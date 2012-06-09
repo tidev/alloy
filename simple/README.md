@@ -22,12 +22,23 @@ You define a style in the JSON like this:
 			"backgroundColor" : "red",
 			"width": Ti.UI.FILL,
 			"height": "100"
+		},
+		"#b" : {
+			"width":Ti.UI.FIT,
+			"height":Ti.UI.FIT
+		},
+		"#t" : {
+			"width":Ti.UI.FILL,
+			"height":Ti.UI.FIT,
+			"color":"black"
 		}
 	}
 	
 And then you would define the view such as:
 
 	<View id="a">
+		<Button id="b">Hello</Button>
+		<Label id="t"></Label>
 	</View>
 
 Note, you can use `Titanium.UI` constants in your JSON file.
@@ -35,6 +46,9 @@ Note, you can use `Titanium.UI` constants in your JSON file.
 In your controller, you can reference the view such as:
 
 	a.backgroundColor = "blue";
+	b.addEventListener("click",function(e){
+		t.text = "You clicked a button";
+	});
 
 All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
 
