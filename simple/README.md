@@ -5,3 +5,36 @@ This is the most basic example of a view and controller.
 
 Any object defined in the view can be referenced in the controller by the id of the controller.
 
+The goal of Alloy should be to favor convention over configuration, much like Ruby on Rails.  Since we are compiling Alloy applications into Titanium applications, we can provide the programmer with a nice environment where they don't need to write as much code.
+
+For example, in Alloy, you should be required to only define one file at a minimum, which is the default view file, `index.xml`, which must be placed in the `views` folder.  
+
+In Alloy, the controller (which is optional) must be named with the same name as the view with the `.js` file extension and placed in the `controllers` folder.
+
+In alloy, you do not provide an `app.js` as it will be automatically generated.
+
+In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
+
+You define a style in the JSON like this:
+
+	{
+		"#a" : {
+			"backgroundColor" : "red",
+			"width": Ti.UI.FILL,
+			"height": "100"
+		}
+	}
+	
+And then you would define the view such as:
+
+	<View id="a">
+	</View>
+
+Note, you can use `Titanium.UI` constants in your JSON file.
+
+In your controller, you can reference the view such as:
+
+	a.backgroundColor = "blue";
+
+All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
+
