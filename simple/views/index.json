@@ -1,0 +1,11 @@
+{
+	"#index": {
+		"backgroundColor":"blue"
+	},
+	
+	"#b": {
+		"width" : Ti.UI.FIT,
+		"height" : Ti.UI.FIT,
+		"text" : "Hello, World"
+	}
+}

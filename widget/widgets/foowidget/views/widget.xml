@@ -1,0 +1,10 @@
+<?ml version="1.0"?>
+
+<Widget version="1.0">
+	<Label id="t"></Label>
+	<View id="hl">
+		<Button id="a"></Button>
+		<Button id="b"></Button>
+		<Button id="c"></Button>
+	</View>
+</Widget>

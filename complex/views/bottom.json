@@ -1,0 +1,8 @@
+{
+	"#b": 
+	{
+		"width": Ti.UI.FIT,
+		"height": Ti.UI.FIT,
+		"text" : "Click me"
+	}
+}

@@ -1,0 +1,12 @@
+<View> <!-- if you don't get the root view an id, it will automatically be named the same as the filename -->
+	
+	<!-- define an empty view -->
+	<View id="top" />
+	
+	<!-- import a referenced view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
+	<View ref="middle" />
+
+	<!-- import a referenced view named 'bottom' -->
+	<View ref="bottom" />
+	
+</View>

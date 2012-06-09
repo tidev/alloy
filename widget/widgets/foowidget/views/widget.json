@@ -1,0 +1,34 @@
+{
+	"#t":{
+		"textAlign" : Ti.UI.TEXT_ALIGNMENT_LEFT,
+		"width" : Ti.UI.FIT,
+		"height": Ti.UI.FIT,
+		"text": "Click a button to display something",
+		"color": "red"
+	},
+	
+	"#hl": {
+		"layout":"horizontal",
+		"width" : Ti.UI.FILL,
+		"height" : "100"
+	},
+	
+	"#a" : {
+		"text": "A",
+		"width" : Ti.UI.FIT,
+		"height": Ti.UI.FIT
+	},
+
+	"#b" : {
+		"text": "B",
+		"width" : Ti.UI.FIT,
+		"height": Ti.UI.FIT
+	},
+
+	"#c" : {
+		"text": "C",
+		"width" : Ti.UI.FIT,
+		"height": Ti.UI.FIT
+	}
+	
+}
