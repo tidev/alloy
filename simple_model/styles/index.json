@@ -1,0 +1,17 @@
+{
+	".name" : {
+		"width": Ti.UI.FIT,
+		"height": Ti.UI.FIT,
+		"textAlign": Ti.UI.TEXT_ALIGNMENT_LEFT,
+		"color": "black",
+		"left": 20
+	},
+	
+	".done" : {
+		"width": Ti.UI.FIT,
+		"height": Ti.UI.FIT,
+		"textAlign": Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		"color": "red",
+		"right": 20
+	}
+}

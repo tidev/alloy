@@ -1,0 +1,16 @@
+{
+	"columns":
+	{
+		"name": "string",
+		"done": "boolean"
+	},
+	"defaults":
+	{
+		"name":"",
+		"done":false
+	},
+	"adapter": {
+		"type": "sql",
+		"tablename":"todos"
+	}
+}
