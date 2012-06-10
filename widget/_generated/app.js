@@ -41,7 +41,7 @@ var $w1_$hl1 = Ti.UI.createLabel({
 $w1.add($w1_$hl1);
 
 var $w1_$a1 = Ti.UI.createButton({
-	text: "A",
+	title: "A",
 	width : Ti.UI.FIT,
 	height : Ti.UI.FIT,
 	id:"#w:#a"
@@ -50,7 +50,7 @@ var $w1_$a1 = Ti.UI.createButton({
 $w1_$hl1.add($w1_$a1);
 
 var $w1_$b1 = Ti.UI.createButton({
-	text: "B",
+	title: "B",
 	width : Ti.UI.FIT,
 	height : Ti.UI.FIT,
 	id:"#w:#b"
@@ -59,7 +59,7 @@ var $w1_$b1 = Ti.UI.createButton({
 $w1_$hl1.add($w1_$b1);
 
 var $w1_$c1 = Ti.UI.createButton({
-	text: "C",
+	title: "C",
 	width : Ti.UI.FIT,
 	height : Ti.UI.FIT,
 	id:"#w:#c"

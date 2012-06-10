@@ -1,12 +1,12 @@
 {
 	"#middle": {
-		backgroundColor:"red"
-	}
+		"backgroundColor":"red"
+	},
 	
 	"#t" : {
 		"width": Ti.UI.FILL,
 		"height":Ti.UI.FIT,
 		"color": "yellow",
-		"textAlign": Ti.UI.TEXT_ALIGNMENT_LEFT
+		"textAlign": Ti.UI.TEXT_ALIGNMENT_CENTER
 	}
 }

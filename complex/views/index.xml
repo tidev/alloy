@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <View> <!-- if you don't get the root view an id, it will automatically be named the same as the filename -->
 	
 	<!-- define an empty view -->

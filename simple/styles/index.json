@@ -1,11 +1,19 @@
 {
+	"Button" : {
+		"width" : Ti.UI.FIT,
+		"height" : Ti.UI.FIT
+	},
+	
+	".button" : {
+		"randomProp":"OK"
+	},
+	
 	"#index": {
 		"backgroundColor":"blue"
 	},
 	
 	"#b": {
-		"width" : Ti.UI.FIT,
-		"height" : Ti.UI.FIT,
-		"text" : "Hello, World"
+		"title" : "Hello, World",
+		"randomProp" : null
 	}
 }

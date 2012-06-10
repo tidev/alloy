@@ -14,19 +14,19 @@
 	},
 	
 	"#a" : {
-		"text": "A",
+		"title": "A",
 		"width" : Ti.UI.FIT,
 		"height": Ti.UI.FIT
 	},
 
 	"#b" : {
-		"text": "B",
+		"title": "B",
 		"width" : Ti.UI.FIT,
 		"height": Ti.UI.FIT
 	},
 
 	"#c" : {
-		"text": "C",
+		"title": "C",
 		"width" : Ti.UI.FIT,
 		"height": Ti.UI.FIT
 	}

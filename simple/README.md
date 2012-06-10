@@ -52,3 +52,57 @@ In your controller, you can reference the view such as:
 
 All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
 
+Styles
+------
+
+You can use the following CSS attributes in your style name: Classes (prefix by `.`), Object Name (name of the Object Type such as `Button`) or ID (prefix by `#`).  The ID attribute will always take precedence.
+
+For example:
+
+	{
+		"Button": {
+			"width":Ti.UI.FIT,
+			"height":Ti.UI.FIT,
+			"borderColor":"red"
+		},
+		
+		".b" : {
+			"width": "100",
+			"b":true
+		},
+		
+		".c" : {
+			"height": "50",
+			"b":false
+		},
+		
+		"#b" : {
+			"width": Ti.UI.FILL,
+			borderColor:null
+		}
+	}
+	
+With the following XML:
+
+	<View>
+		<Button id="b" class="b c" />
+	</View>
+	
+Should result in the following code properties when merged:
+
+	{
+		"width": Ti.UI.FILL,
+		"height":Ti.UI.FIT,
+		"b":false
+	}
+	
+A few notes on the code generation and style merging:
+
+- any `null` values will be removed in any final styles to optimize code generation.  
+- classes can be separated by multiple spaces
+- classes will be merged in order
+- the order of precedence is: Object Type, Classes, ID
+
+
+
+	

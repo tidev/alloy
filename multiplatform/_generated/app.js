@@ -43,14 +43,14 @@ $detail1.add($image1);
 (function(window, master, detail, search, table, image){
 
 	table.setData([
-		{"title":"Row 1", "image":"smallpic1.jpg"},
-		{"title":"Row 2", "image":"smallpic2.jpg"},
-		{"title":"Row 3", "image":"smallpic3.jpg"}
+		{"title":"Alcatraz", "image":"smallpic1.jpg"},
+		{"title":"American Flag", "image":"smallpic2.jpg"},
+		{"title":"Row 3", "Penitentiary Sign":"smallpic3.jpg"}
 	]);
 
 	table.addEventListener("click",function(e)
 	{
-		image.url = e.rowData.image;
+		image.image = e.rowData.image;
 	});
 
 	search.addEventListener("change", function(e)
