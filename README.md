@@ -26,8 +26,14 @@ Installation
 
 Alloy is available as a Node.JS NPM module by running the following command:
 
-	npm install alloy
-	
+	[sudo] npm install -g alloy
+
+Local Installation
+------------------
+
+To install your own local copy (with executable), clone this repository, navigate to the top level directory, and install via:
+
+	[sudo] npm install -g .
 
 Creating an App
 ---------------
