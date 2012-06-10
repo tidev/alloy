@@ -197,6 +197,20 @@ A few notes on the code generation and style merging:
 - classes will be merged in order
 - the order of precedence is: Object Type, Classes, ID
 
+De-composing complex Views
+--------------------------
+
+Alloy allows you to decompose a View into multiple subviews.  You would use the `require` attribute on a View element to import a separate view by name.  
+
+	<View>
+		<View require="first" id="first"/>
+		<View require="second" id="second"/>
+		<View require="third" id="third"/>
+	</View>
+
+In the above example, you should have 3 other view files named `first.xml`, `second.xml` and `third.xml`.  Of course, these subviews could also import their own subviews, too.
+
+
 Building Application Logic
 --------------------------
 
