@@ -139,7 +139,7 @@ function compile(args)
 		die('inputPath "' + inputPath + '" does not exist');
 	}	
 
-	outputPath = program.outputPath || resolveAppHome();
+	outputPath = program.outputPath || path.join(resolveAppHome(),"..");
 	ensureDir(outputPath);
 
 	var viewsDir = path.join(inputPath,'views');
@@ -438,7 +438,11 @@ function compile(args)
 					str += serializer.serializeToString(node.childNodes[c]);
 				}
 			}
-			(state.styles['#'+id]||{})['text']=str;
+			if (!state.styles['#'+id])
+			{
+				state.styles['#'+id]={};
+			}
+			state.styles['#'+id]['text']=str;
 		}
 
 		appendSource("var " + symbol + " = " + ns + "." + fn + "({");
@@ -557,10 +561,14 @@ function newproject(args)
 	}
 	
 	var INDEX_XML  = "<?xml version='1.0'?>\n" +
-					 "<View>\n" +
+					 "<View class='container'>\n" +
 					 '  <Label id="t">Hello, World</Label>\n' +
 					 "</View>\n",
 		INDEX_JSON = "{\n" +
+					 '   ".container":\n' +
+					 '   {\n' +
+					 '       "backgroundColor":"white"\n' +
+					 '   },\n' +
 		             '   "Label":\n' +
 		             '    {\n' +
 		             '       "width": Ti.UI.FIT,\n'+ 
@@ -630,10 +638,14 @@ function generateView(home,args)
 	
 	// right now, it's empty.  we'll likely want to generate a skeleton
 	var XML  = "<?xml version='1.0'?>\n" +
-			   "<View>\n" +
+			   "<View class='container'>\n" +
 			   '\n' +
 			   "</View>\n",
 		JSON = "{\n" +
+				 '   ".container":\n' +
+				 '   {\n' +
+				 '       "backgroundColor":"white"\n'+
+				 '   },\n'
 		       "}\n";
 
 	fs.writeFileSync(vn,XML);
