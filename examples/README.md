@@ -5,7 +5,7 @@ This is a set of real code examples of the new Alloy framework.  These are hand 
 
 For each example, I have provided a `_generated` folder with an `app.js` that would be generated from the resulting code by the compiler.
 
-For a basic amount of documentation, see the [README](https://github.com/appcelerator/alloy_examples/blob/master/simple/README.md) file in the [Simple](https://github.com/appcelerator/alloy_examples/blob/master/simple) example.
+For a basic amount of documentation, see the [README](https://github.com/appcelerator/alloy/blob/master/simple/README.md) file in the [Simple](https://github.com/appcelerator/alloy_examples/blob/master/simple) example.
 
 Examples
 --------

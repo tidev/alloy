@@ -21,6 +21,11 @@ The following are the main goals for Alloy:
 - *Maintainability*:  it's important that Titanium apps can be maintained and sustained - not just by the original developer, but by others tha are on the team, that come along afterwards or by others in the Titanium community.  Alloy should provide a framework that anyone can drop into and become productive once they understand the basics of Alloy.
 - *Best Practices*: it's important that Alloy provide a clean separation of concerns for application design, provide a framework that encapsulates the best practices for Titanium and provides a mechanism for reusable application building blocks called `Widgets`.
 
+Installation
+-------------
+
+	npm install alloy
+
 Credits
 -------
 
@@ -38,5 +43,4 @@ Legal
 
 Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
 Alloy is made available under the Apache Public License, version 2.  See the [LICENSE](LICENSE) file for more information.
-
 
