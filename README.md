@@ -252,9 +252,9 @@ For example, in your `widget.js`:
 		return 3.14; 
 	}
 
-Now, if your widget reference was `w`, you would access your function in your app controller such as:
+Now, if your widget reference was `foo` as in the example above, you would access your function in your app controller such as:
 
-	w.calculatePie();
+	foo.calculatePie();
 
 
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
