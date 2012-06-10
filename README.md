@@ -12,6 +12,7 @@ Examples
 - *Complex*: a more complex example that shows decomposing a view into subviews
 - *Widget*: an example of building a widget and then using it in an app
 - *Simple Model*: an example of a model based system that includes migrations
+- *Multiplatform*: an example of building a multi screen app
 
 
 Issues to be resolved:

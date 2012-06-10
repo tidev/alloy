@@ -1,0 +1,29 @@
+{
+	"#master" : 
+	{
+	},
+	
+	"#detail" :
+	{
+	},
+	
+	"#search":
+	{
+		"top":0,
+		"height": 50,
+		"barColor":"#000",
+		"showCancel":true
+	},
+	
+	"#table":
+	{
+		"top": 51,
+		"height": Ti.UI.FILL
+	},
+	
+	"#image":
+	{
+		"height": Ti.UI.FILL,
+		"width": Ti.UI.FILL
+	}
+}
