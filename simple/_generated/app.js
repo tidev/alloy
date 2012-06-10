@@ -1,3 +1,4 @@
+var Alloy = require("alloy");
 
 var $w = Ti.UI.createWindow({
 	id:"#window"
