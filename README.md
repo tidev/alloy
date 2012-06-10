@@ -241,6 +241,22 @@ The widget view styles can also be imported by the views JSON file by using a sp
 
 For example, if the widget was imported to the name `foo` and the internal ID of a control was `b` - the reference would be '#foo:#b'.
 
+If your widget would like to export properties and/or functions, it should assign them to the `exports` variable of the `widget.js`.
+
+In your app controller, you would then be able to access them referencing the widget reference and the name of the property.
+
+For example, in your `widget.js`:
+
+	exports.calculatePie () 
+	{ 
+		return 3.14; 
+	}
+
+Now, if your widget reference was `w`, you would access your function in your app controller such as:
+
+	w.calculatePie();
+
+
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
