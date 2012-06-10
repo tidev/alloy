@@ -1,3 +1,3 @@
 
-module.exports.$ = require("sizzle");
-module.exports._ = require("underscore");
+module.exports.$ = require("alloy/sizzle");
+module.exports._ = require("alloy/underscore");

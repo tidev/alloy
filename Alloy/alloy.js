@@ -9,25 +9,42 @@ var fs = require('fs'),
 	logger = require("./common/logger"),
 	wrench = require("wrench"),
 	DOMParser = require("xmldom").DOMParser,
-	XMLSerializer = require("xmldom").XMLSerializer;
+	XMLSerializer = require("xmldom").XMLSerializer,
+	jsp = require("./uglify-js/uglify-js").parser,
+	pro = require("./uglify-js/uglify-js").uglify;
+
+//
+//TODO: we need a much more robust help from command line -- see sort of what i did in titanium
+//
+//
+
+/**
+ * ACTIONS:
+ *
+ * - new [path] - create a new project
+ * - compile - compile the project
+ * - generate [type] - generate an object such as a model or controller
+ */
 		
 program
-	.version('0.0.1')
-	.description('Generate Titanium project code based on a declarative UI')
-	.usage('INPUT_PATH [OPTIONS]')
-	.option('-i, --installFolder', 'Print the install location of this module')
-	.option('-o, --outputPath <outputPath>', 'Output path for generated code. (Default: ./output)')
+	.version('0.1.0')
+	.description('Alloy command line')
+	.usage('ACTION [ARGS] [OPTIONS]')
+	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
+	.option('-d, --dump','Dump the generated app.js to console')
+	.option('-f, --force','Force the command to execute')
 	.parse(process.argv);
 
 var outputPath,
-	
-	JS = "/**\n"+
+
+	JS_COPYRIGHT = "/**\n"+
 	     " * Alloy for Titanium by Appcelerator\n" +
 	     " * This is generated code, DO NOT MODIFY - change will be lost!\n"+
 	     " * Copyright (c) 2012 by Appcelerator, Inc.\n"+
-	     " */\n" + 
-	     "\n"+
+	     " */\n",
+
+	JS = 
 		 "var Alloy = require('alloy'),\n" + 
 		 "        $ = Alloy.$,\n" +
 		 "        _ = Alloy._;\n" +
@@ -47,7 +64,8 @@ function generateVarName()
 	return '$'+generateId();
 }
 
-var die = function(msg, printUsage) {
+function die(msg, printUsage) 
+{
 	printUsage = typeof printUsage === 'undefined' ? false : printUsage;
 	logger.error(msg);
 	if (printUsage) {
@@ -83,23 +101,47 @@ function loadStyle(p)
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_LEFT/g,'"TI_UI_TEXT_ALIGNMENT_LEFT"')
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_RIGHT/g,'"TI_UI_TEXT_ALIGNMENT_RIGHT"')
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_CENTER/g,'"TI_UI_TEXT_ALIGNMENT_CENTER"')
-		return JSON.parse(f);
+		try 
+		{
+			return JSON.parse(f);
+		}
+		catch(E)
+		{
+			die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
+		}
 	}
 	return {};
 }
 
-function main(args)
+function banner()
 {
-	var inputPath = args[0];
+	var str = 
+	"       .__  .__                \n"+
+	"_____  |  | |  |   ____ ___.__.\n"+
+	"\\__  \\ |  | |  |  /  _ <   |  |\n"+
+	" / __ \\|  |_|  |_(  <_> )___  |\n"+
+	"(____  /____/____/\\____// ____|\n"+
+	"     \\/                 \\/";
 	
+	if (!program.dump)
+	{
+		console.log(str.blue);
+		console.log("Alloy by Appcelerator".yellow+"\n");
+	}
+}
+
+function compile(args)
+{
+	var inputPath = args.length > 0 ? args[0] : resolveAppHome();
+
 	if (!path.existsSync(inputPath)) 
 	{
 		die('inputPath "' + inputPath + '" does not exist');
 	}	
-	
-	outputPath = program.outputPath || './output';
+
+	outputPath = program.outputPath || resolveAppHome();
 	ensureDir(outputPath);
-	
+
 	var viewsDir = path.join(inputPath,'views');
 	if (!path.existsSync(viewsDir))
 	{
@@ -108,7 +150,7 @@ function main(args)
 	var stylesDir = path.join(inputPath,'styles');
 	var controllersDir = path.join(inputPath,'controllers');
 	var widgetsDir = path.join(inputPath,'widgets');
-	
+
 	var indexView = path.join(viewsDir,"index.xml");
 	if (!path.existsSync(indexView))
 	{
@@ -116,16 +158,31 @@ function main(args)
 	}
 	var resourcesDir = path.join(outputPath,"Resources");
 	ensureDir(resourcesDir);
-	
+
+	logger.info("Generating to "+resourcesDir.yellow+" from ".cyan + inputPath.yellow);
+
 	function generateSourceCode()
 	{
 		var appJS = path.join(resourcesDir,"app.js");
 		var code = JS + "\n" + JS_EPILOG;
-		fs.writeFileSync(appJS,code);
 		
-		console.log(code);
+		//FIXME - these need to be passed in
+		var defines = {
+			OS_IPAD:false
+		};
+
+		var ast = jsp.parse(code); // parse code and get the initial AST
+		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
+		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+		var final_code = pro.gen_code(ast); 
+		
+		final_code = JS_COPYRIGHT + final_code;
+		
+		fs.writeFileSync(appJS,final_code);
+
+		if (program.dump) console.log(final_code.blue);
 	}
-	
+
 	function copyAssets()
 	{
 		var assets = path.join(inputPath,'assets');
@@ -135,7 +192,7 @@ function main(args)
 			wrench.copyDirSyncRecursive(assets,resourcesDir);
 		}
 	}
-	
+
 	function copyLibs()
 	{
 		var lib = path.join(inputPath,'lib');
@@ -151,15 +208,15 @@ function main(args)
 			wrench.copyDirSyncRecursive(vendor,path.join(resourcesDir,'vendor'));
 		}
 	}
-	
+
 	function copyAlloy()
 	{
 		var lib = path.join(__dirname,'lib');
 		wrench.copyDirSyncRecursive(lib,resourcesDir);
 	}
-	
+
 	var JSON_NULL = JSON.parse('null');
-	
+
 	function mergeStyles(from,to)
 	{
 		if (from)
@@ -179,7 +236,7 @@ function main(args)
 			}
 		}
 	}
-	
+
 	function properCase (n)
 	{
 		return n.charAt(0).toUpperCase() + n.substring(1);
@@ -246,7 +303,7 @@ function main(args)
 		}
 		return str.join(",\n");
 	}
-	
+
 	function generateController(name, parameters, dir, state, id)
 	{
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
@@ -262,7 +319,7 @@ function main(args)
 				arg1.push(parameters[c][0]);
 				arg2.push(parameters[c][1]);
 			}
-			
+
 			if (name == 'widget')
 			{
 				var symbol = generateVarName();
@@ -287,13 +344,13 @@ function main(args)
 				              " * @controller " + name + "\n" +
 				              " */";
 			}
-			
+
 			appendSource("");
 			appendSource(comment);
 			appendSource(src);
 		}
 	}
-	
+
 	function findWidget(id)
 	{
 		var files = fs.readdirSync(widgetsDir);
@@ -313,16 +370,16 @@ function main(args)
 		}
 		return null;
 	}
-	
+
 	function generateNode(ischild,viewFile,node,state,defId)
 	{
 		if (node.nodeType != 1) return;
-		
+
 		var id = node.getAttribute('id') || defId;
 		var symbol = generateVarName();
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
-		
+
 		switch(nodename)
 		{
 			case 'View':
@@ -358,17 +415,17 @@ function main(args)
 				}
 			}
 		}
-		
+
 		if (ids[id])
 		{
 			die("<"+nodename+"> from '"+viewFile+"' attempted to use the id '"+id+"' which has already been defined in the view '"+ids[id]+"'");
 		}
-		
+
 		ids[id]=viewFile;
-		
+
 		var ns = "Ti.UI";
 		var fn = "create" + nodename;
-		
+
 		// special TEXT processing for label
 		if (nodename == 'Label' && node.childNodes.length > 0)
 		{
@@ -381,20 +438,20 @@ function main(args)
 					str += serializer.serializeToString(node.childNodes[c]);
 				}
 			}
-			state.styles['#'+id]['text']=str;
+			(state.styles['#'+id]||{})['text']=str;
 		}
-		
+
 		appendSource("var " + symbol + " = " + ns + "." + fn + "({");
 		appendSource(generateStyleParams(state.styles,classes,id,node.nodeName));
 		appendSource("});");
 		appendSource(state.parentNode+".add("+symbol+");");
-		
+
 		var childstate = {
 			parentNode: symbol,
 			parameters: state.parameters,
 			styles: state.styles
 		};
-		
+
 		if (id && state.parentNode!=symbol) state.parameters.push([symbol,id]);
 
 		for (var c=0;c<node.childNodes.length;c++)
@@ -403,12 +460,12 @@ function main(args)
 			generateNode(true,viewFile,child,childstate);
 		}
 	}
-	
+
 	function parseView(viewName,state,dir,viewid)
 	{
 		var vd = dir ? path.join(dir,'views') : viewsDir;
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
-		
+
 		var viewFile = path.join(vd,viewName+".xml");
 		if (!path.existsSync(viewFile))
 		{
@@ -427,7 +484,7 @@ function main(args)
 
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
-		
+
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
 		var parameters = state.parameters;
@@ -456,20 +513,248 @@ function main(args)
 
 		generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
 		generateController(viewName,parameters,dir,state,id);
-		
+
 		return true;
 	}
-	
+
 	var state = {
 		parentNode:"$w",
 		parameters:[["$w","window"]]
 	};
-	
+
 	parseView('index',state);
 	copyAssets();
 	copyLibs();
 	copyAlloy();
 	generateSourceCode();
+}
+
+function newproject(args)
+{
+	if (args.length == 0)
+	{
+		die("newproject requires the [OUTPUT_DIR] as a second argument");
+	}
+	var outputPath = path.join(args[0],'app');
+	if (path.existsSync(outputPath))
+	{
+		if (!program.force)
+		{
+			die("Directory already exists at: "+outputPath);
+		}
+	}
+	if (!path.existsSync(path.join(args[0]))) fs.mkdirSync(path.join(args[0]));
+	if (!path.existsSync(outputPath)) fs.mkdirSync(outputPath);
+	
+	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'];
+	for (var c=0;c<dirs.length;c++)
+	{
+		var p = path.join(outputPath,dirs[c]);
+		if (!path.existsSync(p))
+		{
+			fs.mkdirSync(p);
+		}
+	}
+	
+	var INDEX_XML  = "<?xml version='1.0'?>\n" +
+					 "<View>\n" +
+					 '  <Label id="t">Hello, World</Label>\n' +
+					 "</View>\n",
+		INDEX_JSON = "{\n" +
+		             '   "Label":\n' +
+		             '    {\n' +
+		             '       "width": Ti.UI.FIT,\n'+ 
+		             '       "height": Ti.UI.FIT\n'+ 
+		             '    }\n' + 
+		             "}\n",
+		INDEX_C    = "t.addEventListener('click',function(){\n" + 
+					 "   alert(t.text);\n" +
+					 "});\n";
+	
+	fs.writeFileSync(path.join(outputPath,'views','index.xml'),INDEX_XML);
+	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
+	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
+	
+	logger.info('Generated new project at: '+outputPath);
+}
+
+function resolveAppHome()
+{
+	var f = path.join("./","app");
+	if (path.existsSync(f))
+	{
+		return f;
+	}
+	die("This directory: "+f+" does not look like an Alloy directory");
+}
+
+function generateController(home,args)
+{
+	if (args.length == 0)
+	{
+		die("generate controller requires a NAME as third argument");
+	}
+	var name = args[0];
+	
+	var cn = path.join(home,'controllers',name+'.js');
+	if (path.existsSync(cn) && !program.force)
+	{
+		die("File already exists: "+cn);
+	}
+	
+	// right now, it's empty.  we'll likely want to generate a skeleton
+	var	C    = "\n";
+	fs.writeFileSync(cn,C);
+
+	logger.info('Generate controller named '+name);
+}
+
+function generateView(home,args)
+{
+	if (args.length == 0)
+	{
+		die("generate view requires a NAME as third argument");
+	}
+	var name = args[0];
+	
+	var vn = path.join(home,'views',name+'.xml');
+	if (path.existsSync(vn) && !program.force)
+	{
+		die("File already exists: "+vn);
+	}
+	var sn = path.join(home,'styles',name+'.xml');
+	if (path.existsSync(sn) && !program.force)
+	{
+		die("File already exists: "+sn);
+	}
+	
+	// right now, it's empty.  we'll likely want to generate a skeleton
+	var XML  = "<?xml version='1.0'?>\n" +
+			   "<View>\n" +
+			   '\n' +
+			   "</View>\n",
+		JSON = "{\n" +
+		       "}\n";
+
+	fs.writeFileSync(vn,XML);
+	fs.writeFileSync(sn,JSON);
+
+	logger.info('Generate view and styles named '+name);
+}
+
+function generateModel(home,args)
+{
+	if (args.length == 0)
+	{
+		die("generate controller requires a NAME as third argument");
+	}
+	var name = args[0],
+		a = args.slice(1);
+		
+	if (a.length == 0)
+	{
+		die("missing model columns as fourth argument and beyond");
+	}
+	
+	var J = {"columns":{},"defaults":{},"adapter":{"type":"sql","tablename":name}};
+	for (var c=0;c<a.length;c++)
+	{
+		var X = a[c].split(":");
+		J.columns[X[0]] = X[1];
+	}
+	
+	var mn = path.join(home,'models',name+'.json');
+	if (path.existsSync(mn) && !program.force)
+	{
+		die("File already exists: "+mn);
+	}
+	
+	//TODO: automatically generate migration file
+
+	var ast = jsp.parse("("+JSON.stringify(J)+")"); // parse code and get the initial AST
+	ast = pro.ast_mangle(ast); // get a new AST with mangled names
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
+	final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
+
+	fs.writeFileSync(mn,final_code);
+
+	logger.info('Generate model named '+name);
+}
+
+function generateMigration(home,args)
+{
+	
+}
+
+function generate(args)
+{
+	if (args.length == 0)
+	{
+		die("generate requires a TYPE such as 'controller' as second argument");
+	}
+	var home = resolveAppHome();
+	var newargs = args.slice(1);
+	switch(args[0])
+	{
+		case 'controller':
+		{
+			generateController(home,newargs);
+			break;
+		}
+		case 'view':
+		{
+			generateView(home,newargs);
+			break;
+		}
+		case 'model':
+		{
+			generateModel(home,newargs);
+			break;
+		}
+		case 'migration':
+		{
+			generateMigration(home,newargs);
+			break;
+		}
+	}
+}
+
+function main(args)
+{
+	banner();
+	
+	if (args.length == 0)
+	{
+		die('You must supply an ACTION as the first argument');
+	}
+	
+	var action = args[0],
+		newargs = args.slice(1);
+	
+	switch(action)
+	{
+		case 'new':
+		{
+			newproject(newargs);
+			break;
+		}
+		case 'compile':
+		{
+			compile(newargs);
+			break;
+		}
+		case 'generate':
+		{
+			generate(newargs);
+			break;
+		}
+		default:
+		{
+			die('Unknown action: '+action.red);
+		}
+	}
+	
 }
 
 main(program.args);
