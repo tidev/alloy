@@ -282,7 +282,7 @@ There's a lot of work to get Alloy to a release state.  The following are some o
 - full implementation of different views based on os, screen size, etc.
 - widget packaging implementation, spec and tooling
 - ability to better integrate native modules and reference them
-
+- controller, view and model lifecycle events
 	
 Credits
 -------
