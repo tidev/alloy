@@ -3,10 +3,10 @@
 	<!-- define an empty view -->
 	<View id="top" />
 	
-	<!-- import a referenced view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
-	<View ref="middle" />
+	<!-- import a view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
+	<View require="middle" />
 
-	<!-- import a referenced view named 'bottom' -->
-	<View ref="bottom" />
+	<!-- import a view named 'bottom' -->
+	<View require="bottom" />
 	
 </View>
