@@ -92,6 +92,159 @@ For example:
 
 	alloy generate model todo name:string active:boolean
 	
+
+Developing in Alloy
+-------------------
+
+You are required to only define one file at a minimum, which is the default view file, `index.xml`, which must be placed in the `views` folder.  
+
+In Alloy, the controller (which is optional) must be named with the same name as the view with the `.js` file extension and placed in the `controllers` folder.
+
+In alloy, you do not provide an `app.js` as it will be automatically generated.
+
+In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
+
+You define a style in the JSON like this:
+
+	{
+		"#a" : {
+			"backgroundColor" : "red",
+			"width": Ti.UI.FILL,
+			"height": "100"
+		},
+		"#b" : {
+			"width":Ti.UI.FIT,
+			"height":Ti.UI.FIT
+		},
+		"#t" : {
+			"width":Ti.UI.FILL,
+			"height":Ti.UI.FIT,
+			"color":"black"
+		}
+	}
+	
+And then you would define the view such as:
+
+	<View id="a">
+		<Button id="b">Hello</Button>
+		<Label id="t"></Label>
+	</View>
+
+Note, you can use `Titanium.UI` constants in your JSON file.
+
+In your controller, you can reference the view such as:
+
+	a.backgroundColor = "blue";
+	b.addEventListener("click",function(e){
+		t.text = "You clicked a button";
+	});
+
+All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
+
+View Styling
+-----------
+
+Alloy separates the structural elements of a View from the styling components of the View -- much like the difference between HTML and CSS.  
+
+You can use the following CSS attributes in your style name: Classes (prefix by `.`), Object Name (name of the Object Type such as `Button`) or ID (prefix by `#`).  The ID attribute will always take precedence.
+
+For example:
+
+	{
+		"Button": {
+			"width":Ti.UI.FIT,
+			"height":Ti.UI.FIT,
+			"borderColor":"red"
+		},
+		
+		".b" : {
+			"width": "100",
+			"b":true
+		},
+		
+		".c" : {
+			"height": "50",
+			"b":false
+		},
+		
+		"#b" : {
+			"width": Ti.UI.FILL,
+			borderColor:null
+		}
+	}
+	
+With the following XML:
+
+	<View>
+		<Button id="b" class="b c" />
+	</View>
+	
+Should result in the following code properties when merged:
+
+	{
+		"width": Ti.UI.FILL,
+		"height":Ti.UI.FIT,
+		"b":false
+	}
+	
+A few notes on the code generation and style merging:
+
+- any `null` values will be removed in any final styles to optimize code generation.  
+- classes can be separated by multiple spaces
+- classes will be merged in order
+- the order of precedence is: Object Type, Classes, ID
+
+Building Application Logic
+--------------------------
+
+In Alloy, you separate the application logic from the View logic (the `C` part of `MVC`) with `Controllers`.  
+
+Controllers automagically will have pre-defined your View objects, as long as you've added a unique `id` attribute on the XML.
+
+Each `id` value will reference the corresponding Titanium object in your controller automatically.
+
+For example, if you have a view named `index.xml` with the following:
+
+	<View>
+		<Button id="b"></Button>
+	</View>
+	
+You would then define a controller named `index.js` and you could automatically bind events inline in your controller code:
+
+	b.addEventListener("click",function(){
+		alert("You clicked the button");
+	});
+
+If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
+
+_NOTE: it's import that you use unique `id` attributes across all your view files.  If you don't, you will get a compiler error._
+
+
+Building Re-usable Application Widgets
+---------------------------------------
+
+Alloy supports the concept of a `widget` which is a package of MVC logic that can be reused inside an application.
+
+The widget is defined in a separate 'widgets' subdirectory, but we would also support a widget distribution packaging much like modules today so that you could simply reference them and then they would automatically be found and imported either by searching for local widgets in the folder of the app or by scanning the titanium distribution, etc.
+
+The widget would define its own views and controllers and they would work very similar to any normal application.
+
+The widget controller would be able to export zero or more properties or methods that define the public interface for the widget.
+
+Example of importing a widget:
+
+	<View>
+		<Widget require="com.foo.widget" id="foo"/>
+	</View>
+
+The widget view styles can also be imported by the views JSON file by using a special widget ID pattern: <#widget_id #id>.
+
+For example, if the widget was imported to the name `foo` and the internal ID of a control was `b` - the reference would be '#foo:#b'.
+
+See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
+
+_NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
+	
 	
 Credits
 -------
