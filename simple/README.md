@@ -13,7 +13,7 @@ In Alloy, the controller (which is optional) must be named with the same name as
 
 In alloy, you do not provide an `app.js` as it will be automatically generated.
 
-In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
+In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
 
 You define a style in the JSON like this:
 
