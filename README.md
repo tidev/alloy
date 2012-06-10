@@ -6,6 +6,11 @@ Alloy is a new application framework by [Appcelerator](http://www.appcelerator.c
 It provides a nice [MVC](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) framework for developers 
 that are building Titanium apps.  
 
+Current Status
+--------------
+
+*June 10, 2012* - _Unstable_
+
 
 Goals
 ------
