@@ -260,7 +260,26 @@ Now, if your widget reference was `foo` as in the example above, you would acces
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
-	
+
+TODO
+----
+
+There's a lot of work to get Alloy to a release state.  The following are some of the major items:
+
+- integration into Titanium Studio wizards
+- DB migration support implementation
+- support for SQLite backed Model implementation
+- support for ACS backed Model implementation
+- added a selector engine (is this necessary still?)
+- uglify all JS files, not just the app.js
+- generation of scaffolding
+- add support for TDD testing (possibly Jasmine?)
+- implement compiler constants such as `OS_IPAD` or `ENV_DEV`
+- possible view template support?
+- full implementation of different views based on os, screen size, etc.
+- widget packaging implementation, spec and tooling
+- ability to better integrate native modules and reference them
+
 	
 Credits
 -------
