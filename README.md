@@ -25,7 +25,74 @@ Installation
 -------------
 
 	npm install alloy
+	
+Creating an App
+---------------
 
+To create an Alloy enabled app, you must first create a project in Titanium Studio or via the Titanium CLI.  While in a console, 
+navigate to the root directory of your application and run the following command in the console
+
+	alloy new .
+	
+Alternatively, you can specify an argument as the second parameter to the location of a Titanium project directory.
+
+As part of Alloy-enabling your Titanium project, Alloy will install a special compiler plugin that will help Studio or the CLI know how to use the Alloy compiler.  _NOTE: this currently only works on OSX and will be resolved prior to the production release._
+
+Your new Alloy project will have a new folder named `app` that will contain the skeleton Alloy app.
+
+Directory Structure
+--------------------
+
+Alloy has directories that should be familiar if you've used any of the popular web MVC frameworks like Ruby on Rails.  
+
+Alloy prefers to use convention over configuration for simplicity.  
+
+- *views* - this is where your views should go in the format _*view*.xml_
+- *controllers* - this is where your controllers should go in the format _*view*.js_. 
+- *styles* - this is where your view styling logic should go in the format _*view*.json_.
+- *models* - this is where your model files will go.
+- *assets* - this is where you should put your image assets and other misc. files that you want copied into the _Resources_ directory.
+- *migrations* - this is where your database migration files will be stored.
+- *lib* - this is where you should put application specific files, typically in the CommonJS format.
+- *vendor* - this is where you should put any vendor specific modules, typically in the CommonJS format.  Do not place native modules in this folder.
+- *config* - _RESERVED FOR FUTURE USE_.  This is currently not used but will eventually contain application specific config.
+
+Compiling an App
+----------------
+
+You can run a Titanium project that is using Alloy like any normal build.  However, you can also use Alloy's command line tool to build from the command line.
+
+	alloy compile
+
+If you run this from the projects directory, it will compile the files to the correct location automatically.
+	
+	
+Generating Views
+-----------------
+
+To generate an empty view and the associated style files, you can run the following command:
+
+	alloy generate view <name>
+
+Generating Controllers
+---------------------
+
+To generate an empty controller, you can run the following command:
+
+	alloy generate controller <name>
+
+Generating Models
+---------------------
+
+To generate a model, you can run the following command:
+
+	alloy generate model <name> [column_name:type, ...]
+	
+For example:
+
+	alloy generate model todo name:string active:boolean
+	
+	
 Credits
 -------
 
