@@ -24,8 +24,11 @@ The following are the main goals for Alloy:
 Installation
 -------------
 
+Alloy is available as a Node.JS NPM module by running the following command:
+
 	npm install alloy
 	
+
 Creating an App
 ---------------
 
