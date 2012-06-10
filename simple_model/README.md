@@ -20,4 +20,10 @@ TableViewRow and bind a model object to the row object.
 We subscribe for model change events on each model row and then re-bind any changes back to the row as changed.  This is done with a model `change` event.  We could also use the backbone syntax such as `change:name` to bind a specific model property instead of all changes.
 
 
+Migrations
+----------
+
+Alloy would support DB migrations much like Rails.  The Alloy command line (and Studio) will support the creation of models and 
+migration files.   The migration will allow the programmer to control the low-level migration of the data base model.
+
 

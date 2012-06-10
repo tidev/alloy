@@ -11,7 +11,7 @@ Examples
 - *Simple*: the most basic example 
 - *Complex*: a more complex example that shows decomposing a view into subviews
 - *Widget*: an example of building a widget and then using it in an app
-- *Simple Model*: an example of a model based system
+- *Simple Model*: an example of a model based system that includes migrations
 
 
 Issues to be resolved:

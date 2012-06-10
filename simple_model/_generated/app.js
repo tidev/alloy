@@ -19,6 +19,52 @@ var $table1 = Ti.UI.createTableView({
 
 $index1.add($table1);
 
+
+// perform one or more migrations in order
+(function(){
+	
+	// this will pass a list of Migration ids in order of the migration (reversed from oldest to newest)
+	// and the migration library will check the local db and then run the migrations in order -- note this
+	// is only appropriate for the SQLite adapter -- for other adapters such as ACS, we would do other things (or nothing at all)
+	Alloy.DB.Migration.createMigration([
+	{
+		id:"20120610045346",
+		callback: function(migration) 
+		{
+			// this function would be called (if necessary) to perform the migration
+			// this code comes from the users migration
+			migration.up = function(db)
+			{
+				db.createTable("todos",
+				{
+					"columns":
+					{
+						"name": "string",
+						"done": "boolean"
+					},
+
+					"defaults":
+					{
+						"name":"",
+						"done":false
+					},
+
+					"tablename":"todos"
+				});
+
+			};
+
+			migration.down = function(db)
+			{
+				db.dropTable("todos");
+			};
+		
+		}
+	}]);
+	
+})();
+
+
 // Alloy.Model is a special class that would create our model, load our adapter, etc.
 var $todo1 = Alloy.Model.create({
 	"columns":
