@@ -8,6 +8,7 @@ var fs = require('fs'),
 	program = require('commander'),
 	logger = require("./common/logger"),
 	wrench = require("wrench"),
+	colors = require("colors"),
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
@@ -15,7 +16,8 @@ var fs = require('fs'),
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
-//
+//TODO: handle localization files and merging
+//TODO: uglify all files not just our main app.js
 //
 
 /**
@@ -34,6 +36,7 @@ program
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
 	.option('-d, --dump','Dump the generated app.js to console')
 	.option('-f, --force','Force the command to execute')
+	.option('-n, --no-colors','Turn off colors')
 	.parse(process.argv);
 
 var outputPath,
@@ -78,9 +81,45 @@ function ensureDir(p)
 {
 	if (!path.existsSync(p))
 	{
-		logger.info("Creating directory: "+p);
+		logger.debug("Creating directory: "+p);
 		fs.mkdirSync(p);
 	}
+}
+
+function getNodeText(node)
+{
+	var str = '';
+	var serializer = new XMLSerializer();
+	for (var c=0;c<node.childNodes.length;c++)
+	{
+		if (node.childNodes[c].nodeType!=1)
+		{
+			str += serializer.serializeToString(node.childNodes[c]);
+		}
+	}
+	return str;
+}
+
+function copyFileSync (srcFile, destFile) 
+{
+	var BUF_LENGTH = 64 * 1024, 
+		buff, 
+		bytesRead, 
+		fdr, 
+		fdw, 
+		pos;
+	buff = new Buffer(BUF_LENGTH);
+	fdr = fs.openSync(srcFile, 'r');
+	fdw = fs.openSync(destFile, 'w');
+	bytesRead = 1;
+	pos = 0;
+	while (bytesRead > 0) {
+		bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos);
+		fs.writeSync(fdw, buff, 0, bytesRead);
+		pos += bytesRead;
+	}
+	fs.closeSync(fdr);
+	return fs.closeSync(fdw);
 }
 
 function appendSource(line)
@@ -125,8 +164,9 @@ function banner()
 	
 	if (!program.dump)
 	{
-		console.log(str.blue);
-		console.log("Alloy by Appcelerator".yellow+"\n");
+		console.log(logger.stripColors ? str : str.blue);
+		var m = "Alloy by Appcelerator".yellow+"\n";
+		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
 }
 
@@ -139,7 +179,15 @@ function compile(args)
 		die('inputPath "' + inputPath + '" does not exist');
 	}	
 
-	outputPath = program.outputPath || path.join(resolveAppHome(),"..");
+	if (!program.outputPath)
+	{
+		var t = path.join(inputPath,'views','index.xml');
+		if (path.existsSync(t))
+		{
+			outputPath = path.join(inputPath,'..');
+		}
+	}
+	outputPath = outputPath ? outputPath : (program.outputPath || path.join(resolveAppHome(),".."));
 	ensureDir(outputPath);
 
 	var viewsDir = path.join(inputPath,'views');
@@ -179,8 +227,32 @@ function compile(args)
 		final_code = JS_COPYRIGHT + final_code;
 		
 		fs.writeFileSync(appJS,final_code);
+		logger.info("compiling alloy to " + appJS);
 
 		if (program.dump) console.log(final_code.blue);
+	}
+
+	function copyFilesAndDirs(f,d)
+	{
+		var files = fs.readdirSync(f);
+//		logger.info('files returned for '+f+' is '+JSON.stringify(files));
+		for (var c=0;c<files.length;c++)
+		{
+			var file = files[c];
+			var fpath = path.join(f,file);
+			var stats = fs.lstatSync(fpath);
+			var rd = path.join(d,file);
+			logger.info('Copying ' + fpath + ' to ' + d);
+			if (stats.isDirectory())
+			{
+				ensureDir(rd);
+				wrench.copyDirSyncRecursive(fpath, rd);
+			}
+			else
+			{
+				copyFileSync(fpath,rd);
+			}
+		}
 	}
 
 	function copyAssets()
@@ -189,7 +261,7 @@ function compile(args)
 		if (path.existsSync(assets))
 		{
 			logger.info('Copying assets from: '+assets);
-			wrench.copyDirSyncRecursive(assets,resourcesDir);
+			copyFilesAndDirs(assets,resourcesDir);
 		}
 	}
 
@@ -199,20 +271,20 @@ function compile(args)
 		if (path.existsSync(lib))
 		{
 			logger.info('Copying app libs: '+lib);
-			wrench.copyDirSyncRecursive(lib,resourcesDir);
+			copyFilesAndDirs(lib,resourcesDir);
 		}
 		var vendor = path.join(inputPath,'vendor');
 		if (path.existsSync(vendor))
 		{
 			logger.info('Copying vendor libs: '+vendor);
-			wrench.copyDirSyncRecursive(vendor,path.join(resourcesDir,'vendor'));
+			copyFilesAndDirs(vendor,path.join(resourcesDir,'vendor'));
 		}
 	}
 
 	function copyAlloy()
 	{
 		var lib = path.join(__dirname,'lib');
-		wrench.copyDirSyncRecursive(lib,resourcesDir);
+		copyFilesAndDirs(lib,resourcesDir);
 	}
 
 	var JSON_NULL = JSON.parse('null');
@@ -429,15 +501,7 @@ function compile(args)
 		// special TEXT processing for label
 		if (nodename == 'Label' && node.childNodes.length > 0)
 		{
-			var str = '';
-			var serializer = new XMLSerializer();
-			for (var c=0;c<node.childNodes.length;c++)
-			{
-				if (node.childNodes[c].nodeType!=1)
-				{
-					str += serializer.serializeToString(node.childNodes[c]);
-				}
-			}
+			var str = getNodeText(node);
 			if (!state.styles['#'+id])
 			{
 				state.styles['#'+id]={};
@@ -533,6 +597,84 @@ function compile(args)
 	generateSourceCode();
 }
 
+function createPlugin(rootDir)
+{
+	var plugins = path.join(rootDir,"plugins");
+	ensureDir(plugins);
+	
+	var alloyPluginDir = path.join(plugins,"ti.alloy");
+	ensureDir(alloyPluginDir);
+	
+	var alloyPlugin = path.join(alloyPluginDir,"plugin.py");
+	var pi = path.join(__dirname,"template","plugin.py");
+	
+	copyFileSync(pi,alloyPlugin);
+	logger.info('Deployed ti.alloy plugin to '+alloyPlugin);
+}
+
+function installPlugin(dir)
+{
+	createPlugin(dir);
+
+	var tiapp = path.join(dir,'tiapp.xml');
+	if (path.existsSync(tiapp))
+	{
+		var xml = fs.readFileSync(tiapp);
+		var doc = new DOMParser().parseFromString(String(xml));
+		var plugins = doc.documentElement.getElementsByTagName("plugins");
+		var found = false;
+		if (plugins.length > 0)
+		{
+			var items = plugins.item(0).getElementsByTagName('plugin');
+			if (items.length > 0)
+			{
+				for (var c=0;c<items.length;c++)
+				{
+					var plugin = items.item(c);
+					var name = getNodeText(plugin);
+					if (name == 'ti.alloy')
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (!found)
+		{
+			var node = doc.createElement('plugin');
+			node.setAttribute('version','1.0');
+			var text = doc.createTextNode('ti.alloy');
+			node.appendChild(text);
+			
+			var pna = null;
+			
+			// install the plugin into tiapp.xml
+			if (plugins.length == 0)
+			{
+				var pn = doc.createElement('plugins');
+				doc.documentElement.appendChild(pn);
+				doc.documentElement.appendChild(doc.createTextNode("\n"));
+				pna = pn;
+			}
+			else
+			{
+				pna = plugins.item(0);
+			}
+			
+			pna.appendChild(node);
+			pna.appendChild(doc.createTextNode("\n"));
+			
+			var serializer = new XMLSerializer();
+			var newxml = serializer.serializeToString(doc);
+			
+			fs.writeFileSync(tiapp,newxml);
+			logger.info("Installed 'ti.alloy' plugin to "+tiapp);
+		}
+	}
+}
+
 function newproject(args)
 {
 	if (args.length == 0)
@@ -582,6 +724,8 @@ function newproject(args)
 	fs.writeFileSync(path.join(outputPath,'views','index.xml'),INDEX_XML);
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
+	
+	installPlugin(args[0]);
 	
 	logger.info('Generated new project at: '+outputPath);
 }
@@ -734,6 +878,8 @@ function generate(args)
 
 function main(args)
 {
+	logger.stripColors = (program.colors==false);
+	
 	banner();
 	
 	if (args.length == 0)

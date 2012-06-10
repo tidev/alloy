@@ -1,5 +1,5 @@
-var isNode = typeof process == 'object' && typeof process.versions == 'object' && process.versions.node;
-if (isNode) { require('colors'); }
+var colors = require('colors');
+
 
 exports.DEBUG = 3;
 exports.INFO = 2;
@@ -7,6 +7,7 @@ exports.WARN = 1;
 exports.ERROR = 0;
 exports.NONE = -1;
 exports.logLevel = exports.DEBUG;
+exports.stripColors = false;
 
 exports.debug = function(msg) {
 	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'debug'); }
@@ -23,6 +24,7 @@ exports.warn = function(msg) {
 exports.error = function(msg) {
 	if (exports.logLevel >= exports.ERROR) { printMessage(msg, 'error'); }
 }
+
 
 // Private functions and members
 var levels = ['info','debug','error','warn'];
@@ -69,7 +71,7 @@ var printMessage = function(msg, level) {
 	level = has(levels, level) ? level : 'info'
 
 	// Have to wrap in a function to avoid "Illegal invocation" error on android
-	var logFunc = isNode ? function(msg){console.log(msg)} : function(msg){Ti.API[level](msg)};
+	var logFunc = function(msg){console.log(msg)};
 
 	// Create message array and print
 	if (!isArray(msg)) {
@@ -77,6 +79,7 @@ var printMessage = function(msg, level) {
 	}
 	for (var i = 0; i < msg.length; i++) {
 		var str = (formattedDate() + ' -- [' + formatTag(level.toUpperCase(),5) + '] ').grey + msg[i].cyan;
-		logFunc(str);
+		var m = exports.stripColors ? colors.stripColors(str) : str;
+		logFunc(m);
 	}
 };
