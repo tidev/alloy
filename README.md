@@ -95,6 +95,17 @@ For example:
 
 	alloy generate model todo name:string active:boolean
 	
+When you generate a model, a migration file is automatically provided with the initial model details.
+
+Generating Migrations
+---------------------
+
+To generate a standalone migration for a specific model, you can run the following command:
+
+	alloy generate migration <name>
+
+This will create a timestamp-ordered migration file for the model specified.	
+
 
 Developing in Alloy
 -------------------
