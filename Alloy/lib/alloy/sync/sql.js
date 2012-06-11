@@ -182,6 +182,7 @@ function Migrate(migrations)
 			}
 			if (_.isFunction(mctx.up))
 			{
+				mctx.down(sqlMigration);
 				mctx.up(sqlMigration);
 			}
 			prev = mctx;
