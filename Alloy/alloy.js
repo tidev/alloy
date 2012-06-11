@@ -131,6 +131,12 @@ function loadStyle(p)
 	{
 		var f = fs.readFileSync(p);
 		f = String(f);
+
+		// skip empty files
+		if (/^\s*$/.test(f)) {
+			return {};
+		}
+
 		f = f.replace(/Titanium\./g,"Ti.");
 		// fixup constants so we can use them in JSON but then we do magic conversions
 		f = f.replace(/Ti\.UI\.FILL/g,'"TI_UI_FILL"');
@@ -893,7 +899,7 @@ function generateView(home,args)
 				 '   ".container":\n' +
 				 '   {\n' +
 				 '       "backgroundColor":"white"\n'+
-				 '   },\n' +
+				 '   }\n' +
 		       "}\n";
 
 	fs.writeFileSync(vn,XML);
