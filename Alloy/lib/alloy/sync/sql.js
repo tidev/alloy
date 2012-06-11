@@ -217,7 +217,7 @@ function Migrate(migrations)
 	
 	if (prev && prev.id)
 	{
-		db.execute("DELETE FROM migrations");
+		db.execute("DELETE FROM migrations where model = ?",prev.name);
 		db.execute("INSERT INTO migrations VALUES (?,?)",prev.id,prev.name);
 	}
 	
