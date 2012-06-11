@@ -2,30 +2,32 @@
  * Local SQLite sync adapter which will store all models in
  * an on device database
  */
-var _ = require("alloy/underscore")._,
-	lastestMigrationId, 
+var _ = require("alloy/underscore")._, 
 	db;
 
 function InitDB()
 {
 	if (!db)
 	{
-		module.exports.db = db = Ti.Database.open("_alloy");
+		module.exports.db = db = Ti.Database.open("_alloy_");
 		
 		// create the table in case it doesn't exist
-		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT)");
-				
-		// get the latest migratino
-		rs = db.execute("SELECT latest FROM migrations LIMIT 1");
-		if (rs.isValidRow())
-		{
-			lastestMigrationId = rs.field(0);
-		}
-		rs.close();
-
-		Ti.API.info("latest migration: "+lastestMigrationId);
+		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)");
 	}
 	return db;
+}
+
+function GetMigrationFor(table)
+{
+	var mid;
+	// get the latest migratino
+	var rs = db.execute("SELECT latest FROM migrations where model = ?",table);
+	if (rs.isValidRow())
+	{
+		mid = rs.field(0);
+	}
+	rs.close();
+	return mid;
 }
 
 function SQLiteMigrateDB()
@@ -77,7 +79,7 @@ function SQLiteMigrateDB()
 	
 	this.createTable = function(name,config)
 	{
-		Ti.API.info("create table migration called for "+config.tablename);
+		Ti.API.info("create table migration called for "+config.adapter.tablename);
 		
 		var self = this,
 			columns = [];
@@ -87,7 +89,7 @@ function SQLiteMigrateDB()
 			columns.push(k + ' ' + self.column(config.columns[k]));
 		}
 			
-		var sql = "CREATE TABLE "+config.tablename+" ( " + columns.join(",") + " )";
+		var sql = "CREATE TABLE "+config.adapter.tablename+" ( " + columns.join(",") + " )";
 		Ti.API.info(sql);
 		
 		db.execute(sql);
@@ -155,13 +157,27 @@ function SQLSync(model)
 
 }
 
+function GetMigrationForCached(t,m)
+{
+	if (m[t])
+	{
+		return m[t];
+	}
+	var v = GetMigrationFor(t);
+	if (v)
+	{
+		m[t] = v;
+	}
+	return v;
+}
+
 function Migrate(migrations)
 {
 	var prev;
 
 	//TODO: check config for the right adapter and then delegate. for now just doing SQL
-	//TODO: refactor this into SQLSync
 	var sqlMigration = new SQLiteMigrateDB;
+	var migrationIds = {}; // cache for latest mid by model name
 	
 	db.execute("BEGIN;");
 	
@@ -170,12 +186,13 @@ function Migrate(migrations)
 	// oldest to newest based on timestamp
 	_.each(migrations,function(migration)
 	{
-		//TODO: skip calling migrations that are older than the migration in the db
 		var mctx = {};
 		migration(mctx);
-		if (!lastestMigrationId || mctx.id > lastestMigrationId)
+		var mid = GetMigrationForCached(mctx.name,migrationIds);
+		Ti.API.info("mid = "+mid+", name = "+mctx.name);
+		if (!mid || mctx.id > mid)
 		{
-			Ti.API.info("Migration starting to "+mctx.id);
+			Ti.API.info("Migration starting to "+mctx.id+" for "+mctx.name);
 			if (prev && _.isFunction(prev.down))
 			{
 				prev.down(sqlMigration);
@@ -197,7 +214,7 @@ function Migrate(migrations)
 	if (prev && prev.id)
 	{
 		db.execute("DELETE FROM migrations");
-		db.execute("INSERT INTO migrations VALUES (?)",prev.id);
+		db.execute("INSERT INTO migrations VALUES (?,?)",prev.id,prev.name);
 	}
 	
 	db.execute("COMMIT;");

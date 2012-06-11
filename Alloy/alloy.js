@@ -565,7 +565,11 @@ function compile(args)
 			{
 				var mf = path.join(migrationsDir,f);
 				var m = fs.readFileSync(mf);
-				var code = "(function(migration){\n migration.id = '" + f.substring(0,f.length-part.length-1) + "';\n" + String(m) + "})";
+				var code = "(function(migration){\n "+
+				           "migration.name = '" + name + "';\n" + 
+						   "migration.id = '" + f.substring(0,f.length-part.length-1) + "';\n" + 
+							String(m) + 
+							"})";
 				codes.push(code);
 			});
 			logger.info("Found " + codes.length + " migrations for model: "+name);
