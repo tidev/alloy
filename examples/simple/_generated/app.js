@@ -30,9 +30,20 @@ $w.add($index1);
 
 	// this would be the code that was present in the controller and all variables 
 	// would be passed in that are defined in the view by the 'id' attribute
-	b.addEventListener("click",function(e){
-		alert("Click!");
-	});
+
+	function showAlert()
+	{
+	    alert("Click! Shouldn't do it again though");
+
+	    // test removing it
+	    b.off("click",showAlert);
+	}
+
+
+	/**
+	 * 'b' is a magic predefined variabale automatically generated and available in your controller
+	 */
+	b.on("click",showAlert);
 	
 })($w, $index1,$b1);
 
