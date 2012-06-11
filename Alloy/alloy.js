@@ -898,6 +898,22 @@ function generateView(home,args)
 	logger.info('Generate view and styles named '+name);
 }
 
+function pad(x)
+{
+	if (x < 10)
+	{
+		return '0' + x;
+	}
+	return x;
+}
+
+function generateMigrationFileName(t)
+{
+	var d = new Date;
+	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
+	return s + '_' + t + '.js';
+}
+
 function generateModel(home,args)
 {
 	if (args.length == 0)
@@ -906,6 +922,9 @@ function generateModel(home,args)
 	}
 	var name = args[0],
 		a = args.slice(1);
+
+	var migrationsDir = path.join(home,'migrations');
+	ensureDir(migrationsDir);
 		
 	if (a.length == 0)
 	{
@@ -934,13 +953,59 @@ function generateModel(home,args)
 	final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
 
 	fs.writeFileSync(mn,final_code);
+	
+	var mf = path.join( migrationsDir, generateMigrationFileName(name) );
+	
+	var mc = final_code.split("\n");
+	
+	var md = "" +
+	'migration.up = function(db)\n'+
+	'{\n'+
+	'   db.createTable("' + name + '",\n';
+	
+	_.each(mc,function(l){
+		md+='      '+l+'\n';
+	});
+	
+	md+=''+
+	'   );\n' +
+	'};\n'+
+	'\n'+
+	'migration.down = function(db)\n'+
+	'{\n'+
+	'   db.dropTable("' + name + '");\n'+
+	'};\n'+
+	'\n';
+
+	fs.writeFileSync(mf,md);
 
 	logger.info('Generate model named '+name);
 }
 
 function generateMigration(home,args)
 {
+	if (args.length == 0)
+	{
+		die("generate migration requires a NAME as third argument");
+	}
 	
+	var name = args[0];
+	var migrationsDir = path.join(home,'migrations');
+	ensureDir(migrationsDir);
+	
+	var mf = path.join( migrationsDir, generateMigrationFileName(name) );
+
+	var md = "" +
+	'migration.up = function(db)\n'+
+	'{\n'+
+	'};\n'+
+	'\n'+
+	'migration.down = function(db)\n'+
+	'{\n'+
+	'};\n'+
+	'\n';
+
+	fs.writeFileSync(mf,md);
 }
 
 function generate(args)
