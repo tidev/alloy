@@ -264,7 +264,7 @@ In your app controller, you would then be able to access them referencing the wi
 
 For example, in your `widget.js`:
 
-	exports.calculatePie () 
+	exports.calculatePie = function() 
 	{ 
 		return 3.14; 
 	}
