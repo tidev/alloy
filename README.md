@@ -215,6 +215,23 @@ A few notes on the code generation and style merging:
 - classes will be merged in order
 - the order of precedence is: Object Type, Classes, ID
 
+Titanium Namespacing
+--------------------
+
+By default, all UI components specified in your markup will be prefixed with the `Ti.UI` namespace for convenince. 
+
+```xml
+<Button id="mybutton">button title</Button>
+```
+
+The above snippet would create a `Ti.UI.Button`. If you want to add a UI component to your markup hierarchy that is _not_ part of the `Ti.UI` namespace, you can use the `ns` attribute.
+
+```xml
+<View ns="Ti.Map" id="map"/>
+```
+
+The above snippet would use `Ti.Map` as its namespace prefix, instead of the default `Ti.UI`, which would then give you a `Ti.Map.View` in your app.
+
 De-composing complex Views
 --------------------------
 

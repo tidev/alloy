@@ -501,7 +501,7 @@ function compile(args)
 
 		ids[id]=viewFile;
 
-		var ns = "Ti.UI";
+		var ns = node.getAttribute('ns') || "Ti.UI";
 		var fn = "create" + nodename;
 		
 		
