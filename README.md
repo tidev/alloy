@@ -172,7 +172,7 @@ For example:
 		
 		"#b" : {
 			"width": Ti.UI.FILL,
-			borderColor:null
+			"borderColor":null
 		}
 	}
 	

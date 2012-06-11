@@ -38,7 +38,7 @@ $middle1.add($label1);
 var $button1 = Ti.UI.createButton({
 	width: Ti.UI.FIT,
 	height: Ti.UI.FIT,
-	text : "Click me",
+	title : "Click me",
 	id: "#b"
 });
 

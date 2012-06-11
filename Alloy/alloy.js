@@ -9,6 +9,7 @@ var fs = require('fs'),
 	logger = require("./common/logger"),
 	wrench = require("wrench"),
 	colors = require("colors"),
+	_ = require("./lib/alloy/underscore")._,
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
@@ -49,22 +50,17 @@ var outputPath,
 
 	JS = 
 		 "var Alloy = require('alloy'),\n" + 
-		 "        $ = Alloy.$,\n" +
-		 "        _ = Alloy._;\n" +
-		 "\n",
+		 "        _ = Alloy._,\n" +
+		 "        A$ = Alloy.A\n" +
+		 ";\n",
 	
 	JS_EPILOG = "$w.finishLayout();\n$w.open();\n",
 	id = 1,
 	ids = {};
 	
-function generateId()
-{
-	return id++;
-}
-
 function generateVarName()
 {
-	return '$'+generateId();
+	return _.uniqueId('$');
 }
 
 function die(msg, printUsage) 
@@ -497,21 +493,35 @@ function compile(args)
 
 		var ns = "Ti.UI";
 		var fn = "create" + nodename;
-
-		// special TEXT processing for label
-		if (nodename == 'Label' && node.childNodes.length > 0)
+		
+		
+		if (node.childNodes.length > 0)
 		{
-			var str = getNodeText(node);
-			if (!state.styles['#'+id])
+			var processors = 
+			[
+				['Label','text'],
+				['Button','title']
+			];
+			_.every(processors, function(el)
 			{
-				state.styles['#'+id]={};
-			}
-			state.styles['#'+id]['text']=str;
+				if (nodename == el[0])
+				{
+					var k = el[1];
+					var str = getNodeText(node);
+					if (!state.styles['#'+id])
+					{
+						state.styles['#'+id]={};
+					}
+					state.styles['#'+id][k]=str;
+					return false;
+				} 
+				return true;
+			});
 		}
 
-		appendSource("var " + symbol + " = " + ns + "." + fn + "({");
+		appendSource("var " + symbol + " = A$(" + ns + "." + fn + "({");
 		appendSource(generateStyleParams(state.styles,classes,id,node.nodeName));
-		appendSource("});");
+		appendSource("}),'" + node.nodeName + "', " + state.parentNode + ");");
 		appendSource(state.parentNode+".add("+symbol+");");
 
 		var childstate = {
