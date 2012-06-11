@@ -51,7 +51,9 @@ var outputPath,
 	JS = 
 		 "var Alloy = require('alloy'),\n" + 
 		 "        _ = Alloy._,\n" +
-		 "        A$ = Alloy.A\n" +
+		 "        A$ = Alloy.A,\n" +
+		 "        M$ = Alloy.M,\n" +
+		 "  Backbone = Alloy.Backbone\n" +
 		 ";\n",
 	
 	JS_EPILOG = "$w.finishLayout();\n$w.open();\n",
@@ -194,6 +196,8 @@ function compile(args)
 	var stylesDir = path.join(inputPath,'styles');
 	var controllersDir = path.join(inputPath,'controllers');
 	var widgetsDir = path.join(inputPath,'widgets');
+	var modelsDir = path.join(inputPath,'models');
+	var migrationsDir = path.join(inputPath,'migrations');
 
 	var indexView = path.join(viewsDir,"index.xml");
 	if (!path.existsSync(indexView))
@@ -527,7 +531,8 @@ function compile(args)
 		var childstate = {
 			parentNode: symbol,
 			parameters: state.parameters,
-			styles: state.styles
+			styles: state.styles,
+			models:state.models
 		};
 
 		if (id && state.parentNode!=symbol) state.parameters.push([symbol,id]);
@@ -536,6 +541,88 @@ function compile(args)
 		{
 			var child = node.childNodes[c];
 			generateNode(true,viewFile,child,childstate);
+		}
+	}
+	
+	function findModelMigrations(state,name)
+	{
+		try
+		{
+			var files = fs.readdirSync(migrationsDir);
+			var part = '_'+name+'.js';
+			// look for our model
+			files = _.reject(files,function(f) { return f.indexOf(part)!=-1});
+			// sort them in the oldest order first
+			files = files.sort(function(a,b){
+				var x = a.substring(0,a.length - part.length -1);
+				var y = b.substring(0,b.length - part.length -1);
+				if (x<y) return -1;
+				if (x>y) return 1;
+				return 0;
+			});
+			var codes = [];
+			_.each(files,function(f)
+			{
+				var mf = path.join(migrationsDir,f);
+				var m = fs.readFileSync(mf);
+				var code = "(function(migration){\n migration.id = '" + f.substring(0,f.length-part.length-1) + "';\n" + String(m) + "})";
+				codes.push(code);
+			});
+			logger.info("Found " + codes.length + " migrations for model: "+name);
+			return codes;
+		}
+		catch(E)
+		{
+			return [];
+		}
+	}
+	
+	function findAndLoadModels(state)
+	{
+		var f = modelsDir;
+		var files = fs.readdirSync(f);
+		for (var c=0;c<files.length;c++)
+		{
+			var file = files[c];
+			if (file.indexOf(".json")>0)
+			{
+				var fpath = path.join(f,file);
+				var part = file.substring(0,file.length-5);
+				var modelJs = path.join(f,part+'.js');
+
+				var jm = fs.readFileSync(fpath);
+				var js = "";
+				try
+				{
+					var stats = fs.lstatSync(modelJs);
+					if (stats.isFile())
+					{
+						js = fs.readFileSync(modelJs);
+					}
+				}
+				catch(E) { }
+				
+				var migrations = findModelMigrations(state,part);
+				
+				var symbol1 =  generateVarName();
+				var symbol2 =  generateVarName();
+				var codegen = "var " + symbol1 + " = M$('"+ part +"',\n" +
+								jm + "\n" +
+							  ", function("+part+"){\n" +
+								js + "\n" +
+							"},\n" + 
+							 "[ " + migrations.join("\n,") + " ]\n" +  
+							");\n";
+
+				codegen+="var " + symbol2 + " = Backbone.Collection.extend({model:" + symbol1 + "});\n";
+				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
+				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
+				appendSource(codegen);			
+				// create the single model 
+				state.parameters.push([symbol1,part]);
+				// create the plural collection
+				state.parameters.push([symbol2,part+'s']);
+			}
 		}
 	}
 
@@ -587,6 +674,8 @@ function compile(args)
 				appendSource("\n// defer rendering");
 				appendSource("$w.startLayout();\n");
 			}
+			
+			findAndLoadModels(state);
 		}
 
 		generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
@@ -597,7 +686,8 @@ function compile(args)
 
 	var state = {
 		parentNode:"$w",
-		parameters:[["$w","window"]]
+		parameters:[["$w","window"]],
+		models:[]
 	};
 
 	parseView('index',state);
