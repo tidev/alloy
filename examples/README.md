@@ -16,6 +16,7 @@ Examples
 - *Simple Model*: an example of a model based system that includes migrations
 - *Multiplatform*: an example of building a multi screen app
 - *Modules*: an example that shows an app built module and a vendor module. This also demonstrates the selector engine.
+- *Namespaces*: Shows you how you can use UI components outside of the `Ti.UI` namespace in your markup view hierarchy.
 
 
 Issues to be resolved
