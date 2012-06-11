@@ -228,6 +228,35 @@ Alloy allows you to decompose a View into multiple subviews.  You would use the 
 
 In the above example, you should have 3 other view files named `first.xml`, `second.xml` and `third.xml`.  Of course, these subviews could also import their own subviews, too.
 
+Working with Models & Collections
+-----------------------------------
+
+For models, we specify the schema of our model using JSON as the name of the model ending with `.json`.
+
+You should generate a model using the `alloy generate model` command so that you can get automatic migration support.
+
+All model classes are automatically defined and available in your controller scope as the name of the model.
+
+For example, if you defined a model named `todo`, it would be available as the same variable name.
+
+To create a new model object:
+
+	var todo = new Todo({
+		name:"hello",
+		done:false
+	});
+	
+	todo.save();
+
+Models inherit from Backbone.Model. _NOTE: if the first character of a model is lower case, it will be automatically converted to uppercase for referencing the Model class._
+
+Collections of your models are automatically also created with the plural name of your model class. For example, if you defined a model named `todo`, you could automatically create a collection of models by using the following code:
+
+	var list = new TodoCollection();
+	var results = list.find();
+
+Collections inherit from Backbone.Collections.
+	
 
 Building Application Logic
 --------------------------

@@ -619,9 +619,9 @@ function compile(args)
 				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
 				appendSource(codegen);			
 				// create the single model 
-				state.parameters.push([symbol1,part]);
-				// create the plural collection
-				state.parameters.push([symbol2,part+'s']);
+				state.parameters.push([symbol1,properCase(part)]);
+				// create the collection
+				state.parameters.push([symbol2,properCase(part)+'Collection']);
 			}
 		}
 	}
