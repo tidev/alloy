@@ -120,8 +120,12 @@ function SQLSync(model)
 			var o = {};
 			_.times(rs.fieldCount(),function(c){
 				var fn = rs.fieldName(c);
-				var rv = rs.field(c);
-				o[fn]=rv;
+				if (fn!='rowid')
+				{
+					// don't place rowid in the model
+					var rv = rs.field(c);
+					o[fn]=rv;
+				}
 			});
 			o.id = rs.fieldByName('rowid');
 			var m = new self.model.model(o);
