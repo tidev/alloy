@@ -3,7 +3,7 @@
 table.setData([
 	{"title":"Alcatraz", "image":"smallpic1.jpg"},
 	{"title":"American Flag", "image":"smallpic2.jpg"},
-	{"title":"Row 3", "Penitentiary Sign":"smallpic3.jpg"}
+	{"title":"Penitentiary Sign", "image":"smallpic3.jpg"}
 ]);
 
 

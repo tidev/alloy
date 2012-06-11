@@ -26,7 +26,7 @@ var $image1 = Ti.UI.createImageView({
 	id: "#image"
 });
 
-var $w = Ti.UI.iPad..createSplitWindow({
+var $w = Ti.UI.iPad.createSplitWindow({
 	masterView: $master1,
 	detailView: $detail1,
 	id:"#window"
