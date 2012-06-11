@@ -325,5 +325,5 @@ Legal
 ------
 
 Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
-Alloy is made available under the Apache Public License, version 2.  See the [LICENSE](LICENSE) file for more information.
+Alloy is made available under the Apache Public License, version 2.  See the [LICENSE](https://github.com/appcelerator/alloy/blob/master/LICENSE) file for more information.
 
