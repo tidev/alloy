@@ -878,7 +878,7 @@ function generateView(home,args)
 	{
 		die("File already exists: "+vn);
 	}
-	var sn = path.join(home,'styles',name+'.xml');
+	var sn = path.join(home,'styles',name+'.json');
 	if (path.existsSync(sn) && !program.force)
 	{
 		die("File already exists: "+sn);
@@ -893,7 +893,7 @@ function generateView(home,args)
 				 '   ".container":\n' +
 				 '   {\n' +
 				 '       "backgroundColor":"white"\n'+
-				 '   },\n'
+				 '   },\n' +
 		       "}\n";
 
 	fs.writeFileSync(vn,XML);
