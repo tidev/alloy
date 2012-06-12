@@ -60,8 +60,33 @@ var outputPath,
 		 ";\n",
 	
 	JS_EPILOG = "$.w.finishLayout();\n$.w.open();\n",
-	ids = {};
+	ids = {},
+	compilerMakeFile;
 	
+function CompilerMakeFile()
+{
+	var handlers = {};
+	
+	this.task = function(event, fn)
+	{
+		logger.debug('adding task: '+event.yellow);
+		handlers[event] = fn;
+	};
+	
+	this.trigger = function(event, config)
+	{
+		logger.debug("compile:trigger-> "+event.yellow);
+		var fn = handlers[event];
+		if (fn)
+		{
+			return fn(config,logger);
+		}
+		return null;
+	};
+	
+	return this;
+}	
+
 function generateVarName(id)
 {
 	return '$.'+id;
@@ -179,7 +204,7 @@ function banner()
 	if (!program.dump)
 	{
 		console.log(logger.stripColors ? str : str.blue);
-		var m = "Alloy by Appcelerator".yellow+"\n";
+		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
 		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
 }
@@ -210,8 +235,7 @@ function compile(args)
 	{
 		var c = fs.readFileSync(alloyCF);
 		alloyConfig = JSON.parse(c);
-		logger.info("found alloy configuration at "+alloyCF);
-		logger.info(JSON.stringify(alloyConfig));
+		logger.info("found alloy configuration at "+alloyCF.yellow);
 	}
 
 	var viewsDir = path.join(inputPath,'views');
@@ -233,7 +257,45 @@ function compile(args)
 	var resourcesDir = path.join(outputPath,"Resources");
 	ensureDir(resourcesDir);
 
+	var assetsDir = path.join(inputPath,'assets');
+
 	logger.info("Generating to "+resourcesDir.yellow+" from ".cyan + inputPath.yellow);
+
+	// setup the compiler makefile
+	compilerMakeFile = new CompilerMakeFile();
+	var compileConfig = 
+	{
+		alloyConfig: alloyConfig,
+		home: inputPath,
+		outdir : outputPath,
+		viewsDir: viewsDir,
+		controllersDir: controllersDir,
+		widgetsDir: widgetsDir,
+		modelsDir: modelsDir,
+		migrationsDir: migrationsDir,
+		resourcesDir: resourcesDir,
+		assetsDir: assetsDir
+	};
+	
+	var alloyJMK = path.resolve(path.normalize(path.join(inputPath,"alloy.jmk")));
+	if (path.existsSync(alloyJMK))
+	{
+		logger.info("Found project specific makefile at " + "app/alloy.jmk".yellow);
+		var vm = require('vm'),
+			util = require('util');
+		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
+		try
+		{
+			script.runInNewContext(compilerMakeFile);
+		}
+		catch(E)
+		{
+			logger.error("project build at "+alloyJMK + " generated an error during load: "+E);
+		}
+	}
+	
+	// trigger our custom compiler makefile
+	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
 	function generateSourceCode()
 	{
@@ -253,9 +315,16 @@ function compile(args)
 		var final_code = pro.gen_code(ast,{beautify:beautify}); 
 		
 		final_code = JS_COPYRIGHT + final_code;
+
+		// trigger our custom compiler makefile
+		var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":final_code, "appJSFile" : path.resolve(appJS)}));
+		if (njs)
+		{
+			final_code = njs;
+		}
 		
 		fs.writeFileSync(appJS,final_code);
-		logger.info("compiling alloy to " + appJS);
+		logger.info("compiling alloy to " + appJS.yellow);
 
 		if (program.dump) console.log(final_code.blue);
 	}
@@ -269,7 +338,7 @@ function compile(args)
 			var fpath = path.join(f,file);
 			var stats = fs.lstatSync(fpath);
 			var rd = path.join(d,file);
-			logger.info('Copying ' + fpath + ' to ' + d);
+			logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
 			if (stats.isDirectory())
 			{
 				ensureDir(rd);
@@ -284,11 +353,10 @@ function compile(args)
 
 	function copyAssets()
 	{
-		var assets = path.join(inputPath,'assets');
-		if (path.existsSync(assets))
+		if (path.existsSync(assetsDir))
 		{
-			logger.info('Copying assets from: '+assets);
-			copyFilesAndDirs(assets,resourcesDir);
+			logger.info('Copying assets from: '+assetsDir.yellow);
+			copyFilesAndDirs(assetsDir,resourcesDir);
 		}
 	}
 
@@ -297,13 +365,13 @@ function compile(args)
 		var lib = path.join(inputPath,'lib');
 		if (path.existsSync(lib))
 		{
-			logger.info('Copying app libs: '+lib);
+			logger.info('Copying app libs: '+lib.yellow);
 			copyFilesAndDirs(lib,resourcesDir);
 		}
 		var vendor = path.join(inputPath,'vendor');
 		if (path.existsSync(vendor))
 		{
-			logger.info('Copying vendor libs: '+vendor);
+			logger.info('Copying vendor libs: '+vendor.yellow);
 			copyFilesAndDirs(vendor,path.join(resourcesDir,'vendor'));
 		}
 	}
@@ -572,7 +640,7 @@ function compile(args)
 							"})";
 				codes.push(code);
 			});
-			logger.info("Found " + codes.length + " migrations for model: "+name);
+			logger.info("Found " + codes.length + " migrations for model: "+name.yellow);
 			return codes;
 		}
 		catch(E)
@@ -700,6 +768,9 @@ function compile(args)
 	copyLibs();
 	copyAlloy();
 	generateSourceCode();
+
+	// trigger our custom compiler makefile
+	compilerMakeFile.trigger("post:compile",_.extend(_.clone(compileConfig), {state:state}));
 }
 
 function createPlugin(rootDir)
@@ -837,6 +908,16 @@ function newproject(args)
 		}
 	};
 	fs.writeFileSync(path.join(outputPath,'alloy.json'),stringifyJSON(defaultConfig));
+	
+	var cmk = "\n"+
+		'task("pre:compile",function(event,logger){\n'+
+		'});\n'+
+		'\n'+
+		'task("post:compile",function(event,logger){\n'+
+		'});\n'+
+		'\n';
+	fs.writeFileSync(path.join(outputPath,'alloy.jmk'),cmk);
+		
 	
 	installPlugin(args[0]);
 	

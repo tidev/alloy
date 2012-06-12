@@ -388,6 +388,24 @@ See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examp
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
 
+Per Project Compiler
+---------------------
+
+Alloy provides an ability for the project to hook and customize the compile process using a special JS file in the project root directory named `alloy.jmk`.  This file can be used for common administration tasks or to fine tune the build process.  
+
+The JMK file is loaded automatically by the Alloy command line during compilation.  To customize the build process, you call the `task` function with the event name and provide a function callback which will be called when the event is triggered by the compiler.
+
+Currently, there are 3 main compiler tasks:
+
+- *pre:compile* - called before the compiler gets started
+- *post:compile* - called after the compiler is complete, but before it exits
+- *compile:app.js* - called just after the compilation of the main app.js file but before the code is written to disk. you can return new code which will be used or `null` or `undefined` to write the code unchanged.
+
+The function callback provides two arguments: `event` and `logger`.
+
+The `event` object provides a set of values which may be useful for building tasks. 
+The `logger` object provides a reference to the logger which defins the following methods: `debug`, `info`, `warn`, `error`.
+
 
 Alloy compiler configuration
 -----------------------------
