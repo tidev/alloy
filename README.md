@@ -127,22 +127,24 @@ In Alloy, any view styles will automatically be loaded from a file with the same
 
 You define a style in the JSON like this:
 
-	{
-		"#a" : {
-			"backgroundColor" : "red",
-			"width": Ti.UI.FILL,
-			"height": "100"
-		},
-		"#b" : {
-			"width":Ti.UI.FIT,
-			"height":Ti.UI.FIT
-		},
-		"#t" : {
-			"width":Ti.UI.FILL,
-			"height":Ti.UI.FIT,
-			"color":"black"
-		}
+```json
+{
+	"#a" : {
+		"backgroundColor" : "red",
+		"width": Ti.UI.FILL,
+		"height": "100"
+	},
+	"#b" : {
+		"width":Ti.UI.FIT,
+		"height":Ti.UI.FIT
+	},
+	"#t" : {
+		"width":Ti.UI.FILL,
+		"height":Ti.UI.FIT,
+		"color":"black"
 	}
+}
+```
 	
 And then you would define the view such as:
 
