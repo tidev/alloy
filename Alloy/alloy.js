@@ -51,18 +51,21 @@ var outputPath,
 	JS = 
 		 "var Alloy = require('alloy'),\n" + 
 		 "        _ = Alloy._,\n" +
-		 "        A$ = Alloy.A,\n" +
-		 "        M$ = Alloy.M,\n" +
-		 "  Backbone = Alloy.Backbone\n" +
+		 "       A$ = Alloy.A,\n" +
+		 "       M$ = Alloy.M,\n" +
+		 "      BC$ = Alloy.Backbone.Collection,\n" +
+		 "     TFL$ = Ti.UI.FILL,\n" +
+		 "     TFT$ = Ti.UI.FIT,\n" +
+		 "        $ = {}\n" +
 		 ";\n",
 	
-	JS_EPILOG = "$w.finishLayout();\n$w.open();\n",
-	id = 1,
+	JS_EPILOG = "$.w.finishLayout();\n$.w.open();\n",
 	ids = {};
 	
-function generateVarName()
+function generateVarName(id)
 {
-	return _.uniqueId('$');
+//	return '$.'+_.uniqueId('v');
+	return '$.'+id;
 }
 
 function die(msg, printUsage) 
@@ -82,6 +85,14 @@ function ensureDir(p)
 		logger.debug("Creating directory: "+p);
 		fs.mkdirSync(p);
 	}
+}
+
+function stringifyJSON(j)
+{
+	var ast = jsp.parse("("+JSON.stringify(j)+")");
+	ast = pro.ast_mangle(ast);
+	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
+	return final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
 }
 
 function getNodeText(node)
@@ -193,6 +204,16 @@ function compile(args)
 	}
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(resolveAppHome(),".."));
 	ensureDir(outputPath);
+	
+	var alloyConfig = {};
+	var alloyCF = path.join(inputPath,'alloy.json');
+	if (path.existsSync(alloyCF))
+	{
+		var c = fs.readFileSync(alloyCF);
+		alloyConfig = JSON.parse(c);
+		logger.info("found alloy configuration at "+alloyCF);
+		logger.info(JSON.stringify(alloyConfig));
+	}
 
 	var viewsDir = path.join(inputPath,'views');
 	if (!path.existsSync(viewsDir))
@@ -225,10 +246,12 @@ function compile(args)
 			OS_IPAD:false
 		};
 
+		var beautify = alloyConfig.compiler ? alloyConfig.compiler.beautify : false;
+
 		var ast = jsp.parse(code); // parse code and get the initial AST
 		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
 		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-		var final_code = pro.gen_code(ast); 
+		var final_code = pro.gen_code(ast,{beautify:beautify}); 
 		
 		final_code = JS_COPYRIGHT + final_code;
 		
@@ -241,7 +264,6 @@ function compile(args)
 	function copyFilesAndDirs(f,d)
 	{
 		var files = fs.readdirSync(f);
-//		logger.info('files returned for '+f+' is '+JSON.stringify(files));
 		for (var c=0;c<files.length;c++)
 		{
 			var file = files[c];
@@ -333,42 +355,24 @@ function compile(args)
 		mergeStyles(styles['#'+id],s);
 		if (id) s['id'] = id;
 		var str = [];
+		
+		var constants = {
+			'TI_UI_FILL':'TFL$',
+			'TI_UI_FIT':'TFT$',
+			'TI_UI_TEXT_ALIGNMENT_LEFT':'Ti.UI.TEXT_ALIGNMENT_LEFT',
+			'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
+			'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'
+		};
+		
 		for (var sn in s)
 		{
 			var v = s[sn];
 			var q = typeof(v) === 'string';
-			switch(v)
+			var cf = constants[v];
+			if (cf)
 			{
-				case 'TI_UI_FILL':
-				{
-					v = "Ti.UI.FILL";
-					q = false;
-					break;
-				}
-				case 'TI_UI_FIT':
-				{
-					v = "Ti.UI.FIT";
-					q = false;
-					break;
-				}
-				case 'TI_UI_TEXT_ALIGNMENT_LEFT':
-				{
-					v = "Ti.UI.TEXT_ALIGNMENT_LEFT";
-					q = false;
-					break;
-				}
-				case 'TI_UI_TEXT_ALIGNMENT_CENTER':
-				{
-					v = "Ti.UI.TEXT_ALIGNMENT_CENTER";
-					q = false;
-					break;
-				}
-				case 'TI_UI_TEXT_ALIGNMENT_RIGHT':
-				{
-					v = "Ti.UI.TEXT_ALIGNMENT_RIGHT";
-					q = false;
-					break;
-				}
+				v = cf;
+				q = false;
 			}
 			if (q)
 			{
@@ -386,37 +390,40 @@ function compile(args)
 	{
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
 		var p = path.join(cd,name+'.js');
+		var symbol = generateVarName(id);
 //		logger.info('controller: '+p);
 		if (path.existsSync(p))
 		{
 			var js = fs.readFileSync(p);
-			var arg1 = [];
-			var arg2 = [];
-			for (var c=0;c<parameters.length;c++)
-			{
-				arg1.push(parameters[c][0]);
-				arg2.push(parameters[c][1]);
-			}
+			// var arg1 = [];
+			// var arg2 = [];
+			// for (var c=0;c<parameters.length;c++)
+			// {
+			// 	arg1.push(parameters[c][0]);
+			// 	arg2.push(parameters[c][1]);
+			// }
 
 			if (name == 'widget')
 			{
-				var symbol = generateVarName();
-				var src = "var " + symbol + " = (function(exports," + arg2.join(",") + "){\n" + 
+				var src = symbol + " = (function(exports," + arg2.join(",") + "){\n" + 
 						   js + "\n" +
 						  "  return exports;\n" + 
-				          "})({}," + arg1.join(",") + ");\n";
+//				          "})({}," + arg1.join(",") + ");\n";
+				          "})({});\n";
 
 				var comment = "/**\n" + 
 				              " * @widget " + name + "\n" +
 				              " */";
 
-				state.parameters.push([symbol,id]);
+				state.globals.push(symbol);
 			}
 			else
 			{
-				var src = "(function(" + arg2.join(",") + "){\n" + 
+				var src = "(function(exports){\n" + 
+//				var src = "(function(" + arg2.join(",") + "){\n" + 
 						   js + "\n" +
-				          "})(" + arg1.join(",") + ");\n";
+//				          "})(" + arg1.join(",") + ");\n";
+				          "})(" + symbol + ");\n";
 
 				var comment = "/**\n" + 
 				              " * @controller " + name + "\n" +
@@ -454,7 +461,7 @@ function compile(args)
 		if (node.nodeType != 1) return;
 
 		var id = node.getAttribute('id') || defId;
-		var symbol = generateVarName();
+		var symbol = generateVarName(id);
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
 
@@ -529,19 +536,19 @@ function compile(args)
 			});
 		}
 
-		appendSource("var " + symbol + " = A$(" + ns + "." + fn + "({");
+		appendSource(symbol + " = A$(" + ns + "." + fn + "({");
 		appendSource(generateStyleParams(state.styles,classes,id,node.nodeName));
 		appendSource("}),'" + node.nodeName + "', " + state.parentNode + ");");
 		appendSource(state.parentNode+".add("+symbol+");");
 
 		var childstate = {
 			parentNode: symbol,
-			parameters: state.parameters,
+			globals: state.globals,
 			styles: state.styles,
 			models:state.models
 		};
 
-		if (id && state.parentNode!=symbol) state.parameters.push([symbol,id]);
+		if (id && state.parentNode!=symbol) state.globals.push(symbol);
 
 		for (var c=0;c<node.childNodes.length;c++)
 		{
@@ -573,7 +580,7 @@ function compile(args)
 				var m = fs.readFileSync(mf);
 				var code = "(function(migration){\n "+
 				           "migration.name = '" + name + "';\n" + 
-						   "migration.id = '" + f.substring(0,f.length-part.length-1) + "';\n" + 
+						   "migration.id = '" + f.substring(0,f.length-part.length).replace(/_/g,'') + "';\n" + 
 							String(m) + 
 							"})";
 				codes.push(code);
@@ -614,9 +621,10 @@ function compile(args)
 				
 				var migrations = findModelMigrations(state,part);
 				
-				var symbol1 =  generateVarName();
-				var symbol2 =  generateVarName();
-				var codegen = "var " + symbol1 + " = M$('"+ part +"',\n" +
+				var theid = properCase(part), theidc = properCase(part)+'Collection';
+				var symbol1 =  generateVarName(theid);
+				var symbol2 =  generateVarName(theidc);
+				var codegen = symbol1 + " = M$('"+ part +"',\n" +
 								jm + "\n" +
 							  ", function("+part+"){\n" +
 								js + "\n" +
@@ -624,14 +632,14 @@ function compile(args)
 							 "[ " + migrations.join("\n,") + " ]\n" +  
 							");\n";
 
-				codegen+="var " + symbol2 + " = Backbone.Collection.extend({model:" + symbol1 + "});\n";
+				codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
 				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
 				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
 				appendSource(codegen);			
 				// create the single model 
-				state.parameters.push([symbol1,properCase(part)]);
+				state.globals.push(symbol1);
 				// create the collection
-				state.parameters.push([symbol2,properCase(part)+'Collection']);
+				state.globals.push(symbol2);
 			}
 		}
 	}
@@ -662,7 +670,7 @@ function compile(args)
 
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
-		var parameters = state.parameters;
+		var parameters = state.globals;
 		var parentNode = state.parentNode;
 
 		if (viewName=='index')
@@ -670,19 +678,19 @@ function compile(args)
 			if (doc.documentElement.nodeName == 'SplitWindow')
 			{
 				//TODO -- this is not right yet - we need to populate masterView, detailView
-				var src = "var $w = Ti.UI.iOS.createSplitWindow({\n" + 
+				var src = "$.w = Ti.UI.iOS.createSplitWindow({\n" + 
 						  "   masterView: ,\n" + 
 						  "   detailView: ,\n" + 
 						  "   id: '" + "'\n" + 
 						  "});\n" + 
-						  "$w.startLayout();\n";
+						  "$.w.startLayout();\n";
 				JS_EPILOG = src + JS_EPILOG;
 			}
 			else
 			{
-				appendSource("var $w = Ti.UI.createWindow();");
+				appendSource("$.w = Ti.UI.createWindow();");
 				appendSource("\n// defer rendering");
-				appendSource("$w.startLayout();\n");
+				appendSource("$.w.startLayout();\n");
 			}
 			
 			findAndLoadModels(state);
@@ -695,8 +703,8 @@ function compile(args)
 	}
 
 	var state = {
-		parentNode:"$w",
-		parameters:[["$w","window"]],
+		parentNode:"$.w",
+		globals:[["$.w","window"]],
 		models:[]
 	};
 
@@ -827,13 +835,21 @@ function newproject(args)
 		             '       "height": Ti.UI.FIT\n'+ 
 		             '    }\n' + 
 		             "}\n",
-		INDEX_C    = "t.addEventListener('click',function(){\n" + 
-					 "   alert(t.text);\n" +
+		INDEX_C    = "$.t.on('click',function(e){\n" + 
+					 "   alert($.t.text);\n" +
 					 "});\n";
 	
 	fs.writeFileSync(path.join(outputPath,'views','index.xml'),INDEX_XML);
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
+
+	var defaultConfig = 
+	{
+		compiler: {
+			beautify:false
+		}
+	};
+	fs.writeFileSync(path.join(outputPath,'alloy.json'),stringifyJSON(defaultConfig));
 	
 	installPlugin(args[0]);
 	
@@ -954,15 +970,8 @@ function generateModel(home,args)
 		die("File already exists: "+mn);
 	}
 	
-	//TODO: automatically generate migration file
-
-	var ast = jsp.parse("("+JSON.stringify(J)+")"); // parse code and get the initial AST
-	ast = pro.ast_mangle(ast); // get a new AST with mangled names
-	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
-	final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
-
-	fs.writeFileSync(mn,final_code);
+	var code = stringifyJSON(J);
+	fs.writeFileSync(mn,code);
 	
 	var mf = path.join( migrationsDir, generateMigrationFileName(name) );
 	

@@ -160,13 +160,13 @@ Note, you can use `Titanium.UI` constants in your JSON file.
 In your controller, you can reference the view such as:
 
 ```javascript
-a.backgroundColor = "blue";
-b.addEventListener("click",function(e){
-	t.text = "You clicked a button";
+$.a.backgroundColor = "blue";
+$.b.addEventListener("click",function(e){
+	$.t.text = "You clicked a button";
 });
 ```
 
-All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
+All objects which have an `id` in your view will automatically be defined and available as a property in the special variable `$` in your controller.  For example, if you use the id `foo`, your object would be available as `$.foo`.
 
 View Styling
 -----------
@@ -268,12 +268,12 @@ You should generate a model using the `alloy generate model` command so that you
 
 All model classes are automatically defined and available in your controller scope as the name of the model.
 
-For example, if you defined a model named `todo`, it would be available as the same variable name.
+For example, if you defined a model named `todo`, it would be available as the same variable name under the `$.` object.
 
 To create a new model object:
 
 ```javascript
-var todo = new Todo({
+var todo = new $.Todo({
 	name:"hello",
 	done:false
 });
@@ -286,7 +286,7 @@ Models inherit from Backbone.Model. _NOTE: if the first character of a model is 
 Collections of your models are automatically also created with the plural name of your model class. For example, if you defined a model named `todo`, you could automatically create a collection of models by using the following code:
 
 ```javascript
-var list = new TodoCollection();
+var list = new $.TodoCollection();
 var results = list.find();
 ```
 
@@ -313,7 +313,7 @@ For example, if you have a view named `index.xml` with the following:
 You would then define a controller named `index.js` and you could automatically bind events inline in your controller code:
 
 ```javascript
-b.addEventListener("click",function(){
+$.b.addEventListener("click",function(){
 	alert("You clicked the button");
 });
 ```
@@ -322,6 +322,25 @@ If you don't add an `id` attribute to an element, it will not be referencable di
 
 _NOTE: it's import that you use unique `id` attributes across all your view files.  If you don't, you will get a compiler error._
 
+Exporting Properties & Functions from Controllers
+-------------------------------------------------
+
+Sometimes it's necessary to provide properties and functions in your controller that can be used by other controllers as a well defined API.
+
+To export them, you would set the in the `exports` object which is predefined for you in your controller.
+
+```javascript
+exports.foo = function()
+{
+	return 'a';
+}
+```
+
+You would then use the name of the controller to reference this method such as:
+
+```javascript
+$.index.foo();
+```
 
 Building Re-usable Application Widgets
 ---------------------------------------
@@ -362,7 +381,7 @@ exports.calculatePie = function()
 Now, if your widget reference was `foo` as in the example above, you would access your function in your app controller such as:
 
 ```javascript
-foo.calculatePie();
+$.foo.calculatePie();
 ```
 
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
