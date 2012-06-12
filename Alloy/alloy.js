@@ -7,6 +7,7 @@ var fs = require('fs'),
 	path = require('path')
 	program = require('commander'),
 	logger = require("./common/logger"),
+	U = require('./lib/utils'),
 	wrench = require("wrench"),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
@@ -104,23 +105,6 @@ function die(msg, printUsage)
 		logger.info(program.helpInformation());
 	}
 	process.exit(1);
-}
-
-function ensureDir(p)
-{
-	if (!path.existsSync(p))
-	{
-		logger.debug("Creating directory: "+p);
-		fs.mkdirSync(p);
-	}
-}
-
-function stringifyJSON(j)
-{
-	var ast = jsp.parse("("+JSON.stringify(j)+")");
-	ast = pro.ast_mangle(ast);
-	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
-	return final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
 }
 
 function getNodeText(node)
@@ -231,7 +215,7 @@ function compile(args)
 		}
 	}
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(resolveAppHome(),".."));
-	ensureDir(outputPath);
+	U.ensureDir(outputPath);
 	
 	if (program.config)
 	{
@@ -271,7 +255,7 @@ function compile(args)
 		die("Couldn't find expected index view at '"+indexView+"'");
 	}
 	var resourcesDir = path.join(outputPath,"Resources");
-	ensureDir(resourcesDir);
+	U.ensureDir(resourcesDir);
 
 	var assetsDir = path.join(inputPath,'assets');
 
@@ -402,7 +386,7 @@ function compile(args)
 			logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
 			if (stats.isDirectory())
 			{
-				ensureDir(rd);
+				U.ensureDir(rd);
 				wrench.copyDirSyncRecursive(fpath, rd);
 			}
 			else
@@ -837,10 +821,10 @@ function compile(args)
 function createPlugin(rootDir)
 {
 	var plugins = path.join(rootDir,"plugins");
-	ensureDir(plugins);
+	U.ensureDir(plugins);
 	
 	var alloyPluginDir = path.join(plugins,"ti.alloy");
-	ensureDir(alloyPluginDir);
+	U.ensureDir(alloyPluginDir);
 	
 	var alloyPlugin = path.join(alloyPluginDir,"plugin.py");
 	var pi = path.join(__dirname,"template","plugin.py");
@@ -969,7 +953,7 @@ function newproject(args)
 			beautify:false
 		}
 	};
-	fs.writeFileSync(path.join(outputPath,'alloy.json'),stringifyJSON(defaultConfig));
+	fs.writeFileSync(path.join(outputPath,'alloy.json'),U.stringifyJSON(defaultConfig));
 
 	// write the build file
 	var cmk = "\n"+
@@ -983,7 +967,7 @@ function newproject(args)
 		
 	// write the project config file
 	var cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
-	fs.writeFileSync(path.join(outputPath,"config","config.json"), stringifyJSON(cfg));
+	fs.writeFileSync(path.join(outputPath,"config","config.json"), U.stringifyJSON(cfg));
 
 	// install the plugin
 	installPlugin(args[0]);
