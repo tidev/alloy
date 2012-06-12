@@ -14,7 +14,8 @@ var fs = require('fs'),
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify;
+	pro = require("./uglify-js/uglify-js").uglify,
+	generators = require('./lib/generators');
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
@@ -986,198 +987,30 @@ function resolveAppHome()
 	die("This directory: "+f+" does not look like an Alloy directory");
 }
 
-function generateController(home,args)
-{
-	if (args.length == 0)
-	{
-		die("generate controller requires a NAME as third argument");
-	}
-	var name = args[0];
-	
-	var cn = path.join(home,'controllers',name+'.js');
-	if (path.existsSync(cn) && !program.force)
-	{
-		die("File already exists: "+cn);
-	}
-	
-	// right now, it's empty.  we'll likely want to generate a skeleton
-	var	C    = "\n";
-	fs.writeFileSync(cn,C);
-
-	logger.info('Generate controller named '+name);
-}
-
-function generateView(home,args)
-{
-	if (args.length == 0)
-	{
-		die("generate view requires a NAME as third argument");
-	}
-	var name = args[0];
-	
-	var vn = path.join(home,'views',name+'.xml');
-	if (path.existsSync(vn) && !program.force)
-	{
-		die("File already exists: "+vn);
-	}
-	var sn = path.join(home,'styles',name+'.json');
-	if (path.existsSync(sn) && !program.force)
-	{
-		die("File already exists: "+sn);
-	}
-	
-	// right now, it's empty.  we'll likely want to generate a skeleton
-	var XML  = "<?xml version='1.0'?>\n" +
-			   "<View class='container'>\n" +
-			   '\n' +
-			   "</View>\n",
-		JSON = "{\n" +
-				 '   ".container":\n' +
-				 '   {\n' +
-				 '       "backgroundColor":"white"\n'+
-				 '   }\n' +
-		       "}\n";
-
-	fs.writeFileSync(vn,XML);
-	fs.writeFileSync(sn,JSON);
-
-	logger.info('Generate view and styles named '+name);
-}
-
-function pad(x)
-{
-	if (x < 10)
-	{
-		return '0' + x;
-	}
-	return x;
-}
-
-function generateMigrationFileName(t)
-{
-	var d = new Date;
-	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
-	return s + '_' + t + '.js';
-}
-
-function generateModel(home,args)
+function generate(args)
 {
 	if (args.length === 0) {
 		die("generate requires a TYPE such as 'controller' as second argument");
 	} else if (args.length === 1) {
 		die("generate requires a NAME such as third argument");
 	}
-		a = args.slice(1);
 
-	var migrationsDir = path.join(home,'migrations');
-	ensureDir(migrationsDir);
-		
-	if (a.length == 0)
+	var targets = ['controller', 'view', 'model', 'migration', 'widget'];	
+	var target = args[0];	
+	var name = args[1];
+
+	if (!_.contains(targets, target)) 
 	{
-		die("missing model columns as fourth argument and beyond");
+		die(
+			'Invalid generate target "' + target + '"\n' + 
+			'Must be one of the following: [' + targets.join(',') + ']'
+		);
 	}
-	
-	var J = {"columns":{},"defaults":{},"adapter":{"type":"sql","tablename":name}};
-	for (var c=0;c<a.length;c++)
-	{
-		var X = a[c].split(":");
-		J.columns[X[0]] = X[1];
-	}
-	
-	var mn = path.join(home,'models',name+'.json');
-	if (path.existsSync(mn) && !program.force)
-	{
-		die("File already exists: "+mn);
-	}
-	
-	var code = stringifyJSON(J);
-	fs.writeFileSync(mn,code);
-	
-	var mf = path.join( migrationsDir, generateMigrationFileName(name) );
-	
-	var mc = final_code.split("\n");
-	
-	var md = "" +
-	'migration.up = function(db)\n'+
-	'{\n'+
-	'   db.createTable("' + name + '",\n';
-	
-	_.each(mc,function(l){
-		md+='      '+l+'\n';
-	});
-	
-	md+=''+
-	'   );\n' +
-	'};\n'+
-	'\n'+
-	'migration.down = function(db)\n'+
-	'{\n'+
-	'   db.dropTable("' + name + '");\n'+
-	'};\n'+
-	'\n';
 
-	fs.writeFileSync(mf,md);
-
-	logger.info('Generate model named '+name);
-}
-
-function generateMigration(home,args)
-{
-	if (args.length == 0)
-	{
-		die("generate migration requires a NAME as third argument");
-	}
-	
-	var name = args[0];
-	var migrationsDir = path.join(home,'migrations');
-	ensureDir(migrationsDir);
-	
-	var mf = path.join( migrationsDir, generateMigrationFileName(name) );
-
-	var md = "" +
-	'migration.up = function(db)\n'+
-	'{\n'+
-	'};\n'+
-	'\n'+
-	'migration.down = function(db)\n'+
-	'{\n'+
-	'};\n'+
-	'\n';
-
-	fs.writeFileSync(mf,md);
-}
-
-function generate(args)
-{
-	if (args.length == 0)
-	{
-		die("generate requires a TYPE such as 'controller' as second argument");
-	}
 	var home = resolveAppHome();
 	var newargs = args.slice(1);
-	switch(args[0])
-	{
-		case 'controller':
-		{
-			generateController(home,newargs);
-			break;
-		}
-		case 'view':
-		{
-			generateView(home,newargs);
-			break;
-		}
-		case 'model':
-		{
-			generateModel(home,newargs);
-			break;
-		}
-		case 'migration':
-		{
-			generateMigration(home,newargs);
-			break;
-		}
-	}
+	var funcName = 'generate' + target.charAt(0).toUpperCase() + target.slice(1);
+	generators[funcName](home,newargs,name,program.force);	
 }
 
 function main(args)
