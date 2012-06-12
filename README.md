@@ -410,7 +410,7 @@ An example of a build file:
 
 ```javascript
 task("pre:compile",function(event,logger){
-	logger.info('compiling to '+event.outdir);
+	logger.info('building project at '+event.projectDir);
 });
 
 task("post:compile",function(event,logger){

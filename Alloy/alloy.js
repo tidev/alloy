@@ -266,15 +266,15 @@ function compile(args)
 	var compileConfig = 
 	{
 		alloyConfig: alloyConfig,
-		home: inputPath,
-		outdir : outputPath,
-		viewsDir: viewsDir,
-		controllersDir: controllersDir,
-		widgetsDir: widgetsDir,
-		modelsDir: modelsDir,
-		migrationsDir: migrationsDir,
-		resourcesDir: resourcesDir,
-		assetsDir: assetsDir
+		home: path.resolve(inputPath),
+		projectDir : path.resolve(outputPath),
+		viewsDir: path.resolve(viewsDir),
+		controllersDir: path.resolve(controllersDir),
+		widgetsDir: path.resolve(widgetsDir),
+		modelsDir: path.resolve(modelsDir),
+		migrationsDir: path.resolve(migrationsDir),
+		resourcesDir: path.resolve(resourcesDir),
+		assetsDir: path.resolve(assetsDir)
 	};
 	
 	var alloyJMK = path.resolve(path.normalize(path.join(inputPath,"alloy.jmk")));
