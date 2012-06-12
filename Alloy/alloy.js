@@ -64,7 +64,6 @@ var outputPath,
 	
 function generateVarName(id)
 {
-//	return '$.'+_.uniqueId('v');
 	return '$.'+id;
 }
 
@@ -391,24 +390,14 @@ function compile(args)
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
 		var p = path.join(cd,name+'.js');
 		var symbol = generateVarName(id);
-//		logger.info('controller: '+p);
 		if (path.existsSync(p))
 		{
 			var js = fs.readFileSync(p);
-			// var arg1 = [];
-			// var arg2 = [];
-			// for (var c=0;c<parameters.length;c++)
-			// {
-			// 	arg1.push(parameters[c][0]);
-			// 	arg2.push(parameters[c][1]);
-			// }
-
 			if (name == 'widget')
 			{
 				var src = symbol + " = (function(exports," + arg2.join(",") + "){\n" + 
 						   js + "\n" +
 						  "  return exports;\n" + 
-//				          "})({}," + arg1.join(",") + ");\n";
 				          "})({});\n";
 
 				var comment = "/**\n" + 
@@ -420,9 +409,7 @@ function compile(args)
 			else
 			{
 				var src = "(function(exports){\n" + 
-//				var src = "(function(" + arg2.join(",") + "){\n" + 
 						   js + "\n" +
-//				          "})(" + arg1.join(",") + ");\n";
 				          "})(" + symbol + ");\n";
 
 				var comment = "/**\n" + 
@@ -628,9 +615,9 @@ function compile(args)
 								jm + "\n" +
 							  ", function("+part+"){\n" +
 								js + "\n" +
-							"},\n" + 
-							 "[ " + migrations.join("\n,") + " ]\n" +  
-							");\n";
+							  "},\n" + 
+							  "[ " + migrations.join("\n,") + " ]\n" +  
+							  ");\n";
 
 				codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
 				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
@@ -704,7 +691,7 @@ function compile(args)
 
 	var state = {
 		parentNode:"$.w",
-		globals:[["$.w","window"]],
+		globals:["$.w"],
 		models:[]
 	};
 

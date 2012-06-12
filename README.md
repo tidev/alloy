@@ -388,6 +388,13 @@ See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examp
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
 
+
+Alloy compiler configuration
+-----------------------------
+
+You can control some settings of the compiler on a per project basis by modifying settings in the `alloy.json` in your root alloy app directory.
+
+
 TODO
 ----
 
