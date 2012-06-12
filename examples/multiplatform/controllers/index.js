@@ -1,19 +1,19 @@
 
 
-table.setData([
+$.table.setData([
 	{"title":"Alcatraz", "image":"smallpic1.jpg"},
 	{"title":"American Flag", "image":"smallpic2.jpg"},
 	{"title":"Penitentiary Sign", "image":"smallpic3.jpg"}
 ]);
 
 
-table.addEventListener("click",function(e)
+$.table.addEventListener("click",function(e)
 {
 	// note that the JPG images will be loaded (as compiled) from the assets directory
-	image.image = e.rowData.image;
+	$.image.image = e.rowData.image;
 });
 
-search.addEventListener("change", function(e)
+$.search.addEventListener("change", function(e)
 {
 	// do something with e.value
 });
