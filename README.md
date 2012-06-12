@@ -406,6 +406,17 @@ The function callback provides two arguments: `event` and `logger`.
 The `event` object provides a set of values which may be useful for building tasks. 
 The `logger` object provides a reference to the logger which defins the following methods: `debug`, `info`, `warn`, `error`.
 
+An example of a build file:
+
+```javascript
+task("pre:compile",function(event,logger){
+	logger.info('compiling to '+event.outdir);
+});
+
+task("post:compile",function(event,logger){
+	logger.info('compile finished!');
+});
+```
 
 Alloy compiler configuration
 -----------------------------
