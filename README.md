@@ -388,8 +388,8 @@ See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examp
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
 
-Per Project Compiler
----------------------
+Per Project Build Customization
+-------------------------------
 
 Alloy provides an ability for the project to hook and customize the compile process using a special JS file in the project root directory named `alloy.jmk`.  This file can be used for common administration tasks or to fine tune the build process.  
 
