@@ -508,7 +508,8 @@ function compile(args)
 			var js = fs.readFileSync(p);
 			if (name == 'widget')
 			{
-				var src = symbol + " = (function(exports," + arg2.join(",") + "){\n" + 
+				// var src = symbol + " = (function(exports," + arg2.join(",") + "){\n" + 
+				var src = symbol + " = (function(exports){\n" + 
 						   js + "\n" +
 						  "  return exports;\n" + 
 				          "})({});\n";
