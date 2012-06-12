@@ -177,28 +177,30 @@ You can use the following CSS attributes in your style name: Classes (prefix by 
 
 For example:
 
-	{
-		"Button": {
-			"width":Ti.UI.FIT,
-			"height":Ti.UI.FIT,
-			"borderColor":"red"
-		},
-		
-		".b" : {
-			"width": "100",
-			"b":true
-		},
-		
-		".c" : {
-			"height": "50",
-			"b":false
-		},
-		
-		"#b" : {
-			"width": Ti.UI.FILL,
-			"borderColor":null
-		}
+```json
+{
+	"Button": {
+		"width":Ti.UI.FIT,
+		"height":Ti.UI.FIT,
+		"borderColor":"red"
+	},
+	
+	".b" : {
+		"width": "100",
+		"b":true
+	},
+	
+	".c" : {
+		"height": "50",
+		"b":false
+	},
+	
+	"#b" : {
+		"width": Ti.UI.FILL,
+		"borderColor":null
 	}
+}
+```
 	
 With the following XML:
 
@@ -210,11 +212,13 @@ With the following XML:
 	
 Should result in the following code properties when merged:
 
-	{
-		"width": Ti.UI.FILL,
-		"height":Ti.UI.FIT,
-		"b":false
-	}
+```json
+{
+	"width": Ti.UI.FILL,
+	"height":Ti.UI.FIT,
+	"b":false
+}
+```
 	
 A few notes on the code generation and style merging:
 
