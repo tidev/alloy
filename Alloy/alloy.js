@@ -1062,11 +1062,11 @@ function generateMigrationFileName(t)
 
 function generateModel(home,args)
 {
-	if (args.length == 0)
-	{
-		die("generate controller requires a NAME as third argument");
+	if (args.length === 0) {
+		die("generate requires a TYPE such as 'controller' as second argument");
+	} else if (args.length === 1) {
+		die("generate requires a NAME such as third argument");
 	}
-	var name = args[0],
 		a = args.slice(1);
 
 	var migrationsDir = path.join(home,'migrations');
