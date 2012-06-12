@@ -263,6 +263,7 @@ function compile(args)
 	var widgetsDir = path.join(inputPath,'widgets');
 	var modelsDir = path.join(inputPath,'models');
 	var migrationsDir = path.join(inputPath,'migrations');
+	var configDir = path.join(inputPath,'config');
 
 	var indexView = path.join(viewsDir,"index.xml");
 	if (!path.existsSync(indexView))
@@ -289,7 +290,8 @@ function compile(args)
 		modelsDir: path.resolve(modelsDir),
 		migrationsDir: path.resolve(migrationsDir),
 		resourcesDir: path.resolve(resourcesDir),
-		assetsDir: path.resolve(assetsDir)
+		assetsDir: path.resolve(assetsDir),
+		configDir:path.resolve(configDir)
 	};
 	
 	var alloyJMK = path.resolve(path.normalize(path.join(inputPath,"alloy.jmk")));
@@ -311,6 +313,22 @@ function compile(args)
 	
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
+
+	function generateConfig()
+	{
+		var cf = path.join(configDir,'config.json');
+		if (path.existsSync(cf))
+		{
+			var jf = fs.readFileSync(cf);
+			var j = JSON.parse(jf);
+			
+			var o = j.global || {};
+			o = _.extend(o, j['env:'+program.config.deploytype]);
+			o = _.extend(o, j['os:'+program.config.platform]);
+			
+			appendSource("$.CFG = " + JSON.stringify(o) + ";");
+		}
+	}
 
 	function generateSourceCode()
 	{
@@ -339,8 +357,13 @@ function compile(args)
 		{
 			defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
 		}
+		
+		var cfg = generateConfig();
 
-		var code = JS_PROLOG + "\n" + JS + "\n" + JS_EPILOG;
+		var code = JS_PROLOG + "\n" + 
+				   cfg + "\n" + 
+				   JS + "\n" + 
+				   JS_EPILOG;
 		
 		var beautify = alloyConfig.compiler ? alloyConfig.compiler.beautify : false;
 
@@ -791,13 +814,14 @@ function compile(args)
 
 		return true;
 	}
-
+	
 	var state = {
 		parentNode:"$.w",
 		globals:["$.w"],
 		models:[]
 	};
 
+	generateConfig();
 	parseView('index',state);
 	copyAssets();
 	copyLibs();
@@ -936,14 +960,16 @@ function newproject(args)
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
 
-	var defaultConfig = 
-	{
+	
+	// write a default compiler configuration
+	var defaultConfig = {
 		compiler: {
 			beautify:false
 		}
 	};
 	fs.writeFileSync(path.join(outputPath,'alloy.json'),stringifyJSON(defaultConfig));
-	
+
+	// write the build file
 	var cmk = "\n"+
 		'task("pre:compile",function(event,logger){\n'+
 		'});\n'+
@@ -953,7 +979,11 @@ function newproject(args)
 		'\n';
 	fs.writeFileSync(path.join(outputPath,'alloy.jmk'),cmk);
 		
-	
+	// write the project config file
+	var cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
+	fs.writeFileSync(path.join(outputPath,"config","config.json"), stringifyJSON(cfg));
+
+	// install the plugin
 	installPlugin(args[0]);
 	
 	logger.info('Generated new project at: '+outputPath);
