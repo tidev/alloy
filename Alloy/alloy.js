@@ -508,7 +508,7 @@ function compile(args)
 			}
 			else
 			{
-				str.push("   "+sn+':'+v);
+				str.push("   "+sn+':'+ JSON.stringify(v));
 			}
 		}
 		return str.join(",\n");
