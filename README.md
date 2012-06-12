@@ -430,8 +430,8 @@ TODO
 There's a lot of work to get Alloy to a release state.  The following are some of the major items:
 
 - integration into Titanium Studio wizards
-- DB migration support implementation
-- support for SQLite backed Model implementation
+- DB migration support implementation [TEST]
+- support for SQLite backed Model implementation [TEST]
 - support for ACS backed Model implementation
 - uglify all JS files, not just the app.js
 - generation of scaffolding

@@ -67,6 +67,9 @@ function CompilerMakeFile()
 {
 	var handlers = {};
 	
+	this.require = require;
+	this.process = process;
+	
 	this.task = function(event, fn)
 	{
 		logger.debug('adding task: '+event.yellow);
@@ -290,7 +293,7 @@ function compile(args)
 		}
 		catch(E)
 		{
-			logger.error("project build at "+alloyJMK + " generated an error during load: "+E);
+			logger.error("project build at "+alloyJMK.yellow + " generated an error during load: "+E.red);
 		}
 	}
 	
