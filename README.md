@@ -388,6 +388,30 @@ See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examp
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
 
+
+Conditional Code
+-----------------
+
+Alloy introduces a set of special variables which act like compiler directives.  If you use these compiler constants, your code will be optimized at code generation/compilation and any non-reachable code will be removed. This allows you to specify code blocks which are efficiently handled or dynamically processed based on these compiler constants.
+
+The following are the constants which are defined by Alloy:
+
+- *OS_IOS* : true if the current compiler target is iOS
+- *OS_ANDROID*: true if the current compiler target is Android
+- *OS_MOBILEWEB*: true if the current compiler target is Mobile Web
+- *ENV_DEV*: true if the current compiler target is build for development (running in simulator/emulator)
+- *ENV_TEST*: true if the current compiler target is build for test (run on device)
+- *ENV_PRODUCTION*: true if the current compiler target is build for product (run after packaged for install)
+
+Example of usage:
+
+```javascript
+if (ENV_DEV && OS_IOS)
+{
+	alert("You are running iOS in the simulator");
+}
+```
+
 Per Project Build Customization
 -------------------------------
 

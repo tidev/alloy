@@ -38,17 +38,18 @@ program
 	.option('-d, --dump','Dump the generated app.js to console')
 	.option('-f, --force','Force the command to execute')
 	.option('-n, --no-colors','Turn off colors')
+	.option('-c, --config <config>','Pass in compiler configuration')
 	.parse(process.argv);
 
 var outputPath,
 
 	JS_COPYRIGHT = "/**\n"+
 	     " * Alloy for Titanium by Appcelerator\n" +
-	     " * This is generated code, DO NOT MODIFY - change will be lost!\n"+
+	     " * This is generated code, DO NOT MODIFY - changes will be lost!\n"+
 	     " * Copyright (c) 2012 by Appcelerator, Inc.\n"+
 	     " */\n",
 
-	JS = 
+	JS_PROLOG = 
 		 "var Alloy = require('alloy'),\n" + 
 		 "        _ = Alloy._,\n" +
 		 "       A$ = Alloy.A,\n" +
@@ -58,7 +59,7 @@ var outputPath,
 		 "     TFT$ = Ti.UI.FIT,\n" +
 		 "        $ = {}\n" +
 		 ";\n",
-	
+	JS = "",
 	JS_EPILOG = "$.w.finishLayout();\n$.w.open();\n",
 	ids = {},
 	compilerMakeFile;
@@ -232,6 +233,17 @@ function compile(args)
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(resolveAppHome(),".."));
 	ensureDir(outputPath);
 	
+	if (program.config)
+	{
+		var pc = {};
+		_.each(program.config.split(','),function(v)
+		{
+			var a = v.split('=');
+			pc[a[0]]=a[1];
+		});
+		program.config = pc;
+	}
+	
 	var alloyConfig = {};
 	var alloyCF = path.join(inputPath,'alloy.json');
 	if (path.existsSync(alloyCF))
@@ -303,13 +315,33 @@ function compile(args)
 	function generateSourceCode()
 	{
 		var appJS = path.join(resourcesDir,"app.js");
-		var code = JS + "\n" + JS_EPILOG;
 		
-		//FIXME - these need to be passed in
-		var defines = {
-			OS_IPAD:false
+		if (!program.config)
+		{
+			program.config = {
+				deploytype:"development"
+			};
+		}
+		
+		var DEFINES = 
+		{
+			OS_IOS : program.config.platform == 'ios',
+			OS_ANDROID: program.config.platform == 'android',
+			OS_MOBILEWEB: program.config.platform == 'mobileweb',
+			ENV_DEV: program.config.deploytype == 'development',
+			ENV_DEVELOPMENT: program.config.deploytype == 'development',
+			ENV_TEST: program.config.deploytype == 'test',
+			ENV_PRODUCTION: program.config.deploytype == 'production'
 		};
+		
+		var defines = {};
+		for (var k in DEFINES)
+		{
+			defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
+		}
 
+		var code = JS_PROLOG + "\n" + JS + "\n" + JS_EPILOG;
+		
 		var beautify = alloyConfig.compiler ? alloyConfig.compiler.beautify : false;
 
 		var ast = jsp.parse(code); // parse code and get the initial AST
