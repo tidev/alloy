@@ -7,7 +7,7 @@ var fs = require('fs'),
 	path = require('path')
 	program = require('commander'),
 	logger = require("./common/logger"),
-	U = require('./lib/utils'),
+	U = require('./utils'),
 	wrench = require("wrench"),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
@@ -15,7 +15,7 @@ var fs = require('fs'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
-	generators = require('./lib/generators');
+	generators = require('./generators');
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium

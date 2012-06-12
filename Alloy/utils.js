@@ -2,9 +2,9 @@
 
 var path = require('path'),
 	fs = require('fs'),
-	logger = require('../common/logger'),
-	jsp = require("../uglify-js/uglify-js").parser,
-	pro = require("../uglify-js/uglify-js").uglify;
+	logger = require('./common/logger'),
+	jsp = require("./uglify-js/uglify-js").parser,
+	pro = require("./uglify-js/uglify-js").uglify;
 
 exports.ensureDir = function(p)
 {
