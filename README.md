@@ -146,19 +146,23 @@ You define a style in the JSON like this:
 	
 And then you would define the view such as:
 
-	<View id="a">
-		<Button id="b">Hello</Button>
-		<Label id="t"></Label>
-	</View>
+```xml
+<View id="a">
+	<Button id="b">Hello</Button>
+	<Label id="t"></Label>
+</View>
+```
 
 Note, you can use `Titanium.UI` constants in your JSON file.
 
 In your controller, you can reference the view such as:
 
-	a.backgroundColor = "blue";
-	b.addEventListener("click",function(e){
-		t.text = "You clicked a button";
-	});
+```javascript
+a.backgroundColor = "blue";
+b.addEventListener("click",function(e){
+	t.text = "You clicked a button";
+});
+```
 
 All objects which have an `id` in your view will automatically be defined and available as a local variable in your controller.
 
@@ -196,9 +200,11 @@ For example:
 	
 With the following XML:
 
-	<View>
-		<Button id="b" class="b c" />
-	</View>
+```xml
+<View>
+	<Button id="b" class="b c" />
+</View>
+```
 	
 Should result in the following code properties when merged:
 
@@ -237,11 +243,13 @@ De-composing complex Views
 
 Alloy allows you to decompose a View into multiple subviews.  You would use the `require` attribute on a View element to import a separate view by name.  
 
-	<View>
-		<View require="first" id="first"/>
-		<View require="second" id="second"/>
-		<View require="third" id="third"/>
-	</View>
+```xml
+<View>
+	<View require="first" id="first"/>
+	<View require="second" id="second"/>
+	<View require="third" id="third"/>
+</View>
+```
 
 In the above example, you should have 3 other view files named `first.xml`, `second.xml` and `third.xml`.  Of course, these subviews could also import their own subviews, too.
 
@@ -258,19 +266,23 @@ For example, if you defined a model named `todo`, it would be available as the s
 
 To create a new model object:
 
-	var todo = new Todo({
-		name:"hello",
-		done:false
-	});
-	
-	todo.save();
+```javascript
+var todo = new Todo({
+	name:"hello",
+	done:false
+});
+
+todo.save();
+```
 
 Models inherit from Backbone.Model. _NOTE: if the first character of a model is lower case, it will be automatically converted to uppercase for referencing the Model class._
 
 Collections of your models are automatically also created with the plural name of your model class. For example, if you defined a model named `todo`, you could automatically create a collection of models by using the following code:
 
-	var list = new TodoCollection();
-	var results = list.find();
+```javascript
+var list = new TodoCollection();
+var results = list.find();
+```
 
 Collections inherit from Backbone.Collections.
 	
@@ -286,15 +298,19 @@ Each `id` value will reference the corresponding Titanium object in your control
 
 For example, if you have a view named `index.xml` with the following:
 
-	<View>
-		<Button id="b"></Button>
-	</View>
+```xml
+<View>
+	<Button id="b"></Button>
+</View>
+```
 	
 You would then define a controller named `index.js` and you could automatically bind events inline in your controller code:
 
-	b.addEventListener("click",function(){
-		alert("You clicked the button");
-	});
+```javascript
+b.addEventListener("click",function(){
+	alert("You clicked the button");
+});
+```
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
 
@@ -314,9 +330,11 @@ The widget controller would be able to export zero or more properties or methods
 
 Example of importing a widget:
 
-	<View>
-		<Widget require="com.foo.widget" id="foo"/>
-	</View>
+```xml
+<View>
+	<Widget require="com.foo.widget" id="foo"/>
+</View>
+```
 
 The widget view styles can also be imported by the views JSON file by using a special widget ID pattern: <#widget_id #id>.
 
@@ -328,15 +346,18 @@ In your app controller, you would then be able to access them referencing the wi
 
 For example, in your `widget.js`:
 
-	exports.calculatePie = function() 
-	{ 
-		return 3.14; 
-	}
-
+```javascript
+exports.calculatePie = function() 
+{ 
+	return 3.14; 
+}
+```
+	
 Now, if your widget reference was `foo` as in the example above, you would access your function in your app controller such as:
 
-	foo.calculatePie();
-
+```javascript
+foo.calculatePie();
+```
 
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
 
@@ -351,7 +372,6 @@ There's a lot of work to get Alloy to a release state.  The following are some o
 - DB migration support implementation
 - support for SQLite backed Model implementation
 - support for ACS backed Model implementation
-- added a selector engine (is this necessary still?)
 - uglify all JS files, not just the app.js
 - generation of scaffolding
 - add support for TDD testing (possibly Jasmine?)
