@@ -460,7 +460,6 @@ There's a lot of work to get Alloy to a release state.  The following are some o
 - uglify all JS files, not just the app.js
 - generation of scaffolding
 - add support for TDD testing (possibly Jasmine?)
-- implement compiler constants such as `OS_IPAD` or `ENV_DEV`
 - possible view template support?
 - full implementation of different views based on os, screen size, etc.
 - widget packaging implementation, spec and tooling
