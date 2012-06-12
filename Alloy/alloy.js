@@ -323,11 +323,14 @@ function compile(args)
 			var j = JSON.parse(jf);
 			
 			var o = j.global || {};
-			o = _.extend(o, j['env:'+program.config.deploytype]);
-			o = _.extend(o, j['os:'+program.config.platform]);
-			
-			appendSource("$.CFG = " + JSON.stringify(o) + ";");
+			if (program.config)
+			{
+				o = _.extend(o, j['env:'+program.config.deploytype]);
+				o = _.extend(o, j['os:'+program.config.platform]);
+			}
+			return "$.CFG = " + JSON.stringify(o) + ";";
 		}
+		return '';
 	}
 
 	function generateSourceCode()
@@ -821,7 +824,6 @@ function compile(args)
 		models:[]
 	};
 
-	generateConfig();
 	parseView('index',state);
 	copyAssets();
 	copyLibs();

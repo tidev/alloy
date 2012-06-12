@@ -409,10 +409,25 @@ Example config:
 	{
 		"foo":2
 	},
+
+	"env:test":
+	{
+		"foo":3
+	},
+
+	"env:production":
+	{
+		"foo":4
+	},
 	
 	"os:ios":
 	{
-		"foo":3
+		"foo":5
+	},
+
+	"os:android":
+	{
+		"foo":6
 	}
 }
 ```
@@ -423,7 +438,7 @@ Then, you can reference configuration at runtime in your code:
 alert($.CFG.foo);
 ```
 
-In the above example, when running under the iOS simulator, you should see `3` in the alert dialog box.
+In the above example, when running under the iOS simulator, you should see `5` in the alert dialog box.
 
 
 Conditional Code
