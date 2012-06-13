@@ -62,7 +62,7 @@ var outputPath,
 		 "        $ = {}\n" +
 		 ";\n",
 	JS = "",
-	JS_EPILOG = "$.w.finishLayout();\n$.w.open();\n",
+	JS_EPILOG = "", //"$.w.finishLayout();\n$.w.open();\n",
 	ids = {},
 	compilerMakeFile;
 	
@@ -776,6 +776,7 @@ function compile(args)
 
 		if (viewName=='index')
 		{
+			/*
 			if (doc.documentElement.nodeName == 'SplitWindow')
 			{
 				//TODO -- this is not right yet - we need to populate masterView, detailView
@@ -793,6 +794,7 @@ function compile(args)
 				appendSource("\n// defer rendering");
 				appendSource("$.w.startLayout();\n");
 			}
+			*/
 			
 			findAndLoadModels(state);
 		}
