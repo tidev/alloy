@@ -1,7 +1,8 @@
 
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
-	SQLSync  = require("alloy/sync/sql");
+	SQLSync  = require("alloy/sync/sql"),
+	osname   = Ti.Platform.osname;
 	
 module.exports._ = _;
 module.exports.Backbone = Backbone;
@@ -98,7 +99,13 @@ module.exports.A = function(t,type,parent)
 				}
 			};
 			cbs[cb]=wcb;
-			al.call(t, e, wcb);
+
+			if (osname === 'android') {
+				al.call(t, e, wcb);
+			} else {
+				al(e, wcb);
+			}
+
 			_.bind(oo,ctx,e,cb,context)();
 		};
 
@@ -108,7 +115,13 @@ module.exports.A = function(t,type,parent)
 			if (f)
 			{
 				_.bind(of,ctx,e,cb,context)();
-				rl.call(t, e, f);
+
+				if (osname === 'android') {
+					rl.call(t, e, f);
+				} else {
+					rl(e, f);
+				}
+				
 				delete cbs[cb];
 				f = null;
 			}
