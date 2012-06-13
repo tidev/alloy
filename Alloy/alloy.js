@@ -769,7 +769,7 @@ function compile(args)
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
 
-		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
+		var id = viewid; //|| doc.documentElement.getAttribute('id') || viewName;
 
 		var parameters = state.globals;
 		var parentNode = state.parentNode;
@@ -809,7 +809,7 @@ function compile(args)
 		models:[]
 	};
 
-	parseView('index',state);
+	parseView('index',state,null,'index');
 	copyAssets();
 	copyLibs();
 	copyAlloy();
