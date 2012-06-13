@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
-<View> <!-- if you don't get the root view an id, it will automatically be named the same as the filename -->
-	
-	<!-- define an empty view -->
-	<View id="top" />
-	
-	<!-- import a view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
-	<View require="middle" />
+<App>
+	<Window> <!-- if you don't get the root view an id, it will automatically be named the same as the filename -->
+		
+		<!-- define an empty view -->
+		<View id="top" />
+		
+		<!-- import a view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
+		<View require="middle" />
 
-	<!-- import a view named 'bottom' -->
-	<View require="bottom" />
-	
-</View>
+		<!-- import a view named 'bottom' -->
+		<View require="bottom" />
+		
+	</Window>
+</App>

@@ -1,9 +1,11 @@
-<SplitWindow>
-	<View id="master">
-		<SearchBar id="search"/>
-		<TableView id="table"/>
-	</View>
-	<View id="detail">
-		<ImageView id="image"/>
-	</View>
-</SplitWindow>
+<App>
+	<SplitWindow>
+		<View id="master">
+			<SearchBar id="search"/>
+			<TableView id="table"/>
+		</View>
+		<View id="detail">
+			<ImageView id="image"/>
+		</View>
+	</SplitWindow>
+</App>

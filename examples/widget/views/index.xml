@@ -1,3 +1,5 @@
-<View>
-	<Widget require="com.foo.widget" id="w" /> 
-</View>
+<App>
+	<Window>
+		<Widget require="com.foo.widget" id="w" /> 
+	</Window>
+</App>

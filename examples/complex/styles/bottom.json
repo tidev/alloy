@@ -1,8 +1,8 @@
 {
 	"#b": 
 	{
-		"width": Ti.UI.FIT,
-		"height": Ti.UI.FIT,
+		"width": Ti.UI.SIZE,
+		"height": Ti.UI.SIZE,
 		"title" : "Click me",
 		"bottom" : 20
 	}

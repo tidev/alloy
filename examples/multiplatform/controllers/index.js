@@ -25,3 +25,5 @@ if (OS_IPAD)
 	
 	Ti.API.info("We are on an iPad so you should see a split view");
 }
+
+exports.open();

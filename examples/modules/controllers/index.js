@@ -1,6 +1,6 @@
 var foo = require("foo"),
 	bar = require("vendor/bar");
 
+Ti.API.info(bar.helloize(foo.generate()));
 
-// use the selector engine to find the first Label and set the text
-bar.helloize(foo.generate());
+exports.open();

@@ -1,3 +1,5 @@
-<View>
-	<Label></Label>
-</View>
+<App>
+	<Window>
+		<Label></Label>
+	</Window>
+</App>

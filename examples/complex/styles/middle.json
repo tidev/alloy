@@ -5,7 +5,7 @@
 	
 	"#t" : {
 		"width": Ti.UI.FILL,
-		"height":Ti.UI.FIT,
+		"height":Ti.UI.SIZE,
 		"color": "yellow",
 		"textAlign": Ti.UI.TEXT_ALIGNMENT_CENTER
 	}

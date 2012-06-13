@@ -1,15 +1,15 @@
 {
 	".name" : {
-		"width": Ti.UI.FIT,
-		"height": Ti.UI.FIT,
+		"width": Ti.UI.SIZE,
+		"height": Ti.UI.SIZE,
 		"textAlign": Ti.UI.TEXT_ALIGNMENT_LEFT,
 		"color": "black",
 		"left": 20
 	},
 	
 	".done" : {
-		"width": Ti.UI.FIT,
-		"height": Ti.UI.FIT,
+		"width": Ti.UI.SIZE,
+		"height": Ti.UI.SIZE,
 		"textAlign": Ti.UI.TEXT_ALIGNMENT_RIGHT,
 		"color": "red",
 		"right": 20

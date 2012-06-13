@@ -29,3 +29,4 @@ $.todo.fetch(function(todos) {
 	
 });
 
+exports.open();

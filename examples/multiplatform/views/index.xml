@@ -1,9 +1,11 @@
-<View>
-	<View id="master">
-		<SearchBar id="search" />
-		<TableView id="table" />
-	</View>
-	<View id="detail">
-		<ImageView id="image"/>
-	</View>
-</View>
+<App>
+	<Window>
+		<View id="master">
+			<SearchBar id="search" />
+			<TableView id="table" />
+		</View>
+		<View id="detail">
+			<ImageView id="image"/>
+		</View>
+	</Window>
+</App>

@@ -1,4 +1,6 @@
 <?xml version='1.0'?>
-<View class='container'>
-  <View ns="Ti.Map" id="map"/>
-</View>
+<App>
+	<Window class='container'>
+	  <View ns="Ti.Map" id="map"/>
+	</Window>
+</App>

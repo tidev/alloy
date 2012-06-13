@@ -11,3 +11,5 @@ $.b.addEventListener('click',function(){
 	$.t.text = "You clicked me";
 });
 
+exports.open();
+
