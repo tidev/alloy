@@ -1,0 +1,4 @@
+<App>
+	<View require="master" id="master"/>
+	<View require="detail" id="detail"/>
+</App>

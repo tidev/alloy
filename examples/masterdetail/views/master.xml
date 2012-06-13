@@ -1,0 +1,4 @@
+<?xml version='1.0'?>
+<Window class="container">
+	<TableView id="table"/>
+</Window>
