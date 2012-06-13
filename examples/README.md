@@ -14,6 +14,7 @@ Examples
 - *Complex*: a more complex example that shows decomposing a view into subviews
 - *Widget*: an example of building a widget and then using it in an app
 - *Simple Model*: an example of a model based system that includes migrations
+- *masterdetail*: a lesson in louse-coupling through MVC, delegates, and custom events in alloy
 - *Multiplatform*: an example of building a multi screen app
 - *Modules*: an example that shows an app built module and a vendor module. This also demonstrates the selector engine.
 - *Namespaces*: Shows you how you can use UI components outside of the `Ti.UI` namespace in your markup view hierarchy.
