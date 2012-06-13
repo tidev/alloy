@@ -98,7 +98,7 @@ module.exports.A = function(t,type,parent)
 				}
 			};
 			cbs[cb]=wcb;
-			al(e, wcb);
+			al.call(t, e, wcb);
 			_.bind(oo,ctx,e,cb,context)();
 		};
 
@@ -108,7 +108,7 @@ module.exports.A = function(t,type,parent)
 			if (f)
 			{
 				_.bind(of,ctx,e,cb,context)();
-				rl(e, f);
+				rl.call(t, e, f);
 				delete cbs[cb];
 				f = null;
 			}
