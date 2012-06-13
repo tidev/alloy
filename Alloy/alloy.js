@@ -482,17 +482,12 @@ function compile(args)
 			var v = s[sn];
 			var q = typeof(v) === 'string';
 			var cf = constants[v];
-			if (cf)
-			{
+			if (cf) {
 				v = cf;
 				q = false;
-			}
-			if (q)
-			{
+			} else if (q) {
 				str.push("   "+sn+':'+'"'+v+'"');
-			}
-			else
-			{
+			} else {
 				str.push("   "+sn+':'+ JSON.stringify(v));
 			}
 		}
