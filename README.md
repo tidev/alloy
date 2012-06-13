@@ -65,7 +65,7 @@ Alloy prefers to use convention over configuration for simplicity.
 - *migrations* - this is where your database migration files will be stored.
 - *lib* - this is where you should put application specific files, typically in the CommonJS format.
 - *vendor* - this is where you should put any vendor specific modules, typically in the CommonJS format.  Do not place native modules in this folder.
-- *config* - _RESERVED FOR FUTURE USE_.  This is currently not used but will eventually contain application specific config.
+- *config* - Contains application specific config.
 
 Compiling an App
 ----------------
@@ -113,6 +113,15 @@ To generate a standalone migration for a specific model, you can run the followi
 
 This will create a timestamp-ordered migration file for the model specified.	
 
+Generating Widgets
+------------------
+
+To generate a basic widget, you run the following command
+
+	alloy generate widget <name>
+
+This will create a default widget in your projects's `app/widgets` path.
+
 
 Developing in Alloy
 -------------------
@@ -135,12 +144,12 @@ You define a style in the JSON like this:
 		"height": "100"
 	},
 	"#b" : {
-		"width":Ti.UI.FIT,
-		"height":Ti.UI.FIT
+		"width":Ti.UI.SIZE,
+		"height":Ti.UI.SIZE
 	},
 	"#t" : {
 		"width":Ti.UI.FILL,
-		"height":Ti.UI.FIT,
+		"height":Ti.UI.SIZE,
 		"color":"black"
 	}
 }
@@ -180,8 +189,8 @@ For example:
 ```json
 {
 	"Button": {
-		"width":Ti.UI.FIT,
-		"height":Ti.UI.FIT,
+		"width":Ti.UI.SIZE,
+		"height":Ti.UI.SIZE,
 		"borderColor":"red"
 	},
 	
@@ -215,7 +224,7 @@ Should result in the following code properties when merged:
 ```json
 {
 	"width": Ti.UI.FILL,
-	"height":Ti.UI.FIT,
+	"height":Ti.UI.SIZE,
 	"b":false
 }
 ```
@@ -305,9 +314,9 @@ Each `id` value will reference the corresponding Titanium object in your control
 For example, if you have a view named `index.xml` with the following:
 
 ```xml
-<View>
+<Window>
 	<Button id="b"></Button>
-</View>
+</Window>
 ```
 	
 You would then define a controller named `index.js` and you could automatically bind events inline in your controller code:
@@ -316,6 +325,9 @@ You would then define a controller named `index.js` and you could automatically 
 $.b.addEventListener("click",function(){
 	alert("You clicked the button");
 });
+
+// "exports" represents the top-level container for this view
+exports.open();
 ```
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
