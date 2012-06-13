@@ -58,7 +58,7 @@ var outputPath,
 		 "       M$ = Alloy.M,\n" +
 		 "      BC$ = Alloy.Backbone.Collection,\n" +
 		 "     TFL$ = Ti.UI.FILL,\n" +
-		 "     TFT$ = Ti.UI.FIT,\n" +
+		 "     TSZ$ = Ti.UI.SIZE,\n" +
 		 "        $ = {}\n" +
 		 ";\n",
 	JS = "",
@@ -164,7 +164,7 @@ function loadStyle(p)
 		f = f.replace(/Titanium\./g,"Ti.");
 		// fixup constants so we can use them in JSON but then we do magic conversions
 		f = f.replace(/Ti\.UI\.FILL/g,'"TI_UI_FILL"');
-		f = f.replace(/Ti\.UI\.FIT/g,'"TI_UI_FIT"');
+		f = f.replace(/Ti\.UI\.SIZE/g,'"TI_UI_SIZE"');
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_LEFT/g,'"TI_UI_TEXT_ALIGNMENT_LEFT"')
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_RIGHT/g,'"TI_UI_TEXT_ALIGNMENT_RIGHT"')
 		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_CENTER/g,'"TI_UI_TEXT_ALIGNMENT_CENTER"')
@@ -471,7 +471,7 @@ function compile(args)
 		
 		var constants = {
 			'TI_UI_FILL':'TFL$',
-			'TI_UI_FIT':'TFT$',
+			'TI_UI_SIZE':'TSZ$',
 			'TI_UI_TEXT_ALIGNMENT_LEFT':'Ti.UI.TEXT_ALIGNMENT_LEFT',
 			'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
 			'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'
@@ -928,8 +928,8 @@ function newproject(args)
 					 '   },\n' +
 		             '   "Label":\n' +
 		             '    {\n' +
-		             '       "width": Ti.UI.FIT,\n'+ 
-		             '       "height": Ti.UI.FIT\n'+ 
+		             '       "width": Ti.UI.SIZE,\n'+ 
+		             '       "height": Ti.UI.SIZE,\n'+ 
 		             '    }\n' + 
 		             "}\n",
 		INDEX_C    = "$.t.on('click',function(e){\n" + 
