@@ -913,9 +913,11 @@ function newproject(args)
 	}
 	
 	var INDEX_XML  = "<?xml version='1.0'?>\n" +
-					 "<View class='container'>\n" +
-					 '  <Label id="t">Hello, World</Label>\n' +
-					 "</View>\n",
+					 "<App>\n" +
+					 "\t<Window class='container'>\n" +
+					 '\t\t<Label id="t">Hello, World</Label>\n' +
+					 "\t</Window>\n" +
+					 "</App>\n",
 		INDEX_JSON = "{\n" +
 					 '   ".container":\n' +
 					 '   {\n' +
@@ -925,11 +927,13 @@ function newproject(args)
 		             '    {\n' +
 		             '       "width": Ti.UI.SIZE,\n'+ 
 		             '       "height": Ti.UI.SIZE,\n'+ 
+		             '       "color": "#000"\n'+
 		             '    }\n' + 
 		             "}\n",
 		INDEX_C    = "$.t.on('click',function(e){\n" + 
 					 "   alert($.t.text);\n" +
-					 "});\n";
+					 "});\n\n" +
+					 "exports.open();";
 	
 	fs.writeFileSync(path.join(outputPath,'views','index.xml'),INDEX_XML);
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
