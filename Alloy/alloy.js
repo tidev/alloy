@@ -774,33 +774,13 @@ function compile(args)
 		var doc = new DOMParser().parseFromString(String(xml));
 		var docRoot = doc.documentElement;
 
-		var id = viewid; //|| doc.documentElement.getAttribute('id') || viewName;
+		var id = viewid;
 
 		var parameters = state.globals;
 		var parentNode = state.parentNode;
 
 		if (viewName=='index')
 		{
-			/*
-			if (doc.documentElement.nodeName == 'SplitWindow')
-			{
-				//TODO -- this is not right yet - we need to populate masterView, detailView
-				var src = "$.w = Ti.UI.iOS.createSplitWindow({\n" + 
-						  "   masterView: ,\n" + 
-						  "   detailView: ,\n" + 
-						  "   id: '" + "'\n" + 
-						  "});\n" + 
-						  "$.w.startLayout();\n";
-				JS_EPILOG = src + JS_EPILOG;
-			}
-			else
-			{
-				appendSource("$.w = Ti.UI.createWindow();");
-				appendSource("\n// defer rendering");
-				appendSource("$.w.startLayout();\n");
-			}
-			*/
-			
 			findAndLoadModels(state);
 		}
 
