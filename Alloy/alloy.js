@@ -939,7 +939,7 @@ function newproject(args)
 	// write a default compiler configuration
 	var defaultConfig = {
 		compiler: {
-			beautify:false
+			beautify:true
 		}
 	};
 	fs.writeFileSync(path.join(outputPath,'alloy.json'),U.stringifyJSON(defaultConfig));
