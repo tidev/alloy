@@ -574,7 +574,7 @@ function compile(args)
 				var req = node.getAttribute('require');
 				if (req)
 				{
-					parseView(req,state);
+					parseView(req,state,null,id);
 					return;
 				}
 				break;
