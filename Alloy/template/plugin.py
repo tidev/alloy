@@ -11,12 +11,15 @@ def compile(config):
         devicefamily = 'none'
         simtype = 'none'
         version = '0'
+        deploytype = 'development'
         if config['platform']==u'ios':
             version = config['iphone_version']
             devicefamily = config['devicefamily']
+            deploytype = config['deploytype']
         if config['platform']==u'android':
             builder = config['android_builder']
             version = builder.tool_api_level
-        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,config['deploytype'])
+            deploytype = config['deploy_type']
+        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = "/usr/local/bin/node /usr/local/bin/alloy compile \"%s\" --no-colors --config \"%s\"" % (f,cfg)
         os.system(cmd)
