@@ -639,8 +639,12 @@ function compile(args)
 
 		appendSource(symbol + " = A$(" + ns + "." + fn + "({");
 		appendSource(generateStyleParams(state.styles,classes,id,node.nodeName));
-		appendSource("}),'" + node.nodeName + "', " + state.parentNode + ");");
-		appendSource(state.parentNode+".add("+symbol+");");
+		if (state.parentNode) {
+			appendSource("}),'" + node.nodeName + "', " + state.parentNode + ");");
+			appendSource(state.parentNode+".add("+symbol+");");
+		} else {
+			appendSource("}),'" + node.nodeName + "');");
+		}
 
 		var childstate = {
 			parentNode: symbol,
@@ -768,6 +772,7 @@ function compile(args)
 
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
+		var docRoot = doc.documentElement;
 
 		var id = viewid; //|| doc.documentElement.getAttribute('id') || viewName;
 
@@ -799,15 +804,21 @@ function compile(args)
 			findAndLoadModels(state);
 		}
 
-		generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
+		if (docRoot.nodeName === 'App') {
+			for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
+				generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
+			}
+		} else {
+			generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
+		}
 		generateController(viewName,parameters,dir,state,id);
 
 		return true;
 	}
 	
 	var state = {
-		parentNode:"$.w",
-		globals:["$.w"],
+		parentNode: null,
+		globals: [],
 		models:[]
 	};
 
