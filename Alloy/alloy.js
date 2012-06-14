@@ -769,7 +769,7 @@ function compile(args)
 		var doc = new DOMParser().parseFromString(String(xml));
 		var docRoot = doc.documentElement;
 
-		var id = viewid;
+		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
 		var parameters = state.globals;
 		var parentNode = state.parentNode;
