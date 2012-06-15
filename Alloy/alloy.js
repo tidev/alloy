@@ -355,7 +355,7 @@ function compile(args)
 				   JS + "\n" + 
 				   JS_EPILOG;
 		
-		var beautify = alloyConfig.compiler ? alloyConfig.compiler.beautify : false;
+		var beautify = program.config.deploytype === 'development' ? true : false;
 
 		var ast = jsp.parse(code); // parse code and get the initial AST
 		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
@@ -948,9 +948,7 @@ function newproject(args)
 	
 	// write a default compiler configuration
 	var defaultConfig = {
-		compiler: {
-			beautify:true
-		}
+		compiler: {}
 	};
 	fs.writeFileSync(path.join(outputPath,'alloy.json'),U.stringifyJSON(defaultConfig));
 
