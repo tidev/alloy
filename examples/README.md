@@ -18,6 +18,7 @@ Examples
 - *Multiplatform*: an example of building a multi screen app
 - *Modules*: an example that shows an app built module and a vendor module. This also demonstrates the selector engine.
 - *Namespaces*: Shows you how you can use UI components outside of the `Ti.UI` namespace in your markup view hierarchy.
+- *No Ids*: Build a view hierarchy without explicitly giving the elements IDs.
 
 
 Issues to be resolved
