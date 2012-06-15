@@ -15,7 +15,8 @@ var fs = require('fs'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
-	generators = require('./generators');
+	generators = require('./generators'),
+	pkginfo = require('pkginfo')(module, 'name', 'version');
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
@@ -32,7 +33,7 @@ var fs = require('fs'),
  */
 		
 program
-	.version('0.1.0')
+	.version(module.exports.version)
 	.description('Alloy command line')
 	.usage('ACTION [ARGS] [OPTIONS]')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
