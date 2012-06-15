@@ -9,7 +9,13 @@ function InitDB()
 {
 	if (!db)
 	{
-		module.exports.db = db = Ti.Database.open("_alloy_");
+		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
+			throw "No support for Titanium.Database in MobileWeb environment";
+		}
+		else {
+			db = Ti.Database.open("_alloy_");
+		}
+		module.exports.db = db;
 		
 		// create the table in case it doesn't exist
 		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)");
