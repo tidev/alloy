@@ -355,7 +355,7 @@ function compile(args)
 				   JS + "\n" + 
 				   JS_EPILOG;
 		
-		var beautify = program.config.deploytype === 'development' ? true : false;
+		var beautify = alloyConfig.compiler && typeof alloyConfig.compiler.beautify !== 'undefined' ? alloyConfig.compiler.beautify : program.config.deploytype === 'development' ? true : false;
 
 		var ast = jsp.parse(code); // parse code and get the initial AST
 		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
