@@ -1,0 +1,16 @@
+{
+   ".container":
+   {
+       "backgroundColor":"white"
+   },
+   ".background":
+   {
+   		"backgroundColor":"#a00"
+   },
+   "Label":
+    {
+       "width": Ti.UI.SIZE,
+       "height": Ti.UI.SIZE,
+       "color": "#000"
+    }
+}

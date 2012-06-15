@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<App>
+	<Window class='container'>
+		<View>
+			<View class="background"/>
+			<Button>my button</Button>
+		</View>
+	</Window>
+</App>
