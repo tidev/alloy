@@ -664,7 +664,7 @@ function compile(args)
 			var files = fs.readdirSync(migrationsDir);
 			var part = '_'+name+'.js';
 			// look for our model
-			files = _.reject(files,function(f) { return f.indexOf(part)!=-1});
+			files = _.reject(files,function(f) { return f.indexOf(part)==-1});
 			// sort them in the oldest order first
 			files = files.sort(function(a,b){
 				var x = a.substring(0,a.length - part.length -1);
