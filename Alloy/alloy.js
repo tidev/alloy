@@ -1,5 +1,5 @@
 /**
- * Alloykkkk
+ * Alloy
  * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
  * See LICENSE for more information on licensing.
  */
