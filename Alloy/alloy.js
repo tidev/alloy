@@ -64,7 +64,9 @@ var outputPath,
 	JS = "",
 	JS_EPILOG = "", //"$.w.finishLayout();\n$.w.open();\n",
 	ids = {},
-	compilerMakeFile;
+	compilerMakeFile,
+	alloyUniqueIdPrefix = '__alloyId',
+	alloyUniqueIdCounter = 0;
 	
 function CompilerMakeFile()
 {
@@ -552,11 +554,15 @@ function compile(args)
 		return null;
 	}
 
+	function generateUniqueId() {
+		return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
+	};
+
 	function generateNode(ischild,viewFile,node,state,defId)
 	{
 		if (node.nodeType != 1) return;
 
-		var id = node.getAttribute('id') || defId;
+		var id = node.getAttribute('id') || defId || generateUniqueId();
 		var symbol = generateVarName(id);
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
