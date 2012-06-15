@@ -1,5 +1,5 @@
 /**
- * Alloy
+ * Alloykkkk
  * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
  * See LICENSE for more information on licensing.
  */
@@ -597,7 +597,7 @@ function compile(args)
 			}
 		}
 
-		if (ids[id])
+		if (id !== undefined && ids[id])
 		{
 			die("<"+nodename+"> from '"+viewFile+"' attempted to use the id '"+id+"' which has already been defined in the view '"+ids[id]+"'");
 		}
