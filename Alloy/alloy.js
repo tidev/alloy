@@ -703,54 +703,51 @@ function compile(args)
 	
 	function findAndLoadModels(state) {
 		var f = modelsDir;
-		
-		//don't die if a models directory doesn't exist - this shouldn't be a prerequisite
-		try {
-			var files = fs.readdirSync(f);
+		if (!path.existsSync(f)) {
+			wrench.mkdirSyncRecursive(f, 777);
+		}		
 
-			for (var c=0;c<files.length;c++) {
-				var file = files[c];
-				if (file.indexOf(".json")>0) {
-					var fpath = path.join(f,file);
-					var part = file.substring(0,file.length-5);
-					var modelJs = path.join(f,part+'.js');
+		var files = fs.readdirSync(f);
 
-					var jm = fs.readFileSync(fpath);
-					var js = "";
-					try {
-						var stats = fs.lstatSync(modelJs);
-						if (stats.isFile()) {
-							js = fs.readFileSync(modelJs);
-						}
+		for (var c=0;c<files.length;c++) {
+			var file = files[c];
+			if (file.indexOf(".json")>0) {
+				var fpath = path.join(f,file);
+				var part = file.substring(0,file.length-5);
+				var modelJs = path.join(f,part+'.js');
+
+				var jm = fs.readFileSync(fpath);
+				var js = "";
+				try {
+					var stats = fs.lstatSync(modelJs);
+					if (stats.isFile()) {
+						js = fs.readFileSync(modelJs);
 					}
-					catch(E) { }
-
-					var migrations = findModelMigrations(state,part);
-
-					var theid = properCase(part), theidc = properCase(part)+'Collection';
-					var symbol1 =  generateVarName(theid);
-					var symbol2 =  generateVarName(theidc);
-					var codegen = symbol1 + " = M$('"+ part +"',\n" +
-									jm + "\n" +
-								  ", function("+part+"){\n" +
-									js + "\n" +
-								  "},\n" + 
-								  "[ " + migrations.join("\n,") + " ]\n" +  
-								  ");\n";
-
-					codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
-					codegen+=symbol2+".prototype.model = " + symbol1+";\n";
-					codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
-					appendSource(codegen);			
-					// create the single model 
-					state.globals.push(symbol1);
-					// create the collection
-					state.globals.push(symbol2);
 				}
+				catch(E) { }
+
+				var migrations = findModelMigrations(state,part);
+
+				var theid = properCase(part), theidc = properCase(part)+'Collection';
+				var symbol1 =  generateVarName(theid);
+				var symbol2 =  generateVarName(theidc);
+				var codegen = symbol1 + " = M$('"+ part +"',\n" +
+								jm + "\n" +
+							  ", function("+part+"){\n" +
+								js + "\n" +
+							  "},\n" + 
+							  "[ " + migrations.join("\n,") + " ]\n" +  
+							  ");\n";
+
+				codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
+				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
+				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
+				appendSource(codegen);			
+				// create the single model 
+				state.globals.push(symbol1);
+				// create the collection
+				state.globals.push(symbol2);
 			}
-		}
-		catch (ex) {
-			logger.warn('no model directory found at '+f);
 		}
 	}
 
