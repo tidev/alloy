@@ -1,5 +1,6 @@
-projects/Harness/build.log
 generated/*
+projects/Harness/plugins/alloy/plugin.pyc
+projects/Harness/build.log
 projects/Harness/build/iphone/*
 projects/Harness/build/android/*
 projects/Harness/Resources/*
