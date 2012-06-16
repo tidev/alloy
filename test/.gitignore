@@ -6,9 +6,6 @@ projects/Harness/build/iphone/*
 projects/Harness/build/android/*
 projects/Harness/build/mobileweb/*
 projects/Harness/Resources/*
-!projects/Harness/Resources/android
-!projects/Harness/Resources/iphone
-!projects/Harness/Resources/mobileweb
 projects/Harness/app/*
 projects/Harness/build/iphone/Classes
 projects/Harness/build/iphone/tmp
