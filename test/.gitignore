@@ -4,6 +4,7 @@ projects/Harness/plugins/alloy/plugin.pyc
 projects/Harness/build.log
 projects/Harness/build/iphone/*
 projects/Harness/build/android/*
+projects/Harness/build/mobileweb/*
 projects/Harness/Resources/*
 projects/Harness/app/*
 projects/Harness/build/iphone/Classes
