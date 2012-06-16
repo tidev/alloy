@@ -33,9 +33,8 @@ Local Installation
 
 To install your own local copy (with executable), clone this repository, navigate to the top level directory, and install via:
 
-	[sudo] npm install -g .
-	
-	
+	[sudo] npm install -g .	
+
 Creating an App
 ---------------
 
@@ -510,6 +509,21 @@ Alloy compiler configuration
 -----------------------------
 
 You can control some settings of the compiler on a per project basis by modifying settings in the `alloy.json` in your root alloy app directory.
+
+Running the Test Harness
+------------------------
+
+To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which its self is based on make.  Jake can be installed via npm:
+
+	[sudo] npm install -g jake
+
+To see which build targets are available, run `jake -T` at the top level project folder.  Sample Alloy apps are located in the `test/apps` directory.  Running a sample app from the command line (`jake app:run dir=masterdetail platform=iphone` e.g.) is supported for iOS and Android via `titanium.py` right now, provided you have a `TITANIUM_MOBILE_SDK` environment variable set.  Otherwise, you must pass in an `sdk` parameter pointing to your desired Titanium Mobile SDK location.
+
+To run the samples via Studio, you must first copy over the appropriate Alloy app to the "Harness application".  There are Jake build targets set up for this purpose.  If you want to run the `no_ids` test app, for instance, you would first execute:
+
+	jake app:setup dir=no_ids
+
+Then, you could import the Harness project into Titanium Studio, and run the project as normal.  The Alloy compiler plugin is already configured.
 
 
 TODO
