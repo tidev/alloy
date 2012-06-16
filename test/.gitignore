@@ -1,0 +1,17 @@
+projects/Harness/build.log
+generated/*
+projects/Harness/build/iphone/*
+projects/Harness/build/android/*
+projects/Harness/Resources/*
+projects/Harness/app/*
+projects/Harness/build/iphone/Classes
+projects/Harness/build/iphone/tmp
+projects/Harness/build/iphone/build
+projects/Harness/build/iphone/headers
+projects/Harness/build/iphone/lib
+projects/Harness/build/iphone/Resources
+projects/Harness/build/iphone/*.xcodeproj
+projects/Harness/build/iphone/*.xcconfig
+projects/Harness/build/iphone/main.m
+projects/Harness/build/iphone/*.plist
+projects/Harness/build/iphone/*.pch
