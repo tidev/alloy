@@ -45,25 +45,7 @@ program
 	.parse(process.argv);
 
 var outputPath,
-
-	JS_COPYRIGHT = "/**\n"+
-	     " * Alloy for Titanium by Appcelerator\n" +
-	     " * This is generated code, DO NOT MODIFY - changes will be lost!\n"+
-	     " * Copyright (c) 2012 by Appcelerator, Inc.\n"+
-	     " */\n",
-
-	JS_PROLOG = 
-		 "var Alloy = require('alloy'),\n" + 
-		 "        _ = Alloy._,\n" +
-		 "       A$ = Alloy.A,\n" +
-		 "       M$ = Alloy.M,\n" +
-		 "      BC$ = Alloy.Backbone.Collection,\n" +
-		 "     TFL$ = Ti.UI.FILL,\n" +
-		 "     TSZ$ = Ti.UI.SIZE,\n" +
-		 "        $ = {}\n" +
-		 ";\n",
 	JS = "",
-	JS_EPILOG = "", //"$.w.finishLayout();\n$.w.open();\n",
 	ids = {},
 	compilerMakeFile,
 	alloyUniqueIdPrefix = '__alloyId',
@@ -328,20 +310,13 @@ function compile(args)
 		}
 		
 		var cfg = generateConfig();
-
-		var code = JS_PROLOG + "\n" + 
-				   cfg + "\n" + 
-				   JS + "\n" + 
-				   JS_EPILOG;
-		
+		var code = _.template(fs.readFileSync(path.join(outputPath,'app','template','app.js'),'utf8'),{config:cfg});
 		var beautify = alloyConfig.compiler && typeof alloyConfig.compiler.beautify !== 'undefined' ? alloyConfig.compiler.beautify : program.config.deploytype === 'development' ? true : false;
 
 		var ast = jsp.parse(code); // parse code and get the initial AST
 		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
 		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
 		var final_code = pro.gen_code(ast,{beautify:beautify}); 
-		
-		final_code = JS_COPYRIGHT + final_code;
 
 		// trigger our custom compiler makefile
 		var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":final_code, "appJSFile" : path.resolve(appJS)}));
@@ -865,7 +840,6 @@ function newproject(args)
 	if (!path.existsSync(path.join(args[0]))) fs.mkdirSync(path.join(args[0]));
 	if (!path.existsSync(outputPath)) fs.mkdirSync(outputPath);
 	
-	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'];
 	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor','template'];
 	for (var c=0;c<dirs.length;c++)
 	{
@@ -876,7 +850,6 @@ function newproject(args)
 		}
 	}
 	
-		             '    }\n' + 
 	var templateDir = path.join(__dirname,'template');
 		INDEX_XML  = fs.readFileSync(path.join(templateDir,'default','index.xml'),'utf8'),
 		INDEX_JSON = fs.readFileSync(path.join(templateDir,'default','index.json'),'utf8'),
@@ -885,7 +858,6 @@ function newproject(args)
 	fs.writeFileSync(path.join(outputPath,'views','index.xml'),INDEX_XML);
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
-
 	U.copyFilesAndDirs(templateDir, path.join(outputPath,'template'));
 	
 	// write a default compiler configuration
