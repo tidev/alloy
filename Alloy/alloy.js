@@ -492,7 +492,7 @@ function compile(args)
 
 	function generateNode(ischild,viewFile,node,state,defId)
 	{
-		if (node.nodeType != 1) return;
+		if (node.nodeType != 1) return '';
 
 		var id = node.getAttribute('id') || defId || generateUniqueId();
 		var symbol = generateVarName(id);
