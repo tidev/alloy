@@ -420,9 +420,9 @@ function compile(args)
 				v = cf;
 				q = false;
 			} else if (q) {
-				str.push("   "+sn+':'+'"'+v+'"');
+				str.push("\t\t"+sn+':'+'"'+v+'"');
 			} else {
-				str.push("   "+sn+':'+ JSON.stringify(v));
+				str.push("\t\t"+sn+':'+ JSON.stringify(v));
 			}
 		}
 		return str.join(",\n");
