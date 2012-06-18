@@ -735,10 +735,12 @@ function compile(args)
 		models:[]
 	};
 
+	// create components directory for view/controller components
+	copyAlloy();
+	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'components'), 0777);
 	parseView('index',state,null,'index');
 	copyAssets();
 	copyLibs();
-	copyAlloy();
 	generateSourceCode();
 
 	// trigger our custom compiler makefile
