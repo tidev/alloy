@@ -475,6 +475,7 @@ function compile(args)
 		var symbol = generateVarName(id);
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
+		var req = node.getAttribute('require');
 
 		switch(nodename)
 		{
@@ -519,35 +520,38 @@ function compile(args)
 
 		// ids[id]=viewFile;
 
-		var ns = node.getAttribute('ns') || "Ti.UI";
-		var fn = "create" + nodename;
-		
-		
-		if (node.childNodes.length > 0)
-		{
-			var processors = 
-			[
-				['Label','text'],
-				['Button','title']
-			];
-			_.every(processors, function(el)
+		if (req) {
+			code += symbol + " = (require('alloy/components/" + id + "')).create();\n"
+		} else {
+			var ns = node.getAttribute('ns') || "Ti.UI";
+			var fn = "create" + nodename;
+			
+			
+			if (node.childNodes.length > 0)
 			{
-				if (nodename == el[0])
+				var processors = 
+				[
+					['Label','text'],
+					['Button','title']
+				];
+				_.every(processors, function(el)
 				{
-					var k = el[1];
-					var str = getNodeText(node);
-					if (!state.styles['#'+id])
+					if (nodename == el[0])
 					{
-						state.styles['#'+id]={};
-					}
-					state.styles['#'+id][k]=str;
-					return false;
-				} 
-				return true;
-			});
-		}
+						var k = el[1];
+						var str = getNodeText(node);
+						if (!state.styles['#'+id])
+						{
+							state.styles['#'+id]={};
+						}
+						state.styles['#'+id][k]=str;
+						return false;
+					} 
+					return true;
+				});
+			}
 
-			appendSource("}),'" + node.nodeName + "');");
+			code += '\t' + symbol + " = A$(" + ns + "." + fn + "({\n";
 			code += generateStyleParams(state.styles,classes,id,node.nodeName);
 			if (state.parentNode) {
 				code += "\n\t}),'" + node.nodeName + "', " + state.parentNode + ");\n\t";
