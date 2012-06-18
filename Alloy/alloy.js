@@ -45,8 +45,6 @@ program
 	.parse(process.argv);
 
 var outputPath,
-	JS = "",
-	ids = {},
 	// ids = {},
 	compilerMakeFile,
 	alloyUniqueIdPrefix = '__alloyId',
@@ -106,11 +104,6 @@ function getNodeText(node)
 		}
 	}
 	return str;
-}
-
-function appendSource(line)
-{
-	JS+=line + "\n";
 }
 
 function loadStyle(p)
@@ -431,39 +424,21 @@ function compile(args)
 
 	function generateController(name, parameters, dir, state, id)
 	{
+		var code = '';
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
 		var p = path.join(cd,name+'.js');
 		var symbol = generateVarName(id);
-		if (path.existsSync(p))
-		{
+		
+		if (path.existsSync(p)) {
 			var js = fs.readFileSync(p);
-			if (name == 'widget')
-			{ 
-				var src = symbol + " = (function(exports){\n" + 
-						   js + "\n" +
-						  "  return exports;\n" + 
-				          "})({});\n";
 
-				var comment = "/**\n" + 
-				              " * @widget " + name + "\n" +
-				              " */";
-
+			if (name == 'widget') { 
 				state.globals.push(symbol);
-			}
-			else
-			{
-				var src = "(function(exports){\n" + 
-						   js + "\n" +
-				          "})(" + symbol + ");\n";
+			} 
 
-				var comment = "/**\n" + 
-				              " * @controller " + name + "\n" +
-				              " */";
-			}
-
-			appendSource("");
-			appendSource(comment);
-			appendSource(src);
+			return js;
+		} else {
+			return '';
 		}
 	}
 
@@ -495,6 +470,7 @@ function compile(args)
 	{
 		if (node.nodeType != 1) return '';
 
+		var code = '';
 		var id = node.getAttribute('id') || defId || generateUniqueId();
 		var symbol = generateVarName(id);
 		var nodename = node.nodeName;
@@ -505,12 +481,12 @@ function compile(args)
 			case 'View':
 			{
 				// do a full import if a require tag is used
-				var req = node.getAttribute('require');
-				if (req)
-				{
-					parseView(req,state,null,id);
-					return;
-				}
+				//var req = node.getAttribute('require');
+				//if (req)
+				//{
+					//parseView(req,state,null,id);
+					//return;
+				//}
 				break;
 			}
 			case 'Widget':
@@ -571,13 +547,14 @@ function compile(args)
 			});
 		}
 
-		appendSource(symbol + " = A$(" + ns + "." + fn + "({");
-		appendSource(generateStyleParams(state.styles,classes,id,node.nodeName));
-		if (state.parentNode) {
-			appendSource("}),'" + node.nodeName + "', " + state.parentNode + ");");
-			appendSource(state.parentNode+".add("+symbol+");");
-		} else {
 			appendSource("}),'" + node.nodeName + "');");
+			code += generateStyleParams(state.styles,classes,id,node.nodeName);
+			if (state.parentNode) {
+				code += "\n\t}),'" + node.nodeName + "', " + state.parentNode + ");\n\t";
+				code += state.parentNode+".add("+symbol+");\n";
+			} else {
+				code += "}),'" + node.nodeName + "');\n";
+			}
 		}
 
 		var childstate = {
@@ -592,8 +569,10 @@ function compile(args)
 		for (var c=0;c<node.childNodes.length;c++)
 		{
 			var child = node.childNodes[c];
-			generateNode(true,viewFile,child,childstate);
+			code += generateNode(true,viewFile,child,childstate);
 		}
+
+		return code;
 	}
 	
 	function findModelMigrations(state,name)
@@ -635,6 +614,7 @@ function compile(args)
 	
 	function findAndLoadModels(state) {
 		var f = modelsDir;
+		var code = '';
 		if (!path.existsSync(f)) {
 			wrench.mkdirSyncRecursive(f, 777);
 		}		
@@ -674,17 +654,26 @@ function compile(args)
 				codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
 				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
 				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
-				appendSource(codegen);			
+			
 				// create the single model 
 				state.globals.push(symbol1);
 				// create the collection
 				state.globals.push(symbol2);
+
+				code += codegen;
 			}
 		}
+
+		return code;
 	}
 
 	function parseView(viewName,state,dir,viewid)
 	{
+		var template = {
+			viewCode: '',
+			controllerCode: '',
+			lifecycle: ''
+		};
 		var vd = dir ? path.join(dir,'views') : viewsDir;
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
 
@@ -693,12 +682,6 @@ function compile(args)
 		{
 			return false;
 		}
-
-		var comment = "/**\n" + 
-		              " * @view " + viewName + "\n" +
-		              " */";
-		appendSource("");
-		appendSource(comment);
 
 		var styleFile = path.join(sd,viewName+".json");
 		var styles = loadStyle(styleFile);
@@ -715,19 +698,22 @@ function compile(args)
 
 		if (viewName=='index')
 		{
-			findAndLoadModels(state);
+			template.viewCode += findAndLoadModels(state);
 		}
 
 		if (docRoot.nodeName === 'App') {
 			for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-				generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
+				template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
 			}
 		} else {
-			generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
+			template.viewCode += generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
 		}
-		generateController(viewName,parameters,dir,state,id);
+		template.controllerCode += generateController(viewName,parameters,dir,state,id);
 
-		return true;
+		// create commonjs module for this view/controller
+		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
+		fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
+		//console.log(code);
 	}
 	
 	var state = {
@@ -739,7 +725,17 @@ function compile(args)
 	// create components directory for view/controller components
 	copyAlloy();
 	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'components'), 0777);
-	parseView('index',state,null,'index');
+
+	// need to loop through all views
+	var vFiles = fs.readdirSync(path.join(outputPath,'app','views'));
+	for (var i = 0; i < vFiles.length; i++) {
+		if (/\.xml$/.test(vFiles[i])) {
+			var basename = path.basename(vFiles[i], '.xml');
+			parseView(basename,state,null,basename);
+		}
+	}
+	//parseView('index',state,null,'index');
+
 	copyAssets();
 	copyLibs();
 	generateSourceCode();
