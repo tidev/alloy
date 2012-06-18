@@ -7,3 +7,7 @@ $.table.setData([
 $.table.addEventListener('click', function(e) {
 	exports.fireEvent('rowClick', {image:e.row.image});
 });
+
+$.open = function(o) {
+	$.master.open(o);
+};
