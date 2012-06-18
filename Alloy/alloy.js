@@ -125,28 +125,6 @@ function getNodeText(node)
 	return str;
 }
 
-function copyFileSync (srcFile, destFile) 
-{
-	var BUF_LENGTH = 64 * 1024, 
-		buff, 
-		bytesRead, 
-		fdr, 
-		fdw, 
-		pos;
-	buff = new Buffer(BUF_LENGTH);
-	fdr = fs.openSync(srcFile, 'r');
-	fdw = fs.openSync(destFile, 'w');
-	bytesRead = 1;
-	pos = 0;
-	while (bytesRead > 0) {
-		bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos);
-		fs.writeSync(fdw, buff, 0, bytesRead);
-		pos += bytesRead;
-	}
-	fs.closeSync(fdr);
-	return fs.closeSync(fdw);
-}
-
 function appendSource(line)
 {
 	JS+=line + "\n";
@@ -378,34 +356,12 @@ function compile(args)
 		if (program.dump) console.log(final_code.blue);
 	}
 
-	function copyFilesAndDirs(f,d)
-	{
-		var files = fs.readdirSync(f);
-		for (var c=0;c<files.length;c++)
-		{
-			var file = files[c];
-			var fpath = path.join(f,file);
-			var stats = fs.lstatSync(fpath);
-			var rd = path.join(d,file);
-			logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
-			if (stats.isDirectory())
-			{
-				U.ensureDir(rd);
-				wrench.copyDirSyncRecursive(fpath, rd);
-			}
-			else
-			{
-				copyFileSync(fpath,rd);
-			}
-		}
-	}
-
 	function copyAssets()
 	{
 		if (path.existsSync(assetsDir))
 		{
 			logger.info('Copying assets from: '+assetsDir.yellow);
-			copyFilesAndDirs(assetsDir,resourcesDir);
+			U.copyFilesAndDirs(assetsDir,resourcesDir);
 		}
 	}
 
@@ -415,20 +371,20 @@ function compile(args)
 		if (path.existsSync(lib))
 		{
 			logger.info('Copying app libs: '+lib.yellow);
-			copyFilesAndDirs(lib,resourcesDir);
+			U.copyFilesAndDirs(lib,resourcesDir);
 		}
 		var vendor = path.join(inputPath,'vendor');
 		if (path.existsSync(vendor))
 		{
 			logger.info('Copying vendor libs: '+vendor.yellow);
-			copyFilesAndDirs(vendor,path.join(resourcesDir,'vendor'));
+			U.copyFilesAndDirs(vendor,path.join(resourcesDir,'vendor'));
 		}
 	}
 
 	function copyAlloy()
 	{
 		var lib = path.join(__dirname,'lib');
-		copyFilesAndDirs(lib,resourcesDir);
+		U.copyFilesAndDirs(lib,resourcesDir);
 	}
 
 	var JSON_NULL = JSON.parse('null');
@@ -825,7 +781,7 @@ function createPlugin(rootDir)
 	var alloyPlugin = path.join(alloyPluginDir,"plugin.py");
 	var pi = path.join(__dirname,"plugin","plugin.py");
 	
-	copyFileSync(pi,alloyPlugin);
+	U.copyFileSync(pi,alloyPlugin);
 	logger.info('Deployed ti.alloy plugin to '+alloyPlugin);
 }
 
