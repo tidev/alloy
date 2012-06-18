@@ -47,6 +47,7 @@ program
 var outputPath,
 	JS = "",
 	ids = {},
+	// ids = {},
 	compilerMakeFile,
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0;
@@ -535,12 +536,12 @@ function compile(args)
 			}
 		}
 
-		if (id !== undefined && ids[id])
-		{
-			die("<"+nodename+"> from '"+viewFile+"' attempted to use the id '"+id+"' which has already been defined in the view '"+ids[id]+"'");
-		}
+		// if (id !== undefined && ids[id])
+		// {
+		// 	die("<"+nodename+"> from '"+viewFile+"' attempted to use the id '"+id+"' which has already been defined in the view '"+ids[id]+"'");
+		// }
 
-		ids[id]=viewFile;
+		// ids[id]=viewFile;
 
 		var ns = node.getAttribute('ns') || "Ti.UI";
 		var fn = "create" + nodename;
