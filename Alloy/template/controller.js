@@ -20,10 +20,10 @@ exports.create = function(args) {
 	}
 
 	// generated from view markup
-	<%= viewCode %>
+<%= viewCode %>
 
 	// generated from controller
-	<%= controllerCode %>
+<%= controllerCode %>
 
 	if (_.isFunction(Lifecycle.afterCreate)) {
 		Lifecycle.afterCreate($);
