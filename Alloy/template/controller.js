@@ -6,7 +6,6 @@ var Alloy = require("alloy"),
 	A$ = Alloy.A, 
 	M$ = Alloy.M, 
 	BC$ = Alloy.Backbone.Collection,
-	U = require(''),
 	Lifecycle = {};
 
 <%= lifecycle %>
