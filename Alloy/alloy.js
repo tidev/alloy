@@ -866,6 +866,7 @@ function newproject(args)
 	if (!path.existsSync(outputPath)) fs.mkdirSync(outputPath);
 	
 	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'];
+	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor','template'];
 	for (var c=0;c<dirs.length;c++)
 	{
 		var p = path.join(outputPath,dirs[c]);
@@ -885,6 +886,7 @@ function newproject(args)
 	fs.writeFileSync(path.join(outputPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(outputPath,'controllers','index.js'),INDEX_C);
 
+	U.copyFilesAndDirs(templateDir, path.join(outputPath,'template'));
 	
 	// write a default compiler configuration
 	var defaultConfig = {
