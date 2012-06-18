@@ -823,7 +823,7 @@ function createPlugin(rootDir)
 	U.ensureDir(alloyPluginDir);
 	
 	var alloyPlugin = path.join(alloyPluginDir,"plugin.py");
-	var pi = path.join(__dirname,"template","plugin.py");
+	var pi = path.join(__dirname,"plugin","plugin.py");
 	
 	copyFileSync(pi,alloyPlugin);
 	logger.info('Deployed ti.alloy plugin to '+alloyPlugin);
