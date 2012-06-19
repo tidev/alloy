@@ -18,12 +18,12 @@ $.search.addEventListener("change", function(e)
 	// do something with e.value
 });
 
-
-if (OS_IPAD)
-{
-	// this code would be executed in the ipad example
+////////// NOT YET IMPLEMENTED //////////////
+// if (OS_IPAD)
+// {
+// 	// this code would be executed in the ipad example
 	
-	Ti.API.info("We are on an iPad so you should see a split view");
-}
+// 	Ti.API.info("We are on an iPad so you should see a split view");
+// }
 
-exports.open();
+$.index.open();
