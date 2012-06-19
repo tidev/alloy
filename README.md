@@ -525,6 +525,16 @@ To run the samples via Studio, you must first copy over the appropriate Alloy ap
 
 Then, you could import the Harness project into Titanium Studio, and run the project as normal.  The Alloy compiler plugin is already configured.
 
+Feedback
+--------
+
+To our intrepid developers taking an early look at alloy, please consider the following when asking questions or citing concerns:
+
+* Alloy is currently unstable and changing rapidly. Expect turbulence.
+* If you want to pose an Alloy question to the whole community on [Q&A](http://developer.appcelerator.com/questions/newest), make sure to use the **alloy** tag.
+* Since Alloy is in its earliest stages, you may first want log your issues in the [Issues section of the Github repository](https://github.com/appcelerator/alloy/issues?state=open). That way core Alloy developers will have immediate visibility into your concerns.
+
+Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
 
 TODO
 ----
