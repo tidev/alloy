@@ -2,10 +2,13 @@
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
 	SQLSync  = require("alloy/sync/sql"),
+	FileSysSync  = require("alloy/sync/filesys"),
 	osname   = Ti.Platform.osname;
 	
 module.exports._ = _;
 module.exports.Backbone = Backbone;
+
+Backbone.Collection.notify = _.extend({}, Backbone.Events);
 
 Backbone.sync = function(method, model, opts)
 {
@@ -20,6 +23,12 @@ Backbone.sync = function(method, model, opts)
 		case 'sql':
 		{
 			return SQLSync.sync(model,method,opts);
+		}
+		case 'filesystem':
+		{
+			FileSysSync.sync(model,method,opts);
+			Backbone.Collection.notify.trigger('refresh', {method:method,model:model});
+			return;
 		}
 		default:
 		{
@@ -39,6 +48,7 @@ module.exports.M = function(name,config,modelFn,migrations)
 		
 		validate: function(attrs) 
 		{
+			/*
 			if (_.isFunction(this._validate))
 			{
 				for (var k in attrs)
@@ -51,6 +61,7 @@ module.exports.M = function(name,config,modelFn,migrations)
 				}
 			}
 			return;
+			*/
 		}
 	});
 	

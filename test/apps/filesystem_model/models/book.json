@@ -1,0 +1,9 @@
+{
+    "defaults": {
+    	"type": "fiction"   
+    },
+    "adapter": {
+        "type": "filesystem",
+        "filename": "books"
+    }
+}
