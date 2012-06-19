@@ -520,11 +520,16 @@ function compile(args)
 		// ids[id]=viewFile;
 
 		if (req) {
-			code += symbol + " = (require('alloy/components/" + id + "')).create();\n"
+			code += symbol + " = (require('alloy/components/" + id + "')).create();\n";
+			if (!ischild) {
+				code += "root$ = " + symbol + ";\n";
+			}
+			if (state.parentNode) {
+				code += symbol + '.setParent(' + state.parentNode + ');\n';
+			} 
 		} else {
 			var ns = node.getAttribute('ns') || "Ti.UI";
 			var fn = "create" + nodename;
-			
 			
 			if (node.childNodes.length > 0)
 			{
