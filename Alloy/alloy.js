@@ -432,11 +432,6 @@ function compile(args)
 		
 		if (path.existsSync(p)) {
 			var js = fs.readFileSync(p);
-
-			if (name == 'widget') { 
-				state.globals.push(symbol);
-			} 
-
 			return js;
 		} else {
 			return '';
@@ -574,12 +569,8 @@ function compile(args)
 
 		var childstate = {
 			parentNode: symbol,
-			globals: state.globals,
-			styles: state.styles,
-			models:state.models
+			styles: state.styles
 		};
-
-		if (id && state.parentNode!=symbol) state.globals.push(symbol);
 
 		for (var c=0;c<node.childNodes.length;c++)
 		{
@@ -670,11 +661,6 @@ function compile(args)
 				codegen+=symbol2+".prototype.model = " + symbol1+";\n";
 				codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
 			
-				// create the single model 
-				state.globals.push(symbol1);
-				// create the collection
-				state.globals.push(symbol2);
-
 				code += codegen;
 			}
 		}
@@ -729,9 +715,7 @@ function compile(args)
 	}
 	
 	var state = {
-		parentNode: null,
-		globals: [],
-		models:[]
+		parentNode: null
 	};
 
 	// create components directory for view/controller components
@@ -746,7 +730,6 @@ function compile(args)
 			parseView(basename,state,null,basename);
 		}
 	}
-	//parseView('index',state,null,'index');
 
 	copyAssets();
 	copyLibs();
