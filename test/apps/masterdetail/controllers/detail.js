@@ -1,5 +1,5 @@
 $.closeButton.addEventListener('click', function(e) {
-	exports.close();
+	$.detail.close();
 });
 
 $.updateContent = function(o) {
