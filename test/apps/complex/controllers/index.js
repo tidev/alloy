@@ -7,9 +7,9 @@ $.top.updateLayout({
 	height:100
 });
 
-$.b.addEventListener('click',function(){
-	$.t.text = "You clicked me";
+$.bottom.b.addEventListener('click',function(){
+	$.middle.t.text = "You clicked me";
 });
 
-exports.open();
+$.index.open();
 
