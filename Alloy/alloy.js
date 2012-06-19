@@ -343,10 +343,12 @@ function compile(args)
 			U.copyFilesAndDirs(lib,resourcesDir);
 		}
 		var vendor = path.join(inputPath,'vendor');
+		var vendorTarget = path.join(resourcesDir,'vendor');
 		if (path.existsSync(vendor))
 		{
 			logger.info('Copying vendor libs: '+vendor.yellow);
-			U.copyFilesAndDirs(vendor,path.join(resourcesDir,'vendor'));
+			wrench.mkdirSyncRecursive(vendorTarget, 0777);
+			U.copyFilesAndDirs(vendor,vendorTarget);
 		}
 	}
 
