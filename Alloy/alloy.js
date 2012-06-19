@@ -701,7 +701,6 @@ function compile(args)
 		var docRoot = doc.documentElement;
 
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
-
 		var parentNode = state.parentNode;
 
 		if (viewName=='index')
@@ -721,7 +720,6 @@ function compile(args)
 		// create commonjs module for this view/controller
 		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
 		fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
-		//console.log(code);
 	}
 	
 	var state = {
