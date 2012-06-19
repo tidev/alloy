@@ -421,7 +421,7 @@ function compile(args)
 		return str.join(",\n");
 	}
 
-	function generateController(name, parameters, dir, state, id)
+	function generateController(name, dir, state, id)
 	{
 		var code = '';
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
@@ -696,7 +696,6 @@ function compile(args)
 
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
-		var parameters = state.globals;
 		var parentNode = state.parentNode;
 
 		if (viewName=='index')
@@ -711,7 +710,7 @@ function compile(args)
 		} else {
 			template.viewCode += generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
 		}
-		template.controllerCode += generateController(viewName,parameters,dir,state,id);
+		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
 		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
