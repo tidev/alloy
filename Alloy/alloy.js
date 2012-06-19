@@ -398,8 +398,8 @@ function compile(args)
 		var str = [];
 		
 		var constants = {
-			'TI_UI_FILL':'TFL$',
-			'TI_UI_SIZE':'TSZ$',
+			'TI_UI_FILL':'Ti.UI.FILL',
+			'TI_UI_SIZE':'Ti.UI.SIZE',
 			'TI_UI_TEXT_ALIGNMENT_LEFT':'Ti.UI.TEXT_ALIGNMENT_LEFT',
 			'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
 			'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'

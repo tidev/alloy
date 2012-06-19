@@ -8,8 +8,6 @@ var Alloy = require('alloy'),
 	A$ = Alloy.A,
 	M$ = Alloy.M,
 	BC$ = Alloy.Backbone.Collection,
-	TFL$ = Ti.UI.FILL,
-	TSZ$ = Ti.UI.SIZE,
 	$ = {};
 
 <%= config %>
