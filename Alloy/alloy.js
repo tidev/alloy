@@ -557,11 +557,12 @@ function compile(args)
 
 			code += '\t' + symbol + " = A$(" + ns + "." + fn + "({\n";
 			code += generateStyleParams(state.styles,classes,id,node.nodeName);
+			code += "\n\t}),'" + node.nodeName + "', " + (state.parentNode || 'null') + ");\n\t";
+			if (!ischild) {
+				code += "root$ = " + symbol + ";\n";
+			}
 			if (state.parentNode) {
-				code += "\n\t}),'" + node.nodeName + "', " + state.parentNode + ");\n\t";
 				code += state.parentNode+".add("+symbol+");\n";
-			} else {
-				code += "}),'" + node.nodeName + "');\n";
 			}
 		}
 
