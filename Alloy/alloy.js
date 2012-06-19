@@ -411,8 +411,7 @@ function compile(args)
 			var q = typeof(v) === 'string';
 			var cf = constants[v];
 			if (cf) {
-				v = cf;
-				q = false;
+				str.push("\t\t"+sn+':'+cf);
 			} else if (q) {
 				str.push("\t\t"+sn+':'+'"'+v+'"');
 			} else {
