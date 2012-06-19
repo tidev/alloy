@@ -3,4 +3,4 @@ var foo = require("foo"),
 
 Ti.API.info(bar.helloize(foo.generate()));
 
-exports.open();
+$.index.open();
