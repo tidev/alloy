@@ -1,7 +1,8 @@
 var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
-	spawn = require('child_process').spawn;
+	spawn = require('child_process').spawn,
+	targetAppPath = path.join(process.cwd(),'test','projects','Harness','app');
 
 desc('Default task - prompt to print this listing');
 task('default', function() {
@@ -12,17 +13,25 @@ namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
 		console.log('clobbering Alloy app directory...');
-		var appDir = process.cwd()+'/test/projects/Harness/app';
-		if (path.existsSync(appDir)) {
-			wrench.rmdirSyncRecursive(appDir);
+		if (path.existsSync(targetAppPath)) {
+			wrench.rmdirSyncRecursive(targetAppPath);
 		}
-		fs.mkdirSync(process.cwd()+'/test/projects/Harness/app');
+		fs.mkdirSync(targetAppPath);
 	});
 	
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=master_detail"');
 	task('setup', ['app:clobber'], function() {
+		var templateDir = path.join(targetAppPath,'template');
+
 		console.log('Staging sample app "'+process.env.dir+'" for launch...');
-		wrench.copyDirSyncRecursive(process.cwd()+'/test/apps/'+process.env.dir, process.cwd()+'/test/projects/Harness/app');
+		wrench.copyDirSyncRecursive(process.cwd()+'/test/apps/'+process.env.dir, targetAppPath);
+
+		console.log('Copying Alloy templates...');
+		if (path.existsSync(templateDir)) {
+			wrench.rmdirSyncRecursive(templateDir);
+		}
+		wrench.mkdirSyncRecursive(templateDir, 0777);
+		wrench.copyDirSyncRecursive(process.cwd()+'/Alloy/template', templateDir);
 	});
 	
 	desc('run the example app in the given directory name, with optional platform, e.g. "jake app:run dir=master_detail platform=android"');
