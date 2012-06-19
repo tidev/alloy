@@ -470,11 +470,15 @@ function compile(args)
 		if (node.nodeType != 1) return '';
 
 		var code = '';
-		var id = node.getAttribute('id') || defId || generateUniqueId();
+		var req = node.getAttribute('require');
+
+		// TODO: may need to rethink including "req" here. It simplifies usage,
+		//       but will cause complications when views/widgets are used more than
+		//       once in a view.
+		var id = node.getAttribute('id') || defId || req || generateUniqueId();
 		var symbol = generateVarName(id);
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
-		var req = node.getAttribute('require');
 
 		switch(nodename)
 		{
