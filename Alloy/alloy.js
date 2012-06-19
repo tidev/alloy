@@ -526,7 +526,7 @@ function compile(args)
 		// ids[id]=viewFile;
 
 		if (req) {
-			code += symbol + " = (require('alloy/components/" + id + "')).create();\n";
+			code += symbol + " = (require('alloy/components/" + req + "')).create();\n";
 			if (!ischild) {
 				code += "root$ = " + symbol + ";\n";
 			}
