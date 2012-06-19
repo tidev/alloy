@@ -11,7 +11,8 @@ var Alloy = require("alloy"),
 <%= lifecycle %>
 
 exports.create = function() {
-	var L$ = {};
+	var L$ = {},
+		root$;
 
 	// TODO: Move this definition into a component object module to be included
 	//       in the runtime alloy/components path
@@ -35,6 +36,11 @@ exports.create = function() {
 				L$[evt] = _.without(L$[evt], callback);
 				Ti.API.info(L$[evt]);
 			}
+		},
+		setParent: function(parent) {
+			if (root$) {
+				parent.add(root$);
+			} 
 		}
 	};
 
