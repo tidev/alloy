@@ -325,8 +325,8 @@ $.b.addEventListener("click",function(){
 	alert("You clicked the button");
 });
 
-// "exports" represents the top-level container for this view
-exports.open();
+// "$.index" is the default variable for a top-level container inside the index.xml
+$.index.open();
 ```
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
@@ -338,10 +338,10 @@ Exporting Properties & Functions from Controllers
 
 Sometimes it's necessary to provide properties and functions in your controller that can be used by other controllers as a well defined API.
 
-To export them, you would set the in the `exports` object which is predefined for you in your controller.
+To export them, you would set the in the `$` object which is predefined for you in your controller.
 
 ```javascript
-exports.foo = function()
+$.foo = function()
 {
 	return 'a';
 }
@@ -383,7 +383,7 @@ In your app controller, you would then be able to access them referencing the wi
 For example, in your `widget.js`:
 
 ```javascript
-exports.calculatePie = function() 
+$.calculatePie = function() 
 { 
 	return 3.14; 
 }
