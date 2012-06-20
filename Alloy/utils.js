@@ -5,8 +5,22 @@ var path = require('path'),
 	colors = require('colors'),
 	wrench = require('wrench'),
 	logger = require('./common/logger'),
+	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify;
+
+exports.XML = {
+	getNodeText: function(node) {
+		var serializer = new XMLSerializer(),
+			str = '';
+		for (var c = 0; c < node.childNodes.length; c++) {
+			if (node.childNodes[c].nodeType != 1) {
+				str += serializer.serializeToString(node.childNodes[c]);
+			}
+		}
+		return str;
+	}
+};
 
 exports.copyFileSync = function(srcFile, destFile) 
 {
@@ -59,6 +73,11 @@ exports.copyFilesAndDirs = function(f,d)
 			exports.copyFileSync(fpath,rd);
 		}
 	}
+}
+
+exports.isTiProject = function(dir) 
+{
+	return (path.existsSync(path.join(dir,'tiapp.xml')));
 }
 
 exports.stringifyJSON = function(j)

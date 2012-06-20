@@ -45,7 +45,6 @@ program
 	.parse(process.argv);
 
 var outputPath,
-	// ids = {},
 	compilerMakeFile,
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0;
@@ -92,19 +91,19 @@ function die(msg, printUsage)
 	process.exit(1);
 }
 
-function getNodeText(node)
-{
-	var str = '';
-	var serializer = new XMLSerializer();
-	for (var c=0;c<node.childNodes.length;c++)
-	{
-		if (node.childNodes[c].nodeType!=1)
-		{
-			str += serializer.serializeToString(node.childNodes[c]);
-		}
-	}
-	return str;
-}
+// function getNodeText(node)
+// {
+// 	var str = '';
+// 	var serializer = new XMLSerializer();
+// 	for (var c=0;c<node.childNodes.length;c++)
+// 	{
+// 		if (node.childNodes[c].nodeType!=1)
+// 		{
+// 			str += serializer.serializeToString(node.childNodes[c]);
+// 		}
+// 	}
+// 	return str;
+// }
 
 function loadStyle(p)
 {
@@ -893,11 +892,6 @@ function generate(args)
 	generators[funcName](home,newargs,name,program.force);	
 }
 
-function isTiProject(dir)
-{
-	return (path.existsSync(path.join(dir,'tiapp.xml')));
-}
-
 function run(args)
 {
 	if (process.platform != 'darwin')
@@ -912,7 +906,7 @@ function run(args)
 		die('inputPath "' + inputPath + '" does not exist');
 	}
 	
-	if (isTiProject(inputPath))
+	if (U.isTiProject(inputPath))
 	{
 		inputPath = path.join(inputPath,'app');
 		if (!path.existsSync(inputPath))
