@@ -525,6 +525,21 @@ To run the samples via Studio, you must first copy over the appropriate Alloy ap
 
 Then, you could import the Harness project into Titanium Studio, and run the project as normal.  The Alloy compiler plugin is already configured.
 
+Running a project from the command line
+---------------------------------------
+
+You can run the alloy and Titanium directly from the command line using the `run` command.
+
+	alloy run
+	
+If you are inside a Alloy based Titanium project directory, you do not need to pass any additional parameters.  The run command takes 2 optional parameters:
+
+	alloy run <directory> <platform>
+	
+Where `directory` is the project directory and `platform` is one of `iphone`, `android`, etc.
+
+_NOTE: currently, this command is only available on OSX._
+
 
 TODO
 ----
