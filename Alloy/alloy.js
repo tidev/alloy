@@ -438,26 +438,6 @@ function compile(args)
 		}
 	}
 
-	function findWidget(id)
-	{
-		var files = fs.readdirSync(widgetsDir);
-		for (var c=0;c<files.length;c++)
-		{
-			var dirname = files[c];
-			var f = path.join(widgetsDir,dirname,'widget.json');
-			if (path.existsSync(f))
-			{
-				var json = fs.readFileSync(f);
-				var manifest = JSON.parse(json);
-				if (manifest.id == id)
-				{
-					return [manifest,path.join(widgetsDir,dirname)];
-				}
-			}
-		}
-		return null;
-	}
-
 	function generateUniqueId() {
 		return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 	};
@@ -477,57 +457,18 @@ function compile(args)
 		var nodename = node.nodeName;
 		var classes = node.getAttribute('class').split(' ');
 
-		switch(nodename)
-		{
-			case 'View':
-			{
-				// do a full import if a require tag is used
-				//var req = node.getAttribute('require');
-				//if (req)
-				//{
-					//parseView(req,state,null,id);
-					//return;
-				//}
-				break;
-			}
-			case 'Widget':
-			{
-				// if we're not inside a widget file, then attempt to pull it in
-				if (viewFile.indexOf('widget.xml')==-1)
-				{
-					var req = node.getAttribute('require');
-					if (!req)
-					{
-						die("Widget at '"+viewFile+"' doesn't specify a 'require' attribute which is required");
-					}
-					var widget = findWidget(req);
-					parseView('widget',state,widget[1],id);
-					return;
-				}
-				else
-				{
-					// a widget should actually get turned into an empty view container
-					nodename = 'View';
-					break;
-				}
-			}
-		}
-
-		// if (id !== undefined && ids[id])
-		// {
-		// 	die("<"+nodename+"> from '"+viewFile+"' attempted to use the id '"+id+"' which has already been defined in the view '"+ids[id]+"'");
-		// }
-
-		// ids[id]=viewFile;
-
 		if (req) {
-			code += symbol + " = (require('alloy/components/" + req + "')).create();\n";
+			var commonjs = "alloy/components/" + req;
+			if (nodename === 'Widget') {
+				commonjs = "alloy/widgets/" + req + "/components/widget";
+			} 
+			code += symbol + " = (require('" + commonjs + "')).create();\n";
 			if (!ischild) {
 				code += "root$ = " + symbol + ";\n";
 			}
 			if (state.parentNode) {
 				code += symbol + '.setParent(' + state.parentNode + ');\n';
-			} 
+			}
 		} else {
 			var ns = node.getAttribute('ns') || "Ti.UI";
 			var fn = "create" + nodename;
@@ -668,7 +609,7 @@ function compile(args)
 		return code;
 	}
 
-	function parseView(viewName,state,dir,viewid)
+	function parseView(viewName,state,dir,viewid,isWidget,wJSon)
 	{
 		var template = {
 			viewCode: '',
@@ -710,8 +651,15 @@ function compile(args)
 		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
-		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
-		fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
+		if (isWidget) {
+			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
+			console.log(code);
+			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
+			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components', viewName + '.js'), code);
+		} else {
+			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
+			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
+		}
 	}
 	
 	var state = {
@@ -721,6 +669,34 @@ function compile(args)
 	// create components directory for view/controller components
 	copyAlloy();
 	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'components'), 0777);
+	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets'), 0777);
+
+	// TODO: Clean up this iteration mess!
+	// loop through all widgets
+	var widgetPath = path.join(outputPath,'app','widgets');
+	var wFiles = fs.readdirSync(widgetPath);
+	for (var i = 0; i < wFiles.length; i++) {
+		var wDir = wFiles[i];
+		// TODO: make sure wDir is a directory
+		var wDirFiles = fs.readdirSync(path.join(widgetPath,wDir));
+		for (var j = 0; j < wDirFiles.length; j++) {
+			if (_.indexOf(wDirFiles,'widget.json') === -1) {
+				break;
+			}
+		}
+
+		var wReq = JSON.parse(fs.readFileSync(path.join(widgetPath,wDir,'widget.json'),'utf8'));
+
+		// need to loop through all views
+		var vFiles = fs.readdirSync(path.join(widgetPath, wDir,'views'));
+		for (var k = 0; k < vFiles.length; k++) {
+			
+			if (/\.xml$/.test(vFiles[k])) {
+				var basename = path.basename(vFiles[k], '.xml');
+				parseView(basename,state,path.join(widgetPath,wDir),basename,true,wReq);
+			}
+		}
+	}
 
 	// need to loop through all views
 	var vFiles = fs.readdirSync(path.join(outputPath,'app','views'));
