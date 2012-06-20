@@ -13,7 +13,7 @@ function showAlert()
  */
 $.b.on("click",showAlert);
 
-exports.open();
+$.index.open();
 
 
 

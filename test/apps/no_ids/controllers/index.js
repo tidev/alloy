@@ -1,1 +1,1 @@
-exports.open();
+$.index.open();

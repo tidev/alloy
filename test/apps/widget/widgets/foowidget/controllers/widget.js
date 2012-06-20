@@ -15,10 +15,10 @@ $.c.addEventListener('click',function(){
 
 // anything defined against the export will be provided as methods/properties against the widgets variable
 
-exports.setText = function(text){
+$.setText = function(text){
 	$.t.text = text;
 };
 
-exports.getText = function() {
+$.getText = function() {
 	return $.t.text;
 }

@@ -10,7 +10,7 @@ $.todo.fetch(function(todos) {
 	// bind each todo model item to the row
 	$.todos.each(function(todo)
 	{
-		// notice that the createRowTemplate is a special Allow function that will
+		// notice that the createRowTemplate is a special Alloy function that will
 		// create a table view row from the TableViewRowTemplate XML and bind the data from the 
 		// row model into the template
 		var row = $.table.createRowTemplate(todo);
@@ -29,4 +29,4 @@ $.todo.fetch(function(todos) {
 	
 });
 
-exports.open();
+$.index.open();

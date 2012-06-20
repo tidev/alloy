@@ -26,4 +26,4 @@ books.fetch();
 // for this sample delete models to clean up
 books.forEach(function(model){model.destroy();});
 
-exports.open();
+$.index.open();
