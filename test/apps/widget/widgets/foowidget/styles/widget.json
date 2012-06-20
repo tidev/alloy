@@ -1,8 +1,8 @@
 {
 	"#t":{
 		"textAlign" : Ti.UI.TEXT_ALIGNMENT_LEFT,
-		"width" : Ti.UI.FIT,
-		"height": Ti.UI.FIT,
+		"width" : Ti.UI.SIZE,
+		"height": Ti.UI.SIZE,
 		"text": "Click a button to display something",
 		"color": "red"
 	},
@@ -15,20 +15,20 @@
 	
 	"#a" : {
 		"title": "A",
-		"width" : Ti.UI.FIT,
-		"height": Ti.UI.FIT
+		"width" : Ti.UI.SIZE,
+		"height": Ti.UI.SIZE
 	},
 
 	"#b" : {
 		"title": "B",
-		"width" : Ti.UI.FIT,
-		"height": Ti.UI.FIT
+		"width" : Ti.UI.SIZE,
+		"height": Ti.UI.SIZE
 	},
 
 	"#c" : {
 		"title": "C",
-		"width" : Ti.UI.FIT,
-		"height": Ti.UI.FIT
+		"width" : Ti.UI.SIZE,
+		"height": Ti.UI.SIZE
 	}
 	
 }
