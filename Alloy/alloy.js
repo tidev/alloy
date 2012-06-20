@@ -673,26 +673,28 @@ function compile(args)
 	// TODO: Clean up this iteration mess!
 	// loop through all widgets
 	var widgetPath = path.join(outputPath,'app','widgets');
-	var wFiles = fs.readdirSync(widgetPath);
-	for (var i = 0; i < wFiles.length; i++) {
-		var wDir = wFiles[i];
-		// TODO: make sure wDir is a directory
-		var wDirFiles = fs.readdirSync(path.join(widgetPath,wDir));
-		for (var j = 0; j < wDirFiles.length; j++) {
-			if (_.indexOf(wDirFiles,'widget.json') === -1) {
-				break;
+	if (path.existsSync(widgetPath)) {
+		var wFiles = fs.readdirSync(widgetPath);
+		for (var i = 0; i < wFiles.length; i++) {
+			var wDir = wFiles[i];
+			// TODO: make sure wDir is a directory
+			var wDirFiles = fs.readdirSync(path.join(widgetPath,wDir));
+			for (var j = 0; j < wDirFiles.length; j++) {
+				if (_.indexOf(wDirFiles,'widget.json') === -1) {
+					break;
+				}
 			}
-		}
 
-		var wReq = JSON.parse(fs.readFileSync(path.join(widgetPath,wDir,'widget.json'),'utf8'));
+			var wReq = JSON.parse(fs.readFileSync(path.join(widgetPath,wDir,'widget.json'),'utf8'));
 
-		// need to loop through all views
-		var vFiles = fs.readdirSync(path.join(widgetPath, wDir,'views'));
-		for (var k = 0; k < vFiles.length; k++) {
-			
-			if (/\.xml$/.test(vFiles[k])) {
-				var basename = path.basename(vFiles[k], '.xml');
-				parseView(basename,state,path.join(widgetPath,wDir),basename,true,wReq);
+			// need to loop through all views
+			var vFiles = fs.readdirSync(path.join(widgetPath, wDir,'views'));
+			for (var k = 0; k < vFiles.length; k++) {
+				
+				if (/\.xml$/.test(vFiles[k])) {
+					var basename = path.basename(vFiles[k], '.xml');
+					parseView(basename,state,path.join(widgetPath,wDir),basename,true,wReq);
+				}
 			}
 		}
 	}
@@ -702,7 +704,7 @@ function compile(args)
 	for (var i = 0; i < vFiles.length; i++) {
 		if (/\.xml$/.test(vFiles[i])) {
 			var basename = path.basename(vFiles[i], '.xml');
-			parseView(basename,state,null,basename);
+			parseView(basename,state,null,basename,false);
 		}
 	}
 
