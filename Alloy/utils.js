@@ -22,6 +22,15 @@ exports.XML = {
 	}
 };
 
+exports.resolveAppHome = function() {
+	var f = path.join("./","app");
+	if (path.existsSync(f))
+	{
+		return f;
+	}
+	U.die("This directory: "+f+" does not look like an Alloy directory");
+}
+
 exports.generateConfig = function(configDir, alloyConfig) {
 	var cf = path.join(configDir,'config.json');
 	if (path.existsSync(cf))
