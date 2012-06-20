@@ -541,7 +541,6 @@ function compile(args, program) {
 
 	copyAssets();
 	copyLibs();
-	//generateSourceCode();
 
 	// generate app.js
 	var appJS = path.join(resourcesDir,"app.js");

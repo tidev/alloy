@@ -11,11 +11,8 @@ var fs = require('fs'),
 	wrench = require("wrench"),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	//DOMParser = require("xmldom").DOMParser,
-	//XMLSerializer = require("xmldom").XMLSerializer,
 	generators = require('./generators'),
 	pkginfo = require('pkginfo')(module, 'name', 'version');
-//	CompilerMakeFile = require('./CompilerMakeFile');
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
