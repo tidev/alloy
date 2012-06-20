@@ -52,16 +52,6 @@ function generateVarName(id)
 	return '$.'+id;
 }
 
-function die(msg, printUsage) 
-{
-	printUsage = typeof printUsage === 'undefined' ? false : printUsage;
-	logger.error(msg);
-	if (printUsage) {
-		logger.info(program.helpInformation());
-	}
-	process.exit(1);
-}
-
 function loadStyle(p)
 {
 	if (path.existsSync(p))
@@ -87,7 +77,7 @@ function loadStyle(p)
 		}
 		catch(E)
 		{
-			die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
+			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
 		}
 	}
 	return {};
@@ -120,7 +110,7 @@ function compile(args)
 
 	if (!path.existsSync(inputPath)) 
 	{
-		die('inputPath "' + inputPath + '" does not exist');
+		U.die('inputPath "' + inputPath + '" does not exist');
 	}	
 
 	if (!program.outputPath)
@@ -153,7 +143,7 @@ function compile(args)
 	// establish alloy app directories
 	var viewsDir = path.join(inputPath,'views');
 	if (!path.existsSync(viewsDir)) {
-		die("Couldn't find expected views directory at '"+viewsDir+"'");
+		U.die("Couldn't find expected views directory at '"+viewsDir+"'");
 	}
 	var stylesDir = path.join(inputPath,'styles');
 	var controllersDir = path.join(inputPath,'controllers');
@@ -174,7 +164,7 @@ function compile(args)
 	// make sure we have a root index view
 	var indexView = path.join(viewsDir,"index.xml");
 	if (!path.existsSync(indexView)) {
-		die("Couldn't find expected index view at '"+indexView+"'");
+		U.die("Couldn't find expected index view at '"+indexView+"'");
 	}
 
 	// make sure we have a Resources directory in the output path
@@ -635,15 +625,15 @@ function resolveAppHome()
 	{
 		return f;
 	}
-	die("This directory: "+f+" does not look like an Alloy directory");
+	U.die("This directory: "+f+" does not look like an Alloy directory");
 }
 
 function generate(args)
 {
 	if (args.length === 0) {
-		die("generate requires a TYPE such as 'controller' as second argument");
+		U.die("generate requires a TYPE such as 'controller' as second argument");
 	} else if (args.length === 1) {
-		die("generate requires a NAME such as third argument");
+		U.die("generate requires a NAME such as third argument");
 	}
 
 	var targets = ['controller', 'view', 'model', 'migration', 'widget'];	
@@ -652,7 +642,7 @@ function generate(args)
 
 	if (!_.contains(targets, target)) 
 	{
-		die(
+		U.die(
 			'Invalid generate target "' + target + '"\n' + 
 			'Must be one of the following: [' + targets.join(',') + ']'
 		);
@@ -668,14 +658,14 @@ function run(args)
 {
 	if (process.platform != 'darwin')
 	{
-		die("Sorry, Alloy doesn't yet support the `run` command on this platform (" + process.platform + ")");
+		U.die("Sorry, Alloy doesn't yet support the `run` command on this platform (" + process.platform + ")");
 	}
 	
 	var inputPath = path.resolve(args.length > 0 ? args[0] : resolveAppHome());
 	
 	if (!path.existsSync(inputPath)) 
 	{
-		die('inputPath "' + inputPath + '" does not exist');
+		U.die('inputPath "' + inputPath + '" does not exist');
 	}
 	
 	if (U.isTiProject(inputPath))
@@ -683,7 +673,7 @@ function run(args)
 		inputPath = path.join(inputPath,'app');
 		if (!path.existsSync(inputPath))
 		{
-			die("This project doesn't seem to contain an Alloy app");
+			U.die("This project doesn't seem to contain an Alloy app");
 		}
 	}
 		
@@ -784,7 +774,7 @@ function run(args)
 	}
 	else
 	{
-		die("Couldn't find Titanium SDK at "+sdkRoot);
+		U.die("Couldn't find Titanium SDK at "+sdkRoot);
 	}
 }
 
@@ -796,7 +786,7 @@ function main(args)
 	
 	if (args.length == 0)
 	{
-		die('You must supply an ACTION as the first argument');
+		U.die('You must supply an ACTION as the first argument');
 	}
 	
 	var action = args[0],
@@ -826,7 +816,7 @@ function main(args)
 		}
 		default:
 		{
-			die('Unknown action: '+action.red);
+			U.die('Unknown action: '+action.red);
 		}
 	}
 	
