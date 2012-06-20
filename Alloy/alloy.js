@@ -91,20 +91,6 @@ function die(msg, printUsage)
 	process.exit(1);
 }
 
-// function getNodeText(node)
-// {
-// 	var str = '';
-// 	var serializer = new XMLSerializer();
-// 	for (var c=0;c<node.childNodes.length;c++)
-// 	{
-// 		if (node.childNodes[c].nodeType!=1)
-// 		{
-// 			str += serializer.serializeToString(node.childNodes[c]);
-// 		}
-// 	}
-// 	return str;
-// }
-
 function loadStyle(p)
 {
 	if (path.existsSync(p))
