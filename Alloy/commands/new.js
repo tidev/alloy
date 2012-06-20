@@ -92,7 +92,7 @@ function newproject(args, program) {
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.xml'),'utf8'),
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.json'),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.js'),'utf8'),
-		defaultConfig = { compiler: {} },
+		defaultConfig = {},
 		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
 
 	// validate args
