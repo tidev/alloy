@@ -14,7 +14,8 @@ var fs = require('fs'),
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
 	generators = require('./generators'),
-	pkginfo = require('pkginfo')(module, 'name', 'version');
+	pkginfo = require('pkginfo')(module, 'name', 'version'),
+	CompilerMakeFile = require('./CompilerMakeFile');
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
@@ -45,33 +46,6 @@ var outputPath,
 	compilerMakeFile,
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0;
-	
-function CompilerMakeFile()
-{
-	var handlers = {};
-	
-	this.require = require;
-	this.process = process;
-	
-	this.task = function(event, fn)
-	{
-		logger.debug('adding task: '+event.yellow);
-		handlers[event] = fn;
-	};
-	
-	this.trigger = function(event, config)
-	{
-		logger.debug("compile:trigger-> "+event.yellow);
-		var fn = handlers[event];
-		if (fn)
-		{
-			return fn(config,logger);
-		}
-		return null;
-	};
-	
-	return this;
-}	
 
 function generateVarName(id)
 {
