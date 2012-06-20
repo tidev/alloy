@@ -21,7 +21,6 @@ var fs = require('fs'),
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
 //TODO: handle localization files and merging
-//TODO: uglify all files not just our main app.js
 //
 
 /**
@@ -143,6 +142,9 @@ function banner()
 function compile(args)
 {
 	var inputPath = args.length > 0 ? args[0] : resolveAppHome();
+	var alloyCF = path.join(inputPath,'alloy.json');
+	var generatedCFG = '';
+	var alloyConfig = {};
 
 	if (!path.existsSync(inputPath)) 
 	{
@@ -159,30 +161,26 @@ function compile(args)
 	}
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(resolveAppHome(),".."));
 	U.ensureDir(outputPath);
-	
-	if (program.config)
-	{
-		var pc = {};
-		_.each(program.config.split(','),function(v)
-		{
-			var a = v.split('=');
-			pc[a[0]]=a[1];
-		});
-		program.config = pc;
-	}
-	
-	var alloyConfig = {};
-	var alloyCF = path.join(inputPath,'alloy.json');
-	if (path.existsSync(alloyCF))
-	{
-		var c = fs.readFileSync(alloyCF);
-		alloyConfig = JSON.parse(c);
+
+	// construct compiler config from alloy.json and the command line config parameters
+	if (path.existsSync(alloyCF)) {
+		alloyConfig = JSON.parse(fs.readFileSync(alloyCF, 'utf8'));
 		logger.info("found alloy configuration at "+alloyCF.yellow);
 	}
+	if (program.config) {
+		_.each(program.config.split(','), function(v) {
+			var a = v.split('=');
+			alloyConfig[a[0]]=a[1];
+		});
+	}
+	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
+	alloyConfig.beautify = alloyConfig.beautify || alloyConfig.deploytype === 'development';
 
+	//console.log(alloyConfig);
+
+	// establish alloy app directories
 	var viewsDir = path.join(inputPath,'views');
-	if (!path.existsSync(viewsDir))
-	{
+	if (!path.existsSync(viewsDir)) {
 		die("Couldn't find expected views directory at '"+viewsDir+"'");
 	}
 	var stylesDir = path.join(inputPath,'styles');
@@ -191,17 +189,26 @@ function compile(args)
 	var modelsDir = path.join(inputPath,'models');
 	var migrationsDir = path.join(inputPath,'migrations');
 	var configDir = path.join(inputPath,'config');
-
-	var indexView = path.join(viewsDir,"index.xml");
-	if (!path.existsSync(indexView))
-	{
-		die("Couldn't find expected index view at '"+indexView+"'");
-	}
-	var resourcesDir = path.join(outputPath,"Resources");
-	U.ensureDir(resourcesDir);
-
 	var assetsDir = path.join(inputPath,'assets');
 
+	// generate $.CFG from config.json, if present
+	// TODO: $.CFG doesn't seem like a good idea for the variable name, since
+	//       $ is used for each component object. Perhaps the generated config
+	//       should be accessed via commonjs module. This ensures that it is 
+	//       only generated/loaded once and will be "global" to all project
+	//       resources.
+	generatedCFG = U.generateConfig(configDir, alloyConfig);
+
+	// make sure we have a root index view
+	var indexView = path.join(viewsDir,"index.xml");
+	if (!path.existsSync(indexView)) {
+		die("Couldn't find expected index view at '"+indexView+"'");
+	}
+
+	// make sure we have a Resources directory in the output path
+	var resourcesDir = path.join(outputPath,"Resources");
+	U.ensureDir(resourcesDir);
+	
 	logger.info("Generating to "+resourcesDir.yellow+" from ".cyan + inputPath.yellow);
 
 	// setup the compiler makefile
@@ -240,74 +247,6 @@ function compile(args)
 	
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
-
-	function generateConfig()
-	{
-		var cf = path.join(configDir,'config.json');
-		if (path.existsSync(cf))
-		{
-			var jf = fs.readFileSync(cf);
-			var j = JSON.parse(jf);
-			
-			var o = j.global || {};
-			if (program.config)
-			{
-				o = _.extend(o, j['env:'+program.config.deploytype]);
-				o = _.extend(o, j['os:'+program.config.platform]);
-			}
-			return "$.CFG = " + JSON.stringify(o) + ";";
-		}
-		return '';
-	}
-
-	function generateSourceCode()
-	{
-		var appJS = path.join(resourcesDir,"app.js");
-		
-		if (!program.config)
-		{
-			program.config = {
-				deploytype:"development"
-			};
-		}
-		
-		var DEFINES = 
-		{
-			OS_IOS : program.config.platform == 'ios',
-			OS_ANDROID: program.config.platform == 'android',
-			OS_MOBILEWEB: program.config.platform == 'mobileweb',
-			ENV_DEV: program.config.deploytype == 'development',
-			ENV_DEVELOPMENT: program.config.deploytype == 'development',
-			ENV_TEST: program.config.deploytype == 'test',
-			ENV_PRODUCTION: program.config.deploytype == 'production'
-		};
-		
-		var defines = {};
-		for (var k in DEFINES)
-		{
-			defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-		}
-		
-		var cfg = generateConfig();
-		var code = _.template(fs.readFileSync(path.join(outputPath,'app','template','app.js'),'utf8'),{config:cfg});
-		var beautify = alloyConfig.compiler && typeof alloyConfig.compiler.beautify !== 'undefined' ? alloyConfig.compiler.beautify : program.config.deploytype === 'development' ? true : false;
-		var ast = jsp.parse(code); // parse code and get the initial AST
-		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
-		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-		var final_code = pro.gen_code(ast,{beautify:beautify}); 
-
-		// trigger our custom compiler makefile
-		var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":final_code, "appJSFile" : path.resolve(appJS)}));
-		if (njs)
-		{
-			final_code = njs;
-		}
-		
-		fs.writeFileSync(appJS,final_code);
-		logger.info("compiling alloy to " + appJS.yellow);
-
-		if (program.dump) console.log(final_code.blue);
-	}
 
 	function copyAssets()
 	{
@@ -598,7 +537,8 @@ function compile(args)
 		var template = {
 			viewCode: '',
 			controllerCode: '',
-			lifecycle: ''
+			lifecycle: '',
+			CFG: generatedCFG
 		};
 		var vd = dir ? path.join(dir,'views') : viewsDir;
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
@@ -635,12 +575,12 @@ function compile(args)
 		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
+		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
+		code = U.processSourceCode(code, alloyConfig);
 		if (isWidget) {
-			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
 			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
 			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components', viewName + '.js'), code);
 		} else {
-			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
 			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
 		}
 	}
@@ -694,7 +634,23 @@ function compile(args)
 
 	copyAssets();
 	copyLibs();
-	generateSourceCode();
+	//generateSourceCode();
+
+	// generate app.js
+	var appJS = path.join(resourcesDir,"app.js");
+	var code = _.template(fs.readFileSync(path.join(outputPath,'app','template','app.js'),'utf8'),{config:generatedCFG});
+	code = U.processSourceCode(code, alloyConfig);
+
+	// trigger our custom compiler makefile
+	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
+	if (njs) {
+		code = njs;
+	}
+	
+	fs.writeFileSync(appJS,code);
+	logger.info("compiling alloy to " + appJS.yellow);
+
+	if (program.dump) console.log(final_code.blue);
 
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.extend(_.clone(compileConfig), {state:state}));
