@@ -13,8 +13,6 @@ var fs = require('fs'),
 	_ = require("./lib/alloy/underscore")._,
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
-	jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify,
 	generators = require('./generators'),
 	pkginfo = require('pkginfo')(module, 'name', 'version');
 
