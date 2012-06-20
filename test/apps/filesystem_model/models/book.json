@@ -1,6 +1,5 @@
 {
-    "defaults": {
-    	"type": "fiction"   
+    "defaults": { 
     },
     "adapter": {
         "type": "filesystem",

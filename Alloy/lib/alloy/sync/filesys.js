@@ -12,14 +12,21 @@ function FileSysSync(model)
 	
 	var self = this;
 	
+	this.create = function(opts)
+	{
+		var filename = model.config.adapter.filename;
+		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, filename);
+    	f.write(JSON.stringify(model));
+	};
+
 	this.read = function(opts)
 	{
 		var filename = model.config.adapter.filename;
 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, filename);
 		if (f.exists()) { Ti.API.info("Fetch results = " + f.read()); }
 	};
-	
-	this.create = function(opts)
+
+	this.update = function(opts)
 	{
 		var filename = model.config.adapter.filename;
 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, filename);
