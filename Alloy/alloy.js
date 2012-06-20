@@ -893,6 +893,135 @@ function generate(args)
 	generators[funcName](home,newargs,name,program.force);	
 }
 
+function isTiProject(dir)
+{
+	return (path.existsSync(path.join(dir,'tiapp.xml')));
+}
+
+function run(args)
+{
+	if (process.platform != 'darwin')
+	{
+		die("Sorry, Alloy doesn't yet support the `run` command on this platform (" + process.platform + ")");
+	}
+	
+	var inputPath = path.resolve(args.length > 0 ? args[0] : resolveAppHome());
+	
+	if (!path.existsSync(inputPath)) 
+	{
+		die('inputPath "' + inputPath + '" does not exist');
+	}
+	
+	if (isTiProject(inputPath))
+	{
+		inputPath = path.join(inputPath,'app');
+		if (!path.existsSync(inputPath))
+		{
+			die("This project doesn't seem to contain an Alloy app");
+		}
+	}
+		
+	var platform = args.length > 1 ? args[1] : 'iphone'; // TODO: check tiapp.xml for <deployment-targets>
+	
+	var sdkRoot = path.resolve('/Library/Application Support/Titanium/mobilesdk/osx')
+	if (path.existsSync(sdkRoot))
+	{
+		var dirs = fs.readdirSync(sdkRoot);
+		if (dirs.length > 0)
+		{
+			// sort and get the latest if we don't pass it in
+			dirs = dirs.sort();
+			sdkRoot = path.join(sdkRoot, dirs[dirs.length-1]);
+		}
+	}
+	
+	if (sdkRoot && path.existsSync(sdkRoot))
+	{
+		function trim(line)
+		{
+			return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+		}
+		function filterLog(line)
+		{
+			line =trim(line);
+			if (!line) return;
+			var lines = line.split('\n');
+			if (lines.length > 1)
+			{
+				_.each(lines,function(l){
+					filterLog(l);
+				});
+				return;
+			}
+			var idx = line.indexOf(' -- [');
+			if (idx > 0)
+			{
+				var idx2 = line.indexOf(']', idx+7);
+				line = line.substring(idx2+1);
+			}
+			if (line.charAt(0)=='[')
+			{
+				var i = line.indexOf(']');
+				var label = line.substring(1,i);
+				var rest = trim(line.substring(i+1));
+				if (!rest) return;
+				switch(label)
+				{
+					case 'INFO':
+					{
+						logger.info(rest);
+						return;
+					}
+					case 'TRACE':
+					case 'DEBUG':
+					{
+						logger.debug(rest);
+						return;
+					}
+					case 'WARN':
+					{
+						logger.warn(rest);
+						return;
+					}
+					case 'ERROR':
+					{
+						logger.error(rest);
+						return;
+					}
+				}
+			}
+			logger.debug(line);
+		}
+
+		var spawn = require('child_process').spawn;
+		
+		//run the project using titanium.py
+		var runcmd = spawn('python', [
+			path.join(sdkRoot,'titanium.py'),
+			'run',
+			'--dir=' + inputPath ,
+			'--platform=' + platform
+		],process.env);
+		
+		//run stdout/stderr back through console.log
+		runcmd.stdout.on('data', function (data) {
+			filterLog(data);
+		});
+
+		runcmd.stderr.on('data', function (data) {
+			filterLog(data);
+		});
+
+		runcmd.on('exit', function (code) {
+		  	logger.info('Finished with code ' + code);
+		});
+	}
+	else
+	{
+		die("Couldn't find Titanium SDK at "+sdkRoot);
+	}
+}
+
 function main(args)
 {
 	logger.stripColors = (program.colors==false);
@@ -922,6 +1051,11 @@ function main(args)
 		case 'generate':
 		{
 			generate(newargs);
+			break;
+		}
+		case 'run':
+		{
+			run(newargs);
 			break;
 		}
 		default:

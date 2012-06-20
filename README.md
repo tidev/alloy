@@ -536,6 +536,21 @@ To our intrepid developers taking an early look at alloy, please consider the fo
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
 
+Running a project from the command line
+---------------------------------------
+
+You can run the alloy and Titanium directly from the command line using the `run` command.
+
+	alloy run
+	
+If you are inside a Alloy based Titanium project directory, you do not need to pass any additional parameters.  The run command takes 2 optional parameters:
+
+	alloy run <directory> <platform>
+	
+Where `directory` is the project directory and `platform` is one of `iphone`, `android`, etc.
+
+_NOTE: currently, this command is only available on OSX._
+
 TODO
 ----
 
