@@ -11,7 +11,6 @@ var fs = require('fs'),
 	wrench = require("wrench"),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	generators = require('./generators'),
 	pkginfo = require('pkginfo')(module, 'name', 'version');
 
 //
@@ -201,13 +200,9 @@ function main(args)
 		case 'new':
 		case 'compile':
 		case 'generate':
-		{
-			(require('./commands/'+action))(newargs, program);
-			break;
-		}
 		case 'run':
 		{
-			run(newargs);
+			(require('./commands/'+action))(newargs, program);
 			break;
 		}
 		default:
