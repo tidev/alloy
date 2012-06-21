@@ -10,30 +10,13 @@ var program = require('commander'),
 	_ = require("./lib/alloy/underscore")._,
 	pkginfo = require('pkginfo')(module, 'name', 'version');
 
+// TODO: get the action list from the commands directory
+var ACTIONS = ['compile', 'generate', 'new', 'run'];
+
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium
 //TODO: handle localization files and merging
 //
-
-/**
- * ACTIONS:
- *
- * - new [path] - create a new project
- * - compile - compile the project
- * - generate [type] - generate an object such as a model or controller
- */
-		
-program
-	.version(module.exports.version)
-	.description('Alloy command line')
-	.usage('ACTION [ARGS] [OPTIONS]')
-	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
-	.option('-d, --dump','Dump the generated app.js to console')
-	.option('-f, --force','Force the command to execute')
-	.option('-n, --no-colors','Turn off colors')
-	.option('-c, --config <config>','Pass in compiler configuration')
-	.parse(process.argv);
 
 function banner()
 {
@@ -53,41 +36,37 @@ function banner()
 	}
 }
 
+////////////////////////////////////
+////////// MAIN EXECUTION //////////
+////////////////////////////////////
 
+// Process command line input
+program
+	.version(module.exports.version)
+	.description('Alloy command line')
+	.usage('ACTION [ARGS] [OPTIONS]')
+	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
+	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
+	.option('-d, --dump','Dump the generated app.js to console')
+	.option('-f, --force','Force the command to execute')
+	.option('-n, --no-colors','Turn off colors')
+	.option('-c, --config <config>','Pass in compiler configuration')
+	.parse(process.argv);
 
+// Setup up logging output
+logger.stripColors = (program.colors==false);
+banner();
 
+// Validate the command line action
+var action = program.args[0];
+if (!action) {
+	U.die('You must supply an ACTION as the first argument');
+}
+if (!_.contains(ACTIONS, action)) {
+	U.die('Unknown action: ' + action.red);
 }
 
-function main(args)
-{
-	logger.stripColors = (program.colors==false);
-	banner();
-	
-	if (args.length == 0) {
-		U.die('You must supply an ACTION as the first argument');
-	}
-	
-	var action = args[0],
-		newargs = args.slice(1);
+// Launch command with given arguments and options
+(require('./commands/'+action))(program.args.slice(1), program);
 
-	// TODO: validate "action" by checking for list of actions in the 
-	//       Alloy/commands directory
-	
-	switch(action)
-	{
-		case 'new':
-		case 'compile':
-		case 'generate':
-		case 'run':
-		{
-			(require('./commands/'+action))(newargs, program);
-			break;
-		}
-		default:
-		{
-			U.die('Unknown action: '+action.red);
-		}
-	}
-}
 
-main(program.args);
