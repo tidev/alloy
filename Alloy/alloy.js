@@ -3,12 +3,9 @@
  * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
  * See LICENSE for more information on licensing.
  */
-var fs = require('fs'),
-	path = require('path')
-	program = require('commander'),
+var program = require('commander'),
 	logger = require("./common/logger"),
 	U = require('./utils'),
-	wrench = require("wrench"),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
 	pkginfo = require('pkginfo')(module, 'name', 'version');
