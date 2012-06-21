@@ -19,9 +19,7 @@ var fs = require('fs'),
 	pkginfo = require('pkginfo')(module, 'name', 'version');
 
 //
-//TODO: we need a much more robust help from command line -- see sort of what i did in titanium
 //TODO: handle localization files and merging
-//TODO: uglify all files not just our main app.js
 //
 
 /**
@@ -41,8 +39,22 @@ program
 	.option('-d, --dump','Dump the generated app.js to console')
 	.option('-f, --force','Force the command to execute')
 	.option('-n, --no-colors','Turn off colors')
-	.option('-c, --config <config>','Pass in compiler configuration')
-	.parse(process.argv);
+	.option('-c, --config <config>','Pass in compiler configuration');
+	
+
+program.command('new'.blue+' <dir>'.white)
+		.description('    create a new alloy project'.grey);
+
+program.command('compile'.blue+' [dir]'.white)
+		.description('compile into titanium sourcecode'.grey);
+
+program.command('run'.blue+' [dir] [platform]'.white)
+		.description('compile and run alloy. defaults to iphone'.grey);
+	
+program.command('generate'.blue+' <type> <name>'.white)
+		.description('    generate a new alloy type such as a controller'.grey);
+
+program.parse(process.argv);
 
 var outputPath,
 	compilerMakeFile,
@@ -306,10 +318,54 @@ function compile(args)
 		var code = _.template(fs.readFileSync(path.join(outputPath,'app','template','app.js'),'utf8'),{config:cfg});
 		var beautify = alloyConfig.compiler && typeof alloyConfig.compiler.beautify !== 'undefined' ? alloyConfig.compiler.beautify : program.config.deploytype === 'development' ? true : false;
 
+		function show_copyright(comments) {
+		        var ret = "";
+		        for (var i = 0; i < comments.length; ++i) {
+		                var c = comments[i];
+		                if (c.type == "comment1") {
+		                        ret += "//" + c.value + "\n";
+		                } else {
+		                        ret += "/*" + c.value + "*/";
+		                }
+		        }
+		        return ret;
+		};
+        var c = jsp.tokenizer(code)();
+		// extract header copyright so we can preserve it
+        var copyrights = show_copyright(c.comments_before);
+
+		// use the general defaults from the uglify command line
+		var options = 
+		{
+		        ast: false,
+		        consolidate: true,
+		        mangle: true,
+		        mangle_toplevel: false,
+		        no_mangle_functions: false,
+		        squeeze: true,
+		        make_seqs: true,
+		        dead_code: true,
+		        unsafe: false,
+		        defines: defines,
+		        lift_vars: false,
+		        codegen_options: {
+		                ascii_only: false,
+		                beautify: beautify,
+		                indent_level: 4,
+		                indent_start: 0,
+		                quote_keys: false,
+		                space_colon: false,
+		                inline_script: false
+		        },
+		        make: false,
+		        output: false,
+				except: ['Ti','Titanium']
+		};
+
 		var ast = jsp.parse(code); // parse code and get the initial AST
-		ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
+		ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
 		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-		var final_code = pro.gen_code(ast,{beautify:beautify}); 
+		var final_code = copyrights + "\n" + pro.gen_code(ast,options.codegen_options); 
 
 		// trigger our custom compiler makefile
 		var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":final_code, "appJSFile" : path.resolve(appJS)}));
@@ -640,23 +696,34 @@ function compile(args)
 			template.viewCode += findAndLoadModels(state);
 		}
 
-		if (docRoot.nodeName === 'App') {
+		if (docRoot.nodeName === 'App') 
+		{
 			for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
 				template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
 			}
-		} else {
+		} 
+		else 
+		{
 			template.viewCode += generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
-		if (isWidget) {
+		if (isWidget) 
+		{
 			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
 			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
 			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components', viewName + '.js'), code);
-		} else {
-			var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
-			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
+		} 
+		else 
+		{
+			// controllers are optional, so double check
+			var controllerFile = path.join(outputPath, 'app', 'template', 'controller.js');
+			if (path.existsSync(controllerFile))
+			{
+				var code = _.template(fs.readFileSync(controllerFile, 'utf8'), template);
+				fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
+			}
 		}
 	}
 	
@@ -883,7 +950,11 @@ function main(args)
 	
 	if (args.length == 0)
 	{
-		die('You must supply an ACTION as the first argument');
+		var help = program.helpInformation();
+		help = help.replace('Usage: alloy ACTION [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' ACTION'.white+' [ARGS] [OPTIONS]'.grey);
+		help = logger.stripColors ? colors.stripColors(help) : help;
+		console.log(help);
+		process.exit(1);
 	}
 	
 	var action = args[0],
