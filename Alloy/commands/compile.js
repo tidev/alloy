@@ -482,7 +482,7 @@ function compile(args, program) {
 		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
-		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'controller.js'), 'utf8'), template);
+		var code = _.template(fs.readFileSync(path.join(outputPath, 'app', 'template', 'component.js'), 'utf8'), template);
 		code = U.processSourceCode(code, alloyConfig);
 		if (isWidget) {
 			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
