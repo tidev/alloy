@@ -22,4 +22,6 @@ def compile(config):
             deploytype = config['deploy_type']
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = "/usr/local/bin/node /usr/local/bin/alloy compile \"%s\" --no-colors --config \"%s\"" % (f,cfg)
+        
+        # TODO: If alloy fails, the build process should abort
         os.system(cmd)
