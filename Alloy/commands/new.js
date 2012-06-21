@@ -116,7 +116,7 @@ function newproject(args, program) {
 	for (var c = 0; c < dirs.length; c++) {
 		tmpPath = path.join(appPath, dirs[c]);
 		if (!path.existsSync(tmpPath)) {
-			fs.mkdirSync(tmpPath);
+			wrench.mkdirSyncRecursive(tmpPath, 0777);
 		}
 	}
 	
