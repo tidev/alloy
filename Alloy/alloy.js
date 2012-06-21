@@ -218,18 +218,17 @@ function main(args)
 	
 	var action = args[0],
 		newargs = args.slice(1);
+
+	// TODO: validate "action" by checking for list of actions in the 
+	//       Alloy/commands directory
 	
 	switch(action)
 	{
 		case 'new':
 		case 'compile':
-		{
-			(require('./commands/'+action))(newargs, program);
-			break;
-		}
 		case 'generate':
 		{
-			generate(newargs);
+			(require('./commands/'+action))(newargs, program);
 			break;
 		}
 		case 'run':
