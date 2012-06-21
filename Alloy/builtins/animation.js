@@ -1,8 +1,10 @@
 /**
  * this is a collection of alloy animations
  */
+var utils = require('./utils.js');
 
 exports.animate = function()
 {
-	//TODO: this is just a placeholder for now
+	alert(utils.test());
 }
+

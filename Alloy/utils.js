@@ -102,3 +102,59 @@ exports.die = function(msg)
 	logger.error(msg);
 	process.exit(1);
 }
+
+exports.formatAST = function(ast,beautify)
+{
+	// use the general defaults from the uglify command line
+	var options = 
+	{
+	        ast: false,
+	        consolidate: true,
+	        mangle: true,
+	        mangle_toplevel: false,
+	        no_mangle_functions: false,
+	        squeeze: true,
+	        make_seqs: true,
+	        dead_code: true,
+	        unsafe: false,
+	        defines: exports.defines,
+	        lift_vars: false,
+	        codegen_options: {
+	                ascii_only: false,
+	                beautify: beautify,
+	                indent_level: 4,
+	                indent_start: 0,
+	                quote_keys: false,
+	                space_colon: false,
+	                inline_script: false
+	        },
+	        make: false,
+	        output: false,
+			except: ['Ti','Titanium']
+	};
+
+	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	return pro.gen_code(ast,options.codegen_options); 
+};
+
+exports.formatJS = function(code, beautify)
+{
+	function show_copyright(comments) {
+	        var ret = "";
+	        for (var i = 0; i < comments.length; ++i) {
+	                var c = comments[i];
+	                if (c.type == "comment1") {
+	                        ret += "//" + c.value + "\n";
+	                } else {
+	                        ret += "/*" + c.value + "*/";
+	                }
+	        }
+	        return ret;
+	};
+    var c = jsp.tokenizer(code)();
+	// extract header copyright so we can preserve it
+    var copyrights = show_copyright(c.comments_before);
+	var ast = jsp.parse(code); // parse code and get the initial AST
+	return copyrights + "\n" + exports.formatAST(ast);
+}

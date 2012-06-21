@@ -314,59 +314,13 @@ function compile(args)
 		{
 			defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
 		}
+		U.defines = defines;
 		
 		var cfg = generateConfig();
 		var code = _.template(fs.readFileSync(path.join(outputPath,'app','template','app.js'),'utf8'),{config:cfg});
 		var beautify = alloyConfig.compiler && typeof alloyConfig.compiler.beautify !== 'undefined' ? alloyConfig.compiler.beautify : program.config.deploytype === 'development' ? true : false;
-
-		function show_copyright(comments) {
-		        var ret = "";
-		        for (var i = 0; i < comments.length; ++i) {
-		                var c = comments[i];
-		                if (c.type == "comment1") {
-		                        ret += "//" + c.value + "\n";
-		                } else {
-		                        ret += "/*" + c.value + "*/";
-		                }
-		        }
-		        return ret;
-		};
-        var c = jsp.tokenizer(code)();
-		// extract header copyright so we can preserve it
-        var copyrights = show_copyright(c.comments_before);
-
-		// use the general defaults from the uglify command line
-		var options = 
-		{
-		        ast: false,
-		        consolidate: true,
-		        mangle: true,
-		        mangle_toplevel: false,
-		        no_mangle_functions: false,
-		        squeeze: true,
-		        make_seqs: true,
-		        dead_code: true,
-		        unsafe: false,
-		        defines: defines,
-		        lift_vars: false,
-		        codegen_options: {
-		                ascii_only: false,
-		                beautify: beautify,
-		                indent_level: 4,
-		                indent_start: 0,
-		                quote_keys: false,
-		                space_colon: false,
-		                inline_script: false
-		        },
-		        make: false,
-		        output: false,
-				except: ['Ti','Titanium']
-		};
-
-		var ast = jsp.parse(code); // parse code and get the initial AST
-		ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
-		ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-		var final_code = copyrights + "\n" + pro.gen_code(ast,options.codegen_options); 
+		
+		var final_code = U.formatJS(code,beautify);
 
 		// trigger our custom compiler makefile
 		var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":final_code, "appJSFile" : path.resolve(appJS)}));
@@ -443,6 +397,24 @@ function compile(args)
 			alloyLibs = _.uniq(alloyLibs);
 			_.each(alloyLibs,function(lib)
 			{
+				// find all dependencies that look to be relative to our dependency
+				var depends = requires.findAllRequires(lib);
+				var libdir = path.dirname(lib);
+				_.each(depends,function(depend)
+				{
+					var ext = depend.substring(depend.length-3);
+					if (ext == '.js' && depend.substring(0,libdir.length)==libdir) 
+					{
+						if (path.existsSync(depend))
+						{
+							var rel = depend.substring(libdir.length);
+							var depDest = path.join(alloyDir,rel);
+							logger.debug('Copying builtin dependency '+depend.yellow+' to '.cyan+depDest.yellow);
+							U.copyFileSync(depend,depDest);
+						}
+					}
+				});
+				// now copy our builtin
 				var name = path.basename(lib);
 				var dest = path.join(alloyDir,name);
 				logger.debug('Copying builtin '+lib.yellow+' to '.cyan+dest.yellow);
@@ -450,7 +422,23 @@ function compile(args)
 			});
 		}
 	}
-
+	
+	function fixRequirePaths()
+	{
+		var resourcesDir = path.join(outputPath,'Resources');
+		var files = wrench.readdirSyncRecursive(resourcesDir);
+		_.each(files,function(file){
+			var ext = file.substring(file.length-3);
+			if (ext == '.js')
+			{
+				var f = path.join(resourcesDir,file);
+				// we fix require paths to make sure they are correct and relative to the project
+				var newSrc = requires.makeRequiresRelative(f,resourcesDir);
+				fs.writeFileSync(f,newSrc,'utf-8');
+			}
+		});
+	}
+	
 	function copyLibs()
 	{
 		var lib = path.join(inputPath,'lib');
@@ -840,6 +828,7 @@ function compile(args)
 	copyLibs();
 	generateSourceCode();
 	copyBuiltins();
+	fixRequirePaths();
 
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.extend(_.clone(compileConfig), {state:state}));
