@@ -57,32 +57,6 @@ function banner()
 	}
 }
 
-function generate(args)
-{
-	if (args.length === 0) {
-		U.die("generate requires a TYPE such as 'controller' as second argument");
-	} else if (args.length === 1) {
-		U.die("generate requires a NAME such as third argument");
-	}
-
-	var targets = ['controller', 'view', 'model', 'migration', 'widget'];	
-	var target = args[0];	
-	var name = args[1];
-
-	if (!_.contains(targets, target)) 
-	{
-		U.die(
-			'Invalid generate target "' + target + '"\n' + 
-			'Must be one of the following: [' + targets.join(',') + ']'
-		);
-	}
-
-	var home = U.resolveAppHome();
-	var newargs = args.slice(1);
-	var funcName = 'generate' + target.charAt(0).toUpperCase() + target.slice(1);
-	generators[funcName](home,newargs,name,program.force);	
-}
-
 function run(args)
 {
 	if (process.platform != 'darwin')
