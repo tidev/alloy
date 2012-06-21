@@ -16,6 +16,7 @@ var fs = require('fs'),
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
 	generators = require('./generators'),
+	requires = require('./requires'),
 	pkginfo = require('pkginfo')(module, 'name', 'version');
 
 //
@@ -386,6 +387,67 @@ function compile(args)
 		{
 			logger.info('Copying assets from: '+assetsDir.yellow);
 			U.copyFilesAndDirs(assetsDir,resourcesDir);
+		}
+	}
+	
+	function copyBuiltins()
+	{
+		// this method will allow an app to do a require
+		// of special built-in alloy libraries that we provide 
+		// as part of the framework and then auto-deploy them at 
+		// compile time, only copying the libraries that we 
+		// actually require in our app - saving space and memory
+		var builtInsDir = path.join(__dirname,'builtins');
+		function alloyFilter(fn)
+		{
+			if (/^alloy\//.test(fn))
+			{
+				switch(fn)
+				{
+					// exclude these
+					case 'alloy/underscore':
+						return null;
+					default:
+						// check to see if this is a builtin
+						var f = path.join(builtInsDir,fn.substring(6)+'.js');
+						if (path.existsSync(f))
+						{
+							return f;
+						}
+				}
+			}
+			return null;
+		}
+		var alloyLibs = [];
+		var resourcesDir = path.join(outputPath,'Resources');
+		var files = wrench.readdirSyncRecursive(resourcesDir);
+		_.each(files,function(file){
+			var ext = file.substring(file.length-3);
+			if (ext == '.js')
+			{
+				var f = path.join(resourcesDir,file);
+				// this method will use the AST of the code to resolve all
+				// the requires in the code and filter only the ones which are 
+				// alloy builtins
+				var found = requires.findAllRequires(f,alloyFilter);
+				_.extend(alloyLibs,found);
+			}
+		});
+		
+		if (alloyLibs.length > 0)
+		{
+			// now find all our builtin libs and then copy them into 
+			// the project relative to the alloy directory so that 
+			// when they are required in the real project they will be available
+			var alloyDir = path.join(resourcesDir,'alloy');
+			alloyLibs = _.uniq(alloyLibs);
+			_.each(alloyLibs,function(lib)
+			{
+				var name = path.basename(lib);
+				var dest = path.join(alloyDir,name);
+				logger.debug('Copying builtin '+lib.yellow+' to '.cyan+dest.yellow);
+				U.copyFileSync(lib,dest);
+			});
 		}
 	}
 
@@ -777,6 +839,7 @@ function compile(args)
 	copyAssets();
 	copyLibs();
 	generateSourceCode();
+	copyBuiltins();
 
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.extend(_.clone(compileConfig), {state:state}));
