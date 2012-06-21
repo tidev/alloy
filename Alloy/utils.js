@@ -22,6 +22,10 @@ exports.XML = {
 	}
 };
 
+exports.trim = function(line) {
+	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+}
+
 exports.resolveAppHome = function() {
 	var f = path.join("./","app");
 	if (path.existsSync(f))
