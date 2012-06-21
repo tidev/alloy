@@ -103,7 +103,7 @@ exports.ensureDir = function(p)
 	if (!path.existsSync(p))
 	{
 		logger.debug("Creating directory: "+p);
-		fs.mkdirSync(p);
+		wrench.mkdirSyncRecursive(p, 0777);
 	}
 }
 
