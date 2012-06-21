@@ -151,6 +151,13 @@ exports.pad = function(x)
 	return x;
 }
 
+exports.generateMigrationFileName = function(t)
+{
+	var d = new Date;
+	var s = String(d.getUTCFullYear()) + String(exports.pad(d.getUTCMonth())) + String(exports.pad(d.getUTCDate())) + String(exports.pad(d.getUTCHours())) + String(exports.pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
+	return s + '_' + t + '.js';
+}
+
 exports.die = function(msg) 
 {
 	logger.error(msg);
