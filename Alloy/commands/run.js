@@ -138,7 +138,6 @@ module.exports = function(args, program) {
 		'--dir=' + path.resolve(inputPath),
 		'--platform=' + platform
 	];
-	console.log(runArgs);
 	var runcmd = spawn('python', runArgs, process.env);
 	
 	//run stdout/stderr back through console.log
