@@ -14,6 +14,8 @@ function FileSysSync(model)
 	
 	this.create = function(opts)
 	{
+		// need to increment 
+		model.set("id", Ti.App.guid);
 		var filename = model.config.adapter.filename;
 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, filename);
     	f.write(JSON.stringify(model));
