@@ -48,20 +48,17 @@ module.exports.M = function(name,config,modelFn,migrations)
 		
 		validate: function(attrs) 
 		{
-			/*
-			if (_.isFunction(this._validate))
+			if (_.isFunction(Backbone.$_validate))
 			{
 				for (var k in attrs)
 				{
-					var t = this._validate(k, attrs[k]);
+					var t = Backbone.$_validate(k, attrs[k]);
 					if (!t)
 					{
 						return "validation failed for: "+k;
 					}
 				}
 			}
-			return;
-			*/
 		}
 	});
 	
