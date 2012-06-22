@@ -18,7 +18,7 @@ describe('when the CLI receives no arguments', function() {
 		
 		runs(function() {
 			console.log(output);
-			expect(output).toContain('You must supply an ACTION as the first argument');
+			expect(output).toContain('Alloy by Appcelerator. The MVC app framework for Titanium.');
 		});
 	});
 });
