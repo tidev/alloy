@@ -45,7 +45,6 @@
         <theme>default</theme>
     </mobileweb>
     <plugins>
-        <plugin version="0.0.1">alloy</plugin>
-    <plugin version="1.0">ti.alloy</plugin>
-</plugins>
+    	<plugin version="1.0">ti.alloy</plugin>
+	</plugins>
 </ti:app>
