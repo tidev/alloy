@@ -403,7 +403,7 @@ Project Configurations
 ----------------------
 
 Alloy provides an ability to have project configurations stored as JSON which will be compiled and conditionalized at build time.
-The configuration will be available in your app at runtime in the property `$.CFG`.  The config file is generated under the config folder with the name `config.json`.
+The configuration will be available in your app at runtime in the variable `CFG$`.  The config file is generated under the config folder with the name `config.json`.
 
 In the config file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target.  The order of precedence for key merging is `global`, `env` and then `os`.
 
@@ -446,7 +446,7 @@ Example config:
 Then, you can reference configuration at runtime in your code:
 
 ```javascript
-alert($.CFG.foo);
+alert(CFG$.foo);
 ```
 
 In the above example, when running under the iOS simulator, you should see `5` in the alert dialog box.
