@@ -21,7 +21,9 @@ def compile(config):
             version = builder.tool_api_level
             deploytype = config['deploy_type']
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
-        cmd = "/usr/local/bin/node /usr/local/bin/alloy compile \"%s\" --no-colors --config \"%s\"" % (f,cfg)
-        
-        # TODO: If alloy fails, the build process should abort
-        os.system(cmd)
+        cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
+        try:
+            subprocess.check_call(cmd)
+        except subprocess.CalledProcessError as ex:
+            print "[ERROR] Alloy compile failed"
+            sys.exit(ex.returncode)

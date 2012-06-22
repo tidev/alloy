@@ -81,6 +81,7 @@ if (program.args.length == 0)
 }
 
 // Validate the command line action
+var action = program.args[0];
 if (!_.contains(ACTIONS, action)) {
 	U.die('Unknown action: ' + action.red);
 }

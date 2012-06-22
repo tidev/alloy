@@ -80,7 +80,7 @@ function installPlugin(dir)
 			var serializer = new XMLSerializer();
 			var newxml = serializer.serializeToString(doc);
 			
-			fs.writeFileSync(tiapp,newxml);
+			fs.writeFileSync(tiapp,newxml,'utf-8');
 			logger.info("Installed 'ti.alloy' plugin to "+tiapp);
 		}
 	}
@@ -93,6 +93,7 @@ function newproject(args, program) {
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.xml'),'utf8'),
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.json'),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.js'),'utf8'),
+		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
 		defaultConfig = {},
 		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
 
@@ -122,18 +123,19 @@ function newproject(args, program) {
 	}
 	
 	// create default view, controller, style, and config. 
-	fs.writeFileSync(path.join(appPath,'views','index.xml'),INDEX_XML);
-	fs.writeFileSync(path.join(appPath,'styles','index.json'),INDEX_JSON);
-	fs.writeFileSync(path.join(appPath,'controllers','index.js'),INDEX_C);
-	fs.writeFileSync(path.join(appPath,'config','alloy.json'),U.stringifyJSON(defaultConfig));
+	fs.writeFileSync(path.join(appPath,'views','index.xml'),INDEX_XML,'utf-8');
+	fs.writeFileSync(path.join(appPath,'styles','index.json'),INDEX_JSON,'utf-8');
+	fs.writeFileSync(path.join(appPath,'controllers','index.js'),INDEX_C,'utf-8');
+	fs.writeFileSync(path.join(appPath,'config','alloy.json'),U.stringifyJSON(defaultConfig),'utf-8');
+	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
 
 	// write the build file
 	alloyJmkTemplate = fs.readFileSync(path.join(templateDir,'alloy.jmk'), 'utf8');
-	fs.writeFileSync(path.join(appPath,'alloy.jmk'), alloyJmkTemplate);
+	fs.writeFileSync(path.join(appPath,'alloy.jmk'), alloyJmkTemplate,'utf-8');
 		
 	// write the project config file
 	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
-	fs.writeFileSync(path.join(appPath,"config","config.json"), U.stringifyJSON(cfg));
+	fs.writeFileSync(path.join(appPath,"config","config.json"), U.stringifyJSON(cfg),'utf-8');
 
 	// install the plugin
 	installPlugin(projectPath);
