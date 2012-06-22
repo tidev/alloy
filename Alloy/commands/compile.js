@@ -199,27 +199,22 @@ function compile(args, program) {
 		var builtInsDir = path.join(__dirname,'..','builtins');
 		function alloyFilter(fn)
 		{
-			if (/^alloy\//.test(fn))
-			{
-				switch(fn)
-				{
-					// exclude these
-					// TODO: move backbone.js and underscore.js to builtins directory and
-					//       test to make sure it doesn't break current functionality
-					case 'alloy/underscore':
-					case 'alloy/backbone':
-						return null;
-					default:
-						// check to see if this is a builtin
-						var f = path.join(builtInsDir,fn.substring(6)+'.js');
-						if (path.existsSync(f))
-						{
-							return f;
-						}
+			var exclude = ['backbone','underscore'];
+			var matches = fn.match(/^alloy\/(.+)$/);
+			var builtin, filepath;
+
+			if (matches !== null) {
+				builtin = matches[1];
+				if (!_.contains(exclude, builtin)) {
+					filepath = path.join(builtInsDir,builtin+'.js');
+					if (path.existsSync(filepath)) {
+						return filepath;
+					}
 				}
 			}
 			return null;
 		}
+
 		var alloyLibs = [];
 		var resourcesDir = path.join(outputPath,'Resources');
 		var files = wrench.readdirSyncRecursive(resourcesDir);
@@ -550,8 +545,7 @@ function compile(args, program) {
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
 
 		var viewFile = path.join(vd,viewName+".xml");
-		if (!path.existsSync(viewFile))
-		{
+		if (!path.existsSync(viewFile)) {
 			return false;
 		}
 
@@ -562,12 +556,10 @@ function compile(args, program) {
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
 		var docRoot = doc.documentElement;
-
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
-		var parentNode = state.parentNode;
 
-		if (viewName=='index')
-		{
+		// TODO: Can we move this out of the parseView() call?
+		if (viewName === 'index') {
 			template.viewCode += findAndLoadModels(state);
 		}
 
@@ -592,7 +584,8 @@ function compile(args, program) {
 	}
 	
 	var state = {
-		parentNode: null
+		parentNode: null,
+		styles: null
 	};
 
 	// create components directory for view/controller components
