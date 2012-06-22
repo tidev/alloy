@@ -1,7 +1,6 @@
 var exec = require('child_process').exec;
 
 describe('when the CLI receives no arguments', function() {
-	//TODO: this is shitty default behavior and should be changed to display all commands and help
 	it('will prompt the user to specify an action', function() {
 		var done, output;
 		
