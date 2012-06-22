@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <App>
-	<Window id="main" class="container">
+	<Window class="container">
 		<Label id="t">Hello, World</Label>
 	</Window>
 </App>
