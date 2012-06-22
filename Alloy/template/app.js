@@ -13,4 +13,3 @@ var Alloy = require('alloy'),
 <%= config %>
 
 (require('alloy/components/index')).create();
-

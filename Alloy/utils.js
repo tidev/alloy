@@ -7,7 +7,9 @@ var path = require('path'),
 	logger = require('./common/logger'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify;
+	pro = require("./uglify-js/uglify-js").uglify,
+	_ = require("./lib/alloy/underscore")._
+;
 
 exports.XML = {
 	getNodeText: function(node) {
@@ -20,6 +22,69 @@ exports.XML = {
 		}
 		return str;
 	}
+};
+
+exports.trim = function(line) {
+	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+}
+
+exports.resolveAppHome = function() {
+	var f = path.join("./","app");
+	if (path.existsSync(f))
+	{
+		return f;
+	}
+	var cf = path.join('./', 'alloy.jmk');
+	if (path.existsSync(cf))
+	{
+		return path.resolve(path.join('.'));
+	}
+	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
+}
+
+exports.generateConfig = function(configDir, alloyConfig) {
+	var cf = path.join(configDir,'config.json');
+	if (path.existsSync(cf))
+	{
+		var jf = fs.readFileSync(cf);
+		var j = JSON.parse(jf);
+		var o = j.global || {};
+		if (alloyConfig) {
+			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
+			o = _.extend(o, j['os:'+alloyConfig.platform]);
+		}
+		return "$.CFG = " + JSON.stringify(o) + ";\n";
+	}
+	return '';
+};
+
+exports.processSourceCode = function(code, config) {
+	var defines = {},
+		DEFINES, ast;
+
+	config = config || {};
+	config.deploytype = config.deploytype || 'development';
+	config.beautify = config.beautify || true;
+
+	DEFINES = {
+		OS_IOS : config.platform == 'ios',
+		OS_ANDROID: config.platform == 'android',
+		OS_MOBILEWEB: config.platform == 'mobileweb',
+		ENV_DEV: config.deploytype == 'development',
+		ENV_DEVELOPMENT: config.deploytype == 'development',
+		ENV_TEST: config.deploytype == 'test',
+		ENV_PRODUCTION: config.deploytype == 'production'
+	};
+
+	for (var k in DEFINES) {
+		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
+	}
+	
+	ast = jsp.parse(code); // parse code and get the initial AST
+	ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	
+	return pro.gen_code(ast,{beautify:config.beautify}); 
 };
 
 exports.copyFileSync = function(srcFile, destFile) 
@@ -49,7 +114,7 @@ exports.ensureDir = function(p)
 	if (!path.existsSync(p))
 	{
 		logger.debug("Creating directory: "+p);
-		fs.mkdirSync(p);
+		wrench.mkdirSyncRecursive(p, 0777);
 	}
 }
 
@@ -95,6 +160,13 @@ exports.pad = function(x)
 		return '0' + x;
 	}
 	return x;
+}
+
+exports.generateMigrationFileName = function(t)
+{
+	var d = new Date;
+	var s = String(d.getUTCFullYear()) + String(exports.pad(d.getUTCMonth())) + String(exports.pad(d.getUTCDate())) + String(exports.pad(d.getUTCHours())) + String(exports.pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
+	return s + '_' + t + '.js';
 }
 
 exports.die = function(msg) 

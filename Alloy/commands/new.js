@@ -5,6 +5,7 @@ var path = require('path'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	_ = require('../lib/alloy/underscore')._,
 	U = require('../utils'),
+	logger = require('../common/logger'),
 	alloyRoot = path.join(__dirname,'..');
 
 function createPlugin(rootDir) {
@@ -86,13 +87,13 @@ function installPlugin(dir)
 }
 
 function newproject(args, program) {
-	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor','template'],
+	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.xml'),'utf8'),
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.json'),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.js'),'utf8'),
-		defaultConfig = { compiler: {} },
+		defaultConfig = {},
 		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
 
 	// validate args
@@ -116,7 +117,7 @@ function newproject(args, program) {
 	for (var c = 0; c < dirs.length; c++) {
 		tmpPath = path.join(appPath, dirs[c]);
 		if (!path.existsSync(tmpPath)) {
-			fs.mkdirSync(tmpPath);
+			wrench.mkdirSyncRecursive(tmpPath, 0777);
 		}
 	}
 	
@@ -124,10 +125,7 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'views','index.xml'),INDEX_XML);
 	fs.writeFileSync(path.join(appPath,'styles','index.json'),INDEX_JSON);
 	fs.writeFileSync(path.join(appPath,'controllers','index.js'),INDEX_C);
-	fs.writeFileSync(path.join(appPath,'alloy.json'),U.stringifyJSON(defaultConfig));
-
-	// Copy templates
-	U.copyFilesAndDirs(templateDir, path.join(appPath,'template'));
+	fs.writeFileSync(path.join(appPath,'config','alloy.json'),U.stringifyJSON(defaultConfig));
 
 	// write the build file
 	alloyJmkTemplate = fs.readFileSync(path.join(templateDir,'alloy.jmk'), 'utf8');

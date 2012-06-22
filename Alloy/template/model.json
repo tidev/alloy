@@ -1,0 +1,8 @@
+{
+	"columns": {},
+	"defaults": {},
+	"adapter": {
+		"type": "sql",
+		"tablename": "<%= name %>"
+	}
+}
