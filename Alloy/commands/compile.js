@@ -554,7 +554,7 @@ function compile(args, program) {
 		state.styles = styles;
 
 		var xml = fs.readFileSync(viewFile);
-		var doc = new DOMParser().parseFromString(String(xml));
+		var doc = new DOMParser().parseFromString('<root>' + String(xml) + '</root>');
 		var docRoot = doc.documentElement;
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
@@ -563,12 +563,8 @@ function compile(args, program) {
 			template.viewCode += findAndLoadModels(state);
 		}
 
-		if (docRoot.nodeName === 'App') {
-			for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-				template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
-			}
-		} else {
-			template.viewCode += generateNode(false,viewFile,doc.documentElement,state,viewid||viewName);
+		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
+			template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 
