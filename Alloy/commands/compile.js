@@ -214,7 +214,7 @@ function compile(args, program) {
 			}
 			return null;
 		}
-		
+
 		var alloyLibs = [];
 		var resourcesDir = path.join(outputPath,'Resources');
 		var files = wrench.readdirSyncRecursive(resourcesDir);
@@ -545,8 +545,7 @@ function compile(args, program) {
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
 
 		var viewFile = path.join(vd,viewName+".xml");
-		if (!path.existsSync(viewFile))
-		{
+		if (!path.existsSync(viewFile)) {
 			return false;
 		}
 
@@ -557,12 +556,10 @@ function compile(args, program) {
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
 		var docRoot = doc.documentElement;
-
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
-		var parentNode = state.parentNode;
 
-		if (viewName=='index')
-		{
+		// TODO: Can we move this out of the parseView() call?
+		if (viewName === 'index') {
 			template.viewCode += findAndLoadModels(state);
 		}
 
@@ -587,7 +584,8 @@ function compile(args, program) {
 	}
 	
 	var state = {
-		parentNode: null
+		parentNode: null,
+		styles: null
 	};
 
 	// create components directory for view/controller components
