@@ -196,7 +196,7 @@ function compile(args, program) {
 		// as part of the framework and then auto-deploy them at 
 		// compile time, only copying the libraries that we 
 		// actually require in our app - saving space and memory
-		var builtInsDir = path.join(__dirname,'builtins');
+		var builtInsDir = path.join(__dirname,'..','builtins');
 		function alloyFilter(fn)
 		{
 			if (/^alloy\//.test(fn))
@@ -268,7 +268,7 @@ function compile(args, program) {
 		}
 	}
 	
-	function fixRequirePaths()
+	function fixRequirePaths(config)
 	{
 		var resourcesDir = path.join(outputPath,'Resources');
 		var files = wrench.readdirSyncRecursive(resourcesDir);
@@ -278,7 +278,7 @@ function compile(args, program) {
 			{
 				var f = path.join(resourcesDir,file);
 				// we fix require paths to make sure they are correct and relative to the project
-				var newSrc = requires.makeRequiresRelative(f,resourcesDir);
+				var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
 				fs.writeFileSync(f,newSrc,'utf-8');
 			}
 		});
@@ -653,7 +653,7 @@ function compile(args, program) {
 	logger.info("compiling alloy to " + appJS.yellow);
 
 	copyBuiltins();
-	fixRequirePaths();
+	fixRequirePaths(alloyConfig);
 
 	if (program.dump) console.log(code.blue);
 

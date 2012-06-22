@@ -85,7 +85,7 @@ function trimExtension(f)
 	return f;
 }
 
-function makeRequiresRelative(fn,resourcesDir)
+function makeRequiresRelative(fn,resourcesDir,config)
 {
 	var basedir = path.dirname(path.resolve(fn));
 	var code = String(fs.readFileSync(fn,'utf-8'));
@@ -119,7 +119,7 @@ function makeRequiresRelative(fn,resourcesDir)
 		return w.walk(ast);
 	});
 	
-	return U.formatAST(ast,true);
+	return U.formatAST(ast,true,config);
 }			
 
 exports.findAllRequires = findAllRequires;

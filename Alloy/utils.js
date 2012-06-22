@@ -175,9 +175,31 @@ exports.die = function(msg)
 	process.exit(1);
 }
 
-exports.formatAST = function(ast,beautify)
+exports.formatAST = function(ast,beautify,config)
 {
 	// use the general defaults from the uglify command line
+	var defines = {},
+		DEFINES, 
+		config;
+
+	config = config || {};
+	config.deploytype = config.deploytype || 'development';
+	config.beautify = config.beautify || true;
+
+	DEFINES = {
+		OS_IOS : config.platform == 'ios',
+		OS_ANDROID: config.platform == 'android',
+		OS_MOBILEWEB: config.platform == 'mobileweb',
+		ENV_DEV: config.deploytype == 'development',
+		ENV_DEVELOPMENT: config.deploytype == 'development',
+		ENV_TEST: config.deploytype == 'test',
+		ENV_PRODUCTION: config.deploytype == 'production'
+	};
+
+	for (var k in DEFINES) {
+		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
+	}
+
 	var options = 
 	{
 	        ast: false,
@@ -189,7 +211,7 @@ exports.formatAST = function(ast,beautify)
 	        make_seqs: true,
 	        dead_code: true,
 	        unsafe: false,
-	        defines: exports.defines,
+	        defines: defines,
 	        lift_vars: false,
 	        codegen_options: {
 	                ascii_only: false,
