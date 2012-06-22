@@ -1,5 +1,6 @@
 generated/*
 projects/Harness/.fastdev.lock
+projects/Harness/plugins/ti.alloy/plugin.pyc
 projects/Harness/plugins/alloy/plugin.pyc
 projects/Harness/build.log
 projects/Harness/build/iphone/*
