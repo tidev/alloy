@@ -204,7 +204,10 @@ function compile(args, program) {
 				switch(fn)
 				{
 					// exclude these
+					// TODO: move backbone.js and underscore.js to builtins directory and
+					//       test to make sure it doesn't break current functionality
 					case 'alloy/underscore':
+					case 'alloy/backbone'
 						return null;
 					default:
 						// check to see if this is a builtin
