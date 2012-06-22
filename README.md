@@ -399,11 +399,26 @@ See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examp
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
 
+Builtin JS LIbraries
+--------------------
+
+_builtins_ are meant to extend the base functionality of all your Titanium apps. The great thing about them is that only the builtins you need will be pulled into your generated Titanium project. The alloy compile process will survey your code and determine which builtins you will need to use at runtime.
+
+The existing list of builtins can be found at: [https://github.com/appcelerator/alloy/tree/master/Alloy/builtins](https://github.com/appcelerator/alloy/tree/master/Alloy/builtins)
+
+To use a builtin library in your code and have it automatically added to your generate Titanium project, all you need to do is require it with the `alloy` root diretory in your `require()` call. For example, if you wanted to include the `animation` builtin, all you need to do is this:
+
+```javascript
+var animation = require('alloy/animation');
+```
+
+Now you are free to use the builtin animation library in your code.
+
 Project Configurations
 ----------------------
 
 Alloy provides an ability to have project configurations stored as JSON which will be compiled and conditionalized at build time.
-The configuration will be available in your app at runtime in the property `$.CFG`.  The config file is generated under the config folder with the name `config.json`.
+The configuration will be available in your app at runtime in the variable `CFG$`.  The config file is generated under the config folder with the name `config.json`.
 
 In the config file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target.  The order of precedence for key merging is `global`, `env` and then `os`.
 
@@ -446,7 +461,7 @@ Example config:
 Then, you can reference configuration at runtime in your code:
 
 ```javascript
-alert($.CFG.foo);
+alert(CFG$.foo);
 ```
 
 In the above example, when running under the iOS simulator, you should see `5` in the alert dialog box.

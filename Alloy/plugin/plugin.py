@@ -23,7 +23,8 @@ def compile(config):
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         try:
-            subprocess.check_call(cmd)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
+            print ex.output
             print "[ERROR] Alloy compile failed"
             sys.exit(ex.returncode)
