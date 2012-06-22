@@ -196,7 +196,7 @@ function compile(args, program) {
 		// as part of the framework and then auto-deploy them at 
 		// compile time, only copying the libraries that we 
 		// actually require in our app - saving space and memory
-		var builtInsDir = path.join(__dirname,'builtins');
+		var builtInsDir = path.join(__dirname,'..','builtins');
 		function alloyFilter(fn)
 		{
 			if (/^alloy\//.test(fn))
