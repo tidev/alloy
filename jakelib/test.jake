@@ -12,7 +12,6 @@ jasmine.getEnv().addReporter(new ConsoleReporter(console.log, function() {}, tru
 //run list of specs
 function runSpecs(names) {
 	_.each(names, function(name) {
-		var mod = name.substr(0, name.lastIndexOf('.js')) || name;
 		require('../test/specs/'+name);
 	});
 	jasmine.getEnv().execute();
