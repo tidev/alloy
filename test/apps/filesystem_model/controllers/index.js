@@ -51,4 +51,4 @@ book.save({author:"R Kipling"});
 // DELETE - destroy triggers the CRUD delete opperation
 books.forEach(function(model){model.destroy();});
 
-exports.open();
+$.index.open();
