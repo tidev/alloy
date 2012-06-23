@@ -1,13 +1,10 @@
-<?xml version='1.0'?>
-<App>
-	<Window>
-		<View id="backdrop"/>
-		<View class="container">
-			<View id="mover">
-				<Label id="label">     trimmable string     </Label>
-			</View>
-			<Button id="shake">shake</Button>
-			<Button id="trim">trim string</Button>
+<Window>
+	<View id="backdrop"/>
+	<View class="container">
+		<View id="mover">
+			<Label id="label">     trimmable string     </Label>
 		</View>
-	</Window>
-</App>
+		<Button id="shake">shake</Button>
+		<Button id="trim">trim string</Button>
+	</View>
+</Window>

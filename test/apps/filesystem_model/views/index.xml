@@ -1,6 +1,3 @@
-<?xml version='1.0'?>
-<App>
-	<Window class="container">
-		<TableView id="table"/>
-	</Window>
-</App>
+<Window class="container">
+	<TableView id="table"/>
+</Window>

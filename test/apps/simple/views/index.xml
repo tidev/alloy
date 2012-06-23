@@ -1,6 +1,3 @@
-<?xml version="1.0"?>
-<App>
-	<Window id="index">
-		<Button id="b" class="button"/>
-	</Window>
-</App>
+<Window id="index">
+	<Button id="b" class="button"/>
+</Window>
