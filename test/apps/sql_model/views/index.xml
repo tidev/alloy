@@ -1,0 +1,13 @@
+<?xml version='1.0'?>
+<App>
+	<Window id="main" class="container">
+		<TableView id="table">	
+			<!--	
+			<TableViewRowTemplate class="row">
+				<Label class="name"/>
+				<Label class="done"/>
+			</TableViewRowTemplate>
+			-->
+		</TableView>
+	</Window>
+</App>

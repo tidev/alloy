@@ -1,91 +1,135 @@
-/**
- * Alloy
- * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
- * See LICENSE for more information on licensing.
- */
-var program = require('commander'),
-	logger = require("./common/logger"),
-	U = require('./utils'),
-	colors = require("colors"),
-	_ = require("./lib/alloy/underscore")._,
-	pkginfo = require('pkginfo')(module, 'name', 'version');
 
-// TODO: get the action list from the commands directory
-var ACTIONS = ['compile', 'generate', 'new', 'run'];
-
-//
-//TODO: we need a much more robust help from command line -- see sort of what i did in titanium
-//TODO: handle localization files and merging
-//
-
-function banner()
-{
-	var str = 
-	"       .__  .__                \n"+
-	"_____  |  | |  |   ____ ___.__.\n"+
-	"\\__  \\ |  | |  |  /  _ <   |  |\n"+
-	" / __ \\|  |_|  |_(  <_> )___  |\n"+
-	"(____  /____/____/\\____// ____|\n"+
-	"     \\/                 \\/";
+var 	   _ = require("alloy/underscore")._,
+	Backbone = require("alloy/backbone"),
+	SQLSync  = require("alloy/sync/sql"),
+	FileSysSync  = require("alloy/sync/filesys"),
+	osname   = Ti.Platform.osname;
 	
-	if (!program.dump)
-	{
-		console.log(logger.stripColors ? str : str.blue);
-		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
-		console.log(logger.stripColors ? colors.stripColors(m) : m);
+module.exports._ = _;
+module.exports.Backbone = Backbone;
+
+Backbone.Collection.notify = _.extend({}, Backbone.Events);
+
+Backbone.sync = function(method, model, opts) {
+	//Ti.API.info("sync called with method="+method+", model="+JSON.stringify(model)+", opts="+JSON.stringify(opts));
+	
+	var m = (model.config || {});
+	var type = (m.adapter ? m.adapter.type : null) || 'sql';
+	
+	switch (type) {
+		case 'sql': {
+			SQLSync.sync(model,method,opts);
+			break;
+		}
+		case 'filesystem': {
+			FileSysSync.sync(model,method,opts);
+			break;
+		}
+		default: {
+			Ti.API.error("No sync adapter found for: "+type);
+			return;
+		}
 	}
-}
 
-////////////////////////////////////
-////////// MAIN EXECUTION //////////
-////////////////////////////////////
+	Backbone.Collection.notify.trigger('sync', {method:method,model:model});
+};
 
-// Process command line input
-program
-	.version(module.exports.version)
-	.description('Alloy command line')
-	.usage('ACTION [ARGS] [OPTIONS]')
-	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
-	.option('-d, --dump','Dump the generated app.js to console')
-	.option('-f, --force','Force the command to execute')
-	.option('-n, --no-colors','Turn off colors')
-	.option('-c, --config <config>','Pass in compiler configuration');
+module.exports.M = function(name,config,modelFn,migrations) {
 
-program.command('new'.blue+' <dir>'.white)
-		.description('    create a new alloy project'.grey);
-
-program.command('compile'.blue+' [dir]'.white)
-		.description('compile into titanium sourcecode'.grey);
-
-program.command('run'.blue+' [dir] [platform]'.white)
-		.description('compile and run alloy. defaults to iphone'.grey);
-
-program.command('generate'.blue+' <type> <name>'.white)
-		.description('    generate a new alloy type such as a controller'.grey);
-
-program.parse(process.argv);
+	//var m = (model.config || {});
+	var type = (config.adapter ? config.adapter.type : null) || 'sql';
+	if (type === 'sql') { SQLSync.init(); }
 	
+	var Model = Backbone.Model.extend( {
+		
+		defaults: config.defaults,
+		
+		validate: function(attrs) {
+			if (typeof __validate !== 'undefined') {
+				if (_.isFunction(__validate)) {
+					for (var k in attrs) {
+						var t = __validate(k, attrs[k]);
+						if (!t) {
+							return "validation failed for: "+k;
+						}
+					}
+				}
+			}
+		}
+	});
+		
+	if (migrations && migrations.length > 0) {
+		SQLSync.migrate(migrations);
+	}
 
-// Setup up logging output
-logger.stripColors = (program.colors==false);
-banner();
+	Model.prototype.config = config;
 
-if (program.args.length == 0)
-{
-	var help = program.helpInformation();
-	help = help.replace('Usage: alloy ACTION [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' ACTION'.white+' [ARGS] [OPTIONS]'.grey);
-	help = logger.stripColors ? colors.stripColors(help) : help;
-	console.log(help);
-	process.exit(1);
+    // bring in user defined function like validate
+	modelFn(Model);
+	
+	return Model;
+};
+
+module.exports.A = function(t,type,parent) {
+	_.extend(t,{nodeType:1, nodeName:type, parentNode: parent});
+	_.extend(t,Backbone.Events);
+	
+	(function() {
+			
+		// we are going to wrap addEventListener and removeEventListener
+		// with on, off so we can use the Backbone events
+		var al = t.addEventListener,
+			rl = t.removeEventListener,
+			oo = t.on,
+			of = t.off,
+			tg = t.trigger,
+		   cbs = [],
+		   ctx = {};
+
+		t.on = function(e,cb,context)
+		{
+			var wcb = function(evt)
+			{
+				try 
+				{
+					_.bind(tg,ctx,e,evt)();
+				}
+				catch(E) 
+				{
+					Ti.API.error("Error triggering '"+e+"' event: "+E);
+				}
+			};
+			cbs[cb]=wcb;
+
+			if (osname === 'android') {
+				al.call(t, e, wcb);
+			} else {
+				al(e, wcb);
+			}
+
+			_.bind(oo,ctx,e,cb,context)();
+		};
+
+		t.off = function(e,cb,context)
+		{
+			var f = cbs[cb];
+			if (f)
+			{
+				_.bind(of,ctx,e,cb,context)();
+
+				if (osname === 'android') {
+					rl.call(t, e, f);
+				} else {
+					rl(e, f);
+				}
+				
+				delete cbs[cb];
+				f = null;
+			}
+		};
+		
+	})();
+	
+	return t;
 }
-
-// Validate the command line action
-var action = program.args[0];
-if (!_.contains(ACTIONS, action)) {
-	U.die('Unknown action: ' + action.red);
-}
-
-// Launch command with given arguments and options
-(require('./commands/'+action))(program.args.slice(1), program);
 

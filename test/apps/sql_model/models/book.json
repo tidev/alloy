@@ -1,0 +1,16 @@
+{
+	"columns":
+	{
+		"book": "string",
+		"author": "string"
+	},
+	"defaults":
+	{
+		"book":  "-",
+		"author": "-"
+	},
+	"adapter": {
+		"type": "sql",
+		"tablename": "books"
+	}
+}
