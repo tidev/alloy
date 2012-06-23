@@ -554,7 +554,14 @@ function compile(args, program) {
 		state.styles = styles;
 
 		var xml = fs.readFileSync(viewFile);
-		var doc = new DOMParser().parseFromString('<root>' + String(xml) + '</root>');
+		var doc = new DOMParser().parseFromString(String(xml));
+
+		// Give our document the <Alloy> root element if it doesn't already have one
+		if (doc.documentElement.nodeName !== 'Alloy') {
+			var tmpDoc = new DOMParser().parseFromString('<Alloy></Alloy>');
+			tmpDoc.documentElement.appendChild(doc.documentElement);
+			doc = tmpDoc;
+		}
 		var docRoot = doc.documentElement;
 		var id = viewid || doc.documentElement.getAttribute('id') || viewName;
 
