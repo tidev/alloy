@@ -4,7 +4,8 @@ var fs = require('fs'),
 	spawn = require('child_process').spawn,
 	titanium = require('../Alloy/common/titanium'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness')
-	targetAppPath = path.join(process.cwd(),'test','projects','Harness','app');
+	targetAppPath = path.join(process.cwd(),'test','projects','Harness','app'),
+	alloyLibPath = path.join(process.cwd(),'test','projects','Harness','Resources','alloy');
 
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
@@ -12,6 +13,9 @@ namespace('app', function() {
 		console.log('clobbering Alloy app directory...');
 		if (path.existsSync(targetAppPath)) {
 			wrench.rmdirSyncRecursive(targetAppPath);
+		}
+		if (path.existsSync(alloyLibPath)) {
+			wrench.rmdirSyncRecursive(alloyLibPath);
 		}
 		fs.mkdirSync(targetAppPath);
 	});
