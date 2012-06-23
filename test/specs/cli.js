@@ -16,26 +16,10 @@ describe('when the CLI receives no arguments', function() {
 		},500);
 		
 		runs(function() {
-			console.log(output);
-			expect(output).toContain('Alloy by Appcelerator. The MVC app framework for Titanium.');
+			//ensure usage data and some known options are displayed
+			expect(output).toContain('Usage:');
+			expect(output).toContain('-h');
+			expect(output).toContain('--force');
 		});
-	});
-});
-
-describe('the "run" command in the CLI', function() {
-	it('will do something awesome (placeholder)', function() {
-		expect(true).toBe(true);
-	});
-});
-
-describe('the "new" command in the CLI', function() {
-	it('will generate a view', function() {
-		expect(true).toBe(true);
-	});
-});
-
-describe('the "compile" command in the CLI', function() {
-	it('will do something awesome (placeholder)', function() {
-		expect(true).toBe(true);
 	});
 });
