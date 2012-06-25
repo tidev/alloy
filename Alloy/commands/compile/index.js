@@ -332,7 +332,7 @@ function compile(args, program) {
 		if (state.parent && state.parent.node) {
 			var newParent = state.parent.node;
 			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-				code += parseNode(newParent.childNodes.item(i), state);
+				code += generateNode(newParent.childNodes.item(i), state);
 			}
 		}
 
