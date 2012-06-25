@@ -15,6 +15,15 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
+exports.addStyleById = function(styles, id, key, value) {
+	var idStr = '#' + id;
+	if (!styles[idStr]) {
+		styles[idStr] = {};
+	} 
+	styles[idStr][key] = value; 
+	return styles;
+} 
+
 exports.generateStyleParams = function(styles,classes,id,className) {
 	var s = {};
 
