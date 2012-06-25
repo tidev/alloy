@@ -1,0 +1,12 @@
+<TabGroup>
+	<Tab>
+		<!-- Explicit Window declaration -->
+		<Window>
+			<Label>Tab 1</Label>
+		</Window>
+	</Tab>
+	<Tab>
+		<!-- Implicit window, added during the compile stage -->
+		<Label>Tab 2</Label>
+	</Tab>
+</TabGroup>
