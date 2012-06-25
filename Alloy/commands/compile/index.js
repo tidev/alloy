@@ -2,9 +2,9 @@ var path = require('path'),
 	colors = require('colors'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	DOMParser = require("xmldom").DOMParser,
 	U = require('../../utils'),
 	_ = require("../../lib/alloy/underscore")._,
-	DOMParser = require("xmldom").DOMParser,
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
@@ -363,82 +363,37 @@ function compile(args, program) {
 	};
 
 
-
-	function parseNode(ischild,viewFile,node,state,defId)
-	{
+	function parseNode(node, state, styles, defaultId) {
 		if (node.nodeType != 1) return '';
 
-		var code = '';
-		var req = node.getAttribute('require');
+		var name = node.nodeName,
+			ns = node.getAttribute('ns') || 'Ti.UI',
+			fullname = ns + '.' + name;
+			req = node.getAttribute('require'),
+			id = node.getAttribute('id') || defaultId || req || generateUniqueId(),
+			code = '';
 
-		// TODO: may need to rethink including "req" here. It simplifies usage,
-		//       but will cause complications when views/widgets are used more than
-		//       once in a view.
-		var id = node.getAttribute('id') || defId || req || generateUniqueId();
-		var symbol = generateVarName(id);
-		var nodename = node.nodeName;
-		var classes = node.getAttribute('class').split(' ');
-
-		if (req) {
-			var commonjs = "alloy/components/" + req;
-			if (nodename === 'Widget') {
-				commonjs = "alloy/widgets/" + req + "/components/widget";
-			} 
-			code += symbol + " = (require('" + commonjs + "')).create();\n";
-			if (!ischild) {
-				code += "root$ = " + symbol + ";\n";
-			}
-			if (state.parentNode) {
-				code += symbol + '.setParent(' + state.parentNode + ');\n';
-			}
-		} else {
-			var ns = node.getAttribute('ns') || "Ti.UI";
-			var fn = "create" + nodename;
-			
-			if (node.childNodes.length > 0)
-			{
-				var processors = 
-				[
-					['Label','text'],
-					['Button','title']
-				];
-				_.every(processors, function(el)
-				{
-					if (nodename == el[0])
-					{
-						var k = el[1];
-						var str = U.XML.getNodeText(node);
-						if (!state.styles['#'+id])
-						{
-							state.styles['#'+id]={};
-						}
-						state.styles['#'+id][k]=str;
-						return false;
-					} 
-					return true;
-				});
-			}
-
-			code += '\t' + symbol + " = A$(" + ns + "." + fn + "({\n";
-			code += generateStyleParams(state.styles,classes,id,node.nodeName);
-			code += "\n\t}),'" + node.nodeName + "', " + (state.parentNode || 'null') + ");\n\t";
-			if (!ischild) {
-				code += "root$ = " + symbol + ";\n";
-			}
-			if (state.parentNode) {
-				code += state.parentNode+".add("+symbol+");\n";
+		// Determine which parser to use for this node
+		var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
+		var files = fs.readdirSync(parsersDir);
+		var parserRequire = 'default';
+		for (var i = 0, l = files.length; i < l; i++) {
+			if (fullname + '.js' === files[i]) {
+				parserRequire = files[i];
+				break;
 			}
 		}
 
-		var childstate = {
-			parentNode: symbol,
-			styles: state.styles
-		};
+		// Execute the appropriate tag parser and append code
+		state = require('./parsers/' + parserRequire).parse(node, ns, id, styles, state) || { parent: {} };
+		code += state.code;
 
-		for (var c=0;c<node.childNodes.length;c++)
-		{
-			var child = node.childNodes[c];
-			code += generateNode(true,viewFile,child,childstate);
+		// Continue parsing if necessary
+		if (state.parent && state.parent.node) {
+			var newParent = state.parent.node;
+			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
+				code += parseNode(newParent.childNodes.item(i), state, styles);
+			}
 		}
 
 		return code;
@@ -621,6 +576,7 @@ function compile(args, program) {
 			lifecycle: '',
 			CFG: generatedCFG
 		};
+		state = { parent: {} };
 		var vd = dir ? path.join(dir,'views') : viewsDir;
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
 
@@ -631,7 +587,7 @@ function compile(args, program) {
 
 		var styleFile = path.join(sd,viewName+".json");
 		var styles = loadStyle(styleFile);
-		state.styles = styles;
+		//state.styles = styles;
 
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
@@ -652,7 +608,7 @@ function compile(args, program) {
 
 		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
 			// template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
-			template.viewCode += parseNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
+			template.viewCode += parseNode(docRoot.childNodes.item(i),state,styles,viewid||viewname);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 
@@ -668,8 +624,9 @@ function compile(args, program) {
 	}
 	
 	var state = {
-		parentNode: null,
-		styles: null
+		//parentNode: null,
+		//styles: null
+		parent: {}
 	};
 
 	// create components directory for view/controller components
