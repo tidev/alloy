@@ -1,4 +1,7 @@
 var U = require('../../utils'),
+	colors = require('colors'),
+	path = require('path'),
+	fs = require('fs'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
@@ -14,6 +17,35 @@ exports.generateVarName = function(id) {
 exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
+
+exports.loadStyle = function(p) {
+	if (path.existsSync(p)) {
+		var f = fs.readFileSync(p, 'utf8');
+
+		// skip empty files
+		if (/^\s*$/.test(f)) {
+			return {};
+		}
+
+		f = f.replace(/Titanium\./g,"Ti.");
+		// fixup constants so we can use them in JSON but then we do magic conversions
+		f = f.replace(/Ti\.UI\.FILL/g,'"TI_UI_FILL"');
+		f = f.replace(/Ti\.UI\.SIZE/g,'"TI_UI_SIZE"');
+		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_LEFT/g,'"TI_UI_TEXT_ALIGNMENT_LEFT"')
+		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_RIGHT/g,'"TI_UI_TEXT_ALIGNMENT_RIGHT"')
+		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_CENTER/g,'"TI_UI_TEXT_ALIGNMENT_CENTER"')
+		try 
+		{
+			return JSON.parse(f);
+		}
+		catch(E)
+		{
+			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
+		}
+	}
+	return {};
+}
+
 
 exports.addStyleById = function(styles, id, key, value) {
 	var idStr = '#' + id;

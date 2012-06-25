@@ -123,36 +123,6 @@ function compile(args, program) {
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
-	function loadStyle(p)
-	{
-		if (path.existsSync(p))
-		{
-			var f = fs.readFileSync(p, 'utf8');
-
-			// skip empty files
-			if (/^\s*$/.test(f)) {
-				return {};
-			}
-
-			f = f.replace(/Titanium\./g,"Ti.");
-			// fixup constants so we can use them in JSON but then we do magic conversions
-			f = f.replace(/Ti\.UI\.FILL/g,'"TI_UI_FILL"');
-			f = f.replace(/Ti\.UI\.SIZE/g,'"TI_UI_SIZE"');
-			f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_LEFT/g,'"TI_UI_TEXT_ALIGNMENT_LEFT"')
-			f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_RIGHT/g,'"TI_UI_TEXT_ALIGNMENT_RIGHT"')
-			f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_CENTER/g,'"TI_UI_TEXT_ALIGNMENT_CENTER"')
-			try 
-			{
-				return JSON.parse(f);
-			}
-			catch(E)
-			{
-				U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
-			}
-		}
-		return {};
-	}
-
 	function copyAssets()
 	{
 		if (path.existsSync(assetsDir))
@@ -444,7 +414,7 @@ function compile(args, program) {
 		}
 
 		var styleFile = path.join(sd,viewName+".json");
-		var styles = loadStyle(styleFile);
+		var styles = CU.loadStyle(styleFile);
 		state.styles = styles;
 
 		var xml = fs.readFileSync(viewFile);
@@ -498,6 +468,7 @@ function compile(args, program) {
 		});
 	});
 
+	// copy assets and libs
 	copyAssets();
 	copyLibs();
 
