@@ -153,11 +153,6 @@ function compile(args, program) {
 		return {};
 	}
 
-	function generateVarName(id)
-	{
-		return '$.'+id;
-	}
-
 	function copyAssets()
 	{
 		if (path.existsSync(assetsDir))
@@ -284,72 +279,12 @@ function compile(args, program) {
 		});
 	}
 
-	var JSON_NULL = JSON.parse('null');
-
-	function mergeStyles(from,to)
-	{
-		if (from)
-		{
-			for (var k in from)
-			{
-				var v = from[k];
-				// for optimization, remove null or undefined values
-				if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null')
-				{
-					delete to[k];
-				}
-				else
-				{
-					to[k] = from[k];
-				}
-			}
-		}
-	}
-
-	function generateStyleParams(styles,classes,id,className)
-	{
-		var s = {};
-		mergeStyles(styles['View'],s);
-		mergeStyles(styles[U.properCase(className)],s);
-		for (var c=0;c<classes.length;c++)
-		{
-			var clsn = classes[c];
-			mergeStyles(styles['.'+clsn],s);
-		}
-		mergeStyles(styles['#'+id],s);
-		if (id) s['id'] = id;
-		var str = [];
-		
-		var constants = {
-			'TI_UI_FILL':'Ti.UI.FILL',
-			'TI_UI_SIZE':'Ti.UI.SIZE',
-			'TI_UI_TEXT_ALIGNMENT_LEFT':'Ti.UI.TEXT_ALIGNMENT_LEFT',
-			'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
-			'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'
-		};
-		
-		for (var sn in s)
-		{
-			var v = s[sn];
-			var q = typeof(v) === 'string';
-			var cf = constants[v];
-			if (cf) {
-				str.push("\t\t"+sn+':'+cf);
-			} else if (q) {
-				str.push("\t\t"+sn+':'+'"'+v+'"');
-			} else {
-				str.push("\t\t"+sn+':'+ JSON.stringify(v));
-			}
-		}
-		return str.join(",\n");
-	}
-
 	function generateController(name, dir, state, id)
 	{
 		var code = '';
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
 		var p = path.join(cd,name+'.js');
-		var symbol = generateVarName(id);
+		var symbol = CU.generateVarName(id);
 		
 		if (path.existsSync(p)) {
 			var js = fs.readFileSync(p);
@@ -359,19 +294,14 @@ function compile(args, program) {
 		}
 	}
 
-	function generateUniqueId() {
-		return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
-	};
-
-
-	function parseNode(node, state, defaultId) {
+	function generateNode(node, state, defaultId) {
 		if (node.nodeType != 1) return '';
 
 		var name = node.nodeName,
 			ns = node.getAttribute('ns') || 'Ti.UI',
 			fullname = ns + '.' + name;
 			req = node.getAttribute('require'),
-			id = node.getAttribute('id') || defaultId || req || generateUniqueId(),
+			id = node.getAttribute('id') || defaultId || req || CU.generateUniqueId(),
 			code = '';
 
 		// Determine which parser to use for this node
@@ -404,88 +334,6 @@ function compile(args, program) {
 			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
 				code += parseNode(newParent.childNodes.item(i), state);
 			}
-		}
-
-		return code;
-	}
-
-
-
-	function generateNode(ischild,viewFile,node,state,defId)
-	{
-		if (node.nodeType != 1) return '';
-
-		var code = '';
-		var req = node.getAttribute('require');
-
-		// TODO: may need to rethink including "req" here. It simplifies usage,
-		//       but will cause complications when views/widgets are used more than
-		//       once in a view.
-		var id = node.getAttribute('id') || defId || req || generateUniqueId();
-		var symbol = generateVarName(id);
-		var nodename = node.nodeName;
-		var classes = node.getAttribute('class').split(' ');
-
-		if (req) {
-			var commonjs = "alloy/components/" + req;
-			if (nodename === 'Widget') {
-				commonjs = "alloy/widgets/" + req + "/components/widget";
-			} 
-			code += symbol + " = (require('" + commonjs + "')).create();\n";
-			if (!ischild) {
-				code += "root$ = " + symbol + ";\n";
-			}
-			if (state.parentNode) {
-				code += symbol + '.setParent(' + state.parentNode + ');\n';
-			}
-		} else {
-			var ns = node.getAttribute('ns') || "Ti.UI";
-			var fn = "create" + nodename;
-			
-			if (node.childNodes.length > 0)
-			{
-				var processors = 
-				[
-					['Label','text'],
-					['Button','title']
-				];
-				_.every(processors, function(el)
-				{
-					if (nodename == el[0])
-					{
-						var k = el[1];
-						var str = U.XML.getNodeText(node);
-						if (!state.styles['#'+id])
-						{
-							state.styles['#'+id]={};
-						}
-						state.styles['#'+id][k]=str;
-						return false;
-					} 
-					return true;
-				});
-			}
-
-			code += '\t' + symbol + " = A$(" + ns + "." + fn + "({\n";
-			code += generateStyleParams(state.styles,classes,id,node.nodeName);
-			code += "\n\t}),'" + node.nodeName + "', " + (state.parentNode || 'null') + ");\n\t";
-			if (!ischild) {
-				code += "root$ = " + symbol + ";\n";
-			}
-			if (state.parentNode) {
-				code += state.parentNode+".add("+symbol+");\n";
-			}
-		}
-
-		var childstate = {
-			parentNode: symbol,
-			styles: state.styles
-		};
-
-		for (var c=0;c<node.childNodes.length;c++)
-		{
-			var child = node.childNodes[c];
-			code += generateNode(true,viewFile,child,childstate);
 		}
 
 		return code;
@@ -557,8 +405,8 @@ function compile(args, program) {
 				var migrations = findModelMigrations(state,part);
 
 				var theid = U.properCase(part), theidc = U.properCase(part)+'Collection';
-				var symbol1 =  generateVarName(theid);
-				var symbol2 =  generateVarName(theidc);
+				var symbol1 =  CU.generateVarName(theid);
+				var symbol2 =  CU.generateVarName(theidc);
 				var codegen = symbol1 + " = M$('"+ part +"',\n" +
 								jm + "\n" +
 							  ", function("+part+"){\n" +
@@ -616,9 +464,9 @@ function compile(args, program) {
 			template.viewCode += findAndLoadModels(state);
 		}
 
+		// Generate Titanium code from the markup
 		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-			// template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
-			template.viewCode += parseNode(docRoot.childNodes.item(i),state,viewid||viewname);
+			template.viewCode += generateNode(docRoot.childNodes.item(i),state,viewid||viewname);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 
@@ -634,8 +482,6 @@ function compile(args, program) {
 	}
 	
 	var state = {
-		//parentNode: null,
-		//styles: null
 		parent: {}
 	};
 
