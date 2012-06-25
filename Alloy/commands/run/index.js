@@ -26,7 +26,7 @@ module.exports = function(args, program) {
 	var p = titanium.run(
 		inputPath, 
 		args[1], //optional platform
-		program.tiverson, //optional version
+		program.tiversion, //optional version
 		program.tiSDK //optional SDK direct path
 	);
 }
