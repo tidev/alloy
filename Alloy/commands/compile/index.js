@@ -426,7 +426,7 @@ function compile(args, program) {
 		return code;
 	}
 
-	function parseView(viewName,dir,viewid,isWidget,wJSon)
+	function parseView(viewName,dir,viewid,manifest)
 	{
 		var template = {
 			viewCode: '',
@@ -473,9 +473,9 @@ function compile(args, program) {
 		// create commonjs module for this view/controller
 		var code = _.template(fs.readFileSync(path.join(alloyRoot, 'template', 'component.js'), 'utf8'), template);
 		code = U.processSourceCode(code, alloyConfig);
-		if (isWidget) {
-			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
-			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components', viewName + '.js'), code);
+		if (manifest) {
+			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', manifest.id, 'components'), 0777);
+			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'widgets', manifest.id, 'components', viewName + '.js'), code);
 		} else {
 			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
 		}
@@ -486,43 +486,17 @@ function compile(args, program) {
 	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'components'), 0777);
 	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets'), 0777);
 
-	// TODO: Clean up this iteration mess!
-	// loop through all widgets
-	var widgetPath = path.join(outputPath,'app','widgets');
-	if (path.existsSync(widgetPath)) {
-		var wFiles = fs.readdirSync(widgetPath);
-		for (var i = 0; i < wFiles.length; i++) {
-			var wDir = wFiles[i];
-			// TODO: make sure wDir is a directory
-			var wDirFiles = fs.readdirSync(path.join(widgetPath,wDir));
-			for (var j = 0; j < wDirFiles.length; j++) {
-				if (_.indexOf(wDirFiles,'widget.json') === -1) {
-					break;
-				}
+	// Process all views, including all those belonging to widgets
+	var viewCollection = U.getWidgetDirectories(outputPath);
+	viewCollection.push({ dir: path.join(outputPath,'app') });
+	_.each(viewCollection, function(collection) {
+		_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
+			if (/\.xml$/.test(view)) {
+				var basename = path.basename(view, '.xml');
+				parseView(basename, collection.dir, basename, collection.manifest);
 			}
-
-			var wReq = JSON.parse(fs.readFileSync(path.join(widgetPath,wDir,'widget.json'),'utf8'));
-
-			// need to loop through all views
-			var vFiles = fs.readdirSync(path.join(widgetPath, wDir,'views'));
-			for (var k = 0; k < vFiles.length; k++) {
-				
-				if (/\.xml$/.test(vFiles[k])) {
-					var basename = path.basename(vFiles[k], '.xml');
-					parseView(basename,path.join(widgetPath,wDir),basename,true,wReq);
-				}
-			}
-		}
-	}
-
-	// need to loop through all views
-	var vFiles = fs.readdirSync(path.join(outputPath,'app','views'));
-	for (var i = 0; i < vFiles.length; i++) {
-		if (/\.xml$/.test(vFiles[i])) {
-			var basename = path.basename(vFiles[i], '.xml');
-			parseView(basename,null,basename,false);
-		}
-	}
+		});
+	});
 
 	copyAssets();
 	copyLibs();
