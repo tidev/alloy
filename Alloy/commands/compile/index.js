@@ -279,7 +279,7 @@ function compile(args, program) {
 		});
 	}
 
-	function generateController(name, dir, state, id)
+	function generateController(name, dir, id)
 	{
 		var code = '';
 		var cd = dir ? path.join(dir,'controllers') : controllersDir;
@@ -339,7 +339,7 @@ function compile(args, program) {
 		return code;
 	}
 	
-	function findModelMigrations(state,name)
+	function findModelMigrations(name)
 	{
 		try
 		{
@@ -376,7 +376,7 @@ function compile(args, program) {
 		}
 	}
 	
-	function findAndLoadModels(state) {
+	function findAndLoadModels() {
 		var f = modelsDir;
 		var code = '';
 		if (!path.existsSync(f)) {
@@ -402,7 +402,7 @@ function compile(args, program) {
 				}
 				catch(E) { }
 
-				var migrations = findModelMigrations(state,part);
+				var migrations = findModelMigrations(part);
 
 				var theid = U.properCase(part), theidc = U.properCase(part)+'Collection';
 				var symbol1 =  CU.generateVarName(theid);
@@ -426,7 +426,7 @@ function compile(args, program) {
 		return code;
 	}
 
-	function parseView(viewName,state,dir,viewid,isWidget,wJSon)
+	function parseView(viewName,dir,viewid,isWidget,wJSon)
 	{
 		var template = {
 			viewCode: '',
@@ -434,7 +434,7 @@ function compile(args, program) {
 			lifecycle: '',
 			CFG: generatedCFG
 		};
-		state = { parent: {} };
+		var state = { parent: {} };
 		var vd = dir ? path.join(dir,'views') : viewsDir;
 		var sd = dir ? path.join(dir,'styles') : stylesDir;
 
@@ -461,14 +461,14 @@ function compile(args, program) {
 
 		// TODO: Can we move this out of the parseView() call?
 		if (viewName === 'index') {
-			template.viewCode += findAndLoadModels(state);
+			template.viewCode += findAndLoadModels();
 		}
 
 		// Generate Titanium code from the markup
 		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
 			template.viewCode += generateNode(docRoot.childNodes.item(i),state,viewid||viewname);
 		}
-		template.controllerCode += generateController(viewName,dir,state,id);
+		template.controllerCode += generateController(viewName,dir,id);
 
 		// create commonjs module for this view/controller
 		var code = _.template(fs.readFileSync(path.join(alloyRoot, 'template', 'component.js'), 'utf8'), template);
@@ -480,10 +480,6 @@ function compile(args, program) {
 			fs.writeFileSync(path.join(outputPath, 'Resources', 'alloy', 'components', viewName + '.js'), code);
 		}
 	}
-	
-	var state = {
-		parent: {}
-	};
 
 	// create components directory for view/controller components
 	copyAlloy();
@@ -513,7 +509,7 @@ function compile(args, program) {
 				
 				if (/\.xml$/.test(vFiles[k])) {
 					var basename = path.basename(vFiles[k], '.xml');
-					parseView(basename,state,path.join(widgetPath,wDir),basename,true,wReq);
+					parseView(basename,path.join(widgetPath,wDir),basename,true,wReq);
 				}
 			}
 		}
@@ -524,7 +520,7 @@ function compile(args, program) {
 	for (var i = 0; i < vFiles.length; i++) {
 		if (/\.xml$/.test(vFiles[i])) {
 			var basename = path.basename(vFiles[i], '.xml');
-			parseView(basename,state,null,basename,false);
+			parseView(basename,null,basename,false);
 		}
 	}
 
@@ -551,7 +547,7 @@ function compile(args, program) {
 	if (program.dump) console.log(code.blue);
 
 	// trigger our custom compiler makefile
-	compilerMakeFile.trigger("post:compile",_.extend(_.clone(compileConfig), {state:state}));
+	compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
 };
 
 module.exports = compile;
