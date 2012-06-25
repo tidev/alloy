@@ -305,16 +305,11 @@ function compile(args, program) {
 		}
 	}
 
-	function properCase (n)
-	{
-		return n.charAt(0).toUpperCase() + n.substring(1);
-	}
-
 	function generateStyleParams(styles,classes,id,className)
 	{
 		var s = {};
 		mergeStyles(styles['View'],s);
-		mergeStyles(styles[properCase(className)],s);
+		mergeStyles(styles[U.properCase(className)],s);
 		for (var c=0;c<classes.length;c++)
 		{
 			var clsn = classes[c];
@@ -596,7 +591,7 @@ function compile(args, program) {
 
 				var migrations = findModelMigrations(state,part);
 
-				var theid = properCase(part), theidc = properCase(part)+'Collection';
+				var theid = U.properCase(part), theidc = U.properCase(part)+'Collection';
 				var symbol1 =  generateVarName(theid);
 				var symbol2 =  generateVarName(theidc);
 				var codegen = symbol1 + " = M$('"+ part +"',\n" +

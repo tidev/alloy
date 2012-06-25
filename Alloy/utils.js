@@ -24,6 +24,10 @@ exports.XML = {
 	}
 };
 
+exports.properCase = function() {
+	return n.charAt(0).toUpperCase() + n.substring(1);
+};
+
 exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
