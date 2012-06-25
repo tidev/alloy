@@ -1,9 +1,9 @@
-var jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify,
+var jsp = require("../../uglify-js/uglify-js").parser,
+	pro = require("../../uglify-js/uglify-js").uglify,
 	fs = require('fs'),
 	path = require('path'),
-	U = require('./utils.js'),
-	_ = require("./lib/alloy/underscore")._
+	U = require('../../utils.js'),
+	_ = require("../../lib/alloy/underscore")._
 ;
 
 function appendFileExt(p)

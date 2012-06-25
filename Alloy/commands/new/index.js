@@ -3,10 +3,10 @@ var path = require('path'),
 	wrench = require('wrench'),
 	DOMParser = require("xmldom").DOMParser,
 	XMLSerializer = require("xmldom").XMLSerializer,
-	_ = require('../lib/alloy/underscore')._,
-	U = require('../utils'),
-	logger = require('../common/logger'),
-	alloyRoot = path.join(__dirname,'..');
+	_ = require('../../lib/alloy/underscore')._,
+	U = require('../../utils'),
+	logger = require('../../common/logger'),
+	alloyRoot = path.join(__dirname,'..', '..');
 
 function createPlugin(rootDir) {
 	var plugins = path.join(rootDir,"plugins");

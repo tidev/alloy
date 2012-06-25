@@ -1,4 +1,4 @@
-var logger = require('./common/logger'),
+var logger = require('../../common/logger'),
 	colors = require('colors');
 
 function CompilerMakeFile() {

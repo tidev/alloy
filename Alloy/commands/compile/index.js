@@ -2,12 +2,13 @@ var path = require('path'),
 	colors = require('colors'),
 	fs = require('fs'),
 	wrench = require('wrench'),
-	U = require('../utils'),
-	_ = require("../lib/alloy/underscore")._,
+	U = require('../../utils'),
+	_ = require("../../lib/alloy/underscore")._,
 	DOMParser = require("xmldom").DOMParser,
-	logger = require('../common/logger'),
-	requires = require('../requires'),
-	CompilerMakeFile = require('../CompilerMakeFile');
+	logger = require('../../common/logger'),
+	requires = require('./requires'),
+	CompilerMakeFile = require('./CompilerMakeFile'),
+	alloyRoot = path.join(__dirname,'..','..');
 
 var outputPath,
 	compilerMakeFile,
@@ -185,7 +186,7 @@ function compile(args, program) {
 
 	function copyAlloy()
 	{
-		var lib = path.join(__dirname,'..','lib');
+		var lib = path.join(alloyRoot,'lib');
 		U.copyFilesAndDirs(lib,resourcesDir);
 	}
 
@@ -196,7 +197,7 @@ function compile(args, program) {
 		// as part of the framework and then auto-deploy them at 
 		// compile time, only copying the libraries that we 
 		// actually require in our app - saving space and memory
-		var builtInsDir = path.join(__dirname,'..','builtins');
+		var builtInsDir = path.join(alloyRoot,'builtins');
 		function alloyFilter(fn)
 		{
 			var exclude = ['backbone','underscore'];
@@ -661,7 +662,7 @@ function compile(args, program) {
 		template.controllerCode += generateController(viewName,dir,state,id);
 
 		// create commonjs module for this view/controller
-		var code = _.template(fs.readFileSync(path.join(__dirname, '..' , 'template', 'component.js'), 'utf8'), template);
+		var code = _.template(fs.readFileSync(path.join(alloyRoot, 'template', 'component.js'), 'utf8'), template);
 		code = U.processSourceCode(code, alloyConfig);
 		if (isWidget) {
 			wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets', wJSon.id, 'components'), 0777);
@@ -724,7 +725,7 @@ function compile(args, program) {
 
 	// generate app.js
 	var appJS = path.join(resourcesDir,"app.js");
-	var code = _.template(fs.readFileSync(path.join(__dirname,'..','template','app.js'),'utf8'),{config:generatedCFG});
+	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{config:generatedCFG});
 	code = U.processSourceCode(code, alloyConfig);
 
 	// trigger our custom compiler makefile

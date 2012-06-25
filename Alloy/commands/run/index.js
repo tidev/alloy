@@ -1,8 +1,8 @@
 var path = require('path'),
-	_ = require("../lib/alloy/underscore")._,
-	U = require('../utils'),
-	logger = require('../common/logger'),
-	titanium = require('../common/titanium');
+	_ = require("../../lib/alloy/underscore")._,
+	U = require('../../utils'),
+	logger = require('../../common/logger'),
+	titanium = require('../../common/titanium');
 
 module.exports = function(args, program) {
 	if (!titanium.home) {

@@ -89,5 +89,5 @@ if (!_.contains(ACTIONS, action)) {
 }
 
 // Launch command with given arguments and options
-(require('./commands/'+action))(program.args.slice(1), program);
+(require('./commands/' + action + '/index'))(program.args.slice(1), program);
 

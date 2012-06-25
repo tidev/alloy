@@ -366,6 +366,90 @@ function compile(args, program) {
 		return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 	};
 
+
+
+	function parseNode(ischild,viewFile,node,state,defId)
+	{
+		if (node.nodeType != 1) return '';
+
+		var code = '';
+		var req = node.getAttribute('require');
+
+		// TODO: may need to rethink including "req" here. It simplifies usage,
+		//       but will cause complications when views/widgets are used more than
+		//       once in a view.
+		var id = node.getAttribute('id') || defId || req || generateUniqueId();
+		var symbol = generateVarName(id);
+		var nodename = node.nodeName;
+		var classes = node.getAttribute('class').split(' ');
+
+		if (req) {
+			var commonjs = "alloy/components/" + req;
+			if (nodename === 'Widget') {
+				commonjs = "alloy/widgets/" + req + "/components/widget";
+			} 
+			code += symbol + " = (require('" + commonjs + "')).create();\n";
+			if (!ischild) {
+				code += "root$ = " + symbol + ";\n";
+			}
+			if (state.parentNode) {
+				code += symbol + '.setParent(' + state.parentNode + ');\n';
+			}
+		} else {
+			var ns = node.getAttribute('ns') || "Ti.UI";
+			var fn = "create" + nodename;
+			
+			if (node.childNodes.length > 0)
+			{
+				var processors = 
+				[
+					['Label','text'],
+					['Button','title']
+				];
+				_.every(processors, function(el)
+				{
+					if (nodename == el[0])
+					{
+						var k = el[1];
+						var str = U.XML.getNodeText(node);
+						if (!state.styles['#'+id])
+						{
+							state.styles['#'+id]={};
+						}
+						state.styles['#'+id][k]=str;
+						return false;
+					} 
+					return true;
+				});
+			}
+
+			code += '\t' + symbol + " = A$(" + ns + "." + fn + "({\n";
+			code += generateStyleParams(state.styles,classes,id,node.nodeName);
+			code += "\n\t}),'" + node.nodeName + "', " + (state.parentNode || 'null') + ");\n\t";
+			if (!ischild) {
+				code += "root$ = " + symbol + ";\n";
+			}
+			if (state.parentNode) {
+				code += state.parentNode+".add("+symbol+");\n";
+			}
+		}
+
+		var childstate = {
+			parentNode: symbol,
+			styles: state.styles
+		};
+
+		for (var c=0;c<node.childNodes.length;c++)
+		{
+			var child = node.childNodes[c];
+			code += generateNode(true,viewFile,child,childstate);
+		}
+
+		return code;
+	}
+
+
+
 	function generateNode(ischild,viewFile,node,state,defId)
 	{
 		if (node.nodeType != 1) return '';
@@ -571,7 +655,8 @@ function compile(args, program) {
 		}
 
 		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-			template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
+			// template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
+			template.viewCode += parseNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 
