@@ -8,6 +8,7 @@ var path = require('path'),
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
+	CU = require('./compilerUtils'),
 	alloyRoot = path.join(__dirname,'..','..');
 
 var outputPath,
@@ -363,7 +364,7 @@ function compile(args, program) {
 	};
 
 
-	function parseNode(node, state, styles, defaultId) {
+	function parseNode(node, state, defaultId) {
 		if (node.nodeType != 1) return '';
 
 		var name = node.nodeName,
@@ -385,14 +386,23 @@ function compile(args, program) {
 		}
 
 		// Execute the appropriate tag parser and append code
-		state = require('./parsers/' + parserRequire).parse(node, ns, id, styles, state) || { parent: {} };
+		var args = {
+			ns: ns,
+			id: id, 
+			fullname: fullname,
+			req: req,
+			symbol: CU.generateVarName(id),
+			classes: node.getAttribute('class').split(' '),	
+			parent: state.parent || {},
+		};
+		state = require('./parsers/' + parserRequire).parse(node, state, args) || { parent: {} };
 		code += state.code;
 
 		// Continue parsing if necessary
 		if (state.parent && state.parent.node) {
 			var newParent = state.parent.node;
 			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-				code += parseNode(newParent.childNodes.item(i), state, styles);
+				code += parseNode(newParent.childNodes.item(i), state);
 			}
 		}
 
@@ -587,7 +597,7 @@ function compile(args, program) {
 
 		var styleFile = path.join(sd,viewName+".json");
 		var styles = loadStyle(styleFile);
-		//state.styles = styles;
+		state.styles = styles;
 
 		var xml = fs.readFileSync(viewFile);
 		var doc = new DOMParser().parseFromString(String(xml));
@@ -608,7 +618,7 @@ function compile(args, program) {
 
 		for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
 			// template.viewCode += generateNode(false,viewFile,docRoot.childNodes.item(i),state,viewid||viewname);
-			template.viewCode += parseNode(docRoot.childNodes.item(i),state,styles,viewid||viewname);
+			template.viewCode += parseNode(docRoot.childNodes.item(i),state,viewid||viewname);
 		}
 		template.controllerCode += generateController(viewName,dir,state,id);
 

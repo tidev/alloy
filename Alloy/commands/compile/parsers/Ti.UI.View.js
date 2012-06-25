@@ -1,35 +1,29 @@
 var CU = require('../compilerUtils');
 
-exports.parse = function(node, ns, id, styles, state) {
-	var symbol = CU.generateVarName(id),
-		classes = node.getAttribute('class').split(' '),
-		fullname = ns + '.' + node.nodeName,
-		req = node.getAttribute('require'),
-		createFunc = 'create' + node.nodeName,
-		symbol = CU.generateVarName(id),
-		parent = state.parent || {};
-		code = '';
+exports.parse = function(node, state, args) {
+	var code = '';
 
 	// We only need special handling if there's a req attribute
-	if (!req) {
-		return require('./default').parse(node, ns, id, styles, state);
+	if (!args.req) {
+		return require('./default').parse(node, state, args);
 	} 
 
 	// Generate runtime code
-	var commonjs = "alloy/components/" + req;
-	code += symbol + " = (require('" + commonjs + "')).create();\n";
-	if (parent.symbol) {
-		code += symbol + '.setParent(' + parent.symbol + ');\n';
+	var commonjs = "alloy/components/" + args.req;
+	code += args.symbol + " = (require('" + commonjs + "')).create();\n";
+	if (args.parent.symbol) {
+		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	} else {
-		code += "root$ = " + symbol + ";\n";
+		code += "root$ = " + args.symbol + ";\n";
 	}
 
 	// Update the parsing state
 	return {
 		parent: {
 			node: node,
-			symbol: symbol
+			symbol: args.symbol
 		},
+		styles: state.styles,
 		code: code
 	}
 };

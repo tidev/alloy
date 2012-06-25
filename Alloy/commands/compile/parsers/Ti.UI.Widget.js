@@ -1,36 +1,30 @@
 var CU = require('../compilerUtils'),
 	U = require('../../../utils');
 
-exports.parse = function(node, ns, id, styles, state) {
-	var symbol = CU.generateVarName(id),
-		classes = node.getAttribute('class').split(' '),
-		fullname = ns + '.' + node.nodeName,
-		req = node.getAttribute('require'),
-		createFunc = 'create' + node.nodeName,
-		symbol = CU.generateVarName(id),
-		parent = state.parent || {};
-		code = '';
+exports.parse = function(node, state, args) {
+	var code = '';
 
 	// Validate widget
-	if (!req) {
-		U.die('Invalid Widget with ID "' + id + '", must have a "req" attribute');
+	if (!args.req) {
+		U.die('Invalid Widget with ID "' + args.id + '", must have a "req" attribute');
 	} 
 
 	// Generate runtime code
-	var commonjs = "alloy/widgets/" + req + "/components/widget";
-	code += symbol + " = (require('" + commonjs + "')).create();\n";
-	if (parent.symbol) {
-		code += symbol + '.setParent(' + parent.symbol + ');\n';
+	var commonjs = "alloy/widgets/" + args.req + "/components/widget";
+	code += args.symbol + " = (require('" + commonjs + "')).create();\n";
+	if (args.parent.symbol) {
+		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	} else {
-		code += "root$ = " + symbol + ";\n";
+		code += "root$ = " + args.symbol + ";\n";
 	}
 
 	// Update the parsing state
 	return {
 		parent: {
 			node: node,
-			symbol: symbol
+			symbol: args.symbol
 		},
+		styles: state.styles,
 		code: code
 	}
 };
