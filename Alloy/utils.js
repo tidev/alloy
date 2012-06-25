@@ -24,7 +24,7 @@ exports.XML = {
 	}
 };
 
-exports.properCase = function() {
+exports.properCase = function(n) {
 	return n.charAt(0).toUpperCase() + n.substring(1);
 };
 
