@@ -24,6 +24,25 @@ exports.XML = {
 	}
 };
 
+exports.getWidgetDirectories = function(outputPath) {
+	var dirs = [];
+	var widgetPath = path.join(outputPath,'app','widgets');
+	if (path.existsSync(widgetPath)) {
+		var wFiles = fs.readdirSync(widgetPath);
+		for (var i = 0; i < wFiles.length; i++) {
+			var wDir = path.join(widgetPath,wFiles[i]); 
+			if (fs.statSync(wDir).isDirectory() &&
+				_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
+				dirs.push({
+					dir: wDir,
+					manifest: JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'))
+				});
+			} 
+		}
+	}
+	return dirs;
+};
+
 exports.properCase = function(n) {
 	return n.charAt(0).toUpperCase() + n.substring(1);
 };
