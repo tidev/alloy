@@ -12,9 +12,7 @@ var path = require('path'),
 	alloyRoot = path.join(__dirname,'..','..');
 
 var outputPath,
-	compilerMakeFile,
-	alloyUniqueIdPrefix = '__alloyId',
-	alloyUniqueIdCounter = 0;
+	compilerMakeFile;
 
 function compile(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome();
