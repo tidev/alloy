@@ -2,6 +2,9 @@ var U = require('../../utils'),
 	colors = require('colors'),
 	path = require('path'),
 	fs = require('fs'),
+	_ = require('../../lib/alloy/underscore')._;
+
+var alloyRoot = path.join(__dirname,'..','..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
@@ -17,6 +20,62 @@ exports.generateVarName = function(id) {
 exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
+
+exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
+	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
+	var libDirs = ['builtins','template'];
+	var resources = path.resolve(path.join(outputPath,'Resources'));
+
+	var obj = {
+		alloyConfig: alloyConfig,
+		runtimeConfig: '',
+		dir: {
+			home: path.resolve(inputPath),
+			project: path.resolve(outputPath),
+			resources: resources,
+			resourcesAlloy: path.join(resources,'alloy')
+		}
+	};
+
+	// create list of dirs
+	_.each(dirs, function(dir) {
+		obj.dir[dir] = path.resolve(path.join(inputPath,dir));
+	});
+	_.each(libDirs, function(dir) {
+		obj.dir[dir] = path.resolve(path.join(alloyRoot,dir));
+	});
+
+	// validation
+	var indexXml = path.join(obj.dir.views,'index.xml');
+	if (!path.existsSync(indexXml)) {
+		U.die('Alloy project must have an index.xml at ' + indexXml);
+	}
+	if (path.existsSync(obj.dir.config)) {
+		obj.runtimeConfig = exports.generateConfig(obj.dir.config, alloyConfig);
+	}
+	U.ensureDir(obj.dir.resources);
+
+	return obj;
+};
+
+// TODO: instead of dumping this full JSON in every file, create a commonjs
+//       module for the config, then load it in each file. The loaded module
+//       can then be assigned to CFG$ (or whatever else we want to name it)
+exports.generateConfig = function(configDir, alloyConfig) {
+	var cf = path.join(configDir,'config.json');
+	if (path.existsSync(cf))
+	{
+		var jf = fs.readFileSync(cf);
+		var j = JSON.parse(jf);
+		var o = j.global || {};
+		if (alloyConfig) {
+			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
+			o = _.extend(o, j['os:'+alloyConfig.platform]);
+		}
+		return "CFG$ = " + JSON.stringify(o) + ";\n";
+	}
+	return '';
+};
 
 exports.loadStyle = function(p) {
 	if (path.existsSync(p)) {

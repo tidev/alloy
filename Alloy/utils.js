@@ -79,25 +79,6 @@ exports.resolveAppHome = function() {
 	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
 }
 
-// TODO: instead of dumping this full JSON in every file, create a commonjs
-//       module for the config, then load it in each file. The loaded module
-//       can then be assigned to CFG$ (or whatever else we want to name it)
-exports.generateConfig = function(configDir, alloyConfig) {
-	var cf = path.join(configDir,'config.json');
-	if (path.existsSync(cf))
-	{
-		var jf = fs.readFileSync(cf);
-		var j = JSON.parse(jf);
-		var o = j.global || {};
-		if (alloyConfig) {
-			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
-			o = _.extend(o, j['os:'+alloyConfig.platform]);
-		}
-		return "CFG$ = " + JSON.stringify(o) + ";\n";
-	}
-	return '';
-};
-
 exports.processSourceCode = function(code, config) {
 	var defines = {},
 		DEFINES, ast;
