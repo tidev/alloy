@@ -40,7 +40,7 @@ function compile(args, program) {
 		alloyConfig = JSON.parse(fs.readFileSync(alloyCF, 'utf8'));
 		logger.info("found alloy configuration at "+alloyCF.yellow);
 	}
-	if (program.config) {
+	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
 			var a = v.split('=');
 			alloyConfig[a[0]]=a[1];
