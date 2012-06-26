@@ -13,6 +13,9 @@ var path = require('path'),
 var alloyRoot = path.join(__dirname,'..','..'),
 	compileConfig = {};
 
+//////////////////////////////////////
+////////// command function //////////
+//////////////////////////////////////
 module.exports = function(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
 		alloyConfigPath = path.join(inputPath,'config','alloy.json'),
