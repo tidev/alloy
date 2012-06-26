@@ -15,20 +15,19 @@ var outputPath,
 	compilerMakeFile;
 
 function compile(args, program) {
-	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome();
-	var alloyCF = path.join(inputPath,'config','alloy.json');
-	var generatedCFG = '';
-	var alloyConfig = {};
+	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
+		alloyConfigPath = path.join(inputPath,'config','alloy.json'),
+		generatedCFG = '',
+		alloyConfig = {},
+		outputPath, tmpPath;
 
+	// validate input and output paths
 	if (!path.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
 	}	
-
-	if (!program.outputPath)
-	{
-		var t = path.join(inputPath,'views','index.xml');
-		if (path.existsSync(t))
-		{
+	if (!program.outputPath) {
+		tmpPath = path.join(inputPath,'views','index.xml');
+		if (path.existsSync(tmpPath)) {
 			outputPath = path.join(inputPath,'..');
 		}
 	}
@@ -36,9 +35,9 @@ function compile(args, program) {
 	U.ensureDir(outputPath);
 
 	// construct compiler config from alloy.json and the command line config parameters
-	if (path.existsSync(alloyCF)) {
-		alloyConfig = JSON.parse(fs.readFileSync(alloyCF, 'utf8'));
-		logger.info("found alloy configuration at "+alloyCF.yellow);
+	if (path.existsSync(alloyConfigPath)) {
+		alloyConfig = JSON.parse(fs.readFileSync(alloyConfigPath, 'utf8'));
+		logger.info("found alloy configuration at " + alloyConfigPath.yellow);
 	}
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
@@ -48,8 +47,6 @@ function compile(args, program) {
 	}
 	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
 	alloyConfig.beautify = alloyConfig.beautify || alloyConfig.deploytype === 'development';
-
-	//console.log(alloyConfig);
 
 	// establish alloy app directories
 	var viewsDir = path.join(inputPath,'views');
