@@ -4,19 +4,24 @@ var fs = require('fs'),
 	spawn = require('child_process').spawn,
 	titanium = require('../Alloy/common/titanium'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness')
-	targetAppPath = path.join(process.cwd(),'test','projects','Harness','app'),
-	alloyLibPath = path.join(process.cwd(),'test','projects','Harness','Resources','alloy');
+	targetAppPath = path.join(harnessAppPath,'app'),
+	resourcesPath = path.join(harnessAppPath,'Resources'),
+	alloyLibPath = path.join(resourcesPath,'alloy'),
+	vendorPath = path.join(resourcesPath,'vendor'),
+	assetsPath = path.join(resourcesPath,'assets');
 
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
-		console.log('clobbering Alloy app directory...');
-		if (path.existsSync(targetAppPath)) {
-			wrench.rmdirSyncRecursive(targetAppPath);
-		}
-		if (path.existsSync(alloyLibPath)) {
-			wrench.rmdirSyncRecursive(alloyLibPath);
-		}
+		console.log('Deleting Alloy app directory...');
+		wrench.rmdirSyncRecursive(targetAppPath, true);
+		console.log('Deleting runtime alloy directory...');
+		wrench.rmdirSyncRecursive(alloyLibPath, true);
+		console.log('Deleting runtime vendor directory...');
+		wrench.rmdirSyncRecursive(vendorPath, true);
+		console.log('Deleting runtime assets directory...');
+		wrench.rmdirSyncRecursive(assetsPath, true);
+		console.log('Creating empty app path at ' + targetAppPath);
 		fs.mkdirSync(targetAppPath);
 	});
 	
