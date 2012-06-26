@@ -121,39 +121,6 @@ function compile(args, program) {
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
-	function copyAssets()
-	{
-		if (path.existsSync(assetsDir))
-		{
-			logger.info('Copying assets from: '+assetsDir.yellow);
-			U.copyFilesAndDirs(assetsDir,resourcesDir);
-		}
-	}
-
-	function copyLibs()
-	{
-		var lib = path.join(inputPath,'lib');
-		if (path.existsSync(lib))
-		{
-			logger.info('Copying app libs: '+lib.yellow);
-			U.copyFilesAndDirs(lib,resourcesDir);
-		}
-		var vendor = path.join(inputPath,'vendor');
-		var vendorTarget = path.join(resourcesDir,'vendor');
-		if (path.existsSync(vendor))
-		{
-			logger.info('Copying vendor libs: '+vendor.yellow);
-			wrench.mkdirSyncRecursive(vendorTarget, 0777);
-			U.copyFilesAndDirs(vendor,vendorTarget);
-		}
-	}
-
-	function copyAlloy()
-	{
-		var lib = path.join(alloyRoot,'lib');
-		U.copyFilesAndDirs(lib,resourcesDir);
-	}
-
 	function copyBuiltins()
 	{
 		// this method will allow an app to do a require
@@ -450,9 +417,10 @@ function compile(args, program) {
 	}
 
 	// create components directory for view/controller components
-	copyAlloy();
-	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'components'), 0777);
-	wrench.mkdirSyncRecursive(path.join(outputPath, 'Resources', 'alloy', 'widgets'), 0777);
+	var alloyRuntimeDir = path.join(outputPath, 'Resources', 'alloy');
+	U.copyAlloyDir(alloyRoot, 'lib', resourcesDir);
+	wrench.mkdirSyncRecursive(path.join(alloyRuntimeDir, 'components'), 0777);
+	wrench.mkdirSyncRecursive(path.join(alloyRuntimeDir, 'widgets'), 0777);
 
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(outputPath);
@@ -466,9 +434,9 @@ function compile(args, program) {
 		});
 	});
 
-	// copy assets and libs
-	copyAssets();
-	copyLibs();
+	// copy assets and libraries
+	U.copyAlloyDir(inputPath, ['assets','lib'], resourcesDir);
+	U.copyAlloyDir(inputPath, 'vendor', path.join(resourcesDir,'vendor'));
 
 	// generate app.js
 	var appJS = path.join(resourcesDir,"app.js");
@@ -480,10 +448,10 @@ function compile(args, program) {
 	if (njs) {
 		code = njs;
 	}
-	
 	fs.writeFileSync(appJS,code);
 	logger.info("compiling alloy to " + appJS.yellow);
 
+	// copy builtins and fix their require paths
 	copyBuiltins();
 	fixRequirePaths(alloyConfig);
 
