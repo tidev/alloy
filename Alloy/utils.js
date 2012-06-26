@@ -24,6 +24,20 @@ exports.XML = {
 	}
 };
 
+exports.copyAlloyDir = function(appDir, sources, destDir) {
+	var sources = _.isArray(sources) ? sources : [sources];
+	_.each(sources, function(source) {
+		var sourceDir = path.join(appDir, source);
+		if (path.existsSync(sourceDir)) {
+			logger.info('Copying ' + source + ' from: ' + sourceDir.yellow);
+			if (!path.existsSync(destDir)) {
+				wrench.mkdirSyncRecursive(destDir, 0777);
+			}
+			exports.copyFilesAndDirs(sourceDir, destDir);
+		}
+	});
+};
+
 exports.getWidgetDirectories = function(outputPath) {
 	var dirs = [];
 	var widgetPath = path.join(outputPath,'app','widgets');
