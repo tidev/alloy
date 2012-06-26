@@ -487,8 +487,6 @@ function compile(args, program) {
 	copyBuiltins();
 	fixRequirePaths(alloyConfig);
 
-	if (program.dump) console.log(code.blue);
-
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
 };

@@ -47,7 +47,6 @@ program
 	.usage('ACTION [ARGS] [OPTIONS]')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
-	.option('-d, --dump','Dump the generated app.js to console')
 	.option('-f, --force','Force the command to execute')
 	.option('-n, --no-colors','Turn off colors')
 	.option('-c, --config <config>','Pass in compiler configuration')
