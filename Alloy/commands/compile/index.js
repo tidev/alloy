@@ -180,8 +180,6 @@ function generateNode(node, state, defaultId) {
 	var name = node.nodeName,
 		ns = node.getAttribute('ns') || 'Ti.UI',
 		fullname = ns + '.' + name,
-		req = node.getAttribute('require'),
-		id = node.getAttribute('id') || defaultId || req || CU.generateUniqueId(),
 		code = '';
 
 	// Determine which parser to use for this node
@@ -196,24 +194,22 @@ function generateNode(node, state, defaultId) {
 	}
 
 	// Execute the appropriate tag parser and append code
-	var args = {
-		ns: ns,
-		id: id, 
-		fullname: fullname,
-		req: req,
-		symbol: CU.generateVarName(id),
-		classes: node.getAttribute('class').split(' '),	
-		parent: state.parent || {},
-	};
-	state = require('./parsers/' + parserRequire).parse(node, state, args) || { parent: {} };
+	if (defaultId) { state.defaultId = defaultId; }
+	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code += state.code;
 
 	// Continue parsing if necessary
-	if (state.parent && state.parent.node) {
-		var newParent = state.parent.node;
-		for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-			code += generateNode(newParent.childNodes.item(i), state);
-		}
+	if (state.parent) {
+		var states = _.isArray(state.parent) ? state.parent : [state.parent];
+		_.each(states, function(p) {
+			var newParent = p.node;
+			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
+				code += generateNode(newParent.childNodes.item(i), {
+					parent: p,
+					styles: state.styles,
+				});
+			}
+		}); 
 	}
 
 	return code;
