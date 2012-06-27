@@ -21,6 +21,24 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
+exports.getParserArgs = function(node, state) {
+	state = state || {};
+	var name = node.nodeName,
+		ns = node.getAttribute('ns') || 'Ti.UI',
+		req = node.getAttribute('require'),
+		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId();
+	if (state.defaultId) { delete state.defaultId; }
+	return {
+		ns: ns,
+		id: id, 
+		fullname: ns + '.' + name,
+		req: req,
+		symbol: exports.generateVarName(id),
+		classes: node.getAttribute('class').split(' ') || [],	
+		parent: state.parent || {},
+	};
+};
+
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
 	var libDirs = ['builtins','template'];
@@ -115,8 +133,9 @@ exports.addStyleById = function(styles, id, key, value) {
 	return styles;
 } 
 
-exports.generateStyleParams = function(styles,classes,id,className) {
+exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
 	var s = {};
+	extraStyle = extraStyle || {};
 
 	// Start with any base View styles
 	mergeStyles(styles['View'],s);
@@ -134,6 +153,9 @@ exports.generateStyleParams = function(styles,classes,id,className) {
 	mergeStyles(styles['#'+id],s);
 	if (id) s['id'] = id;
 	var str = [];
+
+	// Merge in any extra specified styles
+	mergeStyles(extraStyle,s);
 	
 	// Process any Titanium constants in the generated style
 	var constants = {
@@ -143,8 +165,9 @@ exports.generateStyleParams = function(styles,classes,id,className) {
 		'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
 		'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'
 	};
-	for (var sn in s)
-	{
+
+	//console.log(s);
+	for (var sn in s) {
 		var v = s[sn];
 		var q = typeof(v) === 'string';
 		var cf = constants[v];
@@ -153,7 +176,11 @@ exports.generateStyleParams = function(styles,classes,id,className) {
 		} else if (q) {
 			str.push(stylePrefix+sn+':'+'"'+v+'"');
 		} else {
-			str.push(stylePrefix+sn+':'+ JSON.stringify(v));
+			if (_.isObject(v) && v.alloyType === 'var') {
+				str.push(stylePrefix+sn+':'+v.value);
+			} else {
+				str.push(stylePrefix+sn+':'+ JSON.stringify(v));
+			}
 		}
 	}
 	return str.join(",\n");
