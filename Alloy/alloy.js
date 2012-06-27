@@ -8,7 +8,10 @@ var program = require('commander'),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	require('pkginfo')(module, 'name', 'version');
+	pkginfo = require('pkginfo');
+
+// setup our module so have the pkginfo version from package.json
+pkginfo(module,'name','version');
 
 // TODO: get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
