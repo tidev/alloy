@@ -176,25 +176,27 @@ function parseView(viewName,dir,viewid,manifest) {
 
 function generateNode(node, state, defaultId) {
 	if (node.nodeType != 1) return '';
+	if (defaultId) { state.defaultId = defaultId; }
 
-	var name = node.nodeName,
-		ns = node.getAttribute('ns') || CU.implicitNamespaces[name] || 'Ti.UI',
-		fullname = ns + '.' + name,
+	var args = CU.getParserArgs(node, state, defaultId),
 		code = '';
+	// var name = node.nodeName,
+	// 	ns = node.getAttribute('ns') || CU.implicitNamespaces[name] || 'Ti.UI',
+	// 	fullname = ns + '.' + name,
+	// 	code = '';
 
 	// Determine which parser to use for this node
 	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
 	var files = fs.readdirSync(parsersDir);
 	var parserRequire = 'default';
 	for (var i = 0, l = files.length; i < l; i++) {
-		if (fullname + '.js' === files[i]) {
+		if (args.fullname + '.js' === files[i]) {
 			parserRequire = files[i];
 			break;
 		}
 	}
 
 	// Execute the appropriate tag parser and append code
-	if (defaultId) { state.defaultId = defaultId; }
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code += state.code;
 

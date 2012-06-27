@@ -10,27 +10,14 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	JSON_NULL = JSON.parse('null'),
 	stylePrefix = '\t\t';
 
-exports.STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
-exports.STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
-
-//////////////////////////////////////
-////////// public interface //////////
-//////////////////////////////////////
-exports.generateVarName = function(id) {
-	return '$.' + id;
-}
-
-exports.generateUniqueId = function() {
-	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
-}
-
 var NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
 	NS_TI_UI_IPAD = 'Ti.UI.iPad',
 	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
 	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb';
-exports.implicitNamespaces = {
+
+var implicitNamespaces = {
 	// Ti.Map
 	Annotation: NS_TI_MAP,
 
@@ -52,12 +39,26 @@ exports.implicitNamespaces = {
 	// Ti.UI.iPhone
 	NavigationGroup: NS_TI_UI_IPHONE, // I know MobileWeb has one, but 99% will be this one
 	StatusBar: NS_TI_UI_IPHONE,
-
 };
+
+exports.STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
+exports.STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
+
+//////////////////////////////////////
+////////// public interface //////////
+//////////////////////////////////////
+exports.generateVarName = function(id) {
+	return '$.' + id;
+}
+
+exports.generateUniqueId = function() {
+	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
+}
+
 exports.getParserArgs = function(node, state) {
 	state = state || {};
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || exports.implicitNamespaces[name] || 'Ti.UI',
+		ns = node.getAttribute('ns') || implicitNamespaces[name] || 'Ti.UI',
 		req = node.getAttribute('require'),
 		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId();
 
