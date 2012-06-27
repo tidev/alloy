@@ -180,10 +180,6 @@ function generateNode(node, state, defaultId) {
 
 	var args = CU.getParserArgs(node, state, defaultId),
 		code = '';
-	// var name = node.nodeName,
-	// 	ns = node.getAttribute('ns') || CU.implicitNamespaces[name] || 'Ti.UI',
-	// 	fullname = ns + '.' + name,
-	// 	code = '';
 
 	// Determine which parser to use for this node
 	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
