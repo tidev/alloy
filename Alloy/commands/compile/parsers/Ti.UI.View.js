@@ -1,11 +1,12 @@
 var CU = require('../compilerUtils');
 
-exports.parse = function(node, state, args) {
-	var code = '';
+exports.parse = function(node, state) {
+	var args = CU.getParserArgs(node, state),
+		code = '';
 
 	// We only need special handling if there's a req attribute
 	if (!args.req) {
-		return require('./default').parse(node, state, args);
+		return require('./default').parse(node, state);
 	} 
 
 	// Generate runtime code

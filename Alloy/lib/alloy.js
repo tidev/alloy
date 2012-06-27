@@ -10,52 +10,49 @@ module.exports.Backbone = Backbone;
 
 Backbone.Collection.notify = _.extend({}, Backbone.Events);
 
-Backbone.sync = function(method, model, opts)
-{
-	Ti.API.info("sync called with method="+method+", model="+JSON.stringify(model)+", opts="+JSON.stringify(opts));
+Backbone.sync = function(method, model, opts) {
+	// Ti.API.info("sync called with method="+method+", model="+JSON.stringify(model)+", opts="+JSON.stringify(opts));
 	// Ti.API.info("config => "+JSON.stringify(model.config));
 	
 	var m = (model.config || {});
 	var type = (m.adapter ? m.adapter.type : null) || 'sql';
 	
-	switch (type)
-	{
-		case 'sql':
-		{
-			return SQLSync.sync(model,method,opts);
-		}
-		case 'filesystem':
-		{
-			FileSysSync.sync(model,method,opts);
-			Backbone.Collection.notify.trigger('refresh', {method:method,model:model});
-			return;
-		}
-		default:
-		{
-			Ti.API.error("No sync adapter found for: "+type);
+	switch (type) {
+		case 'sql': {
+			SQLSync.sync(model,method,opts);
 			break;
 		}
+		case 'filesystem': {
+			FileSysSync.sync(model,method,opts);
+			break;
+		}
+		default: {
+			Ti.API.error("No sync adapter found for: "+type);
+			return;
+		}
 	}
+
+	Backbone.Collection.notify.trigger('sync', {method:method,model:model});
 };
 
-module.exports.M = function(name,config,modelFn,migrations)
-{
-	SQLSync.init();
+module.exports.M = function(name,config,modelFn,migrations) {
 	
-	var Model = Backbone.Model.extend({
+    var type = (config.adapter ? config.adapter.type : null) || 'sql';
+    if (type == 'sql') { SQLSync.init(); }
+	
+	var Model = Backbone.Model.extend( {
 		
 		defaults: config.defaults,
 		
 		validate: function(attrs) 
 		{
-			if (_.isFunction(Backbone.$_validate))
-			{
-				for (var k in attrs)
-				{
-					var t = Backbone.$_validate(k, attrs[k]);
-					if (!t)
-					{
-						return "validation failed for: "+k;
+			if (typeof __validate !== 'undefined') {
+				if (_.isFunction(__validate)) {
+					for (var k in attrs) {
+						var t = __validate(k, attrs[k]);
+						if (!t) {
+							return "validation failed for: "+k;
+						}
 					}
 				}
 			}

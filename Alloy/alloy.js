@@ -8,7 +8,10 @@ var program = require('commander'),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	pkginfo = require('pkginfo')(module, 'name', 'version');
+	pkginfo = require('pkginfo');
+
+// setup our module so have the pkginfo version from package.json
+pkginfo(module,'name','version');
 
 // TODO: get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
@@ -69,10 +72,10 @@ program.parse(process.argv);
 	
 
 // Setup up logging output
-logger.stripColors = (program.colors==false);
+logger.stripColors = (program.colors===false);
 banner();
 
-if (program.args.length == 0)
+if (program.args.length === 0)
 {
 	var help = program.helpInformation();
 	help = help.replace('Usage: alloy ACTION [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' ACTION'.white+' [ARGS] [OPTIONS]'.grey);

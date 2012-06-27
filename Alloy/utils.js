@@ -6,6 +6,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	logger = require('./common/logger'),
 	XMLSerializer = require("xmldom").XMLSerializer,
+	DOMParser = require("xmldom").DOMParser,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
 	_ = require("./lib/alloy/underscore")._
@@ -21,6 +22,22 @@ exports.XML = {
 			}
 		}
 		return str;
+	},
+	getElementsFromNodes: function(nodeList) {
+		var elems = [];
+		if (nodeList && nodeList.length) {
+			for (var i = 0, l = nodeList.length; i < l; i++) {
+				var node = nodeList.item(i);
+				if (node.nodeType === 1) {
+					elems.push(node);
+				}
+			}
+		}
+		return elems;
+	},
+	createEmptyNode: function(name, ns) {
+		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';
+		return new DOMParser().parseFromString(str).documentElement;
 	}
 };
 
