@@ -7,10 +7,11 @@ var program = require('commander'),
 	logger = require("./common/logger"),
 	U = require('./utils'),
 	colors = require("colors"),
-	_ = require("./lib/alloy/underscore")._;
+	_ = require("./lib/alloy/underscore")._,
+	pkginfo = require('pkginfo');
 
-// get module info
-require('pkginfo')(module, 'name', 'version');
+// setup our module so have the pkginfo version from package.json
+pkginfo(module,'name','version');
 
 // TODO: get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
