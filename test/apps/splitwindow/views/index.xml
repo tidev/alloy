@@ -1,0 +1,8 @@
+<SplitWindow ns="Ti.UI.iPad">
+	<Window>
+		<Label>This is the master</Label>
+	</Window>
+	<Window>
+		<Label>This is the detail</Label>
+	</Window>
+</SplitWindow>
