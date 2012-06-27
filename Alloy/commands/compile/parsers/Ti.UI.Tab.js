@@ -40,10 +40,12 @@ exports.parse = function(node, state) {
 	code += winState.code;
 
 	// Generate the code for the Tab itself, with the Window in it
+	var extraStyle = { window: { value: winState.parent.symbol } };
+	extraStyle.window[CU.STYLE_ALLOY_TYPE] = 'var';
 	var tabState = require('./default').parse(
 		node, 
 		CU.createEmptyState(state.styles), 
-		{ window: { value:winState.parent.symbol, alloyType:'var' } }
+		extraStyle
 	);
 	code += tabState.code;
 
