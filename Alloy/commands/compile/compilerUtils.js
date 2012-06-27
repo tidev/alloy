@@ -10,6 +10,9 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	JSON_NULL = JSON.parse('null'),
 	stylePrefix = '\t\t';
 
+exports.STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
+exports.STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
+
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
@@ -27,8 +30,11 @@ exports.getParserArgs = function(node, state) {
 		ns = node.getAttribute('ns') || 'Ti.UI',
 		req = node.getAttribute('require'),
 		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId();
+
+	ns = ns.replace(/^Titanium\./, 'Ti');
 	node.setAttribute('id', id);
 	if (state.defaultId) { delete state.defaultId; }
+	
 	return {
 		ns: ns,
 		id: id, 
@@ -40,6 +46,8 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
+// "Empty" states are generally used when you want to create a 
+// Titanium component with no parent
 exports.createEmptyState = function(styles) {
 	return {
 		parent: {},
@@ -112,19 +120,18 @@ exports.loadStyle = function(p) {
 			return {};
 		}
 
+		// use Ti namespace
 		f = f.replace(/Titanium\./g,"Ti.");
-		// fixup constants so we can use them in JSON but then we do magic conversions
-		f = f.replace(/Ti\.UI\.FILL/g,'"TI_UI_FILL"');
-		f = f.replace(/Ti\.UI\.SIZE/g,'"TI_UI_SIZE"');
-		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_LEFT/g,'"TI_UI_TEXT_ALIGNMENT_LEFT"')
-		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_RIGHT/g,'"TI_UI_TEXT_ALIGNMENT_RIGHT"')
-		f = f.replace(/Ti\.UI\.TEXT_ALIGNMENT_CENTER/g,'"TI_UI_TEXT_ALIGNMENT_CENTER"')
-		try 
-		{
+
+		// find constants
+		// TODO: This needs work. There's still an off chance that this could 
+		//       match content in a string. Or that the STYLE_CONST_PREFIX could
+		//       appear in other style strings. Extremely unlikely, but possible.
+		f = f.replace(/\:\s*(Ti\.[^\s\,\}]+)/, ': "' + exports.STYLE_CONST_PREFIX + '$1"');
+		
+		try {
 			return JSON.parse(f);
-		}
-		catch(E)
-		{
+		} catch(E) {
 			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
 		}
 	}
@@ -164,34 +171,27 @@ exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
 
 	// Merge in any extra specified styles
 	mergeStyles(extraStyle,s);
-	
-	// Process any Titanium constants in the generated style
-	var constants = {
-		'TI_UI_FILL':'Ti.UI.FILL',
-		'TI_UI_SIZE':'Ti.UI.SIZE',
-		'TI_UI_TEXT_ALIGNMENT_LEFT':'Ti.UI.TEXT_ALIGNMENT_LEFT',
-		'TI_UI_TEXT_ALIGNMENT_CENTER':'Ti.UI.TEXT_ALIGNMENT_CENTER',
-		'TI_UI_TEXT_ALIGNMENT_RIGHT':'Ti.UI.TEXT_ALIGNMENT_RIGHT'
-	};
 
-	//console.log(s);
+	var regex = new RegExp('^' + exports.STYLE_CONST_PREFIX + '(.+)');
 	for (var sn in s) {
-		var v = s[sn];
-		var q = typeof(v) === 'string';
-		var cf = constants[v];
-		if (cf) {
-			str.push(stylePrefix+sn+':'+cf);
-		} else if (q) {
-			str.push(stylePrefix+sn+':'+'"'+v+'"');
-		} else {
-			if (_.isObject(v) && v.alloyType === 'var') {
-				str.push(stylePrefix+sn+':'+v.value);
+		var value = s[sn],
+			actualValue;
+
+		if (_.isString(value)) {
+			var matches = value.match(regex);
+			if (matches !== null) {
+				actualValue = matches[1]; // matched a constant
 			} else {
-				str.push(stylePrefix+sn+':'+ JSON.stringify(v));
+				actualValue = '"' + value + '"'; // just a string
 			}
+		} else if (_.isObject(value) && value[exports.STYLE_ALLOY_TYPE] === 'var') {
+			actualValue = value.value; // dynamic variable value
+		} else {
+			actualValue = JSON.stringify(value); // catch all, just stringify the value
 		}
+		str.push(stylePrefix + sn + ':' + actualValue);
 	}
-	return str.join(",\n");
+	return str.join(',\n');
 }
 
 ///////////////////////////////////////
