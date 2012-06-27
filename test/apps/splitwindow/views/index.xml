@@ -1,4 +1,4 @@
-<SplitWindow ns="Ti.UI.iPad">
+<SplitWindow>
 	<Window>
 		<Label>This is the master</Label>
 	</Window>

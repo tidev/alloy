@@ -178,7 +178,7 @@ function generateNode(node, state, defaultId) {
 	if (node.nodeType != 1) return '';
 
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || 'Ti.UI',
+		ns = node.getAttribute('ns') || CU.implicitNamespaces[name] || 'Ti.UI',
 		fullname = ns + '.' + name,
 		code = '';
 

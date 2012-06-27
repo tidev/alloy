@@ -24,10 +24,14 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
+exports.implicitNamespaces = {
+	SplitWindow: 'Ti.UI.iPad',
+	Annotation: 'Ti.Map'
+};
 exports.getParserArgs = function(node, state) {
 	state = state || {};
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || 'Ti.UI',
+		ns = node.getAttribute('ns') || exports.implicitNamespaces[name] || 'Ti.UI',
 		req = node.getAttribute('require'),
 		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId();
 
