@@ -1,8 +1,6 @@
 
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
-	SQLSync  = require("alloy/sync/sql"),
-	FileSysSync  = require("alloy/sync/filesys"),
 	osname   = Ti.Platform.osname;
 	
 module.exports._ = _;
@@ -19,10 +17,12 @@ Backbone.sync = function(method, model, opts) {
 	
 	switch (type) {
 		case 'sql': {
+			var SQLSync  = require("alloy/sync/sql");
 			SQLSync.sync(model,method,opts);
 			break;
 		}
 		case 'filesystem': {
+			var FileSysSync  = require("alloy/sync/filesys");
 			FileSysSync.sync(model,method,opts);
 			break;
 		}
@@ -37,15 +37,18 @@ Backbone.sync = function(method, model, opts) {
 
 module.exports.M = function(name,config,modelFn,migrations) {
 	
+	var SQLSync;
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
-    if (type == 'sql') { SQLSync.init(); }
+    if (type == 'sql') { 
+    	SQLSync  = require("alloy/sync/sql");
+    	SQLSync.init(); 
+    }
 	
 	var Model = Backbone.Model.extend( {
 		
 		defaults: config.defaults,
 		
-		validate: function(attrs) 
-		{
+		validate: function(attrs) {
 			if (typeof __validate !== 'undefined') {
 				if (_.isFunction(__validate)) {
 					for (var k in attrs) {
@@ -59,10 +62,10 @@ module.exports.M = function(name,config,modelFn,migrations) {
 		}
 	});
 	
-	
-	if (migrations && migrations.length > 0)
-	{
-		SQLSync.migrate(migrations);
+	if (migrations && migrations.length > 0) {
+		if (type == 'sql') { 
+			SQLSync.migrate(migrations);
+		}
 	}
 
 	Model.prototype.config = config;
@@ -72,13 +75,11 @@ module.exports.M = function(name,config,modelFn,migrations) {
 	return Model;
 };
 
-module.exports.A = function(t,type,parent)
-{
+module.exports.A = function(t,type,parent) {
 	_.extend(t,{nodeType:1, nodeName:type, parentNode: parent});
 	_.extend(t,Backbone.Events);
 	
-	(function(){
-		
+	(function() {
 		
 		// we are going to wrap addEventListener and removeEventListener
 		// with on, off so we can use the Backbone events
@@ -90,16 +91,12 @@ module.exports.A = function(t,type,parent)
 		   cbs = [],
 		   ctx = {};
 
-		t.on = function(e,cb,context)
-		{
-			var wcb = function(evt)
-			{
-				try 
-				{
+		t.on = function(e,cb,context) {
+			var wcb = function(evt) {
+				try {
 					_.bind(tg,ctx,e,evt)();
 				}
-				catch(E) 
-				{
+				catch(E) {
 					Ti.API.error("Error triggering '"+e+"' event: "+E);
 				}
 			};
@@ -114,11 +111,9 @@ module.exports.A = function(t,type,parent)
 			_.bind(oo,ctx,e,cb,context)();
 		};
 
-		t.off = function(e,cb,context)
-		{
+		t.off = function(e,cb,context) {
 			var f = cbs[cb];
-			if (f)
-			{
+			if (f) {
 				_.bind(of,ctx,e,cb,context)();
 
 				if (osname === 'android') {

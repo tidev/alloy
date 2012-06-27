@@ -10,7 +10,7 @@ $.table.updateContent = function(o) {
 };
 
 // CRUD ops handler, put any special model processing here, some are ignored for this sample
-var CRUDEops = {
+var CRUDops = {
 	"create": function(o) { Ti.API.info("create called with model="+JSON.stringify(o)); },
     "read": function(o) { $.table.updateContent(o); },
     "update": function(o) { Ti.API.info("update called with model="+JSON.stringify(o)); },
@@ -19,7 +19,7 @@ var CRUDEops = {
 
 // listener for server to persistant store sync requests
 $.BookCollection.notify.on('sync', function(e) {
-	CRUDEops[e.method](e.model);	
+	CRUDops[e.method](e.model);	
 });
 
 // Now let's create a Backbone collection that will hold our models,
