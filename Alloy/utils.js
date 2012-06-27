@@ -25,10 +25,12 @@ exports.XML = {
 	},
 	getElementsFromNodes: function(nodeList) {
 		var elems = [];
-		for (var i = 0, l = nodeList.length; i < l; i++) {
-			var node = nodeList.item(i);
-			if (node.nodeType === 1) {
-				elems.push(node);
+		if (nodeList && nodeList.length) {
+			for (var i = 0, l = nodeList.length; i < l; i++) {
+				var node = nodeList.item(i);
+				if (node.nodeType === 1) {
+					elems.push(node);
+				}
 			}
 		}
 		return elems;
