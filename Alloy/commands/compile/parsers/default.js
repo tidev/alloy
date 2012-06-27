@@ -1,13 +1,14 @@
 var CU = require('../compilerUtils');
 
-exports.parse = function(node, state, args) {
-	var createFunc = 'create' + node.nodeName,
+exports.parse = function(node, state, extraStyle) {
+	var args = CU.getParserArgs(node, state),
+		createFunc = 'create' + node.nodeName,
 		linePrefix = '\t';
 		code = '';
 
 	// Generate runtime code
 	code += linePrefix + args.symbol + " = A$(" + args.ns + "." + createFunc + "({\n";
-	code += CU.generateStyleParams(state.styles, args.classes, args.id, node.nodeName) + '\n';
+	code += CU.generateStyleParams(state.styles, args.classes, args.id, node.nodeName, extraStyle) + '\n';
 	code += linePrefix + "}),'" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");\n";
 	if (args.parent.symbol) {
 		code += linePrefix + args.parent.symbol + ".add(" + args.symbol + ");\n";
