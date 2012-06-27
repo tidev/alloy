@@ -138,6 +138,22 @@ exports.loadStyle = function(p) {
 	return {};
 }
 
+exports.createVariableStyle = function(keyValuePairs, value) {
+	var style = {},
+		key, value;
+	if (_.isArray(keyValuePairs)) {
+		_.each(keyValuePairs, function(pair) {
+			var k = pair[0];
+			var v = pair[1];
+			style[k] = { value:v };
+			style[k][exports.STYLE_ALLOY_TYPE] = 'var';
+		});
+	} else {
+		style[keyValuePairs] = { value:value };
+		style[keyValuePairs][exports.STYLE_ALLOY_TYPE] = 'var';
+	}
+	return style;
+};
 
 exports.addStyleById = function(styles, id, key, value) {
 	var idStr = '#' + id;
