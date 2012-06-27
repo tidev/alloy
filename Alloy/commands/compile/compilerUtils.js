@@ -27,6 +27,7 @@ exports.getParserArgs = function(node, state) {
 		ns = node.getAttribute('ns') || 'Ti.UI',
 		req = node.getAttribute('require'),
 		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId();
+	node.setAttribute('id', id);
 	if (state.defaultId) { delete state.defaultId; }
 	return {
 		ns: ns,
