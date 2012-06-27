@@ -9,10 +9,18 @@ var _ = require('../../../lib/alloy/underscore')._,
 exports.parse = function(node, state) {
 	var args = CU.getParserArgs(node, state),
 		parentArgs = {},
-		children = node.childNodes,
+		rawChildren = node.childNodes,
 		linePrefix = '\t',
 		tabStates = [],
-		code = '';
+		code = '',
+		children = [];
+
+	// create array of children elements
+	for (var i = 0, l = rawChildren.length; i < l; i++) {
+		if (rawChildren.item(i).nodeType === 1) {
+			children.push(rawChildren.item(i));
+		}
+	}
 
 	// Make sure the parent is TabGroup
 	if (args.parent.node) {
@@ -27,27 +35,29 @@ exports.parse = function(node, state) {
 	var createEmptyState = function() {
 		return {
 			parent: {},
-			style: state.style
+			styles: state.styles
 		}
 	};
 
 	// Generate the code for the Window contained in the Tab
+	var winNode;
 	if (children.length !== 1 ||
-		CU.getParserArgs(children.item(0)).fullname !== 'Ti.UI.Window') {
-		var eNode = U.XML.createEmptyNode('Window');
+		CU.getParserArgs(children[0]).fullname !== 'Ti.UI.Window') {
+		winNode = U.XML.createEmptyNode('Window');
 		for (var i = 0; i < children.length; i++) {
-			eNode.appendChild(children.item(i));
-			node.removeChild(children.item(i));
+			winNode.appendChild(children[i]);
+			node.removeChild(children[i]);
 		}
-		node.appendChild(eNode);
-	}
+		node.appendChild(winNode);
+	} 
 
 	// Generate code for Tab's Window
-	winState = require('./default').parse(node.childNodes.item(0), createEmptyState());
+	// TODO: children[0] needs to be something else in the case of creating Window
+	winState = require('./default').parse(winNode || children[0], createEmptyState());
 	code += winState.code;
 
 	// Generate the code for the Tab itself, with the Window in it
-	var tabState = require('./default').parser(
+	var tabState = require('./default').parse(
 		node, 
 		createEmptyState(), 
 		{ window: { value:winState.parent.symbol, alloyType:'var' } }
