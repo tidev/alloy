@@ -24,11 +24,13 @@ exports.parse = function(node, state) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var c = children.item(i),
-			child = {
-				name: c.nodeName,
-				ns: c.getAttribute('ns') || 'Ti.UI'
-			};
+		var c = children.item(i);
+		if (c.nodeType != 1) { continue; }
+
+		var child = {
+			name: c.nodeName,
+			ns: c.getAttribute('ns') || 'Ti.UI'
+		};
 		child.fullname = child.ns + '.' + child.name;
 
 		// Make sure all children are Tabs
@@ -36,6 +38,7 @@ exports.parse = function(node, state) {
 			U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
 		}
 
+		// process each Tab and save its state
 		var tabState = require('./Ti.UI.Tab').parse(c, tabGroupState);
 		tabStates.push(tabState.parent);
 		code += tabState.code;
@@ -43,10 +46,7 @@ exports.parse = function(node, state) {
 
 	// Update the parsing state
 	return {
-		parent: {
-			node: node,
-			symbol: args.symbol
-		},
+		parent: tabStates,
 		styles: state.styles,
 		code: code
 	}
