@@ -8,7 +8,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 
 exports.parse = function(node, state) {
 	var args = CU.getParserArgs(node, state),
-		children = U.getElementsFromNodes(node.childNodes),
+		children = U.XML.getElementsFromNodes(node.childNodes),
 		linePrefix = '\t',
 		tabStates = [],
 		code = '';
