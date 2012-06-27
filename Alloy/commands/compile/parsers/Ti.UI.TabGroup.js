@@ -8,7 +8,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 
 exports.parse = function(node, state) {
 	var args = CU.getParserArgs(node, state),
-		children = node.childNodes,
+		children = U.getElementsFromNodes(node.childNodes),
 		linePrefix = '\t',
 		tabStates = [],
 		code = '';
@@ -24,22 +24,16 @@ exports.parse = function(node, state) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var c = children.item(i);
-		if (c.nodeType != 1) { continue; }
-
-		var child = {
-			name: c.nodeName,
-			ns: c.getAttribute('ns') || 'Ti.UI'
-		};
-		child.fullname = child.ns + '.' + child.name;
+		var child = children[i],
+			childArgs = CU.getParserArgs(child);
 
 		// Make sure all children are Tabs
-		if (child.fullname !== 'Ti.UI.Tab') {
+		if (childArgs.fullname !== 'Ti.UI.Tab') {
 			U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
 		}
 
 		// process each Tab and save its state
-		var tabState = require('./Ti.UI.Tab').parse(c, tabGroupState);
+		var tabState = require('./Ti.UI.Tab').parse(child, tabGroupState);
 		tabStates.push(tabState.parent);
 		code += tabState.code;
 	}

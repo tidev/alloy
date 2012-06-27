@@ -23,6 +23,16 @@ exports.XML = {
 		}
 		return str;
 	},
+	getElementsFromNodes: function(nodeList) {
+		var elems = [];
+		for (var i = 0, l = nodeList.length; i < l; i++) {
+			var node = nodeList.item(i);
+			if (node.nodeType === 1) {
+				elems.push(node);
+			}
+		}
+		return elems;
+	},
 	createEmptyNode: function(name, ns) {
 		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';
 		return new DOMParser().parseFromString(str).documentElement;

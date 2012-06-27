@@ -40,6 +40,13 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
+exports.createEmptyState = function(styles) {
+	return {
+		parent: {},
+		styles: styles
+	};
+};
+
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
 	var libDirs = ['builtins','template'];
