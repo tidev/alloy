@@ -52,7 +52,6 @@ exports.parse = function(node, state) {
 	} 
 
 	// Generate code for Tab's Window
-	// TODO: children[0] needs to be something else in the case of creating Window
 	winState = require('./default').parse(winNode || children[0], createEmptyState());
 	code += winState.code;
 
