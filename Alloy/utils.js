@@ -238,15 +238,16 @@ exports.formatAST = function(ast,beautify,config)
 		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
 	}
 
+	var isDev = config.deploytype === 'development';
 	var options = 
 	{
 	        ast: false,
-	        consolidate: true,
-	        mangle: true,
+	        consolidate: !isDev,
+	        mangle: !isDev,
 	        mangle_toplevel: false,
 	        no_mangle_functions: false,
-	        squeeze: true,
-	        make_seqs: true,
+	        squeeze: !isDev,
+	        make_seqs: !isDev,
 	        dead_code: true,
 	        unsafe: false,
 	        defines: defines,
