@@ -35,8 +35,7 @@ exports.parse = function(node, state) {
 	// Create the initial Map code
 	var mapState;
 	if (annotationSymbols.length > 0) {
-		var extraStyle = { annotations: { value:'[' + annotationSymbols.join(',') + ']' } };
-		extraStyle.annotations[CU.STYLE_ALLOY_TYPE] = 'var';
+		var extraStyle = CU.createVariableStyle('annotations', '[' + annotationSymbols.join(',') + ']');
 		mapState = require('./default').parse(node, state, extraStyle);
 	} else {
 		mapState = require('./default').parse(node, state);

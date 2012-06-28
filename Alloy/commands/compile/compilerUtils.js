@@ -42,8 +42,8 @@ var implicitNamespaces = {
 	StatusBar: NS_TI_UI_IPHONE,
 };
 
-exports.STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
-exports.STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
+var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
+var STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -175,7 +175,7 @@ exports.loadStyle = function(p) {
 		// TODO: This needs work. There's still an off chance that this could 
 		//       match content in a string. Or that the STYLE_CONST_PREFIX could
 		//       appear in other style strings. Extremely unlikely, but possible.
-		f = f.replace(/\:\s*(Ti\.[^\s\,\}]+)/g, ': "' + exports.STYLE_CONST_PREFIX + '$1"');
+		f = f.replace(/\:\s*(Ti\.[^\s\,\}]+)/g, ': "' + STYLE_CONST_PREFIX + '$1"');
 		
 		try {
 			return JSON.parse(f);
@@ -194,11 +194,11 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 			var k = pair[0];
 			var v = pair[1];
 			style[k] = { value:v };
-			style[k][exports.STYLE_ALLOY_TYPE] = 'var';
+			style[k][STYLE_ALLOY_TYPE] = 'var';
 		});
 	} else {
 		style[keyValuePairs] = { value:value };
-		style[keyValuePairs][exports.STYLE_ALLOY_TYPE] = 'var';
+		style[keyValuePairs][STYLE_ALLOY_TYPE] = 'var';
 	}
 	return style;
 };
@@ -236,7 +236,7 @@ exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
 	// Merge in any extra specified styles
 	mergeStyles(extraStyle,s);
 
-	var regex = new RegExp('^' + exports.STYLE_CONST_PREFIX + '(.+)');
+	var regex = new RegExp('^' + STYLE_CONST_PREFIX + '(.+)');
 	for (var sn in s) {
 		var value = s[sn],
 			actualValue;
@@ -248,7 +248,7 @@ exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
 			} else {
 				actualValue = '"' + value + '"'; // just a string
 			}
-		} else if (_.isObject(value) && value[exports.STYLE_ALLOY_TYPE] === 'var') {
+		} else if (_.isObject(value) && value[STYLE_ALLOY_TYPE] === 'var') {
 			actualValue = value.value; // dynamic variable value
 		} else {
 			actualValue = JSON.stringify(value); // catch all, just stringify the value

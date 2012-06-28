@@ -40,13 +40,8 @@ exports.parse = function(node, state) {
 	code += winState.code;
 
 	// Generate the code for the Tab itself, with the Window in it
-	var extraStyle = { window: { value: winState.parent.symbol } };
-	extraStyle.window[CU.STYLE_ALLOY_TYPE] = 'var';
-	var tabState = require('./default').parse(
-		node, 
-		CU.createEmptyState(state.styles), 
-		extraStyle
-	);
+	var extraStyle = CU.createVariableStyle('window', winState.parent.symbol);
+	var tabState = require('./default').parse(node, CU.createEmptyState(state.styles), extraStyle);
 	code += tabState.code;
 
 	// Generate code that adds this Tab to its parent TabGroup
