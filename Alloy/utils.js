@@ -169,7 +169,7 @@ exports.copyFilesAndDirs = function(f,d)
 		if (stats.isDirectory())
 		{
 			exports.ensureDir(rd);
-			wrench.copyDirSyncRecursive(fpath, rd);
+			wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
 		}
 		else
 		{
