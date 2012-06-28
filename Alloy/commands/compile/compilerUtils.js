@@ -2,6 +2,7 @@ var U = require('../../utils'),
 	colors = require('colors'),
 	path = require('path'),
 	fs = require('fs'),
+	wrench = require('wrench'),
 	_ = require('../../lib/alloy/underscore')._;
 
 var alloyRoot = path.join(__dirname,'..','..'),
@@ -76,6 +77,22 @@ exports.getParserArgs = function(node, state) {
 		parent: state.parent || {},
 	};
 };
+
+exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
+	var files = wrench.readdirSyncRecursive(assetsDir);
+	_.each(files, function(file) {
+		var source = path.join(assetsDir, file);
+		if (fs.statSync(source).isFile()) {
+			var destDir = path.join(resourceDir, path.dirname(file), widgetId);
+			var dest = path.join(destDir, path.basename(file));
+			if (!path.existsSync(destDir)) {
+				wrench.mkdirSyncRecursive(destDir, 0777);
+			}
+			console.log('Copying assets ' + source + ' --> ' + dest);
+			U.copyFileSync(source, dest);
+		}
+	});
+}
 
 // "Empty" states are generally used when you want to create a 
 // Titanium component with no parent
