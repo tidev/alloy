@@ -376,7 +376,7 @@ The widget view styles can also be imported by the views JSON file by using a sp
 
 For example, if the widget was imported to the name `foo` and the internal ID of a control was `b` - the reference would be '#foo:#b'.
 
-If your widget would like to export properties and/or functions, it should assign them to the `exports` variable of the `widget.js`.
+If your widget would like to export properties and/or functions, it should assign them to the `$` variable of the `widget.js`.
 
 In your app controller, you would then be able to access them referencing the widget reference and the name of the property.
 
@@ -398,6 +398,49 @@ $.foo.calculatePie();
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
+
+Widget Assets
+-------------
+
+Widgets are to be self-contained components that can be easily dropped into Alloy-powered Titanium projects. For this reason, widgets can have their own collection of assets. These assets will be intelligently overlayed on your project's `Resources` directory at compile time. In this way, you can still specify platform-specific assets, yet keep these assets unique to your widget id.
+
+For example, the following `app` folder structure for an alloy project:
+
+```
+app
+- widgets
+  - com.appc.testwidget
+    - assets
+      - iphone
+        - images
+          - myimage.png
+          - myimage@2x.png
+```
+
+would be copied to your generated Titanium project as:
+
+```
+Resources
+- iphone
+  - images
+    - com.appc.testwidget
+      - myimage.png
+      - myimage@2x.png
+```
+
+and those files could then be accessed in your widget's code and styles as: 
+
+```javascript
+var image = Ti.UI.createImageView({
+	image: '/images/com.appc.testwidget/myimage.png'
+});
+```
+
+This example shows only `iphone`, but widget assets can be copied to any path in the Resources directory. The final generated path will always have the widget's id as a folder, just before the file name. Here's a few more examples for clarity:
+
+* `app/widgets/com.appc.mywidget/assets/images/cool.png` --> `Resources/images/com.appc.mywidget/cool.png`
+* `app/widgets/com.appc.widget/images/android/images/res-hdpi/highresimage.png` --> `Resources/android/images/res-hdpi/com.appc.widget/highresimage.png`
+* `app/widgets/com.appc.lastone/some/weird/path/file.txt` --> `Resources/some/weird/path/com.appc.lastone/file.txt`
 
 Builtin JS LIbraries
 --------------------
