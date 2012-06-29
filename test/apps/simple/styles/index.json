@@ -1,6 +1,6 @@
 {
 	"Button" : {
-		"width" : `Ti.Platform.displayCaps.platformWidth/2`,
+		"width" : Ti.UI.SIZE,
 		"height" : Ti.UI.SIZE
 	},
 	

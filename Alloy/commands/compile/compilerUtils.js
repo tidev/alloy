@@ -176,7 +176,7 @@ exports.loadStyle = function(p) {
 		// TODO: This needs work. There's still an off chance that this could 
 		//       match content in a string. Or that the STYLE_CONST_PREFIX could
 		//       appear in other style strings. Extremely unlikely, but possible.
-		f = f.replace(/\:\s*`((?:[^`]|\\`)+)`/g, ': "' + STYLE_CONST_PREFIX + '$1"');
+		//f = f.replace(/\:\s*`((?:[^`]|\\`)+)`/g, ': "' + STYLE_CONST_PREFIX + '$1"');
 		f = f.replace(/\:\s*(Ti\.[^\s\,\}\]]+)/g, ': "' + STYLE_CONST_PREFIX + '$1"');
 		
 		try {
