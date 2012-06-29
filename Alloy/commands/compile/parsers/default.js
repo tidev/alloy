@@ -12,9 +12,7 @@ exports.parse = function(node, state, extraStyle) {
 	code += linePrefix + "}),'" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");\n";
 	if (args.parent.symbol) {
 		code += linePrefix + args.parent.symbol + ".add(" + args.symbol + ");\n";
-	} else {
-		code += linePrefix + "root$ = " + args.symbol + ";\n";
-	}
+	} 
 
 	// Update the parsing state
 	return {

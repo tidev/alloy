@@ -159,7 +159,11 @@ function parseView(viewName,dir,viewid,manifest) {
 
 	// Generate Titanium code from the markup
 	for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-		template.viewCode += generateNode(docRoot.childNodes.item(i),state,viewid||viewname);
+		template.viewCode += generateNode(
+			docRoot.childNodes.item(i),
+			state,
+			viewid||viewname,
+			true);
 	}
 	template.controllerCode += generateController(viewName,dir,id);
 
@@ -180,7 +184,7 @@ function parseView(viewName,dir,viewid,manifest) {
 	}
 }
 
-function generateNode(node, state, defaultId) {
+function generateNode(node, state, defaultId, isRoot) {
 	if (node.nodeType != 1) return '';
 	if (defaultId) { state.defaultId = defaultId; }
 
@@ -201,6 +205,7 @@ function generateNode(node, state, defaultId) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code += state.code;
+	if (isRoot) { code += 'root$ = ' + args.symbol + ';\n'; }
 
 	// Continue parsing if necessary
 	if (state.parent) {

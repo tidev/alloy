@@ -15,9 +15,7 @@ exports.parse = function(node, state) {
 	code += args.symbol + " = (require('" + commonjs + "')).create();\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
-	} else {
-		code += "root$ = " + args.symbol + ";\n";
-	}
+	} 
 
 	// Update the parsing state
 	return {
