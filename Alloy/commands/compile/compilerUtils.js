@@ -3,6 +3,8 @@ var U = require('../../utils'),
 	path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	jsp = require("../../uglify-js/uglify-js").parser,
+	pro = require("../../uglify-js/uglify-js").uglify,
 	_ = require('../../lib/alloy/underscore')._;
 
 var alloyRoot = path.join(__dirname,'..','..'),
@@ -170,20 +172,61 @@ exports.loadStyle = function(p) {
 			return {};
 		}
 
-		// use Ti namespace
-		f = f.replace(/Titanium\./g,"Ti.");
+		// Handle "call" ASTs, where we look for expr() syntax
+        function do_call() {
+        	if (this[1][1] === 'expr') {
+        		var code = pro.gen_code(this[2][0]);
+        		var new_ast = ['string', STYLE_CONST_PREFIX + code];
+        		return new_ast;
+        	} 
+        };
 
-		// find constants
-		// TODO: This needs work. There's still an off chance that this could 
-		//       match content in a string. Or that the STYLE_CONST_PREFIX could
-		//       appear in other style strings. Extremely unlikely, but possible.
-		//f = f.replace(/\:\s*`((?:[^`]|\\`)+)`/g, ': "' + STYLE_CONST_PREFIX + '$1"');
-		f = f.replace(/\:\s*(Ti\.[^\s\,\}\]]+)/g, ': "' + STYLE_CONST_PREFIX + '$1"');
-		
+        // Recursively assemble the full name of a dot-notation variable
+        function processDot(dot,name) {
+        	switch(dot[0]) {
+        		case 'dot':
+        			return processDot(dot[1], '.' + (dot[2] || '') + name);
+        			break;
+        		case 'name':
+        			var pre = dot[1];
+        			if (pre === 'Ti' || pre === 'Titanium') {
+        				return pre + name;
+        			} else {
+        				return null;
+        			}
+        			break;
+        	}
+        }
+
+        // Handle all AST "dot"s, looking for Titanium constants
+        function do_dot() {
+        	var name = processDot(this,'');
+        	if (name === null) {
+        		return null;
+        	} else {
+        		return ['string', STYLE_CONST_PREFIX + name];
+        	}
+        }
+
+        // Generate AST and add the handlers for "call" and "dot" to the AST walker
+        var ast = jsp.parse('module.exports = ' + f);
+		var walker = pro.ast_walker();
+		var new_ast = walker.with_walkers({
+			"call": do_call,
+			"dot": do_dot
+		}, function(){
+            return walker.walk(ast);
+        });
+
+        // generate code based on the new AST. Make sure to keep keys quoted so the
+        // JSON parses without exception. The wild [1][0][1][3] array is how we grab 
+        // just the style object from the AST, leaving behind the appended "module.exports = "
+        var code = pro.gen_code(new_ast[1][0][1][3], { beautify: true, quote_keys: true });
+
 		try {
-			return JSON.parse(f);
+			return JSON.parse(code);
 		} catch(E) {
-			console.error(f);
+			console.error(code);
 			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
 		}
 	}
