@@ -80,6 +80,7 @@ exports.getParserArgs = function(node, state) {
 };
 
 exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
+	if (!path.existsSync(assetsDir)) { return; }
 	var files = wrench.readdirSyncRecursive(assetsDir);
 	_.each(files, function(file) {
 		var source = path.join(assetsDir, file);
