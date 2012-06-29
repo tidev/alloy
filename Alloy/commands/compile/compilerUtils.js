@@ -43,7 +43,8 @@ var implicitNamespaces = {
 };
 
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
-var STYLE_CONST_PREFIX = '__ALLOY_CONST__:';
+var STYLE_CONST_PREFIX = '__ALLOY_CONST__--';
+var STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -175,11 +176,13 @@ exports.loadStyle = function(p) {
 		// TODO: This needs work. There's still an off chance that this could 
 		//       match content in a string. Or that the STYLE_CONST_PREFIX could
 		//       appear in other style strings. Extremely unlikely, but possible.
-		f = f.replace(/\:\s*(Ti\.[^\s\,\}]+)/g, ': "' + STYLE_CONST_PREFIX + '$1"');
+		f = f.replace(/\:\s*`((?:[^`]|\\`)+)`/g, ': "' + STYLE_CONST_PREFIX + '$1"');
+		f = f.replace(/\:\s*(Ti\.[^\s\,\}\]]+)/g, ': "' + STYLE_CONST_PREFIX + '$1"');
 		
 		try {
 			return JSON.parse(f);
 		} catch(E) {
+			console.error(f);
 			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
 		}
 	}
