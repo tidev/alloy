@@ -187,19 +187,17 @@ exports.loadStyle = function(p) {
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
-	var style = {},
-		key, value;
-	if (_.isArray(keyValuePairs)) {
-		_.each(keyValuePairs, function(pair) {
-			var k = pair[0];
-			var v = pair[1];
-			style[k] = { value:v };
-			style[k][STYLE_ALLOY_TYPE] = 'var';
-		});
-	} else {
-		style[keyValuePairs] = { value:value };
-		style[keyValuePairs][STYLE_ALLOY_TYPE] = 'var';
+	var style = {};
+
+	if (!_.isArray(keyValuePairs)) {
+		keyValuePairs = [[keyValuePairs, value]];
 	}
+	_.each(keyValuePairs, function(pair) {
+		var k = pair[0];
+		var v = pair[1];
+		style[k] = { value:v };
+		style[k][STYLE_ALLOY_TYPE] = 'var';
+	});
 	return style;
 };
 
