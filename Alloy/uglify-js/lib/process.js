@@ -1569,7 +1569,8 @@ function gen_code(ast, options) {
         };
 
         function make_num(num) {
-                var str = num.toString(10), a = [ str.replace(/^0\./, ".") ], m;
+                // TODO: Should probably make this configurable then submit a pull request
+                var str = num.toString(10), a = [ str/*str.replace(/^0\./, ".")*/ ], m;
                 if (Math.floor(num) === num) {
                         if (num >= 0) {
                                 a.push("0x" + num.toString(16).toLowerCase(), // probably pointless
