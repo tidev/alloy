@@ -222,7 +222,11 @@ exports.loadStyle = function(p) {
         // generate code based on the new AST. Make sure to keep keys quoted so the
         // JSON parses without exception. The wild [1][0][1][3] array is how we grab 
         // just the style object from the AST, leaving behind the appended "module.exports = "
-        var code = pro.gen_code(new_ast[1][0][1][3], { beautify: true, quote_keys: true });
+        var code = pro.gen_code(new_ast[1][0][1][3], { 
+        	beautify: true, 
+        	quote_keys: true,
+        	keep_zeroes: true 
+        });
 
 		try {
 			return JSON.parse(code);
