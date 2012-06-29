@@ -1,7 +1,10 @@
 
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
-	osname   = Ti.Platform.osname;
+	osname   = Ti.Platform.osname,
+	SQLSync, 
+	SQLSyncInit,
+	FileSysSync;
 	
 module.exports._ = _;
 module.exports.Backbone = Backbone;
@@ -17,12 +20,12 @@ Backbone.sync = function(method, model, opts) {
 	
 	switch (type) {
 		case 'sql': {
-			var SQLSync  = require("alloy/sync/sql");
+			SQLSync  = require("alloy/sync/sql");
 			SQLSync.sync(model,method,opts);
 			break;
 		}
 		case 'filesystem': {
-			var FileSysSync  = require("alloy/sync/filesys");
+			FileSysSync  = require("alloy/sync/filesys");
 			FileSysSync.sync(model,method,opts);
 			break;
 		}
@@ -37,10 +40,9 @@ Backbone.sync = function(method, model, opts) {
 
 module.exports.M = function(name,config,modelFn,migrations) {
 	
-	var SQLSync;
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
-    if (type == 'sql') { 
-    	SQLSync  = require("alloy/sync/sql");
+    if (type === 'sql' && !SQLSyncInit) {
+ 		SQLSyncInit = true;
     	SQLSync.init(); 
     }
 	
@@ -76,7 +78,6 @@ module.exports.M = function(name,config,modelFn,migrations) {
 };
 
 module.exports.A = function(t,type,parent) {
-	_.extend(t,{nodeType:1, nodeName:type, parentNode: parent});
 	_.extend(t,Backbone.Events);
 	
 	(function() {
