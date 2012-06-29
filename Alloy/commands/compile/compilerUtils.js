@@ -210,6 +210,7 @@ exports.loadStyle = function(p) {
 
         // Generate AST and add the handlers for "call" and "dot" to the AST walker
         var ast = jsp.parse('module.exports = ' + f);
+        //console.log(require('util').inspect(ast, false, null));
 		var walker = pro.ast_walker();
 		var new_ast = walker.with_walkers({
 			"call": do_call,
