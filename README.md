@@ -331,8 +331,6 @@ $.index.open();
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
 
-_NOTE: it's import that you use unique `id` attributes across all your view files.  If you don't, you will get a compiler error._
-
 Exporting Properties & Functions from Controllers
 -------------------------------------------------
 
