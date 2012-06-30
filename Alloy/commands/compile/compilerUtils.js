@@ -225,7 +225,8 @@ exports.loadStyle = function(p) {
         var code = pro.gen_code(new_ast[1][0][1][3], { 
         	beautify: true, 
         	quote_keys: true,
-        	keep_zeroes: true 
+        	keep_zeroes: true,
+        	double_quotes: true
         });
 
 		try {
