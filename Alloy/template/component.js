@@ -43,6 +43,9 @@ exports.create = function() {
 			if (root$) {
 				parent.add(root$);
 			} 
+		},
+		getRoot: function() {
+			return root$;
 		}
 	};
 
