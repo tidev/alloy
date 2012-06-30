@@ -20,7 +20,8 @@ exports.parse = function(node, state) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol
+			symbol: args.symbol,
+			required: true 
 		},
 		styles: state.styles,
 		code: code

@@ -27,7 +27,10 @@ exports.parse = function(node, state) {
 			viewState = require('./default').parse(child, CU.createEmptyState(state.styles));
 		}
 		subParents.push(viewState.parent);
-		symbols.push(viewState.parent.symbol);
+
+		// TODO: quick fix to handle required views. Need to make this work for all 
+		//       tag handlers.
+		symbols.push(viewState.parent.symbol + (viewState.parent.required ? '.getRoot()' : ''));
 		code += viewState.code;
 	}
 
