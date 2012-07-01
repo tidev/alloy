@@ -30,7 +30,7 @@ exports.parse = function(node, state) {
 
 		// TODO: quick fix to handle required views. Need to make this work for all 
 		//       tag handlers.
-		symbols.push(viewState.parent.symbol + (viewState.parent.required ? '.getRoot()' : ''));
+		symbols.push(viewState.parent.symbol);
 		code += viewState.code;
 	}
 

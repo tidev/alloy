@@ -21,8 +21,7 @@ exports.parse = function(node, state) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol,
-			required: true
+			symbol: args.symbol + '.getRoot()'
 		},
 		styles: state.styles,
 		code: code
