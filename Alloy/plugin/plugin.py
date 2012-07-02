@@ -20,6 +20,9 @@ def compile(config):
             builder = config['android_builder']
             version = builder.tool_api_level
             deploytype = config['deploy_type']
+        if config['platform']==u'mobileweb':
+            builder = config['mobileweb_builder']
+            deploytype = config['deploytype']
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         try:
