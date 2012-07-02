@@ -11,7 +11,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
-	stylePrefix = '\t\t';
+	stylePrefix = '\t\t',
+	compilerConfig;
 
 var NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
@@ -130,10 +131,11 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 		code = { content: '' };
 
 	// Check for platform-specific considerations
+	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
 	if (args.platform) {
 		var conditionArray = [];
 		_.each(args.platform, function(v,k) {
-			conditionArray.push(conditionMap[k]['runtime']);
+			conditionArray.push(conditionMap[k][conditionType]);
 		});
 		code.condition = conditionArray.join(' || ');
 	} 
@@ -226,6 +228,9 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 		obj.runtimeConfig = exports.generateConfig(obj.dir.config, alloyConfig);
 	}
 	U.ensureDir(obj.dir.resources);
+
+	// keep a copy of the config for this module
+	compilerConfig = obj;
 
 	return obj;
 };
