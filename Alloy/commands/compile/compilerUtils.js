@@ -107,6 +107,66 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
+var conditionMap = {
+	android: {
+		compile: 'OS_ANDROID',
+		runtime: "TI.Platform.osname === 'android'"
+	},
+	ios: {
+		compile: 'OS_IOS',
+		runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
+	},
+	mobileweb: {
+		compile: 'OS_MOBILEWEB',
+		runtime: "Ti.Platform.osname === 'mobileweb'"
+	}
+}
+exports.generateNode = function(node, state, defaultId, isRoot) {
+	if (node.nodeType != 1) return '';
+	if (defaultId) { state.defaultId = defaultId; }
+
+	var args = exports.getParserArgs(node, state, defaultId),
+		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
+		code = { content: '' };
+
+	// Check for platform-specific considerations
+	if (args.platform) {
+		var conditionArray = [];
+		_.each(args.platform, function(v,k) {
+			conditionArray.push(conditionMap[k]['runtime']);
+		});
+		code.condition = conditionArray.join(' || ');
+	} 
+
+	// Determine which parser to use for this node
+	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
+	var parserRequire = 'default';
+	if (_.contains(fs.readdirSync(parsersDir), args.fullname+'.js')) {
+		parserRequire = args.fullname+'.js';
+	} 
+
+	// Execute the appropriate tag parser and append code
+	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
+	code.content += state.code;
+	if (isRoot) { code.content += 'root$ = ' + args.symbol + ';\n'; }
+
+	// Continue parsing if necessary
+	if (state.parent) {
+		var states = _.isArray(state.parent) ? state.parent : [state.parent];
+		_.each(states, function(p) {
+			var newParent = p.node;
+			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
+				code.content += exports.generateNode(newParent.childNodes.item(i), {
+					parent: p,
+					styles: state.styles,
+				});
+			}
+		}); 
+	}
+
+	return code.condition ? _.template(codeTemplate, code) : code.content;
+}
+
 exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
 	if (!path.existsSync(assetsDir)) { return; }
 	var files = wrench.readdirSyncRecursive(assetsDir);

@@ -4,7 +4,7 @@
 		<Window id="win1">
 			<Label>Label 1</Label>
 			<Label>Label 2</Label>
-			<Label>Label 3</Label>
+			<Label platform="ios">Label 3</Label>
 			<Label>Label 4</Label>
 			<Label>Label 5</Label>
 		</Window>

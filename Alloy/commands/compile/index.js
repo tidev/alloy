@@ -159,7 +159,7 @@ function parseView(viewName,dir,viewid,manifest) {
 
 	// Generate Titanium code from the markup
 	for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-		template.viewCode += generateNode(
+		template.viewCode += CU.generateNode(
 			docRoot.childNodes.item(i),
 			state,
 			viewid||viewname,
@@ -182,46 +182,6 @@ function parseView(viewName,dir,viewid,manifest) {
 	} else {
 		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, 'components', viewName + '.js'), code);
 	}
-}
-
-function generateNode(node, state, defaultId, isRoot) {
-	if (node.nodeType != 1) return '';
-	if (defaultId) { state.defaultId = defaultId; }
-
-	var args = CU.getParserArgs(node, state, defaultId),
-		code = '';
-
-	// Determine which parser to use for this node
-	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
-	var files = fs.readdirSync(parsersDir);
-	var parserRequire = 'default';
-	for (var i = 0, l = files.length; i < l; i++) {
-		if (args.fullname + '.js' === files[i]) {
-			parserRequire = files[i];
-			break;
-		}
-	}
-
-	// Execute the appropriate tag parser and append code
-	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
-	code += state.code;
-	if (isRoot) { code += 'root$ = ' + args.symbol + ';\n'; }
-
-	// Continue parsing if necessary
-	if (state.parent) {
-		var states = _.isArray(state.parent) ? state.parent : [state.parent];
-		_.each(states, function(p) {
-			var newParent = p.node;
-			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-				code += generateNode(newParent.childNodes.item(i), {
-					parent: p,
-					styles: state.styles,
-				});
-			}
-		}); 
-	}
-
-	return code;
 }
 
 function generateController(name, dir, id) {
