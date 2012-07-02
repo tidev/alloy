@@ -311,7 +311,7 @@ function copyBuiltins() {
 			// the requires in the code and filter only the ones which are 
 			// alloy builtins
 			var found = requires.findAllRequires(f,alloyFilter);
-			_.extend(alloyLibs,found);
+			alloyLibs = _.union(alloyLibs,found);
 		}
 	});
 	
