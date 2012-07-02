@@ -172,11 +172,6 @@ function parseView(viewName,dir,viewid,manifest) {
 	code = U.processSourceCode(code, compileConfig.alloyConfig);
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components'), 0777);
-		
-		// TODO: Is there a better way for widgets to include platform-specific
-		//       images other than overlaying them on the Resources directory with
-		//       the widget id as part of the path? 
-		//U.copyFilesAndDirs(path.join(dir,'assets'), compileConfig.dir.resources);
 		CU.copyWidgetAssets(path.join(dir,'assets'), compileConfig.dir.resources, manifest.id);
 		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components', viewName + '.js'), code);
 	} else {
