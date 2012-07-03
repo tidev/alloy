@@ -180,7 +180,7 @@ exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
 			if (!path.existsSync(destDir)) {
 				wrench.mkdirSyncRecursive(destDir, 0777);
 			}
-			console.log('Copying assets ' + source + ' --> ' + dest);
+			//console.log('Copying assets ' + source + ' --> ' + dest);
 			U.copyFileSync(source, dest);
 		}
 	});
