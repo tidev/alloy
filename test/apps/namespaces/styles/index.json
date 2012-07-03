@@ -3,6 +3,14 @@
    	{
 		"backgroundColor":"white"
 	},
+	"#map": {
+		"region": {
+			"latitude": 37.38,
+			"latitudeDelta": 0.2,
+			"longitude": -122.05,
+			"longitudeDelta": 0.2
+		}
+	},
 	"Annotation": {
 		"animate":true,
 		"pincolor":Ti.Map.ANNOTATION_RED
@@ -13,9 +21,14 @@
 		"longitude":-122.050212
 	},
 	"#annotation2": {
-		"title":"Pittsburgh, PA", 
-		"latitude":40.493893, 
-		"longitude":-80.056856
+		"title":"Google HQ", 
+		"latitude":37.4231054, 
+		"longitude":-122.0823988
+	},
+	"#annotation3": {
+		"title":"Apple HQ", 
+		"latitude":37.3308525, 
+		"longitude":-122.0296837
 	},
 	"#footerImage": {
 		"image": "appc-400px.png",
