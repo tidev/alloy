@@ -30,7 +30,7 @@ if (process.platform === 'darwin') {
 		path.join(HOME, SDK_PATHS.darwin.path)
 	];
 	_.each(osxSdkPaths, function(sdkPath) {
-		if (path.existsSync(sdkPath)) {
+		if (path.existsSync(path.join(sdkPath, SDK_PATHS.darwin.suffix))) {
 			SDK_PATHS.darwin.path = sdkPath;
 		}
 	});
