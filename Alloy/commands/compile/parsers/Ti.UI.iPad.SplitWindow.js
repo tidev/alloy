@@ -7,9 +7,11 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		children = U.XML.getElementsFromNodes(node.childNodes),
-		linePrefix = '\t',
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var children = U.XML.getElementsFromNodes(node.childNodes),
 		subParents = [],
 		code = '';
 

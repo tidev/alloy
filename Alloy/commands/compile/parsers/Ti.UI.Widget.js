@@ -2,8 +2,11 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		code = '';
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var code = '';
 
 	// Validate widget
 	if (!args.req) {

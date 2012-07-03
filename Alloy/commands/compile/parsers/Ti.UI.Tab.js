@@ -7,10 +7,12 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		children = U.XML.getElementsFromNodes(node.childNodes),
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var children = U.XML.getElementsFromNodes(node.childNodes),
 		parentArgs = {},
-		linePrefix = '\t',
 		tabStates = [],
 		code = '';
 
@@ -36,23 +38,32 @@ exports.parse = function(node, state) {
 	} 
 
 	// Generate code for Tab's Window
-	var winState = require('./default').parse(winNode || children[0], CU.createEmptyState(state.styles));
-	code += winState.code;
+	var winSymbol;
+	code += CU.generateNode(winNode || children[0], {
+		parent: {},
+		styles: state.styles,
+		post: function(n,s,a) {
+			winSymbol = s.parent.symbol;
+		}
+	});
+	// var winState = require('./default').parse(winNode || children[0], CU.createEmptyState(state.styles));
+	// code += winState.code;
 
 	// Generate the code for the Tab itself, with the Window in it
-	var extraStyle = CU.createVariableStyle('window', winState.parent.symbol);
-	var tabState = require('./default').parse(node, CU.createEmptyState(state.styles), extraStyle);
+	//var extraStyle = CU.createVariableStyle('window', winSymbol /*winState.parent.symbol*/);
+	var tabState = require('./default').parse(node, {
+		parent: {},
+		styles: state.styles,
+		extraStyle: CU.createVariableStyle('window', winSymbol /*winState.parent.symbol*/)
+	});
 	code += tabState.code;
 
 	// Generate code that adds this Tab to its parent TabGroup
-	code += linePrefix + state.parent.symbol + '.addTab(' + tabState.parent.symbol + ');\n';
+	//code += state.parent.symbol + '.addTab(' + tabState.parent.symbol + ');\n';
 
 	// Update the parsing state
 	return {
-		parent: {
-			node: winState.parent.node,
-			symbol: winState.parent.symbol
-		},
+		parent: {}, //tabState.parent,
 		styles: state.styles,
 		code: code
 	}

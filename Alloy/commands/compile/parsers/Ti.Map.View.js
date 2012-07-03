@@ -22,14 +22,13 @@ function parse(node, state, args) {
 
 		// Process the Map's Annotations
 		if (childArgs.fullname === 'Ti.Map.Annotation') {
-			var annCode = CU.generateNode(child, {
+			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,
 				post: function(node, state, args) {
-					return arrayName + '.push(' + args.symbol + ');\n';
+					return arrayName + '.push(' + state.parent.symbol + ');\n';
 				}
 			});
-			code += annCode;
 
 			// When we are done processing the Annotation, remove it from the
 			// markup. That way we can just pass back the current Map state as 
@@ -40,8 +39,8 @@ function parse(node, state, args) {
 	}
 
 	// Create the initial Map code
-	var extraStyle = CU.createVariableStyle('annotations', arrayName);
-	var mapState = require('./default').parse(node, state, extraStyle);
+	state.extraStyle = CU.createVariableStyle('annotations', arrayName);
+	var mapState = require('./default').parse(node, state);
 	code += mapState.code;
 
 	// Update the parsing state
