@@ -153,18 +153,16 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	if (isRoot) { code.content += 'root$ = ' + args.symbol + ';\n'; }
 
 	// Continue parsing if necessary
-	if (state.parent) {
-		var states = _.isArray(state.parent) ? state.parent : [state.parent];
-		_.each(states, function(p) {
-			var newParent = p.node;
-			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-				code.content += exports.generateNode(newParent.childNodes.item(i), {
-					parent: p,
-					styles: state.styles,
-				});
-			}
-		}); 
-	}
+	var states = state.parent ? (_.isArray(state.parent) ? state.parent : [state.parent]) : [];
+	_.each(states, function(p) {
+		var parent = p.node;
+		for (var i = 0, l = parent.childNodes.length; i < l; i++) {
+			code.content += exports.generateNode(parent.childNodes.item(i), {
+				parent: p,
+				styles: state.styles,
+			});
+		}
+	}); 
 
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
