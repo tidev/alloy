@@ -169,7 +169,13 @@ function parseView(viewName,dir,viewid,manifest) {
 
 	// create commonjs module for this view/controller
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
-	code = U.processSourceCode(code, compileConfig.alloyConfig, viewName+'.js');
+	try {
+		code = U.processSourceCode(code, compileConfig.alloyConfig, viewName+'.js');
+	} catch (e) {
+		logger.error(code);
+		U.die(e);
+	}
+
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components'), 0777);
 		CU.copyWidgetAssets(path.join(dir,'assets'), compileConfig.dir.resources, manifest.id);
