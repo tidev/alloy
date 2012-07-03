@@ -9,7 +9,8 @@ var path = require('path'),
 	DOMParser = require("xmldom").DOMParser,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
-	_ = require("./lib/alloy/underscore")._
+	_ = require("./lib/alloy/underscore")._,
+	optimizer = require('./optimizer.js')
 ;
 
 exports.XML = {
@@ -96,33 +97,26 @@ exports.resolveAppHome = function() {
 	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
 }
 
-exports.processSourceCode = function(code, config) {
-	var defines = {},
-		DEFINES, ast;
-
-	config = config || {};
-	config.deploytype = config.deploytype || 'development';
-	config.beautify = config.beautify || true;
-
-	DEFINES = {
-		OS_IOS : config.platform == 'ios',
-		OS_ANDROID: config.platform == 'android',
-		OS_MOBILEWEB: config.platform == 'mobileweb',
-		ENV_DEV: config.deploytype == 'development',
-		ENV_DEVELOPMENT: config.deploytype == 'development',
-		ENV_TEST: config.deploytype == 'test',
-		ENV_PRODUCTION: config.deploytype == 'production'
+exports.processSourceCode = function(code, config, fn) 
+{
+	function show_copyright(comments) {
+	        var ret = "";
+	        for (var i = 0; i < comments.length; ++i) {
+	                var c = comments[i];
+	                if (c.type == "comment1") {
+	                        ret += "//" + c.value + "\n";
+	                } else {
+	                        ret += "/*" + c.value + "*/";
+	                }
+	        }
+	        return ret;
 	};
-
-	for (var k in DEFINES) {
-		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-	}
-	
-	ast = jsp.parse(code); // parse code and get the initial AST
-	ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
-	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-	
-	return pro.gen_code(ast,{beautify:config.beautify}); 
+	var c = jsp.tokenizer(code)();
+	// extract header copyright so we can preserve it (if at the top of the file)
+    var copyrights = show_copyright(c.comments_before);
+	var ast = jsp.parse(code); 
+	var newCode = exports.formatAST(ast,config,fn);
+	return (copyrights ? copyrights + '\n' : '' ) + newCode;
 };
 
 exports.copyFileSync = function(srcFile, destFile) 
@@ -213,7 +207,7 @@ exports.die = function(msg)
 	process.exit(1);
 }
 
-exports.formatAST = function(ast,beautify,config)
+exports.formatAST = function(ast,config,fn)
 {
 	// use the general defaults from the uglify command line
 	var defines = {},
@@ -254,7 +248,7 @@ exports.formatAST = function(ast,beautify,config)
 	        lift_vars: false,
 	        codegen_options: {
 	                ascii_only: false,
-	                beautify: beautify,
+	                beautify: config.beautify,
 	                indent_level: 4,
 	                indent_start: 0,
 	                quote_keys: false,
@@ -267,27 +261,8 @@ exports.formatAST = function(ast,beautify,config)
 	};
 
 	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
+	ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
 	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
 	return pro.gen_code(ast,options.codegen_options); 
 };
 
-exports.formatJS = function(code, beautify)
-{
-	function show_copyright(comments) {
-	        var ret = "";
-	        for (var i = 0; i < comments.length; ++i) {
-	                var c = comments[i];
-	                if (c.type == "comment1") {
-	                        ret += "//" + c.value + "\n";
-	                } else {
-	                        ret += "/*" + c.value + "*/";
-	                }
-	        }
-	        return ret;
-	};
-    var c = jsp.tokenizer(code)();
-	// extract header copyright so we can preserve it
-    var copyrights = show_copyright(c.comments_before);
-	var ast = jsp.parse(code); // parse code and get the initial AST
-	return copyrights + "\n" + exports.formatAST(ast);
-}

@@ -97,7 +97,7 @@ module.exports = function(args, program) {
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
 	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{config:compileConfig.runtimeConfig});
-	code = U.processSourceCode(code, alloyConfig);
+	code = U.processSourceCode(code, alloyConfig, 'app.js');
 
 	// trigger our custom compiler makefile
 	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
@@ -109,7 +109,7 @@ module.exports = function(args, program) {
 
 	// copy builtins and fix their require paths
 	copyBuiltins();
-	fixRequirePaths(alloyConfig);
+	optimizeCompiledCode(alloyConfig);
 
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
@@ -169,7 +169,7 @@ function parseView(viewName,dir,viewid,manifest) {
 
 	// create commonjs module for this view/controller
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
-	code = U.processSourceCode(code, compileConfig.alloyConfig);
+	code = U.processSourceCode(code, compileConfig.alloyConfig, viewName+'.js');
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components'), 0777);
 		CU.copyWidgetAssets(path.join(dir,'assets'), compileConfig.dir.resources, manifest.id);
@@ -345,7 +345,7 @@ function copyBuiltins() {
 	}
 }
 
-function fixRequirePaths(config) {
+function optimizeCompiledCode(config) {
 	var resourcesDir =  compileConfig.dir.resources, 
 		files = wrench.readdirSyncRecursive(resourcesDir);
 

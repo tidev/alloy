@@ -8,13 +8,18 @@ var program = require('commander'),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	pkginfo = require('pkginfo');
+	pkginfo = require('pkginfo'),
+	path = require('path'),
+	fs = require('fs');
 
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
 
 // TODO: get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
+
+// patch to remove the warning in node >=0.8
+path.existsSync = fs.existsSync;
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium

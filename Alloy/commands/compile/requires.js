@@ -119,7 +119,7 @@ function makeRequiresRelative(fn,resourcesDir,config)
 		return w.walk(ast);
 	});
 	
-	return U.formatAST(ast,true,config);
+	return U.formatAST(ast,config,fn);
 }			
 
 exports.findAllRequires = findAllRequires;
