@@ -1,12 +1,7 @@
-var CU = require('../compilerUtils');
-
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		code = '';
+	return require('./base').parse(node, state, parse);
+};
 
-	code += require('./default').parse(node, CU.createEmptyState(state.styles)).code;
-	if (state.arrayName) {
-		code += state.arrayName + '.push(' + args.symbol + ');\n';
-	}
-	return { code: code };
+function parse(node, state, args) {
+	return { code: require('./default').parse(node, state).code };
 };

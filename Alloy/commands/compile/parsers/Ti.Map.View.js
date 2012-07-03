@@ -7,10 +7,11 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		children = U.XML.getElementsFromNodes(node.childNodes),
-		linePrefix = '\t',
-		annotationSymbols = [],
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
 		code = 'var ' + arrayName + ' = [];\n';
 
@@ -24,7 +25,9 @@ exports.parse = function(node, state) {
 			var annCode = CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,
-				arrayName: arrayName 
+				post: function(node, state, args) {
+					return arrayName + '.push(' + args.symbol + ');\n';
+				}
 			});
 			code += annCode;
 
