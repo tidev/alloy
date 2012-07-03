@@ -11,7 +11,8 @@ exports.parse = function(node, state) {
 		children = U.XML.getElementsFromNodes(node.childNodes),
 		linePrefix = '\t',
 		annotationSymbols = [],
-		code = '';
+		arrayName = CU.generateUniqueId(),
+		code = 'var ' + arrayName + ' = [];\n';
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
@@ -20,9 +21,12 @@ exports.parse = function(node, state) {
 
 		// Process the Map's Annotations
 		if (childArgs.fullname === 'Ti.Map.Annotation') {
-			var annotationState = require('./default').parse(child, CU.createEmptyState(state.styles));
-			annotationSymbols.push(annotationState.parent.symbol);
-			code += annotationState.code;
+			var annCode = CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				arrayName: arrayName 
+			});
+			code += annCode;
 
 			// When we are done processing the Annotation, remove it from the
 			// markup. That way we can just pass back the current Map state as 
@@ -33,13 +37,8 @@ exports.parse = function(node, state) {
 	}
 
 	// Create the initial Map code
-	var mapState;
-	if (annotationSymbols.length > 0) {
-		var extraStyle = CU.createVariableStyle('annotations', '[' + annotationSymbols.join(',') + ']');
-		mapState = require('./default').parse(node, state, extraStyle);
-	} else {
-		mapState = require('./default').parse(node, state);
-	}
+	var extraStyle = CU.createVariableStyle('annotations', arrayName);
+	var mapState = require('./default').parse(node, state, extraStyle);
 	code += mapState.code;
 
 	// Update the parsing state
