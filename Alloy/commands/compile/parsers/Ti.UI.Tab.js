@@ -13,7 +13,6 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		parentArgs = {},
-		tabStates = [],
 		code = '';
 
 	// Make sure the parent is TabGroup
@@ -46,24 +45,18 @@ function parse(node, state, args) {
 			winSymbol = s.parent.symbol;
 		}
 	});
-	// var winState = require('./default').parse(winNode || children[0], CU.createEmptyState(state.styles));
-	// code += winState.code;
 
 	// Generate the code for the Tab itself, with the Window in it
-	//var extraStyle = CU.createVariableStyle('window', winSymbol /*winState.parent.symbol*/);
 	var tabState = require('./default').parse(node, {
 		parent: {},
 		styles: state.styles,
-		extraStyle: CU.createVariableStyle('window', winSymbol /*winState.parent.symbol*/)
+		extraStyle: CU.createVariableStyle('window', winSymbol)
 	});
 	code += tabState.code;
 
-	// Generate code that adds this Tab to its parent TabGroup
-	//code += state.parent.symbol + '.addTab(' + tabState.parent.symbol + ');\n';
-
 	// Update the parsing state
 	return {
-		parent: {}, //tabState.parent,
+		parent: {}, 
 		styles: state.styles,
 		code: code
 	}

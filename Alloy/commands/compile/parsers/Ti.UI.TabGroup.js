@@ -12,12 +12,10 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		tabStates = [],
 		code = '';
 
 	// Create the initial TabGroup code
-	var tabGroupState = require('./default').parse(node, state);
-	code += tabGroupState.code;
+	code += require('./default').parse(node, state).code;
 
 	// Gotta have at least one Tab
 	if (children.length === 0) {
@@ -26,31 +24,28 @@ function parse(node, state, args) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child);
+		var child = children[i];
 
 		// Make sure all children are Tabs
-		if (childArgs.fullname !== 'Ti.UI.Tab') {
+		if (CU.getParserArgs(child).fullname !== 'Ti.UI.Tab') {
 			U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
 		}
 
+		// Generate each Tab, and the views contained within it
 		code += CU.generateNode(child, {
-			parent: { node:node },
+			parent: { 
+				node: node,
+				symbol: args.symbol 
+			},
 			styles: state.styles,
 			post: function(n,s,a) {
 				return args.symbol + '.addTab(' + a.symbol + ');\n';
 			}
 		});
-
-		// process each Tab and save its state
-		// var tabState = require('./Ti.UI.Tab').parse(child, tabGroupState);
-		// tabStates.push(tabState.parent);
-		// code += tabState.code;
 	}
 
 	// Update the parsing state
 	return {
-		//parent: tabStates,
 		parent: {},
 		styles: state.styles,
 		code: code

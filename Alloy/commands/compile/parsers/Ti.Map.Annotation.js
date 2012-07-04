@@ -8,6 +8,7 @@ function parse(node, state, args) {
 			node: node,
 			symbol: args.symbol
 		},
+		styles: state.styles,
 		code: require('./default').parse(node, state).code 
 	};
 };
