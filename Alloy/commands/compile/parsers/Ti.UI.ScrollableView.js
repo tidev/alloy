@@ -29,11 +29,9 @@ function parse(node, state, args) {
 		});
 	}
 
+	// create the ScrollableView itself
 	state.extraStyle = CU.createVariableStyle('views', arrayName);
-	var scrollState = require('./default').parse(node, state);
-	code += scrollState.code;
-
-	console.log(code);
+	code += require('./default').parse(node, state).code;
 
 	// Update the parsing state
 	return {

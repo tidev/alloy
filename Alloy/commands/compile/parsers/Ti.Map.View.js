@@ -17,11 +17,10 @@ function parse(node, state, args) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child);
+		var child = children[i];
 
 		// Process the Map's Annotations
-		if (childArgs.fullname === 'Ti.Map.Annotation') {
+		if (CU.getParserArgs(child).fullname === 'Ti.Map.Annotation') {
 			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,

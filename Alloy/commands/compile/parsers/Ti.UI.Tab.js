@@ -47,12 +47,11 @@ function parse(node, state, args) {
 	});
 
 	// Generate the code for the Tab itself, with the Window in it
-	var tabState = require('./default').parse(node, {
+	code += require('./default').parse(node, {
 		parent: {},
 		styles: state.styles,
 		extraStyle: CU.createVariableStyle('window', winSymbol)
-	});
-	code += tabState.code;
+	}).code;
 
 	// Update the parsing state
 	return {
