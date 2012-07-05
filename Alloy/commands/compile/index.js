@@ -163,8 +163,8 @@ function parseView(viewName,dir,viewid,manifest) {
 		template.viewCode += CU.generateNode(
 			rootChildren[i],
 			state,
-			viewid||viewname,
-			true);
+			i === 0 ? (viewid||viewName) : undefined,
+			i === 0);
 	}
 	template.controllerCode += generateController(viewName,dir,id);
 
