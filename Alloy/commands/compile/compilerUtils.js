@@ -90,19 +90,6 @@ exports.getParserArgs = function(node, state) {
 		platform = node.getAttribute('platform'),
 		platformObj = {};
 
-	// get create arguments and events from attributes
-	var createArgs = {}, events = [];
-	_.each(node.attributes, function(attr) {
-		var attrName = attr.nodeName;
-		if (_.contains(RESERVED_ATTRIBUTES, attrName)) { return; }
-		var matches = attrName.match(RESERVED_EVENT_REGEX);
-		if (matches !== null) {
-			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
-		} else {
-			createArgs[attrName] = node.getAttribute(attrName);
-		}
-	});
-
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
 	node.setAttribute('id', id);
@@ -129,6 +116,19 @@ exports.getParserArgs = function(node, state) {
 			U.die('Invalid platform type found: ' + p);
 		});
 	}
+
+	// get create arguments and events from attributes
+	var createArgs = {}, events = [];
+	_.each(node.attributes, function(attr) {
+		var attrName = attr.nodeName;
+		if (_.contains(RESERVED_ATTRIBUTES, attrName)) { return; }
+		var matches = attrName.match(RESERVED_EVENT_REGEX);
+		if (matches !== null) {
+			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
+		} else {
+			createArgs[attrName] = node.getAttribute(attrName);
+		}
+	});
 	
 	return {
 		ns: ns,
