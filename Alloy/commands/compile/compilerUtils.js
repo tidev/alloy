@@ -7,6 +7,9 @@ var U = require('../../utils'),
 	pro = require("../../uglify-js/uglify-js").uglify,
 	_ = require('../../lib/alloy/underscore')._;
 
+///////////////////////////////////////
+////////// private variables //////////
+///////////////////////////////////////
 var alloyRoot = path.join(__dirname,'..','..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
@@ -14,41 +17,56 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	stylePrefix = '\t\t',
 	compilerConfig;
 
-var NS_TI_MAP = 'Ti.Map',
+///////////////////////////////
+////////// constants //////////
+///////////////////////////////
+var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
+	STYLE_CONST_PREFIX = '__ALLOY_CONST__--',
+	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
+	PLATFORMS = ['ios', 'android', 'mobileweb'],
+	NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
 	NS_TI_UI_IPAD = 'Ti.UI.iPad',
 	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
-	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb';
+	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
+	IMPLICIT_NAMESPACES = {
+		// Ti.Map
+		Annotation: NS_TI_MAP,
 
-var implicitNamespaces = {
-	// Ti.Map
-	Annotation: NS_TI_MAP,
+		// Ti.Media
+		VideoPlayer: NS_TI_MEDIA,
+		MusicPlayer: NS_TI_MEDIA,
 
-	// Ti.Media
-	VideoPlayer: NS_TI_MEDIA,
-	MusicPlayer: NS_TI_MEDIA,
+		// Ti.UI.iOS
+		AdView: NS_TI_UI_IOS,
+		CoverFlowView: NS_TI_UI_IOS,
+		TabbedBar: NS_TI_UI_IOS,
+		Toolbar: NS_TI_UI_IOS,
 
-	// Ti.UI.iOS
-	AdView: NS_TI_UI_IOS,
-	CoverFlowView: NS_TI_UI_IOS,
-	TabbedBar: NS_TI_UI_IOS,
-	Toolbar: NS_TI_UI_IOS,
+		// Ti.UI.iPad
+		DocumentViewer: NS_TI_UI_IPAD,
+		Popover: NS_TI_UI_IPAD,
+		SplitWindow: NS_TI_UI_IPAD,
 
-	// Ti.UI.iPad
-	DocumentViewer: NS_TI_UI_IPAD,
-	Popover: NS_TI_UI_IPAD,
-	SplitWindow: NS_TI_UI_IPAD,
-
-	// Ti.UI.iPhone
-	NavigationGroup: NS_TI_UI_IPHONE, // I know MobileWeb has one, but 99% will be this one
-	StatusBar: NS_TI_UI_IPHONE,
-};
-
-var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
-var STYLE_CONST_PREFIX = '__ALLOY_CONST__--';
-var STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
-var PLATFORMS = ['ios', 'android', 'mobileweb'];
+		// Ti.UI.iPhone
+		NavigationGroup: NS_TI_UI_IPHONE, // I know MobileWeb has one, but 99% will be this one
+		StatusBar: NS_TI_UI_IPHONE,
+	},
+	CONDITION_MAP = {
+		android: {
+			compile: 'OS_ANDROID',
+			runtime: "TI.Platform.osname === 'android'"
+		},
+		ios: {
+			compile: 'OS_IOS',
+			runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
+		},
+		mobileweb: {
+			compile: 'OS_MOBILEWEB',
+			runtime: "Ti.Platform.osname === 'mobileweb'"
+		}
+	};
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -64,7 +82,7 @@ exports.generateUniqueId = function() {
 exports.getParserArgs = function(node, state) {
 	state = state || {};
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || implicitNamespaces[name] || 'Ti.UI',
+		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || 'Ti.UI',
 		req = node.getAttribute('require'),
 		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
@@ -108,20 +126,6 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
-var conditionMap = {
-	android: {
-		compile: 'OS_ANDROID',
-		runtime: "TI.Platform.osname === 'android'"
-	},
-	ios: {
-		compile: 'OS_IOS',
-		runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
-	},
-	mobileweb: {
-		compile: 'OS_MOBILEWEB',
-		runtime: "Ti.Platform.osname === 'mobileweb'"
-	}
-}
 exports.generateNode = function(node, state, defaultId, isRoot) {
 	if (node.nodeType != 1) return '';
 	if (defaultId) { state.defaultId = defaultId; }
@@ -135,7 +139,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	if (args.platform) {
 		var conditionArray = [];
 		_.each(args.platform, function(v,k) {
-			conditionArray.push(conditionMap[k][conditionType]);
+			conditionArray.push(CONDITION_MAP[k][conditionType]);
 		});
 		code.condition = conditionArray.join(' || ');
 	} 
