@@ -158,9 +158,10 @@ function parseView(viewName,dir,viewid,manifest) {
 	}
 
 	// Generate Titanium code from the markup
-	for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
+	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+	for (var i = 0, l = rootChildren.length; i < l; i++) {
 		template.viewCode += CU.generateNode(
-			docRoot.childNodes.item(i),
+			rootChildren[i],
 			state,
 			viewid||viewname,
 			true);
