@@ -66,7 +66,9 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			compile: 'OS_MOBILEWEB',
 			runtime: "Ti.Platform.osname === 'mobileweb'"
 		}
-	};
+	},
+	RESERVED_ATTRIBUTES = ['id', 'class', 'require', 'platform'],
+	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -88,6 +90,20 @@ exports.getParserArgs = function(node, state) {
 		platform = node.getAttribute('platform'),
 		platformObj = {};
 
+	// get create arguments and events from attributes
+	var createArgs = {}, events = [];
+	_.each(node.attributes, function(attr) {
+		var attrName = attr.nodeName;
+		if (_.contains(RESERVED_ATTRIBUTES, attrName)) { return; }
+		var matches = attrName.match(RESERVED_EVENT_REGEX);
+		if (matches !== null) {
+			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
+		} else {
+			createArgs[attrName] = node.getAttribute(attrName);
+		}
+	});
+
+	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
 	node.setAttribute('id', id);
 	if (state.defaultId) { delete state.defaultId; }
@@ -122,7 +138,9 @@ exports.getParserArgs = function(node, state) {
 		symbol: exports.generateVarName(id),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
-		platform: !platformObj ? undefined : platformObj
+		platform: !platformObj ? undefined : platformObj,
+		createArgs: createArgs,
+		events: events
 	};
 };
 
@@ -130,7 +148,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	if (node.nodeType != 1) return '';
 	if (defaultId) { state.defaultId = defaultId; }
 
-	var args = exports.getParserArgs(node, state, defaultId),
+	var args = exports.getParserArgs(node, state),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { content: '' };
 
@@ -155,6 +173,11 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
 	if (isRoot) { code.content += 'root$ = ' + args.symbol + ';\n'; }
+	if (args.events && args.events.length > 0) {
+		_.each(args.events, function(ev) {
+			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
+		});	
+	}
 
 	// Continue parsing if necessary
 	if (state.parent) {
