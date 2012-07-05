@@ -79,6 +79,12 @@ exports.properCase = function(n) {
 	return n.charAt(0).toUpperCase() + n.substring(1);
 };
 
+exports.lcfirst = function (text) {
+    if (!text)
+        return text;
+    return text[0].toLowerCase() + text.substr(1);
+};
+
 exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
