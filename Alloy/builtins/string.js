@@ -19,6 +19,12 @@ exports.ucfirst = function (text) {
     return text[0].toUpperCase() + text.substr(1);
 };
 
+exports.lcfirst = function (text) {
+    if (!text)
+        return text;
+    return text[0].toLowerCase() + text.substr(1);
+};
+
 exports.formatCurrency = !OS_MOBILEWEB ? String.formatCurrency : function (amount) {
     var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;
     return '$' + parseFloat(num).toFixed(2);
