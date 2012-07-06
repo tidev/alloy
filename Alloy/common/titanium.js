@@ -26,14 +26,16 @@ var SDK_PATHS = {
 // Find out to which path the SDK is installed on OSX
 if (process.platform === 'darwin') {
 	var osxSdkPaths = [
-		SDK_PATHS.darwin.path,
-		path.join(HOME, SDK_PATHS.darwin.path)
+		path.join(HOME, SDK_PATHS.darwin.path),
+		SDK_PATHS.darwin.path
 	];
-	_.each(osxSdkPaths, function(sdkPath) {
+	for (var i = 0; i < osxSdkPaths.length; i++) {
+		var sdkPath = osxSdkPaths[i];
 		if (path.existsSync(path.join(sdkPath, SDK_PATHS.darwin.suffix))) {
 			SDK_PATHS.darwin.path = sdkPath;
+			break;
 		}
-	});
+	}
 	if (!SDK_PATHS.darwin.path) {
 		U.die('Unable to find Titanium SDK, looked in: \n' + osxSdkPaths.join('\n'));
 	}
