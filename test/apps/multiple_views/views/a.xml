@@ -1,0 +1,3 @@
+<Window class="container">
+	<Label id="t">View 2</Label>
+</Window>
