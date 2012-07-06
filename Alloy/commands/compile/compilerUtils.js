@@ -318,7 +318,7 @@ exports.loadStyle = function(p) {
         			break;
         		case 'name':
         			var pre = dot[1];
-        			if (pre === 'Ti' || pre === 'Titanium') {
+        			if (pre === 'Ti' || pre === 'Titanium' || pre === 'Alloy') {
         				return pre + name;
         			} else {
         				return null;
