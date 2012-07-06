@@ -254,9 +254,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	}
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
-	if (path.existsSync(obj.dir.config)) {
-		exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
-	}
+	exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
 
 	// keep a copy of the config for this module
 	compilerConfig = obj;
