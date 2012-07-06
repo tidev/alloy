@@ -23,7 +23,7 @@ def compile(config):
         if config['platform']==u'mobileweb':
             builder = config['mobileweb_builder']
             deploytype = config['deploytype']
-        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
+        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         try:
             try: 
