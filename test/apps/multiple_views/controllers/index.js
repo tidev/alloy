@@ -1,12 +1,12 @@
 var a = require('alloy/components/a').create();
 
-a.setDelegate(this);
+a.setDelegate($);
  
 $.t.on('click',function(e) { 
   a.getRoot().open();
 });
 
-exports.showAlert = function() {
+$.showAlert = function() {
 	alert($.t.text);
 };
 
