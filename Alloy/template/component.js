@@ -8,8 +8,6 @@ var Alloy = require("alloy"),
 	BC$ = Alloy.Backbone.Collection,
 	Lifecycle = {};
 
-<%= CFG %>
-
 <%= lifecycle %>
 
 exports.create = function() {

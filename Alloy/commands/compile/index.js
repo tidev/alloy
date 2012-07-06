@@ -96,7 +96,7 @@ module.exports = function(args, program) {
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{config:compileConfig.runtimeConfig});
+	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{});
 	code = U.processSourceCode(code, alloyConfig, 'app.js');
 
 	// trigger our custom compiler makefile
@@ -123,8 +123,7 @@ function parseView(viewName,dir,viewid,manifest) {
 	var template = {
 		viewCode: '',
 		controllerCode: '',
-		lifecycle: '',
-		CFG: compileConfig.runtimeConfig 
+		lifecycle: '' 
 	};
 	var state = { parent: {} };
 	var vd = dir ? path.join(dir,'views') : compileConfig.dir.views; 

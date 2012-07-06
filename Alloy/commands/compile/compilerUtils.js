@@ -3,6 +3,7 @@ var U = require('../../utils'),
 	path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	logger = require('../../common/logger'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
 	_ = require('../../lib/alloy/underscore')._;
@@ -230,7 +231,6 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 
 	var obj = {
 		alloyConfig: alloyConfig,
-		runtimeConfig: '',
 		dir: {
 			home: path.resolve(inputPath),
 			project: path.resolve(outputPath),
@@ -252,10 +252,11 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	if (!path.existsSync(indexXml)) {
 		U.die('Alloy project must have an index.xml at ' + indexXml);
 	}
-	if (path.existsSync(obj.dir.config)) {
-		obj.runtimeConfig = exports.generateConfig(obj.dir.config, alloyConfig);
-	}
 	U.ensureDir(obj.dir.resources);
+	U.ensureDir(obj.dir.resourcesAlloy);
+	if (path.existsSync(obj.dir.config)) {
+		exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
+	}
 
 	// keep a copy of the config for this module
 	compilerConfig = obj;
@@ -266,20 +267,29 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 // TODO: instead of dumping this full JSON in every file, create a commonjs
 //       module for the config, then load it in each file. The loaded module
 //       can then be assigned to CFG$ (or whatever else we want to name it)
-exports.generateConfig = function(configDir, alloyConfig) {
+exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 	var cf = path.join(configDir,'config.json');
-	if (path.existsSync(cf))
-	{
+	var o = {};
+
+	// parse config.json, if it exists
+	if (path.existsSync(cf)) {
 		var jf = fs.readFileSync(cf);
 		var j = JSON.parse(jf);
-		var o = j.global || {};
+		o = j.global || {};
 		if (alloyConfig) {
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
-		return "CFG$ = " + JSON.stringify(o) + ";\n";
+	} else {
+		logger.warn('No "app/config/config.json" file found');
 	}
-	return '';
+
+	// write out the config runtime module
+	wrench.mkdirSyncRecursive(resourceAlloyDir, 0777);
+	fs.writeFileSync(
+		path.join(resourceAlloyDir,'CFG.js'),
+		"module.exports = " + JSON.stringify(o) + ";\n"
+	);
 };
 
 exports.loadStyle = function(p) {
