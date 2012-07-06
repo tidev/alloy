@@ -56,7 +56,7 @@ exports.versions = versions;
 function py(pyScript, args, version /*optional*/, sdkDir /*optional*/) {
 	//use the version they specified, or the latest from the list
 	version = version || versions[0];
-	
+
 	//trim extra whitespace from titanium.py output
 	function filterLog(line) {
 		line =U.trim(line);

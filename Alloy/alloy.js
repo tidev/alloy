@@ -58,7 +58,7 @@ program
 	.option('-f, --force','Force the command to execute')
 	.option('-n, --no-colors','Turn off colors')
 	.option('-c, --config <config>','Pass in compiler configuration')
-	.option('-s, --tiSDK', 'Full path to Titanium SDK to use with run command')
+	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
 	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
 
 program.command('new'.blue+' <dir>'.white)
