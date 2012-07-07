@@ -11,13 +11,13 @@ module.exports = function(args, program) {
 
 	// Validate the input path
 	var inputPath = path.resolve(args.length > 0 ? args[0] : U.resolveAppHome());
-	if (!path.existsSync(inputPath)) {
+	if (!fs.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
 	}
 	
 	// Validate that this is a Titanium alloy-powered project
 	if (U.isTiProject(inputPath)) {
-		if (!path.existsSync(path.join(inputPath,'app'))) {
+		if (!fs.existsSync(path.join(inputPath,'app'))) {
 			U.die("This project doesn't seem to contain an Alloy app directory");
 		}
 	}

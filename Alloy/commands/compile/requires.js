@@ -23,7 +23,7 @@ function makeFullPath(basedir,p)
 		return appendFileExt(path.join(basedir,p));
 	}
 	var f = path.join(basedir,appendFileExt(p));
-	if (path.existsSync(f))
+	if (fs.existsSync(f))
 	{
 		// check to see if it exists and if so, return
 		return f;

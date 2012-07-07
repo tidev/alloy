@@ -19,7 +19,7 @@ pkginfo(module,'name','version');
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
 
 // patch to remove the warning in node >=0.8
-path.existsSync = fs.existsSync || path.existsSync;
+fs.existsSync = fs.existsSync || fs.existsSync;
 
 //
 //TODO: we need a much more robust help from command line -- see sort of what i did in titanium

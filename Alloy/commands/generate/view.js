@@ -12,10 +12,10 @@ module.exports = function(name, args, program) {
 	var styleTemplate = path.join(templatePath, 'style.json');
 
 	// validate paths
-	if (path.existsSync(vn) && !program.force) {
+	if (fs.existsSync(vn) && !program.force) {
 		U.die("View file already exists: "+vn);
 	}
-	if (path.existsSync(sn) && !program.force) {
+	if (fs.existsSync(sn) && !program.force) {
 		U.die("Style file already exists: "+sn);
 	}
 	

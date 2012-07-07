@@ -24,12 +24,12 @@ module.exports = function(args, program) {
 		outputPath, tmpPath, compilerMakeFile;
 
 	// validate input and output paths
-	if (!path.existsSync(inputPath)) {
+	if (!fs.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
 	}	
 	if (!program.outputPath) {
 		tmpPath = path.join(inputPath,'views','index.xml');
-		if (path.existsSync(tmpPath)) {
+		if (fs.existsSync(tmpPath)) {
 			outputPath = path.join(inputPath,'..');
 		}
 	}
@@ -37,7 +37,7 @@ module.exports = function(args, program) {
 	U.ensureDir(outputPath);
 
 	// construct compiler config from alloy.json and the command line config parameters
-	if (path.existsSync(alloyConfigPath)) {
+	if (fs.existsSync(alloyConfigPath)) {
 		alloyConfig = JSON.parse(fs.readFileSync(alloyConfigPath, 'utf8'));
 		logger.info("found alloy configuration at " + alloyConfigPath.yellow);
 	}
@@ -57,7 +57,7 @@ module.exports = function(args, program) {
 
 	// process project makefiles
 	var alloyJMK = path.resolve(path.join(inputPath,"alloy.jmk"));
-	if (path.existsSync(alloyJMK)) {
+	if (fs.existsSync(alloyJMK)) {
 		logger.info("Found project specific makefile at " + "app/alloy.jmk".yellow);
 		var vm = require('vm'),
 			util = require('util');
@@ -130,7 +130,7 @@ function parseView(viewName,dir,viewid,manifest) {
 	var sd = dir ? path.join(dir,'styles') : compileConfig.dir.styles; 
 
 	var viewFile = path.join(vd,viewName+".xml");
-	if (!path.existsSync(viewFile)) {
+	if (!fs.existsSync(viewFile)) {
 		logger.warn('No XML view file found for view ' + viewFile);
 		return;
 	}
@@ -190,7 +190,7 @@ function generateController(name, dir, id) {
 		p = path.join(controllerDir,name+'.js'),
 		code = '';
 	
-	if (path.existsSync(p)) {
+	if (fs.existsSync(p)) {
 		return fs.readFileSync(p,'utf8');
 	} else {
 		return '';
@@ -236,7 +236,7 @@ function findModelMigrations(name) {
 function findAndLoadModels() {
 	var f = compileConfig.dir.models; 
 	var code = '';
-	if (!path.existsSync(f)) {
+	if (!fs.existsSync(f)) {
 		wrench.mkdirSyncRecursive(f, 777);
 	}		
 
@@ -298,7 +298,7 @@ function copyBuiltins() {
 			builtin = matches[1];
 			if (!_.contains(exclude, builtin)) {
 				filepath = path.join(builtInsDir,builtin+'.js');
-				if (path.existsSync(filepath)) {
+				if (fs.existsSync(filepath)) {
 					return filepath;
 				}
 			}
@@ -334,7 +334,7 @@ function copyBuiltins() {
 			_.each(depends,function(depend) {
 				var ext = depend.substring(depend.length-3);
 				if (ext == '.js' && depend.substring(0,libdir.length)==libdir)  {
-					if (path.existsSync(depend)) {
+					if (fs.existsSync(depend)) {
 						var rel = depend.substring(libdir.length);
 						var depDest = path.join(alloyDir,rel);
 						logger.debug('Copying builtin dependency '+depend.yellow+' to '.cyan+depDest.yellow);

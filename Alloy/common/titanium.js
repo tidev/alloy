@@ -31,7 +31,7 @@ if (process.platform === 'darwin') {
 	];
 	for (var i = 0; i < osxSdkPaths.length; i++) {
 		var sdkPath = osxSdkPaths[i];
-		if (path.existsSync(path.join(sdkPath, SDK_PATHS.darwin.suffix))) {
+		if (fs.existsSync(path.join(sdkPath, SDK_PATHS.darwin.suffix))) {
 			SDK_PATHS.darwin.path = sdkPath;
 			break;
 		}
@@ -120,7 +120,7 @@ exports.py = py;
 //run a titanium project with titanium.py - return the spawned titanium.py process
 exports.run = function(projectDir, platform /*optional*/, version /*optional*/, sdkDir /*optional*/) {
 	// Validate the input path
-	if (!path.existsSync(projectDir)) {
+	if (!fs.existsSync(projectDir)) {
 		U.die('projectDir "' + projectDir + '" does not exist');
 	}
 

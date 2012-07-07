@@ -199,14 +199,14 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 }
 
 exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
-	if (!path.existsSync(assetsDir)) { return; }
+	if (!fs.existsSync(assetsDir)) { return; }
 	var files = wrench.readdirSyncRecursive(assetsDir);
 	_.each(files, function(file) {
 		var source = path.join(assetsDir, file);
 		if (fs.statSync(source).isFile()) {
 			var destDir = path.join(resourceDir, path.dirname(file), widgetId);
 			var dest = path.join(destDir, path.basename(file));
-			if (!path.existsSync(destDir)) {
+			if (!fs.existsSync(destDir)) {
 				wrench.mkdirSyncRecursive(destDir, 0777);
 			}
 			//console.log('Copying assets ' + source + ' --> ' + dest);
@@ -249,7 +249,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 
 	// validation
 	var indexXml = path.join(obj.dir.views,'index.xml');
-	if (!path.existsSync(indexXml)) {
+	if (!fs.existsSync(indexXml)) {
 		U.die('Alloy project must have an index.xml at ' + indexXml);
 	}
 	U.ensureDir(obj.dir.resources);
@@ -270,7 +270,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 	var o = {};
 
 	// parse config.json, if it exists
-	if (path.existsSync(cf)) {
+	if (fs.existsSync(cf)) {
 		var jf = fs.readFileSync(cf);
 		var j = JSON.parse(jf);
 		o = j.global || {};
@@ -291,7 +291,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 };
 
 exports.loadStyle = function(p) {
-	if (path.existsSync(p)) {
+	if (fs.existsSync(p)) {
 		var f = fs.readFileSync(p, 'utf8');
 
 		// skip empty files
