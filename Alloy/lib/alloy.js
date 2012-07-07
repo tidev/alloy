@@ -103,7 +103,7 @@ module.exports.A = function(t,type,parent) {
 			};
 			cbs[cb]=wcb;
 
-			if (osname === 'android') {
+			if (osname !== 'iphone') {
 				al.call(t, e, wcb);
 			} else {
 				al(e, wcb);
@@ -117,7 +117,7 @@ module.exports.A = function(t,type,parent) {
 			if (f) {
 				_.bind(of,ctx,e,cb,context)();
 
-				if (osname === 'android') {
+				if (osname !== 'iphone') {
 					rl.call(t, e, f);
 				} else {
 					rl(e, f);
