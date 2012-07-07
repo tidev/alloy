@@ -1,7 +1,6 @@
 
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
-	osname   = Ti.Platform.osname,
 	SQLSync, 
 	SQLSyncInit,
 	FileSysSync;
@@ -103,10 +102,10 @@ module.exports.A = function(t,type,parent) {
 			};
 			cbs[cb]=wcb;
 
-			if (osname !== 'iphone') {
-				al.call(t, e, wcb);
-			} else {
+			if (OS_IOS) {
 				al(e, wcb);
+			} else {
+				al.call(t, e, wcb);
 			}
 
 			_.bind(oo,ctx,e,cb,context)();
@@ -117,10 +116,10 @@ module.exports.A = function(t,type,parent) {
 			if (f) {
 				_.bind(of,ctx,e,cb,context)();
 
-				if (osname !== 'iphone') {
-					rl.call(t, e, f);
-				} else {
+				if (OS_IOS) {
 					rl(e, f);
+				} else {
+					rl.call(t, e, f);
 				}
 				
 				delete cbs[cb];
