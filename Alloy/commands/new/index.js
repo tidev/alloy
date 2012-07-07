@@ -27,7 +27,7 @@ function installPlugin(dir)
 	createPlugin(dir);
 
 	var tiapp = path.join(dir,'tiapp.xml');
-	if (path.existsSync(tiapp))
+	if (fs.existsSync(tiapp))
 	{
 		var xml = fs.readFileSync(tiapp);
 		var doc = new DOMParser().parseFromString(String(xml));
@@ -105,7 +105,7 @@ function newproject(args, program) {
 	// get app path, create if necessary
 	projectPath = args[0];
 	appPath = path.join(projectPath,'app');
-	if (path.existsSync(appPath)) {
+	if (fs.existsSync(appPath)) {
 		if (!program.force) {
 			U.die("Directory already exists at: " + appPath);
 		} else {
@@ -117,7 +117,7 @@ function newproject(args, program) {
 	// create alloy app directories
 	for (var c = 0; c < dirs.length; c++) {
 		tmpPath = path.join(appPath, dirs[c]);
-		if (!path.existsSync(tmpPath)) {
+		if (!fs.existsSync(tmpPath)) {
 			wrench.mkdirSyncRecursive(tmpPath, 0777);
 		}
 	}

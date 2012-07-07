@@ -35,7 +35,7 @@ module.exports = function(name, args, program) {
 
 	// Write new model JSON to model file
 	var modelFile = path.join(modelsDir,name+'.json');
-	if (path.existsSync(modelFile) && !program.force) {
+	if (fs.existsSync(modelFile) && !program.force) {
 		U.die("Model file already exists: "+modelFile);
 	}
 	var code = U.stringifyJSON(json);

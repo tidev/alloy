@@ -8,7 +8,7 @@ module.exports = function(name, args, program) {
 	var templatePath = path.join(__dirname,'..','..','template','controller.js');
 	var cn = path.join(program.outputPath,'controllers',name+'.js');
 	
-	if (path.existsSync(cn) && !program.force) {
+	if (fs.existsSync(cn) && !program.force) {
 		U.die("Controller file already exists: " + cn);
 	}
 

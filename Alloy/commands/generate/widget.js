@@ -13,7 +13,7 @@ module.exports = function(name, args, program) {
 
 	// TODO: Should we use the widgetId instead of name for the folder name?
 	var widgetPath = path.join(program.outputPath,'widgets',name);
-	if (path.existsSync(widgetPath) && !program.force) {
+	if (fs.existsSync(widgetPath) && !program.force) {
 		U.die("Widget already exists: "+widgetPath);
 	}
 

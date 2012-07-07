@@ -46,9 +46,9 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 	var sources = _.isArray(sources) ? sources : [sources];
 	_.each(sources, function(source) {
 		var sourceDir = path.join(appDir, source);
-		if (path.existsSync(sourceDir)) {
+		if (fs.existsSync(sourceDir)) {
 			logger.info('Copying ' + source + ' from: ' + sourceDir.yellow);
-			if (!path.existsSync(destDir)) {
+			if (!fs.existsSync(destDir)) {
 				wrench.mkdirSyncRecursive(destDir, 0777);
 			}
 			exports.copyFilesAndDirs(sourceDir, destDir);
@@ -59,7 +59,7 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 exports.getWidgetDirectories = function(outputPath) {
 	var dirs = [];
 	var widgetPath = path.join(outputPath,'app','widgets');
-	if (path.existsSync(widgetPath)) {
+	if (fs.existsSync(widgetPath)) {
 		var wFiles = fs.readdirSync(widgetPath);
 		for (var i = 0; i < wFiles.length; i++) {
 			var wDir = path.join(widgetPath,wFiles[i]); 
@@ -91,12 +91,12 @@ exports.trim = function(line) {
 
 exports.resolveAppHome = function() {
 	var f = path.join("./","app");
-	if (path.existsSync(f))
+	if (fs.existsSync(f))
 	{
 		return f;
 	}
 	var cf = path.join('./', 'alloy.jmk');
-	if (path.existsSync(cf))
+	if (fs.existsSync(cf))
 	{
 		return path.resolve(path.join('.'));
 	}
@@ -149,7 +149,7 @@ exports.copyFileSync = function(srcFile, destFile)
 
 exports.ensureDir = function(p)
 {
-	if (!path.existsSync(p))
+	if (!fs.existsSync(p))
 	{
 		logger.debug("Creating directory: "+p);
 		wrench.mkdirSyncRecursive(p, 0777);
@@ -180,7 +180,7 @@ exports.copyFilesAndDirs = function(f,d)
 
 exports.isTiProject = function(dir) 
 {
-	return (path.existsSync(path.join(dir,'tiapp.xml')));
+	return (fs.existsSync(path.join(dir,'tiapp.xml')));
 }
 
 exports.stringifyJSON = function(j)

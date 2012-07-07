@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	exists = path.existsSync,
+	exists = fs.existsSync,
 	exec = require('child_process').exec,
 	spawn = require('child_process').spawn,
 	wrench = require('wrench'),
