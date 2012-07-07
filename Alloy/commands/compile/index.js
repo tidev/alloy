@@ -123,7 +123,8 @@ function parseView(viewName,dir,viewid,manifest) {
 	var template = {
 		viewCode: '',
 		controllerCode: '',
-		lifecycle: '' 
+		onCreateStart: '',
+		onCreateEnd: '' 
 	};
 	var state = { parent: {} };
 	var vd = dir ? path.join(dir,'views') : compileConfig.dir.views; 
@@ -150,6 +151,13 @@ function parseView(viewName,dir,viewid,manifest) {
 	}
 	var docRoot = doc.documentElement;
 	var id = viewid || doc.documentElement.getAttribute('id') || viewName;
+
+	// handle component-level events
+	var componentEvents = ['onCreateStart','onCreateEnd'];
+	_.each(['onCreateStart','onCreateEnd'], function(evt) {
+		var attr = docRoot.getAttribute(evt);
+		template[evt] = attr ? attr + '($);\n' : '';
+	});
 
 	// TODO: Can we move this out of the parseView() call?
 	if (viewName === 'index') {
