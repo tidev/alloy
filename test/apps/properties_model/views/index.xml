@@ -1,0 +1,4 @@
+<Window id="win">
+	<Button id="button">Increment</Button>
+	<Label id="label">count: 0</Label>
+</Window>

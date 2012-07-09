@@ -1,0 +1,9 @@
+{
+	"#win": {
+		"backgroundColor": "#fff",
+		"layout": "vertical"
+	},
+	"#button": {
+		"top": 100
+	}
+}
