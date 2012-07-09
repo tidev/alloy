@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.0.0.v20120328101644</sdk-version>
+    <sdk-version>2.1.0.GA</sdk-version>
     <id>com.appcelerator.alloy.harness</id>
     <name>Harness</name>
     <version>1.0</version>
