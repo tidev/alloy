@@ -1,32 +1,21 @@
-var dispatcher = _.clone(require('alloy/backbone').Events);
-var CRUDops = {
-	"create": function(o) { Ti.API.info("CREATE called with model="+JSON.stringify(o)); },
-    "read": function(o) { Ti.API.info("READ called with model="+JSON.stringify(o)); },
-    "update": function(o) { Ti.API.info("UPDATE called with model="+JSON.stringify(o)); },
-    "delete": function(o) { Ti.API.info("DELETE called with model="+JSON.stringify(o)); }
-};
-$.AppCollection.notify.on('sync', function(e) {
-	CRUDops[e.method](e.model);	
+var app = new $.App();
+
+// save all changes to Ti.App.Properties
+app.on('change', function() { 
+	app.save(); 
 });
 
-var app = new $.App({count:0});
-$.button.on('click', function(e) {
-	app.set({count:4});
-	app.save();
-	dispatcher.trigger('count:changed', app.get('count'));
-	//Ti.API.info(app.get('count'));
-	//app.set({count:4})
-	//app.save({count:2});
-	// update model
-
+// Change label when 'count' changes on model
+app.on('change:count', function(model) {
+	$.label.text = 'count: ' + model.get('count');
 });
 
-$.label.on('app:increment', function(e) {
-	// get valu from model and update label
-});
+// fetch model from Ti.App.Properties, or use defaults
+app.fetch();
 
-dispatcher.on('count:changed', function(count) {
-	$.label.text = 'count: ' + count
+// increment model 'count' 
+$.button.on('click', function() {
+	app.set({'count':app.get('count')+1});
 });
 
 $.win.open();
