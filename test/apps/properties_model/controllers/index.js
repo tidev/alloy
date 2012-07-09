@@ -1,5 +1,6 @@
 var app = new $.App();
 
+// TODO: Should we always do this? Could put it in the model code itself
 // save all changes to Ti.App.Properties
 app.on('change', function() { 
 	app.save(); 
