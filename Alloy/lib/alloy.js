@@ -3,7 +3,8 @@ var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone"),
 	SQLSync, 
 	SQLSyncInit,
-	FileSysSync;
+	FileSysSync,
+	TiAppPropertiesSync;
 	
 module.exports._ = _;
 module.exports.Backbone = Backbone;
@@ -28,6 +29,11 @@ Backbone.sync = function(method, model, opts) {
 			FileSysSync.sync(model,method,opts);
 			break;
 		}
+		case 'properties': {
+			TiAppPropertiesSync = require('alloy/sync/properties');
+			TiAppPropertiesSync.sync(model,method,opts);
+			break;
+		}
 		default: {
 			Ti.API.error("No sync adapter found for: "+type);
 			return;
@@ -41,6 +47,7 @@ module.exports.M = function(name,config,modelFn,migrations) {
 	
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
     if (type === 'sql' && !SQLSyncInit) {
+    	SQLSync = SQLSync || require("alloy/sync/sql");
  		SQLSyncInit = true;
     	SQLSync.init(); 
     }
