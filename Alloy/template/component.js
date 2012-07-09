@@ -44,15 +44,13 @@ exports.create = function() {
 		}
 	};
 
-<%= onCreateStart %>
+<%= onCreate %>
 
 	// generated from view markup
 <%= viewCode %>
 
 	// generated from controller
 <%= controllerCode %>
-
-<%= onCreateEnd %>
 
 	return $;
 };
