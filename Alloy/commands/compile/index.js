@@ -78,6 +78,9 @@ module.exports = function(args, program) {
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
+	// Process all models
+	var models = processModels();
+
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(outputPath);
 	viewCollection.push({ dir: path.join(outputPath,'app') });
@@ -96,7 +99,7 @@ module.exports = function(args, program) {
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{});
+	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{models:models});
 	code = U.processSourceCode(code, alloyConfig, 'app.js');
 
 	// trigger our custom compiler makefile
@@ -156,11 +159,6 @@ function parseView(viewName,dir,viewid,manifest) {
 		var attr = docRoot.getAttribute(evt);
 		template[evt] = attr ? attr + '($);\n' : '';
 	});
-
-	// TODO: Can we move this out of the parseView() call?
-	if (viewName === 'index') {
-		template.viewCode += findAndLoadModels();
-	}
 
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
@@ -239,53 +237,51 @@ function findModelMigrations(name) {
 	}
 }
 
-function findAndLoadModels() {
-	var f = compileConfig.dir.models; 
-	var code = '';
-	if (!path.existsSync(f)) {
-		wrench.mkdirSyncRecursive(f, 777);
-	}		
+function processModels() {
+	var models = [];
+	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
+	U.ensureDir(compileConfig.dir.models);
 
-	var files = fs.readdirSync(f);
-	for (var c=0;c<files.length;c++) {
-		var file = files[c];
-		if (file.indexOf(".json")>0) {
-			var fpath = path.join(f,file);
-			var part = file.substring(0,file.length-5);
-			var modelJs = path.join(f,part+'.js');
-
-			var jm = fs.readFileSync(fpath);
-			var js = "";
-			try {
-				var stats = fs.lstatSync(modelJs);
-				if (stats.isFile()) {
-					js = fs.readFileSync(modelJs,'utf8');
-				}
-			}
-			catch(E) { }
-
-			var migrations = findModelMigrations(part);
-			var theid = U.properCase(part), theidc = U.properCase(part)+'Collection';
-			var symbol1 =  CU.generateVarName(theid);
-			var symbol2 =  CU.generateVarName(theidc);
-			var codegen = symbol1 + " = M$('"+ part +"',\n" +
-							jm + "\n" +
-						  ", function("+part+"){\n" +
-							js + "\n" +
-						  "},\n" + 
-						  "[ " + migrations.join("\n,") + " ]\n" +  
-						  ");\n";
-
-			codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
-			codegen+=symbol2+".prototype.model = " + symbol1+";\n";
-			codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
-		
-			code += codegen;
-		}
+	// Make sure we havea runtime models directory
+	var modelFiles = fs.readdirSync(compileConfig.dir.models);
+	if (modelFiles.length > 0) {
+		U.ensureDir(modelRuntimeDir);
 	}
 
-	return code;
-}
+	// process each model
+	_.each(modelFiles, function(modelFile) {
+		if (!/\.json$/.test(modelFile)) {
+			logger.warn('Non-model file "' + modelFile + '" in models directory');
+			return;
+		}
+		var fullpath = path.join(compileConfig.dir.models,modelFile);
+		var basename = path.basename(fullpath, '.json');
+		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
+		var modelConfig = fs.readFileSync(fullpath);
+		var modelJs = '';
+
+		// grab any additional model code from corresponding JS file, if it exists
+		if (path.existsSync(modelJsFile)) {
+			js = fs.readFileSync(modelJsFile,'utf8');
+		}
+
+		// generate model code based on model.js template and migrations
+		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
+			basename: basename,
+			modelConfig: modelConfig,
+			modelJs: modelJs,
+			migrations: findModelMigrations(basename)
+		});	
+
+		// write the model to the runtime file
+		var casedBasename = U.properCase(basename);
+		fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
+		models.push(casedBasename);
+	});
+
+	return models;
+};
 
 function copyBuiltins() {
 	// this method will allow an app to do a require
