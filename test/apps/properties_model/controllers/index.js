@@ -1,10 +1,8 @@
-var app = new $.App();
+var app = new Alloy.Models.App; // new (require('alloy/models/App').Model)
 
 // TODO: Should we always do this? Could put it in the model code itself
 // save all changes to Ti.App.Properties
-app.on('change', function() { 
-	app.save(); 
-});
+app.on('change', function() { app.save(); });
 
 // Change label when 'count' changes on model
 app.on('change:count', function(model) {

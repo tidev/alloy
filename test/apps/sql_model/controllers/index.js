@@ -18,17 +18,17 @@ var CRUDops = {
 };
 
 // listener for server to persistant store sync requests
-$.BookCollection.notify.on('sync', function(e) {
+Alloy.Collections.Book.notify.on('sync', function(e) {
 	CRUDops[e.method](e.model);	
 });
 
 // Now let's create a Backbone collection that will hold our models,
 // the classes that represent our model have been generated automatically.
 // Use new on the generated classes to create the model or collection object.
-var books = new $.BookCollection;
+var books = new Alloy.Collections.Book; //$.BookCollection;
 
 // CREATE - create a model
-var book = new $.Book({book:"Jungle Book", author:"Kipling"});
+var book = new Alloy.Models.Book({book:"Jungle Book", author:"Kipling"});
 
 // Add a model to a Backbone collection.
 books.add(book);
