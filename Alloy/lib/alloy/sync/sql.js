@@ -240,7 +240,4 @@ module.exports.beforeModelCreate = InitDB;
 module.exports.afterModelCreate = function(Model) {
 	Migrate(Model.migrations);
 };
-
-//module.exports.init = InitDB;
-//module.exports.migrate = Migrate;
 module.exports.sync = Sync;
