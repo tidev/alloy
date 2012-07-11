@@ -18,12 +18,9 @@ function getUniqueId(id) {
 function TiAppPropertiesSync(model) {
 	var self = this;
 	var prefix = model.config.adapter.prefix ? model.config.adapter.prefix + '-' : '';
-	var id = getUniqueId(model.config.adapter.prefix); 
 	var adapterName = 'TiAppPropertiesSync';
 
 	// save the model and columns
-	model.config.columns.id = 'String';
-	model.config.defaults.id = id;
 	this.model = model;
 	this.columns = model.config.columns;
 
@@ -68,3 +65,16 @@ function Sync(model, method, opts) {
 }
 
 module.exports.sync = Sync;
+module.exports.beforeModelCreate = function(obj) {
+	// make sure we have a populated model object
+	obj = obj || {};
+	obj.config = obj.config || {};
+	obj.config.columns = obj.config.columns || {};
+	obj.config.defaults = obj.config.defaults || {};
+
+	// add this adapter's values
+	obj.config.columns.id = 'String';
+	obj.config.defaults.id = getUniqueId();
+
+	return obj;
+};
