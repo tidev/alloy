@@ -1,6 +1,6 @@
 <Window id="win">
-	<Button id="create">create</Button>
-	<Button id="destroy">destroy</Button>
-	<Button id="increment">Increment</Button>
+	<Button id="create" onClick="create">create</Button>
+	<Button id="destroy" onClick="destroy">destroy</Button>
+	<Button id="increment" onClick="increment">Increment</Button>
 	<Label id="label">model: {}</Label>
 </Window>
