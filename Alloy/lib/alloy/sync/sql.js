@@ -18,7 +18,8 @@ function InitDB() {
 		// create the table in case it doesn't exist
 		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)");
 	}
-	return db;
+	//return db;
+	return {};
 }
 
 function GetMigrationFor(table) {
@@ -235,7 +236,11 @@ function Sync(model, method, opts) {
 	return sync[method](opts);
 }
 
+module.exports.beforeModelCreate = InitDB;
+module.exports.afterModelCreate = function(Model) {
+	Migrate(Model.migrations);
+};
 
-module.exports.init = InitDB;
-module.exports.migrate = Migrate;
+//module.exports.init = InitDB;
+//module.exports.migrate = Migrate;
 module.exports.sync = Sync;
