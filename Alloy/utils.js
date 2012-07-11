@@ -231,6 +231,7 @@ exports.formatAST = function(ast,config,fn)
 		ENV_DEV: config.deploytype == 'development',
 		ENV_DEVELOPMENT: config.deploytype == 'development',
 		ENV_TEST: config.deploytype == 'test',
+		ENV_PROD: config.deploytype == 'production',
 		ENV_PRODUCTION: config.deploytype == 'production'
 	};
 
