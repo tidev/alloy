@@ -65,16 +65,15 @@ function Sync(model, method, opts) {
 }
 
 module.exports.sync = Sync;
-module.exports.beforeModelCreate = function(obj) {
+module.exports.beforeModelCreate = function(config) {
 	// make sure we have a populated model object
-	obj = obj || {};
-	obj.config = obj.config || {};
-	obj.config.columns = obj.config.columns || {};
-	obj.config.defaults = obj.config.defaults || {};
+	config = config || {};
+	config.columns = config.columns || {};
+	config.defaults = config.defaults || {};
 
 	// add this adapter's values
-	obj.config.columns.id = 'String';
-	obj.config.defaults.id = getUniqueId();
+	config.columns.id = 'String';
+	config.defaults.id = getUniqueId();
 
-	return obj;
+	return config;
 };
