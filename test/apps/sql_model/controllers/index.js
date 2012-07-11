@@ -25,9 +25,9 @@ Alloy.Collections.Book.notify.on('sync', function(e) {
 // Now let's create a Backbone collection that will hold our models,
 // the classes that represent our model have been generated automatically.
 // Use new on the generated classes to create the model or collection object.
-var books = new Alloy.Collections.Book; //$.BookCollection;
+var books = new Alloy.Collections.Book; 
 
-// CREATE - create a model
+// create a model
 var book = new Alloy.Models.Book({book:"Jungle Book", author:"Kipling"});
 
 // Add a model to a Backbone collection.
@@ -36,8 +36,9 @@ books.add(book);
 // Use Backbone shortcut to create a model and add to collection in single step.
 books.add({book:"War and Peace", author:"Tolstoy"});
 
-// READ - fetch triggers the CRUD read operation causing a sever to persistent store sync up.
-// Fetch only returns models that are in the new state. 
+// fetch triggers the CRUD read operation causing a sever to persistent store sync up.
+// Everything in the current Backbone model state will be overwritten with the 
+// fetched "server" state, triggering a "read" sync operation
 books.fetch();
 
 // Add will add models to local server but save triggers the CRUD create opperation,
