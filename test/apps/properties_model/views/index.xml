@@ -1,4 +1,6 @@
 <Window id="win">
-	<Button id="button">Increment</Button>
-	<Label id="label">count: 0</Label>
+	<Button id="create">create</Button>
+	<Button id="destroy">destroy</Button>
+	<Button id="increment">Increment</Button>
+	<Label id="label">model: {}</Label>
 </Window>

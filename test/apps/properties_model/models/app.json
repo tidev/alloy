@@ -7,6 +7,6 @@
 	},
 	"adapter": {
 		"type": "properties",
-		"tablename": "app"
+		"prefix": "app"
 	}
 }
