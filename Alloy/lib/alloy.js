@@ -30,8 +30,7 @@ Backbone.sync = function(method, model, opts) {
 module.exports.M = function(name,config,modelFn,migrations) {
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
     var adapter = require('alloy/sync/'+type);
-    var adapterExtend = {};
-    var defaultExtend = {
+    var extendObj = {
 		config: config,
 		defaults: config.defaults,
 		validate: function(attrs) {
@@ -49,10 +48,9 @@ module.exports.M = function(name,config,modelFn,migrations) {
 	};
 
 	// cosntruct the model based on the current adapter type
-	if (migrations) { defaultExtend.migrations = migrations; }
-    if (_.isFunction(adapter.beforeModelCreate)) { adapterExtend = adapter.beforeModelCreate() || {}; }
-	_.extend(defaultExtend, adapterExtend);
-	var Model = Backbone.Model.extend(defaultExtend);
+	if (migrations) { extendObj.migrations = migrations; }
+    if (_.isFunction(adapter.beforeModelCreate)) { extendObj = adapter.beforeModelCreate(extendObj) || {}; }
+	var Model = Backbone.Model.extend(extendObj);
 	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
 	// execute any custom scripts on the model
