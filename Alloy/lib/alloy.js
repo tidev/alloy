@@ -1,14 +1,12 @@
 
 var 	   _ = require("alloy/underscore")._,
-	Backbone = require("alloy/backbone"),
-	SQLSync, 
-	SQLSyncInit,
-	FileSysSync,
-	TiAppPropertiesSync;
+	Backbone = require("alloy/backbone");
 	
 module.exports._ = _;
 module.exports.Backbone = Backbone;
 
+// TODO: we might want to eliminate this as all sync operations can be handles
+//       in the adapter-specific code
 Backbone.Collection.notify = _.extend({}, Backbone.Events);
 
 Backbone.sync = function(method, model, opts) {
@@ -17,45 +15,25 @@ Backbone.sync = function(method, model, opts) {
 	
 	var m = (model.config || {});
 	var type = (m.adapter ? m.adapter.type : null) || 'sql';
-	
-	switch (type) {
-		case 'sql': {
-			SQLSync  = require("alloy/sync/sql");
-			SQLSync.sync(model,method,opts);
-			break;
-		}
-		case 'filesystem': {
-			FileSysSync  = require("alloy/sync/filesys");
-			FileSysSync.sync(model,method,opts);
-			break;
-		}
-		case 'properties': {
-			TiAppPropertiesSync = require('alloy/sync/properties');
-			TiAppPropertiesSync.sync(model,method,opts);
-			break;
-		}
-		default: {
-			Ti.API.error("No sync adapter found for: "+type);
-			return;
-		}
+
+	try {
+		require('alloy/sync/'+type).sync(model,method,opts);
+	} catch(e) {
+		Ti.API.error('Invalid adapter type "' + type + '" used for model');
 	}
 
+	// TODO: we might want to eliminate this as all sync operations can be handles
+	//       in the adapter-specific code
 	Backbone.Collection.notify.trigger('sync', {method:method,model:model});
 };
 
 module.exports.M = function(name,config,modelFn,migrations) {
-	
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
-    if (type === 'sql' && !SQLSyncInit) {
-    	SQLSync = SQLSync || require("alloy/sync/sql");
- 		SQLSyncInit = true;
-    	SQLSync.init(); 
-    }
-	
-	var Model = Backbone.Model.extend( {
-		
+    var adapter = require('alloy/sync/'+type);
+    var adapterExtend = {};
+    var defaultExtend = {
+		config: config,
 		defaults: config.defaults,
-		
 		validate: function(attrs) {
 			if (typeof __validate !== 'undefined') {
 				if (_.isFunction(__validate)) {
@@ -68,16 +46,16 @@ module.exports.M = function(name,config,modelFn,migrations) {
 				}
 			}
 		}
-	});
+	};
+
+	// cosntruct the model based on the current adapter type
+	if (migrations) { defaultExtend.migrations = migrations; }
+    if (_.isFunction(adapter.beforeModelCreate)) { adapterExtend = adapter.beforeModelCreate() || {}; }
+	_.extend(defaultExtend, adapterExtend);
+	var Model = Backbone.Model.extend(defaultExtend);
+	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
-	if (migrations && migrations.length > 0) {
-		if (type == 'sql') { 
-			SQLSync.migrate(migrations);
-		}
-	}
-
-	Model.prototype.config = config;
-
+	// execute any custom scripts on the model
 	modelFn(Model);
 	
 	return Model;
