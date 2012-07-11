@@ -13,5 +13,4 @@ Alloy.Models = {
 Alloy.Collections = {
 <% _.each(models, function(name) {%>	<%= name %>: require('alloy/models/<%= name %>').Collection, <% }); %>
 };
-
 (require('alloy/components/index')).create();
