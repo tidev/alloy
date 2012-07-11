@@ -2,8 +2,8 @@
 var 	   _ = require("alloy/underscore")._,
 	Backbone = require("alloy/backbone");
 	
-module.exports._ = _;
-module.exports.Backbone = Backbone;
+exports._ = _;
+exports.Backbone = Backbone;
 
 // TODO: we might want to eliminate this as all sync operations can be handles
 //       in the adapter-specific code
@@ -16,22 +16,17 @@ Backbone.sync = function(method, model, opts) {
 	var m = (model.config || {});
 	var type = (m.adapter ? m.adapter.type : null) || 'sql';
 
-	try {
-		require('alloy/sync/'+type).sync(model,method,opts);
-	} catch(e) {
-		Ti.API.error('Invalid adapter type "' + type + '" used for model');
-	}
+	require('alloy/sync/'+type).sync(model,method,opts);
 
 	// TODO: we might want to eliminate this as all sync operations can be handles
 	//       in the adapter-specific code
 	Backbone.Collection.notify.trigger('sync', {method:method,model:model});
 };
 
-module.exports.M = function(name,config,modelFn,migrations) {
+exports.M = function(name,config,modelFn,migrations) {
     var type = (config.adapter ? config.adapter.type : null) || 'sql';
     var adapter = require('alloy/sync/'+type);
     var extendObj = {
-		config: config,
 		defaults: config.defaults,
 		validate: function(attrs) {
 			if (typeof __validate !== 'undefined') {
@@ -49,8 +44,9 @@ module.exports.M = function(name,config,modelFn,migrations) {
 
 	// cosntruct the model based on the current adapter type
 	if (migrations) { extendObj.migrations = migrations; }
-    if (_.isFunction(adapter.beforeModelCreate)) { extendObj = adapter.beforeModelCreate(extendObj) || {}; }
+    if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
 	var Model = Backbone.Model.extend(extendObj);
+	Model.prototype.config = config;
 	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
 	// execute any custom scripts on the model
@@ -59,7 +55,7 @@ module.exports.M = function(name,config,modelFn,migrations) {
 	return Model;
 };
 
-module.exports.A = function(t,type,parent) {
+exports.A = function(t,type,parent) {
 	_.extend(t,Backbone.Events);
 	
 	(function() {
