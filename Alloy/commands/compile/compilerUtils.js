@@ -57,7 +57,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	CONDITION_MAP = {
 		android: {
 			compile: 'OS_ANDROID',
-			runtime: "TI.Platform.osname === 'android'"
+			runtime: "Ti.Platform.osname === 'android'"
 		},
 		ios: {
 			compile: 'OS_IOS',
