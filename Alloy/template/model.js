@@ -3,9 +3,7 @@ var Alloy = require('alloy'),
 
 model = Alloy.M('<%= basename %>',
 	<%= modelConfig %>,
-	function(<%= basename %>) {
-		<%= modelJs %>
-	},
+	<%= modelJs %>,
 	[<%= migrations %>]
 );
 collection = Alloy.Backbone.Collection.extend({model:model});

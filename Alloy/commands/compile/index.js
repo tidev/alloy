@@ -259,11 +259,11 @@ function processModels() {
 		var basename = path.basename(fullpath, '.json');
 		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
 		var modelConfig = fs.readFileSync(fullpath);
-		var modelJs = '';
+		var modelJs = 'function(Model){}';
 
 		// grab any additional model code from corresponding JS file, if it exists
 		if (path.existsSync(modelJsFile)) {
-			js = fs.readFileSync(modelJsFile,'utf8');
+			modelJs = fs.readFileSync(modelJsFile,'utf8');
 		}
 
 		// generate model code based on model.js template and migrations

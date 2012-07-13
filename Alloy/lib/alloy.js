@@ -50,7 +50,7 @@ exports.M = function(name,config,modelFn,migrations) {
 	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
 	// execute any custom scripts on the model
-	modelFn(Model);
+	Model = modelFn(Model) || Model;
 	
 	return Model;
 };
