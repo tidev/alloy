@@ -6,6 +6,7 @@
 var Alloy = require('alloy'),
 	_ = require('alloy/underscore')._;
 
+// TODO: Use AST to create these Alloy namespace shortcuts at compile time
 Alloy.CFG = require('alloy/CFG');
 Alloy.Models = {
 <% _.each(models, function(name) {%>	<%= name %>: require('alloy/models/<%= name %>').Model, <% }); %>
