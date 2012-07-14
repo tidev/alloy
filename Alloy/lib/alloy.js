@@ -46,6 +46,8 @@ exports.M = function(name,config,modelFn,migrations) {
 	if (migrations) { extendObj.migrations = migrations; }
     if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
 	var Model = Backbone.Model.extend(extendObj);
+	config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
+	config.data = {}; // for localStorage or case where entire collection is needed to maintain store
 	Model.prototype.config = config;
 	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
