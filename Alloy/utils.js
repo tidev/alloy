@@ -264,7 +264,7 @@ exports.formatAST = function(ast,config,fn)
 	        },
 	        make: false,
 	        output: false,
-			except: ['Ti','Titanium']
+			except: ['Ti','Titanium','Alloy']
 	};
 
 	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
