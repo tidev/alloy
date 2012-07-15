@@ -1,6 +1,7 @@
 
 var 	   _ = require("alloy/underscore")._,
-	Backbone = require("alloy/backbone");
+	Backbone = require("alloy/backbone"),
+	STR = require('alloy/string');
 	
 exports._ = _;
 exports.Backbone = Backbone;
@@ -119,4 +120,12 @@ exports.getWidget = function(id) {
 
 exports.getComponent = function(name) {
 	return require('alloy/components/' + name);
+}
+
+exports.getModel = function(name) {
+	return require('alloy/models/' + STR.ucfirst(name)).Model;
+}
+
+exports.Collections = function(name) {
+	return require('alloy/models/' + STR.ucfirst(name)).Collection;
 }
