@@ -113,3 +113,10 @@ exports.A = function(t,type,parent) {
 	return t;
 }
 
+exports.getWidget = function(id) {
+	return require('alloy/widgets/' + id + '/components/widget');
+}
+
+exports.getComponent = function(name) {
+	return require('alloy/components/' + name);
+}
