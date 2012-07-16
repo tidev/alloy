@@ -6,7 +6,8 @@ var U = require('../../utils'),
 	logger = require('../../common/logger'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
-	_ = require('../../lib/alloy/underscore')._;
+	_ = require('../../lib/alloy/underscore')._,
+	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
 ////////// private variables //////////
@@ -248,10 +249,6 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	});
 
 	// validation
-	var indexXml = path.join(obj.dir.views,'index.xml');
-	if (!path.existsSync(indexXml)) {
-		U.die('Alloy project must have an index.xml at ' + indexXml);
-	}
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
 	exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
@@ -262,11 +259,8 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	return obj;
 };
 
-// TODO: instead of dumping this full JSON in every file, create a commonjs
-//       module for the config, then load it in each file. The loaded module
-//       can then be assigned to CFG$ (or whatever else we want to name it)
 exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
-	var cf = path.join(configDir,'config.json');
+	var cf = path.join(configDir,'config.'+CONST.FILE_EXT.CONFIG);
 	var o = {};
 
 	// parse config.json, if it exists
@@ -279,7 +273,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 	} else {
-		logger.warn('No "app/config/config.json" file found');
+		logger.warn('No "app/config/config."' + CONST.FILE_EXT.CONFIG + ' file found');
 	}
 
 	// write out the config runtime module

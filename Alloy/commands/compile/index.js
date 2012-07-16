@@ -8,9 +8,12 @@ var path = require('path'),
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
-	CU = require('./compilerUtils');
+	CU = require('./compilerUtils'),
+	CONST = require('../../common/constants');
 
 var alloyRoot = path.join(__dirname,'..','..'),
+	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
+	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	compileConfig = {};
 
 //////////////////////////////////////
@@ -18,17 +21,19 @@ var alloyRoot = path.join(__dirname,'..','..'),
 //////////////////////////////////////
 module.exports = function(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
-		alloyConfigPath = path.join(inputPath,'config','alloy.json'),
-		generatedCFG = '',
+		alloyConfigPath = path.join(inputPath,'config','alloy.' + CONST.FILE_EXT.CONFIG),
 		alloyConfig = {},
 		outputPath, tmpPath, compilerMakeFile;
 
 	// validate input and output paths
 	if (!path.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
+	} else if (!path.existsSync(path.join(inputPath,'views','index.' + CONST.FILE_EXT.VIEW))) {
+		U.die('inputPath has no views/index.' + CONST.FILE_EXT.VIEW + ' file.');
 	}	
+
 	if (!program.outputPath) {
-		tmpPath = path.join(inputPath,'views','index.xml');
+		tmpPath = path.join(inputPath,'views','index.'+CONST.FILE_EXT.VIEW);
 		if (path.existsSync(tmpPath)) {
 			outputPath = path.join(inputPath,'..');
 		}
@@ -86,8 +91,8 @@ module.exports = function(args, program) {
 	viewCollection.push({ dir: path.join(outputPath,'app') });
 	_.each(viewCollection, function(collection) {
 		_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
-			if (/\.xml$/.test(view)) {
-				var basename = path.basename(view, '.xml');
+			if (viewRegex.test(view)) {
+				var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
 				parseView(basename, collection.dir, basename, collection.manifest);
 			}
 		});
@@ -138,13 +143,13 @@ function parseView(viewName,dir,viewid,manifest) {
 	var vd = dir ? path.join(dir,'views') : compileConfig.dir.views; 
 	var sd = dir ? path.join(dir,'styles') : compileConfig.dir.styles; 
 
-	var viewFile = path.join(vd,viewName+".xml");
+	var viewFile = path.join(vd,viewName+"."+CONST.FILE_EXT.VIEW);
 	if (!path.existsSync(viewFile)) {
-		logger.warn('No XML view file found for view ' + viewFile);
+		logger.warn('No ' + CONST.FILE_EXT.VIEW + ' view file found for view ' + viewFile);
 		return;
 	}
 
-	var styleFile = path.join(sd,viewName+".json");
+	var styleFile = path.join(sd,viewName+"."+CONST.FILE_EXT.STYLE);
 	var styles = CU.loadStyle(styleFile);
 	state.styles = styles;
 
@@ -197,7 +202,7 @@ function parseView(viewName,dir,viewid,manifest) {
 
 function generateController(name, dir, id) {
 	var controllerDir = dir ? path.join(dir,'controllers') : compileConfig.dir.controllers, 
-		p = path.join(controllerDir,name+'.js'),
+		p = path.join(controllerDir,name+'.'+CONST.FILE_EXT.CONTROLLER),
 		code = '';
 	
 	if (path.existsSync(p)) {
@@ -211,7 +216,7 @@ function findModelMigrations(name) {
 	try {
 		var migrationsDir = compileConfig.dir.migrations;
 		var files = fs.readdirSync(migrationsDir);
-		var part = '_'+name+'.js';
+		var part = '_'+name+'.'+CONST.FILE_EXT.MIGRATION;
 
 		// look for our model
 		files = _.reject(files,function(f) { return f.indexOf(part)==-1});
@@ -257,12 +262,12 @@ function processModels() {
 
 	// process each model
 	_.each(modelFiles, function(modelFile) {
-		if (!/\.json$/.test(modelFile)) {
+		if (!modelRegex.test(modelFile)) {
 			logger.warn('Non-model file "' + modelFile + '" in models directory');
 			return;
 		}
 		var fullpath = path.join(compileConfig.dir.models,modelFile);
-		var basename = path.basename(fullpath, '.json');
+		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
 		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
 		var modelConfig = fs.readFileSync(fullpath);
 		var modelJs = 'function(Model){}';
