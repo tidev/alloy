@@ -18,20 +18,20 @@ var CRUDops = {
 };
 
 // listener for server to persistant store sync requests
-Alloy.Collections.Book.notify.on('sync', function(e) {
+Alloy.getCollection('Book').notify.on('sync', function(e) {
 	CRUDops[e.method](e.model);	
 });
 
 // Now let's create a Backbone collection that will hold our models,
 // the classes that represent our model have been generated automatically.
 // Use new on the generated classes to create the model or collection object.
-var books = new Alloy.Collections.Book;
+var books = new (Alloy.getCollection('Book'));
 
 // Fetch will load the models from persistent starage.
 books.fetch();
 
 // Now we can add items to the model.
-var book = new Alloy.Models.Book({ book:"Jungle Book", author:"Kipling" });
+var book = new (Alloy.getModel('Book'))({ book:"Jungle Book", author:"Kipling" });
 books.add(book);
 
 // Use Backbone shortcut to create a model and add to collection in single step. Does the same
