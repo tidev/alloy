@@ -10,7 +10,8 @@ var path = require('path'),
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
 	_ = require("./lib/alloy/underscore")._,
-	optimizer = require('./optimizer.js')
+	optimizer = require('./optimizer.js'),
+	CONST = require('./common/constants')
 ;
 
 exports.XML = {
@@ -204,7 +205,7 @@ exports.generateMigrationFileName = function(t)
 {
 	var d = new Date;
 	var s = String(d.getUTCFullYear()) + String(exports.pad(d.getUTCMonth())) + String(exports.pad(d.getUTCDate())) + String(exports.pad(d.getUTCHours())) + String(exports.pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
-	return s + '_' + t + '.js';
+	return s + '_' + t + '.' + CONST.FILE_EXT.MIGRATION;
 }
 
 exports.die = function(msg) 

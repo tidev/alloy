@@ -3,6 +3,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	U = require('../../utils'),
 	_ = require("../../lib/alloy/underscore")._,
+	CONST = require('../../common/constants'),
 	logger = require('../../common/logger');
 
 module.exports = function(name, args, program) {
@@ -33,13 +34,13 @@ module.exports = function(name, args, program) {
 		"min-alloy-version": "1.0",
 		"min-titanium-version":"2.0"
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.xml'), '<View id="defaultView"/>');
-	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.json'), U.stringifyJSON({
+	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<View id="defaultView"/>');
+	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
 		"#defaultView": {
 			"backgroundColor": "#a00"
 		}
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.js'), '// do something!');
+	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.' + CONST.FILE_EXT.CONTROLLER), '// do something!');
 
 	logger.info('Generated widget named '+name);
 }

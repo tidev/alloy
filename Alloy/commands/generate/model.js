@@ -2,12 +2,13 @@ var path = require('path'),
 	fs = require('fs'),
 	U = require('../../utils'),
 	_ = require("../../lib/alloy/underscore")._,
+	CONST = require('../../common/constants'),
 	logger = require('../../common/logger');
 
 module.exports = function(name, args, program) {
 	var templatePath = path.join(__dirname,'..','..','template');
-	var modelTemplatePath = path.join(templatePath, 'model.json');
-	var migrationTemplatePath = path.join(templatePath, 'migration.js');
+	var modelTemplatePath = path.join(templatePath, 'model.' + CONST.FILE_EXT.MODEL);
+	var migrationTemplatePath = path.join(templatePath, 'migration.' + CONST.FILE_EXT.MIGRATION);
 	var migrationsDir = path.join(program.outputPath,'migrations');
 	var modelsDir = path.join(program.outputPath,'models');
 	var template = {
@@ -34,7 +35,7 @@ module.exports = function(name, args, program) {
 	});
 
 	// Write new model JSON to model file
-	var modelFile = path.join(modelsDir,name+'.json');
+	var modelFile = path.join(modelsDir,name+'.' + CONST.FILE_EXT.MODEL);
 	if (path.existsSync(modelFile) && !program.force) {
 		U.die("Model file already exists: "+modelFile);
 	}

@@ -2,14 +2,15 @@ var path = require('path'),
 	fs = require('fs'),
 	U = require('../../utils'),
 	_ = require("../../lib/alloy/underscore")._,
+	CONST = require('../../common/constants'),
 	logger = require('../../common/logger');
 
 module.exports = function(name, args, program) {
-	var vn = path.join(program.outputPath,'views',name+'.xml');
-	var sn = path.join(program.outputPath,'styles',name+'.json');
+	var vn = path.join(program.outputPath,'views',name+'.'+CONST.FILE_EXT.VIEW);
+	var sn = path.join(program.outputPath,'styles',name+'.'+CONST.FILE_EXT.STYLE);
 	var templatePath = path.join(__dirname,'..','..','template');
-	var viewTemplate = path.join(templatePath, 'view.js');
-	var styleTemplate = path.join(templatePath, 'style.json');
+	var viewTemplate = path.join(templatePath, 'view.' + CONST.FILE_EXT.VIEW);
+	var styleTemplate = path.join(templatePath, 'style.' + CONST.FILE_EXT.STYLE);
 
 	// validate paths
 	if (path.existsSync(vn) && !program.force) {
