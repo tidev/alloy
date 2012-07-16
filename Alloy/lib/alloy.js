@@ -126,6 +126,6 @@ exports.getModel = function(name) {
 	return require('alloy/models/' + STR.ucfirst(name)).Model;
 }
 
-exports.Collections = function(name) {
+exports.getCollection = function(name) {
 	return require('alloy/models/' + STR.ucfirst(name)).Collection;
 }
