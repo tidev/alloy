@@ -27,7 +27,7 @@ function generate(args, program) {
 	}
 
 	// launch requested generator
-	(require('./' + target))(name, args.slice(2), program);
+	(require('./targets/' + target))(name, args.slice(2), program);
 }
 
 module.exports = generate;

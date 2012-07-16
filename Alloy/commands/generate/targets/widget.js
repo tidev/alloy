@@ -1,10 +1,10 @@
 var path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
-	U = require('../../utils'),
-	_ = require("../../lib/alloy/underscore")._,
-	CONST = require('../../common/constants'),
-	logger = require('../../common/logger');
+	U = require('../../../utils'),
+	_ = require("../../../lib/alloy/underscore")._,
+	CONST = require('../../../common/constants'),
+	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
 	// TODO: use name to give default values to widget

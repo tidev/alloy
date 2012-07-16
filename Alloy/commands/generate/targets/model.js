@@ -1,12 +1,12 @@
 var path = require('path'),
 	fs = require('fs'),
-	U = require('../../utils'),
-	_ = require("../../lib/alloy/underscore")._,
-	CONST = require('../../common/constants'),
-	logger = require('../../common/logger');
+	U = require('../../../utils'),
+	_ = require("../../../lib/alloy/underscore")._,
+	CONST = require('../../../common/constants'),
+	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
-	var templatePath = path.join(__dirname,'..','..','template');
+	var templatePath = path.join(__dirname,'..','..','..','template');
 	var modelTemplatePath = path.join(templatePath, 'model.' + CONST.FILE_EXT.MODEL);
 	var migrationTemplatePath = path.join(templatePath, 'migration.' + CONST.FILE_EXT.MIGRATION);
 	var migrationsDir = path.join(program.outputPath,'migrations');

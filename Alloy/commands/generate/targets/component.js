@@ -1,5 +1,5 @@
-var _ = require("../../lib/alloy/underscore")._,
-	logger = require('../../common/logger');
+var _ = require("../../../lib/alloy/underscore")._,
+	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
 	_.each(['view', 'controller'], function(target) {
