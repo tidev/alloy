@@ -114,6 +114,11 @@ exports.A = function(t,type,parent) {
 	return t;
 }
 
+exports.Models = {};
+exports.Collections = {};
+exports.Components = {};
+exports.Widgets = {};
+
 exports.getWidget = function(id) {
 	return require('alloy/widgets/' + id + '/components/widget');
 }
