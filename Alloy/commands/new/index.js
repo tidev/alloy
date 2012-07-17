@@ -91,7 +91,7 @@ function newproject(args, program) {
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.xml'),'utf8'),
-		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.json'),'utf8'),
+		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.tss'),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.js'),'utf8'),
 		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
 		defaultConfig = {},
@@ -124,7 +124,7 @@ function newproject(args, program) {
 	
 	// create default view, controller, style, and config. 
 	fs.writeFileSync(path.join(appPath,'views','index.xml'),INDEX_XML,'utf-8');
-	fs.writeFileSync(path.join(appPath,'styles','index.json'),INDEX_JSON,'utf-8');
+	fs.writeFileSync(path.join(appPath,'styles','index.tss'),INDEX_JSON,'utf-8');
 	fs.writeFileSync(path.join(appPath,'controllers','index.js'),INDEX_C,'utf-8');
 	fs.writeFileSync(path.join(appPath,'config','alloy.json'),U.stringifyJSON(defaultConfig),'utf-8');
 	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
