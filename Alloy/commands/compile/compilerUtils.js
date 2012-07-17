@@ -285,6 +285,14 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 	);
 };
 
+exports.loadController = function(file) {
+	if (path.existsSync(file)) {
+		return fs.readFileSync(file,'utf8');
+	} else {
+		return '';
+	}
+};
+
 exports.loadStyle = function(p) {
 	if (path.existsSync(p)) {
 		var f = fs.readFileSync(p, 'utf8');

@@ -180,7 +180,7 @@ function parseView(viewName,dir,viewid,manifest) {
 			i === 0 ? (viewid||viewName) : undefined,
 			i === 0);
 	}
-	template.controllerCode += generateController(viewName,dir,id);
+	template.controllerCode += CU.loadController(files.CONTROLLER);
 
 	// create commonjs module for this view/controller
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
@@ -200,15 +200,7 @@ function parseView(viewName,dir,viewid,manifest) {
 	}
 }
 
-function generateController(name, dir, id) {
-	var controllerDir = dir ? path.join(dir,'controllers') : compileConfig.dir.controllers, 
-		p = path.join(controllerDir,name+'.'+CONST.FILE_EXT.CONTROLLER),
-		code = '';
-	
-	if (path.existsSync(p)) {
-		return fs.readFileSync(p,'utf8');
 	} else {
-		return '';
 	}
 }
 
