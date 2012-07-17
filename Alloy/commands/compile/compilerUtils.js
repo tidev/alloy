@@ -89,7 +89,7 @@ exports.getParserArgs = function(node, state) {
 	var name = node.nodeName,
 		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || 'Ti.UI',
 		req = node.getAttribute('require'),
-		id = node.getAttribute('id') || state.defaultId || req || exports.generateUniqueId(),
+		id = node.getAttribute('id') || state.defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		platformObj = {};
 
