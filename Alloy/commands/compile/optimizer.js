@@ -218,6 +218,12 @@ function processIf()
 	return null;
 }
 
+function processDot() {
+}
+
+function processSub() {
+}
+
 function optimize(ast, defines, fn)
 {
 	try
@@ -229,6 +235,8 @@ function optimize(ast, defines, fn)
 			{
 				"if" : processIf,
 				"var" :processVar
+				//"dot": processDot,
+				//"sub": processSub
 			}
 		, function()
 		{
@@ -263,6 +271,7 @@ if (require.main === module)
 		if (newcode !== matchThis)
 		{
 			console.log('FAILED: '.red + tryThis + '\n\treturned: '.red + newcode + '\n\texpected: '.red + matchThis);
+			//console.log(require('util').inspect(ast, false, null));
 			return 0;
 		}
 		else
@@ -345,7 +354,8 @@ if (require.main === module)
 		["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", iosDefines],
 
 		// check Alloy namespace shorthand methods
-		["Alloy.Models.ModelName","Alloy.getModel('ModelName')",defaultDefines]
+		//["Alloy.Models.ModelName","Alloy.getModel('ModelName')",defaultDefines],
+		//["Alloy['Models'].ModelName","Alloy.getModel('ModelName')",defaultDefines]
 	];
 	
 	var succeeded = 0;
