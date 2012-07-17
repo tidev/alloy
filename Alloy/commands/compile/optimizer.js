@@ -5,6 +5,7 @@
 var jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
 	util = require('util'),
+	colors = require('colors'),
 	logger = require('../../common/logger.js'),
 	platformDefines,
 	platformName
@@ -261,12 +262,12 @@ if (require.main === module)
 		}
 		if (newcode !== matchThis)
 		{
-			console.log('[ERROR] test failed. this code: "' + tryThis+'", returned: "'+newcode+'", expected: "'+matchThis+'"');
+			console.log('FAILED: '.red + tryThis + '\n\treturned: '.red + newcode + '\n\texpected: '.red + matchThis);
 			return 0;
 		}
 		else
 		{
-			console.log('[INFO] test passed. "'+tryThis+'"');
+			console.log('PASSED: '.green + tryThis);
 			return 1;
 		}
 	}
@@ -282,6 +283,7 @@ if (require.main === module)
 		OS_ANDROID: true,
 		OS_MOBILEWEB: false
 	};
+	var defaultDefines = iosDefines;
 	
 	var tests = 
 	[
@@ -341,6 +343,9 @@ if (require.main === module)
 		["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"false\"", androidDefines],
 		["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", androidDefines],
 		["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", iosDefines],
+
+		// check Alloy namespace shorthand methods
+		["Alloy.Models.ModelName","Alloy.getModel('ModelName')",defaultDefines]
 	];
 	
 	var succeeded = 0;
