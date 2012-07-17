@@ -3,6 +3,7 @@ var jsp = require("../../uglify-js/uglify-js").parser,
 	fs = require('fs'),
 	path = require('path'),
 	U = require('../../utils.js'),
+	CU = require('./compilerUtils'),
 	_ = require("../../lib/alloy/underscore")._
 ;
 
@@ -119,7 +120,7 @@ function makeRequiresRelative(fn,resourcesDir,config)
 		return w.walk(ast);
 	});
 	
-	return U.formatAST(ast,config,fn);
+	return CU.formatAST(ast,config,fn);
 }			
 
 exports.findAllRequires = findAllRequires;

@@ -1,6 +1,7 @@
 var path = require('path'),
 	fs = require('fs'),
 	U = require('../../../utils'),
+	GU = require('../generateUtils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	logger = require('../../../common/logger');
 
@@ -9,7 +10,7 @@ module.exports = function(name, args, program) {
 	U.ensureDir(migrationsDir);
 	
 	var templatePath = path.join(__dirname,'..','..','..','template','migration.' + CONST.FILE_EXT.MIGRATION);
-	var mf = path.join(migrationsDir, U.generateMigrationFileName(name));
+	var mf = path.join(migrationsDir, GU.generateMigrationFileName(name));
 	var md = _.template(fs.readFileSync(templatePath,'utf8'),{});
 	fs.writeFileSync(mf,md);
 

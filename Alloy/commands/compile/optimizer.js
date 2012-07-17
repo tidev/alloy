@@ -2,10 +2,10 @@
  * Code in this file will attempt to optimize generated code so it's more compact
  * and executes faster, better, etc.
  */
-var jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify,
+var jsp = require("../../uglify-js/uglify-js").parser,
+	pro = require("../../uglify-js/uglify-js").uglify,
 	util = require('util'),
-	logger = require('./common/logger.js'),
+	logger = require('../../common/logger.js'),
 	platformDefines,
 	platformName
 ;

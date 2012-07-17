@@ -107,7 +107,7 @@ module.exports = function(args, program) {
 	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{models:models});
 	
 	try {
-		code = U.processSourceCode(code, alloyConfig, 'app.js');
+		code = CU.processSourceCode(code, alloyConfig, 'app.js');
 	} catch(e) {
 		logger.error(code);
 		U.die(e);
@@ -185,7 +185,7 @@ function parseView(viewName,dir,viewid,manifest) {
 	// create commonjs module for this view/controller
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 	try {
-		code = U.processSourceCode(code, compileConfig.alloyConfig, viewName+'.js');
+		code = CU.processSourceCode(code, compileConfig.alloyConfig, viewName+'.js');
 	} catch (e) {
 		logger.error(code);
 		U.die(e);

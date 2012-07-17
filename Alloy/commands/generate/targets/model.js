@@ -1,6 +1,7 @@
 var path = require('path'),
 	fs = require('fs'),
 	U = require('../../../utils'),
+	GU = require('../generateUtils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	CONST = require('../../../common/constants'),
 	logger = require('../../../common/logger');
@@ -43,7 +44,7 @@ module.exports = function(name, args, program) {
 	fs.writeFileSync(modelFile, code);
 
 	// generate migration file
-	var migrationFile = path.join(migrationsDir, U.generateMigrationFileName(name));
+	var migrationFile = path.join(migrationsDir, GU.generateMigrationFileName(name));
 	var migrationCode = code.split("\n");
 
 	// Create the "up" and "down" template values

@@ -7,6 +7,7 @@ var U = require('../../utils'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
 	_ = require('../../lib/alloy/underscore')._,
+	optimizer = require('./optimizer'),
 	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
@@ -429,6 +430,88 @@ exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
 	}
 	return str.join(',\n');
 }
+
+exports.processSourceCode = function(code, config, fn) 
+{
+	function show_copyright(comments) {
+	        var ret = "";
+	        for (var i = 0; i < comments.length; ++i) {
+	                var c = comments[i];
+	                if (c.type == "comment1") {
+	                        ret += "//" + c.value + "\n";
+	                } else {
+	                        ret += "/*" + c.value + "*/";
+	                }
+	        }
+	        return ret;
+	};
+	var c = jsp.tokenizer(code)();
+	// extract header copyright so we can preserve it (if at the top of the file)
+    var copyrights = show_copyright(c.comments_before);
+	var ast = jsp.parse(code); 
+	var newCode = exports.formatAST(ast,config,fn);
+	return (copyrights ? copyrights + '\n' : '' ) + newCode;
+};
+
+exports.formatAST = function(ast,config,fn)
+{
+	// use the general defaults from the uglify command line
+	var defines = {},
+		DEFINES, 
+		config;
+
+	config = config || {};
+	config.deploytype = config.deploytype || 'development';
+	config.beautify = config.beautify || true;
+
+	DEFINES = {
+		OS_IOS : config.platform == 'ios',
+		OS_ANDROID: config.platform == 'android',
+		OS_MOBILEWEB: config.platform == 'mobileweb',
+		ENV_DEV: config.deploytype == 'development',
+		ENV_DEVELOPMENT: config.deploytype == 'development',
+		ENV_TEST: config.deploytype == 'test',
+		ENV_PROD: config.deploytype == 'production',
+		ENV_PRODUCTION: config.deploytype == 'production'
+	};
+
+	for (var k in DEFINES) {
+		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
+	}
+
+	var isDev = config.deploytype === 'development';
+	var options = 
+	{
+	        ast: false,
+	        consolidate: !isDev,
+	        mangle: !isDev,
+	        mangle_toplevel: false,
+	        no_mangle_functions: false,
+	        squeeze: !isDev,
+	        make_seqs: !isDev,
+	        dead_code: true,
+	        unsafe: false,
+	        defines: defines,
+	        lift_vars: false,
+	        codegen_options: {
+	                ascii_only: false,
+	                beautify: config.beautify,
+	                indent_level: 4,
+	                indent_start: 0,
+	                quote_keys: false,
+	                space_colon: false,
+	                inline_script: false
+	        },
+	        make: false,
+	        output: false,
+			except: ['Ti','Titanium','Alloy']
+	};
+
+	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
+	ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	return pro.gen_code(ast,options.codegen_options); 
+};
 
 ///////////////////////////////////////
 ////////// private functions //////////
