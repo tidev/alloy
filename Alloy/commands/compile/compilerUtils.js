@@ -17,14 +17,12 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
-	stylePrefix = '\t\t',
 	compilerConfig;
 
 ///////////////////////////////
 ////////// constants //////////
 ///////////////////////////////
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
-	STYLE_CONST_PREFIX = '__ALLOY_CONST__--',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	PLATFORMS = ['ios', 'android', 'mobileweb'],
 	NS_TI_MAP = 'Ti.Map',
@@ -306,7 +304,7 @@ exports.loadStyle = function(p) {
         function do_call() {
         	if (this[1][1] === 'expr') {
         		var code = pro.gen_code(this[2][0]);
-        		var new_ast = ['string', STYLE_CONST_PREFIX + code];
+        		var new_ast = ['string', STYLE_EXPR_PREFIX + code];
         		return new_ast;
         	} 
         };
@@ -334,7 +332,7 @@ exports.loadStyle = function(p) {
         	if (name === null) {
         		return null;
         	} else {
-        		return ['string', STYLE_CONST_PREFIX + name];
+        		return ['string', STYLE_EXPR_PREFIX + name];
         	}
         }
 
@@ -395,7 +393,7 @@ exports.addStyleById = function(styles, id, key, value) {
 
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	var mergedStyle = mergeAllStyles(styles,classes,id,apiName,extraStyle),
-		regex = new RegExp('^' + STYLE_CONST_PREFIX + '(.+)'),
+		regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
 		str = [];
 
 	function processStyle(style) {
@@ -426,7 +424,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			} else {
 				actualValue = JSON.stringify(value); // catch all, just stringify the value
 			}
-			str.push(stylePrefix + sn + ':' + actualValue);
+			str.push(sn + ':' + actualValue);
 		}
 	}
 	processStyle(mergedStyle);
