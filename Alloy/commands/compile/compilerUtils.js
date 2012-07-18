@@ -393,50 +393,73 @@ exports.addStyleById = function(styles, id, key, value) {
 	return styles;
 } 
 
-exports.generateStyleParams = function(styles,classes,id,className,extraStyle) {
-	var s = {};
+exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
+	var mergedStyle = {};
 	extraStyle = extraStyle || {};
 
 	// Start with any base View styles
-	mergeStyles(styles['View'],s);
+	mergeStyles(styles['View'],mergedStyle);
 
 	// Merge in styles based on UI component type
-	mergeStyles(styles[U.properCase(className)],s);
+	mergeStyles(styles[U.properCase(apiName)],mergedStyle);
 
 	// Merge in styles based on associated classes
 	for (var c=0;c<classes.length;c++) {
 		var clsn = classes[c];
-		mergeStyles(styles['.'+clsn],s);
+		mergeStyles(styles['.'+clsn],mergedStyle);
 	}
 
 	// Merge in styles based on the component's ID
-	mergeStyles(styles['#'+id],s);
-	if (id) s['id'] = id;
-	var str = [];
+	mergeStyles(styles['#'+id],mergedStyle);
+	if (id) mergedStyle['id'] = id;
 
 	// Merge in any extra specified styles
-	mergeStyles(extraStyle,s);
+	mergeStyles(extraStyle,mergedStyle);
 
+
+	var str = [];
 	var regex = new RegExp('^' + STYLE_CONST_PREFIX + '(.+)');
-	for (var sn in s) {
-		var value = s[sn],
-			actualValue;
+	function processStyle(style) {
+		for (var sn in style) {
+			var value = style[sn],
+				actualValue;
 
-		if (_.isString(value)) {
-			var matches = value.match(regex);
-			if (matches !== null) {
-				actualValue = matches[1]; // matched a constant
+			if (_.isString(value)) {
+				var matches = value.match(regex);
+				if (matches !== null) {
+					actualValue = matches[1]; // matched a constant or expr()
+				} else {
+					actualValue = '"' + value + '"'; // just a string
+				}
+			} else if (_.isObject(value)) {
+			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
+			 		actualValue = value.value; // dynamic variable value
+			 	} else {
+			 		str.push({
+			 			value: sn + ': {',
+			 			useComma: false
+			 		});
+			 		processStyle(value);
+			 		str.push('}');
+			 		continue;
+			 	}
 			} else {
-				actualValue = '"' + value + '"'; // just a string
+				actualValue = JSON.stringify(value); // catch all, just stringify the value
 			}
-		} else if (_.isObject(value) && value[STYLE_ALLOY_TYPE] === 'var') {
-			actualValue = value.value; // dynamic variable value
-		} else {
-			actualValue = JSON.stringify(value); // catch all, just stringify the value
+			str.push(stylePrefix + sn + ':' + actualValue);
 		}
-		str.push(stylePrefix + sn + ':' + actualValue);
 	}
-	return str.join(',\n');
+	processStyle(mergedStyle);
+
+	var finalStyle = '';
+	_.each(str, function(line) {
+		if (_.isObject(line)) {
+			finalStyle += line.value + '\n';
+		} else {
+			finalStyle += line + ',\n';
+		}
+	});
+	return finalStyle;
 }
 
 exports.processSourceCode = function(code, config, fn) 
