@@ -394,31 +394,10 @@ exports.addStyleById = function(styles, id, key, value) {
 } 
 
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
-	var mergedStyle = {};
-	extraStyle = extraStyle || {};
+	var mergedStyle = mergeAllStyles(styles,classes,id,apiName,extraStyle),
+		regex = new RegExp('^' + STYLE_CONST_PREFIX + '(.+)'),
+		str = [];
 
-	// Start with any base View styles
-	mergeStyles(styles['View'],mergedStyle);
-
-	// Merge in styles based on UI component type
-	mergeStyles(styles[U.properCase(apiName)],mergedStyle);
-
-	// Merge in styles based on associated classes
-	for (var c=0;c<classes.length;c++) {
-		var clsn = classes[c];
-		mergeStyles(styles['.'+clsn],mergedStyle);
-	}
-
-	// Merge in styles based on the component's ID
-	mergeStyles(styles['#'+id],mergedStyle);
-	if (id) mergedStyle['id'] = id;
-
-	// Merge in any extra specified styles
-	mergeStyles(extraStyle,mergedStyle);
-
-
-	var str = [];
-	var regex = new RegExp('^' + STYLE_CONST_PREFIX + '(.+)');
 	function processStyle(style) {
 		for (var sn in style) {
 			var value = style[sn],
@@ -435,6 +414,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
 			 		actualValue = value.value; // dynamic variable value
 			 	} else {
+			 		// recursively process objects
 			 		str.push({
 			 			value: sn + ': {',
 			 			useComma: false
@@ -547,7 +527,7 @@ exports.formatAST = function(ast,config,fn)
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-var mergeStyles = function(from, to) {
+function mergeStyles(from, to) {
 	if (from) {
 		for (var k in from) {
 			var v = from[k];
@@ -559,4 +539,30 @@ var mergeStyles = function(from, to) {
 			}
 		}
 	}
+}
+
+function mergeAllStyles(styles,classes,id,apiName,extraStyle) {
+	var mergedStyle = {};
+	extraStyle = extraStyle || {};
+
+	// Start with any base View styles
+	mergeStyles(styles['View'],mergedStyle);
+
+	// Merge in styles based on UI component type
+	mergeStyles(styles[U.properCase(apiName)],mergedStyle);
+
+	// Merge in styles based on associated classes
+	for (var c=0;c<classes.length;c++) {
+		var clsn = classes[c];
+		mergeStyles(styles['.'+clsn],mergedStyle);
+	}
+
+	// Merge in styles based on the component's ID
+	mergeStyles(styles['#'+id],mergedStyle);
+	if (id) mergedStyle['id'] = id;
+
+	// Merge in any extra specified styles
+	mergeStyles(extraStyle,mergedStyle);
+
+	return mergedStyle;
 }
