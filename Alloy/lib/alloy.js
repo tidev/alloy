@@ -129,3 +129,38 @@ exports.getModel = function(name) {
 exports.getCollection = function(name) {
 	return require('alloy/models/' + STR.ucfirst(name)).Collection;
 }
+
+function isTabletFallback() {
+	return !(Math.min(
+		Ti.Platform.displayCaps.platformHeight,
+		Ti.Platform.displayCaps.platformWidth
+	) < 700);
+}
+
+exports.isTablet = (function() {
+	if (OS_IOS) {
+		return Ti.Platform.osname === 'ipad';
+	}
+	if (OS_ANDROID) {
+		try {
+			var psc = require('ti.physicalSizeCategory');
+			return psc.physicalSizeCategory === 'large' ||
+				   psc.physicalSizeCategory === 'xlarge';
+		} catch(e) {
+			Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
+			return isTabletFallback();
+		}
+	}
+	// TODO: this needs some help 
+	if (OS_MOBILEWEB) {
+		return !(Math.min(
+			Ti.Platform.displayCaps.platformHeight,
+			Ti.Platform.displayCaps.platformWidth
+		) < 700);
+	} 
+
+	// Last resort. Don't worry, uglifyjs cleans up this dead code if necessary.
+	return isTabletFallback();
+})();
+
+exports.isHandheld = !exports.isTablet;
