@@ -78,6 +78,18 @@ module.exports = function(args, program) {
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
+	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	// Make sure that ti.physicalSizeCategory is installed
+	if (!path.existsSync(path.join(outputPath,'ti.physicalSizeCategory-android-1.0.zip')) && 
+		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
+		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
+	}
+	U.installModule(outputPath, {
+		id: 'ti.physicalSizeCategory',
+		platform: 'android',
+		version: '1.0'
+	});
+
 	// create components directory for view/controller components
 	U.copyAlloyDir(alloyRoot, 'lib', compileConfig.dir.resources); 
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);

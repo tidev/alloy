@@ -87,71 +87,6 @@ function installPlugin(dir)
 	}
 }
 
-function installModule(dir, opts)
-{
-	var tiapp = path.join(dir,'tiapp.xml');
-	if (path.existsSync(tiapp))
-	{
-		var xml = fs.readFileSync(tiapp);
-		var doc = new DOMParser().parseFromString(String(xml));
-		var modules = doc.documentElement.getElementsByTagName("modules");
-		var found = false;
-
-		if (modules.length > 0)
-		{
-			var items = modules.item(0).getElementsByTagName('module');
-			if (items.length > 0)
-			{
-				for (var c=0;c<items.length;c++)
-				{
-					var mod = items.item(c);
-					var name = U.XML.getNodeText(mod);
-					if (name == opts.id)
-					{
-						found = true;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (!found)
-		{
-			var node = doc.createElement('module');
-			if (opts.platform) {
-				node.setAttribute('platform',opts.platform);
-			}
-			node.setAttribute('version',opts.version || '1.0');
-			var text = doc.createTextNode(opts.id);
-			node.appendChild(text);
-			
-			var pna = null;
-			
-			// install the plugin into tiapp.xml
-			if (modules.length == 0)
-			{
-				var pn = doc.createElement('modules');
-				doc.documentElement.appendChild(pn);
-				doc.documentElement.appendChild(doc.createTextNode("\n"));
-				pna = pn;
-			}
-			else
-			{
-				pna = modules.item(0);
-			}
-			
-			pna.appendChild(node);
-			pna.appendChild(doc.createTextNode("\n"));
-			
-			var serializer = new XMLSerializer();
-			var newxml = serializer.serializeToString(doc);
-			
-			fs.writeFileSync(tiapp,newxml,'utf-8');
-			logger.info("Installed '" + opts.id + "' module to "+tiapp);
-		}
-	}
-}
-
 function newproject(args, program) {
 	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
 		templateDir = path.join(alloyRoot,'template'),
@@ -197,7 +132,9 @@ function newproject(args, program) {
 
 	// copy in any modules
 	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
-	installModule(projectPath, {
+
+	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	U.installModule(projectPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
