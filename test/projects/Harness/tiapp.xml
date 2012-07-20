@@ -48,4 +48,7 @@
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
     </plugins>
+    <modules>
+    		<module version="1.0" platform="android">ti.physicalSizeCategory</module>
+    </modules>
 </ti:app>
