@@ -1,0 +1,42 @@
+{
+	"#win": {
+		"backgroundColor": "#fff"
+	},
+	"#win[platform=ios]": {
+		"backgroundColor": "#f00"
+	},
+	"#win[platform=android]": {
+		"backgroundColor": "#0f0"
+	},
+	"#win[platform=mobileweb]": {
+		"backgroundColor": "#00f"
+	},
+	"Label": {
+		"color": "#000",
+		"font": {
+			"fontSize": 48,
+			"fontWeight": "bold"
+		}
+	},
+	"Label[size=tablet]": {
+		"font": {
+			"fontSize": 96,
+			"fontWeight": "bold"
+		}
+	},
+	"#os": {
+		"title": "Generic"
+	},
+	"#os[platform=ios,size=tablet]": {
+		"title": "iPad"
+	},
+	"#os[platform=ios]": {
+		"title": "iPhone"
+	},
+	"#os[platform=android]": {
+		"title": "Android"
+	},
+	"#os[platform=mobileweb]": {
+		"title": "Mobileweb"
+	}
+}
