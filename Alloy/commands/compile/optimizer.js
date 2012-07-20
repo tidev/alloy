@@ -11,6 +11,7 @@ var jsp = require("../../uglify-js/uglify-js").parser,
 	platformName
 ;
 
+var JSON_NULL = JSON.parse('null');
 var EQUALITY_SIGNS = {
 	'==': 1,
 	'===': 1,
@@ -222,6 +223,17 @@ function processDot() {
 }
 
 function processSub() {
+}
+
+exports.optimizeStyle = function(sortedStyles) {
+	for (var i = 0, l = sortedStyles.length; i < l; i++) {
+		for (var key in sortedStyles[i].style) {
+			var v = sortedStyles[i].style[key];
+			if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null') {
+				delete sortedStyles[i].style[key];
+			} 
+		}
+	}
 }
 
 function optimize(ast, defines, fn)
