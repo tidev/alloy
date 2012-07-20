@@ -8,12 +8,15 @@
 		"randomProp":"OK"
 	},
 	
-	"#index": {
+	"#index[platform=ios]": {
 		"backgroundColor":"blue"
 	},
 	
+	"#index[platform=ios size=tablet]": {
+		"backgroundColor":"red"
+	},
+
 	"#b": {
-		"title" : "Hello, World",
 		"randomProp" : null
 	}
 }
