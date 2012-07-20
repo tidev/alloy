@@ -1,6 +1,6 @@
 {
 	"#win": {
-		"backgroundColor": "#fff"
+		"backgroundColor": "#000"
 	},
 	"#win[platform=ios]": {
 		"backgroundColor": "#f00"
@@ -12,11 +12,13 @@
 		"backgroundColor": "#00f"
 	},
 	"Label": {
-		"color": "#000",
+		"color": "#fff",
 		"font": {
 			"fontSize": 48,
 			"fontWeight": "bold"
-		}
+		},
+		"height": Ti.UI.SIZE,
+		"width": Ti.UI.SIZE
 	},
 	"Label[size=tablet]": {
 		"font": {
@@ -24,19 +26,24 @@
 			"fontWeight": "bold"
 		}
 	},
-	"#os": {
-		"title": "Generic"
+	"#osLabel": {
+		"text": "Generic"
 	},
-	"#os[platform=ios,size=tablet]": {
-		"title": "iPad"
+	"#osLabel[platform=ios size=tablet]": {
+		"text": "iPad"
 	},
-	"#os[platform=ios]": {
-		"title": "iPhone"
+	"#osLabel[platform=ios]": {
+		"text": "iPhone"
 	},
-	"#os[platform=android]": {
-		"title": "Android"
+	"#osLabel[platform=android]": {
+		"text": "Android",
+		"color": "#000"
 	},
-	"#os[platform=mobileweb]": {
-		"title": "Mobileweb"
+	"#osLabel[platform=android size=tablet]": {
+		"text": "Android\nTablet",
+		"color": "#000"
+	},
+	"#osLabel[platform=mobileweb]": {
+		"text": "Mobileweb"
 	}
 }
