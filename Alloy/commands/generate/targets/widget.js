@@ -33,6 +33,8 @@ module.exports = function(name, args, program) {
 		"license":"Public Domain",
 		"min-alloy-version": "1.0",
 		"min-titanium-version":"2.0"
+		"min-titanium-version":"2.0",
+		"tags":""
 	}));
 	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<View id="defaultView"/>');
 	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
