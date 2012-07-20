@@ -291,79 +291,26 @@ exports.loadController = function(file) {
 	}
 };
 
-exports.loadStyle = function(p) {
-	if (path.existsSync(p)) {
-		var f = fs.readFileSync(p, 'utf8');
+exports.loadStyle = function(tssFile) {
+	var code, json, styles;
 
-		// skip empty files
-		if (/^\s*$/.test(f)) {
-			return {};
-		}
-
-		// Handle "call" ASTs, where we look for expr() syntax
-        function do_call() {
-        	if (this[1][1] === 'expr') {
-        		var code = pro.gen_code(this[2][0]);
-        		var new_ast = ['string', STYLE_EXPR_PREFIX + code];
-        		return new_ast;
-        	} 
-        };
-
-        // Recursively assemble the full name of a dot-notation variable
-        function processDot(dot,name) {
-        	switch(dot[0]) {
-        		case 'dot':
-        			return processDot(dot[1], '.' + (dot[2] || '') + name);
-        			break;
-        		case 'name':
-        			var pre = dot[1];
-        			if (pre === 'Ti' || pre === 'Titanium' || pre === 'Alloy') {
-        				return pre + name;
-        			} else {
-        				return null;
-        			}
-        			break;
-        	}
-        }
-
-        // Handle all AST "dot"s, looking for Titanium constants
-        function do_dot() {
-        	var name = processDot(this,'');
-        	if (name === null) {
-        		return null;
-        	} else {
-        		return ['string', STYLE_EXPR_PREFIX + name];
-        	}
-        }
-
-        // Generate AST and add the handlers for "call" and "dot" to the AST walker
-        var ast = jsp.parse('module.exports = ' + f);
-        //console.log(require('util').inspect(ast, false, null));
-		var walker = pro.ast_walker();
-		var new_ast = walker.with_walkers({
-			"call": do_call,
-			"dot": do_dot
-		}, function(){
-            return walker.walk(ast);
-        });
-
-        // generate code based on the new AST. Make sure to keep keys quoted so the
-        // JSON parses without exception. The wild [1][0][1][3] array is how we grab 
-        // just the style object from the AST, leaving behind the appended "module.exports = "
-        var code = pro.gen_code(new_ast[1][0][1][3], { 
-        	beautify: true, 
-        	quote_keys: true,
-        	keep_zeroes: true,
-        	double_quotes: true
-        });
-
-		try {
-			return JSON.parse(code);
-		} catch(E) {
-			console.error(code);
-			U.die("Error parsing style at "+p.yellow+".  Error was: "+String(E).red);
+	if (path.existsSync(tssFile)) {
+		var contents = fs.readFileSync(tssFile, 'utf8');
+		if (!/^\s*$/.test(contents)) {
+			try {
+				code = processTssFile(contents);
+				json = JSON.parse(code);
+				styles = sortStyles(json);
+				optimizer.optimizeStyle(styles);
+				//console.log(require('util').inspect(styles,false,null));
+				return styles;
+			} catch(E) {
+				console.error(code);
+				U.die("Error parsing style at "+tssFile.yellow+".  Error was: "+String(E).red);
+			}
 		}
 	}
+
 	return {};
 }
 
@@ -382,19 +329,74 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 	return style;
 };
 
-exports.addStyleById = function(styles, id, key, value) {
-	var idStr = '#' + id;
-	if (!styles[idStr]) {
-		styles[idStr] = {};
-	} 
-	styles[idStr][key] = value; 
-	return styles;
-} 
-
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
-	var mergedStyle = mergeAllStyles(styles,classes,id,apiName,extraStyle),
-		regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
-		str = [];
+	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
+	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
+		styleCollection = [],
+		lastObj = {};
+
+	_.each(styles, function(style) {
+		if ((style.isId && style.key === id) ||
+			(style.isClass && _.contains(classes, style.key)) ||
+			(style.isApi && style.key === apiName)) {
+			
+			// manage potential runtime conditions for the style
+			var conditionals = {
+				platform: [],
+				size: ''
+			};
+
+			if (style.queries) {
+				// handle platform device query
+				// - Make compile time comparison if possible
+				// - Add runtime conditional if platform is not known
+				var q = style.queries;
+				if (q.platform) {
+					if (platform) {
+						if (!_.contains(q.platform,platform)) {
+							return;
+						}
+					} else {
+						_.each(q.platform, function(p) {
+							conditionals.platform.push(CONDITION_MAP[p]['runtime']);
+						});
+					}
+				}
+
+				// handle size device query
+				if (q.size === 'tablet') {
+					conditionals.size = 'Alloy.isTablet';
+				} else if (q.size === 'handheld') {
+					conditionals.size = 'Alloy.isHandheld';
+				}
+
+				// assemble runtime query
+				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
+				var joinString = pcond && conditionals.size ? ' && ' : '';
+				var conditional = pcond + joinString + conditionals.size;
+
+				// push styles if we need to insert a conditional
+				if (conditional) {
+					if (lastObj) {
+						styleCollection.push({style:lastObj});
+						styleCollection.push({style:style.style, condition:conditional});
+						lastObj = {};
+					}
+				} else {
+					_.extend(lastObj,style.style);
+				}
+			} else {
+				_.extend(lastObj, style.style);
+			}
+		}
+	});
+
+	// add in any final styles
+	_.extend(lastObj, extraStyle || {});
+	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
+
+	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
+	// console.log(require('util').inspect(styleCollection, false, null));
 
 	function processStyle(style) {
 		for (var sn in style) {
@@ -404,40 +406,61 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			if (_.isString(value)) {
 				var matches = value.match(regex);
 				if (matches !== null) {
-					actualValue = matches[1]; // matched a constant or expr()
+					code += sn + ':' + matches[1] + ','; // matched a constant or expr()
 				} else {
-					actualValue = '"' + value + '"'; // just a string
+					code += sn + ':"' + value + '",'; // just a string
 				}
 			} else if (_.isObject(value)) {
 			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
-			 		actualValue = value.value; // dynamic variable value
+			 		code += sn + ':' + value.value + ','; // dynamic variable value
 			 	} else {
 			 		// recursively process objects
-			 		str.push({
-			 			value: sn + ': {',
-			 			useComma: false
-			 		});
+			 		code += sn + ': {';
 			 		processStyle(value);
-			 		str.push('}');
+			 		code += '},';
 			 		continue;
 			 	}
 			} else {
-				actualValue = JSON.stringify(value); // catch all, just stringify the value
+				code += sn + ':' + JSON.stringify(value) + ','; // catch all, just stringify the value
 			}
-			str.push(sn + ':' + actualValue);
 		}
 	}
-	processStyle(mergedStyle);
 
-	var finalStyle = '';
-	_.each(str, function(line) {
-		if (_.isObject(line)) {
-			finalStyle += line.value + '\n';
+	// Let's assemble the fastest factory method object possible based on
+	// what we know about the style we just sorted and assembled
+	var code = '';
+	if (styleCollection.length === 0) {
+		// do nothing
+	} else if (styleCollection.length === 1) {
+		if (styleCollection[0].condition) {
+			// check the condition and return the object
+			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style) + '} : {}';
 		} else {
-			finalStyle += line + ',\n';
+			// just return the object
+			console.log(styleCollection[0].style);
+			code += '{';
+			processStyle(styleCollection[0].style);
+			code += '}';
 		}
-	});
-	return finalStyle;
+	} else if (styleCollection.length > 1) {
+		// construct self-executing function to merge styles based on runtime conditionals
+		code += '(function(){\n';
+		code += 'var o = {};\n';
+		for (var i = 0, l = styleCollection.length; i < l; i++) {
+			if (styleCollection[i].condition) {
+				code += 'if (' + styleCollection[i].condition + ') ';
+			} 
+			code += '_.extend(o, {';
+			processStyle(styleCollection[i].style);
+			code += '});\n';
+		}
+		code += 'return o;\n'
+		code += '})()'
+	}
+	
+	//console.log(code);
+
+	return code;
 }
 
 exports.processSourceCode = function(code, config, fn) 
@@ -525,42 +548,150 @@ exports.formatAST = function(ast,config,fn)
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function mergeStyles(from, to) {
-	if (from) {
-		for (var k in from) {
-			var v = from[k];
-			// for optimization, remove null or undefined values
-			if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null') {
-				delete to[k];
-			} else {
-				to[k] = from[k];
-			}
+function processTssFile(f) {
+	// Handle "call" ASTs, where we look for expr() syntax
+    function do_call() {
+    	if (this[1][1] === 'expr') {
+    		var code = pro.gen_code(this[2][0]);
+    		var new_ast = ['string', STYLE_EXPR_PREFIX + code];
+    		return new_ast;
+    	} 
+    };
+
+    // Recursively assemble the full name of a dot-notation variable
+    function processDot(dot,name) {
+    	switch(dot[0]) {
+    		case 'dot':
+    			return processDot(dot[1], '.' + (dot[2] || '') + name);
+    			break;
+    		case 'name':
+    			var pre = dot[1];
+    			if (pre === 'Ti' || pre === 'Titanium' || pre === 'Alloy') {
+    				return pre + name;
+    			} else {
+    				return null;
+    			}
+    			break;
+    	}
+    }
+
+    // Handle all AST "dot"s, looking for Titanium constants
+    function do_dot() {
+    	var name = processDot(this,'');
+    	if (name === null) {
+    		return null;
+    	} else {
+    		return ['string', STYLE_EXPR_PREFIX + name];
+    	}
+    }
+
+    // Generate AST and add the handlers for "call" and "dot" to the AST walker
+    var ast = jsp.parse('module.exports = ' + f);
+	var walker = pro.ast_walker();
+	var new_ast = walker.with_walkers({
+		"call": do_call,
+		"dot": do_dot
+	}, function(){
+        return walker.walk(ast);
+    });
+
+    // generate code based on the new AST. Make sure to keep keys quoted so the
+    // JSON parses without exception. The wild [1][0][1][3] array is how we grab 
+    // just the style object from the AST, leaving behind the appended "module.exports = "
+    return pro.gen_code(new_ast[1][0][1][3], { 
+    	beautify: true, 
+    	quote_keys: true,
+    	keep_zeroes: true,
+    	double_quotes: true
+    }) || '';
+}
+
+function sortStyles(styles) {
+	var mergedStyle = {},
+		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
+		extraStyle = extraStyle || {};
+
+	var raw = [];
+
+	// TODO: we need a global style file. app.tss? alloy.tss?
+
+	// Calculate priority:
+	var VALUES = {
+		ID:    100000,
+		CLASS:  10000,
+		API:     1000,
+		GLOBAL:   100,
+		PLATFORM:  10,
+		SUM:        1,
+		ORDER:      0.001
+	}
+
+	var ctr = 1;
+	for (var key in styles) {
+		var obj = {};
+		var priority = ctr++ * VALUES.ORDER;
+		var match = key.match(regex);
+		if (match === null) {
+			U.die('Invalid style specifier "' + key + '"');
 		}
+		var newKey = match[2];
+		switch(match[1]) {
+			case '#':
+				obj.isId = true;
+				priority += VALUES.ID;
+				break;
+			case '.':
+				obj.isClass = true;
+				priority += VALUES.CLASS;
+				break;
+			default:
+				if (match[2]) {
+					obj.isApi = true;
+					priority += VALUES.API;
+				}
+				break;
+		}
+
+		if (match[3]) {
+			obj.queries = {};
+			_.each(match[3].split(/\s+/), function(query) {
+				var parts = query.split('=');
+				var q = U.trim(parts[0]);
+				var v = U.trim(parts[1]);
+				if (q === 'platform') {
+					priority += VALUES.PLATFORM + VALUES.SUM;
+					v = v.split(',');
+				} else {
+					priority += VALUES.SUM;
+				}
+				obj.queries[q] = v;
+			});
+		} 
+
+		_.extend(obj, {
+			priority: priority,
+			key: newKey, 
+			style: styles[key]
+		});
+		raw.push(obj);
 	}
+
+	return _.sortBy(raw, 'priority');
 }
 
-function mergeAllStyles(styles,classes,id,apiName,extraStyle) {
-	var mergedStyle = {};
-	extraStyle = extraStyle || {};
+// testing style priority
+if (require.main === module) {
+	console.log(require('util').inspect(sortStyles({
+		"#myview": {},
+		"#myview[platform=ios]": {},
+		"#myview[size=tablet]": {},
+		".container[platform=android size=tablet]": {},
+		"View[platform=ios]": {},
+		"Label": {},
+		".container[platform=android size=handheld]": {},
+		".container": {}
+	}), false, null));
+	console.log('------------------------------');
 
-	// Start with any base View styles
-	mergeStyles(styles['View'],mergedStyle);
-
-	// Merge in styles based on UI component type
-	mergeStyles(styles[U.properCase(apiName)],mergedStyle);
-
-	// Merge in styles based on associated classes
-	for (var c=0;c<classes.length;c++) {
-		var clsn = classes[c];
-		mergeStyles(styles['.'+clsn],mergedStyle);
-	}
-
-	// Merge in styles based on the component's ID
-	mergeStyles(styles['#'+id],mergedStyle);
-	if (id) mergedStyle['id'] = id;
-
-	// Merge in any extra specified styles
-	mergeStyles(extraStyle,mergedStyle);
-
-	return mergedStyle;
 }
+
