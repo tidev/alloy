@@ -32,7 +32,6 @@ module.exports = function(name, args, program) {
 		"copyright":"Copyright (c) 2012",
 		"license":"Public Domain",
 		"min-alloy-version": "1.0",
-		"min-titanium-version":"2.0"
 		"min-titanium-version":"2.0",
 		"tags":""
 	}));
