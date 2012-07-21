@@ -1,7 +1,8 @@
 <Window class='container'>
 	<View ns="Ti.Map" id="map">
-		<Annotation ns="Ti.Map" id="annotation1"/>
-		<Annotation ns="Ti.Map" id="annotation2"/>
+		<Annotation id="annotation1"/>
+		<Annotation id="annotation2" platform="android"/>
+		<Annotation id="annotation3" platform="ios"/>
 
 		<!-- 
 			Lets add one more UI component to show Annotations being

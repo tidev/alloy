@@ -21,6 +21,8 @@ def compile(config):
             version = builder.tool_api_level
             deploytype = config['deploy_type']
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
+		if deploytype==u'development':
+            print 'compiler config[]: %s' % config
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         try:
             subprocess.check_output(cmd, stderr=subprocess.STDOUT)

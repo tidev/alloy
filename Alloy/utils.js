@@ -9,7 +9,8 @@ var path = require('path'),
 	DOMParser = require("xmldom").DOMParser,
 	jsp = require("./uglify-js/uglify-js").parser,
 	pro = require("./uglify-js/uglify-js").uglify,
-	_ = require("./lib/alloy/underscore")._
+	_ = require("./lib/alloy/underscore")._,
+	CONST = require('./common/constants')
 ;
 
 exports.XML = {
@@ -40,6 +41,71 @@ exports.XML = {
 		return new DOMParser().parseFromString(str).documentElement;
 	}
 };
+
+exports.installModule = function(dir, opts)
+{
+	var tiapp = path.join(dir,'tiapp.xml');
+	if (path.existsSync(tiapp))
+	{
+		var xml = fs.readFileSync(tiapp);
+		var doc = new DOMParser().parseFromString(String(xml));
+		var modules = doc.documentElement.getElementsByTagName("modules");
+		var found = false;
+
+		if (modules.length > 0)
+		{
+			var items = modules.item(0).getElementsByTagName('module');
+			if (items.length > 0)
+			{
+				for (var c=0;c<items.length;c++)
+				{
+					var mod = items.item(c);
+					var name = exports.XML.getNodeText(mod);
+					if (name == opts.id)
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (!found)
+		{
+			var node = doc.createElement('module');
+			if (opts.platform) {
+				node.setAttribute('platform',opts.platform);
+			}
+			node.setAttribute('version',opts.version || '1.0');
+			var text = doc.createTextNode(opts.id);
+			node.appendChild(text);
+			
+			var pna = null;
+			
+			// install the plugin into tiapp.xml
+			if (modules.length == 0)
+			{
+				var pn = doc.createElement('modules');
+				doc.documentElement.appendChild(pn);
+				doc.documentElement.appendChild(doc.createTextNode("\n"));
+				pna = pn;
+			}
+			else
+			{
+				pna = modules.item(0);
+			}
+			
+			pna.appendChild(node);
+			pna.appendChild(doc.createTextNode("\n"));
+			
+			var serializer = new XMLSerializer();
+			var newxml = serializer.serializeToString(doc);
+			
+			fs.writeFileSync(tiapp,newxml,'utf-8');
+			logger.info("Installed '" + opts.id + "' module to "+tiapp);
+		}
+	}
+}
 
 exports.copyAlloyDir = function(appDir, sources, destDir) {
 	var sources = _.isArray(sources) ? sources : [sources];
@@ -78,6 +144,12 @@ exports.properCase = function(n) {
 	return n.charAt(0).toUpperCase() + n.substring(1);
 };
 
+exports.lcfirst = function (text) {
+    if (!text)
+        return text;
+    return text[0].toLowerCase() + text.substr(1);
+};
+
 exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
@@ -96,34 +168,7 @@ exports.resolveAppHome = function() {
 	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
 }
 
-exports.processSourceCode = function(code, config) {
-	var defines = {},
-		DEFINES, ast;
 
-	config = config || {};
-	config.deploytype = config.deploytype || 'development';
-	config.beautify = config.beautify || true;
-
-	DEFINES = {
-		OS_IOS : config.platform == 'ios',
-		OS_ANDROID: config.platform == 'android',
-		OS_MOBILEWEB: config.platform == 'mobileweb',
-		ENV_DEV: config.deploytype == 'development',
-		ENV_DEVELOPMENT: config.deploytype == 'development',
-		ENV_TEST: config.deploytype == 'test',
-		ENV_PRODUCTION: config.deploytype == 'production'
-	};
-
-	for (var k in DEFINES) {
-		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-	}
-	
-	ast = jsp.parse(code); // parse code and get the initial AST
-	ast = pro.ast_mangle(ast,{except:['Ti','Titanium'],defines:defines}); // get a new AST with mangled names
-	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-	
-	return pro.gen_code(ast,{beautify:config.beautify}); 
-};
 
 exports.copyFileSync = function(srcFile, destFile) 
 {
@@ -169,7 +214,7 @@ exports.copyFilesAndDirs = function(f,d)
 		if (stats.isDirectory())
 		{
 			exports.ensureDir(rd);
-			wrench.copyDirSyncRecursive(fpath, rd);
+			wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
 		}
 		else
 		{
@@ -191,102 +236,11 @@ exports.stringifyJSON = function(j)
 	return final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
 }
 
-exports.pad = function(x)
-{
-	if (x < 10)
-	{
-		return '0' + x;
-	}
-	return x;
-}
-
-exports.generateMigrationFileName = function(t)
-{
-	var d = new Date;
-	var s = String(d.getUTCFullYear()) + String(exports.pad(d.getUTCMonth())) + String(exports.pad(d.getUTCDate())) + String(exports.pad(d.getUTCHours())) + String(exports.pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
-	return s + '_' + t + '.js';
-}
-
 exports.die = function(msg) 
 {
 	logger.error(msg);
 	process.exit(1);
 }
 
-exports.formatAST = function(ast,beautify,config)
-{
-	// use the general defaults from the uglify command line
-	var defines = {},
-		DEFINES, 
-		config;
 
-	config = config || {};
-	config.deploytype = config.deploytype || 'development';
-	config.beautify = config.beautify || true;
 
-	DEFINES = {
-		OS_IOS : config.platform == 'ios',
-		OS_ANDROID: config.platform == 'android',
-		OS_MOBILEWEB: config.platform == 'mobileweb',
-		ENV_DEV: config.deploytype == 'development',
-		ENV_DEVELOPMENT: config.deploytype == 'development',
-		ENV_TEST: config.deploytype == 'test',
-		ENV_PRODUCTION: config.deploytype == 'production'
-	};
-
-	for (var k in DEFINES) {
-		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-	}
-
-	var options = 
-	{
-	        ast: false,
-	        consolidate: true,
-	        mangle: true,
-	        mangle_toplevel: false,
-	        no_mangle_functions: false,
-	        squeeze: true,
-	        make_seqs: true,
-	        dead_code: true,
-	        unsafe: false,
-	        defines: defines,
-	        lift_vars: false,
-	        codegen_options: {
-	                ascii_only: false,
-	                beautify: beautify,
-	                indent_level: 4,
-	                indent_start: 0,
-	                quote_keys: false,
-	                space_colon: false,
-	                inline_script: false
-	        },
-	        make: false,
-	        output: false,
-			except: ['Ti','Titanium']
-	};
-
-	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
-	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-	return pro.gen_code(ast,options.codegen_options); 
-};
-
-exports.formatJS = function(code, beautify)
-{
-	function show_copyright(comments) {
-	        var ret = "";
-	        for (var i = 0; i < comments.length; ++i) {
-	                var c = comments[i];
-	                if (c.type == "comment1") {
-	                        ret += "//" + c.value + "\n";
-	                } else {
-	                        ret += "/*" + c.value + "*/";
-	                }
-	        }
-	        return ret;
-	};
-    var c = jsp.tokenizer(code)();
-	// extract header copyright so we can preserve it
-    var copyrights = show_copyright(c.comments_before);
-	var ast = jsp.parse(code); // parse code and get the initial AST
-	return copyrights + "\n" + exports.formatAST(ast);
-}

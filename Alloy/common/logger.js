@@ -1,6 +1,5 @@
 var colors = require('colors');
 
-
 exports.DEBUG = 3;
 exports.INFO = 2;
 exports.WARN = 1;

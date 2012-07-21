@@ -5,6 +5,7 @@ var path = require('path'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
+	CONST = require('../../common/constants'),
 	logger = require('../../common/logger'),
 	alloyRoot = path.join(__dirname,'..', '..');
 
@@ -90,9 +91,9 @@ function newproject(args, program) {
 	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
-		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.xml'),'utf8'),
-		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.json'),'utf8'),
-		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.js'),'utf8'),
+		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.VIEW),'utf8'),
+		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.STYLE),'utf8'),
+		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.CONTROLLER),'utf8'),
 		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
 		defaultConfig = {},
 		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
@@ -123,11 +124,21 @@ function newproject(args, program) {
 	}
 	
 	// create default view, controller, style, and config. 
-	fs.writeFileSync(path.join(appPath,'views','index.xml'),INDEX_XML,'utf-8');
-	fs.writeFileSync(path.join(appPath,'styles','index.json'),INDEX_JSON,'utf-8');
-	fs.writeFileSync(path.join(appPath,'controllers','index.js'),INDEX_C,'utf-8');
-	fs.writeFileSync(path.join(appPath,'config','alloy.json'),U.stringifyJSON(defaultConfig),'utf-8');
+	fs.writeFileSync(path.join(appPath,'views','index.'+CONST.FILE_EXT.VIEW),INDEX_XML,'utf-8');
+	fs.writeFileSync(path.join(appPath,'styles','index.'+CONST.FILE_EXT.STYLE),INDEX_JSON,'utf-8');
+	fs.writeFileSync(path.join(appPath,'controllers','index.'+CONST.FILE_EXT.CONTROLLER),INDEX_C,'utf-8');
+	fs.writeFileSync(path.join(appPath,'config','alloy.'+CONST.FILE_EXT.CONFIG),U.stringifyJSON(defaultConfig),'utf-8');
 	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
+
+	// copy in any modules
+	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
+
+	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	U.installModule(projectPath, {
+		id: 'ti.physicalSizeCategory',
+		platform: 'android',
+		version: '1.0'
+	});
 
 	// write the build file
 	alloyJmkTemplate = fs.readFileSync(path.join(templateDir,'alloy.jmk'), 'utf8');

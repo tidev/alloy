@@ -1,8 +1,0 @@
-<Window>
-	<TableView id="table">
-		<TableViewRowTemplate className="row">
-			<Label class="name"></Label>
-			<Label class="done"></Label>
-		</TableViewRowTemplate>
-	</TableView>
-</Window>

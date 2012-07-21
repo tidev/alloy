@@ -10,7 +10,7 @@ $.table.updateContent = function(o) {
 };
 
 // CRUD ops handler, put any special model processing here, some are ignored for this sample
-var CRUDEops = {
+var CRUDops = {
 	"create": function(o) { Ti.API.info("create called with model="+JSON.stringify(o)); },
     "read": function(o) { $.table.updateContent(o); },
     "update": function(o) { Ti.API.info("update called with model="+JSON.stringify(o)); },
@@ -18,17 +18,17 @@ var CRUDEops = {
 };
 
 // listener for server to persistant store sync requests
-$.BookCollection.notify.on('sync', function(e) {
-	CRUDEops[e.method](e.model);	
+Alloy.getCollection('Book').notify.on('sync', function(e) {
+	CRUDops[e.method](e.model);	
 });
 
 // Now let's create a Backbone collection that will hold our models,
 // the classes that represent our model have been generated automatically.
 // Use new on the generated classes to create the model or collection object.
-var books = new $.BookCollection;
+var books = new (Alloy.getCollection('Book')); 
 
-// CREATE - create a model
-var book = new $.Book({book:"Jungle Book", author:"Kipling"});
+// create a model
+var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
 
 // Add a model to a Backbone collection.
 books.add(book);
@@ -36,8 +36,9 @@ books.add(book);
 // Use Backbone shortcut to create a model and add to collection in single step.
 books.add({book:"War and Peace", author:"Tolstoy"});
 
-// READ - fetch triggers the CRUD read operation causing a sever to persistent store sync up.
-// Fetch only returns models that are in the new state. 
+// fetch triggers the CRUD read operation causing a sever to persistent store sync up.
+// Everything in the current Backbone model state will be overwritten with the 
+// fetched "server" state, triggering a "read" sync operation
 books.fetch();
 
 // Add will add models to local server but save triggers the CRUD create opperation,

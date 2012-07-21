@@ -1,0 +1,8 @@
+{
+    "defaults": { 
+    },
+    "adapter": {
+        "type": "localStorage",
+        "name": "books"
+    }
+}

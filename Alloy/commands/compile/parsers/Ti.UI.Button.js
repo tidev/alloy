@@ -2,11 +2,14 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils');
 
 exports.parse = function(node, state) {
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
 	// Get button title from node text, if present
-	var args = CU.getParserArgs(node, state),
-		nodeText = U.XML.getNodeText(node);
+	var nodeText = U.XML.getNodeText(node);
 	if (nodeText) {
-		state.styles = CU.addStyleById(state.styles, args.id, 'title', nodeText);
+		state.extraStyle = CU.createVariableStyle('title', "'" + nodeText.replace(/'/g, "\\'") + "'");
 	}
 
 	// Generate runtime code using default

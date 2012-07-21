@@ -5,7 +5,7 @@
 var _ = require("alloy/underscore")._, 
 	db;
 
-function InitDB() {
+function InitDB(config) {
 	if (!db) {
 		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
 			throw "No support for Titanium.Database in MobileWeb environment";
@@ -18,7 +18,7 @@ function InitDB() {
 		// create the table in case it doesn't exist
 		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)");
 	}
-	return db;
+	return {};
 }
 
 function GetMigrationFor(table) {
@@ -105,7 +105,7 @@ function SQLSync(model) {
 	this.model = model;
 	this.table = model.config.adapter.tablename;
 	this.columns = model.config.columns;
-	
+
 	var self = this;
 	
 	this.create = function(opts) {
@@ -235,7 +235,8 @@ function Sync(model, method, opts) {
 	return sync[method](opts);
 }
 
-
-module.exports.init = InitDB;
-module.exports.migrate = Migrate;
+module.exports.beforeModelCreate = InitDB;
+module.exports.afterModelCreate = function(Model) {
+	Migrate(Model.migrations);
+};
 module.exports.sync = Sync;

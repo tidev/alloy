@@ -1,0 +1,16 @@
+<TabGroup>
+	<Tab id="tab1">
+		<!-- Explicit Window declaration -->
+		<Window id="win1">
+			<Label>Label 1</Label>
+			<Label>Label 2</Label>
+			<Label platform="ios">Label 3</Label>
+			<Label>Label 4</Label>
+			<Label>Label 5</Label>
+		</Window>
+	</Tab>
+	<Tab id="tab2">
+		<!-- Implicit window, added during the compile stage -->
+		<Label>Tab 2</Label>
+	</Tab>
+</TabGroup>

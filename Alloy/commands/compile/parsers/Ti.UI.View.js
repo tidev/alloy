@@ -1,8 +1,11 @@
 var CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		code = '';
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var code = '';
 
 	// We only need special handling if there's a req attribute
 	if (!args.req) {
@@ -11,18 +14,17 @@ exports.parse = function(node, state) {
 
 	// Generate runtime code
 	var commonjs = "alloy/components/" + args.req;
-	code += args.symbol + " = (require('" + commonjs + "')).create();\n";
+	code += args.symbol + " = (require('" + commonjs + "')).create(" +
+		    (args.createArgs ? JSON.stringify(args.createArgs) : '') + ");\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
-	} else {
-		code += "root$ = " + args.symbol + ";\n";
-	}
+	} 
 
 	// Update the parsing state
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol
+			symbol: args.symbol + '.getRoot()'
 		},
 		styles: state.styles,
 		code: code

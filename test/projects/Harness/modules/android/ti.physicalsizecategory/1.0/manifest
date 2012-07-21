@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: Get the physical size category, based on density independent pixels, of an Android device
+author: Tony Lukasavage
+license: MIT
+copyright: Tony Lukasavage, copyright 2012
+
+
+# these should not be edited
+name: physicalsizecategory
+moduleid: ti.physicalSizeCategory
+guid: f6302951-9dab-4650-9bda-b702dd389593
+platform: android
+minsdk: 2.1.0.GA

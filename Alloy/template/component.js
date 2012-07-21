@@ -5,12 +5,7 @@ var Alloy = require("alloy"),
 	_ = Alloy._, 
 	A$ = Alloy.A, 
 	M$ = Alloy.M, 
-	BC$ = Alloy.Backbone.Collection,
-	Lifecycle = {};
-
-<%= CFG %>
-
-<%= lifecycle %>
+	BC$ = Alloy.Backbone.Collection;
 
 exports.create = function() {
 	var L$ = {},
@@ -43,22 +38,19 @@ exports.create = function() {
 			if (root$) {
 				parent.add(root$);
 			} 
+		},
+		getRoot: function() {
+			return root$;
 		}
 	};
 
-	if (_.isFunction(Lifecycle.beforeCreate)) {
-		Lifecycle.beforeCreate($);
-	}
+<%= onCreate %>
 
 	// generated from view markup
 <%= viewCode %>
 
 	// generated from controller
 <%= controllerCode %>
-
-	if (_.isFunction(Lifecycle.afterCreate)) {
-		Lifecycle.afterCreate($);
-	}
 
 	return $;
 };

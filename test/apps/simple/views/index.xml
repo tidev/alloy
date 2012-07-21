@@ -1,3 +1,3 @@
 <Window id="index">
-	<Button id="b" class="button"/>
+	<Button id="b" class="button">Hello, Wo'rld!</Button>
 </Window>

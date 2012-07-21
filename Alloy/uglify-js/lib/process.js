@@ -1425,7 +1425,7 @@ var DOT_CALL_NO_PARENS = jsp.array_to_hash([
         "defun"
 ]);
 
-function make_string(str, ascii_only) {
+function make_string(str, ascii_only, double_quotes) {
         var dq = 0, sq = 0;
         str = str.replace(/[\\\b\f\n\r\t\x22\x27\u2028\u2029\0]/g, function(s){
                 switch (s) {
@@ -1443,7 +1443,8 @@ function make_string(str, ascii_only) {
                 return s;
         });
         if (ascii_only) str = to_ascii(str);
-        if (dq > sq) return "'" + str.replace(/\x27/g, "\\'") + "'";
+        // TODO: Need to file a PR for this
+        if (dq > sq && !double_quotes) return "'" + str.replace(/\x27/g, "\\'") + "'";
         else return '"' + str.replace(/\x22/g, '\\"') + '"';
 };
 
@@ -1465,7 +1466,11 @@ function gen_code(ast, options) {
                 space_colon  : false,
                 beautify     : false,
                 ascii_only   : false,
-                inline_script: false
+                inline_script: false,
+                // TODO: Pull request submitted --> https://github.com/mishoo/UglifyJS/pull/429
+                keep_zeroes  : false,
+                // TODO: Send another PR for this
+                double_quotes: false
         });
         var beautify = !!options.beautify;
         var indentation = 0,
@@ -1473,7 +1478,7 @@ function gen_code(ast, options) {
             space = beautify ? " " : "";
 
         function encode_string(str) {
-                var ret = make_string(str, options.ascii_only);
+                var ret = make_string(str, options.ascii_only, options.double_quotes);
                 if (options.inline_script)
                         ret = ret.replace(/<\x2fscript([>\/\t\n\f\r ])/gi, "<\\/script$1");
                 return ret;
@@ -1569,7 +1574,8 @@ function gen_code(ast, options) {
         };
 
         function make_num(num) {
-                var str = num.toString(10), a = [ str.replace(/^0\./, ".") ], m;
+                // TODO: Pull request submitted --> https://github.com/mishoo/UglifyJS/pull/429
+                var str = num.toString(10), a = [ options.keep_zeroes ?  str : str.replace(/^0\./, ".") ], m;
                 if (Math.floor(num) === num) {
                         if (num >= 0) {
                                 a.push("0x" + num.toString(16).toLowerCase(), // probably pointless

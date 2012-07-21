@@ -1,0 +1,44 @@
+{
+	".container":
+   	{
+		"backgroundColor":"white"
+	},
+	"#map": {
+		"region": {
+			"latitude": 37.38,
+			"latitudeDelta": 0.2,
+			"longitude": -122.05,
+			"longitudeDelta": 0.2
+		}
+	},
+	"Annotation": {
+		"animate":true,
+		"pincolor":Ti.Map.ANNOTATION_RED
+	},
+	"#annotation1": {
+		"title":"Mountain View, CA", 
+		"latitude":37.389569, 
+		"longitude":-122.050212
+	},
+	"#annotation2": {
+		"title":"Google HQ", 
+		"latitude":37.4231054, 
+		"longitude":-122.0823988
+	},
+	"#annotation3": {
+		"title":"Apple HQ", 
+		"latitude":37.3308525, 
+		"longitude":-122.0296837
+	},
+	"#footerImage": {
+		"image": "appc-400px.png",
+		"backgroundColor": "#fff",
+		"borderColor": "#a00",
+		"borderWidth": 1,
+		"borderRadius": 2,
+		"width": "160dp",
+		"height": "36dp",
+		"bottom": "5dp",
+		"right": "5dp"
+	}
+}

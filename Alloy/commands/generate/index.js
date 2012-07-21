@@ -2,7 +2,7 @@ var _ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils');
 
 // TODO: generate TARGETS array by reading the Alloy/commands/generate files
-var TARGETS = ['controller', 'view', 'model', 'migration', 'widget'];
+var TARGETS = ['component', 'controller', 'view', 'model', 'migration', 'styles', 'widget'];
 
 function generate(args, program) {
 	args = args || [];
@@ -27,7 +27,7 @@ function generate(args, program) {
 	}
 
 	// launch requested generator
-	(require('./' + target))(name, args.slice(2), program);
+	(require('./targets/' + target))(name, args.slice(2), program);
 }
 
 module.exports = generate;

@@ -12,6 +12,7 @@ def compile(config):
         simtype = 'none'
         version = '0'
         deploytype = 'development'
+
         if config['platform']==u'ios':
             version = config['iphone_version']
             devicefamily = config['devicefamily']
@@ -20,10 +21,21 @@ def compile(config):
             builder = config['android_builder']
             version = builder.tool_api_level
             deploytype = config['deploy_type']
-        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s" % (config['platform'],version,simtype,devicefamily,deploytype)
+        if config['platform']==u'mobileweb':
+            builder = config['mobileweb_builder']
+            deploytype = config['deploytype']
+        
+        cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         try:
-            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            try: 
+                subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            except AttributeError:
+                # check_output not available (needs python >= 2.7)
+                # This will NOT give the error output from alloy
+                # TODO: have an alternative method for returning error output
+                #       on python < 2.7.
+                subprocess.check_call(cmd)
         except subprocess.CalledProcessError as ex:
             print ex.output
             print "[ERROR] Alloy compile failed"

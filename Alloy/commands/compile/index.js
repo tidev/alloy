@@ -8,9 +8,12 @@ var path = require('path'),
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
-	CU = require('./compilerUtils');
+	CU = require('./compilerUtils'),
+	CONST = require('../../common/constants');
 
 var alloyRoot = path.join(__dirname,'..','..'),
+	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
+	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	compileConfig = {};
 
 //////////////////////////////////////
@@ -18,17 +21,19 @@ var alloyRoot = path.join(__dirname,'..','..'),
 //////////////////////////////////////
 module.exports = function(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
-		alloyConfigPath = path.join(inputPath,'config','alloy.json'),
-		generatedCFG = '',
+		alloyConfigPath = path.join(inputPath,'config','alloy.' + CONST.FILE_EXT.CONFIG),
 		alloyConfig = {},
 		outputPath, tmpPath, compilerMakeFile;
 
 	// validate input and output paths
 	if (!path.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
+	} else if (!path.existsSync(path.join(inputPath,'views','index.' + CONST.FILE_EXT.VIEW))) {
+		U.die('inputPath has no views/index.' + CONST.FILE_EXT.VIEW + ' file.');
 	}	
+
 	if (!program.outputPath) {
-		tmpPath = path.join(inputPath,'views','index.xml');
+		tmpPath = path.join(inputPath,'views','index.'+CONST.FILE_EXT.VIEW);
 		if (path.existsSync(tmpPath)) {
 			outputPath = path.join(inputPath,'..');
 		}
@@ -73,31 +78,55 @@ module.exports = function(args, program) {
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
+	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	// Make sure that ti.physicalSizeCategory is installed
+	if (!path.existsSync(path.join(outputPath,'ti.physicalSizeCategory-android-1.0.zip')) && 
+		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
+		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
+	}
+	U.installModule(outputPath, {
+		id: 'ti.physicalSizeCategory',
+		platform: 'android',
+		version: '1.0'
+	});
+
 	// create components directory for view/controller components
 	U.copyAlloyDir(alloyRoot, 'lib', compileConfig.dir.resources); 
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
+	// Process all models
+	var models = processModels();
+
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(outputPath);
-	viewCollection.push({ dir: path.join(outputPath,'app') });
+	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
-		_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
-			if (/\.xml$/.test(view)) {
-				var basename = path.basename(view, '.xml');
-				parseView(basename, collection.dir, basename, collection.manifest);
+		//_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
+		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
+			if (viewRegex.test(view)) {
+				console.log(view);
+				// var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
+				// parseView(basename, collection.dir, basename, collection.manifest);
+				parseView(view, collection.dir, collection.manifest);
 			}
 		});
 	});
 
 	// copy assets and libraries
-	U.copyAlloyDir(inputPath, ['assets','lib'], compileConfig.dir.resources);
-	U.copyAlloyDir(inputPath, 'vendor', path.join(compileConfig.dir.resources,'vendor'));
+	U.copyAlloyDir(inputPath, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
+	U.copyAlloyDir(inputPath, CONST.DIR.VENDOR, path.join(compileConfig.dir.resources,CONST.DIR.VENDOR));
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{config:compileConfig.runtimeConfig});
-	code = U.processSourceCode(code, alloyConfig);
+	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{models:models});
+	
+	try {
+		code = CU.processSourceCode(code, alloyConfig, 'app.js');
+	} catch(e) {
+		logger.error(code);
+		U.die(e);
+	}
 
 	// trigger our custom compiler makefile
 	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
@@ -109,7 +138,7 @@ module.exports = function(args, program) {
 
 	// copy builtins and fix their require paths
 	copyBuiltins();
-	fixRequirePaths(alloyConfig);
+	optimizeCompiledCode(alloyConfig);
 
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
@@ -119,28 +148,45 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function parseView(viewName,dir,viewid,manifest) {
-	var template = {
-		viewCode: '',
-		controllerCode: '',
-		lifecycle: '',
-		CFG: compileConfig.runtimeConfig 
-	};
-	var state = { parent: {} };
-	var vd = dir ? path.join(dir,'views') : compileConfig.dir.views; 
-	var sd = dir ? path.join(dir,'styles') : compileConfig.dir.styles; 
+// function parseView(viewName,dir,viewId,manifest) {
+function parseView(view,dir,manifest) {
+	// validate parameters
+	if (!view) { U.die('Undefined view passed to parseView()'); }
+	if (!dir) { U.die('Failed to parse view "' + view + '", no directory given'); }
 
-	var viewFile = path.join(vd,viewName+".xml");
-	if (!path.existsSync(viewFile)) {
-		logger.warn('No XML view file found for view ' + viewFile);
+	var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
+		dirname = path.dirname(view),
+		viewName = basename,
+		viewId = basename,
+		template = {
+			viewCode: '',
+			controllerCode: '',
+			onCreate: '' 
+		},
+		state = { parent: {} },
+		files = {};
+
+	// create a list of file paths
+	_.each(['VIEW','STYLE','CONTROLLER'], function(fileType) {
+		var tmp = path.join(dir,CONST.DIR[fileType]);
+		if (dirname) { tmp = path.join(tmp,dirname); }
+		files[fileType] = path.join(tmp,viewName+'.'+CONST.FILE_EXT[fileType]);
+	});
+	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
+	if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
+	files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
+
+	// validate view
+	if (!path.existsSync(files.VIEW)) {
+		logger.warn('No ' + CONST.FILE_EXT.VIEW + ' view file found for view ' + files.VIEW);
 		return;
 	}
 
-	var styleFile = path.join(sd,viewName+".json");
-	var styles = CU.loadStyle(styleFile);
-	state.styles = styles;
+	// Load the style and update the state
+	state.styles = CU.loadStyle(files.STYLE);
 
-	var xml = fs.readFileSync(viewFile,'utf8');
+	// read and parse the view file
+	var xml = fs.readFileSync(files.VIEW,'utf8');
 	var doc = new DOMParser().parseFromString(xml);
 
 	// Give our document the <Alloy> root element if it doesn't already have one
@@ -150,80 +196,43 @@ function parseView(viewName,dir,viewid,manifest) {
 		doc = tmpDoc;
 	}
 	var docRoot = doc.documentElement;
-	var id = viewid || doc.documentElement.getAttribute('id') || viewName;
+	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
-	// TODO: Can we move this out of the parseView() call?
-	if (viewName === 'index') {
-		template.viewCode += findAndLoadModels();
-	}
+	// handle component-level events
+	_.each(['onCreate'], function(evt) {
+		var attr = docRoot.getAttribute(evt);
+		template[evt] = attr ? attr + '($);\n' : '';
+	});
 
 	// Generate Titanium code from the markup
-	for (var i = 0, l = docRoot.childNodes.length; i < l; i++) {
-		template.viewCode += generateNode(docRoot.childNodes.item(i),state,viewid||viewname);
+	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+	for (var i = 0, l = rootChildren.length; i < l; i++) {
+		template.viewCode += CU.generateNode(
+			rootChildren[i],
+			state,
+			i === 0 ? (viewId||viewName) : undefined,
+			i === 0);
 	}
-	template.controllerCode += generateController(viewName,dir,id);
+	template.controllerCode += CU.loadController(files.CONTROLLER);
 
-	// create commonjs module for this view/controller
+	// create component module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
-	code = U.processSourceCode(code, compileConfig.alloyConfig);
+	try {
+		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
+	} catch (e) {
+		logger.error(code);
+		U.die(e);
+	}
+
+	// Write the view or widget to its runtime file
 	if (manifest) {
-		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components'), 0777);
-		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, 'widgets', manifest.id, 'components', viewName + '.js'), code);
+		var widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT;
+		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
+		CU.copyWidgetAssets(path.join(dir,CONST.DIR.ASSETS), compileConfig.dir.resources, manifest.id);
+		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
 	} else {
-		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, 'components', viewName + '.js'), code);
-	}
-}
-
-function generateNode(node, state, defaultId) {
-	if (node.nodeType != 1) return '';
-
-	var name = node.nodeName,
-		ns = node.getAttribute('ns') || 'Ti.UI',
-		fullname = ns + '.' + name,
-		code = '';
-
-	// Determine which parser to use for this node
-	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
-	var files = fs.readdirSync(parsersDir);
-	var parserRequire = 'default';
-	for (var i = 0, l = files.length; i < l; i++) {
-		if (fullname + '.js' === files[i]) {
-			parserRequire = files[i];
-			break;
-		}
-	}
-
-	// Execute the appropriate tag parser and append code
-	if (defaultId) { state.defaultId = defaultId; }
-	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
-	code += state.code;
-
-	// Continue parsing if necessary
-	if (state.parent) {
-		var states = _.isArray(state.parent) ? state.parent : [state.parent];
-		_.each(states, function(p) {
-			var newParent = p.node;
-			for (var i = 0, l = newParent.childNodes.length; i < l; i++) {
-				code += generateNode(newParent.childNodes.item(i), {
-					parent: p,
-					styles: state.styles,
-				});
-			}
-		}); 
-	}
-
-	return code;
-}
-
-function generateController(name, dir, id) {
-	var controllerDir = dir ? path.join(dir,'controllers') : compileConfig.dir.controllers, 
-		p = path.join(controllerDir,name+'.js'),
-		code = '';
-	
-	if (path.existsSync(p)) {
-		return fs.readFileSync(p,'utf8');
-	} else {
-		return '';
+		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
+		fs.writeFileSync(files.COMPONENT, code);
 	}
 }
 
@@ -231,7 +240,7 @@ function findModelMigrations(name) {
 	try {
 		var migrationsDir = compileConfig.dir.migrations;
 		var files = fs.readdirSync(migrationsDir);
-		var part = '_'+name+'.js';
+		var part = '_'+name+'.'+CONST.FILE_EXT.MIGRATION;
 
 		// look for our model
 		files = _.reject(files,function(f) { return f.indexOf(part)==-1});
@@ -263,53 +272,51 @@ function findModelMigrations(name) {
 	}
 }
 
-function findAndLoadModels() {
-	var f = compileConfig.dir.models; 
-	var code = '';
-	if (!path.existsSync(f)) {
-		wrench.mkdirSyncRecursive(f, 777);
-	}		
+function processModels() {
+	var models = [];
+	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
+	U.ensureDir(compileConfig.dir.models);
 
-	var files = fs.readdirSync(f);
-	for (var c=0;c<files.length;c++) {
-		var file = files[c];
-		if (file.indexOf(".json")>0) {
-			var fpath = path.join(f,file);
-			var part = file.substring(0,file.length-5);
-			var modelJs = path.join(f,part+'.js');
-
-			var jm = fs.readFileSync(fpath);
-			var js = "";
-			try {
-				var stats = fs.lstatSync(modelJs);
-				if (stats.isFile()) {
-					js = fs.readFileSync(modelJs,'utf8');
-				}
-			}
-			catch(E) { }
-
-			var migrations = findModelMigrations(part);
-			var theid = U.properCase(part), theidc = U.properCase(part)+'Collection';
-			var symbol1 =  CU.generateVarName(theid);
-			var symbol2 =  CU.generateVarName(theidc);
-			var codegen = symbol1 + " = M$('"+ part +"',\n" +
-							jm + "\n" +
-						  ", function("+part+"){\n" +
-							js + "\n" +
-						  "},\n" + 
-						  "[ " + migrations.join("\n,") + " ]\n" +  
-						  ");\n";
-
-			codegen+=symbol2 + " = BC$.extend({model:" + symbol1 + "});\n";
-			codegen+=symbol2+".prototype.model = " + symbol1+";\n";
-			codegen+=symbol2+".prototype.config = " + symbol1+".prototype.config;\n";
-		
-			code += codegen;
-		}
+	// Make sure we havea runtime models directory
+	var modelFiles = fs.readdirSync(compileConfig.dir.models);
+	if (modelFiles.length > 0) {
+		U.ensureDir(modelRuntimeDir);
 	}
 
-	return code;
-}
+	// process each model
+	_.each(modelFiles, function(modelFile) {
+		if (!modelRegex.test(modelFile)) {
+			logger.warn('Non-model file "' + modelFile + '" in models directory');
+			return;
+		}
+		var fullpath = path.join(compileConfig.dir.models,modelFile);
+		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
+		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
+		var modelConfig = fs.readFileSync(fullpath);
+		var modelJs = 'function(Model){}';
+
+		// grab any additional model code from corresponding JS file, if it exists
+		if (path.existsSync(modelJsFile)) {
+			modelJs = fs.readFileSync(modelJsFile,'utf8');
+		}
+
+		// generate model code based on model.js template and migrations
+		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
+			basename: basename,
+			modelConfig: modelConfig,
+			modelJs: modelJs,
+			migrations: findModelMigrations(basename)
+		});	
+
+		// write the model to the runtime file
+		var casedBasename = U.properCase(basename);
+		fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
+		models.push(casedBasename);
+	});
+
+	return models;
+};
 
 function copyBuiltins() {
 	// this method will allow an app to do a require
@@ -347,7 +354,7 @@ function copyBuiltins() {
 			// the requires in the code and filter only the ones which are 
 			// alloy builtins
 			var found = requires.findAllRequires(f,alloyFilter);
-			_.extend(alloyLibs,found);
+			alloyLibs = _.union(alloyLibs,found);
 		}
 	});
 	
@@ -381,7 +388,7 @@ function copyBuiltins() {
 	}
 }
 
-function fixRequirePaths(config) {
+function optimizeCompiledCode(config) {
 	var resourcesDir =  compileConfig.dir.resources, 
 		files = wrench.readdirSyncRecursive(resourcesDir);
 

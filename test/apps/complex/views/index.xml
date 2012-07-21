@@ -4,9 +4,9 @@
 	<View id="top" />
 	
 	<!-- import a view named 'middle', the id will inherit the id of the root View elements 'id' attribute -->
-	<View require="middle" />
+	<View require="middle" id="middle"/>
 
 	<!-- import a view named 'bottom' -->
-	<View require="bottom" />
+	<View require="bottom/bottom" id="bottom"/>
 	
 </Window>

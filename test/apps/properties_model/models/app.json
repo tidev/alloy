@@ -1,0 +1,12 @@
+{
+	"columns": {
+		"count": "Int"
+	},
+	"defaults": {
+		"count": 0
+	},
+	"adapter": {
+		"type": "properties",
+		"prefix": "app"
+	}
+}

@@ -7,9 +7,11 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
-	var args = CU.getParserArgs(node, state),
-		children = U.XML.getElementsFromNodes(node.childNodes),
-		linePrefix = '\t',
+	return require('./base').parse(node, state, parse);
+};
+
+function parse(node, state, args) {
+	var children = U.XML.getElementsFromNodes(node.childNodes),
 		subParents = [],
 		code = '';
 
@@ -37,11 +39,11 @@ exports.parse = function(node, state) {
 	// For now, we will assume the first window is the master, the second 
 	// window is the detail. There are a few different ways we could handle this:
 	// Check this for details: https://jira.appcelerator.org/browse/ALOY-80
-	var extraStyle = CU.createVariableStyle([
+	state.extraStyle = CU.createVariableStyle([
 		['masterView', subParents[0].symbol],
 		['detailView', subParents[1].symbol]
 	]);
-	var splitState = require('./default').parse(node, state, extraStyle);
+	var splitState = require('./default').parse(node, state);
 	code += splitState.code;
 
 	// Update the parsing state
