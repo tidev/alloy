@@ -1,4 +1,5 @@
 exports.ALLOY_DIR = 'app';
+exports.GLOBAL_STYLE = 'app.tss';
 
 exports.FILE_EXT = {
 	VIEW: 'xml',
