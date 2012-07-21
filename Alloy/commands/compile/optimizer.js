@@ -225,12 +225,12 @@ function processDot() {
 function processSub() {
 }
 
-exports.optimizeStyle = function(sortedStyles) {
-	for (var i = 0, l = sortedStyles.length; i < l; i++) {
-		for (var key in sortedStyles[i].style) {
-			var v = sortedStyles[i].style[key];
+exports.optimizeStyle = function(styleList) {
+	for (var style in styleList) {
+		for (var key in styleList[style]) {
+			var v = styleList[style][key];
 			if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null') {
-				delete sortedStyles[i].style[key];
+				delete styleList[style][key];
 			} 
 		}
 	}
