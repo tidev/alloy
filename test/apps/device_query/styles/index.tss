@@ -16,9 +16,7 @@
 		"font": {
 			"fontSize": 48,
 			"fontWeight": "bold"
-		},
-		"height": Ti.UI.SIZE,
-		"width": Ti.UI.SIZE
+		}
 	},
 	"Label[size=tablet]": {
 		"font": {

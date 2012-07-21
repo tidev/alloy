@@ -1,0 +1,8 @@
+{
+	"Label": {
+		"color": "#000",
+		"height": Ti.UI.SIZE,
+		"width": Ti.UI.SIZE,
+		"textAlign": "center"
+	}
+}
