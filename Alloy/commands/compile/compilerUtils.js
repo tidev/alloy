@@ -292,27 +292,20 @@ exports.loadController = function(file) {
 };
 
 exports.loadStyle = function(tssFile) {
-	var code, json, styles;
-
 	if (path.existsSync(tssFile)) {
 		var contents = fs.readFileSync(tssFile, 'utf8');
 		if (!/^\s*$/.test(contents)) {
-			try {
-				code = exports.processTssFile(contents);
-				json = JSON.parse(code);
-				
-				styles = sortStyles(json);
-				optimizer.optimizeStyle(styles);
-				//console.log(require('util').inspect(styles,false,null));
-				return styles;
-			} catch(E) {
-				console.error(code);
-				U.die("Error parsing style at "+tssFile.yellow+".  Error was: "+String(E).red);
-			}
+			var code = processTssFile(contents);
+			var json = JSON.parse(code);
+			optimizer.optimizeStyle(json);
+			return json;
 		}
 	}
-
 	return {};
+};
+
+exports.loadAndSortStyle = function(tssFile) {
+	return sortStyles(exports.loadStyle(tssFile));
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
@@ -438,7 +431,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style) + '} : {}';
 		} else {
 			// just return the object
-			console.log(styleCollection[0].style);
 			code += '{';
 			processStyle(styleCollection[0].style);
 			code += '}';
@@ -549,7 +541,7 @@ exports.formatAST = function(ast,config,fn)
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-exports.processTssFile = function(f) {
+function processTssFile(f) {
 	// Handle "call" ASTs, where we look for expr() syntax
     function do_call() {
     	if (this[1][1] === 'expr') {
@@ -623,9 +615,12 @@ function sortStyles(componentStyle) {
 		};
 
 	// add global style to processing, if present
-	var styleList = [componentStyle];
-	if (compilerConfig && compilerConfig.globalStyle) { 
-		styleList.unshift(compilerConfig.globalStyle);
+	var styleList = [];
+	if (compilerConfig && _.isObject(compilerConfig.globalStyle) && !_.isEmpty(compilerConfig.globalStyle)) { 
+		styleList.push(compilerConfig.globalStyle);
+	}
+	if (_.isObject(componentStyle) && !_.isEmpty(componentStyle)) {
+		styleList.push(componentStyle);
 	}
 
 	// Calculate priority:

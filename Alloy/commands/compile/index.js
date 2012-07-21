@@ -96,18 +96,12 @@ module.exports = function(args, program) {
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
 	// create the global style, if it exists
-	var globalStylePath = path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	if (path.existsSync(globalStylePath)) {
-		var contents = fs.readFileSync(globalStylePath, 'utf8');
-		if (!/^\s*$/.test(contents)) {
-			try {
-				compileConfig.globalStyle = JSON.parse(CU.processTssFile(contents));
-			} catch(e) {
-				logger.error(e);
-				U.die('Error processing global style at "' + globalStylePath + '"');
-			}
-		}
-	} 
+	try {
+		compileConfig.globalStyle = CU.loadStyle(path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+	} catch(e) {
+		logger.error(e.stack);
+		U.die('Error processing global style at "' + globalStylePath + '"');
+	}
 
 	// Process all models
 	var models = processModels();
@@ -116,12 +110,8 @@ module.exports = function(args, program) {
 	var viewCollection = U.getWidgetDirectories(outputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
-		//_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
 			if (viewRegex.test(view)) {
-				console.log(view);
-				// var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
-				// parseView(basename, collection.dir, basename, collection.manifest);
 				parseView(view, collection.dir, collection.manifest);
 			}
 		});
@@ -139,7 +129,7 @@ module.exports = function(args, program) {
 		code = CU.processSourceCode(code, alloyConfig, 'app.js');
 	} catch(e) {
 		logger.error(code);
-		U.die(e);
+		U.die(e.stack);
 	}
 
 	// trigger our custom compiler makefile
@@ -197,7 +187,12 @@ function parseView(view,dir,manifest) {
 	}
 
 	// Load the style and update the state
-	state.styles = CU.loadStyle(files.STYLE);
+	try {
+		state.styles = CU.loadAndSortStyle(files.STYLE);
+	} catch (e) {
+		logger.error(e.stack);
+		U.die('Error processing style at "' + files.STYLE + '"');
+	}
 
 	// read and parse the view file
 	var xml = fs.readFileSync(files.VIEW,'utf8');
