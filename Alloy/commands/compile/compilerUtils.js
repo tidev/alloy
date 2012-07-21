@@ -298,8 +298,9 @@ exports.loadStyle = function(tssFile) {
 		var contents = fs.readFileSync(tssFile, 'utf8');
 		if (!/^\s*$/.test(contents)) {
 			try {
-				code = processTssFile(contents);
+				code = exports.processTssFile(contents);
 				json = JSON.parse(code);
+				
 				styles = sortStyles(json);
 				optimizer.optimizeStyle(styles);
 				//console.log(require('util').inspect(styles,false,null));
@@ -548,7 +549,7 @@ exports.formatAST = function(ast,config,fn)
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function processTssFile(f) {
+exports.processTssFile = function(f) {
 	// Handle "call" ASTs, where we look for expr() syntax
     function do_call() {
     	if (this[1][1] === 'expr') {
@@ -606,77 +607,80 @@ function processTssFile(f) {
     }) || '';
 }
 
-function sortStyles(styles) {
+function sortStyles(componentStyle) {
 	var mergedStyle = {},
 		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
-		extraStyle = extraStyle || {};
+		extraStyle = extraStyle || {},
+		sortedStyles = [],
+		ctr = 1,
+		VALUES = {
+			ID:     10000,
+			CLASS:   1000,
+			API:      100,
+			PLATFORM:  10,
+			SUM:        1,
+			ORDER:      0.001
+		};
 
-	var raw = [];
-
-	// TODO: we need a global style file. app.tss? alloy.tss?
+	// add global style to processing, if present
+	var styleList = [componentStyle];
+	if (compilerConfig && compilerConfig.globalStyle) { 
+		styleList.unshift(compilerConfig.globalStyle);
+	}
 
 	// Calculate priority:
-	var VALUES = {
-		ID:    100000,
-		CLASS:  10000,
-		API:     1000,
-		GLOBAL:   100,
-		PLATFORM:  10,
-		SUM:        1,
-		ORDER:      0.001
-	}
+	_.each(styleList, function(style) {
+		for (var key in style) {
+			var obj = {};
+			var priority = ctr++ * VALUES.ORDER;
+			var match = key.match(regex);
+			if (match === null) {
+				U.die('Invalid style specifier "' + key + '"');
+			}
+			var newKey = match[2];
+			switch(match[1]) {
+				case '#':
+					obj.isId = true;
+					priority += VALUES.ID;
+					break;
+				case '.':
+					obj.isClass = true;
+					priority += VALUES.CLASS;
+					break;
+				default:
+					if (match[2]) {
+						obj.isApi = true;
+						priority += VALUES.API;
+					}
+					break;
+			}
 
-	var ctr = 1;
-	for (var key in styles) {
-		var obj = {};
-		var priority = ctr++ * VALUES.ORDER;
-		var match = key.match(regex);
-		if (match === null) {
-			U.die('Invalid style specifier "' + key + '"');
-		}
-		var newKey = match[2];
-		switch(match[1]) {
-			case '#':
-				obj.isId = true;
-				priority += VALUES.ID;
-				break;
-			case '.':
-				obj.isClass = true;
-				priority += VALUES.CLASS;
-				break;
-			default:
-				if (match[2]) {
-					obj.isApi = true;
-					priority += VALUES.API;
-				}
-				break;
-		}
+			if (match[3]) {
+				obj.queries = {};
+				_.each(match[3].split(/\s+/), function(query) {
+					var parts = query.split('=');
+					var q = U.trim(parts[0]);
+					var v = U.trim(parts[1]);
+					if (q === 'platform') {
+						priority += VALUES.PLATFORM + VALUES.SUM;
+						v = v.split(',');
+					} else {
+						priority += VALUES.SUM;
+					}
+					obj.queries[q] = v;
+				});
+			} 
 
-		if (match[3]) {
-			obj.queries = {};
-			_.each(match[3].split(/\s+/), function(query) {
-				var parts = query.split('=');
-				var q = U.trim(parts[0]);
-				var v = U.trim(parts[1]);
-				if (q === 'platform') {
-					priority += VALUES.PLATFORM + VALUES.SUM;
-					v = v.split(',');
-				} else {
-					priority += VALUES.SUM;
-				}
-				obj.queries[q] = v;
+			_.extend(obj, {
+				priority: priority,
+				key: newKey, 
+				style: style[key]
 			});
-		} 
+			sortedStyles.push(obj);
+		}
+	});
 
-		_.extend(obj, {
-			priority: priority,
-			key: newKey, 
-			style: styles[key]
-		});
-		raw.push(obj);
-	}
-
-	return _.sortBy(raw, 'priority');
+	return _.sortBy(sortedStyles, 'priority');
 }
 
 // testing style priority
