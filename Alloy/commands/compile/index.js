@@ -95,6 +95,20 @@ module.exports = function(args, program) {
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
+	// create the global style, if it exists
+	var globalStylePath = path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	if (path.existsSync(globalStylePath)) {
+		var contents = fs.readFileSync(globalStylePath, 'utf8');
+		if (!/^\s*$/.test(contents)) {
+			try {
+				compileConfig.globalStyle = JSON.parse(CU.processTssFile(contents));
+			} catch(e) {
+				logger.error(e);
+				U.die('Error processing global style at "' + globalStylePath + '"');
+			}
+		}
+	} 
+
 	// Process all models
 	var models = processModels();
 
