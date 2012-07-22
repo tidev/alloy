@@ -2,21 +2,29 @@
  * Local SQLite sync adapter which will store all models in
  * an on device database
  */
-var _ = require("alloy/underscore")._, 
+var _ = require('alloy/underscore')._, 
 	db;
 
-function InitDB(config) {
+function S4() {
+   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+};
+
+function guid() {
+   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+};	
+
+function InitAdapter(config) {
 	if (!db) {
 		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
-			throw "No support for Titanium.Database in MobileWeb environment";
+			throw 'No support for Titanium.Database in MobileWeb environment.';
 		}
 		else {
-			db = Ti.Database.open("_alloy_");
+			db = Ti.Database.open('_alloy_');
 		}
 		module.exports.db = db;
 		
-		// create the table in case it doesn't exist
-		db.execute("CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)");
+		// create the migration table in case it doesn't exist
+		db.execute('CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)');
 	}
 	return {};
 }
@@ -24,7 +32,7 @@ function InitDB(config) {
 function GetMigrationFor(table) {
 	var mid;
 	// get the latest migratino
-	var rs = db.execute("SELECT latest FROM migrations where model = ?",table);
+	var rs = db.execute('SELECT latest FROM migrations where model = ?', table);
 	if (rs.isValidRow()) {
 		mid = rs.field(0);
 	}
@@ -32,8 +40,7 @@ function GetMigrationFor(table) {
 	return mid;
 }
 
-function SQLiteMigrateDB()
-{
+function SQLiteMigrateDB() {
 	//TODO: we should move this into the codegen so we don't waste precious cpu cycles doing this
 	this.column = function(name)
 	{
@@ -80,101 +87,91 @@ function SQLiteMigrateDB()
 	};
 	
 	this.createTable = function(name,config) {
-		Ti.API.info("create table migration called for "+config.adapter.tablename);
+		Ti.API.info('create table migration called for '+config.adapter.tablename);
 		
 		var self = this,
 			columns = [];
 			
 		for (var k in config.columns) {
-			columns.push(k + ' ' + self.column(config.columns[k]));
+			columns.push(k+" "+self.column(config.columns[k]));
 		}
 			
-		var sql = "CREATE TABLE "+config.adapter.tablename+" ( " + columns.join(",")+",id" + " )";
+		var sql = 'CREATE TABLE '+config.adapter.tablename+' ( '+columns.join(',')+',id' + ' )';
 		Ti.API.info(sql);
 		
 		db.execute(sql);
 	};
 	
 	this.dropTable = function(name) {
-		Ti.API.info("drop table migration called for "+name);
-		db.execute("DROP TABLE IF EXISTS "+name);
+		Ti.API.info('drop table migration called for '+name);
+		db.execute('DROP TABLE IF EXISTS '+name);
 	};
 }
 
-function SQLSync(model) {
-	this.model = model;
-	this.table = model.config.adapter.tablename;
-	this.columns = model.config.columns;
-
-	var self = this;
+function Sync(model, method, opts) {
+	var table =  model.config.adapter.tablename;
+	var columns = model.config.columns;
 	
-	this.create = function(opts) {
-		var names = [];
-		var values = [];
-		var q = [];
-		for (var k in self.columns)
-		{
-			names.push(k);
-			values.push(self.model.get(k));
-			q.push('?');
-		}
-		var lastRowID = db.getLastInsertRowId();
-		var sql = 'INSERT INTO '+self.table+' ('+names.join(',')+',id) values ('+q.join(',')+',?)';
-		values.push(lastRowID);
-		db.execute(sql,values);
-		self.model.id = lastRowID;
-	};
+	switch (method) {
 
-	this.read = function(opts)
-	{
-		var sql = "select rowid,* from "+self.table;
-		var rs = db.execute(sql);
-		while(rs.isValidRow())
-		{
-			var o = {};
-			_.times(rs.fieldCount(),function(c){
-				var fn = rs.fieldName(c);
-				if (fn!='rowid')
-				{
-					// don't place rowid in the model
-					var rv = rs.field(c);
-					o[fn]=rv;
-				}
-			});
-			//o.id = rs.fieldByName('rowid');
-			//var m = new self.model.model(o);
-			//results.push(m);
-			rs.next();
-		}
-		rs.close();
-		//return results;
-	};
-	
-	this.update = function(opts) {
-        //var sql = 'UPDATE '+self.table+' SET 'icon=? WHERE id=?s rowid,* from "+self.table;
-		var names = [];
-		var values = [];
-		var q = [];
-		for (var k in self.columns)
-		{
-			names.push(k+'=?');
-			values.push(self.model.get(k));
-			q.push("?");
-		}
-		var sql = 'UPDATE '+self.table+' SET '+names.join(',')+' WHERE id=?';
-		
-        var e = sql +","+values.join(',')+','+self.model.id;
-        Ti.API.info(e);
-        values.push(self.model.id);
-		db.execute(sql,values);
-	};
-	
-	this['delete'] = function(opts) {
-		var sql = "delete from "+self.table+" where rowid = ?";
-		db.execute(sql,self.model.id);
-		self.model.id = null;
-	};
+		case 'create':
+			var names = [];
+			var values = [];
+			var q = [];
+			for (var k in columns) {
+				names.push(k);
+				values.push(model.get(k));
+				q.push('?');
+			}
+			var id = guid();
+			var sql = 'INSERT INTO '+table+' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)';
+			values.push(id);
+			db.execute(sql, values);
+			model.id = id;
+			break;
 
+		case 'read':
+			var sql = 'SELECT * FROM '+table;
+			var rs = db.execute(sql);
+			while(rs.isValidRow())
+			{
+				var o = {};
+				_.times(rs.fieldCount(),function(c){
+					var fn = rs.fieldName(c);
+					o[fn] = rs.fieldByName(fn);
+				});
+
+				var m = new model.config.Model(o);
+				model.models.push(m);
+				rs.next();
+			}
+			rs.close();
+			model.trigger('fetch');
+			break;
+	
+		case 'update':
+			var names = [];
+			var values = [];
+			var q = [];
+			for (var k in columns)
+			{
+				names.push(k+'=?');
+				values.push(model.get(k));
+				q.push('?');
+			}
+			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE id=?';
+			
+		    var e = sql +','+values.join(',')+','+model.id;
+		    values.push(model.id);
+			db.execute(sql,values);
+			break;
+
+		case 'delete':
+			var sql = 'DELETE FROM '+table+' WHERE id=?';
+			db.execute(sql, model.id);
+			model.id = null;
+			break;
+	}
 }
 
 function GetMigrationForCached(t,m) {
@@ -190,12 +187,10 @@ function GetMigrationForCached(t,m) {
 
 function Migrate(migrations) {
 	var prev;
-
-	//TODO: check config for the right adapter and then delegate. for now just doing SQL
 	var sqlMigration = new SQLiteMigrateDB;
 	var migrationIds = {}; // cache for latest mid by model name
 	
-	db.execute("BEGIN;");
+	db.execute('BEGIN;');
 	
 	// iterate through all our migrations and call up/down and the last migration should
 	// have the up called but never the down -- the migrations come in pre sorted from
@@ -204,9 +199,9 @@ function Migrate(migrations) {
 		var mctx = {};
 		migration(mctx);
 		var mid = GetMigrationForCached(mctx.name,migrationIds);
-		Ti.API.info("mid = "+mid+", name = "+mctx.name);
+		Ti.API.info('mid = '+mid+', name = '+mctx.name);
 		if (!mid || mctx.id > mid) {
-			Ti.API.info("Migration starting to "+mctx.id+" for "+mctx.name);
+			Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
 			if (prev && _.isFunction(prev.down)) {
 				prev.down(sqlMigration);
 			}
@@ -217,26 +212,35 @@ function Migrate(migrations) {
 			prev = mctx;
 		}
 		else {
-			Ti.API.info("skipping migration "+mctx.id+", already performed");
+			Ti.API.info('skipping migration '+mctx.id+', already performed');
 			prev = null;
 		}
 	});
 	
 	if (prev && prev.id) {
-		db.execute("DELETE FROM migrations where model = ?",prev.name);
-		db.execute("INSERT INTO migrations VALUES (?,?)",prev.id,prev.name);
+		db.execute('DELETE FROM migrations where model = ?', prev.name);
+		db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
 	}
 	
-	db.execute("COMMIT;");
+	db.execute('COMMIT;');
 }
 
-function Sync(model, method, opts) {
-	var sync = new SQLSync(model);
-	return sync[method](opts);
-}
-
-module.exports.beforeModelCreate = InitDB;
-module.exports.afterModelCreate = function(Model) {
-	Migrate(Model.migrations);
-};
 module.exports.sync = Sync;
+
+module.exports.beforeModelCreate = function(config) {
+	config = config || {};
+
+    InitAdapter(config);
+
+	return config;
+};
+
+module.exports.afterModelCreate = function(Model) {
+	Model = Model || {};
+	
+	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
+
+	Migrate(Model.migrations);
+
+	return Model;
+};

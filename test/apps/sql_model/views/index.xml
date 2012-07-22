@@ -1,11 +1,3 @@
-<?xml version='1.0'?>
-<Window id="main" class="container">
-	<TableView id="table">	
-		<!--	
-		<TableViewRowTemplate class="row">
-			<Label class="name"/>
-			<Label class="done"/>
-		</TableViewRowTemplate>
-		-->
-	</TableView>
+<Window class="container">
+	<TableView id="table"/>	
 </Window>
