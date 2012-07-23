@@ -1,8 +1,9 @@
+// Function to keep a Ti.TableView in sync with Backbone Model.
 $.table.updateContent = function(collection) {	
 	var rows = [];
 	for (var i = 0; i < collection.length; i++) {
-		var m = collection[i].attributes, title = "";		
-   		for(var key in m) { if (key !== "id") { title += m[key] + "  " }}	   			
+		var model = collection.at(i).attributes, title = "";		
+   		for (var key in model) { if (key !== "id") { title += model[key] + "  " }}	  			
 		rows.push(Ti.UI.createTableViewRow({"title":title}));
 	}	
 	this.setData(rows);
@@ -16,7 +17,7 @@ var books = new (Alloy.getCollection('Book'));
 
 // You can bind any Backbone event to models or collections but fetch is convenient because
 // fetch occurs when the persistent store is sync'd to the local Backbone server.
-books.bind("fetch", function() { $.table.updateContent(books.models); });
+books.bind("fetch", function() { $.table.updateContent(books); });
 
 // Fetch will load models from persistent starage, sync'ing Backbone and persistent store.
 books.fetch();
@@ -41,7 +42,9 @@ book.save({author:"R Kipling"});
 books.fetch();
 
 // DELETE - destroy triggers the CRUD delete opperation
-books.forEach(function(model) { model.destroy() }); 
+for(i=books.length-1; i>=0; i--) {
+    var model = books.at(i);
+    model.destroy();
+};
 
 $.index.open();
-
