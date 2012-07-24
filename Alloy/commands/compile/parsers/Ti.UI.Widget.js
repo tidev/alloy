@@ -10,7 +10,7 @@ function parse(node, state, args) {
 
 	// Validate widget
 	if (!args.req) {
-		U.die('Invalid Widget with ID "' + args.id + '", must have a "req" attribute');
+		U.die('Invalid Widget with ID "' + args.id + '", must have a "require" attribute');
 	} 
 
 	// Generate runtime code
