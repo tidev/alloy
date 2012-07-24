@@ -1,0 +1,40 @@
+{
+	"Label": {
+		"color": "#000",
+		"font": {
+			"fontSize": "16dp"
+		}
+	},
+	".vgroup": {
+		"layout": "vertical",
+		"height": Ti.UI.SIZE
+	},
+	"#row": {
+		"className": "book_row"
+	},
+	"#thumbnail": {
+		"height": "46dp",
+		"left": 0,
+		"top": "2dp"
+	},
+	"#thumbnail[platform=android]": {
+		"left": "10dp"
+	},
+	"#title": {
+		"top": "2dp",
+		"height": Ti.UI.SIZE,
+		"left": "60dp",
+		"right": "5dp"
+	},
+	"#authors": {
+		"top": "3dp",
+		"bottom": "2dp",
+		"height": Ti.UI.SIZE,
+		"left": "60dp",
+		"right": "5dp",
+		"color": "#333",
+		"font": {
+			"fontSize": "12dp"
+		}
+	}
+}

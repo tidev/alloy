@@ -30,20 +30,25 @@
 		}
 	},
 	"#text": {
-		"height": "36dp",
-		"top": "7dp",
+		"top": "3dp",
+		"bottom": "3dp",
 		"left": "7dp",
 		"right": "60dp",
 		"color": "#111",
 		"borderStyle": Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
 		"hintText": "search for books"
 	},
+	"#text[platform=android]": {
+		"bottom": "1dp"
+	},
 	"#search": {
-		"height": "50dp",
-		"width": "50dp",
+		"top": 0,
+		"bottom": 0,
 		"right": 0,
+		"width": "50dp",
 		"color": "#fff",
-		"backgroundImage": "com.testing.searchForBooks/ic_search.png"
+		"backgroundColor": "transparent",
+		"backgroundImage": "/com.testing.searchForBooks/ic_search.png"
 	},
 	"#loading": {
 		"opacity": 0,
