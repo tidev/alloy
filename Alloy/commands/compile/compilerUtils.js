@@ -392,30 +392,37 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
 	// console.log(require('util').inspect(styleCollection, false, null));
 
-	function processStyle(style) {
+	function processStyle(style, fromArray) {
+		style = fromArray ? {0:style} : style;
 		for (var sn in style) {
 			var value = style[sn],
+				prefix = fromArray ? '' : sn + ':',
 				actualValue;
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
 				if (matches !== null) {
-					code += sn + ':' + matches[1] + ','; // matched a constant or expr()
+					code += prefix + matches[1] + ','; // matched a constant or expr()
 				} else {
-					code += sn + ':"' + value + '",'; // just a string
+					code += prefix + '"' + value + '",'; // just a string
 				}
+			} else if (_.isArray(value)) {
+				code += prefix + '[';
+				_.each(value, function(v) {
+		 			processStyle(v, true);
+		 		});
+				code += '],';
 			} else if (_.isObject(value)) {
 			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
-			 		code += sn + ':' + value.value + ','; // dynamic variable value
+			 		code += prefix + value.value + ','; // dynamic variable value
 			 	} else {
 			 		// recursively process objects
-			 		code += sn + ': {';
+			 		code += prefix + '{';
 			 		processStyle(value);
 			 		code += '},';
-			 		continue;
 			 	}
 			} else {
-				code += sn + ':' + JSON.stringify(value) + ','; // catch all, just stringify the value
+				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
 			}
 		}
 	}
