@@ -21,6 +21,7 @@ exports.generateMigrationFileName = function(t) {
 }
 
 exports.generate = function(name, type, program, args) {
+	args = args || {};
 	var ext = '.'+CONST.FILE_EXT[type];
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
 	var dir = path.join(program.outputPath,CONST.DIR[type],path.dirname(name));
