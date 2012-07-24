@@ -1,4 +1,9 @@
-var colors = require('colors');
+var isNode = true;
+try {
+	var colors = require('colors');
+} catch (e) {
+	isNode = false;
+}
 
 exports.DEBUG = 3;
 exports.INFO = 2;
@@ -9,19 +14,19 @@ exports.logLevel = exports.DEBUG;
 exports.stripColors = false;
 
 exports.debug = function(msg) {
-	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'debug'); }
+	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'info', 'cyan'); }
 }
 
 exports.info = function(msg) {
-	if (exports.logLevel >= exports.INFO) { printMessage(msg, 'info'); }
+	if (exports.logLevel >= exports.INFO) { printMessage(msg, 'info', 'white'); }
 }
 
 exports.warn = function(msg) {
-	if (exports.logLevel >= exports.WARN) { printMessage(msg, 'warn'); }
+	if (exports.logLevel >= exports.WARN) { printMessage(msg, 'warn', 'yellow'); }
 }
 
 exports.error = function(msg) {
-	if (exports.logLevel >= exports.ERROR) { printMessage(msg, 'error'); }
+	if (exports.logLevel >= exports.ERROR) { printMessage(msg, 'error', 'red'); }
 }
 
 
@@ -63,22 +68,26 @@ function formatTag(t,m)
 	return s;
 }
 
-var printMessage = function(msg, level) {
+var printMessage = function(msg, level, color) {
 	// Validate arguments
 	msg = msg || '';
 	level = level || 'info';
-	level = has(levels, level) ? level : 'info'
+	level = has(levels, level) ? level : 'info';
+	color = color || 'white';
 
 	// Have to wrap in a function to avoid "Illegal invocation" error on android
-	var logFunc = function(msg){console.log(msg)};
+	var logFunc = function(msg){console[level](msg)};
 
-	// Create message array and print
-	if (!isArray(msg)) {
-		msg = [msg || ''];
+	function printLine(line) {
+		if (isArray(line)) {
+			for (var i = 0; i < line.length; i++) {
+				printLine(line[i]);
+			}
+		} else {
+			var tag = formattedDate() + ' -- [' + formatTag(level.toUpperCase(),5) + '] ';
+			var str = (isNode ? tag.grey : tag) + (isNode ? line[color] : line);
+			logFunc(str);
+		}
 	}
-	for (var i = 0; i < msg.length; i++) {
-		var str = (formattedDate() + ' -- [' + formatTag(level.toUpperCase(),5) + '] ').grey + msg[i].cyan;
-		var m = exports.stripColors ? colors.stripColors(str) : str;
-		logFunc(m);
-	}
+	printLine(msg);
 };
