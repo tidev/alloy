@@ -70,8 +70,9 @@ module.exports = function(args, program) {
 		
 		try {
 			script.runInNewContext(compilerMakeFile);
-		} catch(E) {
-			logger.error("project build at "+alloyJMK.yellow + " generated an error during load: "+E.red);
+		} catch(e) {
+			logger.error(e.stack);
+			U.die("project build at "+alloyJMK.yellow + " generated an error during load.");
 		}
 	}
 	
@@ -190,8 +191,10 @@ function parseView(view,dir,manifest) {
 	try {
 		state.styles = CU.loadAndSortStyle(files.STYLE);
 	} catch (e) {
-		logger.error(e.stack);
-		U.die('Error processing style at "' + files.STYLE + '"');
+		U.die([
+			e.stack,
+			'Error processing style at "' + files.STYLE + '"'
+		]);
 	}
 
 	// read and parse the view file
@@ -229,8 +232,11 @@ function parseView(view,dir,manifest) {
 	try {
 		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
 	} catch (e) {
-		logger.error(code);
-		U.die(e);
+		//logger.error(e.stack);
+		U.die([
+			e.stack,
+			'Error parsing view "' + view + '".'
+		]);
 	}
 
 	// Write the view or widget to its runtime file
