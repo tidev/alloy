@@ -1,0 +1,7 @@
+{
+	"#win": {
+		"backgroundColor": "#fff",
+		"exitOnClose": "true",
+		"navBarHidden": "true"
+	}
+}

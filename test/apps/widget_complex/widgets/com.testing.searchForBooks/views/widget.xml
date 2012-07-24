@@ -1,0 +1,6 @@
+<View id="bar">
+	<TextField id="text"/>
+	<View class="divider"/>
+	<View id="search" onClick="searchForBooks"/>
+	<Widget require="com.appcelerator.loading" id="loading"/>
+</View>
