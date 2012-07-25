@@ -30,8 +30,8 @@
 		}
 	},
 	"#text": {
-		"top": "3dp",
-		"bottom": "3dp",
+		"top": "6dp",
+		"bottom": "6dp",
 		"left": "7dp",
 		"right": "60dp",
 		"color": "#111",
@@ -39,6 +39,7 @@
 		"hintText": "search for books"
 	},
 	"#text[platform=android]": {
+		"top": "3dp",
 		"bottom": "1dp"
 	},
 	"#searchView": {
