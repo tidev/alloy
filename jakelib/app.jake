@@ -28,9 +28,6 @@ namespace('app', function() {
 				}
 			}
 		}
-
-		// console.log('Creating empty app path at ' + targetAppPath);
-		// fs.mkdirSync(targetAppPath);
 	});
 	
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
