@@ -92,7 +92,7 @@ function closeTopmost() {
     }
 }
 
-if (Ti.Platform.name === 'iPhone OS') {
+if (OS_IOS) {
     var lastBottom;
     Ti.App.addEventListener('keyboardFrameChanged', function keyboardFrameChanged(evt) {
         var newBottom = evt.keyboardFrame.y;
