@@ -27,17 +27,9 @@ namespace('app', function() {
 	
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
-		var templateDir = path.join(targetAppPath,'template');
 
 		console.log('Staging sample app "'+process.env.dir+'" for launch...');
 		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath);
-
-		console.log('Copying Alloy templates...');
-		if (path.existsSync(templateDir)) {
-			wrench.rmdirSyncRecursive(templateDir);
-		}
-		wrench.mkdirSyncRecursive(templateDir, 0777);
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'Alloy', 'template'), templateDir);
 	});
 	
 	desc('run an example, all but dir are optional: e.g. "jake app:run dir=masterdetail platform=android tiversion=2.0.2.GA tisdk=<path to sdk>"');
