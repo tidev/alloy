@@ -9,13 +9,13 @@ var handlers = {};
 // react to changes in the model state
 model.on('change:loading', function(m) {
 	if (m.get('loading')) {
-		$.search.touchEnabled = false;
-		$.search.backgroundImage = 'none';
+		$.searchView.touchEnabled = false;
+		$.search.opacity = 0;
 		$.loading.setOpacity(1.0);	
 	} else {
 		$.loading.setOpacity(0);
-		$.search.backgroundImage = '/com.testing.searchForBooks/ic_search.png';
-		$.search.touchEnabled = true;
+		$.search.opacity = 1;
+		$.searchView.touchEnabled = true;
 	}
 });
 

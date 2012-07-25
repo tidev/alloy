@@ -41,20 +41,26 @@
 	"#text[platform=android]": {
 		"bottom": "1dp"
 	},
-	"#search": {
+	"#searchView": {
 		"top": 0,
 		"bottom": 0,
 		"right": 0,
-		"width": "50dp",
+		"width": "50dp"
+	},
+	"#search": {
+		"height": Ti.UI.FILL,
+		"width": Ti.UI.FILL,
 		"color": "#fff",
 		"backgroundColor": "transparent",
-		"backgroundImage": "/com.testing.searchForBooks/ic_search.png"
+		"image": "/com.testing.searchForBooks/ic_search.png",
+		"touchEnabled": false
 	},
 	"#loading": {
 		"opacity": 0,
 		"right": "8dp",
 		"top": "8dp",
 		"height": "34dp",
-		"width": "34dp"
+		"width": "34dp",
+		"touchEnabled": false
 	}
 }

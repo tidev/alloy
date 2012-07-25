@@ -2,7 +2,7 @@
 	"Label": {
 		"color": "#000",
 		"font": {
-			"fontSize": "16dp"
+			"fontSize": "20dp"
 		}
 	},
 	".vgroup": {
@@ -13,12 +13,9 @@
 		"className": "book_row"
 	},
 	"#thumbnail": {
-		"height": "46dp",
-		"left": 0,
+		"width": "40dp",
+		"left": "5dp",
 		"top": "2dp"
-	},
-	"#thumbnail[platform=android]": {
-		"left": "10dp"
 	},
 	"#title": {
 		"top": "2dp",
@@ -34,7 +31,7 @@
 		"right": "5dp",
 		"color": "#333",
 		"font": {
-			"fontSize": "12dp"
+			"fontSize": "14dp"
 		}
 	}
 }

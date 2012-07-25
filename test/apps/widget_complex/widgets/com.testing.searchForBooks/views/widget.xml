@@ -1,8 +1,8 @@
 <View id="bar">
 	<TextField id="text" onReturn="searchForBooks"/>
 	<View class="divider"/>
-	<View id="search" onClick="searchForBooks"/>
-
-	<!-- Use the loading widget as part of this widget -->
-	<Widget require="com.appcelerator.loading" id="loading"/>
+	<View id="searchView" onClick="searchForBooks">
+		<ImageView id="search"/>
+		<Widget require="com.appcelerator.loading" id="loading"/>
+	</View>
 </View>
