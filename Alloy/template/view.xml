@@ -1,2 +1,4 @@
-<Window class='container'>
-</Window>
+<Component>
+	<Window class='container'>
+	</Window>
+</Component>

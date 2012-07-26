@@ -202,8 +202,8 @@ function parseView(view,dir,manifest) {
 	var doc = new DOMParser().parseFromString(xml);
 
 	// Give our document the <Alloy> root element if it doesn't already have one
-	if (doc.documentElement.nodeName !== 'Alloy') {
-		var tmpDoc = new DOMParser().parseFromString('<Alloy></Alloy>');
+	if (doc.documentElement.nodeName !== CONST.ROOT_NODE) {
+		var tmpDoc = new DOMParser().parseFromString('<' + CONST.ROOT_NODE + '></' + CONST.ROOT_NODE + '>');
 		tmpDoc.documentElement.appendChild(doc.documentElement);
 		doc = tmpDoc;
 	}
