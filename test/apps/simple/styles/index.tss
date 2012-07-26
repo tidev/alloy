@@ -1,22 +1,16 @@
-{
-	"Button" : {
-		width: expr(Ti.Platform.displayCaps.platformWidth/2),
-		height: Ti.UI.SIZE
-	},
-	
-	".button" : {
-		randomProp: 'OK'
-	},
-	
-	"#index[platform=ios]": {
-		backgroundColor: 'blue'
-	},
-	
-	"#index[platform=ios size=tablet]": {
-		backgroundColor: 'red'
-	},
-
-	"#b": {
-		randomProp: null
-	}
+"Button" : {
+	width: expr(Ti.Platform.displayCaps.platformWidth/2),
+	height: Ti.UI.SIZE
+},
+".button" : {
+	randomProp: 'OK'
+},
+"#index[platform=ios]": {
+	backgroundColor: 'blue'
+},
+"#index[platform=ios size=tablet]": {
+	backgroundColor: 'red'
+},
+"#b": {
+	randomProp: null
 }
