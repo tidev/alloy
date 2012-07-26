@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
-
-<View>
-	<Label id="t"></Label>
-	<View id="hl">
-		<Button id="a"></Button>
-		<Button id="b"></Button>
-		<Button id="c"></Button>
+<Component>
+	<View>
+		<Label id="t"></Label>
+		<View id="hl">
+			<Button id="a"></Button>
+			<Button id="b"></Button>
+			<Button id="c"></Button>
+		</View>
 	</View>
-</View>
+</Component>

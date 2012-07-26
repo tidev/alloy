@@ -1,4 +1,6 @@
-<Window id="win">
-	<Widget require="com.testing.searchForBooks" id="sfb"/>
-	<TableView id="table"/>
-</Window>
+<Component>
+	<Window id="win">
+		<Widget require="com.testing.searchForBooks" id="sfb"/>
+		<TableView id="table"/>
+	</Window>
+</Component>

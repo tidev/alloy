@@ -1,67 +1,65 @@
-{
-	".divider": {
-		"height": "48dp",
-		"width": "3dp",
-		"top": "1dp",
-		"right": "50dp",
-		"backgroundGradient": {
-			"type": "linear",
-			"startPoint": { "x": "0%", "y":"0%"},
-			"endPoint":   { "x": "100%", "y":"0%"},
-			"colors": [
-				{ "color": "#666", "offset": 0.0 },
-				{ "color": "#ccc", "offset": 0.5 },
-				{ "color": "#666", "offset": 1.0 }
-			]
-		}
-	},
-	"#bar": {
-		"top": 0,
-		"height": "50dp",
-		"width": Ti.UI.FILL,
-		"backgroundGradient": {
-			"type": "linear",
-			"startPoint": { "x": "0%", "y":"0%"},
-			"endPoint":   { "x": "0%", "y":"100%"},
-			"colors": [
-				{ "color": "#a00", "offset": 0.0 },
-				{ "color": "#800", "offset": 1.0 }
-			]
-		}
-	},
-	"#text": {
-		"top": "6dp",
-		"bottom": "6dp",
-		"left": "7dp",
-		"right": "60dp",
-		"color": "#111",
-		"borderStyle": Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-		"hintText": "search for books"
-	},
-	"#text[platform=android]": {
-		"top": "3dp",
-		"bottom": "1dp"
-	},
-	"#searchView": {
-		"top": 0,
-		"bottom": 0,
-		"right": 0,
-		"width": "50dp"
-	},
-	"#search": {
-		"height": Ti.UI.FILL,
-		"width": Ti.UI.FILL,
-		"color": "#fff",
-		"backgroundColor": "transparent",
-		"image": "/com.testing.searchForBooks/ic_search.png",
-		"touchEnabled": false
-	},
-	"#loading": {
-		"opacity": 0,
-		"right": "8dp",
-		"top": "8dp",
-		"height": "34dp",
-		"width": "34dp",
-		"touchEnabled": false
+".divider": {
+	height: "48dp",
+	width: "3dp",
+	top: "1dp",
+	right: "50dp",
+	backgroundGradient: {
+		type: "linear",
+		startPoint: { x: "0%",   y:"0%"},
+		endPoint:   { x: "100%", y:"0%"},
+		colors: [
+			{ color: "#666", offset: 0.0 },
+			{ color: "#ccc", offset: 0.5 },
+			{ color: "#666", offset: 1.0 }
+		]
 	}
+},
+"#bar": {
+	top: 0,
+	height: "50dp",
+	width: Ti.UI.FILL,
+	backgroundGradient: {
+		type: "linear",
+		startPoint: { x: "0%", y:"0%"},
+		endPoint:   { x: "0%", y:"100%"},
+		colors: [
+			{ color: "#a00", offset: 0.0 },
+			{ color: "#800", offset: 1.0 }
+		]
+	}
+},
+"#text": {
+	top: "6dp",
+	bottom: "6dp",
+	left: "7dp",
+	right: "60dp",
+	color: "#111",
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	hintText: "search for books"
+},
+"#text[platform=android]": {
+	top: "3dp",
+	bottom: "1dp"
+},
+"#searchView": {
+	top: 0,
+	bottom: 0,
+	right: 0,
+	width: "50dp"
+},
+"#search": {
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL,
+	color: "#fff",
+	backgroundColor: "transparent",
+	image: "/com.testing.searchForBooks/ic_search.png",
+	touchEnabled: false
+},
+"#loading": {
+	opacity: 0,
+	right: "8dp",
+	top: "8dp",
+	height: "34dp",
+	width: "34dp",
+	touchEnabled: false
 }

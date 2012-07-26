@@ -1,7 +1,9 @@
-<TableViewRow id="row">
-	<ImageView id="thumbnail"/>
-	<View class="vgroup">
-		<Label id="title"/>
-		<Label id="authors"/>
-	</View>
-</TableViewRow>
+<Component>
+	<TableViewRow id="row">
+		<ImageView id="thumbnail"/>
+		<View class="vgroup">
+			<Label id="title"/>
+			<Label id="authors"/>
+		</View>
+	</TableViewRow>
+</Component>

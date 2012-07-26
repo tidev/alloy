@@ -1,32 +1,30 @@
-{
-	".container": {
-		"layout": "vertical"
-	},
-	"#backdrop": {
-		"backgroundColor": "#fff"
-	},
-	"#mover": {
-		"backgroundColor": "#a00",
-		"height": Ti.UI.SIZE,
-		"width": Ti.UI.SIZE,
-		"top": "20dp"
-	},
-	"#label": {
-		"color": "#eee",
-		"font": {
-			"fontSize": "28dp",
-			"fontWeight": "bold"
-		}
-	},
-	"#shake": {
-		"width": Ti.UI.SIZE,
-		"height": Ti.UI.SIZE,
-		"color": "#000",
-		"top": "20dp"
-	},
-	"#trim": {
-		"height": Ti.UI.SIZE,
-		"width": Ti.UI.SIZE,
-		"top": "20dp"
+".container": {
+	layout: "vertical"
+},
+"#backdrop": {
+	backgroundColor: "#fff"
+},
+"#mover": {
+	backgroundColor: "#a00",
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	top: "20dp"
+},
+"#label": {
+	color: "#eee",
+	font: {
+		fontSize: "28dp",
+		fontWeight: "bold"
 	}
+},
+"#shake": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000",
+	top: "20dp"
+},
+"#trim": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	top: "20dp"
 }

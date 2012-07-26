@@ -1,3 +1,5 @@
-<Window class="container">
-	<Label id="t" onClick="doClick">Hello, World</Label>
-</Window>
+<Component>
+	<Window class="container">
+		<Label id="t" onClick="doClick">Hello, World</Label>
+	</Window>
+</Component>

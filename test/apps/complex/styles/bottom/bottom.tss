@@ -1,9 +1,6 @@
-{
-	"#b": 
-	{
-		"width": Ti.UI.SIZE,
-		"height": Ti.UI.SIZE,
-		"title" : "Click me",
-		"bottom" : 20
-	}
+"#b": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	title : "Click me",
+	bottom : 20
 }

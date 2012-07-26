@@ -1,8 +1,10 @@
-<View id="bar">
-	<TextField id="text" onReturn="searchForBooks"/>
-	<View class="divider"/>
-	<View id="searchView" onClick="searchForBooks">
-		<ImageView id="search"/>
-		<Widget require="com.appcelerator.loading" id="loading"/>
+<Component>
+	<View id="bar">
+		<TextField id="text" onReturn="searchForBooks"/>
+		<View class="divider"/>
+		<View id="searchView" onClick="searchForBooks">
+			<ImageView id="search"/>
+			<Widget require="com.appcelerator.loading" id="loading"/>
+		</View>
 	</View>
-</View>
+</Component>

@@ -1,17 +1,12 @@
-{
-   ".container":
-   {
-       "backgroundColor":"white",
-       "layout": "vertical"
-   },
-   "#image":
-   {
-   		"height": "200dp",
-   		"width": "200dp",
-   		"top": "20dp"
-   },
-   "#closeButton": 
-   {
-   		"top": "20dp"
-   }
+".container": {
+   backgroundColor:"white",
+   layout: "vertical"
+},
+"#image": {
+		height: "200dp",
+		width: "200dp",
+		top: "20dp"
+},
+"#closeButton": {
+		top: "20dp"
 }

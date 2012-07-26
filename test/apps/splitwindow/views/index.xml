@@ -1,8 +1,10 @@
-<SplitWindow>
-	<Window>
-		<Label>This is the master</Label>
-	</Window>
-	<Window>
-		<Label>This is the detail</Label>
-	</Window>
-</SplitWindow>
+<Component>
+	<SplitWindow>
+		<Window>
+			<Label>This is the master</Label>
+		</Window>
+		<Window>
+			<Label>This is the detail</Label>
+		</Window>
+	</SplitWindow>
+</Component>
