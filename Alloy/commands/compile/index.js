@@ -232,7 +232,6 @@ function parseView(view,dir,manifest) {
 	try {
 		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
 	} catch (e) {
-		//logger.error(e.stack);
 		U.die([
 			e.stack,
 			'Error parsing view "' + view + '".'
