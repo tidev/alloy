@@ -198,20 +198,22 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
 
-exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
-	if (!path.existsSync(assetsDir)) { return; }
-	var files = wrench.readdirSyncRecursive(assetsDir);
-	_.each(files, function(file) {
-		var source = path.join(assetsDir, file);
-		if (fs.statSync(source).isFile()) {
-			var destDir = path.join(resourceDir, path.dirname(file), widgetId);
-			var dest = path.join(destDir, path.basename(file));
-			if (!path.existsSync(destDir)) {
-				wrench.mkdirSyncRecursive(destDir, 0777);
+exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
+	_.each(resources, function(dir) {
+		if (!path.existsSync(dir)) { return; }
+		var files = wrench.readdirSyncRecursive(dir);
+		_.each(files, function(file) {
+			var source = path.join(dir, file);
+			if (fs.statSync(source).isFile()) {
+				var destDir = path.join(resourceDir, path.dirname(file), widgetId);
+				var dest = path.join(destDir, path.basename(file));
+				if (!path.existsSync(destDir)) {
+					wrench.mkdirSyncRecursive(destDir, 0777);
+				}
+				//console.log('Copying assets ' + source + ' --> ' + dest);
+				U.copyFileSync(source, dest);
 			}
-			//console.log('Copying assets ' + source + ' --> ' + dest);
-			U.copyFileSync(source, dest);
-		}
+		});
 	});
 }
 

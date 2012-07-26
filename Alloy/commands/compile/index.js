@@ -243,7 +243,11 @@ function parseView(view,dir,manifest) {
 	if (manifest) {
 		var widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT;
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
-		CU.copyWidgetAssets(path.join(dir,CONST.DIR.ASSETS), compileConfig.dir.resources, manifest.id);
+		CU.copyWidgetResources(
+			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
+			compileConfig.dir.resources, 
+			manifest.id
+		);
 		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
 	} else {
 		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
