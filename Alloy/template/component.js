@@ -1,11 +1,6 @@
-// TODO: Optimize out lifecycle events if they are not defined
-//       instead of doing runtime checks
-
 var Alloy = require("alloy"), 
 	_ = Alloy._, 
-	A$ = Alloy.A, 
-	M$ = Alloy.M, 
-	BC$ = Alloy.Backbone.Collection;
+	A$ = Alloy.A;
 
 exports.create = function() {
 	var L$ = {},
