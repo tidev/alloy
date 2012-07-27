@@ -173,7 +173,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isRoot) { code.content += 'root$ = ' + args.symbol + ';\n'; }
+	if (isRoot) { code.content += '$.setRoot(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
