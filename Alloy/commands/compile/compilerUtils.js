@@ -554,11 +554,16 @@ exports.formatAST = function(ast,config,fn)
 function processTssFile(f) {
 	// Handle "call" ASTs, where we look for expr() syntax
     function do_call() {
-    	if (this[1][1] === 'expr') {
-    		var code = pro.gen_code(this[2][0]);
-    		var new_ast = ['string', STYLE_EXPR_PREFIX + code];
-    		return new_ast;
-    	} 
+    	var name = this[1][1];
+    	var code;
+    	if (name === 'expr') { 
+    		code = pro.gen_code(this[2][0]);
+    	} else if (name === 'L') {
+    		code = pro.gen_code(this);
+    	} else {
+    		return null;
+    	}
+    	return ['string', STYLE_EXPR_PREFIX + code];
     };
 
     // Recursively assemble the full name of a dot-notation variable
