@@ -4,6 +4,7 @@
  */
 var jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
+	_ = require('../../lib/alloy/underscore')._,
 	util = require('util'),
 	colors = require('colors'),
 	logger = require('../../common/logger.js'),
@@ -229,7 +230,6 @@ function processCall() {
 }
 
 function handleAddAndRemove(ast) {
-	
 	var theCall = ast[1];
 	var theArgs = ast[2];
 
@@ -248,17 +248,14 @@ function handleAddAndRemove(ast) {
 		return null;
 	}
 
+	// TODO: check theCall to make sure it's a Ti proxy
+	var argsStr = pro.gen_code(theArgs[0],{beautify:false});
+	
 	// Need to wrap this in a self-executing function. This is because the 
 	// argument may be a function, and we don't want to call it twice and 
 	// have unexpected results.
-	// We also need to make sure the returned value is not null, since iOS
-	// thinks every "get" method on a proxy object exists, so _.isFunction()
-	// on iOS gives false positives. iOS simply returns null in these cases.
-	// TODO: Just use a unique property on alloy components to ID them
-	var argsStr = pro.gen_code(theArgs[0],{beautify:false});
-	// TODO: check caller for [object Ti*]
 	var newArgs = '(function(t) {' +
-	              'return (_.isObject(t) && _.isFunction(t.getRoot) ? t.getRoot() : t) || t;' +
+	              'return (_.isObject(t) && t.__iamalloy__ ? t.getRoot() : t) || t;' +
                   '})(' + argsStr + ')';
 	ast[2][0] = jsp.parse(newArgs)[1][0][1];
 
