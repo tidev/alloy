@@ -8,5 +8,6 @@
 	"license":"Public Domain",
 	"min-alloy-version": "0.1.16",
 	"min-titanium-version":"2.0",
-	"tags":"utility,google,search"
+	"tags":"utility,google,search",
+	"platforms":"android,ios,mobileweb"
 }

@@ -7,5 +7,7 @@
 	"copyright":"Copyright (c) 2012 by Jeff Haynie",
 	"license":"Public Domain",
 	"min-alloy-version": "1.0",
-	"min-titanium-version":"2.1"
+	"min-titanium-version":"2.1",
+	"tags":"",
+	"platforms":"android,ios,mobileweb"
 }
