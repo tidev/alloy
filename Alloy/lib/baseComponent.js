@@ -6,6 +6,7 @@ exports.create = function() {
 		root$;
 
 	var $ = {
+		__iamalloy__: true,
 		addEventListener: function(evt,callback) {
 			if (!L$[evt]) {
 				L$[evt] = [];
