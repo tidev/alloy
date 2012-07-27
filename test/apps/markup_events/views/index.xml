@@ -1,5 +1,5 @@
 <Component>
 	<Window class="container">
-		<Label id="t" onClick="doClick">Hello, World</Label>
+		<Label id="t" onClick="doClick" text="CLICK ME" color="#900"></Label>
 	</Window>
 </Component>

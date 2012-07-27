@@ -44,9 +44,9 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-<modules><module platform="android" version="1.0">ti.physicalSizeCategory</module>
+    <modules><module platform="android" version="1.0">ti.physicalSizeCategory</module>
 </modules>
-<plugins>
+    <plugins>
         <plugin version="1.0">ti.alloy</plugin>
     </plugins>
 </ti:app>
