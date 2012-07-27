@@ -483,9 +483,9 @@ exports.processSourceCode = function(code, config, fn)
 	var c = jsp.tokenizer(code)();
 	// extract header copyright so we can preserve it (if at the top of the file)
     var copyrights = show_copyright(c.comments_before);
-	var ast = jsp.parse(code); 
-	var newCode = exports.formatAST(ast,config,fn);
-	return (copyrights ? copyrights + '\n' : '' ) + newCode;
+	//var ast = jsp.parse(code); 
+	//var newCode = exports.formatAST(ast,config,fn);
+	return (copyrights ? copyrights + '\n' : '' ) + code; //newCode;
 };
 
 exports.formatAST = function(ast,config,fn)
