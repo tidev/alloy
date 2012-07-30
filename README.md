@@ -21,6 +21,21 @@ The following are the main goals for Alloy:
 - *Maintainability*:  it's important that Titanium apps can be maintained and sustained - not just by the original developer, but by others that are on the team, that come along afterwards or by others in the Titanium community.  Alloy should provide a framework that anyone can drop into and become productive once they understand the basics of Alloy.
 - *Best Practices*: it's important that Alloy provide a clean separation of concerns for application design, provide a framework that encapsulates the best practices for Titanium and provides a mechanism for reusable application building blocks called `Widgets`.
 
+Quick Start
+-----------
+
+This quick start will give you the shortest path to installing Alloy and creating your first Alloy-driven project. It is  assumed that you have a working Titanium (Studio) environment. Check the [Titanium Quick Start](https://wiki.appcelerator.org/display/guides/Quick+Start) guide for setting that up first if you haven't done so already.
+
+* Do this once:
+	1. Download and install [Node.js](http://nodejs.org/), if necessary
+	2. At the command line: `sudo npm install -g alloy`
+* Do this for each project you create:
+	3. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
+	4. `cd PATH/TO/PROJECT`
+	5. `alloy new .`
+
+After these steps, you can now run your projects in Titanium Studio. Be aware when working with an Alloy project that all files in your **Resources** directory are subject to being overwritten. All your work should be done in your project's **app** folder. 
+
 Installation
 -------------
 

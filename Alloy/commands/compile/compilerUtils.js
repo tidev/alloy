@@ -173,7 +173,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isRoot) { code.content += 'root$ = ' + args.symbol + ';\n'; }
+	if (isRoot) { code.content += '$.setRoot(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
@@ -198,20 +198,22 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
 
-exports.copyWidgetAssets = function(assetsDir, resourceDir, widgetId) {
-	if (!path.existsSync(assetsDir)) { return; }
-	var files = wrench.readdirSyncRecursive(assetsDir);
-	_.each(files, function(file) {
-		var source = path.join(assetsDir, file);
-		if (fs.statSync(source).isFile()) {
-			var destDir = path.join(resourceDir, path.dirname(file), widgetId);
-			var dest = path.join(destDir, path.basename(file));
-			if (!path.existsSync(destDir)) {
-				wrench.mkdirSyncRecursive(destDir, 0777);
+exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
+	_.each(resources, function(dir) {
+		if (!path.existsSync(dir)) { return; }
+		var files = wrench.readdirSyncRecursive(dir);
+		_.each(files, function(file) {
+			var source = path.join(dir, file);
+			if (fs.statSync(source).isFile()) {
+				var destDir = path.join(resourceDir, path.dirname(file), widgetId);
+				var dest = path.join(destDir, path.basename(file));
+				if (!path.existsSync(destDir)) {
+					wrench.mkdirSyncRecursive(destDir, 0777);
+				}
+				//console.log('Copying assets ' + source + ' --> ' + dest);
+				U.copyFileSync(source, dest);
 			}
-			//console.log('Copying assets ' + source + ' --> ' + dest);
-			U.copyFileSync(source, dest);
-		}
+		});
 	});
 }
 
@@ -292,26 +294,21 @@ exports.loadController = function(file) {
 };
 
 exports.loadStyle = function(tssFile) {
-	var code, json, styles;
-
 	if (path.existsSync(tssFile)) {
 		var contents = fs.readFileSync(tssFile, 'utf8');
-		if (!/^\s*$/.test(contents)) {
-			try {
-				code = processTssFile(contents);
-				json = JSON.parse(code);
-				styles = sortStyles(json);
-				optimizer.optimizeStyle(styles);
-				//console.log(require('util').inspect(styles,false,null));
-				return styles;
-			} catch(E) {
-				console.error(code);
-				U.die("Error parsing style at "+tssFile.yellow+".  Error was: "+String(E).red);
-			}
+		if (!/^\s*$/gi.test(contents)) {
+			contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{' + contents + '}';
+			var code = processTssFile(contents);
+			var json = JSON.parse(code);
+			optimizer.optimizeStyle(json);
+			return json;
 		}
 	}
-
 	return {};
+};
+
+exports.loadAndSortStyle = function(tssFile) {
+	return sortStyles(exports.loadStyle(tssFile));
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
@@ -398,30 +395,37 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
 	// console.log(require('util').inspect(styleCollection, false, null));
 
-	function processStyle(style) {
+	function processStyle(style, fromArray) {
+		style = fromArray ? {0:style} : style;
 		for (var sn in style) {
 			var value = style[sn],
+				prefix = fromArray ? '' : sn + ':',
 				actualValue;
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
 				if (matches !== null) {
-					code += sn + ':' + matches[1] + ','; // matched a constant or expr()
+					code += prefix + matches[1] + ','; // matched a constant or expr()
 				} else {
-					code += sn + ':"' + value + '",'; // just a string
+					code += prefix + '"' + value + '",'; // just a string
 				}
+			} else if (_.isArray(value)) {
+				code += prefix + '[';
+				_.each(value, function(v) {
+		 			processStyle(v, true);
+		 		});
+				code += '],';
 			} else if (_.isObject(value)) {
 			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
-			 		code += sn + ':' + value.value + ','; // dynamic variable value
+			 		code += prefix + value.value + ','; // dynamic variable value
 			 	} else {
 			 		// recursively process objects
-			 		code += sn + ': {';
+			 		code += prefix + '{';
 			 		processStyle(value);
 			 		code += '},';
-			 		continue;
 			 	}
 			} else {
-				code += sn + ':' + JSON.stringify(value) + ','; // catch all, just stringify the value
+				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
 			}
 		}
 	}
@@ -437,7 +441,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style) + '} : {}';
 		} else {
 			// just return the object
-			console.log(styleCollection[0].style);
 			code += '{';
 			processStyle(styleCollection[0].style);
 			code += '}';
@@ -480,9 +483,9 @@ exports.processSourceCode = function(code, config, fn)
 	var c = jsp.tokenizer(code)();
 	// extract header copyright so we can preserve it (if at the top of the file)
     var copyrights = show_copyright(c.comments_before);
-	var ast = jsp.parse(code); 
-	var newCode = exports.formatAST(ast,config,fn);
-	return (copyrights ? copyrights + '\n' : '' ) + newCode;
+	//var ast = jsp.parse(code); 
+	//var newCode = exports.formatAST(ast,config,fn);
+	return (copyrights ? copyrights + '\n' : '' ) + code; //newCode;
 };
 
 exports.formatAST = function(ast,config,fn)
@@ -551,11 +554,16 @@ exports.formatAST = function(ast,config,fn)
 function processTssFile(f) {
 	// Handle "call" ASTs, where we look for expr() syntax
     function do_call() {
-    	if (this[1][1] === 'expr') {
-    		var code = pro.gen_code(this[2][0]);
-    		var new_ast = ['string', STYLE_EXPR_PREFIX + code];
-    		return new_ast;
-    	} 
+    	var name = this[1][1];
+    	var code;
+    	if (name === 'expr') { 
+    		code = pro.gen_code(this[2][0]);
+    	} else if (name === 'L') {
+    		code = pro.gen_code(this);
+    	} else {
+    		return null;
+    	}
+    	return ['string', STYLE_EXPR_PREFIX + code];
     };
 
     // Recursively assemble the full name of a dot-notation variable
@@ -601,82 +609,88 @@ function processTssFile(f) {
     return pro.gen_code(new_ast[1][0][1][3], { 
     	beautify: true, 
     	quote_keys: true,
-    	keep_zeroes: true,
+    	ignore_numbers: true,
     	double_quotes: true
     }) || '';
 }
 
-function sortStyles(styles) {
+function sortStyles(componentStyle) {
 	var mergedStyle = {},
 		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
-		extraStyle = extraStyle || {};
+		extraStyle = extraStyle || {},
+		sortedStyles = [],
+		ctr = 1,
+		VALUES = {
+			ID:     10000,
+			CLASS:   1000,
+			API:      100,
+			PLATFORM:  10,
+			SUM:        1,
+			ORDER:      0.001
+		};
 
-	var raw = [];
-
-	// TODO: we need a global style file. app.tss? alloy.tss?
+	// add global style to processing, if present
+	var styleList = [];
+	if (compilerConfig && _.isObject(compilerConfig.globalStyle) && !_.isEmpty(compilerConfig.globalStyle)) { 
+		styleList.push(compilerConfig.globalStyle);
+	}
+	if (_.isObject(componentStyle) && !_.isEmpty(componentStyle)) {
+		styleList.push(componentStyle);
+	}
 
 	// Calculate priority:
-	var VALUES = {
-		ID:    100000,
-		CLASS:  10000,
-		API:     1000,
-		GLOBAL:   100,
-		PLATFORM:  10,
-		SUM:        1,
-		ORDER:      0.001
-	}
+	_.each(styleList, function(style) {
+		for (var key in style) {
+			var obj = {};
+			var priority = ctr++ * VALUES.ORDER;
+			var match = key.match(regex);
+			if (match === null) {
+				U.die('Invalid style specifier "' + key + '"');
+			}
+			var newKey = match[2];
+			switch(match[1]) {
+				case '#':
+					obj.isId = true;
+					priority += VALUES.ID;
+					break;
+				case '.':
+					obj.isClass = true;
+					priority += VALUES.CLASS;
+					break;
+				default:
+					if (match[2]) {
+						obj.isApi = true;
+						priority += VALUES.API;
+					}
+					break;
+			}
 
-	var ctr = 1;
-	for (var key in styles) {
-		var obj = {};
-		var priority = ctr++ * VALUES.ORDER;
-		var match = key.match(regex);
-		if (match === null) {
-			U.die('Invalid style specifier "' + key + '"');
-		}
-		var newKey = match[2];
-		switch(match[1]) {
-			case '#':
-				obj.isId = true;
-				priority += VALUES.ID;
-				break;
-			case '.':
-				obj.isClass = true;
-				priority += VALUES.CLASS;
-				break;
-			default:
-				if (match[2]) {
-					obj.isApi = true;
-					priority += VALUES.API;
-				}
-				break;
-		}
+			if (match[3]) {
+				obj.queries = {};
+				_.each(match[3].split(/\s+/), function(query) {
+					var parts = query.split('=');
+					var q = U.trim(parts[0]);
+					var v = U.trim(parts[1]);
+					if (q === 'platform') {
+						priority += VALUES.PLATFORM + VALUES.SUM;
+						v = v.split(',');
+					} else {
+						priority += VALUES.SUM;
+					}
+					obj.queries[q] = v;
+				});
+			} 
 
-		if (match[3]) {
-			obj.queries = {};
-			_.each(match[3].split(/\s+/), function(query) {
-				var parts = query.split('=');
-				var q = U.trim(parts[0]);
-				var v = U.trim(parts[1]);
-				if (q === 'platform') {
-					priority += VALUES.PLATFORM + VALUES.SUM;
-					v = v.split(',');
-				} else {
-					priority += VALUES.SUM;
-				}
-				obj.queries[q] = v;
+			_.extend(obj, {
+				priority: priority,
+				key: newKey, 
+				style: style[key]
 			});
-		} 
+			sortedStyles.push(obj);
+		}
+	});
 
-		_.extend(obj, {
-			priority: priority,
-			key: newKey, 
-			style: styles[key]
-		});
-		raw.push(obj);
-	}
-
-	return _.sortBy(raw, 'priority');
+	return _.sortBy(sortedStyles, 'priority');
 }
 
 // testing style priority

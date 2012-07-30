@@ -1,18 +1,18 @@
 var path = require('path'),
-	fs = require('fs'),
-	U = require('../../../utils'),
 	GU = require('../generateUtils'),
-	_ = require("../../../lib/alloy/underscore")._,
+	CONST = require('../../../common/constants'),
 	logger = require('../../../common/logger');
 
-module.exports = function(name, args, program) {
-	var migrationsDir = path.join(program.outputPath,'migrations');
-	U.ensureDir(migrationsDir);
-	
-	var templatePath = path.join(__dirname,'..','..','..','template','migration.' + CONST.FILE_EXT.MIGRATION);
-	var mf = path.join(migrationsDir, GU.generateMigrationFileName(name));
-	var md = _.template(fs.readFileSync(templatePath,'utf8'),{});
-	fs.writeFileSync(mf,md);
-
-	logger.info('Generated empty migration named '+name);
+module.exports = function(name, args, program, template) {
+	var type = 'MIGRATION';
+	var dir = path.dirname(name);
+	name = path.join(dir,
+		GU.generateMigrationFileName(path.basename(name,'.'+CONST.FILE_EXT.MIGRATION)));
+	var info = GU.generate(name, type, program, {
+		template: template || {
+			up:'',
+			down:''
+		}
+	});
+	logger.info('Generated ' + type.toLowerCase() + ' named ' + name);
 }

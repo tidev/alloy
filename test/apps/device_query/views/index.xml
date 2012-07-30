@@ -1,3 +1,5 @@
-<Window id="win">
-	<Label id="osLabel"/>
-</Window>
+<Component>
+	<Window id="win">
+		<Label id="osLabel"/>
+	</Window>
+</Component>

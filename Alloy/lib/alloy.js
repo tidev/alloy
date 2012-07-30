@@ -1,27 +1,16 @@
 
-var 	   _ = require("alloy/underscore")._,
-	Backbone = require("alloy/backbone"),
+var 	   _ = require('alloy/underscore')._,
+	Backbone = require('alloy/backbone'),
 	STR = require('alloy/string');
 	
 exports._ = _;
 exports.Backbone = Backbone;
 
-// TODO: we might want to eliminate this as all sync operations can be handles
-//       in the adapter-specific code
-Backbone.Collection.notify = _.extend({}, Backbone.Events);
-
 Backbone.sync = function(method, model, opts) {
-	// Ti.API.info("sync called with method="+method+", model="+JSON.stringify(model)+", opts="+JSON.stringify(opts));
-	// Ti.API.info("config => "+JSON.stringify(model.config));
-	
 	var m = (model.config || {});
 	var type = (m.adapter ? m.adapter.type : null) || 'sql';
 
 	require('alloy/sync/'+type).sync(model,method,opts);
-
-	// TODO: we might want to eliminate this as all sync operations can be handles
-	//       in the adapter-specific code
-	Backbone.Collection.notify.trigger('sync', {method:method,model:model});
 };
 
 exports.M = function(name,config,modelFn,migrations) {
@@ -43,12 +32,12 @@ exports.M = function(name,config,modelFn,migrations) {
 		}
 	};
 
+	var extendClass = {};
+
 	// cosntruct the model based on the current adapter type
-	if (migrations) { extendObj.migrations = migrations; }
+	if (migrations) { extendClass.migrations = migrations; }
     if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
-	var Model = Backbone.Model.extend(extendObj);
-	config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
-	config.data = {}; // for localStorage or case where entire collection is needed to maintain store
+	var Model = Backbone.Model.extend(extendObj, extendClass); 
 	Model.prototype.config = config;
 	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	

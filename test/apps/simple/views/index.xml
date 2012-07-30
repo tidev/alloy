@@ -1,3 +1,5 @@
-<Window id="index">
-	<Button id="b" class="button">Hello, Wo'rld!</Button>
-</Window>
+<Component>
+	<Window id="index">
+		<Button id="b" class="button">Hello, Wo'rld!</Button>
+	</Window>
+</Component>

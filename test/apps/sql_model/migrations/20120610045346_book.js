@@ -6,7 +6,7 @@ migration.up = function(db)
 	// migration and will provide some convenience functions on top of the 
 	// normal Titanium Database APIs to make it easier to create a table from JSON
 	
-	db.createTable("todos",
+	db.createTable("books",
 	{
 		"columns":
 		{

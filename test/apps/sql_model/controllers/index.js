@@ -1,56 +1,50 @@
-// Function to keep a Ti.TableView in sync with Backbone CRUD opperations
-$.table.updateContent = function(o) {	
+// Function to keep a Ti.TableView in sync with Backbone Model.
+$.table.updateContent = function(collection) {	
 	var rows = [];
-	for (var i = 0; i < o.length; i++) {
-		var m = o.models[i], title = "";		
-   		for(var key in m.attributes) { title += m.attributes[key] + "  " }	   			
+	for (var i = 0; i < collection.length; i++) {
+		var model = collection.at(i).attributes, title = "";		
+   		for (var key in model) { if (key !== "id") { title += model[key] + "  " }}	  			
 		rows.push(Ti.UI.createTableViewRow({"title":title}));
 	}	
 	this.setData(rows);
 };
 
-// CRUD ops handler, put any special model processing here, some are ignored for this sample
-var CRUDops = {
-	"create": function(o) { Ti.API.info("create called with model="+JSON.stringify(o)); },
-    "read": function(o) { $.table.updateContent(o); },
-    "update": function(o) { Ti.API.info("update called with model="+JSON.stringify(o)); },
-    "delete": function(o) { Ti.API.info("delete called with model="+JSON.stringify(o)); }
-};
-
-// listener for server to persistant store sync requests
-Alloy.getCollection('Book').notify.on('sync', function(e) {
-	CRUDops[e.method](e.model);	
-});
-
 // Now let's create a Backbone collection that will hold our models,
-// the classes that represent our model have been generated automatically.
-// Use new on the generated classes to create the model or collection object.
-var books = new (Alloy.getCollection('Book')); 
+// the classes that represent our model have been generated automatically
+// as Alloy components. Use new on the component to create the model or 
+// collection.
+var books = new (Alloy.getCollection('Book'));
 
-// create a model
-var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
+// You can bind any Backbone event to models or collections but fetch is convenient because
+// fetch occurs when the persistent store is sync'd to the local Backbone server.
+books.bind("fetch", function() { $.table.updateContent(books); });
 
-// Add a model to a Backbone collection.
-books.add(book);
-
-// Use Backbone shortcut to create a model and add to collection in single step.
-books.add({book:"War and Peace", author:"Tolstoy"});
-
-// fetch triggers the CRUD read operation causing a sever to persistent store sync up.
-// Everything in the current Backbone model state will be overwritten with the 
-// fetched "server" state, triggering a "read" sync operation
+// Fetch will load models from persistent starage, sync'ing Backbone and persistent store.
 books.fetch();
 
-// Add will add models to local server but save triggers the CRUD create opperation,
-// During create an id is added to the model signaling that the model has been persisted
-// and no longer in the new state.
-books.forEach(function(model){model.save();});
+// Now we can add items to the model.
+var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
+books.add(book);
+
+// Use Backbone shortcut to create a model and add to collection in single step. Does the same
+// thing as the creating a new model and then adding it to the collection.
+books.add({book:"War and Peace", author:"Tolstoy"});
+
+// Add will add models to local Backbone server but save triggers the CRUD create opperation
+// causing the model to get added to the persistent store. During create an id is added to the 
+// model signaling that the model has been persisted and no longer in the new state.
+books.forEach(function(model){ model.save();});
 
 // UPDATE - update the model save here triggers the CRUD update opperation
 book.save({author:"R Kipling"});
 
+// Okay time to show the results. Remember this sync's local Backbone server with persitent store.
+books.fetch();
+
 // DELETE - destroy triggers the CRUD delete opperation
-books.forEach(function(model){model.destroy();});
+for(i=books.length-1; i>=0; i--) {
+    var model = books.at(i);
+    model.destroy();
+};
 
-$.main.open();
-
+$.index.open();

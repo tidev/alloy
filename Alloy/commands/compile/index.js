@@ -70,8 +70,9 @@ module.exports = function(args, program) {
 		
 		try {
 			script.runInNewContext(compilerMakeFile);
-		} catch(E) {
-			logger.error("project build at "+alloyJMK.yellow + " generated an error during load: "+E.red);
+		} catch(e) {
+			logger.error(e.stack);
+			U.die("project build at "+alloyJMK.yellow + " generated an error during load.");
 		}
 	}
 	
@@ -95,6 +96,14 @@ module.exports = function(args, program) {
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
+	// create the global style, if it exists
+	try {
+		compileConfig.globalStyle = CU.loadStyle(path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+	} catch(e) {
+		logger.error(e.stack);
+		U.die('Error processing global style at "' + globalStylePath + '"');
+	}
+
 	// Process all models
 	var models = processModels();
 
@@ -102,12 +111,8 @@ module.exports = function(args, program) {
 	var viewCollection = U.getWidgetDirectories(outputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
-		//_.each(fs.readdirSync(path.join(collection.dir,'views')), function(view) {
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
 			if (viewRegex.test(view)) {
-				console.log(view);
-				// var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
-				// parseView(basename, collection.dir, basename, collection.manifest);
 				parseView(view, collection.dir, collection.manifest);
 			}
 		});
@@ -125,7 +130,7 @@ module.exports = function(args, program) {
 		code = CU.processSourceCode(code, alloyConfig, 'app.js');
 	} catch(e) {
 		logger.error(code);
-		U.die(e);
+		U.die(e.stack);
 	}
 
 	// trigger our custom compiler makefile
@@ -183,15 +188,22 @@ function parseView(view,dir,manifest) {
 	}
 
 	// Load the style and update the state
-	state.styles = CU.loadStyle(files.STYLE);
+	try {
+		state.styles = CU.loadAndSortStyle(files.STYLE);
+	} catch (e) {
+		U.die([
+			e.stack,
+			'Error processing style at "' + files.STYLE + '"'
+		]);
+	}
 
 	// read and parse the view file
 	var xml = fs.readFileSync(files.VIEW,'utf8');
 	var doc = new DOMParser().parseFromString(xml);
 
 	// Give our document the <Alloy> root element if it doesn't already have one
-	if (doc.documentElement.nodeName !== 'Alloy') {
-		var tmpDoc = new DOMParser().parseFromString('<Alloy></Alloy>');
+	if (doc.documentElement.nodeName !== CONST.ROOT_NODE) {
+		var tmpDoc = new DOMParser().parseFromString('<' + CONST.ROOT_NODE + '></' + CONST.ROOT_NODE + '>');
 		tmpDoc.documentElement.appendChild(doc.documentElement);
 		doc = tmpDoc;
 	}
@@ -220,15 +232,21 @@ function parseView(view,dir,manifest) {
 	try {
 		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
 	} catch (e) {
-		logger.error(code);
-		U.die(e);
+		U.die([
+			e.stack,
+			'Error parsing view "' + view + '".'
+		]);
 	}
 
 	// Write the view or widget to its runtime file
 	if (manifest) {
 		var widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT;
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
-		CU.copyWidgetAssets(path.join(dir,CONST.DIR.ASSETS), compileConfig.dir.resources, manifest.id);
+		CU.copyWidgetResources(
+			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
+			compileConfig.dir.resources, 
+			manifest.id
+		);
 		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
 	} else {
 		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);

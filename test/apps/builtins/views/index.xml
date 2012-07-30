@@ -1,10 +1,12 @@
-<Window>
-	<View id="backdrop"/>
-	<View class="container">
-		<View id="mover">
-			<Label id="label">     trimmable string     </Label>
+<Component>
+	<Window>
+		<View id="backdrop"/>
+		<View class="container">
+			<View id="mover">
+				<Label id="label">     trimmable string     </Label>
+			</View>
+			<Button id="shake">shake</Button>
+			<Button id="trim">trim string</Button>
 		</View>
-		<Button id="shake">shake</Button>
-		<Button id="trim">trim string</Button>
-	</View>
-</Window>
+	</Window>
+</Component>

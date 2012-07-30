@@ -1,3 +1,5 @@
-<Window>
-	<Label></Label>
-</Window>
+<Component>
+	<Window>
+		<Label></Label>
+	</Window>
+</Component>

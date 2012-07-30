@@ -1,0 +1,35 @@
+"Label": {
+	color: "#000",
+	font: {
+		fontSize: "20dp"
+	}
+},
+".vgroup": {
+	layout: "vertical",
+	height: Ti.UI.SIZE
+},
+"#row": {
+	className: "book_row"
+},
+"#thumbnail": {
+	width: "40dp",
+	left: "5dp",
+	top: "2dp"
+},
+"#title": {
+	top: "2dp",
+	height: Ti.UI.SIZE,
+	left: "60dp",
+	right: "5dp"
+},
+"#authors": {
+	top: "3dp",
+	bottom: "2dp",
+	height: Ti.UI.SIZE,
+	left: "60dp",
+	right: "5dp",
+	color: "#333",
+	font: {
+		fontSize: "14dp"
+	}
+}

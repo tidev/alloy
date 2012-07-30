@@ -1,0 +1,9 @@
+"#win": {
+	backgroundColor: "#fff",
+	exitOnClose: "true",
+	navBarHidden: "true"
+},
+"#table": {
+	top: "50dp",
+	bottom: 0
+}

@@ -14,8 +14,13 @@ function parse(node, state, args) {
 
 	// Generate runtime code
 	var commonjs = "alloy/components/" + args.req;
-	code += args.symbol + " = (require('" + commonjs + "')).create(" +
-		    (args.createArgs ? JSON.stringify(args.createArgs) : '') + ");\n";
+	code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
+		state.styles, 
+		args.classes, 
+		args.id, 
+		node.nodeName, 
+		args.createArgs
+	) + ");\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	} 

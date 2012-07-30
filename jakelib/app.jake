@@ -5,39 +5,45 @@ var fs = require('fs'),
 	titanium = require('../Alloy/common/titanium'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness')
 	targetAppPath = path.join(harnessAppPath,'app'),
-	resourcesPath = path.join(harnessAppPath,'Resources'),
-	alloyLibPath = path.join(resourcesPath,'alloy'),
-	vendorPath = path.join(resourcesPath,'vendor'),
-	assetsPath = path.join(resourcesPath,'assets');
+	resourcesPath = path.join(harnessAppPath,'Resources');
 
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
 		console.log('Deleting Alloy app directory...');
 		wrench.rmdirSyncRecursive(targetAppPath, true);
-		console.log('Deleting runtime alloy directory...');
-		wrench.rmdirSyncRecursive(alloyLibPath, true);
-		console.log('Deleting runtime vendor directory...');
-		wrench.rmdirSyncRecursive(vendorPath, true);
-		console.log('Deleting runtime assets directory...');
-		wrench.rmdirSyncRecursive(assetsPath, true);
-		console.log('Creating empty app path at ' + targetAppPath);
-		fs.mkdirSync(targetAppPath);
+
+		console.log('Cleaning out Resources directory...');
+		var files = fs.readdirSync(resourcesPath);
+		for (var i = 0, l = files.length; i < l; i++) {
+			if (files[i] !== 'android' &&
+				files[i] !== 'iphone' &&
+				files[i] !== 'mobileweb' &&
+				files[i] !== 'app.js'){
+				var toDelete = path.join(resourcesPath, files[i]);
+				if (fs.statSync(toDelete).isDirectory()) {
+					wrench.rmdirSyncRecursive(toDelete, true);
+				} else {
+					fs.unlinkSync(toDelete);
+				}
+			}
+		}
 	});
 	
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
-		var templateDir = path.join(targetAppPath,'template');
-
-		console.log('Staging sample app "'+process.env.dir+'" for launch...');
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath);
-
-		console.log('Copying Alloy templates...');
-		if (path.existsSync(templateDir)) {
-			wrench.rmdirSyncRecursive(templateDir);
-		}
-		wrench.mkdirSyncRecursive(templateDir, 0777);
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'Alloy', 'template'), templateDir);
+		console.log('Initializing Alloy project...');
+		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
+			if (error) {
+				console.log(stdout);
+				console.log(stderr);
+				console.log(error);
+				process.exit(1);
+			} else {
+				console.log('Staging sample app "'+process.env.dir+'" for launch...');
+				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath);
+			}
+		});
 	});
 	
 	desc('run an example, all but dir are optional: e.g. "jake app:run dir=masterdetail platform=android tiversion=2.0.2.GA tisdk=<path to sdk>"');

@@ -1467,10 +1467,8 @@ function gen_code(ast, options) {
                 beautify     : false,
                 ascii_only   : false,
                 inline_script: false,
-                // TODO: Pull request submitted --> https://github.com/mishoo/UglifyJS/pull/429
-                keep_zeroes  : false,
-                // TODO: Send another PR for this
-                double_quotes: false
+                double_quotes: false,
+                ignore_numbers: false
         });
         var beautify = !!options.beautify;
         var indentation = 0,
@@ -1574,8 +1572,10 @@ function gen_code(ast, options) {
         };
 
         function make_num(num) {
-                // TODO: Pull request submitted --> https://github.com/mishoo/UglifyJS/pull/429
-                var str = num.toString(10), a = [ options.keep_zeroes ?  str : str.replace(/^0\./, ".") ], m;
+                if (options.ignore_numbers) {
+                    return num;
+                }
+                var str = num.toString(10), a = [ str.replace(/^0\./, ".") ], m;
                 if (Math.floor(num) === num) {
                         if (num >= 0) {
                                 a.push("0x" + num.toString(16).toLowerCase(), // probably pointless

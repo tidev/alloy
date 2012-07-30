@@ -4,6 +4,7 @@
  */
 var jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
+	_ = require('../../lib/alloy/underscore')._,
 	util = require('util'),
 	colors = require('colors'),
 	logger = require('../../common/logger.js'),
@@ -219,18 +220,57 @@ function processIf()
 	return null;
 }
 
-function processDot() {
+function processCall() {
+	// TODO: Find a way to NOT execute this on code generated via markup
+	var ret = handleAddAndRemove(this);
+	if (ret) {
+		return ret;
+	}
+	return null;
 }
 
-function processSub() {
+function handleAddAndRemove(ast) {
+	var theCall = ast[1];
+	var theArgs = ast[2];
+
+	// make sure there's only one argument
+	if (theArgs.length !== 1) {
+		return null;
+	}
+
+	// make sure the call is being made by an object
+	if (theCall[0] === 'name') {
+		return null;
+	}
+
+	// make sure it's an add() or remove()
+	if (theCall[2] !== 'add' && theCall[2] !== 'remove') {
+		return null;
+	}
+
+	// TODO: check theCall to make sure it's a Ti proxy
+	var argsStr = pro.gen_code(theArgs[0],{beautify:false});
+	
+	// Need to wrap this in a self-executing function. This is because the 
+	// argument may be a function, and we don't want to call it twice and 
+	// have unexpected results.
+	var newArgs = '(function(t) {' +
+	              'return (_.isObject(t) && t.__iamalloy__ ? t.getRoot() : t) || t;' +
+                  '})(' + argsStr + ')';
+	ast[2][0] = jsp.parse(newArgs)[1][0][1];
+
+	// console.log(require('util').inspect(ast, false, null));
+	// console.log('-');
+
+	return ast;
 }
 
-exports.optimizeStyle = function(sortedStyles) {
-	for (var i = 0, l = sortedStyles.length; i < l; i++) {
-		for (var key in sortedStyles[i].style) {
-			var v = sortedStyles[i].style[key];
+exports.optimizeStyle = function(styleList) {
+	for (var style in styleList) {
+		for (var key in styleList[style]) {
+			var v = styleList[style][key];
 			if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null') {
-				delete sortedStyles[i].style[key];
+				delete styleList[style][key];
 			} 
 		}
 	}
@@ -247,8 +287,7 @@ function optimize(ast, defines, fn)
 			{
 				"if" : processIf,
 				"var" :processVar
-				//"dot": processDot,
-				//"sub": processSub
+				//"call": processCall
 			}
 		, function()
 		{

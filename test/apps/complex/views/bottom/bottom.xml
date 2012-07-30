@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
-<View>
-	<Button id="b"></Button>
-</View>
+<Component>
+	<View>
+		<Button id="b"></Button>
+	</View>
+</Component>

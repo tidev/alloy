@@ -10,13 +10,18 @@ function parse(node, state, args) {
 
 	// Validate widget
 	if (!args.req) {
-		U.die('Invalid Widget with ID "' + args.id + '", must have a "req" attribute');
+		U.die('Invalid Widget with ID "' + args.id + '", must have a "require" attribute');
 	} 
 
 	// Generate runtime code
 	var commonjs = "alloy/widgets/" + args.req + "/components/widget";
-	code += args.symbol + " = (require('" + commonjs + "')).create(" + 
-		    (args.createArgs ? JSON.stringify(args.createArgs) : '') + ");\n";
+	code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
+		state.styles, 
+		args.classes, 
+		args.id, 
+		node.nodeName, 
+		args.createArgs
+	) + ");\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	} 

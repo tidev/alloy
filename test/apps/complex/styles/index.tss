@@ -1,6 +1,4 @@
-{
-	"#index": {
-		"backgroundColor": "#fff",
-		"layout": "vertical"
-	}
+"#index": {
+	backgroundColor: "#fff",
+	layout: "vertical"
 }

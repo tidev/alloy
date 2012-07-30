@@ -1,0 +1,13 @@
+{
+	"id": "com.testing.searchForBooks",
+	"name": "searchForBooks",
+	"description" : "Google API Bok search",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 by Appcelerator",
+	"license":"Public Domain",
+	"min-alloy-version": "0.1.16",
+	"min-titanium-version":"2.0",
+	"tags":"utility,google,search",
+	"platforms":"android,ios,mobileweb"
+}

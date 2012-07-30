@@ -1,3 +1,5 @@
-<View>
-	<Label id="t">Middle</Label>
-</View>
+<Component>
+	<View>
+		<Label id="t">Middle</Label>
+	</View>
+</Component>

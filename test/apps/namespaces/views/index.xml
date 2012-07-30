@@ -1,15 +1,17 @@
-<Window class='container'>
-	<View ns="Ti.Map" id="map">
-		<Annotation id="annotation1"/>
-		<Annotation id="annotation2" platform="android"/>
-		<Annotation id="annotation3" platform="ios"/>
+<Component>
+	<Window class='container'>
+		<View ns="Ti.Map" id="map">
+			<Annotation id="annotation1"/>
+			<Annotation id="annotation2" platform="android"/>
+			<Annotation id="annotation3" platform="ios"/>
 
-		<!-- 
-			Lets add one more UI component to show Annotations being
-		    declared side-by-side with child components. Map subviews
-		    will appear on iOS only, but will not adversely effect 
-		    other platforms. 
-		-->
-		<ImageView id="footerImage"/>
-	</View>
-</Window>
+			<!-- 
+				Lets add one more UI component to show Annotations being
+			    declared side-by-side with child components. Map subviews
+			    will appear on iOS only, but will not adversely effect 
+			    other platforms. 
+			-->
+			<ImageView id="footerImage"/>
+		</View>
+	</Window>
+</Component>

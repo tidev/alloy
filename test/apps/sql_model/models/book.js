@@ -1,4 +1,4 @@
-function(Model) {
+(function(Model) {
 	Model.__validate = function (key, value)
 	{
 		if (key == "book")
@@ -16,4 +16,4 @@ function(Model) {
 	};
 
 	return Model;
-}
+})
