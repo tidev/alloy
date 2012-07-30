@@ -107,6 +107,9 @@ module.exports = function(args, program) {
 	// Process all models
 	var models = processModels();
 
+	// include all necessary widgets
+	// TODO: include widgets automatically
+
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(outputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
