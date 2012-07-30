@@ -143,6 +143,8 @@ module.exports = function(args, program) {
 
 	// copy builtins and fix their require paths
 	copyBuiltins();
+
+	// optimize code
 	optimizeCompiledCode(alloyConfig);
 
 	// trigger our custom compiler makefile

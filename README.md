@@ -48,7 +48,21 @@ Local Installation
 
 To install your own local copy (with executable), clone this repository, navigate to the top level directory, and install via:
 
-	[sudo] npm install -g .	
+	[sudo] npm install -g .
+
+Bleeding Edge
+-------------
+
+If you want to be using the latest version of Alloy at all times, here's what you can do:
+
+	// do this once
+	git clone git@github.com:appcelerator/alloy.git
+
+	// do this frequently
+	git pull origin master
+	sudo npm install -g .
+
+This will pull the latest changes from Alloy's repository and then install them locally via npm.
 
 Creating an App
 ---------------
