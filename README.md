@@ -56,9 +56,10 @@ Bleeding Edge
 If you want to be using the latest version of Alloy at all times, here's what you can do:
 
 	// do this once
-	git clone git@github.com:appcelerator/alloy.git
+	git clone https://github.com/appcelerator/alloy.git
 
 	// do this frequently
+	cd /path/to/alloy
 	git pull origin master
 	sudo npm install -g .
 
