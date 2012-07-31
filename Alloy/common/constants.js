@@ -23,5 +23,5 @@ exports.DIR = {
 	WIDGET: 'widgets',
 	LIB: 'lib',
 	VENDOR: 'vendor',
-	COMPONENT: 'components'
+	COMPONENT: 'controllers'
 };

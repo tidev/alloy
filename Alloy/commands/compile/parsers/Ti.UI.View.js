@@ -13,7 +13,7 @@ function parse(node, state, args) {
 	} 
 
 	// Generate runtime code
-	var commonjs = "alloy/components/" + args.req;
+	var commonjs = "alloy/controllers/" + args.req;
 	code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 

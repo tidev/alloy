@@ -14,7 +14,7 @@ function parse(node, state, args) {
 	} 
 
 	// Generate runtime code
-	var commonjs = "alloy/widgets/" + args.req + "/components/widget";
+	var commonjs = "alloy/widgets/" + args.req + "/controllers/widget";
 	code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 

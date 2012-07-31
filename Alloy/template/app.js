@@ -8,4 +8,4 @@ var Alloy = require('alloy'),
 
 // TODO: Use AST to create these Alloy namespace shortcuts at compile time
 Alloy.CFG = require('alloy/CFG');
-(require('alloy/components/index')).create();
+(require('alloy/controllers/index')).create();

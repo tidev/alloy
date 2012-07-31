@@ -33,7 +33,7 @@ function resetTableData() {
 
 	// create row controllers based on all models in the collection
 	_.each(items.toJSON(), function(i) {
-		rowControllers.push(Alloy.getComponent('collection/row').create({
+		rowControllers.push(Alloy.getController('collection/row').create({
 			id: i.id,
 			name: i.name,
 			score: i.score

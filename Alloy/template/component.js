@@ -3,7 +3,7 @@ var Alloy = require("alloy"),
 	A$ = Alloy.A;
 
 exports.create = function() {
-	var $ = require('baseComponent').create();
+	var $ = require('baseController').create();
 
 <%= onCreate %>
 

@@ -104,11 +104,11 @@ exports.A = function(t,type,parent) {
 }
 
 exports.getWidget = function(id, name) {
-	return require('alloy/widgets/' + id + '/components/' + (name || 'widget'));
+	return require('alloy/widgets/' + id + '/controllers/' + (name || 'widget'));
 }
 
-exports.getComponent = function(name) {
-	return require('alloy/components/' + name);
+exports.getController = function(name) {
+	return require('alloy/controllers/' + name);
 }
 
 exports.getModel = function(name) {

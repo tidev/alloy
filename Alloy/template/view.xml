@@ -1,4 +1,4 @@
-<Component>
-	<Window class='container'>
-	</Window>
-</Component>
+<Alloy>
+	<View class='container'>
+	</View>
+</Alloy>

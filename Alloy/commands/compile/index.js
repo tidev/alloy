@@ -91,9 +91,9 @@ module.exports = function(args, program) {
 		version: '1.0'
 	});
 
-	// create components directory for view/controller components
+	// create generated controllers folder in resources 
 	U.copyAlloyDir(alloyRoot, 'lib', compileConfig.dir.resources); 
-	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'components'), 0777);
+	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
 
 	// create the global style, if it exists
@@ -215,7 +215,7 @@ function parseView(view,dir,manifest) {
 	var docRoot = doc.documentElement;
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
-	// handle component-level events
+	// handle controller-level events
 	_.each(['onCreate'], function(evt) {
 		var attr = docRoot.getAttribute(evt);
 		template[evt] = attr ? attr + '($);\n' : '';
@@ -250,7 +250,7 @@ function parseView(view,dir,manifest) {
 	}
 	template.controllerCode += CU.loadController(files.CONTROLLER);
 
-	// create component module code for this view/controller or widget
+	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 	try {
 		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
