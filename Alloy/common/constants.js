@@ -1,6 +1,6 @@
 exports.ALLOY_DIR = 'app';
 exports.GLOBAL_STYLE = 'app.tss';
-exports.ROOT_NODE = 'Component';
+exports.ROOT_NODE = 'Alloy';
 
 exports.FILE_EXT = {
 	VIEW: 'xml',
