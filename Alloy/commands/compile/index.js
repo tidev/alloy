@@ -215,11 +215,6 @@ function parseView(view,dir,manifest) {
 	var docRoot = doc.documentElement;
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
-	// make sure we have a Window, TabGroup, or SplitWindow
-	if (viewName === 'index') {
-
-	}
-
 	// handle component-level events
 	_.each(['onCreate'], function(evt) {
 		var attr = docRoot.getAttribute(evt);
@@ -228,6 +223,24 @@ function parseView(view,dir,manifest) {
 
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+	
+	// make sure we have a Window, TabGroup, or SplitWindow
+	if (viewName === 'index') {
+		var found = _.find(rootChildren, function(node) {
+			var ns = node.getAttribute('ns') || CONST.NAMESPACE_DEFAULT;
+			return (node.nodeName === 'Window' && ns === 'Ti.UI') ||
+			       (node.nodeName === 'SplitWindow' && ns === 'Ti.UI.iPad') ||
+			       (node.nodeName === 'TabGroup' && ns === 'Ti.UI');
+		});
+		if (!found) {
+			U.die([
+				'Compile failed. index.xml must have a top-level container element.',
+				'Valid elements: [ Window, TabGroup, SplitWindow]'
+			]);
+		}
+	}
+
+	// Generate each node in the view
 	for (var i = 0, l = rootChildren.length; i < l; i++) {
 		template.viewCode += CU.generateNode(
 			rootChildren[i],
