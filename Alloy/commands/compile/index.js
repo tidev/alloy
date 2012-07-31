@@ -215,6 +215,11 @@ function parseView(view,dir,manifest) {
 	var docRoot = doc.documentElement;
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
+	// make sure we have a Window, TabGroup, or SplitWindow
+	if (viewName === 'index') {
+
+	}
+
 	// handle component-level events
 	_.each(['onCreate'], function(evt) {
 		var attr = docRoot.getAttribute(evt);
