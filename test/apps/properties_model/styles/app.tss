@@ -1,0 +1,29 @@
+"Window": {
+	backgroundColor: "#fff",
+	navBarHidden: true
+},
+"Button": {
+	width: "50%",
+	top: 20
+},
+".titlebar": {
+	top: 0,
+	height: "50dp",
+	width: Ti.UI.FILL,
+	backgroundGradient: {
+		type: "linear",
+		startPoint: { x: "0%", y:"0%"},
+		endPoint:   { x: "0%", y:"100%"},
+		colors: [
+			{ color: "#a00", offset: 0.0 },
+			{ color: "#800", offset: 1.0 }
+		]
+	}
+},
+".titletext": {
+	color: "#fff",
+	font: {
+		fontSize: "24dp",
+		fontWeight: "bold"
+	}
+}

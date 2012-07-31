@@ -1,0 +1,22 @@
+"#row": {
+	height: '50dp'
+},
+"#name": {
+	height: Ti.UI.SIZE,
+	right: '70dp',
+	left: '10dp',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+},
+"#score": {
+	height: Ti.UI.SIZE,
+	right: '10dp',
+	width: '50dp',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'right'
+}

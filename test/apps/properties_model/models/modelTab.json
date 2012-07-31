@@ -7,6 +7,6 @@
 	},
 	"adapter": {
 		"type": "properties",
-		"prefix": "app"
+		"prefix": "singleModel"
 	}
 }
