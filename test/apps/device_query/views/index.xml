@@ -1,5 +1,5 @@
-<Component>
+<Alloy>
 	<Window id="win">
 		<Label id="osLabel"/>
 	</Window>
-</Component>
+</Alloy>

@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<View>
 		<TableView id="table" onClick="incrementScore" onLongpress="deleteItem"/>
 		<View id="bar" class="titlebar">
@@ -9,4 +9,4 @@
 			</View>
 		</View>
 	</View>
-</Component>
+</Alloy>

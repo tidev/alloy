@@ -1,6 +1,6 @@
-<Component>
+<Alloy>
 	<Window id="detail" class='container'>
 		<ImageView id="image"/>
 		<Button id="closeButton">go back</Button>
 	</Window>
-</Component>
+</Alloy>

@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<View id="bar">
 		<TextField id="text" onReturn="searchForBooks"/>
 		<View class="divider"/>
@@ -7,4 +7,4 @@
 			<Widget require="com.appcelerator.loading" id="loading"/>
 		</View>
 	</View>
-</Component>
+</Alloy>

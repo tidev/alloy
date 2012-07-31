@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<View layout="vertical">
 		<View class="titlebar">
 			<Label class="titletext">Single Model</Label>
@@ -8,4 +8,4 @@
 		<Button id="increment" onClick="increment">Increment</Button>
 		<Label id="label">model: {}</Label>
 	</View>
-</Component>
+</Alloy>

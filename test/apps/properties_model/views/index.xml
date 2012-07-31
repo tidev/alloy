@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<TabGroup>
 		<Tab title="Single Model" icon="KS_nav_ui.png">
 			<View require="modelTab"/>
@@ -7,4 +7,4 @@
 			<View require="collection/collectionTab"/>
 		</Tab>
 	</TabGroup>
-</Component>
+</Alloy>

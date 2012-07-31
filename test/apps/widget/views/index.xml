@@ -1,5 +1,5 @@
-<Component>
+<Alloy>
 	<Window>
 		<Widget require="com.foo.widget" id="w" /> 
 	</Window>
-</Component>
+</Alloy>
