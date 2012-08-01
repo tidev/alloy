@@ -1,47 +1,27 @@
 var Alloy = require("alloy"), 
+	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
-exports.create = function() {
-	var L$ = {},
-		root$;
+var Controller = function(args) {
+	this.__iamalloy__ = true;
+	this.root = undefined;
+	if (this.beforeLayout) { this.beforeLayout(args); }
+	if (this.__layout) { this.__layout(args); }
+	if (this.controller) { this.controller(args); }
+}
+Controller.extend = Backbone.Model.extend;
+_.extend(Controller.prototype, Backbone.Events, {
+	setParent: function(parent) {
+		if (this.root) {
+			parent.add(this.root);
+		} 
+	},
+	setRoot: function(root) {
+		this.root = root;
+	},
+	getRoot: function() {
+		return this.root;
+	}
+});
 
-	var $ = {
-		__iamalloy__: true,
-		addEventListener: function(evt,callback) {
-			if (!L$[evt]) {
-				L$[evt] = [];
-			}
-			L$[evt].push(callback);
-		},
-		fireEvent: function(evt,object) {
-			if (_.isArray(L$[evt])) {
-				for (var i = 0, l = L$[evt].length; i < l; i++) {
-					L$[evt][i](object);
-				}
-			}
-		},
-		removeEventListener: function(evt,callback) {
-			if (_.isArray(L$[evt])) {
-				L$[evt] = _.without(L$[evt], callback);
-			}
-		},
-		setParent: function(parent) {
-			if (root$) {
-				parent.add(root$);
-			} 
-		},
-		getRoot: function() {
-			return root$;
-		},
-		setRoot: function(root) {
-			root$ = root;
-		}
-	};
-
-	// event shorthand methods
-	$.on = $.addEventListener;
-	$.off = $.removeEventListener;
-	$.trigger = $.fireEvent;
-
-	return $;
-};
+module.exports = Controller;

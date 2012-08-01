@@ -1,17 +1,16 @@
-var Alloy = require("alloy"), 
-	_ = Alloy._, 
-	A$ = Alloy.A;
+var A$ = require('alloy').A;
 
-exports.create = function() {
-	var $ = require('baseController').create();
-
-<%= onCreate %>
-
-	// generated from view markup
-<%= viewCode %>
-
-	// generated from controller
 <%= controllerCode %>
 
-	return $;
-};
+function __layout() {
+	var $ = this;
+	<%= viewCode %>
+}
+
+var x = { __layout: __layout };
+if (_.isFunction(beforeLayout)) { x.beforeLayout = beforeLayout; }
+if (_.isFunction(controller)) { x.controller = controller; }
+
+var BaseController = require('BaseController');
+var Controller = BaseController.extend(x);
+module.exports = Controller;
