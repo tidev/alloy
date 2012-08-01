@@ -14,8 +14,9 @@ function parse(node, state, args) {
 	} 
 
 	// Generate runtime code
-	var commonjs = "alloy/widgets/" + args.req + "/controllers/widget";
-	code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
+	var cPath = args.req + "/controllers/widget";
+	//code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
+	code += args.symbol + " = new (Alloy.getController('" + cPath + "'))(" + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
 		args.id, 
