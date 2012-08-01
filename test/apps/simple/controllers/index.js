@@ -1,17 +1,19 @@
-function showAlert()
-{
-    alert("Click! Shouldn't do it again though");
-    
-    // test removing it
-    $.b.off("click",showAlert);
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._;
+
+function controller(args) {
+	var $ = this; 
+
+	function showAlert() {
+    	alert("Click! Shouldn't do it again though");
+    	$.b.off("click",showAlert);
+	}
+	$.b.on("click",showAlert);
+
+	$.index.open();
 }
 
-$.b.on("click",showAlert);
-if (ENV_DEV) {
-	alert('development mode');
+function beforeLayout(args) {
+	if (ENV_DEV) { alert('development mode'); }
 }
-
-$.index.open();
-
-
-
