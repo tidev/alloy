@@ -37,7 +37,16 @@ function findAllRequires(fn,filterFn)
 {
 	var basedir = path.dirname(path.resolve(fn));
 	var code = String(fs.readFileSync(fn,'utf-8'));
-	var ast = jsp.parse(code); 
+	var ast;
+	try {
+		ast = jsp.parse(code); 
+	} catch(e) {
+		U.die([
+			code,
+			e.stack,
+			'Failed to parse code in ' + fn 
+		]);
+	}
 	var w = pro.ast_walker();
 	var requires = [];
 	
