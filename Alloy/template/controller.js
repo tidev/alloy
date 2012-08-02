@@ -1,6 +1,32 @@
+// Controller Lifecycle
+// --------------------
+// init() --> __layout() --> controller()
+//
+// __layout() is performed by Alloy to create the view hierarchy.
+// You should NOT define your own __layout() function.
+//
+// All functions defined in this controller will have access to 
+// all IDed elements from the corresponding markup via the $ variable. 
+// init() is the only exception. init() does NOT have access as it is 
+// executed before the view hierarchy is established.
+
 var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
-	_ = Alloy._;
+	_ = Alloy._,
+	$;
+
+// init() Quick Tips
+// -----------------
+// - Use init() to do any pre-layout configuration
+// - init() is called before everything else. For this reason,
+//   the $ variable does not yet have access to the IDed 
+//   elements from the markup. You can however extend the $
+//   variable, just as you can in controller()
+function init(args) {
+	$ = this;
+
+	// add init code here
+}
 
 // controller() Quick Tips
 // -----------------------
@@ -10,17 +36,5 @@ var Alloy = require('alloy'),
 //       $.myFunction = function(){};
 //       $.customProperty = 123;
 function controller(args) {
-	var $ = this; 
-
 	// Add your controller code here
 }
-
-// Uncomment beforeLayout() to utilize this lifecycle function. For reference,
-// the order of execution is:
-//
-//     beforeLayout() -> __layout() (done by Alloy) -> controller()
-//
-// Be aware that you will not have access to the IDed markup via $ yet as
-// beforeLayout() is executed before Alloy creates the view hierarchy.
-//
-// function beforeLayout(args) {}
