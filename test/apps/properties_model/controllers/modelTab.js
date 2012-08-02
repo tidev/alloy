@@ -5,10 +5,6 @@ var Alloy = require('alloy'),
 
 var app = new (Alloy.getModel('modelTab')); 
 
-function preLayout(args) {
-	$ = this;
-}
-
 function postLayout(args) {
 	// persist all changes
 	app.on('change', function() { app.save(); });

@@ -6,10 +6,6 @@ var Alloy = require('alloy'),
 var items = new (Alloy.getCollection('collectionTab')), 
 	rowControllers = [];
 
-function preLayout(args) {
-	$ = this;
-}
-
 function postLayout(args) {
 	// update the row and save the model when the score changes
 	items.on('change:score', function(model) {

@@ -11,10 +11,6 @@ var Alloy = require('alloy'),
 var animation = require('alloy/animation');
 	string = require('alloy/string');
 
-function preLayout(args) {
-	$ = this;
-}
-
 function postLayout(args) {
 	$.shake.on('click', function(e) { 
 		animation.shake($.mover);
