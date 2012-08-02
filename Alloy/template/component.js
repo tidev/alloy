@@ -10,7 +10,7 @@ function __layout() {
 // TODO: make these assignments at compile time by manipulating 
 //       the uglifyjs AST
 var x = { __layout: __layout };
-try { x.beforeLayout = beforeLayout; } catch(e) {}
-try { x.controller = controller; } catch(e) {}
+try { x.__init = init; } catch(e) {}
+try { x.__controller = controller; } catch(e) {}
 
 module.exports = require('BaseController').extend(x);
