@@ -21,7 +21,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 //////////////////////////////////////
 module.exports = function(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
-		alloyConfigPath = path.join(inputPath,'alloy.' + CONST.FILE_EXT.CONFIG),
 		alloyConfig = {},
 		outputPath, tmpPath, compilerMakeFile;
 
@@ -41,11 +40,7 @@ module.exports = function(args, program) {
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(U.resolveAppHome(),".."));
 	U.ensureDir(outputPath);
 
-	// construct compiler config from alloy.json and the command line config parameters
-	if (path.existsSync(alloyConfigPath)) {
-		alloyConfig = JSON.parse(fs.readFileSync(alloyConfigPath, 'utf8'));
-		logger.info("found alloy configuration at " + alloyConfigPath.yellow);
-	}
+	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
 			var a = v.split('=');

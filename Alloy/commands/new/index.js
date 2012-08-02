@@ -88,7 +88,6 @@ function installPlugin(dir)
 }
 
 function newproject(args, program) {
-	//var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
 	var dirs = ['controllers','styles','views','models','assets'],
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
@@ -96,7 +95,6 @@ function newproject(args, program) {
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.STYLE),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.CONTROLLER),'utf8'),
 		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
-		defaultConfig = {},
 		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
 
 	// validate args
@@ -128,7 +126,6 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'views','index.'+CONST.FILE_EXT.VIEW),INDEX_XML,'utf-8');
 	fs.writeFileSync(path.join(appPath,'styles','index.'+CONST.FILE_EXT.STYLE),INDEX_JSON,'utf-8');
 	fs.writeFileSync(path.join(appPath,'controllers','index.'+CONST.FILE_EXT.CONTROLLER),INDEX_C,'utf-8');
-	fs.writeFileSync(path.join(appPath,'alloy.'+CONST.FILE_EXT.CONFIG),U.stringifyJSON(defaultConfig),'utf-8');
 	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
 
 	// copy in any modules
