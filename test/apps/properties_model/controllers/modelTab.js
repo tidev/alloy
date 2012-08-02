@@ -1,15 +1,26 @@
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
+
 var app = new (Alloy.getModel('modelTab')); 
 
-// persist all changes
-app.on('change', function() { app.save(); });
+function init(args) {
+	$ = this;
+}
 
-// Change label when 'count' changes on model
-app.on('change:count', function(model) {
-	$.label.text = 'model: ' + JSON.stringify(model.attributes);
-});
+function controller(args) {
+	// persist all changes
+	app.on('change', function() { app.save(); });
 
-// fetch model from Ti.App.Properties adapter
-app.fetch();
+	// Change label when 'count' changes on model
+	app.on('change:count', function(model) {
+		$.label.text = 'model: ' + JSON.stringify(model.attributes);
+	});
+
+	// fetch model from Ti.App.Properties adapter
+	app.fetch();
+}
 
 ////////////////////////////////////
 ////////// event handlers //////////

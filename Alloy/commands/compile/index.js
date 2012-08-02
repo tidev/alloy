@@ -215,12 +215,6 @@ function parseView(view,dir,manifest) {
 	var docRoot = doc.documentElement;
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
-	// handle controller-level events
-	_.each(['onCreate'], function(evt) {
-		var attr = docRoot.getAttribute(evt);
-		template[evt] = attr ? attr + '($);\n' : '';
-	});
-
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 	
@@ -228,9 +222,9 @@ function parseView(view,dir,manifest) {
 	if (viewName === 'index') {
 		var found = _.find(rootChildren, function(node) {
 			var ns = node.getAttribute('ns') || CONST.NAMESPACE_DEFAULT;
-			return (node.nodeName === 'Window' && ns === 'Ti.UI') ||
-			       (node.nodeName === 'SplitWindow' && ns === 'Ti.UI.iPad') ||
-			       (node.nodeName === 'TabGroup' && ns === 'Ti.UI');
+			return node.nodeName === 'Window' ||
+			       node.nodeName === 'SplitWindow' ||
+			       node.nodeName === 'TabGroup';
 		});
 		if (!found) {
 			U.die([

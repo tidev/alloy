@@ -1,3 +1,8 @@
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
+
 var API_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 var HANDLERS = ['success','error'];
 var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
@@ -6,29 +11,35 @@ var AppModel = require('alloy/backbone').Model.extend({ loading: false });
 var model = new AppModel;
 var handlers = {};
 
-// react to changes in the model state
-model.on('change:loading', function(m) {
-	if (m.get('loading')) {
-		$.searchView.touchEnabled = false;
-		$.search.opacity = 0;
-		$.loading.setOpacity(1.0);	
-	} else {
-		$.loading.setOpacity(0);
-		$.search.opacity = 1;
-		$.searchView.touchEnabled = true;
-	}
-});
+function init(args) {
+	$ = this;
+}
 
-////////////////////////////////////
-///////// public functions /////////
-////////////////////////////////////
-$.setHandlers = function(args) {
-	_.each(HANDLERS, function(h) {
-		if (args[h]) {
-			handlers[h] = args[h];
+function controller(args) {
+	// react to changes in the model state
+	model.on('change:loading', function(m) {
+		if (m.get('loading')) {
+			$.searchView.touchEnabled = false;
+			$.search.opacity = 0;
+			$.loading.setOpacity(1.0);	
+		} else {
+			$.loading.setOpacity(0);
+			$.search.opacity = 1;
+			$.searchView.touchEnabled = true;
 		}
 	});
-}	
+
+	////////////////////////////////////
+	///////// public functions /////////
+	////////////////////////////////////
+	$.setHandlers = function(args) {
+		_.each(HANDLERS, function(h) {
+			if (args[h]) {
+				handlers[h] = args[h];
+			}
+		});
+	}	
+}
 
 ///////////////////////////////////////
 ////////// private functions //////////
