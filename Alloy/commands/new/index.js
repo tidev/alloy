@@ -127,7 +127,7 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'views','index.'+CONST.FILE_EXT.VIEW),INDEX_XML,'utf-8');
 	fs.writeFileSync(path.join(appPath,'styles','index.'+CONST.FILE_EXT.STYLE),INDEX_JSON,'utf-8');
 	fs.writeFileSync(path.join(appPath,'controllers','index.'+CONST.FILE_EXT.CONTROLLER),INDEX_C,'utf-8');
-	fs.writeFileSync(path.join(appPath,'config','alloy.'+CONST.FILE_EXT.CONFIG),U.stringifyJSON(defaultConfig),'utf-8');
+	fs.writeFileSync(path.join(appPath,'alloy.'+CONST.FILE_EXT.CONFIG),U.stringifyJSON(defaultConfig),'utf-8');
 	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
 
 	// copy in any modules
@@ -146,7 +146,7 @@ function newproject(args, program) {
 		
 	// write the project config file
 	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
-	fs.writeFileSync(path.join(appPath,"config","config.json"), U.stringifyJSON(cfg),'utf-8');
+	fs.writeFileSync(path.join(appPath,"config.json"), U.stringifyJSON(cfg),'utf-8');
 
 	// install the plugin
 	installPlugin(projectPath);

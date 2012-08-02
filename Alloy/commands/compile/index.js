@@ -21,7 +21,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 //////////////////////////////////////
 module.exports = function(args, program) {
 	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
-		alloyConfigPath = path.join(inputPath,'config','alloy.' + CONST.FILE_EXT.CONFIG),
+		alloyConfigPath = path.join(inputPath,'alloy.' + CONST.FILE_EXT.CONFIG),
 		alloyConfig = {},
 		outputPath, tmpPath, compilerMakeFile;
 

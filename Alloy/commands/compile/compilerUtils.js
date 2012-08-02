@@ -252,7 +252,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	// validation
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
-	exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
+	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
 
 	// keep a copy of the config for this module
 	compilerConfig = obj;
@@ -274,7 +274,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 	} else {
-		logger.warn('No "app/config/config."' + CONST.FILE_EXT.CONFIG + ' file found');
+		logger.warn('No "app/config."' + CONST.FILE_EXT.CONFIG + ' file found');
 	}
 
 	// write out the config runtime module
