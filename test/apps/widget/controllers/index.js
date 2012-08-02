@@ -3,11 +3,11 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	$;
 
-function init(args) {
+function preLayout(args) {
 	$ = this;
 }
 
-function controller(args) {
+function postLayout(args) {
 	$.w.setText("Press a button to see something happen");
 	$.index.open();
 }

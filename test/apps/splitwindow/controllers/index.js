@@ -3,10 +3,10 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	$;
 
-function init(args) {
+function preLayout(args) {
 	$ = this;
 }
 
-function controller(args) {
+function postLayout(args) {
 	$.index.open();
 }

@@ -11,11 +11,11 @@ var AppModel = require('alloy/backbone').Model.extend({ loading: false });
 var model = new AppModel;
 var handlers = {};
 
-function init(args) {
+function preLayout(args) {
 	$ = this;
 }
 
-function controller(args) {
+function postLayout(args) {
 	// react to changes in the model state
 	model.on('change:loading', function(m) {
 		if (m.get('loading')) {
