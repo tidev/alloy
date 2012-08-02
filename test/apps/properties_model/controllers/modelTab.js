@@ -1,8 +1,3 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	$;
-
 var app = new (Alloy.getModel('modelTab')); 
 
 function postLayout(args) {

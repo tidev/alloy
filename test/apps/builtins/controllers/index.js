@@ -1,8 +1,3 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	$;
-
 // These "builtin" requires will be detected by the alloy compile process.
 // You do not need to manually copy them to their project location.
 // When the alloy compile finds these require calls, it will include them
