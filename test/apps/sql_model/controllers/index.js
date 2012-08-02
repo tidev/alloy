@@ -1,12 +1,3 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	$;
-
-function preLayout(args) {
-	$ = this;
-}
-
 function postLayout(args) {
 	// Function to keep a Ti.TableView in sync with Backbone Model.
 	$.table.updateContent = function(collection) {	

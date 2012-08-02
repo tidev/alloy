@@ -1,8 +1,3 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	$;
-
 var API_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 var HANDLERS = ['success','error'];
 var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
@@ -10,10 +5,6 @@ var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
 var AppModel = require('alloy/backbone').Model.extend({ loading: false });
 var model = new AppModel;
 var handlers = {};
-
-function preLayout(args) {
-	$ = this;
-}
 
 function postLayout(args) {
 	// react to changes in the model state

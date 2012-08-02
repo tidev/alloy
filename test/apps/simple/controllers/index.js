@@ -1,9 +1,4 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._;
-
 function preLayout(args) {
-	$ = this;
 	if (ENV_DEV) { alert('development mode'); }
 }
 
