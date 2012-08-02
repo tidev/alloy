@@ -215,12 +215,6 @@ function parseView(view,dir,manifest) {
 	var docRoot = doc.documentElement;
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
-	// handle controller-level events
-	_.each(['onCreate'], function(evt) {
-		var attr = docRoot.getAttribute(evt);
-		template[evt] = attr ? attr + '($);\n' : '';
-	});
-
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 	
