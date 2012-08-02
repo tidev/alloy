@@ -88,7 +88,8 @@ function installPlugin(dir)
 }
 
 function newproject(args, program) {
-	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
+	//var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
+	var dirs = ['controllers','styles','views','models','assets'],
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.VIEW),'utf8'),
