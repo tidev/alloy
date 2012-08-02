@@ -228,9 +228,9 @@ function parseView(view,dir,manifest) {
 	if (viewName === 'index') {
 		var found = _.find(rootChildren, function(node) {
 			var ns = node.getAttribute('ns') || CONST.NAMESPACE_DEFAULT;
-			return (node.nodeName === 'Window' && ns === 'Ti.UI') ||
-			       (node.nodeName === 'SplitWindow' && ns === 'Ti.UI.iPad') ||
-			       (node.nodeName === 'TabGroup' && ns === 'Ti.UI');
+			return node.nodeName === 'Window' ||
+			       node.nodeName === 'SplitWindow' ||
+			       node.nodeName === 'TabGroup';
 		});
 		if (!found) {
 			U.die([
