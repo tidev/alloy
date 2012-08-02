@@ -8,7 +8,7 @@ var Controller = function(args) {
 	if (this.__init) { this.__init(); }
 	if (this.preLayout) { this.preLayout(args); }
 	if (this.__layout) { this.__layout(); }
-	if (this.postLayout) { this.postLayout(args); }
+	if (this.__postLayout) { this.__postLayout(args); }
 }
 Controller.extend = Backbone.Model.extend;
 _.extend(Controller.prototype, Backbone.Events, {

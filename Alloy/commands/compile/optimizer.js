@@ -276,6 +276,39 @@ exports.optimizeStyle = function(styleList) {
 	}
 }
 
+exports.parseLifeCycle = function(code) {
+	var ast = jsp.parse(code);
+	var w = pro.ast_walker();
+	var preLayoutCode = 'function(){}';
+	var postLayoutCode = '';
+
+	var new_ast = w.with_walkers({
+		"toplevel": function() {
+			for (var i = 0, l = this[1].length; i < l; i++) {
+				if (this[1][i][0] === 'defun' && this[1][i][1] === 'preLayout') {
+					delete this[1][i][1];
+					preLayoutCode = pro.gen_code(this[1][i]);
+					delete this[1][i];
+				}
+			}
+			return this;
+		}
+	}, function() {
+		return w.walk(ast);
+	});
+	postLayoutCode = pro.gen_code(new_ast);
+
+	return {
+		pre: preLayoutCode,
+		post: postLayoutCode
+	}
+
+	// console.log('----------------------------------------');
+ //    console.log(require('util').inspect(ast, false, null));
+ //    console.log('-');
+	// console.log(require('util').inspect(new_ast, false, null));
+}
+
 function optimize(ast, defines, fn)
 {
 	try

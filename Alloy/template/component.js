@@ -2,25 +2,20 @@ var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._,
 	A$ = Alloy.A,
-	$ = {
-		parentController: Alloy.getController('BaseController')
-	};
+	arguments,
+	$;
 
-<%= controllerCode %>
-
-var __extend = {
-	__init: function() {
+module.exports = Alloy.getController('BaseController').extend({
+	__init: function(args) {
 		$ = _.extend(this, $);
+		arguments = args;
 	},
+	preLayout: <%= preLayoutCode %>
+	,
 	__layout: function() {
 		<%= viewCode %>
+	},
+	__postLayout: function() {
+		<%= controllerCode %>
 	}
-}
-
-// TODO: make these assignments at compile time by manipulating 
-//       the uglifyjs AST
-__extend.parentController = $.parentController;
-try { __extend.preLayout = preLayout; } catch(e) {}
-try { __extend.postLayout = postLayout; } catch(e) {}
-
-module.exports = __extend.parentController.extend(__extend);
+});

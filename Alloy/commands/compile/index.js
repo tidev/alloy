@@ -9,7 +9,8 @@ var path = require('path'),
 	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	CU = require('./compilerUtils'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	optimizer = require('./optimizer');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -238,6 +239,10 @@ function parseView(view,dir,manifest) {
 			i === 0);
 	}
 	template.controllerCode += CU.loadController(files.CONTROLLER);
+
+	var codeObj = optimizer.parseLifeCycle(template.controllerCode);
+	template.controllerCode = codeObj.post;
+	template.preLayoutCode = codeObj.pre;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
