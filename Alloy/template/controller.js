@@ -1,11 +1,7 @@
-var Alloy = require('alloy'),
-	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	$ = {
-		// Change parentController if you want to inherit from a 
-		// different controller. In most cases you'll leave this as it is.
-		parentController: Alloy.getController('BaseComponent')
-	};
+// Change parentController if you want to inherit from a different
+// controller. In most cases you'll leave this as it is. You can
+// also delete it and 'BaseController' will be used by default.
+$.parentController = Alloy.getController('BaseController');
 
 function preLayout(args) {
 	// add your code here
