@@ -1,19 +1,30 @@
-$.sfb.setHandlers({
-	success: function(books) {
-		var data = [];
-		_.each(books, function(book) {
-			var row = Alloy.getController('row').create({
-				title: book.title,
-				authors: book.authors,
-				image: book.image
-			}).getRoot();
-			data.push(row);
-		});
-		$.table.setData(data);
-	}
-	// You can override error handling with the 'error' property
-	// error: function(e) {
-	// 	alert('ERROR: ' + e.error);
-	// }
-});
-$.win.open();
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
+
+function init(args) {
+	$ = this;
+}
+
+function controller(args) {
+	$.sfb.setHandlers({
+		success: function(books) {
+			var data = [];
+			_.each(books, function(book) {
+				var row = new (Alloy.getController('row'))({
+					title: book.title,
+					authors: book.authors,
+					image: book.image
+				}).getRoot();
+				data.push(row);
+			});
+			$.table.setData(data);
+		}
+		// You can override error handling with the 'error' property
+		// error: function(e) {
+		// 	alert('ERROR: ' + e.error);
+		// }
+	});
+	$.win.open();
+}

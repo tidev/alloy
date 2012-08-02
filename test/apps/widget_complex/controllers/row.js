@@ -1,5 +1,14 @@
-var args = arguments[0] || {};
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
 
-$.thumbnail.image = args.image;
-$.title.text = args.title || '';
-$.authors.text = args.authors || '';
+function init(args) {
+	$ = this;
+}
+
+function controller(args) {
+	$.thumbnail.image = args.image;
+	$.title.text = args.title || '';
+	$.authors.text = args.authors || '';
+}

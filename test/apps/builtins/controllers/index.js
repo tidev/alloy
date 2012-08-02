@@ -1,6 +1,7 @@
 var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
-	_ = Alloy._;
+	_ = Alloy._,
+	$;
 
 // These "builtin" requires will be detected by the alloy compile process.
 // You do not need to manually copy them to their project location.
@@ -10,9 +11,11 @@ var Alloy = require('alloy'),
 var animation = require('alloy/animation');
 	string = require('alloy/string');
 
+function init(args) {
+	$ = this;
+}
+
 function controller(args) {
-	var $ = this; 
-	
 	$.shake.on('click', function(e) { 
 		animation.shake($.mover);
 	});
