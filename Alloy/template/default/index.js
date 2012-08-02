@@ -16,8 +16,8 @@ function postLayout(args) {
 	$.index.open();
 }
 
-// Controller Lifecycle
-// --------------------
+// Controller life cycle
+// ---------------------
 // __init() --> preLayout() --> __layout() --> postLayout()
 //
 //  __init: [AUTO-GENERATED]
