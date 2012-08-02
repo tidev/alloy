@@ -1,9 +1,8 @@
 $.parentController = Alloy.getController('BaseController');
 
-function preLayout(args) {
-	// Add code, or delete this function
-}
+// preLayout() is optional. It's safe to delete.
+function preLayout(args) {}
 
-function postLayout(args) {
-	// Add code, or delete this function
-}
+// postLayout() is also optional, but most often all your app 
+// logic will be contained in this function.
+function postLayout(args) {}
