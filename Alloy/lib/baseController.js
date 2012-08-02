@@ -5,9 +5,9 @@ var Alloy = require("alloy"),
 var Controller = function(args) {
 	this.__iamalloy__ = true;
 	this.root = undefined;
-	if (this.beforeLayout) { this.beforeLayout(args); }
+	if (this.__init) { this.__init(args); }
 	if (this.__layout) { this.__layout(args); }
-	if (this.controller) { this.controller(args); }
+	if (this.__controller) { this.__controller(args); }
 }
 Controller.extend = Backbone.Model.extend;
 _.extend(Controller.prototype, Backbone.Events, {
