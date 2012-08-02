@@ -1,24 +1,32 @@
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
 
+function init(args) {
+	$ = this;
+}
 
-$.a.addEventListener('click',function(){
-	$.t.text = "You clicked A";
-});
+function controller(args) {
+	// add listeners for widget buttons
+	$.a.addEventListener('click',function(){
+		$.t.text = "You clicked A";
+	});
 
-$.b.addEventListener('click',function(){
-	$.t.text = "You clicked B";
-});
+	$.b.addEventListener('click',function(){
+		$.t.text = "You clicked B";
+	});
 
-$.c.addEventListener('click',function(){
-	$.t.text = "You clicked C";
-});
+	$.c.addEventListener('click',function(){
+		$.t.text = "You clicked C";
+	});
 
+	// anything defined against the $ will be exposed as methods/properties 
+	$.setText = function(text){
+		$.t.text = text;
+	};
 
-// anything defined against the export will be provided as methods/properties against the widgets variable
-
-$.setText = function(text){
-	$.t.text = text;
-};
-
-$.getText = function() {
-	return $.t.text;
+	$.getText = function() {
+		return $.t.text;
+	}
 }

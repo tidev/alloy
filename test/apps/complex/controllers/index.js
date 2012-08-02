@@ -1,15 +1,24 @@
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
 
-// top is the first view we defined
-$.top.updateLayout({
-	backgroundColor:"black",
-	borderRadius:2,
-	borderColor:"blue",
-	height:100
-});
+function init(args) {
+	$ = this;
+}
 
-$.bottom.b.addEventListener('click',function(){
-	$.middle.t.text = "You clicked me";
-});
+function controller(args) {
+	// top is the first view we defined
+	$.top.updateLayout({
+		backgroundColor:"black",
+		borderRadius:2,
+		borderColor:"blue",
+		height:100
+	});
 
-$.index.open();
+	$.bottom.b.addEventListener('click',function(){
+		$.middle.t.text = "You clicked me";
+	});
 
+	$.index.open();
+}

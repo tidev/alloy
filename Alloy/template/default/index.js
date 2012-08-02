@@ -1,5 +1,16 @@
-$.t.on('click',function(e) { 
-	alert($.t.text);
-});
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
 
-$.index.open();
+function init(args) {
+	$ = this;
+}
+
+function controller(args) {
+	$.t.on('click',function(e) { 
+		alert($.t.text);
+	});
+
+	$.index.open();
+}

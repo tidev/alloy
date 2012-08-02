@@ -1,6 +1,17 @@
-var foo = require("foo"),
-	bar = require("vendor/bar");
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
+	$;
 
-Ti.API.info(bar.helloize(foo.generate()));
+function init(args) {
+	$ = this;
+}
 
-$.index.open();
+function controller(args) {
+	var foo = require("foo"),
+		bar = require("vendor/bar");
+
+	Ti.API.info(bar.helloize(foo.generate()));
+
+	$.index.open();
+}

@@ -1,17 +1,16 @@
-var Alloy = require("alloy"), 
-	_ = Alloy._, 
-	A$ = Alloy.A;
+var A$ = require('alloy').A;
 
-exports.create = function() {
-	var $ = require('baseController').create();
-
-<%= onCreate %>
-
-	// generated from view markup
-<%= viewCode %>
-
-	// generated from controller
 <%= controllerCode %>
 
-	return $;
-};
+function __layout() {
+	var $ = this;
+	<%= viewCode %>
+}
+
+// TODO: make these assignments at compile time by manipulating 
+//       the uglifyjs AST
+var x = { __layout: __layout };
+try { x.__init = init; } catch(e) {}
+try { x.__controller = controller; } catch(e) {}
+
+module.exports = require('BaseController').extend(x);
