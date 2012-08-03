@@ -1,18 +1,16 @@
 localStorage Model
 ==================
 
-The sample show how to use the full CRUD features of Backbone when runing on Mobile Web. 
+This sample shows how to use the features of Alloy's built-in Backbone support when running on the Mobile Web platform. For Mobile Web a HTML5 localStorage adpater will persist the Backbone model.
 
 
-The JSON model descriptor file show below is used to hook the model to the persistant store adapter. The name of file becomes a model and collection class available to create objects from within the code.
+The JSON model descriptor below is used to create the localStorage and store the model. The file name book is the name of the model and the adapter name is the name that the key/value is stored under.
 
-books.json
+book.json
 {
-    "defaults": { 
-    },
     "adapter": {
         "type": "localStorage",
-        "filename": "books"
+        "name": "books"
     }
 }
 
@@ -21,7 +19,3 @@ Supported Platforms
 
 Mobile Web 
 
-ToDo
-====
-
-Handle multiple persistent stores. Delete is not completly clearing all models.

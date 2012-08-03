@@ -28,13 +28,19 @@ This quick start will give you the shortest path to installing Alloy and creatin
 
 * Do this once:
 	1. Download and install [Node.js](http://nodejs.org/), if necessary
-	2. At the command line: `sudo npm install -g alloy`
+	2. Downaload and install [npm](https://github.com/isaacs/npm/), if necessary 
+	3. At the command line: `sudo npm install -g alloy`
 * Do this for each project you create:
-	3. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
-	4. `cd PATH/TO/PROJECT`
-	5. `alloy new .`
+	4. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
+	5. `cd PATH/TO/PROJECT`
+	6. `alloy new .`
 
 After these steps, you can now run your projects in Titanium Studio. Be aware when working with an Alloy project that all files in your **Resources** directory are subject to being overwritten. All your work should be done in your project's **app** folder. 
+
+Environment requirements:
+	Titanium SDK  2.1.0 and greater
+
+At this point we only support Alloy development on OSX. 
 
 Installation
 -------------
@@ -92,9 +98,12 @@ Alloy prefers to use convention over configuration for simplicity.
 - *models* - this is where your model files will go.
 - *assets* - this is where you should put your image assets and other misc. files that you want copied into the _Resources_ directory.
 - *migrations* - this is where your database migration files will be stored.
+
+
+The following folders are not created automatically by Alloy but can be created and used by developers to add application libraries.
+
 - *lib* - this is where you should put application specific files, typically in the CommonJS format.
 - *vendor* - this is where you should put any vendor specific modules, typically in the CommonJS format.  Do not place native modules in this folder.
-- *config* - Contains application specific config.
 
 Compiling an App
 ----------------
@@ -104,19 +113,16 @@ You can run a Titanium project that is using Alloy like any normal build.  Howev
 	alloy compile
 
 If you run this from the projects directory, it will compile the files to the correct location automatically.
-	
-	
-Generating Views
------------------
 
-To generate an empty view and the associated style files, you can run the following command:
+Debugging an App
+----------------
 
-	alloy generate view <name>
+Alloy apps can be debugged from within Titanium Studio by setting breakpoints in the generated controller in the Resources/alloy/controllers folder. 
 
 Generating Controllers
----------------------
+----------------------
 
-To generate an empty controller, you can run the following command:
+To generate an empty controller, style and view file you can run the following command:
 
 	alloy generate controller <name>
 
@@ -396,7 +402,7 @@ Example of importing a widget:
 
 ```xml
 <View>
-	<Widget require="com.foo.widget" id="foo"/>
+	<Require widgetid="com.foo.widget" id="foo"/>
 </View>
 ```
 
@@ -532,7 +538,7 @@ Example config:
 Then, you can reference configuration at runtime in your code:
 
 ```javascript
-alert(CFG$.foo);
+alert(Alloy.CFG.foo);
 ```
 
 In the above example, when running under the iOS simulator, you should see `5` in the alert dialog box.
@@ -591,15 +597,10 @@ task("post:compile",function(event,logger){
 });
 ```
 
-Alloy compiler configuration
------------------------------
-
-You can control some settings of the compiler on a per project basis by modifying settings in the `alloy.json` in your root alloy app directory.
-
 Running the Test Harness
 ------------------------
 
-To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which its self is based on make.  Jake can be installed via npm:
+To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which itself is based on make.  Jake can be installed via npm:
 
 	[sudo] npm install -g jake
 
@@ -643,12 +644,8 @@ TODO
 There's a lot of work to get Alloy to a release state.  The following are some of the major items:
 
 - integration into Titanium Studio wizards
-- DB migration support implementation [TEST]
-- support for SQLite backed Model implementation [TEST]
 - support for ACS backed Model implementation
-- uglify all JS files, not just the app.js
 - generation of scaffolding
-- add support for TDD testing (possibly Jasmine?)
 - possible view template support?
 - full implementation of different views based on os, screen size, etc.
 - widget packaging implementation, spec and tooling

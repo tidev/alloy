@@ -26,9 +26,3 @@ Migrations
 Alloy supports DB migrations much like Rails.  The Alloy command line (and Studio) will support the creation of models and 
 migration files.   The migration will allow the programmer to control the low-level migration of the data base model.
 
-
-ToDo
-====
-
-1) Add the XML binding as described above using templates
-2) Put logic to see if an object added to db is a new, and if so add to local server model

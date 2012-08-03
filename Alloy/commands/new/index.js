@@ -99,7 +99,7 @@ function newproject(args, program) {
 
 	// validate args
 	if (!_.isArray(args) || args.length === 0) {
-		U.die("\"alloy new\" requires an [OUTPUT_DIR]");
+		args[0] = '.';
 	}
 
 	// get app path, create if necessary
