@@ -42,6 +42,6 @@
 	width: Ti.UI.FILL,
 	color: "#fff",
 	backgroundColor: "transparent",
-	image: "ic_menu_add.png",
+	image: "/ic_menu_add.png",
 	touchEnabled: false
 }
