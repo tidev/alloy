@@ -9,7 +9,11 @@ var Controller = function() {
 	_.extend(this, Backbone.Events, {
 		setParent: function(parent) {
 			if (this.root) {
-				parent.add(this.root);
+				if (this.root.__iamalloy__) {
+					parent.add(this.root.getRoot());
+				} else {
+					parent.add(this.root);
+				}
 			} 
 		},
 		setRoot: function(root) {
