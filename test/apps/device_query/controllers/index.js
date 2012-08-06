@@ -1,3 +1,1 @@
-function postLayout(args) { 
-	$.win.open();
-}
+$.win.open();

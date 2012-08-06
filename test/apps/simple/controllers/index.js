@@ -1,7 +1,3 @@
-function preLayout() {
-	if (ENV_DEV) { alert('development mode'); }
-}
-
 function showAlert() {
 	alert("Click! Shouldn't do it again though");
 	$.b.off("click",showAlert);

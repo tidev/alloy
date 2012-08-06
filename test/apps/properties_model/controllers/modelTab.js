@@ -1,17 +1,15 @@
 var app = new (Alloy.getModel('modelTab')); 
 
-function postLayout(args) {
-	// persist all changes
-	app.on('change', function() { app.save(); });
+// persist all changes
+app.on('change', function() { app.save(); });
 
-	// Change label when 'count' changes on model
-	app.on('change:count', function(model) {
-		$.label.text = 'model: ' + JSON.stringify(model.attributes);
-	});
+// Change label when 'count' changes on model
+app.on('change:count', function(model) {
+	$.label.text = 'model: ' + JSON.stringify(model.attributes);
+});
 
-	// fetch model from Ti.App.Properties adapter
-	app.fetch();
-}
+// fetch model from Ti.App.Properties adapter
+app.fetch();
 
 ////////////////////////////////////
 ////////// event handlers //////////

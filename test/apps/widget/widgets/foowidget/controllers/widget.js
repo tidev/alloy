@@ -1,23 +1,21 @@
-function postLayout(args) {
-	// add listeners for widget buttons
-	$.a.addEventListener('click',function(){
-		$.t.text = "You clicked A";
-	});
+// add listeners for widget buttons
+$.a.addEventListener('click',function(){
+	$.t.text = "You clicked A";
+});
 
-	$.b.addEventListener('click',function(){
-		$.t.text = "You clicked B";
-	});
+$.b.addEventListener('click',function(){
+	$.t.text = "You clicked B";
+});
 
-	$.c.addEventListener('click',function(){
-		$.t.text = "You clicked C";
-	});
+$.c.addEventListener('click',function(){
+	$.t.text = "You clicked C";
+});
 
-	// anything defined against the $ will be exposed as methods/properties 
-	$.setText = function(text){
-		$.t.text = text;
-	};
+// anything defined against the $ will be exposed as methods/properties 
+$.setText = function(text){
+	$.t.text = text;
+};
 
-	$.getText = function() {
-		return $.t.text;
-	}
+$.getText = function() {
+	return $.t.text;
 }

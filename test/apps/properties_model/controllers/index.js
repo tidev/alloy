@@ -1,3 +1,1 @@
-function postLayout(args) {
-	$.index.open();
-}
+$.index.open();

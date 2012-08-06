@@ -6,13 +6,11 @@
 var animation = require('alloy/animation');
 	string = require('alloy/string');
 
-function postLayout(args) {
-	$.shake.on('click', function(e) { 
-		animation.shake($.mover);
-	});
-	$.trim.on('click', function(e) {
-		$.label.text = string.trim($.label.text);
-	});
+$.shake.on('click', function(e) { 
+	animation.shake($.mover);
+});
+$.trim.on('click', function(e) {
+	$.label.text = string.trim($.label.text);
+});
 
-	$.index.open();
-}
+$.index.open();

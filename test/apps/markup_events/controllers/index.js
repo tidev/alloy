@@ -1,6 +1,4 @@
-function postLayout(args) {
-	$.index.open();
-}
+$.index.open();
 
 function doClick(e) {  
     alert($.t.text);
