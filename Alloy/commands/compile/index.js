@@ -237,7 +237,7 @@ function parseView(view,dir,manifest) {
 			rootChildren[i],
 			state,
 			i === 0 ? (viewId||viewName) : undefined,
-			i === 0);
+			true);
 	}
 	template.controllerCode += CU.loadController(files.CONTROLLER);
 

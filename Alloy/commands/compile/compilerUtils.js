@@ -133,6 +133,7 @@ exports.getParserArgs = function(node, state) {
 	
 	return {
 		ns: ns,
+		name: name,
 		id: id, 
 		fullname: ns + '.' + name,
 		req: req,
@@ -145,7 +146,7 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
-exports.generateNode = function(node, state, defaultId, isRoot) {
+exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (node.nodeType != 1) return '';
 	if (defaultId) { state.defaultId = defaultId; }
 
@@ -173,7 +174,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isRoot) { code.content += '$.setRoot(' + args.symbol + ');\n'; }
+	if (isTopLevel) { code.content += '$.pushView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
