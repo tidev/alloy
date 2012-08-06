@@ -167,7 +167,7 @@ function parseView(view,dir,manifest) {
 		template = {
 			viewCode: '',
 			controllerCode: '',
-			onCreate: '' 
+			//initFunction: ''
 		},
 		state = { parent: {} },
 		files = {};
@@ -240,9 +240,9 @@ function parseView(view,dir,manifest) {
 	}
 	template.controllerCode += CU.loadController(files.CONTROLLER);
 
-	var codeObj = optimizer.parseLifeCycle(template.controllerCode);
-	template.controllerCode = codeObj.post;
-	template.preLayoutCode = codeObj.pre;
+	//var codeObj = optimizer.dissectController(template.controllerCode);
+	//template.controllerCode = codeObj.post;
+	//template.initFunction = codeObj.init;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
