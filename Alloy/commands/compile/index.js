@@ -209,6 +209,7 @@ function parseView(view,dir,manifest) {
 		doc = tmpDoc;
 	}
 	var docRoot = doc.documentElement;
+	template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
 	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
 	// Generate Titanium code from the markup

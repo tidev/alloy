@@ -5,7 +5,7 @@ var Alloy = require('alloy'),
 	$;
 
 function Controller() {
-	Alloy.getController('BaseController').call(this);
+	Alloy.getController('<%= parentController %>').call(this);
 	$ = this;
 
 	<%= viewCode %>
