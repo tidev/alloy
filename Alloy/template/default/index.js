@@ -6,13 +6,14 @@ $.parentController = Alloy.getController('BaseController');
 // preLayout() is optional. It's safe to delete.
 function preLayout(args) {}
 
+
+function doClick(e) {  
+    alert($.label.text);
+}
+
 // postLayout() is also optional, but most often all your app 
 // logic will be contained in this function.
 function postLayout(args) {
-	$.label.on('click',function(e) { 
-		alert($.label.text);
-	});
-
 	$.index.open();
 }
 

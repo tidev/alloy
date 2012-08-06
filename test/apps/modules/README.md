@@ -17,7 +17,4 @@ Functionally, there is no difference between an app specific module or a vendor 
 
 This example also demonstrates using the built-in selector engine to find a specific selector.
 
-QUESTIONS
-----------
 
-- for the selector engine, since we might have different view hierarchies, do we need to define the `$` in each views controller scope instead of global?
