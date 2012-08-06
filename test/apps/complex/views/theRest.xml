@@ -1,0 +1,4 @@
+<Alloy>
+	<View require="middle" id="middle"/>
+	<View require="bottom" id="bottom"/>
+</Alloy>

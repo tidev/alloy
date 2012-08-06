@@ -1,7 +1,6 @@
 <Alloy>
 	<Window> 
 		<View id="top" />
-		<View require="middle" id="middle"/>
-		<View require="bottom/bottom" id="bottom"/>
+		<View require="theRest"/>
 	</Window>
 </Alloy>
