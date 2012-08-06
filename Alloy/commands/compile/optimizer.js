@@ -8,6 +8,7 @@ var jsp = require("../../uglify-js/uglify-js").parser,
 	util = require('util'),
 	colors = require('colors'),
 	logger = require('../../common/logger.js'),
+	U = require('../../utils'),
 	platformDefines,
 	platformName
 ;
@@ -276,18 +277,27 @@ exports.optimizeStyle = function(styleList) {
 	}
 }
 
-exports.parseLifeCycle = function(code) {
-	var ast = jsp.parse(code);
+exports.dissectController = function(code) {
+	var ast;
+	try {
+		ast = jsp.parse(code);
+	} catch(e) {
+		U.die([
+			code,
+			e.stack,
+			'Failed to parse controller file'
+		]);
+	}
 	var w = pro.ast_walker();
-	var preLayoutCode = 'function(){}';
+	var initFunction = 'function init(){}';
 	var postLayoutCode = '';
 
 	var new_ast = w.with_walkers({
 		"toplevel": function() {
 			for (var i = 0, l = this[1].length; i < l; i++) {
-				if (this[1][i][0] === 'defun' && this[1][i][1] === 'preLayout') {
-					delete this[1][i][1];
-					preLayoutCode = pro.gen_code(this[1][i]);
+				if (this[1][i][0] === 'defun' && this[1][i][1] === 'init') {
+					//delete this[1][i][1];
+					initFunction = pro.gen_code(this[1][i]);
 					delete this[1][i];
 				}
 			}
@@ -299,7 +309,7 @@ exports.parseLifeCycle = function(code) {
 	postLayoutCode = pro.gen_code(new_ast);
 
 	return {
-		pre: preLayoutCode,
+		init: initFunction,
 		post: postLayoutCode
 	}
 
