@@ -130,10 +130,11 @@ section > .row {
   border-bottom: 1px solid #eee;
 }
 .quickstart .container {
-  margin-bottom: 0;
+  margin-bottom: 20px;
 }
 .quickstart .row {
-  margin: 0 -20px;
+  margin: -20px;
+  margin-top: 10px;
   -webkit-box-shadow: 1px 0 0 #f9f9f9;
      -moz-box-shadow: 1px 0 0 #f9f9f9;
           box-shadow: 1px 0 0 #f9f9f9;

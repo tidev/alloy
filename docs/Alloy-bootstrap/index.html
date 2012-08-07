@@ -77,11 +77,9 @@
       <div class="container">
         <div class="row">
           <div  class="pull-right">
-            <br>
             <p>Check us out on GitHub</p>
             <p><a target="_blank" href="https://github.com/appcelerator/alloy" class="btn primary">Alloy on GitHub &raquo;</a>
             </p>
-            <br>
           </div>
         </div><!-- /row -->
       </div>
@@ -136,86 +134,73 @@
   <div class="row">
     <div class="span7">
       <h2>Books Search App</h2>
-      <p>We will be building a book search app to show how quickly you can build a useful cross platform app using Alloy. The app will allow a user to search for books by author or title.  The app will make good use of the features of Alloy including multiple views, styles, and controllers and reusable Alloy widgets. Once you have built the quick start app you should have a good grasp of how to build apps using Alloy.
+      <p>We will be building a book search app to show how quickly you can build a useful cross platform app using Alloy. The app will allow a user to search for books by author or title.  The app will make good use of the features of Alloy including multiple views, styles, controllers and reusable Alloy widgets. Once you have built the quick start app you should have a good grasp of how to build apps using Alloy.
       </p>
     </div>
     <div class="span6 offset3">
-      <img src="assets/img/book-app.png" alt="Book search app">
+      <img src="assets/img/book_app.png" alt="Book search app">
     </div>
   </div><!-- /row -->
 
-
-<!-- Quick Start Application -->
+  <!-- Quick Start Application Setup -->
   <div class="row">
-    <div class="span4">
-      <h2>Headings &amp; copy</h2>
-      <p>A standard typographic hierarchy for structuring your webpages.</p>
-      <p>The entire typographic grid is based on two Less variables in our variables.less file: <code>@basefont</code> and <code>@baseline</code>. The first is the base font-size used throughout and the second is the base line-height.</p>
-      <p>We use those variables, and some math, to create the margins, paddings, and line-heights of all our type and more.</p>
+    <br><br><br>
+    <div class="span5">
+      <h2>Titanium Setup</h2>
+      <br>
+      <p>Follow the guides at <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide"> developer docs</a> to install the lastest Titanium SDK and Studio. Alloy runs on top version 2.1 or greater. If your brand new to Titanium you may want to go through the quick start guide.</p>
     </div>
-    <div class="span4">
-      <h1>h1. Heading 1</h1>
-      <h2>h2. Heading 2</h2>
-      <h3>h3. Heading 3</h3>
-      <h4>h4. Heading 4</h4>
-      <h5>h5. Heading 5</h5>
-      <h6>h6. Heading 6</h6>
+    <div class="span5">
+      <h2>Node.js &amp; npm Install</h2>
+      <br>
+      <p>Alloy code generator and compiler run as Node.js programs and Alloy is built as a npm (node package manager) package, so these programs need installing before Alloy. As of Node.js version 0.6.3, npm is installed automatically with Node.js. Check out <a href="http://nodejs.org/">Node.js</a> and <a href="https://github.com/isaacs/npm/">npm</a> for install instructions.</p>
     </div>
-    <div class="span8">
-      <h3>Example paragraph</h3>
-      <p>Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-      <h1>Example heading <small>Has sub-heading&hellip;</small></h1>
+    <div class="span5">
+      <h2>Alloy Install</h2>
+      <br>
+      <p>Once Titanium and Node.js are installed then run the <code>$sudo npm install alloy -g</code> command from the OSX terminal app to install Alloy. Currently Alloy is only supported on OSX systems but Windows and Linux support is in the works.</p>
     </div>
   </div><!-- /row -->
 
-
-
-
-
-
-
-
-
-
+  <!-- Create New Titanium Studio Project -->
   <div class="row">
-    <div class="span8">
-      <h2>Fixed layout</h2>
-      <p>The default and simple 940px-wide, centered layout for just about any website or page provided by a single <code>&lt;div.container&gt;</code>.</p>
-      <div class="mini-layout">
-        <div class="mini-layout-body"></div>
-      </div>
-<pre class="prettyprint linenums">
-&lt;body&gt;
-  &lt;div class="container"&gt;
-    ...
-  &lt;/div&gt;
-&lt;/body&gt;
-</pre>
+    <br><br><br>
+    <div class="span6">
+       <img src="assets/img/studio_new_project.png" alt="Titanium new project">
     </div><!-- /col -->
-    <div class="span8">
-      <h2>Fluid layout</h2>
-      <p>An alternative, flexible fluid page structure with min- and max-widths and a left-hand sidebar. Great for apps and docs.</p>
-      <div class="mini-layout fluid">
-        <div class="mini-layout-sidebar"></div>
-        <div class="mini-layout-body"></div>
-      </div>
-<pre class="prettyprint linenums">
-&lt;body&gt;
-  &lt;div class="container-fluid"&gt;
-    &lt;div class="sidebar"&gt;
-      ...
-    &lt;/div&gt;
-    &lt;div class="content"&gt;
-      ...
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-</pre>
+    <div class="span7 offset3">
+      <h2>Building the Book Search App</h2>
+      <br>
+      <p>Now that the prerequisites are out of the way it's time to get started on the app. Begin by within Titanium Studio go to <code>File->New</code> menu on the top toolbar and select <code>Titanium Mobile Project</code>. Fill out the project wizard as shown. When done press <code>Finish</code>.</p>
+      <p>Next still from within Studio go to <code>Terminal</code> view. If you have difficulties finding Terminal then go to <code>Window->Show View</code> on the top toolbar and select Terminal. Using Terminal change to the directory where the newly created project lives. With standard Studio installs this is done using the following command <code>$ cd Documents/Titanium\ Studio\ Workspace/BookSearch/</code>. To set up the project to use Alloy run <code>$alloy new</code>.</p>  
+      <p>That's it. You should see in Terminal the the app has been generated. You have just created an Alloy project, next up we'll see what we created.<p>
     </div><!-- /col -->
   </div><!-- /row -->
 </section>
 
-<!-- Quick Start
+<!-- Create New Titanium Studio Project -->
+  <div class="row">
+    <br><br><br>
+    <div class="span6">
+       <img src="assets/img/alloy_folders.png" alt="Alloy folders">
+    </div><!-- /col -->
+    <div class="span7 offset3">
+      <h2>Convention over Configuration</h2>
+      <br>
+      <p>Alloy prefers to use convention over configuration for simplicity.
+      views - this is where your views should go in the format view.xml
+      controllers - this is where your controllers should go in the format view.js.
+      styles - this is where your view styling logic should go in the format view.json.
+      models - this is where your model files will go.
+      assets - this is where you should put your image assets and other misc. files that you want copied into the Resources directory.</p>
+    </div><!-- /col -->
+  </div><!-- /row -->
+</section>
+
+
+
+
+<!-- Quick Start repeat...
 ================================================== -->
 <section id="quickstart-2">
   <div class="page-header">
