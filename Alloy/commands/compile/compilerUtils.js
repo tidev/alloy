@@ -74,6 +74,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		}
 	},
 	RESERVED_ATTRIBUTES = ['id', 'class', 'platform'],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src'],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
@@ -125,9 +126,10 @@ exports.getParserArgs = function(node, state) {
 
 	// get create arguments and events from attributes
 	var createArgs = {}, events = [];
+	var attrs = _.contains([], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
-		if (_.contains(RESERVED_ATTRIBUTES, attrName)) { return; }
+		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
