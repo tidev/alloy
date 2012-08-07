@@ -1,5 +1,5 @@
 <Alloy>
 	<Window>
-		<Widget require="com.foo.widget" id="w" /> 
+		<Require type="widget" src="com.foo.widget" id="w"/> 
 	</Window>
 </Alloy>

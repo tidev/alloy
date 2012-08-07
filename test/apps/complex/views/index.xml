@@ -1,6 +1,6 @@
 <Alloy>
 	<Window> 
 		<View id="top" />
-		<View require="theRest"/>
+		<Require src="theRest"/>
 	</Window>
 </Alloy>

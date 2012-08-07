@@ -4,7 +4,7 @@
 		<View class="divider"/>
 		<View id="searchView" onClick="searchForBooks">
 			<ImageView id="search"/>
-			<Widget require="com.appcelerator.loading" id="loading"/>
+			<Require type="widget" src="com.appcelerator.loading" id="loading"/>
 		</View>
 	</View>
 </Alloy>

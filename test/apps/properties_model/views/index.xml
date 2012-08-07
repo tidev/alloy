@@ -1,10 +1,10 @@
 <Alloy>
 	<TabGroup>
 		<Tab title="Single Model" icon="KS_nav_ui.png">
-			<View require="modelTab"/>
+			<Require src="modelTab"/>
 		</Tab>
 		<Tab title="Collection" icon="KS_nav_views.png">
-			<View require="collection/collectionTab"/>
+			<Require src="collection/collectionTab"/>
 		</Tab>
 	</TabGroup>
 </Alloy>
