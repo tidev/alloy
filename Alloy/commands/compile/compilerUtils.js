@@ -25,6 +25,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	PLATFORMS = ['ios', 'android', 'mobileweb'],
+	NS_ALLOY = 'Alloy',
 	NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
@@ -32,6 +33,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
 	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
 	IMPLICIT_NAMESPACES = {
+		// Alloy
+		Require: NS_ALLOY,
+		Include: NS_ALLOY,
+
 		// Ti.Map
 		Annotation: NS_TI_MAP,
 
