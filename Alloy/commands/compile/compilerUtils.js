@@ -80,6 +80,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
+exports.getCompilerConfig = function() {
+	return compilerConfig;
+}
+
 exports.generateVarName = function(id) {
 	return '$.' + id;
 }
@@ -92,7 +96,7 @@ exports.getParserArgs = function(node, state) {
 	state = state || {};
 	var name = node.nodeName,
 		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
-		req = node.getAttribute('require'),
+		fullname = ns + '.' + name,
 		id = node.getAttribute('id') || state.defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		platformObj = {};
@@ -142,8 +146,7 @@ exports.getParserArgs = function(node, state) {
 		ns: ns,
 		name: name,
 		id: id, 
-		fullname: ns + '.' + name,
-		req: req,
+		fullname: fullname,
 		symbol: exports.generateVarName(id),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
