@@ -3,9 +3,10 @@ var Alloy = require('alloy'),
 	_ = Alloy._;
 
 var Controller = function() {
-	var fixArgs = Array.prototype.slice.call(arguments);
+	var fixArgs = Array.prototype.slice.call(arguments),
+		roots = [];
+
 	this.__iamalloy__ = true;
-	this.__views = [];
 	_.extend(this, Backbone.Events, {
 		setParent: function(parent) {
 			if (parent.__iamalloy__) {
@@ -14,28 +15,28 @@ var Controller = function() {
 				this.parent = parent;
 			}
 
-			for (var i = 0, l = this.__views.length; i < l; i++) {
-				if (this.__views[i].__iamalloy__) {
-					this.__views[i].setParent(this.parent);
+			for (var i = 0, l = roots.length; i < l; i++) {
+				if (roots[i].__iamalloy__) {
+					roots[i].setParent(this.parent);
 				} else {
-					this.parent.add(this.__views[i]);
+					this.parent.add(roots[i]);
 				}
 			}
 		},
-		pushView: function(view) {
-			this.__views.push(view);
+		addRoot: function(view) {
+			roots.push(view);
 		},
-		getViews: function() {
-			return this.__views;
+		getRoots: function() {
+			return roots;
 		},
-		getRoot: function() {
-			return this.__views[0];
+		getRoot: function(index) {
+			return roots[index || 0];
 		}
 	});
-	if (this.__init) { this.__init(); }
-	if (this.preLayout) { this.preLayout.apply(this, fixArgs); }
-	if (this.__layout) { this.__layout(); }
-	if (this.__postLayout) { this.__postLayout.apply(this, fixArgs); }
+	// if (this.__init) { this.__init(); }
+	// if (this.preLayout) { this.preLayout.apply(this, fixArgs); }
+	// if (this.__layout) { this.__layout(); }
+	// if (this.__postLayout) { this.__postLayout.apply(this, fixArgs); }
 }
 //Controller.extend = Backbone.Model.extend;
 // _.extend(Controller.prototype, Backbone.Events, {

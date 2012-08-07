@@ -31,7 +31,7 @@ function parse(node, state, args) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol + '.getRoot()'
+			symbol: args.symbol + '.getRoots()'
 		},
 		styles: state.styles,
 		code: code

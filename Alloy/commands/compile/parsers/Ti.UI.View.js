@@ -30,7 +30,7 @@ function parse(node, state, args) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol + '.getViews()'
+			symbol: args.symbol + '.getRoots()'
 			//symbol: args.symbol + '.getRoot()'
 		},
 		styles: state.styles,
