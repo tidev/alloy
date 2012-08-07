@@ -202,16 +202,16 @@ function parseView(view,dir,manifest) {
 	// read and parse the view file
 	var xml = fs.readFileSync(files.VIEW,'utf8');
 	var doc = new DOMParser().parseFromString(xml);
-
-	// Give our document the <Alloy> root element if it doesn't already have one
-	if (doc.documentElement.nodeName !== CONST.ROOT_NODE) {
-		var tmpDoc = new DOMParser().parseFromString('<' + CONST.ROOT_NODE + '></' + CONST.ROOT_NODE + '>');
-		tmpDoc.documentElement.appendChild(doc.documentElement);
-		doc = tmpDoc;
-	}
 	var docRoot = doc.documentElement;
+
+	// Make sure the markup has a top-level <Alloy> tag
+	if (docRoot.nodeName !== CONST.ROOT_NODE) {
+		U.die([
+			'Invalid view file "' + view + '".',
+			'All view markup must have a top-level <Alloy> tag'
+		]);
+	}
 	template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
-	var id = viewId || doc.documentElement.getAttribute('id') || viewName;
 
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
