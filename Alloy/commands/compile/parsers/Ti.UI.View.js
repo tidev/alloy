@@ -13,8 +13,6 @@ function parse(node, state, args) {
 	} 
 
 	// Generate runtime code
-	//var commonjs = "alloy/controllers/" + args.req;
-	//code += args.symbol + " = (require('" + commonjs + "')).create(" + CU.generateStyleParams(
 	code += args.symbol + " = new (Alloy.getController('" + args.req + "'))(" + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
@@ -31,7 +29,6 @@ function parse(node, state, args) {
 		parent: {
 			node: node,
 			symbol: args.symbol + '.getRoots()'
-			//symbol: args.symbol + '.getRoot()'
 		},
 		styles: state.styles,
 		code: code
