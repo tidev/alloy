@@ -73,7 +73,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			runtime: "Ti.Platform.osname === 'mobileweb'"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'require', 'platform'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform'],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
