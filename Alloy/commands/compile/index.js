@@ -156,6 +156,8 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 // function parseView(viewName,dir,viewId,manifest) {
 function parseView(view,dir,manifest) {
+	logger.debug('Now parsing view ' + view + '...');
+
 	// validate parameters
 	if (!view) { U.die('Undefined view passed to parseView()'); }
 	if (!dir) { U.die('Failed to parse view "' + view + '", no directory given'); }
@@ -166,8 +168,7 @@ function parseView(view,dir,manifest) {
 		viewId = basename,
 		template = {
 			viewCode: '',
-			controllerCode: '',
-			//initFunction: ''
+			controllerCode: ''
 		},
 		state = { parent: {} },
 		files = {};
@@ -240,10 +241,6 @@ function parseView(view,dir,manifest) {
 			true);
 	}
 	template.controllerCode += CU.loadController(files.CONTROLLER);
-
-	//var codeObj = optimizer.dissectController(template.controllerCode);
-	//template.controllerCode = codeObj.post;
-	//template.initFunction = codeObj.init;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
