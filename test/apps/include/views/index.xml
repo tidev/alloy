@@ -1,0 +1,5 @@
+<Alloy>
+	<Window id="index">
+		<Include src="includedView"/>
+	</Window>
+</Alloy>

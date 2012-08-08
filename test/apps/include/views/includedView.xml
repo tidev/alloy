@@ -1,0 +1,6 @@
+<Alloy controller="false">
+    <View>
+    	<Button id="b"/>
+    	<Include src="deeperInclude"/>
+    </View>
+</Alloy>

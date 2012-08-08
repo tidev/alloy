@@ -1,0 +1,14 @@
+"Button" : {
+	width: expr(Ti.Platform.displayCaps.platformWidth/2),
+	height: Ti.UI.SIZE
+},
+"#index": {
+	backgroundColor: 'white'
+},
+"#b": {
+	title: 'the button'
+},
+"#label": {
+	bottom: 10,
+	text: "I'm at the bottom!"
+}
