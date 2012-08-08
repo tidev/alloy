@@ -3,6 +3,7 @@ var path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	DOMParser = require("xmldom").DOMParser,
+	XMLSerializer = require('xmldom').XMLSerializer,
 	U = require('../../utils'),
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
@@ -154,7 +155,6 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-// function parseView(viewName,dir,viewId,manifest) {
 function parseView(view,dir,manifest) {
 	logger.debug('Now parsing view ' + view + '...');
 
@@ -165,7 +165,6 @@ function parseView(view,dir,manifest) {
 	var basename = path.basename(view, '.'+CONST.FILE_EXT.VIEW);
 		dirname = path.dirname(view),
 		viewName = basename,
-		viewId = basename,
 		template = {
 			viewCode: '',
 			controllerCode: ''
@@ -215,7 +214,42 @@ function parseView(view,dir,manifest) {
 
 	// Generate Titanium code from the markup
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-	
+
+	// Process all <Include> tags 
+	function processInclude(node) {
+		var ns = node.getAttribute('ns');
+		if (node.nodeName === 'Include' && (!ns || ns === 'Alloy')) {
+			if (U.XML.getElementsFromNodes(node.childNodes).length !== 0) {
+				U.die('<Include> elements may not have child elements.');
+			}
+
+			var src = node.getAttribute('src');
+			if (!src) {
+				U.die('<Include> element must have a "src" attribute');
+			} else if (node.attributes.length !== 1) {
+				U.die('<Include> must have only one attribute, and it must be "src"');
+			}	
+
+			var fullpath = path.join(dir,CONST.DIR.VIEW,src) + '.' + CONST.FILE_EXT.VIEW;
+			if (!path.existsSync(fullpath)) {
+				U.die('<Include> "src" attribute path "' + src + '" does not exist');
+			}
+
+			var xml = fs.readFileSync(fullpath,'utf8');
+			var doc = new DOMParser().parseFromString(xml);
+			_.each(U.XML.getElementsFromNodes(doc.documentElement.childNodes), function(n) {
+				node.parentNode.appendChild(n);
+			});
+			node.parentNode.removeChild(node);
+		}
+	}
+
+	// need to loop in case <Include> tag contains other <Include> tags
+	while (docRoot.getElementsByTagName('Include').length > 0) {
+		_.each(docRoot.getElementsByTagName('Include'), processInclude);
+	}
+	rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+
 	// make sure we have a Window, TabGroup, or SplitWindow
 	if (viewName === 'index') {
 		var found = _.find(rootChildren, function(node) {
@@ -233,13 +267,10 @@ function parseView(view,dir,manifest) {
 	}
 
 	// Generate each node in the view
-	for (var i = 0, l = rootChildren.length; i < l; i++) {
-		template.viewCode += CU.generateNode(
-			rootChildren[i],
-			state,
-			i === 0 ? (viewId||viewName) : undefined,
-			true);
-	}
+	_.each(rootChildren, function(node, i) {
+		var defaultId = i === 0 ? viewName : undefined;
+		template.viewCode += CU.generateNode(node, state, defaultId, true);
+	});
 	template.controllerCode += CU.loadController(files.CONTROLLER);
 
 	// create generated controller module code for this view/controller or widget
