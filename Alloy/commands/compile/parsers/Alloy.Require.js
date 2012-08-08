@@ -17,7 +17,9 @@ function parse(node, state, args) {
 	// validate src
 	if (!src) {
 		U.die('<Require> elements must have a "src" attribute.');
-	} 
+	} else if (U.XML.getElementsFromNodes(node.childNodes).length !== 0) {
+		U.die('<Require> elements may not have child elements.');
+	}
 
 	// determine which Alloy method to use
 	switch(type) {
