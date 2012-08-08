@@ -245,8 +245,9 @@ function parseView(view,dir,manifest) {
 	}
 
 	// need to loop in case <Include> tag contains other <Include> tags
-	while (docRoot.getElementsByTagName('Include').length > 0) {
-		_.each(docRoot.getElementsByTagName('Include'), processInclude);
+	var includeElems;
+	while ((includeElems = docRoot.getElementsByTagName('Include')).length > 0) {
+		_.each(includeElems, processInclude);
 	}
 	rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
