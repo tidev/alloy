@@ -212,9 +212,6 @@ function parseView(view,dir,manifest) {
 	}
 	template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
 
-	// Generate Titanium code from the markup
-	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-
 	// Process all <Include> tags 
 	function processInclude(node) {
 		var ns = node.getAttribute('ns');
@@ -249,7 +246,11 @@ function parseView(view,dir,manifest) {
 	while ((includeElems = docRoot.getElementsByTagName('Include')).length > 0) {
 		_.each(includeElems, processInclude);
 	}
-	rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+
+	// Don't process any further if "controller" is set to false. This view
+	// does not need a runtime controller.
+	if (docRoot.getAttribute('controller') === 'false') { return; }
 
 	// make sure we have a Window, TabGroup, or SplitWindow
 	if (viewName === 'index') {
