@@ -46,6 +46,7 @@
           <ul class="nav">
             <li><a href="#about">About</a></li>
             <li class="active"><a href="#quickstart">Ouick Start</a></li>
+            <li><a href="#feedback">Feedback</a></li>
           </ul>
         </div>
       </div>
@@ -58,7 +59,7 @@
         <div class="container">
           <h1>Alloy</h1>
           <p class="lead">
-            Alloy is the new Appcelerator framework designed to jumpstart and quicken<br>
+            Alloy is the new Appcelerator framework designed to jump-start and quicken<br>
             the building of quality Titanium applications.<br>
             It includes built in MVC support, XML based views, CSS like style sheets, and much more.<br>
           </p>
@@ -91,18 +92,18 @@
         <div class="row">
           <div class="span-one-third">
             <h3>History</h3>
-            <p>Titanium developers have historically designed and built thier own Javascript libraries and toolkits to better mananage and provide code reuse while developing Titanium apps. Alloy is the anwser to these developers for an Appcelerator provided, endorsed and tested productivity framework.</p>
+            <p>Titanium developers have historically designed and built their own Javascript libraries and toolkits to better manage and provide code reuse while developing Titanium apps. Alloy is the answer to these developers for an Appcelerator provided, endorsed and tested productivity framework.</p>
           </div>
           <div class="span-one-third">
             <h3>Titanium support</h3>
             <p>Alloy is tested and supported on Titanium SDK and Studio 2.1 or greater.</p>
             <p>Development is currently only supported on OSX 10.6 or greater, however Windows and Linux support is in the works.</p>
-            <p>Supported platforms:</p>
+            <p><a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide/Titanium_Compatibility_Matrix">Supported platforms:</a></p>
             <ul>
-              <li>Android</li>
-              <li>iPad</li>
-              <li>iPhone</li>
-              <li>Mobile Web</li>
+              <li>Android - 2.2 (API8) or greater</li>
+              <li>iPad - 4.2 or greater</li>
+              <li>iPhone - 4.2 or greater</li>
+              <li><a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide/Mobile_Web_Platform_Overview">Mobile Web</a></li>
             </ul>
           </div>
           <div class="span-one-third">
@@ -133,7 +134,6 @@
             <img src="assets/img/book_app.png" alt="Book search app">
           </div>
         </div><!-- /row -->
-
       </section>
 
       <section>
@@ -179,8 +179,8 @@
           <div class="span7 offset3">
             <h2>Book Search App</h2>
             <br>
-            <p>Now that the prerequisites are out of the way it's time to get started on the app. Begin by within Titanium Studio go to <code>File->New</code> menu on the top toolbar and select <code>Titanium Mobile Project</code>. Fill out the project wizard as shown. When done press <code>Finish</code>.</p>
-            <p>Next still from within Studio go to <code>Terminal</code> view. If you have difficulties finding Terminal then go to <code>Window->Show View</code> on the top toolbar and select Terminal. Using Terminal change to the directory where the newly created project lives. With standard Studio installs this is done using the following command <code>$ cd "Documents/Titanium Studio Workspace/BookSearch/"</code>. To set up the project to use Alloy run <code>$alloy new</code>.</p>  
+            <p>Now that the prerequisites are out of the way it's time to get started on the app. Begin by within Titanium Studio go to <code>File->New</code> menu on the top tool-bar and select <code>Titanium Mobile Project</code>. Fill out the project wizard as shown. When done press <code>Finish</code>.</p>
+            <p>Next still from within Studio go to <code>Terminal</code> view. If you have difficulties finding Terminal then go to <code>Window->Show View</code> on the top tool-bar and select Terminal. Using Terminal change to the directory where the newly created project lives. With standard Studio installs this is done using the following command <code>$ cd "Documents/Titanium Studio Workspace/BookSearch/"</code>. To set up the project to use Alloy run <code>$alloy new</code>.</p>  
             <p>That's it. You should see in Terminal the app has been generated. You have just created an Alloy project, next up we'll see what we created.</p>
           </div><!-- /col -->
         </div><!-- /row -->
@@ -195,7 +195,7 @@
             <h2>Convention over Configuration</h2>
             <br>
             <p>In an effort to take some of the drudgery out of app development and allow developers to focus more time on creating great apps and less time on things like layout and naming conventions, developers have sucessfully utilized covention over configuration development. The pattern is widely used in Ruby on Rails development and likewise adpoted in Alloy.</p>
-            <p>For example, when Alloy generates the app it expects and looks for certains files in specific locations. For example at generate time Alloy will look for views/index.xml then styles/index.tss, and finally controller/index.js. Optionally other folders are also scanned but for the BookSearch sample these are the key folders of interest.</p>
+            <p>For example, when Alloy generates the app it expects and looks for certain files in specific locations. For example at generate time Alloy will look for views/index.xml then styles/index.tss, and finally controller/index.js. Optionally other folders are also scanned but for the BookSearch sample these are the key folders of interest.</p>
             <p>In the next step we will add to and modify the files in the controllers, styles and views folders.</p>
           </div><!-- /col -->
         </div><!-- /row -->
@@ -208,7 +208,7 @@
             <br>
             <p>If you have been following along you now have a BookSearch project in Studio. If you compile and run the project it runs a simple Hello World Alloy app.</p>
             <p>In the next steps we will be replacing the content of the index files that were generated by default for the Hello World app. We will also be adding three more files to the BookSearch project to code up a table row that will display the results of of book search.</p>
-            <p>Let's create the row files. If your new to Studio, to create a new file select the folder you want to put a new file in and go to <code>File->New</code> menu on the top toolbar and select <code>File</code>. You should create <code>views/row.xml</code>, <code>styles/row.tss</code>, and <code>controllers/row.js</code> files.</p>
+            <p>Let's create the row files. If your new to Studio, to create a new file select the folder you want to put a new file in and go to <code>File->New</code> menu on the top tool-bar and select <code>File</code>. You should create <code>views/row.xml</code>, <code>styles/row.tss</code>, and <code>controllers/row.js</code> files.</p>
             <p>You should now have a <code>index.xml</code> and <code>row.xml</code> file in the <code>app/views</code> folder, a <code>index.tss</code> and <code>row.tss</code> file in the <code>app/styles</code> folder, and a <code>index.js</code> and <code>row.js</code> file in the <code>app/controllers</code> folder.</p>
             <p><span class="label notice">Coding Hint</span> The quickest way to code up the app is to copy the code snippets below and paste the content into the corresponding files in the project.</p> 
           </div><!-- /col -->
@@ -258,7 +258,7 @@
           <br>
           <div class="span4">
             <h3>Styles</h3>
-            <p>Alloy styles are similar to CSS stylesheets and provide a clean separtion of visual styling from the markup structure.</p>
+            <p>Alloy styles are similar to CSS style-sheets and provide a clean separation of visual styling from the markup structure.</p>
           </div><!-- /col -->
           <div class="span12">
           <h3>index.tss style file</h3>  
@@ -331,52 +331,84 @@
           <div class="span12">
           <h3>index.js controller file</h3>  
 <pre class="prettyprint">
-$.sfb.setHandlers({
-  success: function(books) {
-    var data = [];
-    _.each(books, function(book) {
-      var row = new (Alloy.getController('row'))({
-        title: book.title,
-        authors: book.authors,
-        image: book.image
-      }).getRoot();
-      data.push(row);
-    });
-    $.table.setData(data);
-  }
+function onReady(args) { 
+  // code here 
+  $.sfb.setHandlers({
+    success: function(books) {
+      var data = [];
+      _.each(books, function(book) {
+        var row = new (Alloy.getController('row'))({
+          title: book.title,
+          authors: book.authors,
+          image: book.image
+        }).getRoot();
+        data.push(row);
+      });
+      $.table.setData(data);
+    }
+  });
+  $.win.open();
+}
+
+module.exports = Alloy.getController('BaseController').extend({
+  onReady: onReady
 });
-$.win.open();
 </pre>
-            <p>In index.js we get the data returned from the Google book search and add it to the table we declared in index.xml. You can see where our row controller object is created and gets added to the data object. <code>$.table.setData(data)</code> is where the row data is added to the table. In Alloy controller files we access Titanium objects defined in markup by prefixing the id atrribute with <code>$.</code>, providing a very convient way to hookup markup to presentaion logic.</p>
+            <p>The developer typically puts any code that operates on objects defined in markup (xml) and any business logic inside the onReady method. The module.exports definition is required in all controllers but the developer does not typically need to do anything. It's boiler plate and generated automatically by Alloy.</p> 
+            <p>Looking at the code in onReady we get the data returned from the Google book search and add it to the table we declared in index.xml. You can see where our row controller object is created and gets added to the data object. <code>$.table.setData(data)</code> is where the row data is added to the table. In Alloy controller files we access Titanium objects defined in markup by prefixing the id attribute with <code>$.</code>, providing a very convenient way to hookup markup to presentation logic.</p>
             <p>
             <br>
             <h3>row.js controller file</h3>
 <pre class="prettyprint">
-var args = arguments[0] || {};
-$.thumbnail.image = args.image;
-$.title.text = args.title || '';
-$.authors.text = args.authors || '';
+function onReady(args) {  
+  // code here  
+  $.thumbnail.image = args.image;
+  $.title.text = args.title || '';
+  $.authors.text = args.authors || '';
+}
+
+module.exports = Alloy.getController('BaseController').extend({
+  onReady: onReady
+});
 </pre>
             <br>
-            <p>Row.js contains the columns that will hold the returned book data.</p>
+            <p>Row.js contains the code that takes the values returned from Google Books for each book and saves the results in a new row. You can see the row will contain a small image of the book, a brief description, ant the book author.</p>
           </div><!-- /col -->
         </div><!-- /row -->
         <!-- Quick Start Row -->
         <div class="row">
           <br><br><br>
           <div class="span16">
-            <h2>We're done, you can now compile and run the Book Search app</h2>
+            <h2 class="centered-text">* You're done, compile and run the app *</h2>
           </div><!-- /col -->
         </div><!-- /row -->
       </section>
 
+      <!-- Quick Start Section
+      ================================================== -->
+      <section id="feedback">
+        <div class="page-header">
+          <h1>Feedback <small> We want to hear from you, so don't be shy</small></h1>
+        </div>
+        <div class="row">
+          <div class="span16">
+            <p>Since we are still in the early days with Alloy your feedback as suggestions, criticisms, bugs or anything is most welcome. Below is where to find us.
+            <ul>
+              <li><a href="http://developer.appcelerator.com/questions/newest">Alloy Community Questions &amp; Answerers</a> - make sure to include the Alloy tag</li>
+              <li><a href="http://developer.appcelerator.com/questions/newest">GitHub Alloy Issues</a>  - create a new issue, expect a reply in one to two days</li>
+              <li><a href="https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy">Google Groups</a>  - you'll need a gmail or Google Groups account</li>
+            </ul>
+          </div>
+        </div><!-- /row -->
+      </section>
+
+    <br><br>
     </div><!-- /container -->
 
     <footer class="footer">
       <div class="container">
         <p class="pull-right"><a href="#">Back to top</a></p>
         <p>
-          <p>Built with thanks (Twitter-bootstrap)</p>
           <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
         </p>
       </div>

@@ -60,14 +60,14 @@ section > .row {
 ------------------------- */
 /* main docs page */
 .masthead {
-  background-color: #d97676;
+  background-color: #e53c3c;
   background-repeat: no-repeat;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#b80c0c), to(#e53c3c));
   background-image: -webkit-linear-gradient(#b80c0c, #e53c3c);
-  background-image: -moz-linear-gradient(#f30c0c, #d97676);
-  background-image: -o-linear-gradient(top, #f30c0c, #d97676);
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#f30c0c), to(#d97676));
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F30C0C', endColorstr='#d97676', GradientType=0); /* IE8 and down */
+  background-image: -moz-linear-gradient(#b80c0c, #e53c3c);
+  background-image: -o-linear-gradient(top, #b80c0c, #e53c3c);
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#b80c0c), to(#e53c3c));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b80c0c', endColorstr='#e53c3c', GradientType=0); /* IE8 and down */
 }
 /* supporting docs pages */
 .subhead {
@@ -316,3 +316,9 @@ img.large-bird {
 pre.prettyprint {
   overflow: hidden;
 }
+
+/* Center text 
+-------------------------------------------------- */
+.centered-text {
+    text-align:center
+}  
