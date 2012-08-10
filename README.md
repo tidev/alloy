@@ -37,6 +37,8 @@ This quick start will give you the shortest path to installing Alloy and creatin
 
 After these steps, you can now run your projects in Titanium Studio. Be aware when working with an Alloy project that all files in your **Resources** directory are subject to being overwritten. All your work should be done in your project's **app** folder. 
 
+If your new to Titanium development there is a web based guide to building your first app. Follow the link to the [Quick Start Guide](https://github.com/appcelerator/alloy/tree/master/docs/Alloy-bootstrap.zip) open the zip file and click on the index.html to run the guide.
+
 Environment requirements:
 	Titanium SDK  2.1.0 and greater
 
