@@ -61,7 +61,7 @@
           <p class="lead">
             Alloy is the new Appcelerator framework designed to jump-start and quicken<br>
             the building of quality Titanium applications.<br>
-            It includes built in MVC support, XML based views, CSS like style sheets, and much more.<br>
+            It includes built in MVC support, XML based views, style sheets, and much more.<br>
           </p>
         </div><!-- /container -->
       </div>
@@ -108,12 +108,13 @@
           </div>
           <div class="span-one-third">
             <h3>What's included</h3>
-            <p>Alloy comes with a clean well defined XML UI markup, CSS like style sheets, and reusable widget components.</p>
+            <p>Alloy comes with a clean well defined XML UI markup, style sheets, and reusable widget components.</p>
             <ul>
               <li>Integrated Titanium Studio support</li>
               <li>Built-in <a href="http://backbonejs.org/">Backbone.js</a> and <a href="http://underscorejs.org/">Underscore.js</a> support</li>
               <li>Many apps to highlight and test specific Alloy features</li>
               <li>Advanced code generation based on <a href="https://github.com/mishoo/UglifyJS/">UglifyJS</a></li>
+              <li>Powered by Node.js</li>
             </ul>
           </div>
         </div><!-- /row -->
@@ -129,6 +130,7 @@
           <div class="span7">
             <h2>Books Search App</h2>
             <p>We will be building a book search app to show how quickly you can build a useful cross platform app using Alloy. The app will allow a user to search for books by author or title. The app will make good use of Alloy features including multiple views, styles, controllers and reusable Alloy widgets. Once you have built the quick start app you should have a good grasp of how to build apps using Alloy.</p>
+            <p>The app will will need to be on-line in order to see results when testing.</p>
           </div>
           <div class="span6 offset3">
             <img src="assets/img/book_app.png" alt="Book search app">
@@ -149,7 +151,8 @@
             <br>
             <p>Alloy runs on top of Titanium so before developing in Alloy we will need to get Titanium installed and setup.</p>
             <p>Download and install <a href="http://docs.appcelerator.com/titanium/2.0/#!/guide/Quick_Start"> Titanium</a>.</p>
-            <p>If your brand new to Titanium you may want to go through the quick start <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide">guides</a>.</p>
+            <p>If you're brand new to Titanium you may want to go through the quick start <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide">guides</a>.</p>
+            <p>There is a Titanium Studio <a href="http://preview.appcelerator.com/studio/">preview release</a> with Alloy support that assists when working with Alloy projects. It's not discussed in this guide but the Alloy developer should find it useful.
           </div>
           <div class="span5">
             <h2>2. Node.js &amp; npm</h2>
@@ -180,7 +183,7 @@
             <h2>Book Search App</h2>
             <br>
             <p>Now that the prerequisites are out of the way it's time to get started on the app. Begin by within Titanium Studio go to <code>File->New</code> menu on the top tool-bar and select <code>Titanium Mobile Project</code>. Fill out the project wizard as shown. When done press <code>Finish</code>.</p>
-            <p>Next still from within Studio go to <code>Terminal</code> view. If you have difficulties finding Terminal then go to <code>Window->Show View</code> on the top tool-bar and select Terminal. Using Terminal change to the directory where the newly created project lives. With standard Studio installs this is done using the following command <code>$ cd "Documents/Titanium Studio Workspace/BookSearch/"</code>. To set up the project to use Alloy run <code>$alloy new</code>.</p>  
+            <p>Next still from within Studio go to <code>Terminal</code> view. If you have difficulties finding Terminal then go to <code>Window->Show View</code> on the top tool-bar and select Terminal. Using Terminal change to the directory where the newly created project lives. With standard Studio installs this is done using the following command <code>$cd "Documents/Titanium Studio Workspace/BookSearch/"</code>. To set up the project to use Alloy run <code>$alloy new</code>.</p>  
             <p>That's it. You should see in Terminal the app has been generated. You have just created an Alloy project, next up we'll see what we created.</p>
           </div><!-- /col -->
         </div><!-- /row -->
@@ -207,9 +210,9 @@
             <h2>Let's code, a la Alloy</h2>
             <br>
             <p>If you have been following along you now have a BookSearch project in Studio. If you compile and run the project it runs a simple Hello World Alloy app.</p>
-            <p>In the next steps we will be replacing the content of the index files that were generated by default for the Hello World app. We will also be adding three more files to the BookSearch project to code up a table row that will display the results of of book search.</p>
-            <p>Let's create the row files. If your new to Studio, to create a new file select the folder you want to put a new file in and go to <code>File->New</code> menu on the top tool-bar and select <code>File</code>. You should create <code>views/row.xml</code>, <code>styles/row.tss</code>, and <code>controllers/row.js</code> files.</p>
-            <p>You should now have a <code>index.xml</code> and <code>row.xml</code> file in the <code>app/views</code> folder, a <code>index.tss</code> and <code>row.tss</code> file in the <code>app/styles</code> folder, and a <code>index.js</code> and <code>row.js</code> file in the <code>app/controllers</code> folder.</p>
+            <p>In the next steps we will be replacing the content of the index files that were generated by default for the Hello World app. We will also be adding three more files to the BookSearch project to code up a table row that will display the results of of book search.</p>           
+            <p>Let's create the row files. Go to <code>Terminal</code> and in the same folder that you ran <code>alloy new</code> run <code>alloy generate controller row</code>. Alloy generators create stubs for Alloy controllers (we just created a set), models, migrations, widgets and samples. For the Book Search app we need only be concerned with the controller generator, but it does show the power of Alloy in reducing the boiler plate code that a developer needs to create.</p>
+            <p>You should now have a index.xml and row.xml file in the app/views folder, a index.tss and row.tss file in the app/styles folder, and a index.js and row.js file in the app/controllers folder.</p>
             <p><span class="label notice">Coding Hint</span> The quickest way to code up the app is to copy the code snippets below and paste the content into the corresponding files in the project.</p> 
           </div><!-- /col -->
         </div><!-- /row -->
@@ -234,7 +237,7 @@
 </pre>
             
             <p>Looking at the markup you can see the Alloy element, it's required in all Alloy views and must be the first element, in XML jargon the root element. You can also see where the Book Search widget is added to the app. The widget is a very basic wrapper around the <a href="https://developers.google.com/books/docs/dynamic-links">Google Books API</a>. Widget are Alloy building blocks and allow developers to quickly craft an app if the appropriate widget is available. The developer can also create widgets. See the widget section</p>
-            <p>Titanium developers should like this - the Window and TableView elements are just the objects described in the Titanium.UI module with the Titanium.UI removed. All Titanium.UI objects are supported in Alloy. For those objects that require a module like Titanium.UI.Android use the "ns" attribute. For example ns=Titanium.UI.Android. See <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api">Titanium Dev Doc</a> for details.</p>
+            <p>Titanium developers should like this - the Window and TableView elements are just the objects described in the Titanium.UI module with the Titanium.UI removed. All Titanium.UI objects are supported in Alloy. For those objects that require a module like Titanium.UI.Android use the "ns" attribute. For example ns=Titanium.UI.Android. See <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api">Titanium Dev Doc</a> for details. Also check out the <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api/Titanium.UI"> UI objects</a> to see the objects that can be used with Alloy markup.</p>
             <p>Take note of the id attributes, "win" and "table". The id glues the markup to the controller and appropriate styles.</p> 
              <h3>row.xml view file</h3>
 <pre class="prettyprint">
@@ -313,11 +316,11 @@
   right: "5dp",
   color: "#333",
   font: {
-    fontSize: "14dp"
+  fontSize: "14dp"
   }
 }
 </pre>
-            <p>Row.tss supplies the styles that make Book Search rows look good.</p>
+            <p>Looking at Row.tss we can see styles being applied to classes, ids, and an element (Label). The style attributes are the same as supported in the properties descriptions of Titanium UI objects making it straight forward to know what styles are available for elements in markup.</p>
           </div><!-- /col -->
         </div><!-- /row -->
 
@@ -408,8 +411,9 @@ module.exports = Alloy.getController('BaseController').extend({
     <footer class="footer">
       <div class="container">
         <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>
+         <p>
           <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+          <p>Built with <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a></p>
         </p>
       </div>
     </footer>
