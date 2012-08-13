@@ -123,20 +123,26 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 
 exports.getWidgetDirectories = function(outputPath) {
 	var dirs = [];
-	var widgetPath = path.join(outputPath,'app','widgets');
-	if (path.existsSync(widgetPath)) {
-		var wFiles = fs.readdirSync(widgetPath);
-		for (var i = 0; i < wFiles.length; i++) {
-			var wDir = path.join(widgetPath,wFiles[i]); 
-			if (fs.statSync(wDir).isDirectory() &&
-				_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-				dirs.push({
-					dir: wDir,
-					manifest: JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'))
-				});
-			} 
+	var widgetPaths = [];
+	widgetPaths.push(path.join(outputPath,'app','widgets'));
+    widgetPaths.push(path.join(__dirname,'..','widgets'));
+
+    _.each(widgetPaths, function(widgetPath) {
+		if (path.existsSync(widgetPath)) {
+			var wFiles = fs.readdirSync(widgetPath);
+			for (var i = 0; i < wFiles.length; i++) {
+				var wDir = path.join(widgetPath,wFiles[i]); 
+				if (fs.statSync(wDir).isDirectory() &&
+					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
+					dirs.push({
+						dir: wDir,
+						manifest: JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'))
+					});
+				} 
+			}
 		}
-	}
+	});
+	
 	return dirs;
 };
 
