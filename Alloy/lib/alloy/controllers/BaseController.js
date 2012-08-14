@@ -26,10 +26,10 @@ var Controller = function() {
 		addRoot: function(view) {
 			roots.push(view);
 		},
-		getRoots: function() {
+		getUIRoots: function() {
 			return roots;
 		},
-		getRoot: function(index) {
+		getUIRoot: function(index) {
 			return roots[index || 0];
 		}
 	});
