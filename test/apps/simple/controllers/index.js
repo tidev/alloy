@@ -1,9 +1,10 @@
 function showAlert() {
 	alert("Click! Shouldn't do it again though");
-	$.b.off("click",showAlert);
+	$.getView('b').off("click",showAlert);
 }
-$.b.on("click",showAlert);
-$.index.open();
+$.getView('b').on("click",showAlert);
+$.getView('index').open();
+exports.someFunction();
 
 exports.someFunction = function(args) {
 	alert('stuff');
