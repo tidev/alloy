@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><ti:app xmlns:ti="http://ti.appcelerator.org">
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
     <deployment-targets>
         <target device="mobileweb">true</target>
         <target device="iphone">true</target>
@@ -6,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.1.0.GA</sdk-version>
+    <sdk-version>2.1.1.GA</sdk-version>
     <id>com.appcelerator.alloy.harness</id>
     <name>Harness</name>
     <version>1.0</version>
@@ -44,8 +45,9 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <modules><module platform="android" version="1.0">ti.physicalSizeCategory</module>
-</modules>
+    <modules>
+        <module platform="android" version="1.0">ti.physicalSizeCategory</module>
+    </modules>
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
     </plugins>

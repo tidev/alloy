@@ -212,47 +212,8 @@ function parseView(view,dir,manifest) {
 	}
 	template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
 
-	// Process all <Include> tags 
-	function processInclude(node) {
-		var ns = node.getAttribute('ns');
-		if (node.nodeName === 'Include' && (!ns || ns === 'Alloy')) {
-			if (U.XML.getElementsFromNodes(node.childNodes).length !== 0) {
-				U.die('<Include> elements may not have child elements.');
-			}
-
-			var src = node.getAttribute('src');
-			if (!src) {
-				U.die('<Include> element must have a "src" attribute');
-			} else if (node.attributes.length !== 1) {
-				U.die('<Include> must have only one attribute, and it must be "src"');
-			}	
-
-			var fullpath = path.join(dir,CONST.DIR.VIEW,src) + '.' + CONST.FILE_EXT.VIEW;
-			if (!path.existsSync(fullpath)) {
-				U.die('<Include> "src" attribute path "' + src + '" does not exist');
-			}
-
-			var xml = fs.readFileSync(fullpath,'utf8');
-			var doc = new DOMParser().parseFromString(xml);
-			_.each(U.XML.getElementsFromNodes(doc.documentElement.childNodes), function(n) {
-				node.parentNode.appendChild(n);
-			});
-			node.parentNode.removeChild(node);
-		}
-	}
-
-	// need to loop in case <Include> tag contains other <Include> tags
-	var includeElems;
-	while ((includeElems = docRoot.getElementsByTagName('Include')).length > 0) {
-		_.each(includeElems, processInclude);
-	}
-	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-
-	// Don't process any further if "controller" is set to false. This view
-	// does not need a runtime controller.
-	if (docRoot.getAttribute('controller') === 'false') { return; }
-
 	// make sure we have a Window, TabGroup, or SplitWindow
+	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 	if (viewName === 'index') {
 		var found = _.find(rootChildren, function(node) {
 			var ns = node.getAttribute('ns') || CONST.NAMESPACE_DEFAULT;
