@@ -167,7 +167,8 @@ function parseView(view,dir,manifest) {
 		viewName = basename,
 		template = {
 			viewCode: '',
-			controllerCode: ''
+			controllerCode: '',
+			exportsCode: ''
 		},
 		state = { parent: {} },
 		files = {};
@@ -234,7 +235,9 @@ function parseView(view,dir,manifest) {
 		var defaultId = i === 0 ? viewName : undefined;
 		template.viewCode += CU.generateNode(node, state, defaultId, true);
 	});
-	template.controllerCode += CU.loadController(files.CONTROLLER);
+	var cCode = CU.loadController(files.CONTROLLER);
+	template.controllerCode += cCode.controller;
+	template.exportsCode += cCode.exports;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);

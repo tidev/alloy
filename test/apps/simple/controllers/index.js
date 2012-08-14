@@ -3,5 +3,8 @@ function showAlert() {
 	$.b.off("click",showAlert);
 }
 $.b.on("click",showAlert);
-
 $.index.open();
+
+exports.someFunction = function(args) {
+	alert('stuff');
+};

@@ -297,11 +297,52 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 };
 
 exports.loadController = function(file) {
-	if (path.existsSync(file)) {
-		return fs.readFileSync(file,'utf8');
-	} else {
-		return '';
+	var code = {
+		controller: '',
+		exports: ''
+	};
+
+	if (!path.existsSync(file)) {
+		return code;
 	}
+	var contents = fs.readFileSync(file,'utf8');
+
+    function checkAssigment() {
+    	var target = this[2];
+    	var value = this[3];
+    	var match = pro.gen_code(target).match(/^exports\.(.+)/);
+
+    	if (match !== null) {
+    		code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
+    		return ['block'];
+    	}
+    }
+
+    function do_stat() {
+    	if (this[1][0] === 'assign') {
+    		return checkAssigment.call(this[1]);
+    	}
+    }
+
+    // Modify all `exports` assignments:
+    //
+    //     exports.foo = function(){};
+    //
+    // will become at the end of the controller:
+    //
+    //     $.foo = function(){};
+    //
+    var ast = jsp.parse(contents);
+	var walker = pro.ast_walker();
+	var new_ast = walker.with_walkers({
+		"stat": do_stat
+	}, function(){
+        return walker.walk(ast);
+    });
+
+    code.controller = pro.gen_code(new_ast);
+
+	return code;
 };
 
 exports.loadStyle = function(tssFile) {
