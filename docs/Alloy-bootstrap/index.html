@@ -334,48 +334,35 @@
           <div class="span12">
           <h3>index.js controller file</h3>  
 <pre class="prettyprint">
-function onReady(args) {
-  // code here
-  $.sfb.setHandlers({
-    success: function(books) {
-      var data = [];
-      _.each(books, function(book) {
-        var row = new (Alloy.getController('row'))({
-          title: book.title,
-          authors: book.authors,
-          image: book.image
-        }).getRoot();
-        data.push(row);
-      });
-      $.table.setData(data);
-    }
-  });
-  $.win.open();
-}
-
-module.exports = Alloy.getController('BaseController').extend({
-  onReady: onReady
+$.sfb.setHandlers({
+  success: function(books) {
+    var data = [];
+    _.each(books, function(book) {
+      var args = {
+        title: book.title,
+        authors: book.authors,
+        image: book.image
+      };
+      var row = Alloy.getController('row', args).getRoot();
+      data.push(row);
+    });
+    $.table.setData(data);
+  }
 });
+$.win.open();
 </pre>
-            <p>The developer typically puts any code that operates on objects defined in markup (xml) and any business logic inside the onReady method. The onReady method is a controller life-cycle callback method. The other callback method is onInit, but is not used in the Book Search app. The module.exports definition is required in all controllers but the developer does not typically need to do anything. It's boiler plate and generated automatically by Alloy.</p> 
-            <p>Looking at the code in onReady we get the data returned from the Google book search and add it to the table we declared in index.xml. You can see where our row controller object is created and gets added to the data object. <code>$.table.setData(data)</code> is where the row data is added to the table. In Alloy controller files we access Titanium objects defined in markup by prefixing the id attribute with <code>$.</code>, providing a very convenient way to hookup markup to presentation logic.</p>
+            <p>Looking at the code we get the data returned from the Google book search and add it to the table we declared in index.xml. You can see where our row controller object is created and gets added to the data object. $.table.setData(data) is where the row data is added to the table. In Alloy controller files we access Titanium objects defined in markup by prefixing the id attribute with $., providing a very convenient way to hookup markup to presentation logic.</p>
             <p>
             <br>
             <h3>row.js controller file</h3>
 <pre class="prettyprint">
-function onReady(args) {
-  args || (args = {});
-  $.thumbnail.image = args.image;
-  $.title.text = args.title || '';
-  $.authors.text = args.authors || '';
-}
-
-module.exports = Alloy.getController('BaseController').extend({
-  onReady: onReady
-});
+var args = arguments[0] || {};
+$.thumbnail.image = args.image;
+$.title.text = args.title || '';
+$.authors.text = args.authors || '';
 </pre>
             <br>
-            <p>Row.js contains the code that takes the values returned from Google Books for each book and saves the results in a new row. You can see the row will contain a small image of the book, a brief description, ant the book author.</p>
+            <p>Row.js contains the code that takes the values returned from Google Books for each book and saves the results in a new row. The arguments object is a Javascript construct that allows getting passed in arguments to the executable context, in this case our controller object. You can see the row will contain a small image of the book, a brief description, ant the book author.</p>
           </div><!-- /col -->
         </div><!-- /row -->
         <!-- Quick Start Row -->
