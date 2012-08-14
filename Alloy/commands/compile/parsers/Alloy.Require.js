@@ -37,7 +37,7 @@ function parse(node, state, args) {
 	//       its location determined by type
 
 	// Generate runtime code
-	code += args.symbol + " = new (Alloy." + method + "('" + src + "'))(" + CU.generateStyleParams(
+	code += args.symbol + " = Alloy." + method + "('" + src + "'," + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
 		args.id, 

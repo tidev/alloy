@@ -103,20 +103,20 @@ exports.A = function(t,type,parent) {
 	return t;
 }
 
-exports.getWidget = function(id, name) {
-	return require('alloy/widgets/' + id + '/controllers/' + (name || 'widget'));
+exports.getWidget = function(id, name, args) {
+	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
 }
 
-exports.getController = function(name) {
-	return require('alloy/controllers/' + name);
+exports.getController = function(name, args) {
+	return new (require('alloy/controllers/' + name))(args);
 }
 
-exports.getModel = function(name) {
-	return require('alloy/models/' + STR.ucfirst(name)).Model;
+exports.getModel = function(name, args) {
+	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
 }
 
-exports.getCollection = function(name) {
-	return require('alloy/models/' + STR.ucfirst(name)).Collection;
+exports.getCollection = function(name, args) {
+	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
 }
 
 function isTabletFallback() {
