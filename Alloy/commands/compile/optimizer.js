@@ -256,7 +256,7 @@ function handleAddAndRemove(ast) {
 	// argument may be a function, and we don't want to call it twice and 
 	// have unexpected results.
 	var newArgs = '(function(t) {' +
-	              'return (_.isObject(t) && t.__iamalloy__ ? t.getUIRoot() : t) || t;' +
+	              'return (_.isObject(t) && t.__iamalloy ? t.getUIRoot() : t) || t;' +
                   '})(' + argsStr + ')';
 	ast[2][0] = jsp.parse(newArgs)[1][0][1];
 

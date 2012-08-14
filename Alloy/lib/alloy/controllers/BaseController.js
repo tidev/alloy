@@ -6,17 +6,17 @@ var Controller = function() {
 	var fixArgs = Array.prototype.slice.call(arguments),
 		roots = [];
 
-	this.__iamalloy__ = true;
+	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		setParent: function(parent) {
-			if (parent.__iamalloy__) {
+			if (parent.__iamalloy) {
 				this.parent = parent.parent;
 			} else {
 				this.parent = parent;
 			}
 
 			for (var i = 0, l = roots.length; i < l; i++) {
-				if (roots[i].__iamalloy__) {
+				if (roots[i].__iamalloy) {
 					roots[i].setParent(this.parent);
 				} else {
 					this.parent.add(roots[i]);
