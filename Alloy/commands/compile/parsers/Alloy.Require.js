@@ -22,12 +22,14 @@ function parse(node, state, args) {
 	}
 
 	// determine which Alloy method to use
+	var extraArgs = '';
 	switch(type) {
 		case 'view':
 			method = 'getController';
 			break;
 		case 'widget':
 			method = 'getWidget';
+			extraArgs = "'widget',";
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
@@ -37,7 +39,7 @@ function parse(node, state, args) {
 	//       its location determined by type
 
 	// Generate runtime code
-	code += args.symbol + " = Alloy." + method + "('" + src + "'," + CU.generateStyleParams(
+	code += args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
 		args.id, 
