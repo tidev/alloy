@@ -1,4 +1,4 @@
 var args = arguments[0] || {};
-$.thumbnail.image = args.image;
-$.title.text = args.title || '';
-$.authors.text = args.authors || '';
+$.getView('thumbnail').image = args.image;
+$.getView('title').text = args.title || '';
+$.getView('authors').text = args.authors || '';

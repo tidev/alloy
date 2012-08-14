@@ -9,20 +9,20 @@ var handlers = {};
 // react to changes in the model state
 model.on('change:loading', function(m) {
 	if (m.get('loading')) {
-		$.searchView.touchEnabled = false;
-		$.search.opacity = 0;
-		$.loading.setOpacity(1.0);	
+		$.getView('searchView').touchEnabled = false;
+		$.getView('search').opacity = 0;
+		$.getView('loading').setOpacity(1.0);	
 	} else {
-		$.loading.setOpacity(0);
-		$.search.opacity = 1;
-		$.searchView.touchEnabled = true;
+		$.getView('loading').setOpacity(0);
+		$.getView('search').opacity = 1;
+		$.getView('searchView').touchEnabled = true;
 	}
 });
 
 ////////////////////////////////////
 ///////// public functions /////////
 ////////////////////////////////////
-$.setHandlers = function(args) {
+exports.setHandlers = function(args) {
 	_.each(HANDLERS, function(h) {
 		if (args[h]) {
 			handlers[h] = args[h];
@@ -65,10 +65,10 @@ function processBookData(data) {
 ////////// event handlers //////////
 ////////////////////////////////////
 function searchForBooks(e) {
-	$.text.blur();
+	$.getView('text').blur();
 
 	// validate search data
-	var value = encodeURIComponent($.text.value);
+	var value = encodeURIComponent($.getView('text').value);
 	if (!value) {
 		alert('You need to enter search text');
 		return;
