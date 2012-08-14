@@ -85,7 +85,7 @@ exports.getCompilerConfig = function() {
 }
 
 exports.generateVarName = function(id) {
-	return '$.' + id;
+	return '$.__views.' + id;
 }
 
 exports.generateUniqueId = function() {
