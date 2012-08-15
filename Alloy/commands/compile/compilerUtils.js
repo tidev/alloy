@@ -314,12 +314,10 @@ exports.loadController = function(file) {
     	var match = pro.gen_code(target).match(/^exports\.(.+)/);
 
     	if (match !== null) {
-            if (match[1] === 'basecontroller') {
+            if (match[1] === 'baseController') {
     			code.parentControllerName = pro.gen_code(value);
-    		} 
-    		else {  		
-    			code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
-    		}
+    		} 		
+    		code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
     		return ['block'];
     	}
     }
