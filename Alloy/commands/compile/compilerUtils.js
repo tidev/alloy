@@ -298,6 +298,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 
 exports.loadController = function(file) {
 	var code = {
+		parentControllerName: '',
 		controller: '',
 		exports: ''
 	};
@@ -313,7 +314,12 @@ exports.loadController = function(file) {
     	var match = pro.gen_code(target).match(/^exports\.(.+)/);
 
     	if (match !== null) {
-    		code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
+            if (match[1] === 'basecontroller') {
+    			code.parentControllerName = pro.gen_code(value);
+    		} 
+    		else {  		
+    			code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
+    		}
     		return ['block'];
     	}
     }

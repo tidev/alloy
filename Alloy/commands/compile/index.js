@@ -211,7 +211,8 @@ function parseView(view,dir,manifest) {
 			'All view markup must have a top-level <Alloy> tag'
 		]);
 	}
-	template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
+
+	//template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
 
 	// make sure we have a Window, TabGroup, or SplitWindow
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
@@ -236,6 +237,7 @@ function parseView(view,dir,manifest) {
 		template.viewCode += CU.generateNode(node, state, defaultId, true);
 	});
 	var cCode = CU.loadController(files.CONTROLLER);
+	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : 'BaseController';
 	template.controllerCode += cCode.controller;
 	template.exportsCode += cCode.exports;
 
