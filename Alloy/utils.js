@@ -77,7 +77,7 @@ exports.installModule = function(dir, opts)
 				node.setAttribute('platform',opts.platform);
 			}
 			node.setAttribute('version',opts.version || '1.0');
-			var text = doc.createTextNode(opts.id);
+			var text = doc.createTextNode(opts.id.toLowerCase());
 			node.appendChild(text);
 			
 			var pna = null;
