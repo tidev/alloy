@@ -38,6 +38,11 @@ function parse(node, state, args) {
 	// TODO: do a compile time check to make sure the src exists based on 
 	//       its location determined by type
 
+	// Remove <Require>-specific attributes from createArgs
+	args.createArgs = _.reject(args.createArgs, function(v,k) {
+		return _.contains(['type','src'], k);
+	});
+
 	// Generate runtime code
 	code += args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
 		state.styles, 

@@ -490,7 +490,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// what we know about the style we just sorted and assembled
 	var code = '';
 	if (styleCollection.length === 0) {
-		// do nothing
+		code += '{}';
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object
