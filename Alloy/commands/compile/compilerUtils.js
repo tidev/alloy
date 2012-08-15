@@ -317,7 +317,8 @@ exports.loadController = function(file) {
             if (match[1] === 'baseController') {
     			code.parentControllerName = pro.gen_code(value);
     		} 		
-    		code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
+    		//code.exports += '$.' + match[1] + ' = ' + valueCode + '\n';
+    		code.exports += pro.gen_code(this) + ';\n';
     		return ['block'];
     	}
     }
@@ -328,14 +329,6 @@ exports.loadController = function(file) {
     	}
     }
 
-    // Modify all `exports` assignments:
-    //
-    //     exports.foo = function(){};
-    //
-    // will become at the end of the controller:
-    //
-    //     $.foo = function(){};
-    //
     var ast = jsp.parse(contents);
 	var walker = pro.ast_walker();
 	var new_ast = walker.with_walkers({
