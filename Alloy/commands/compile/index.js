@@ -211,9 +211,7 @@ function parseView(view,dir,manifest) {
 			'All view markup must have a top-level <Alloy> tag'
 		]);
 	}
-
-	//template.parentController = docRoot.getAttribute('parentController') || 'BaseController';
-
+	
 	// make sure we have a Window, TabGroup, or SplitWindow
 	var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 	if (viewName === 'index') {
