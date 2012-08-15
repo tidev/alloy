@@ -9,13 +9,13 @@ var handlers = {};
 // react to changes in the model state
 model.on('change:loading', function(m) {
 	if (m.get('loading')) {
-		$.getView('searchView').touchEnabled = false;
-		$.getView('search').opacity = 0;
-		$.getView('loading').setOpacity(1.0);	
+		$.searchView.touchEnabled = false;
+		$.search.opacity = 0;
+		$.loading.setOpacity(1.0);	
 	} else {
-		$.getView('loading').setOpacity(0);
-		$.getView('search').opacity = 1;
-		$.getView('searchView').touchEnabled = true;
+		$.loading.setOpacity(0);
+		$.search.opacity = 1;
+		$.searchView.touchEnabled = true;
 	}
 });
 
@@ -65,10 +65,10 @@ function processBookData(data) {
 ////////// event handlers //////////
 ////////////////////////////////////
 function searchForBooks(e) {
-	$.getView('text').blur();
+	$.text.blur();
 
 	// validate search data
-	var value = encodeURIComponent($.getView('text').value);
+	var value = encodeURIComponent($.text.value);
 	if (!value) {
 		alert('You need to enter search text');
 		return;
