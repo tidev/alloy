@@ -1,1 +1,1 @@
-$.getView('index').open();
+$.index.open();
