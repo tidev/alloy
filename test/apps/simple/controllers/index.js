@@ -4,8 +4,3 @@ function showAlert() {
 }
 $.getView('b').on("click",showAlert);
 $.getView('index').open();
-exports.someFunction();
-
-exports.someFunction = function(args) {
-	alert('stuff');
-};
