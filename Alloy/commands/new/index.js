@@ -152,6 +152,11 @@ function newproject(args, program) {
 
 	// copy original android, iphone, and mobileweb directories to assets
 	_.each(['android','iphone','mobileweb'], function(dir) {
+		var rDir = path.join(resourcesPath,dir);
+		if (!path.existsSync(rDir)) {
+			return;
+		}
+
 		var p = path.join(appPath,'assets',dir);
 		wrench.mkdirSyncRecursive(p, 0777);
 		wrench.copyDirSyncRecursive(path.join(resourcesPath,dir), p);
