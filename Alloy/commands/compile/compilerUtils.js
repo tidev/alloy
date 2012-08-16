@@ -317,7 +317,6 @@ exports.loadController = function(file) {
             if (match[1] === 'baseController') {
     			code.parentControllerName = pro.gen_code(value);
     		} 		
-    		//code.exports += '$.' + match[1] + ' = ' + valueCode + '\n';
     		code.exports += pro.gen_code(this) + ';\n';
     		return ['block'];
     	}
