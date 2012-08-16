@@ -1,4 +1,4 @@
-var items = new (Alloy.getCollection('collectionTab')), 
+var items = Alloy.getCollection('collectionTab'), 
 	rowControllers = [];
 
 // update the row and save the model when the score changes
@@ -33,7 +33,7 @@ function resetTableData() {
 
 	// create row controllers based on all models in the collection
 	_.each(items.toJSON(), function(i) {
-		rowControllers.push(new (Alloy.getController('collection/row'))({
+		rowControllers.push(Alloy.getController('collection/row', {
 			id: i.id,
 			name: i.name,
 			score: i.score
@@ -43,7 +43,7 @@ function resetTableData() {
 	// fill table with the controllers' TableViewRow, and sort
 	// by the row's ID
 	$.table.setData(_.sortBy(
-		_.map(rowControllers, function(r) { return r.getRoot(); }),
+		_.map(rowControllers, function(r) { return r.getUIRoot(); }),
 		function(r) { return r.id; }
 	));
 }
