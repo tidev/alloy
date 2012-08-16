@@ -1,5 +1,0 @@
-".container":
-{
-   backgroundColor:"white",
-   layout: "vertical"
-}
