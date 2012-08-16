@@ -13,7 +13,7 @@ $.table.updateContent = function(collection) {
 // the classes that represent our model have been generated automatically
 // as Alloy components. Use new on the component to create the model or 
 // collection.
-var books = new (Alloy.getCollection('Book'));
+var books = Alloy.getCollection('Book');
 
 // You can bind any Backbone event to models or collections but fetch is convenient because
 // fetch occurs when the persistent store is sync'd to the local Backbone server.
@@ -23,7 +23,7 @@ books.bind("fetch", function() { $.table.updateContent(books); });
 books.fetch();
 
 // Now we can add items to the model.
-var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
+var book = Alloy.getModel('Book', {book:"Jungle Book", author:"Kipling"});
 books.add(book);
 
 // Use Backbone shortcut to create a model and add to collection in single step. Does the same

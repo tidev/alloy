@@ -6,7 +6,7 @@ $.sfb.setHandlers({
 				title: book.title,
 				authors: book.authors,
 				image: book.image
-			}).getUIRoot();
+			}).getView();
 			data.push(row);
 		});
 		$.table.setData(data);
