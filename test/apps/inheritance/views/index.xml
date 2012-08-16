@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<View layout="vertical">
+			<Button onClick="openDialog">baseDialog</Button>
+			<Button onClick="openDialog">animatedDialog</Button>
+		</View>
+	</Window>
+</Alloy>
