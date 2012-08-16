@@ -7,6 +7,7 @@ var Controller = function() {
 
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
+		__views: {},
 		setParent: function(parent) {
 			if (parent.__iamalloy) {
 				this.parent = parent.parent;
@@ -22,21 +23,20 @@ var Controller = function() {
 				}
 			}
 		},
-		addRoot: function(view) {
+		addTopLevelView: function(view) {
 			roots.push(view);
 		},
-		getUIRoot: function(index) {
-			return roots[index || 0];
-		},
-		getUIRoots: function() {
+		getTopLevelViews: function() {
 			return roots;
 		},
-		__views: {},
 		getView: function(id) {
 			if (typeof id === 'undefined' || id === null) {
 				return roots[0];
 			}
 			return this.__views[id];
+		},
+		getViews: function() {
+			return this.__views;
 		}
 	});
 }

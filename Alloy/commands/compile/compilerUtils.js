@@ -184,7 +184,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isTopLevel) { code.content += '$.addRoot(' + args.symbol + ');\n'; }
+	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	

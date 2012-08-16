@@ -58,7 +58,7 @@ function parse(node, state, args) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol + '.getUIRoots()'
+			symbol: args.symbol + '.getView()'
 		},
 		styles: state.styles,
 		code: code
