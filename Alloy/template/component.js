@@ -4,7 +4,7 @@ var Alloy = require('alloy'),
 	A$ = Alloy.A;
 
 function Controller() {
-	require('alloy/controllers/<%= parentController %>').call(this);
+	require('alloy/controllers/' + <%= parentController %>).call(this);
 	
 	var $ = this;
 	var exports = {};
