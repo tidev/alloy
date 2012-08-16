@@ -1,20 +1,12 @@
-var A = require('alloy/controllers/a');
-var a = new A;
- 
- function onReady(args) {
-	a.setDelegate($);
+var controller = Alloy.getController('a');
+controller.setDelegate($);
 	
-	$.showAlert = function() {
-		alert($.t.text);
-	};
-	
-	$.index.open();
+exports.showAlert = function() {
+	alert($.t.text);
 };
 
 function doClick(e) {  
-     a.getRoot().open();
+     controller.getUIRoot().open();
 };
 
-module.exports = Alloy.getController('BaseController').extend({
-	onReady: onReady
-});
+$.index.open();
