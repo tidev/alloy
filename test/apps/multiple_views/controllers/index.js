@@ -6,7 +6,7 @@ exports.showAlert = function() {
 };
 
 function doClick(e) {  
-     controller.getUIRoot().open();
+     controller.getView().open();
 };
 
 $.index.open();
