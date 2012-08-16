@@ -12,9 +12,9 @@ function Controller() {
 
 	<%= viewCode %>
 
-	// make all IDed in $.__views available right on the $ in a 
-	// controller's internal code. Externally the IDed elemetnts 
-	// will be accessed with getView().
+	// make all IDed elements in $.__views available right on the $ in a 
+	// controller's internal code. Externally the IDed elements will
+	// be accessed with getView().
 	_.extend($, $.__views);
 
 	<%= controllerCode %>
