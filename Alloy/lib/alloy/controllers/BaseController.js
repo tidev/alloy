@@ -25,14 +25,17 @@ var Controller = function() {
 		addRoot: function(view) {
 			roots.push(view);
 		},
-		getUIRoots: function() {
-			return roots;
-		},
 		getUIRoot: function(index) {
 			return roots[index || 0];
 		},
+		getUIRoots: function() {
+			return roots;
+		},
 		__views: {},
 		getView: function(id) {
+			if (typeof id === 'undefined' || id === null) {
+				return roots[0];
+			}
 			return this.__views[id];
 		}
 	});
