@@ -41,6 +41,29 @@ book.save({author:"R Kipling"});
 // Okay time to show the results. Remember this sync's local Backbone server with persitent store.
 books.fetch();
 
+
+// Okay filter the result by id
+books.fetch({
+	byId:{id:book.id},
+});
+
+// or filter the result by author now
+books.fetch({
+	filter:{
+		conditions:["author = 'R Kipling'"],
+		operator:'',
+	},
+});
+
+// Or filter the result by author now
+books.fetch({
+	filter:{
+		conditions:["author = 'R Kipling'","book = 'Jungle Book'"],
+		operator:'AND',
+	},
+});
+
+
 // DELETE - destroy triggers the CRUD delete opperation
 for(i=books.length-1; i>=0; i--) {
     var model = books.at(i);
