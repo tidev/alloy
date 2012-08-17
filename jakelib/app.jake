@@ -13,18 +13,20 @@ namespace('app', function() {
 		console.log('Deleting Alloy app directory...');
 		wrench.rmdirSyncRecursive(targetAppPath, true);
 
-		console.log('Cleaning out Resources directory...');
-		var files = fs.readdirSync(resourcesPath);
-		for (var i = 0, l = files.length; i < l; i++) {
-			if (files[i] !== 'android' &&
-				files[i] !== 'iphone' &&
-				files[i] !== 'mobileweb' &&
-				files[i] !== 'app.js'){
-				var toDelete = path.join(resourcesPath, files[i]);
-				if (fs.statSync(toDelete).isDirectory()) {
-					wrench.rmdirSyncRecursive(toDelete, true);
-				} else {
-					fs.unlinkSync(toDelete);
+		if (path.existsSync(resourcesPath)) {
+			console.log('Cleaning out Resources directory...');
+			var files = fs.readdirSync(resourcesPath);
+			for (var i = 0, l = files.length; i < l; i++) {
+				if (files[i] !== 'android' &&
+					files[i] !== 'iphone' &&
+					files[i] !== 'mobileweb' &&
+					files[i] !== 'app.js'){
+					var toDelete = path.join(resourcesPath, files[i]);
+					if (fs.statSync(toDelete).isDirectory()) {
+						wrench.rmdirSyncRecursive(toDelete, true);
+					} else {
+						fs.unlinkSync(toDelete);
+					}
 				}
 			}
 		}
