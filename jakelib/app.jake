@@ -33,6 +33,9 @@ namespace('app', function() {
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
 		console.log('Initializing Alloy project...');
+		if (!path.existsSync(resourcesPath)) {
+			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
 				console.log(stdout);
