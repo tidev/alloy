@@ -36,7 +36,7 @@ module.exports = function(name, args, program) {
 		"tags":"",
 		"platforms":"android,ios,mobileweb"
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<View id="defaultView"/>');
+	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<Alloy><View id="defaultView"/></Alloy>');
 	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
 		"#defaultView": {
 			"backgroundColor": "#a00"
