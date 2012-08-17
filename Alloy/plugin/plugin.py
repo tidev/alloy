@@ -40,4 +40,7 @@ def compile(config):
             if hasattr(ex, 'output'):
                 print ex.output
             print "[ERROR] Alloy compile failed"
-            sys.exit(ex.returncode)
+            retcode = 1
+            if hasattr(ex, 'returncode'):
+                retcode = ex.returncode
+            sys.exit(retcode)
