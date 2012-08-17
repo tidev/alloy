@@ -135,7 +135,7 @@ function Sync(model, method, opts) {
 			
 
 			if(opts.byId) {
-				sql = sql+" WHERE id = '"+opts.byId.id+"'";
+				sql = sql+" WHERE id = '"+opts.byId+"'";
 			} else if(opts.filter) {
 				var filter = model.filterquery(opts, '');
 				sql = sql+" WHERE " + filter;
