@@ -3,7 +3,7 @@ var fs = require('fs'),
 	wrench = require('wrench'),
 	spawn = require('child_process').spawn,
 	titanium = require('../Alloy/common/titanium'),
-	harnessAppPath = path.join(process.cwd(),'test','projects','Harness')
+	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
 	resourcesPath = path.join(harnessAppPath,'Resources');
 
