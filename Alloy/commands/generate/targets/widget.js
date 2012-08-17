@@ -4,13 +4,19 @@ var path = require('path'),
 	U = require('../../../utils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger');
+	logger = require('../../../common/logger'),
+	alloyRoot = path.join(__dirname,'..','..','..');
 
 module.exports = function(name, args, program) {
 	// TODO: use name to give default values to widget
 	// TODO: allow parameters at CLI to fill in manifest values
-	var widgetId = args[0] || 'com.default.' + name;
+	if(name.match("^com\.")) {
+		var widgetId = args[0] || name;	
+	} else {
+		var widgetId = args[0] || 'com.default.' + name;
+	}
 	var widgetDesc = args[1] || '';
+	var templatePath;
 
 	// TODO: Should we use the widgetId instead of name for the folder name?
 	var widgetPath = path.join(program.outputPath,'widgets',name);
@@ -36,13 +42,21 @@ module.exports = function(name, args, program) {
 		"tags":"",
 		"platforms":"android,ios,mobileweb"
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<View id="defaultView"/>');
+
+	templatePath = path.join(alloyRoot,'template','view.xml');
+	var templateViewContents = fs.readFileSync(templatePath,'utf8');
+	
+	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), _.template(templateViewContents, {}));
 	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
-		"#defaultView": {
+		".container": {
 			"backgroundColor": "#a00"
 		}
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.' + CONST.FILE_EXT.CONTROLLER), '// do something!');
+	
+	templatePath = path.join(alloyRoot,'template','controller.js');
+	var templateControllerContents = fs.readFileSync(templatePath,'utf8');
+	var code = _.template(templateControllerContents, {});	
+	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.' + CONST.FILE_EXT.CONTROLLER), _.template(templateControllerContents, {}));
 
 	logger.info('Generated widget named '+name);
 }
