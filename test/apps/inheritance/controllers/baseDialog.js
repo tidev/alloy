@@ -1,3 +1,6 @@
+var args = arguments[0] || {};
+$.message.text = args.message || 'dialog';
+
 exports.openDialog = function(win) {
 	$.refWin = win;	
 	$.refWin.add($.cover);
