@@ -41,6 +41,10 @@ book.save({author:"R Kipling"});
 // Okay time to show the results. Remember this sync's local Backbone server with persitent store.
 books.fetch();
 
+// add manually id
+var book = new (Alloy.getModel('Book'))({book:"Appcelerator Titanium Smartphone App ",author:"Boydlee Pollentine",_id:'cookbookBookId'});
+book.save();
+
 // DELETE - destroy triggers the CRUD delete opperation
 for(i=books.length-1; i>=0; i--) {
     var model = books.at(i);
