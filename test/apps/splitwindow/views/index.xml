@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<SplitWindow>
 		<Window>
 			<Label>This is the master</Label>
@@ -7,4 +7,4 @@
 			<Label>This is the detail</Label>
 		</Window>
 	</SplitWindow>
-</Component>
+</Alloy>

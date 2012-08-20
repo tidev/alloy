@@ -1,17 +1,27 @@
-var Alloy = require("alloy"), 
-	_ = Alloy._, 
+var Alloy = require('alloy'),
+	Backbone = Alloy.Backbone,
+	_ = Alloy._,
 	A$ = Alloy.A;
 
-exports.create = function() {
-	var $ = require('baseComponent').create();
+function Controller() {
+	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
+	
+	var $ = this;
+	var exports = {};
+	<%= exportsCode %>
 
-<%= onCreate %>
+	<%= viewCode %>
 
-	// generated from view markup
-<%= viewCode %>
+	// make all IDed elements in $.__views available right on the $ in a 
+	// controller's internal code. Externally the IDed elements will
+	// be accessed with getView().
+	_.extend($, $.__views);
 
-	// generated from controller
-<%= controllerCode %>
+	<%= controllerCode %>
 
-	return $;
-};
+	// Extend the $ instance with all functions and properties 
+	// defined on the exports object.
+	_.extend($, exports);
+}
+
+module.exports = Controller;

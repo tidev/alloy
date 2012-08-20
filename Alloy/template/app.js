@@ -6,6 +6,5 @@
 var Alloy = require('alloy'),
 	_ = require('alloy/underscore')._;
 
-// TODO: Use AST to create these Alloy namespace shortcuts at compile time
 Alloy.CFG = require('alloy/CFG');
-(require('alloy/components/index')).create();
+Alloy.getController('index');

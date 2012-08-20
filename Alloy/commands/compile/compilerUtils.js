@@ -25,6 +25,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	PLATFORMS = ['ios', 'android', 'mobileweb'],
+	NS_ALLOY = 'Alloy',
 	NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
@@ -32,6 +33,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
 	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
 	IMPLICIT_NAMESPACES = {
+		// Alloy
+		Require: NS_ALLOY,
+		Include: NS_ALLOY,
+
 		// Ti.Map
 		Annotation: NS_TI_MAP,
 
@@ -68,14 +73,19 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			runtime: "Ti.Platform.osname === 'mobileweb'"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'require', 'platform'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform'],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src'],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
+exports.getCompilerConfig = function() {
+	return compilerConfig;
+}
+
 exports.generateVarName = function(id) {
-	return '$.' + id;
+	return '$.__views.' + id;
 }
 
 exports.generateUniqueId = function() {
@@ -85,8 +95,8 @@ exports.generateUniqueId = function() {
 exports.getParserArgs = function(node, state) {
 	state = state || {};
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || 'Ti.UI',
-		req = node.getAttribute('require'),
+		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
+		fullname = ns + '.' + name,
 		id = node.getAttribute('id') || state.defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		platformObj = {};
@@ -120,9 +130,10 @@ exports.getParserArgs = function(node, state) {
 
 	// get create arguments and events from attributes
 	var createArgs = {}, events = [];
+	var attrs = _.contains([], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
-		if (_.contains(RESERVED_ATTRIBUTES, attrName)) { return; }
+		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
@@ -133,9 +144,9 @@ exports.getParserArgs = function(node, state) {
 	
 	return {
 		ns: ns,
+		name: name,
 		id: id, 
-		fullname: ns + '.' + name,
-		req: req,
+		fullname: fullname,
 		symbol: exports.generateVarName(id),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
@@ -145,7 +156,7 @@ exports.getParserArgs = function(node, state) {
 	};
 };
 
-exports.generateNode = function(node, state, defaultId, isRoot) {
+exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (node.nodeType != 1) return '';
 	if (defaultId) { state.defaultId = defaultId; }
 
@@ -173,7 +184,7 @@ exports.generateNode = function(node, state, defaultId, isRoot) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isRoot) { code.content += '$.setRoot(' + args.symbol + ');\n'; }
+	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
@@ -252,7 +263,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	// validation
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
-	exports.generateConfig(obj.dir.config, alloyConfig, obj.dir.resourcesAlloy);
+	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
 
 	// keep a copy of the config for this module
 	compilerConfig = obj;
@@ -274,7 +285,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 	} else {
-		logger.warn('No "app/config/config."' + CONST.FILE_EXT.CONFIG + ' file found');
+		logger.warn('No "app/config."' + CONST.FILE_EXT.CONFIG + ' file found');
 	}
 
 	// write out the config runtime module
@@ -286,11 +297,48 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 };
 
 exports.loadController = function(file) {
-	if (path.existsSync(file)) {
-		return fs.readFileSync(file,'utf8');
-	} else {
-		return '';
+	var code = {
+		parentControllerName: '',
+		controller: '',
+		exports: ''
+	};
+
+	if (!path.existsSync(file)) {
+		return code;
 	}
+	var contents = fs.readFileSync(file,'utf8');
+
+    function checkAssigment() {
+    	var target = this[2];
+    	var value = this[3];
+    	var match = pro.gen_code(target).match(/^exports\.(.+)/);
+
+    	if (match !== null) {
+            if (match[1] === 'baseController') {
+    			code.parentControllerName = pro.gen_code(value);
+    		} 		
+    		code.exports += pro.gen_code(this) + ';\n';
+    		return ['block'];
+    	}
+    }
+
+    function do_stat() {
+    	if (this[1][0] === 'assign') {
+    		return checkAssigment.call(this[1]);
+    	}
+    }
+
+    var ast = jsp.parse(contents);
+	var walker = pro.ast_walker();
+	var new_ast = walker.with_walkers({
+		"stat": do_stat
+	}, function(){
+        return walker.walk(ast);
+    });
+
+    code.controller = pro.gen_code(new_ast);
+
+	return code;
 };
 
 exports.loadStyle = function(tssFile) {
@@ -434,7 +482,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// what we know about the style we just sorted and assembled
 	var code = '';
 	if (styleCollection.length === 0) {
-		// do nothing
+		code += '{}';
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object
@@ -483,9 +531,7 @@ exports.processSourceCode = function(code, config, fn)
 	var c = jsp.tokenizer(code)();
 	// extract header copyright so we can preserve it (if at the top of the file)
     var copyrights = show_copyright(c.comments_before);
-	//var ast = jsp.parse(code); 
-	//var newCode = exports.formatAST(ast,config,fn);
-	return (copyrights ? copyrights + '\n' : '' ) + code; //newCode;
+	return (copyrights ? copyrights + '\n' : '' ) + code;
 };
 
 exports.formatAST = function(ast,config,fn)

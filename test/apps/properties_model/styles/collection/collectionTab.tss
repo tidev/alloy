@@ -1,0 +1,47 @@
+"#table": {
+	top:"50p"
+},
+".divider": {
+	height: "48dp",
+	width: "3dp",
+	top: "1dp",
+	right: "50dp",
+	backgroundGradient: {
+		type: "linear",
+		startPoint: { x: "0%",   y:"0%"},
+		endPoint:   { x: "100%", y:"0%"},
+		colors: [
+			{ color: "#666", offset: 0.0 },
+			{ color: "#ccc", offset: 0.5 },
+			{ color: "#666", offset: 1.0 }
+		]
+	}
+},
+"#text": {
+	top: "6dp",
+	bottom: "6dp",
+	left: "7dp",
+	right: "60dp",
+	color: "#111",
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	hintText: "add an item",
+	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
+},
+"#text[platform=android]": {
+	top: "3dp",
+	bottom: "1dp"
+},
+"#addView": {
+	top: 0,
+	bottom: 0,
+	right: 0,
+	width: "50dp"
+},
+"#addImage": {
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL,
+	color: "#fff",
+	backgroundColor: "transparent",
+	image: "/ic_menu_add.png",
+	touchEnabled: false
+}

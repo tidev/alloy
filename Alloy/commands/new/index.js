@@ -88,24 +88,24 @@ function installPlugin(dir)
 }
 
 function newproject(args, program) {
-	var dirs = ['controllers','styles','views','models','migrations','config','assets','lib','vendor'],
+	var dirs = ['controllers','styles','views','models','assets'],
 		templateDir = path.join(alloyRoot,'template'),
 		defaultDir = path.join(templateDir,'default'),
 		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.VIEW),'utf8'),
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.STYLE),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.CONTROLLER),'utf8'),
 		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
-		defaultConfig = {},
-		projectPath, appPath, tmpPath, alloyJmkTemplate, cfg;
+		projectPath, appPath, resourcesPath, tmpPath, alloyJmkTemplate, cfg;
 
 	// validate args
 	if (!_.isArray(args) || args.length === 0) {
-		U.die("\"alloy new\" requires an [OUTPUT_DIR]");
+		args[0] = '.';
 	}
 
 	// get app path, create if necessary
 	projectPath = args[0];
 	appPath = path.join(projectPath,'app');
+	resourcesPath = path.join(projectPath,'Resources');
 	if (path.existsSync(appPath)) {
 		if (!program.force) {
 			U.die("Directory already exists at: " + appPath);
@@ -127,13 +127,12 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'views','index.'+CONST.FILE_EXT.VIEW),INDEX_XML,'utf-8');
 	fs.writeFileSync(path.join(appPath,'styles','index.'+CONST.FILE_EXT.STYLE),INDEX_JSON,'utf-8');
 	fs.writeFileSync(path.join(appPath,'controllers','index.'+CONST.FILE_EXT.CONTROLLER),INDEX_C,'utf-8');
-	fs.writeFileSync(path.join(appPath,'config','alloy.'+CONST.FILE_EXT.CONFIG),U.stringifyJSON(defaultConfig),'utf-8');
 	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
 
 	// copy in any modules
 	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
 
-	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	// TODO: remove this once this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
 	U.installModule(projectPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
@@ -146,10 +145,22 @@ function newproject(args, program) {
 		
 	// write the project config file
 	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
-	fs.writeFileSync(path.join(appPath,"config","config.json"), U.stringifyJSON(cfg),'utf-8');
+	fs.writeFileSync(path.join(appPath,"config.json"), U.stringifyJSON(cfg),'utf-8');
 
 	// install the plugin
 	installPlugin(projectPath);
+
+	// copy original android, iphone, and mobileweb directories to assets
+	_.each(['android','iphone','mobileweb'], function(dir) {
+		var rDir = path.join(resourcesPath,dir);
+		if (!path.existsSync(rDir)) {
+			return;
+		}
+
+		var p = path.join(appPath,'assets',dir);
+		wrench.mkdirSyncRecursive(p, 0777);
+		wrench.copyDirSyncRecursive(path.join(resourcesPath,dir), p);
+	});
 	
 	logger.info('Generated new project at: ' + appPath);
 }

@@ -37,6 +37,10 @@ def compile(config):
                 #       on python < 2.7.
                 subprocess.check_call(cmd)
         except subprocess.CalledProcessError as ex:
-            print ex.output
+            if hasattr(ex, 'output'):
+                print ex.output
             print "[ERROR] Alloy compile failed"
-            sys.exit(ex.returncode)
+            retcode = 1
+            if hasattr(ex, 'returncode'):
+                retcode = ex.returncode
+            sys.exit(retcode)

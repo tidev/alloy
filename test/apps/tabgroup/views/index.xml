@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<TabGroup>
 		<Tab id="tab1">
 			<!-- Explicit Window declaration -->
@@ -15,4 +15,4 @@
 			<Label>Tab 2</Label>
 		</Tab>
 	</TabGroup>
-</Component>
+</Alloy>

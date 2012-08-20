@@ -2,7 +2,8 @@
  * Ti.App.Properties sync adapter which will store all models locally
  */
 var Alloy = require('alloy'),
-	_ = require("alloy/underscore")._;
+	_ = require("alloy/underscore")._,
+	TAP = Ti.App.Properties;
 
 // make sure we have a unique list of IDs for adapter models
 var idList = [],
@@ -15,53 +16,35 @@ function getUniqueId(id) {
 	return id;
 };
 
-function TiAppPropertiesSync(model) {
-	var self = this;
-	var prefix = model.config.adapter.prefix ? model.config.adapter.prefix + '-' : '';
-	var adapterName = 'TiAppPropertiesSync';
-
-	// save the model and columns
-	this.model = model;
-	this.columns = model.config.columns;
-
-	function debug(funcName) {
-		if (ENV_DEV) { Ti.API.debug(adapterName + '.' + funcName + '(): ' + JSON.stringify(self.model.attributes)); }
-	}
-
-	function setModel(opts) {
-		_.each(self.columns, function(v,k) {
-			Ti.App.Properties['set'+v](prefix + k, self.model.get(k));
-		});
-	}
-
-	this.create = function(opts) {
-		debug('create');
-		setModel(opts);
-	};
-
-	this.read = function(opts) {
-		debug('read');
-		_.each(self.columns, function(v,k) {
-			var obj = {};
-			obj[k] = Ti.App.Properties['get'+v](prefix + k, self.model.config.defaults[k]);
-			self.model.set(obj); 
-		});
-	};
-
-	this.update = function(opts) {
-		debug('update');
-		setModel(opts);
-	};
-	
-	this['delete'] = function(opts) {
-		debug('delete');
-		self.model.clear();
-	};
-}
-
 function Sync(model, method, opts) {
-	var sync = new TiAppPropertiesSync(model);
-	return sync[method](opts);
+	var prefix = model.config.adapter.prefix ? model.config.adapter.prefix : 'default';
+	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
+
+	if (method === 'read') {
+		if (opts.parse) {
+			// is collection
+			var list = [];
+			_.each(TAP.listProperties(), function(prop) {
+				var match = prop.match(regex);
+				if (match !== null) {
+					list.push(TAP.getObject(prop));
+				}
+			});
+			model.reset(list);
+			var maxId = _.max(_.pluck(list, 'id')); 
+			model.maxId = (_.isFinite(maxId) ? maxId : 0) + 1;
+		} else {
+			// is model
+			var obj = TAP.getObject(prefix + '-' + model.get('id'));
+			model.set(obj);
+		}	
+	} 
+	else if (method === 'create' || method === 'update') {
+		TAP.setObject(prefix + '-' + model.get('id'), model.toJSON() || {});
+	} else if (method === 'delete') {
+		TAP.removeProperty(prefix + '-' + model.get('id'));
+		model.clear();
+	}
 }
 
 module.exports.sync = Sync;
@@ -72,7 +55,7 @@ module.exports.beforeModelCreate = function(config) {
 	config.defaults = config.defaults || {};
 
 	// add this adapter's values
-	config.columns.id = 'String';
+	config.columns.id = 'Int';
 	config.defaults.id = getUniqueId();
 
 	return config;

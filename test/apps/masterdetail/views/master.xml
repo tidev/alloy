@@ -1,5 +1,0 @@
-<Component>
-	<Window class="container">
-		<TableView id="table"/>
-	</Window>
-</Component>

@@ -28,13 +28,21 @@ This quick start will give you the shortest path to installing Alloy and creatin
 
 * Do this once:
 	1. Download and install [Node.js](http://nodejs.org/), if necessary
-	2. At the command line: `sudo npm install -g alloy`
+	2. Downaload and install [npm](https://github.com/isaacs/npm/), if necessary 
+	3. At the command line: `sudo npm install -g alloy`
 * Do this for each project you create:
-	3. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
-	4. `cd PATH/TO/PROJECT`
-	5. `alloy new .`
+	4. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
+	5. `cd PATH/TO/PROJECT`
+	6. `alloy new .`
 
 After these steps, you can now run your projects in Titanium Studio. Be aware when working with an Alloy project that all files in your **Resources** directory are subject to being overwritten. All your work should be done in your project's **app** folder. 
+
+If your new to Titanium development there is a web based guide to building your first Alloy app. To view the guide download the Alloy repository as a zip file, then open the zip file and in the docs/Alloy-bootstrap/folder you'll find the guide.
+
+Environment requirements:
+	Titanium SDK  2.1.0 and greater
+
+At this point we only support Alloy development on OSX. 
 
 Installation
 -------------
@@ -48,7 +56,22 @@ Local Installation
 
 To install your own local copy (with executable), clone this repository, navigate to the top level directory, and install via:
 
-	[sudo] npm install -g .	
+	[sudo] npm install -g .
+
+Bleeding Edge
+-------------
+
+If you want to be using the latest version of Alloy at all times, here's what you can do:
+
+	// do this once
+	git clone https://github.com/appcelerator/alloy.git
+
+	// do this frequently
+	cd /path/to/alloy
+	git pull origin master
+	sudo npm install -g .
+
+This will pull the latest changes from Alloy's repository and then install them locally via npm.
 
 Creating an App
 ---------------
@@ -65,7 +88,7 @@ As part of Alloy-enabling your Titanium project, Alloy will install a special co
 Your new Alloy project will have a new folder named `app` that will contain the skeleton Alloy app.
 
 Directory Structure
---------------------
+-------------------
 
 Alloy has directories that should be familiar if you've used any of the popular web MVC frameworks like Ruby on Rails.  
 
@@ -77,9 +100,12 @@ Alloy prefers to use convention over configuration for simplicity.
 - *models* - this is where your model files will go.
 - *assets* - this is where you should put your image assets and other misc. files that you want copied into the _Resources_ directory.
 - *migrations* - this is where your database migration files will be stored.
+
+
+The following folders are not created automatically by Alloy but can be created and used by developers to add application libraries.
+
 - *lib* - this is where you should put application specific files, typically in the CommonJS format.
 - *vendor* - this is where you should put any vendor specific modules, typically in the CommonJS format.  Do not place native modules in this folder.
-- *config* - Contains application specific config.
 
 Compiling an App
 ----------------
@@ -89,24 +115,21 @@ You can run a Titanium project that is using Alloy like any normal build.  Howev
 	alloy compile
 
 If you run this from the projects directory, it will compile the files to the correct location automatically.
-	
-	
-Generating Views
------------------
 
-To generate an empty view and the associated style files, you can run the following command:
+Debugging an App
+----------------
 
-	alloy generate view <name>
+Alloy apps can be debugged from within Titanium Studio by setting breakpoints in the generated controller in the Resources/alloy/controllers folder. 
 
 Generating Controllers
----------------------
+----------------------
 
-To generate an empty controller, you can run the following command:
+To generate an empty controller, style and view file you can run the following command:
 
 	alloy generate controller <name>
 
 Generating Models
----------------------
+-----------------
 
 To generate a model, you can run the following command:
 
@@ -136,7 +159,6 @@ To generate a basic widget, you run the following command
 
 This will create a default widget in your projects's `app/widgets` path.
 
-
 Developing in Alloy
 -------------------
 
@@ -146,7 +168,7 @@ In Alloy, the controller (which is optional) must be named with the same name as
 
 In alloy, you do not provide an `app.js` as it will be automatically generated.
 
-In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
+In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.tss` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
 
 You define a style in the JSON like this:
 
@@ -249,6 +271,7 @@ A few notes on the code generation and style merging:
 - classes can be separated by multiple spaces
 - classes will be merged in order
 - the order of precedence is: Object Type, Classes, ID
+- You can put globals is a file called app.tss
 
 Titanium Namespacing
 --------------------
@@ -285,33 +308,23 @@ In the above example, you should have 3 other view files named `first.xml`, `sec
 Working with Models & Collections
 -----------------------------------
 
-For models, we specify the schema of our model using JSON as the name of the model ending with `.json`.
+For models, we specify the descriptor of our model using JSON as the name of the model ending with `.json`.
 
 You should generate a model using the `alloy generate model` command so that you can get automatic migration support.
 
-All model classes are automatically defined and available in your controller scope as the name of the model.
+A model and collection class are automatically defined and available in your controller scope as the name of the model (name of descriptor JSON file).
 
-For example, if you defined a model named `todo`, it would be available as the same variable name under the `$.` object.
+For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.getCollection('Book') or Alloy.getModel('Book'). 
 
-To create a new model object:
+To create a new collect with a single model:
 
 ```javascript
-var todo = new $.Todo({
-	name:"hello",
-	done:false
-});
-
-todo.save();
+var books = new (Alloy.getCollection('Book'));
+var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
+books.add(book);
 ```
 
 Models inherit from Backbone.Model. _NOTE: if the first character of a model is lower case, it will be automatically converted to uppercase for referencing the Model class._
-
-Collections of your models are automatically also created with the plural name of your model class. For example, if you defined a model named `todo`, you could automatically create a collection of models by using the following code:
-
-```javascript
-var list = new $.TodoCollection();
-var results = list.find();
-```
 
 Collections inherit from Backbone.Collections.
 	
@@ -345,6 +358,14 @@ $.index.open();
 ```
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
+
+The pattern for creating Alloy markup is to have the XML element name match the corresponding Titanium API name. Nested elements get added to parent element, for example the Button element below is added as a child to the Window element. Titanium styles are applied through the attributes of the style files described above.
+
+```xml
+<Window>
+	<Button id="b"></Button>
+</Window>
+```
 
 Exporting Properties & Functions from Controllers
 -------------------------------------------------
@@ -381,7 +402,7 @@ Example of importing a widget:
 
 ```xml
 <View>
-	<Widget require="com.foo.widget" id="foo"/>
+	<Require widgetid="com.foo.widget" id="foo"/>
 </View>
 ```
 
@@ -474,7 +495,7 @@ Project Configurations
 ----------------------
 
 Alloy provides an ability to have project configurations stored as JSON which will be compiled and conditionalized at build time.
-The configuration will be available in your app at runtime in the variable `CFG$`.  The config file is generated under the config folder with the name `config.json`.
+The configuration will be available in your app at runtime in the variable `Alloy.CFG`.  The config file is generated under the app folder with the name `config.json`.
 
 In the config file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target.  The order of precedence for key merging is `global`, `env` and then `os`.
 
@@ -517,7 +538,7 @@ Example config:
 Then, you can reference configuration at runtime in your code:
 
 ```javascript
-alert(CFG$.foo);
+alert(Alloy.CFG.foo);
 ```
 
 In the above example, when running under the iOS simulator, you should see `5` in the alert dialog box.
@@ -576,15 +597,10 @@ task("post:compile",function(event,logger){
 });
 ```
 
-Alloy compiler configuration
------------------------------
-
-You can control some settings of the compiler on a per project basis by modifying settings in the `alloy.json` in your root alloy app directory.
-
 Running the Test Harness
 ------------------------
 
-To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which its self is based on make.  Jake can be installed via npm:
+To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which itself is based on make.  Jake can be installed via npm:
 
 	[sudo] npm install -g jake
 
@@ -622,18 +638,27 @@ Where `directory` is the project directory and `platform` is one of `iphone`, `a
 
 _NOTE: currently, this command is only available on OSX._
 
+Running our test apps (OSX only)
+--------------------------------
+
+You may want to quickly see some of our [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) in action. Here's how to do it.
+
+	cd /usr/local/lib/node_modules/alloy
+	sudo jake app:run dir=widget_complex tiversion=2.1.1.GA
+
+Notes:
+* Make sure you use `sudo`, otherwise you'll get errors
+* `dir` can be the name of any [test app](https://github.com/appcelerator/alloy/tree/master/test/apps)
+* `tiversion` is optional. The latest installed Titanium SDK will be used if this option is omitted. 
+
 TODO
 ----
 
 There's a lot of work to get Alloy to a release state.  The following are some of the major items:
 
 - integration into Titanium Studio wizards
-- DB migration support implementation [TEST]
-- support for SQLite backed Model implementation [TEST]
 - support for ACS backed Model implementation
-- uglify all JS files, not just the app.js
 - generation of scaffolding
-- add support for TDD testing (possibly Jasmine?)
 - possible view template support?
 - full implementation of different views based on os, screen size, etc.
 - widget packaging implementation, spec and tooling

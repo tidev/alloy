@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<Window class='container'>
 		<View ns="Ti.Map" id="map">
 			<Annotation id="annotation1"/>
@@ -14,4 +14,4 @@
 			<ImageView id="footerImage"/>
 		</View>
 	</Window>
-</Component>
+</Alloy>

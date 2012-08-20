@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<TableViewRow id="row">
 		<ImageView id="thumbnail"/>
 		<View class="vgroup">
@@ -6,4 +6,4 @@
 			<Label id="authors"/>
 		</View>
 	</TableViewRow>
-</Component>
+</Alloy>

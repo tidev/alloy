@@ -1,0 +1,4 @@
+<Alloy>
+	<Require src="middle" id="middle"/>
+	<Require src="bottom" id="bottom"/>
+</Alloy>

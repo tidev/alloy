@@ -8,6 +8,7 @@ var jsp = require("../../uglify-js/uglify-js").parser,
 	util = require('util'),
 	colors = require('colors'),
 	logger = require('../../common/logger.js'),
+	U = require('../../utils'),
 	platformDefines,
 	platformName
 ;
@@ -255,7 +256,7 @@ function handleAddAndRemove(ast) {
 	// argument may be a function, and we don't want to call it twice and 
 	// have unexpected results.
 	var newArgs = '(function(t) {' +
-	              'return (_.isObject(t) && t.__iamalloy__ ? t.getRoot() : t) || t;' +
+	              'return (_.isObject(t) && t.__iamalloy ? t.getView() : t) || t;' +
                   '})(' + argsStr + ')';
 	ast[2][0] = jsp.parse(newArgs)[1][0][1];
 
@@ -287,7 +288,6 @@ function optimize(ast, defines, fn)
 			{
 				"if" : processIf,
 				"var" :processVar
-				//"call": processCall
 			}
 		, function()
 		{

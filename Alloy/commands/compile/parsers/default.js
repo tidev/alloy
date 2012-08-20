@@ -16,7 +16,7 @@ function parse(node, state, args) {
 		args.classes, 
 		args.id, 
 		node.nodeName, 
-		_.defaults(state.extraStyle || {}, args.createArgs || {}) //state.extraStyle
+		_.defaults(state.extraStyle || {}, args.createArgs || {}) 
 	) + '\n';
 	code += "),'" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");\n";
 	if (args.parent.symbol) {

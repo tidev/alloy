@@ -1,5 +1,5 @@
-<Component>
+<Alloy>
 	<Window class="container">
 		<TableView id="table"/>	
 	</Window>
-</Component>
+</Alloy>

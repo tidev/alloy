@@ -1,6 +1,7 @@
 exports.ALLOY_DIR = 'app';
 exports.GLOBAL_STYLE = 'app.tss';
-exports.ROOT_NODE = 'Component';
+exports.ROOT_NODE = 'Alloy';
+exports.NAMESPACE_DEFAULT = 'Ti.UI';
 
 exports.FILE_EXT = {
 	VIEW: 'xml',
@@ -22,5 +23,5 @@ exports.DIR = {
 	WIDGET: 'widgets',
 	LIB: 'lib',
 	VENDOR: 'vendor',
-	COMPONENT: 'components'
+	COMPONENT: 'controllers'
 };

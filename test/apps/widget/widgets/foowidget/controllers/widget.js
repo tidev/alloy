@@ -1,5 +1,4 @@
-
-
+// add listeners for widget buttons
 $.a.addEventListener('click',function(){
 	$.t.text = "You clicked A";
 });
@@ -12,13 +11,12 @@ $.c.addEventListener('click',function(){
 	$.t.text = "You clicked C";
 });
 
-
-// anything defined against the export will be provided as methods/properties against the widgets variable
-
-$.setText = function(text){
+// anything defined against exports will be exposed as methods/properties 
+// on any instance of the widget
+exports.setText = function(text){
 	$.t.text = text;
 };
 
-$.getText = function() {
+exports.getText = function() {
 	return $.t.text;
 }

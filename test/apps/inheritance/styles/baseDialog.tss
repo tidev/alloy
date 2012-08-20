@@ -1,0 +1,28 @@
+"#cover": {
+	backgroundColor: '#000',
+	opacity: 0.5,
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL
+},
+"#dialog": {
+	height: '100dp',
+	width: '66%',
+	backgroundColor: '#fff',
+	borderColor: '#000',
+	borderWidth: 2,
+	borderRadius: 4
+},
+"#message": {
+	color: '#000',
+	left: 10,
+	right: 10,
+	top: 10,
+	height: Ti.UI.SIZE,
+	font: {
+		fontSize: '16dp'
+	},
+	textAlign: 'center'
+},
+"#closeButton": {
+	bottom: 10
+}

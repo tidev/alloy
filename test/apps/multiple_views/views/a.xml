@@ -1,0 +1,5 @@
+<Alloy>
+	<Window class="container">
+		<Label id="t" onClick="doClick">View 2</Label>
+	</Window>
+</Alloy>

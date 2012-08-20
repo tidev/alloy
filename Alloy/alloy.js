@@ -53,6 +53,7 @@ program
 	.version(module.exports.version)
 	.description('Alloy command line')
 	.usage('ACTION [ARGS] [OPTIONS]')
+	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
 	.option('-f, --force','Force the command to execute')
@@ -77,6 +78,8 @@ program.parse(process.argv);
 	
 
 // Setup up logging output
+//if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
+Error.stackTraceLimit = Infinity;
 logger.stripColors = (program.colors===false);
 banner();
 

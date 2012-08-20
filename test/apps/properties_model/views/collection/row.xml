@@ -1,0 +1,6 @@
+<Alloy>
+	<TableViewRow>
+		<Label id="name"/>
+		<Label id="score"/>
+	</TableViewRow>
+</Alloy>

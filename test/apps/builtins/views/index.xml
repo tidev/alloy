@@ -1,4 +1,4 @@
-<Component>
+<Alloy>
 	<Window>
 		<View id="backdrop"/>
 		<View class="container">
@@ -9,4 +9,4 @@
 			<Button id="trim">trim string</Button>
 		</View>
 	</Window>
-</Component>
+</Alloy>
