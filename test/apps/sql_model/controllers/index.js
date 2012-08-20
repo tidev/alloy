@@ -44,7 +44,7 @@ books.fetch();
 
 // Okay filter the result by id
 books.fetch({
-	byId:{id:book.id},
+	byId:book.id,
 });
 
 // or filter the result by author now
