@@ -63,6 +63,9 @@ books.fetch({
 	},
 });
 
+//test for attribute manually an id
+var book = new (Alloy.getModel('Book'))({book:"Appcelerator Titanium Smartphone App", author:"Boydlee Pollentine ",_id:'appcookbookID'});
+book.save();
 
 // DELETE - destroy triggers the CRUD delete opperation
 for(i=books.length-1; i>=0; i--) {
