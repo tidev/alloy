@@ -10,7 +10,6 @@ var path = require('path'),
 module.exports = function(name, args, program) {
 	// TODO: use name to give default values to widget
 	// TODO: allow parameters at CLI to fill in manifest values
-	var templatePath;
 	if(name.match("^com\.")) {
 		var widgetId = args[0] || name;	
 	} else {
@@ -42,20 +41,12 @@ module.exports = function(name, args, program) {
 		"tags":"",
 		"platforms":"android,ios,mobileweb"
 	}));
-	templatePath = path.join(alloyRoot,'template','view.xml');
-	var templateViewContents = fs.readFileSync(templatePath,'utf8');
 
-	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), _.template(templateViewContents, {}));
-	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
-		".container": {
-			"backgroundColor": "#a00"
-		}
-	}));
-	
-	templatePath = path.join(alloyRoot,'template','controller.js');
-	var templateControllerContents = fs.readFileSync(templatePath,'utf8');
-	var code = _.template(templateControllerContents, {});	
-	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.' + CONST.FILE_EXT.CONTROLLER), _.template(templateControllerContents, {}));
+	_.each(['VIEW','CONTROLLER','STYLE'], function(type) {
+		var templatePath = path.join(alloyRoot,'template', type.toLowerCase() + '.' + CONST.FILE_EXT[type]);
+		var contents = fs.readFileSync(templatePath,'utf8');
+		fs.writeFileSync(path.join(widgetPath, type.toLowerCase() + 's', 'widget.' + CONST.FILE_EXT[type]), contents);
+	});
 
 	logger.info('Generated widget named '+name);
 }
