@@ -40,10 +40,12 @@ exports.urlDecode = function (string){
 };
 
 exports.urlToJson = function (url){
-    var list = {};
-    var urlarr = url.split('&');
-    for (var n = 0; n < urlarr.length; ++n) {
-        var item = urlarr[n];
+	var ret = {};
+    var arr = url.split('?');
+	var list = {};
+    var queryarr = arr[1].split('&');
+    for (var n = 0; n < queryarr.length; ++n) {
+        var item = queryarr[n];
         if (item == "") { continue; }
         var e = item.indexOf('='),
         	name,
@@ -56,6 +58,8 @@ exports.urlToJson = function (url){
             value = item.substring(e + 1);
         }
         list[name] = value;
-    }						
-	return list;		
+    }			
+	ret.url = arr[0];
+	ret.query = list;
+	return ret;		
 };
