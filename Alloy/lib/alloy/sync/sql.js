@@ -154,6 +154,7 @@ function Sync(model, method, opts) {
 				rs.next();
 			}
 			rs.close();
+			model.length = model.models.length;
 			model.trigger('fetch');
 			break;
 	
