@@ -1,5 +1,5 @@
 <Alloy>
 	<Window id="index">
-		<Button id="b" class="button">Hello, World!</Button>
+		<Button id="b" class="button" onClick="showAlert">Hello, World!</Button>
 	</Window>
 </Alloy>

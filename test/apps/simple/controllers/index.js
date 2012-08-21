@@ -1,6 +1,5 @@
-function showAlert() {
-	alert("Click! Shouldn't do it again though");
+function showAlert(e) {
+	alert('$.' + e.source.id + ' says hello! Just this once though.');
 	$.b.off("click",showAlert);
 }
-$.b.on("click",showAlert);
 $.index.open();
