@@ -17,6 +17,7 @@ exports.DIR = {
 	STYLE: 'styles',
 	CONTROLLER: 'controllers',
 	MODEL: 'models',
+	COLLECTION: 'collections',
 	MIGRATION: 'migrations',
 	CONFIG: 'config',
 	ASSETS: 'assets',

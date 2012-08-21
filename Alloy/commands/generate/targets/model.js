@@ -46,6 +46,19 @@ module.exports = function(name, args, program) {
 			   '})';
 	fs.writeFileSync(path.join(program.outputPath,CONST.DIR.MODEL,name+'.js'),code);
 
+	// generate (optional) custom code file for model
+	// TODO: move to template
+	code = '(function(Collection) {\n' +
+			   '\t// add code to modify/extend your Collection definition\n\n' +
+			   '\t// Example:\n' +
+			   '\t//   return Collection.extend({\n' +
+			   '\t//       customProperty: 123,\n' +
+			   '\t//       customFunction: function() {}\n' +
+			   '\t//   });\n\n' +
+			   '\treturn Collection;\n' + 
+			   '})';
+	fs.writeFileSync(path.join(program.outputPath,CONST.DIR.COLLECTION,name+'.js'),code);
+
 	// generate associated migration
 	var template = { up: '', down: '' };
 	var migrationCode = info.code.split("\n");

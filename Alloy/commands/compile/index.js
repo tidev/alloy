@@ -330,6 +330,7 @@ function processModels() {
 	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
 	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
 	U.ensureDir(compileConfig.dir.models);
+	U.ensureDir(compileConfig.dir.collections);
 
 	// Make sure we havea runtime models directory
 	var modelFiles = fs.readdirSync(compileConfig.dir.models);
@@ -346,19 +347,27 @@ function processModels() {
 		var fullpath = path.join(compileConfig.dir.models,modelFile);
 		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
 		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
+		var collecionJsFile = path.join(compileConfig.dir.collections,basename+'.js');
 		var modelConfig = fs.readFileSync(fullpath);
 		var modelJs = 'function(Model){}';
+		var collectionJs = 'function(Collection){}';
 
 		// grab any additional model code from corresponding JS file, if it exists
 		if (path.existsSync(modelJsFile)) {
 			modelJs = fs.readFileSync(modelJsFile,'utf8');
 		}
+		
+		//grab collection extend JS file, if it exists
+		if (path.existsSync(collecionJsFile)) {
+			collectionJs = fs.readFileSync(collecionJsFile,'utf8');
+		}		
 
 		// generate model code based on model.js template and migrations
 		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
 			basename: basename,
 			modelConfig: modelConfig,
 			modelJs: modelJs,
+			collectionJs: collectionJs,
 			migrations: findModelMigrations(basename)
 		});	
 
