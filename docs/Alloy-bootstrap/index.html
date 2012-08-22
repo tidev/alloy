@@ -343,7 +343,7 @@ $.sfb.setHandlers({
         authors: book.authors,
         image: book.image
       };
-      var row = Alloy.getController('row', args).getRoot();
+      var row = Alloy.getController('row', args).getView();
       data.push(row);
     });
     $.table.setData(data);

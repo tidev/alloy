@@ -1,7 +1,22 @@
-/**
- * A collection of useful Animation utilities
+/** 
+ * @class Alloy.builtins.animation
+ * A collection of useful animation utilities. To use the animation builtin library,
+ * all you need to do is require it with the `alloy` root directory in your
+ * `require` call. For example:
+ * 
+ *     var animation = require('alloy/animation');
+ *     animation.crossFade(view1, view2, 500, callback);
  */
 
+
+/**
+ * @method crossFade
+ * Transitions from one view to another using a cross-fade animation.
+ * @param {Titanium.UI.View} from View to fade out.
+ * @param {Titanium.UI.View} to View to fade in.
+ * @param {Number} duration Fade duration in milliseconds.
+ * @param {function()} callback Callback function, invoked after the fade completes. 
+ */
 exports.crossFade = function (from, to, duration, callback) {
     if (from)
         from.animate({
@@ -17,6 +32,13 @@ exports.crossFade = function (from, to, duration, callback) {
         setTimeout(callback, duration + 300);
 };
 
+/**
+ * @method fadeAndRemove
+ * Fades out a view then removes it from its parent view.
+ * @param {Titanium.UI.View} from View to remove.
+ * @param {Number} duration Fade duration in milliseconds.
+ * @param {Titanium.UI.View} container Parent container view.
+ */
 exports.fadeAndRemove = function (from, duration, container) {
     if (from && container) {
         from.animate({
@@ -29,6 +51,12 @@ exports.fadeAndRemove = function (from, duration, container) {
     }
 };
 
+/**
+ * @method fadeIn
+ * Fades in the specified view.
+ * @param {Titanium.UI.View} to View to fade in.
+ * @param {Number} duration Fade duration in milliseconds.
+ */
 exports.fadeIn = function (to, duration) {
     if (to) {
         to.animate({
@@ -38,6 +66,13 @@ exports.fadeIn = function (to, duration) {
     }
 };
 
+/**
+ * @method popIn
+ * Makes the specified view appear using a "pop-in" animation, which combines a fade-in
+ * with a slight expanding and contracting animation, to call attention to the new view.
+ * 
+ * @param {Titanium.UI.View} view View to animate.
+ */
 exports.popIn = function (view) {
 	if (!OS_IOS) 
 	{
@@ -60,6 +95,13 @@ exports.popIn = function (view) {
     view = null;
 };
 
+/**
+ * @method shake
+ * Creates a shake animation, moving the target view back and forth rapidly several times.
+ *
+ * @param {Titanium.UI.View} view View to animate.
+ * @param {Number} [delay] If specified, animation starts after `delay` milliseconds.
+ */
 exports.shake = function (view, delay) {
     var shake1 = Ti.UI.createAnimation({
         transform: Ti.UI.create2DMatrix().translate(5, 0),
@@ -92,6 +134,14 @@ exports.shake = function (view, delay) {
     }
 };
 
+/**
+ * @method flash
+ * Flashes the target view twice, fading to partially transparent then back to
+ * fully-opaque.
+ *
+ * @param {Titanium.UI.View} view View to animate.
+ * @param {Number} [delay] If specified, animation starts after `delay` milliseconds.
+ */
 exports.flash = function (view, delay) {
     var flash1 = Ti.UI.createAnimation({
         opacity: 0.7,
@@ -120,6 +170,13 @@ exports.flash = function (view, delay) {
     }
 };
 
+/**
+ * @method chainAnimate
+ * Executes a series of animations on the target view.
+ *
+ * @param {Titanium.UI.View} view View to animate.
+ * @param {Titanium.UI.Animation[]} animations A set of animations to execute on `view` in sequence.
+ */
 exports.chainAnimate = function (view, animations) {
     function step() {
         if (animations.length == 0) {

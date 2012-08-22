@@ -26,10 +26,13 @@
 "#osLabel": {
 	text: "Generic"
 },
+"#osLabel[platform=ios]": {
+	text: "iOS device\n(size unknown)"
+},
 "#osLabel[platform=ios size=tablet]": {
 	text: "iPad"
 },
-"#osLabel[platform=ios]": {
+"#osLabel[platform=ios size=handheld]": {
 	text: "iPhone"
 },
 "#osLabel[platform=android]": {

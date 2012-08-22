@@ -4,16 +4,24 @@ var Alloy = require('alloy'),
 	A$ = Alloy.A;
 
 function Controller() {
-	require('alloy/controllers/<%= parentController %>').call(this);
+	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	
-	var exports, $;
-	exports = $ = this;
+	var $ = this;
+	var exports = {};
+	<%= exportsCode %>
 
 	<%= viewCode %>
 
-	<%= exportsCode %>
+	// make all IDed elements in $.__views available right on the $ in a 
+	// controller's internal code. Externally the IDed elements will
+	// be accessed with getView().
+	_.extend($, $.__views);
 
 	<%= controllerCode %>
+
+	// Extend the $ instance with all functions and properties 
+	// defined on the exports object.
+	_.extend($, exports);
 }
 
 module.exports = Controller;

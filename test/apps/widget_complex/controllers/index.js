@@ -1,4 +1,4 @@
-$.getView('sfb').setHandlers({
+$.sfb.setHandlers({
 	success: function(books) {
 		var data = [];
 		_.each(books, function(book) {
@@ -6,14 +6,14 @@ $.getView('sfb').setHandlers({
 				title: book.title,
 				authors: book.authors,
 				image: book.image
-			}).getUIRoot();
+			}).getView();
 			data.push(row);
 		});
-		$.getView('table').setData(data);
+		$.table.setData(data);
 	}
 	// You can override error handling with the 'error' property
 	// error: function(e) {
 	// 	alert('ERROR: ' + e.error);
 	// }
 });
-$.getView('win').open();
+$.win.open();

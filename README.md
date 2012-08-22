@@ -316,7 +316,7 @@ A model and collection class are automatically defined and available in your con
 
 For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.getCollection('Book') or Alloy.getModel('Book'). 
 
-To create a new collect with a single model:
+To create a new collection with a single model:
 
 ```javascript
 var books = new (Alloy.getCollection('Book'));
@@ -637,6 +637,19 @@ If you are inside a Alloy based Titanium project directory, you do not need to p
 Where `directory` is the project directory and `platform` is one of `iphone`, `android`, etc.
 
 _NOTE: currently, this command is only available on OSX._
+
+Running our test apps (OSX only)
+--------------------------------
+
+You may want to quickly see some of our [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) in action. Here's how to do it.
+
+	cd /usr/local/lib/node_modules/alloy
+	sudo jake app:run dir=widget_complex tiversion=2.1.1.GA
+
+Notes:
+* Make sure you use `sudo`, otherwise you'll get errors
+* `dir` can be the name of any [test app](https://github.com/appcelerator/alloy/tree/master/test/apps)
+* `tiversion` is optional. The latest installed Titanium SDK will be used if this option is omitted. 
 
 TODO
 ----

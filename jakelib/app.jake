@@ -3,36 +3,26 @@ var fs = require('fs'),
 	wrench = require('wrench'),
 	spawn = require('child_process').spawn,
 	titanium = require('../Alloy/common/titanium'),
-	harnessAppPath = path.join(process.cwd(),'test','projects','Harness')
+	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
+	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
 	resourcesPath = path.join(harnessAppPath,'Resources');
 
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
-		console.log('Deleting Alloy app directory...');
-		wrench.rmdirSyncRecursive(targetAppPath, true);
-
-		console.log('Cleaning out Resources directory...');
-		var files = fs.readdirSync(resourcesPath);
-		for (var i = 0, l = files.length; i < l; i++) {
-			if (files[i] !== 'android' &&
-				files[i] !== 'iphone' &&
-				files[i] !== 'mobileweb' &&
-				files[i] !== 'app.js'){
-				var toDelete = path.join(resourcesPath, files[i]);
-				if (fs.statSync(toDelete).isDirectory()) {
-					wrench.rmdirSyncRecursive(toDelete, true);
-				} else {
-					fs.unlinkSync(toDelete);
-				}
-			}
-		}
+		console.log('Reseting the Harness app from template...');
+		wrench.rmdirSyncRecursive(harnessAppPath, true);
+		wrench.mkdirSyncRecursive(harnessAppPath, 0777);
+		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
 	});
 	
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
 		console.log('Initializing Alloy project...');
+		if (!path.existsSync(resourcesPath)) {
+			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
 				console.log(stdout);

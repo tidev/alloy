@@ -6,33 +6,29 @@ var AppModel = require('alloy/backbone').Model.extend({ loading: false });
 var model = new AppModel;
 var handlers = {};
 
-function onReady(args) {
-	// react to changes in the model state
-	model.on('change:loading', function(m) {
-		if (m.get('loading')) {
-			$.searchView.touchEnabled = false;
-			$.search.opacity = 0;
-			$.loading.setOpacity(1.0);	
-		} else {
-			$.loading.setOpacity(0);
-			$.search.opacity = 1;
-			$.searchView.touchEnabled = true;
-		}
-	});	
-}
+// react to changes in the model state
+model.on('change:loading', function(m) {
+	if (m.get('loading')) {
+		$.searchView.touchEnabled = false;
+		$.search.opacity = 0;
+		$.loading.setOpacity(1.0);	
+	} else {
+		$.loading.setOpacity(0);
+		$.search.opacity = 1;
+		$.searchView.touchEnabled = true;
+	}
+});
 
-function setHandlers(args) {
+////////////////////////////////////
+///////// public functions /////////
+////////////////////////////////////
+exports.setHandlers = function(args) {
 	_.each(HANDLERS, function(h) {
 		if (args[h]) {
 			handlers[h] = args[h];
 		}
 	});
-}
-
-module.exports = Alloy.getController('BaseController').extend({
-	onReady: onReady,
-	setHandlers: setHandlers
-});
+}	
 
 ///////////////////////////////////////
 ////////// private functions //////////

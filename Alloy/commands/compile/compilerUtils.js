@@ -130,10 +130,10 @@ exports.getParserArgs = function(node, state) {
 
 	// get create arguments and events from attributes
 	var createArgs = {}, events = [];
-	var attrs = _.contains([], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
+	var attrs = _.contains(['Alloy.Require'], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
-		if (_.contains(attrs, attrName)) { return; }
+		if (_.contains(attrs, attrName) && !attrName === 'id') { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
@@ -184,7 +184,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isTopLevel) { code.content += '$.addRoot(' + args.symbol + ');\n'; }
+	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
@@ -298,6 +298,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 
 exports.loadController = function(file) {
 	var code = {
+		parentControllerName: '',
 		controller: '',
 		exports: ''
 	};
@@ -313,7 +314,10 @@ exports.loadController = function(file) {
     	var match = pro.gen_code(target).match(/^exports\.(.+)/);
 
     	if (match !== null) {
-    		code.exports += '$.' + match[1] + ' = ' + pro.gen_code(value) + '\n';
+            if (match[1] === 'baseController') {
+    			code.parentControllerName = pro.gen_code(value);
+    		} 		
+    		code.exports += pro.gen_code(this) + ';\n';
     		return ['block'];
     	}
     }
@@ -324,14 +328,6 @@ exports.loadController = function(file) {
     	}
     }
 
-    // Modify all `exports` assignments:
-    //
-    //     exports.foo = function(){};
-    //
-    // will become at the end of the controller:
-    //
-    //     $.foo = function(){};
-    //
     var ast = jsp.parse(contents);
 	var walker = pro.ast_walker();
 	var new_ast = walker.with_walkers({
@@ -486,7 +482,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// what we know about the style we just sorted and assembled
 	var code = '';
 	if (styleCollection.length === 0) {
-		// do nothing
+		code += '{}';
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object

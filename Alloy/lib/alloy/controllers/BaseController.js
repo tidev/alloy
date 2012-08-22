@@ -11,6 +11,7 @@ var Controller = function() {
 
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
+		__views: {},
 		setParent: function(parent) {
 			if (parent.__iamalloy) {
 				this.parent = parent.parent;
@@ -26,39 +27,20 @@ var Controller = function() {
 				}
 			}
 		},
-		addRoot: function(view) {
+		addTopLevelView: function(view) {
 			roots.push(view);
 		},
-        /**
-         * @method getUIRoots
-         * Returns a list fo the root UI elements associated with this controller. 
-         * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
-         */
-		getUIRoots: function() {
+		getTopLevelViews: function() {
 			return roots;
 		},
-        /**
-         * @method getUIRoot
-         * Returns the specified root UI element associated with this controller. 
-         * If no index is specified, returns the first top-level UI element.
-         * @param {Number} index Root UI element to return. 
-         * @return {Titanium.UI.View/Alloy.Controller}
-         */
-		getUIRoot: function(index) {
-			return roots[index || 0];
-		},
-		__views: {},
-        /**
-         * @method getView
-         * Returns the specified view associated with this controller.
-         * 
-         * If the named view is an Alloy widget, returns an Alloy controller object for 
-         * the widget.
-         * @param {String} id ID of the view to return.
-         * @return {Titanium.UI.View/Alloy.Controller}
-         */
 		getView: function(id) {
+			if (typeof id === 'undefined' || id === null) {
+				return roots[0];
+			}
 			return this.__views[id];
+		},
+		getViews: function() {
+			return this.__views;
 		}
 	});
 }
