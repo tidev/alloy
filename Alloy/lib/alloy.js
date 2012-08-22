@@ -1,4 +1,8 @@
-
+/**
+ * @class Alloy
+ * Top-level module for Alloy functions.
+ * 
+ */
 var 	   _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	STR = require('alloy/string');
@@ -107,14 +111,46 @@ exports.getWidget = function(id, name, args) {
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
 }
 
+/**
+ * @method getController
+ * Factory method for instaniating a controller. Creates and returns an instance of the 
+ * named controller.
+ * @param {String} name Name of controller to instantiate.
+ * @param {*...} [args] Arguments to pass to the controller.
+ * @return {Alloy.Controller} Alloy controller object.
+ */
 exports.getController = function(name, args) {
 	return new (require('alloy/controllers/' + name))(args);
 }
 
+/**
+ * @method getModel
+ * Factory method for instaniating a Backbone Model object. Creates and returns an instance of the 
+ * named model.
+ *
+ * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
+ * information on the methods and properties provided by the Model object.
+ * @param {String} name Name of model to instantiate.
+ * @param {*...} [args] Arguments to pass to the model.
+ * @return {Backbone.Model} Backbone model object.
+ */
 exports.getModel = function(name, args) {
 	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
 }
 
+
+/**
+ * @method getCollection
+ * Factory method for instaniating a Backbone collection of model objects. Creates and returns a
+ * collection for holding the named type of model objects.
+ *
+ * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
+ * documentation for  information on the methods and  properties provided by the
+ * Collection object.
+ * @param {String} name Name of model to hold in this collection.
+ * @param {*...} [args] Arguments to pass to the collection.
+ * @return {Backbone.Collection} Backbone collection object.
+ */
 exports.getCollection = function(name, args) {
 	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
 }
@@ -126,6 +162,12 @@ function isTabletFallback() {
 	) < 700);
 }
 
+/**
+ * @method isTablet
+ * Returns `true` if the current device is a tablet.
+ * @return {boolean}
+ *
+ */
 exports.isTablet = (function() {
 	if (OS_IOS) {
 		return Ti.Platform.osname === 'ipad';
@@ -152,4 +194,10 @@ exports.isTablet = (function() {
 	return isTabletFallback();
 })();
 
+/**
+ * @method isHandheld
+ * Returns `true` if the current device is a handheld device (not a tablet).
+ * @return {boolean}
+ *
+ */
 exports.isHandheld = !exports.isTablet;

@@ -1,4 +1,5 @@
-/**
+/* 
+ * @class Alloy.builtins.string
  * A collection of string utilities
  */
 

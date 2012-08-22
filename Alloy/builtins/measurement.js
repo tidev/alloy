@@ -1,3 +1,7 @@
+/**
+ * @class Alloy.builtins.measurement
+ */
+
 var dpi = Ti.Platform.displayCaps.dpi;
 
 exports.dpToPX = function (val) {

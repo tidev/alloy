@@ -1,4 +1,4 @@
-/**
+/*
  * Ti.App.Properties sync adapter which will store all models locally
  */
 var Alloy = require('alloy'),

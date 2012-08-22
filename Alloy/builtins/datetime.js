@@ -1,4 +1,5 @@
 /** 
+ * @class Alloy.builtins.datetime
  * Collection of Date and Time utilities
  */
 
