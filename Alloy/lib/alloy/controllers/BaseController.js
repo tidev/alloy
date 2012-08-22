@@ -4,7 +4,13 @@ var Alloy = require('alloy'),
 
 /**
  * @class Alloy.Controller
+ * @extends Backbone.Events
  * The base class for Alloy controllers.
+ *
+ * Each controller is associated with a UI hierarchy, defined in an XML file in the
+ * `views` folder. Each element in the view hierarchy is either a Titanium {@link Titanium.UI.View View}
+ * or another Alloy controller, representing an Alloy widget.
+ *
  */
 var Controller = function() {
 	var roots = [];
@@ -30,15 +36,38 @@ var Controller = function() {
 		addTopLevelView: function(view) {
 			roots.push(view);
 		},
+
+		/**
+		 * @method getTopLevelViews
+		 * Returns a list of the root view elements associated with this controller.
+		 *
+		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
+		 */
 		getTopLevelViews: function() {
 			return roots;
 		},
+
+		/**
+		 * @method getView
+		 * Returns the specified view associated with this controller.
+		 *
+		 * If no `id` is specified, returns the first view.
+		 *
+		 * @param {String} [id] ID of the view to return.
+		 * @return {Titanium.UI.View/Alloy.Controller}
+		 */
 		getView: function(id) {
 			if (typeof id === 'undefined' || id === null) {
 				return roots[0];
 			}
 			return this.__views[id];
 		},
+		/**
+		 * @method getViews
+		 * Returns a list of all view elements associated with this controller.
+		 *
+		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
+		 */
 		getViews: function() {
 			return this.__views;
 		}
