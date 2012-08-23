@@ -1,9 +1,18 @@
 <Alloy>
 	<Window class='container'>
 		<View ns="Ti.Map" id="map">
+			<!-- annotation styled via tss file -->
 			<Annotation id="annotation1"/>
+
+			<!-- annotation styles via inline style -->
+			<Annotation title="Palo Alto" latitude="37.47" longitude="-122.12"/>
+
+			<!-- platform-specific annotations -->
 			<Annotation id="annotation2" platform="android"/>
 			<Annotation id="annotation3" platform="ios"/>
+
+			<!-- annotation via <Require> tag -->
+			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
 
 			<!-- 
 				Lets add one more UI component to show Annotations being
