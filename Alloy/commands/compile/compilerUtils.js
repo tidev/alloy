@@ -133,7 +133,7 @@ exports.getParserArgs = function(node, state) {
 	var attrs = _.contains(['Alloy.Require'], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
-		if (_.contains(attrs, attrName) && !attrName === 'id') { return; }
+		if (_.contains(attrs, attrName) && attrName !== 'id') { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
