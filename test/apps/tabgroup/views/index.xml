@@ -10,9 +10,5 @@
 				<Label>Label 5</Label>
 			</Window>
 		</Tab>
-		<Tab id="tab2">
-			<!-- Implicit window, added during the compile stage -->
-			<Label>Tab 2</Label>
-		</Tab>
 	</TabGroup>
 </Alloy>
