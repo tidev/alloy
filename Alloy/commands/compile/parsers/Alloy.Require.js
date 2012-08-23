@@ -39,9 +39,8 @@ function parse(node, state, args) {
 	//       its location determined by type
 
 	// Remove <Require>-specific attributes from createArgs
-	args.createArgs = _.reject(args.createArgs, function(v,k) {
-		return _.contains(['type','src'], k);
-	});
+	delete args.createArgs.type;
+	delete args.createArgs.src;
 
 	// Generate runtime code
 	code += args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
