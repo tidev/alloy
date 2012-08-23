@@ -1,0 +1,9 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Label": {
+	color: '#000',
+	font: {
+		fontWeight: 'bold'
+	}
+}
