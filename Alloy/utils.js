@@ -129,7 +129,7 @@ exports.getWidgetDirectories = function(outputPath) {
 	var dirs = [];
 	var widgetPaths = [];
 	widgetPaths.push(path.join(outputPath,'app','widgets'));
-    //widgetPaths.push(path.join(__dirname,'..','widgets'));
+    widgetPaths.push(path.join(__dirname,'..','widgets'));
 
     _.each(widgetPaths, function(widgetPath) {
 		if (path.existsSync(widgetPath)) {
