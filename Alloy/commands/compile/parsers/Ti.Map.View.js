@@ -23,6 +23,7 @@ function parse(node, state, args) {
 		// Process the Map's Annotations
 		if (childArgs.fullname === 'Ti.Map.Annotation' ||
 			childArgs.fullname === 'Alloy.Require') {
+			// TODO: ensure that <Require> is an Annotation
 			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,
