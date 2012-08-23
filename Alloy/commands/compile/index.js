@@ -109,7 +109,7 @@ module.exports = function(args, program) {
 	// TODO: include appropriate widgets automatically
 
 	// Process all views, including all those belonging to widgets
-	var viewCollection = U.getWidgetDirectories(outputPath);
+	var viewCollection = U.getWidgetDirectories(outputPath, inputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
