@@ -24,22 +24,30 @@ function parse(node, state, args) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i];
+		var child = children[i],
+			childArgs = CU.getParserArgs(child),
+			isRequire;
 
 		// Make sure all children are Tabs
-		if (CU.getParserArgs(child).fullname !== 'Ti.UI.Tab') {
-			U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
+		switch(childArgs.fullname) {
+			case 'Ti.UI.Tab':
+				isRequire = false;
+				break;
+			case 'Alloy.Require': 
+				// TODO: confirm <Require> is actually a Tab
+				isRequire = true;
+				break;
+			default:
+				U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
+				break;
 		}
 
 		// Generate each Tab, and the views contained within it
 		code += CU.generateNode(child, {
-			parent: { 
-				node: node,
-				symbol: args.symbol 
-			},
+			parent: {},
 			styles: state.styles,
 			post: function(n,s,a) {
-				return args.symbol + '.addTab(' + a.symbol + ');\n';
+				return args.symbol + '.addTab(' + (isRequire ? s.parent.symbol : a.symbol) + ');\n';
 			}
 		});
 	}
