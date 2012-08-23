@@ -23,15 +23,25 @@ function parse(node, state, args) {
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
 		var child = children[i],
-			childArgs = CU.getParserArgs(child);
+			childArgs = CU.getParserArgs(child),
+			parserType;
 
-		// Make sure we are dealing with Windows
-		if (childArgs.fullname !== 'Ti.UI.Window') {
-			U.die('SplitWindow child at position ' + i + ' is not a Window');
+		switch(childArgs.fullname) {
+			case 'Alloy.Require':
+				// TODO: need additional checks to ensure that what is contained in
+				//       <Require> is actually a Window.
+				parserType = 'Alloy.Require';
+				break;
+			case 'Ti.UI.Window':
+				parserType = 'default';
+				break;
+			default:
+				U.die('SplitWindow child at position ' + i + ' is not a Window');
+				break;
 		}
 
 		// create the code for the window
-		var winState = require('./default').parse(child, CU.createEmptyState(state.styles));
+		var winState = require('./' + parserType).parse(child, CU.createEmptyState(state.styles));
 		subParents.push(winState.parent);
 		code += winState.code;
 	}
