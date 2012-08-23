@@ -1,0 +1,7 @@
+<Alloy>
+	<Tab title="required">
+		<Window title="required">
+			<Label>This is a required tab</Label>
+		</Window>
+	</Tab>
+</Alloy>
