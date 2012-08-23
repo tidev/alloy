@@ -144,7 +144,7 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'alloy.jmk'), alloyJmkTemplate,'utf-8');
 		
 	// write the project config file
-	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}};
+	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}, "widgets":{}};
 	fs.writeFileSync(path.join(appPath,"config.json"), U.stringifyJSON(cfg),'utf-8');
 
 	// install the plugin

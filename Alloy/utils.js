@@ -125,27 +125,51 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 	});
 };
 
-exports.getWidgetDirectories = function(outputPath) {
-	var dirs = [];
-	var widgetPaths = [];
-	widgetPaths.push(path.join(outputPath,'app','widgets'));
-    widgetPaths.push(path.join(__dirname,'..','widgets'));
+exports.getWidgetDirectories = function(outputPath, appDir) {
+	var content = fs.readFileSync(path.join(appDir, 'config.json')).toString();
+	var appWidgets = JSON.parse(content).widgets;
 
-    _.each(widgetPaths, function(widgetPath) {
+
+	var dirs = [];
+	var collections = [];
+	var widgetPaths = [];
+	widgetPaths.push(path.join(__dirname,'..','widgets'));
+	widgetPaths.push(path.join(outputPath,'app','widgets'));
+
+	_.each(widgetPaths, function(widgetPath) {
 		if (path.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
 				var wDir = path.join(widgetPath,wFiles[i]); 
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-					dirs.push({
+
+                    var manifest = JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+					collections[manifest.id] = {
 						dir: wDir,
-						manifest: JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'))
-					});
+						manifest: manifest
+					};
 				} 
 			}
 		}
 	});
+
+	function walkWidgetDependencies(collection) {  
+		if (collection == null)
+			return;  
+
+        logger.info("kkknnnnnnnnnnnnkkk");
+        dirs.push(collection);
+
+		for (var dependency in collection.manifest.dependencies) { 
+			walkWidgetDependencies(collections[dependency]);
+		}
+	}  
+
+    for (var id in appWidgets) {
+    	logger.info("kkknnnnnnnnnnnnkkk" + id);
+    	walkWidgetDependencies(collections[id]); 
+    }
 	
 	return dirs;
 };
