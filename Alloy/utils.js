@@ -126,9 +126,12 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 };
 
 exports.getWidgetDirectories = function(outputPath, appDir) {
-	var content = fs.readFileSync(path.join(appDir, 'config.json')).toString();
-	var appWidgets = JSON.parse(content).widgets;
-
+	var configPath = path.join(appDir, 'config.json');
+	var appWidgets = [];
+	if (path.existsSync(configPath)) {
+		var content = fs.readFileSync(configPath).toString();
+		appWidgets = JSON.parse(content).widgets;
+	}
 
 	var dirs = [];
 	var collections = [];
@@ -158,16 +161,13 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 		if (collection == null)
 			return;  
 
-        logger.info("kkknnnnnnnnnnnnkkk");
         dirs.push(collection);
-
 		for (var dependency in collection.manifest.dependencies) { 
 			walkWidgetDependencies(collections[dependency]);
 		}
 	}  
 
     for (var id in appWidgets) {
-    	logger.info("kkknnnnnnnnnnnnkkk" + id);
     	walkWidgetDependencies(collections[id]); 
     }
 	
