@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/appcelerator/alloy.png)](http://travis-ci.org/appcelerator/alloy)
 Alloy
 =====
 
