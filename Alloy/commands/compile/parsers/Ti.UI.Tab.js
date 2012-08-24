@@ -12,33 +12,11 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		parentArgs = {},
 		code = '';
-
-	// Make sure the parent is TabGroup
-	if (args.parent.node) {
-		parentArgs = CU.getParserArgs(args.parent.node);
-	}
-	if (parentArgs.fullname !== 'Ti.UI.TabGroup') {
-		U.die('Tab must have a TabGroup as a parent');
-	}
-
-	// See if the only child is a Window. If not, add it as a container
-	// component for all the Tab's children
-	var winNode;
-	if (children.length !== 1 ||
-		CU.getParserArgs(children[0]).fullname !== 'Ti.UI.Window') {
-		winNode = U.XML.createEmptyNode('Window');
-		for (var i = 0; i < children.length; i++) {
-			winNode.appendChild(children[i]);
-			node.removeChild(children[i]);
-		}
-		node.appendChild(winNode);
-	} 
 
 	// Generate code for Tab's Window
 	var winSymbol;
-	code += CU.generateNode(winNode || children[0], {
+	code += CU.generateNode(children[0], {
 		parent: {},
 		styles: state.styles,
 		post: function(n,s,a) {

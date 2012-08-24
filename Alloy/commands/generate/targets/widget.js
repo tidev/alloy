@@ -4,12 +4,17 @@ var path = require('path'),
 	U = require('../../../utils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger');
+	logger = require('../../../common/logger'),
+	alloyRoot = path.join(__dirname,'..','..','..');
 
 module.exports = function(name, args, program) {
 	// TODO: use name to give default values to widget
 	// TODO: allow parameters at CLI to fill in manifest values
-	var widgetId = args[0] || 'com.default.' + name;
+	if(name.match("^com\.")) {
+		var widgetId = args[0] || name;	
+	} else {
+		var widgetId = args[0] || 'com.default.' + name;
+	}
 	var widgetDesc = args[1] || '';
 
 	// TODO: Should we use the widgetId instead of name for the folder name?
@@ -36,13 +41,12 @@ module.exports = function(name, args, program) {
 		"tags":"",
 		"platforms":"android,ios,mobileweb"
 	}));
-	fs.writeFileSync(path.join(widgetPath, 'views', 'widget.' + CONST.FILE_EXT.VIEW), '<Alloy><View id="defaultView"/></Alloy>');
-	fs.writeFileSync(path.join(widgetPath, 'styles', 'widget.' + CONST.FILE_EXT.STYLE), U.stringifyJSON({
-		"#defaultView": {
-			"backgroundColor": "#a00"
-		}
-	}));
-	fs.writeFileSync(path.join(widgetPath, 'controllers', 'widget.' + CONST.FILE_EXT.CONTROLLER), '// do something!');
+
+	_.each(['VIEW','CONTROLLER','STYLE'], function(type) {
+		var templatePath = path.join(alloyRoot,'template', type.toLowerCase() + '.' + CONST.FILE_EXT[type]);
+		var contents = fs.readFileSync(templatePath,'utf8');
+		fs.writeFileSync(path.join(widgetPath, type.toLowerCase() + 's', 'widget.' + CONST.FILE_EXT[type]), contents);
+	});
 
 	logger.info('Generated widget named '+name);
 }

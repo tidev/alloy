@@ -37,6 +37,21 @@ var Controller = function() {
 		},
 		getViews: function() {
 			return this.__views;
+		},
+
+		// getViewEx for advanced parsing and element traversal
+		getViewEx: function(opts) {
+			var recurse = opts.recurse || false;
+			if (recurse) {
+				var view = this.getView();
+				if (view.__iamalloy) {
+					return view.getViewEx({ recurse: true });
+				} else {
+					return view;
+				}
+			} else {
+				return this.getView();
+			}
 		}
 	});
 }

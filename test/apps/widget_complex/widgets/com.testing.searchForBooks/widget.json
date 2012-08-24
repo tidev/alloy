@@ -9,5 +9,9 @@
 	"min-alloy-version": "0.1.16",
 	"min-titanium-version":"2.0",
 	"tags":"utility,google,search",
-	"platforms":"android,ios,mobileweb"
+	"platforms":"android,ios,mobileweb",
+	"dependencies": {
+		"com.appcelerator.loading":"1.0"
+
+	}
 }

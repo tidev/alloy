@@ -1,7 +1,3 @@
-"Window": {
-	backgroundColor: "#fff",
-	title: "Window Title"
-},
 "#tab1": {
 	title: "Tab 1"
 },

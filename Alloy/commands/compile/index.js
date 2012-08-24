@@ -109,7 +109,7 @@ module.exports = function(args, program) {
 	// TODO: include appropriate widgets automatically
 
 	// Process all views, including all those belonging to widgets
-	var viewCollection = U.getWidgetDirectories(outputPath);
+	var viewCollection = U.getWidgetDirectories(outputPath, inputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
@@ -215,38 +215,53 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		} catch (e) {
 			U.die([
 				e.stack,
-				'Error processing style at "' + files.STYLE + '"'
+				'Error processing style for view "' + view + '" in "' + view + '.' + CONST.FILE_EXT.STYLE + '"'
 			]);
 		}
 
-		// read and parse the view file
-		var xml = fs.readFileSync(files.VIEW,'utf8');
-		var doc = new DOMParser().parseFromString(xml);
-		var docRoot = doc.documentElement;
-
-		// Make sure the markup has a top-level <Alloy> tag
-		if (docRoot.nodeName !== CONST.ROOT_NODE) {
+		// Load view from file into an XML document root node
+		try {
+			var docRoot = U.XML.getDocRootFromFile(files.VIEW);
+		} catch (e) {
 			U.die([
-				'Invalid view file "' + view + '".',
-				'All view markup must have a top-level <Alloy> tag'
+				e.stack,
+				'Error parsing XML for view "' + view + '"'
 			]);
 		}
 		
 		// make sure we have a Window, TabGroup, or SplitWindow
+		// TODO: Make sure there is only one by eliminating "nolayout" elements
+		//       as well as platform-specific top level elements.  
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index') {
-			var found = _.find(rootChildren, function(node) {
-				var ns = node.getAttribute('ns') || CONST.NAMESPACE_DEFAULT;
-				return node.nodeName === 'Window' ||
-				       node.nodeName === 'SplitWindow' ||
-				       node.nodeName === 'TabGroup';
+			valid = [
+				'Ti.UI.Window',
+				'Ti.UI.iPad.SplitWindow',
+				'Ti.UI.TabGroup'
+			];
+			_.each(rootChildren, function(node) {
+				var found = true;
+				var args = CU.getParserArgs(node);
+
+				if (args.fullname === 'Alloy.Require') {
+					var inspect = CU.inspectRequireNode(node);
+					for (var i = 0; i < inspect.names.length; i++) {
+						if (!_.contains(valid, inspect.names[i])) {
+							found = false;
+							break;
+						}
+					}
+				} else {
+					found = _.contains(valid, args.fullname);
+				}
+
+				if (!found) {
+					U.die([
+						'Compile failed. index.xml must have a top-level container element.',
+						'Valid elements: [ Window, TabGroup, SplitWindow]'
+					]);
+				}
 			});
-			if (!found) {
-				U.die([
-					'Compile failed. index.xml must have a top-level container element.',
-					'Valid elements: [ Window, TabGroup, SplitWindow]'
-				]);
-			}
 		}
 
 		// Generate each node in the view

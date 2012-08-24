@@ -316,7 +316,7 @@ A model and collection class are automatically defined and available in your con
 
 For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.getCollection('Book') or Alloy.getModel('Book'). 
 
-To create a new collect with a single model:
+To create a new collection with a single model:
 
 ```javascript
 var books = new (Alloy.getCollection('Book'));

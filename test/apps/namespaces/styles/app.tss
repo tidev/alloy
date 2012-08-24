@@ -1,0 +1,4 @@
+"Annotation": {
+	animate:true,
+	pincolor:Ti.Map.ANNOTATION_RED
+}

@@ -39,6 +39,25 @@ exports.XML = {
 	createEmptyNode: function(name, ns) {
 		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';
 		return new DOMParser().parseFromString(str).documentElement;
+	},
+	getDocRootFromFile: function(filename) {
+		// read and parse the view file
+		var xml = fs.readFileSync(filename,'utf8');
+		var doc = new DOMParser().parseFromString(xml);
+		var docRoot = doc.documentElement;
+
+		// Make sure the markup has a top-level <Alloy> tag
+		if (docRoot.nodeName !== CONST.ROOT_NODE) {
+			exports.die([
+				'Invalid view file "' + filename + '".',
+				'All view markup must have a top-level <Alloy> tag'
+			]);
+		}
+
+		return docRoot;
+	},
+	toString: function(node) {
+		return (new XMLSerializer()).serializeToString(node);
 	}
 };
 
@@ -125,27 +144,51 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 	});
 };
 
-exports.getWidgetDirectories = function(outputPath) {
-	var dirs = [];
-	var widgetPaths = [];
-	widgetPaths.push(path.join(outputPath,'app','widgets'));
-    widgetPaths.push(path.join(__dirname,'..','widgets'));
+exports.getWidgetDirectories = function(outputPath, appDir) {
+	var configPath = path.join(appDir, 'config.json');
+	var appWidgets = [];
+	if (path.existsSync(configPath)) {
+		var content = fs.readFileSync(configPath).toString();
+		appWidgets = JSON.parse(content).widgets;
+	}
 
-    _.each(widgetPaths, function(widgetPath) {
+	var dirs = [];
+	var collections = [];
+	var widgetPaths = [];
+	widgetPaths.push(path.join(__dirname,'..','widgets'));
+	widgetPaths.push(path.join(outputPath,'app','widgets'));
+
+	_.each(widgetPaths, function(widgetPath) {
 		if (path.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
 				var wDir = path.join(widgetPath,wFiles[i]); 
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-					dirs.push({
+
+                    var manifest = JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+					collections[manifest.id] = {
 						dir: wDir,
-						manifest: JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'))
-					});
+						manifest: manifest
+					};
 				} 
 			}
 		}
 	});
+
+	function walkWidgetDependencies(collection) {  
+		if (collection == null)
+			return;  
+
+        dirs.push(collection);
+		for (var dependency in collection.manifest.dependencies) { 
+			walkWidgetDependencies(collections[dependency]);
+		}
+	}  
+
+    for (var id in appWidgets) {
+    	walkWidgetDependencies(collections[id]); 
+    }
 	
 	return dirs;
 };

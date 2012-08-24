@@ -17,10 +17,13 @@ function parse(node, state, args) {
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i];
+		var child = children[i],
+			childArgs = CU.getParserArgs(child);
 
 		// Process the Map's Annotations
-		if (CU.getParserArgs(child).fullname === 'Ti.Map.Annotation') {
+		if (childArgs.fullname === 'Ti.Map.Annotation' ||
+			childArgs.fullname === 'Alloy.Require') {
+			// TODO: ensure that <Require> is an Annotation
 			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,

@@ -2,6 +2,7 @@ var path = require('path'),
 	_ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
+	CONST = require('../../../common/constants'),
 	TYPES = ['view','widget'];
 
 exports.parse = function(node, state) {
@@ -10,7 +11,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '',
-		type = node.getAttribute('type') || 'view',
+		type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
 		src = node.getAttribute('src'),
 		method;
 
@@ -39,9 +40,8 @@ function parse(node, state, args) {
 	//       its location determined by type
 
 	// Remove <Require>-specific attributes from createArgs
-	args.createArgs = _.reject(args.createArgs, function(v,k) {
-		return _.contains(['type','src'], k);
-	});
+	delete args.createArgs.type;
+	delete args.createArgs.src;
 
 	// Generate runtime code
 	code += args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
@@ -58,7 +58,7 @@ function parse(node, state, args) {
 	return {
 		parent: {
 			node: node,
-			symbol: args.symbol + '.getView()'
+			symbol: args.symbol + '.getViewEx({recurse:true})'
 		},
 		styles: state.styles,
 		code: code
