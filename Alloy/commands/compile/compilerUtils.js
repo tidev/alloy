@@ -248,14 +248,31 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		}
 	}
 
-	// Need to loop this operation in case <Require> tags contain
-	// other <Require> tags.
 	processRequire(cloneNode, true);
-	while ((requires = cloneNode.getElementsByTagName('Require')).length > 0) {
-		_.each(requires, processRequire);
+	if (doRecursive) {
+		while ((requires = cloneNode.getElementsByTagName('Require')).length > 0) {
+			_.each(requires, processRequire);
+		}
 	}
 
 	return cloneNode;
+}
+
+exports.inspectRequireNode = function(node) {
+	var newNode = exports.expandRequireNode(node, true);
+	var children = U.XML.getElementsFromNodes(newNode.childNodes);
+	var names = [];
+
+	_.each(children, function(c) {
+		var args = getParserArgs(c);
+		names.push(c.fullname);
+	});
+
+	return {
+		children: children,
+		length: children.length,
+		names: names
+	};
 }
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
