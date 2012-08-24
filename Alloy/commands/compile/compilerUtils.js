@@ -264,8 +264,8 @@ exports.inspectRequireNode = function(node) {
 	var names = [];
 
 	_.each(children, function(c) {
-		var args = getParserArgs(c);
-		names.push(c.fullname);
+		var args = exports.getParserArgs(c);
+		names.push(args.fullname);
 	});
 
 	return {
