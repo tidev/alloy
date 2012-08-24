@@ -233,36 +233,36 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		// TODO: Make sure there is only one by eliminating "nolayout" elements
 		//       as well as platform-specific top level elements.  
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-		if (viewName === 'index') {
-			valid = [
-				'Ti.UI.Window',
-				'Ti.UI.iPad.SplitWindow',
-				'Ti.UI.TabGroup'
-			];
-			_.each(rootChildren, function(node) {
-				var found = true;
-				var args = CU.getParserArgs(node);
+		// if (viewName === 'index') {
+		// 	valid = [
+		// 		'Ti.UI.Window',
+		// 		'Ti.UI.iPad.SplitWindow',
+		// 		'Ti.UI.TabGroup'
+		// 	];
+		// 	_.each(rootChildren, function(node) {
+		// 		var found = true;
+		// 		var args = CU.getParserArgs(node);
 
-				if (args.fullname === 'Alloy.Require') {
-					var inspect = CU.inspectRequireNode(node);
-					for (var i = 0; i < inspect.names.length; i++) {
-						if (!_.contains(valid, inspect.names[i])) {
-							found = false;
-							break;
-						}
-					}
-				} else {
-					found = _.contains(valid, args.fullname);
-				}
+		// 		if (args.fullname === 'Alloy.Require') {
+		// 			var inspect = CU.inspectRequireNode(node);
+		// 			for (var i = 0; i < inspect.names.length; i++) {
+		// 				if (!_.contains(valid, inspect.names[i])) {
+		// 					found = false;
+		// 					break;
+		// 				}
+		// 			}
+		// 		} else {
+		// 			found = _.contains(valid, args.fullname);
+		// 		}
 
-				if (!found) {
-					U.die([
-						'Compile failed. index.xml must have a top-level container element.',
-						'Valid elements: [ Window, TabGroup, SplitWindow]'
-					]);
-				}
-			});
-		}
+		// 		if (!found) {
+		// 			U.die([
+		// 				'Compile failed. index.xml must have a top-level container element.',
+		// 				'Valid elements: [ Window, TabGroup, SplitWindow]'
+		// 			]);
+		// 		}
+		// 	});
+		// }
 
 		// Generate each node in the view
 		_.each(rootChildren, function(node, i) {
