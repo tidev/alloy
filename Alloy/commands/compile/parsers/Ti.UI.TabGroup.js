@@ -12,6 +12,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
+		errBase = 'All <TabGroup> children must be a <Tab>, or a <Require> that contains a single tab. '
 		code = '';
 
 	// Create the initial TabGroup code
@@ -26,6 +27,7 @@ function parse(node, state, args) {
 	for (var i = 0, l = children.length; i < l; i++) {
 		var child = children[i],
 			childArgs = CU.getParserArgs(child),
+			err = errBase + ' Invalid child at position ' + i,
 			isRequire;
 
 		// Make sure all children are Tabs
@@ -34,11 +36,14 @@ function parse(node, state, args) {
 				isRequire = false;
 				break;
 			case 'Alloy.Require': 
-				// TODO: confirm <Require> is actually a Tab
+				var inspect = CU.inspectRequireNode(child);
+				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Tab') {
+					U.die(err);
+				}
 				isRequire = true;
 				break;
 			default:
-				U.die('All TabGroup children must be of type Ti.UI.Tab. Invalid child at position ' + i);
+				U.die(err);
 				break;
 		}
 
