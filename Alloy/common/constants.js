@@ -2,6 +2,7 @@ exports.ALLOY_DIR = 'app';
 exports.GLOBAL_STYLE = 'app.tss';
 exports.ROOT_NODE = 'Alloy';
 exports.NAMESPACE_DEFAULT = 'Ti.UI';
+exports.REQUIRE_TYPE_DEFAULT = 'view';
 
 exports.FILE_EXT = {
 	VIEW: 'xml',

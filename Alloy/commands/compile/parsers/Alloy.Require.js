@@ -2,6 +2,7 @@ var path = require('path'),
 	_ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
+	CONST = require('../../../common/constants'),
 	TYPES = ['view','widget'];
 
 exports.parse = function(node, state) {
@@ -10,7 +11,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '',
-		type = node.getAttribute('type') || 'view',
+		type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
 		src = node.getAttribute('src'),
 		method;
 
