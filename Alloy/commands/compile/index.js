@@ -215,20 +215,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		} catch (e) {
 			U.die([
 				e.stack,
-				'Error processing style at "' + files.STYLE + '"'
+				'Error processing style for view "' + view + '" in "' + view + '.' + CONST.FILE_EXT.STYLE + '"'
 			]);
 		}
 
-		// read and parse the view file
-		var xml = fs.readFileSync(files.VIEW,'utf8');
-		var doc = new DOMParser().parseFromString(xml);
-		var docRoot = doc.documentElement;
-
-		// Make sure the markup has a top-level <Alloy> tag
-		if (docRoot.nodeName !== CONST.ROOT_NODE) {
+		// Load view from file into an XML document root node
+		try {
+			var docRoot = U.XML.getDocRootFromFile(files.VIEW);
+		} catch (e) {
 			U.die([
-				'Invalid view file "' + view + '".',
-				'All view markup must have a top-level <Alloy> tag'
+				e.stack,
+				'Error parsing XML for view "' + view + '"'
 			]);
 		}
 		

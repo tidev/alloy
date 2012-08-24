@@ -39,6 +39,25 @@ exports.XML = {
 	createEmptyNode: function(name, ns) {
 		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';
 		return new DOMParser().parseFromString(str).documentElement;
+	},
+	getDocRootFromFile: function(filename) {
+		// read and parse the view file
+		var xml = fs.readFileSync(filename,'utf8');
+		var doc = new DOMParser().parseFromString(xml);
+		var docRoot = doc.documentElement;
+
+		// Make sure the markup has a top-level <Alloy> tag
+		if (docRoot.nodeName !== CONST.ROOT_NODE) {
+			exports.die([
+				'Invalid view file "' + filename + '".',
+				'All view markup must have a top-level <Alloy> tag'
+			]);
+		}
+
+		return docRoot;
+	},
+	assembleAlloyXml: function(filename) {
+
 	}
 };
 
