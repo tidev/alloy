@@ -1,4 +1,4 @@
-if (OS_IOS) {
+if (OS_IOS) { // || OS_MOBILEWEB) {
 	// attach the navgroup to Alloy.CFG so it can be accessed globally
 	Alloy.CFG.navgroup = $.navgroup;
 
