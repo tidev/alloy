@@ -209,6 +209,55 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
 
+exports.expandRequireNode = function(requireNode, doRecursive) {
+	var cloneNode = requireNode.cloneNode(true),
+		requires;
+
+	function processRequire(node, isFirst) {
+		var src = node.getAttribute('src'),
+			type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT;
+
+		// if no "src", just skip it, it'll get validated later
+		if (!src) { 
+			console.warn('Skipping element ' + node.nodeName + ' in "' + filename + '", no "src" attribute...');
+			return; 
+		}
+
+		// Create view path and see if its already got the proper extension
+		var fullpath = path.join(compilerConfig.dir.views,src);
+		var regex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$');
+		if (!regex.test(fullpath)) {
+			fullpath += '.' + CONST.FILE_EXT.VIEW;
+		}
+
+		// Make sure fullpath exists, skip if it doesn't
+		if (!path.existsSync(fullpath)) {
+			console.warn('Skipping element ' + node.nodeName + ' in "' + filename + '", no "src" path does not exist...');
+			return;
+		}
+
+		// re-assemble XML with required elements
+		if (isFirst) {
+			cloneNode = U.XML.getDocRootFromFile(fullpath);
+		} else {
+			var newDocRoot = U.XML.getDocRootFromFile(fullpath);
+			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function(n) {
+				node.parentNode.appendChild(n);
+			});
+			node.parentNode.removeChild(node);
+		}
+	}
+
+	// Need to loop this operation in case <Require> tags contain
+	// other <Require> tags.
+	processRequire(cloneNode, true);
+	while ((requires = cloneNode.getElementsByTagName('Require')).length > 0) {
+		_.each(requires, processRequire);
+	}
+
+	return cloneNode;
+}
+
 exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
