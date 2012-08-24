@@ -56,8 +56,8 @@ exports.XML = {
 
 		return docRoot;
 	},
-	assembleAlloyXml: function(filename) {
-
+	toString: function(node) {
+		return (new XMLSerializer()).serializeToString(node);
 	}
 };
 
