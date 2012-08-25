@@ -333,8 +333,8 @@ For example, if you defined a model named `Book`, it would be available as the s
 To create a new collection with a single model:
 
 ```javascript
-var books = new (Alloy.getCollection('Book'));
-var book = new (Alloy.getModel('Book'))({book:"Jungle Book", author:"Kipling"});
+var books = Alloy.getCollection('Book');
+var book = Alloy.getModel('Book', {book:"Jungle Book", author:"Kipling"});
 books.add(book);
 ```
 
