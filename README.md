@@ -11,6 +11,12 @@ Current Status
 
 *June 10, 2012* - _Unstable_
 
+Release Notes
+-------------
+
+- *When targeting Mobile Web you must do ```alloy compile``` from the command line before running the app.
+- *Alloy only runs on OSX. Windows and Linux support coming soon.
+
 
 Goals
 ------
@@ -303,7 +309,7 @@ The above snippet would use `Ti.Map` as its namespace prefix, instead of the def
 Composing Views
 ---------------
 
-Alloy allows you to compose a View  utilizing into multiple subviews.  You would use the `Require` element with type set to view and then the path to the subview.  
+Alloy allows you to compose a View utilizing multiple subviews.  You would use the `Require` element with type set to view and then the path to the subview.  
 
 ```xml
 <Alloy>
