@@ -361,8 +361,6 @@ function processModels() {
 		var fullpath = path.join(compileConfig.dir.models,modelFile);
 		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
 		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
-		var modelConfig = fs.readFileSync(fullpath);
-		var modelJs = 'function(Model){}';
 
 		// grab any additional model code from corresponding JS file, if it exists
 		if (path.existsSync(modelJsFile)) {
@@ -372,9 +370,11 @@ function processModels() {
 		// generate model code based on model.js template and migrations
 		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
 			basename: basename,
-			modelConfig: modelConfig,
-			modelJs: modelJs,
-			migrations: findModelMigrations(basename)
+			//modelConfig: '',
+			//modelJs: '',
+			//collectionJs: '',			
+			migrations: findModelMigrations(basename),
+			modeldefinition:modelJs
 		});	
 
 		// write the model to the runtime file

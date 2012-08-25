@@ -7,7 +7,8 @@ exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.FILE_EXT = {
 	VIEW: 'xml',
 	STYLE: 'tss',
-	MODEL: 'json',
+	MODEL: 'js',
+	MODELAPP: 'js',
 	MIGRATION: 'js',
 	CONTROLLER: 'js',
 	CONFIG: 'json'
@@ -18,6 +19,7 @@ exports.DIR = {
 	STYLE: 'styles',
 	CONTROLLER: 'controllers',
 	MODEL: 'models',
+	MODELAPP: 'models',
 	MIGRATION: 'migrations',
 	CONFIG: 'config',
 	ASSETS: 'assets',

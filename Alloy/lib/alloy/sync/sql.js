@@ -13,6 +13,102 @@ function guid() {
    return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
 };	
 
+var adapter = function (model,options) {
+	var tablename = model.config.store.name;
+	var columns = model.config.columns;
+	
+	var self=this;
+	
+	this.create= function (success) {
+		success = success || function () {};
+		var names = [],values = [],q = [];
+		if(!model.attributes[model.idAttribute]) {
+			model.set(model.idAttribute, (model.attributes._id)?(model.attributes._id):(guid()));
+		}
+		
+		for (var k in columns) {
+			names.push(k);
+			values.push(model.get(k));
+			q.push('?');
+		}		
+		values.push(model.attributes[model.idAttribute]);
+		self._execute('INSERT INTO ' + tablename + ' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)',values);
+		model.id = model.attributes[model.idAttribute];
+		success({});
+	};
+
+	this.destroy= function (success) {
+		success = success || function () {};
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		self._execute('DELETE FROM '+tablename+' WHERE id=?',[model.attributes[model.idAttribute]]);
+		model.id = null;
+	};
+
+	this.find= function (success) {
+		success = success || function () {};
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		var result = self._execute('SELECT * FROM '+tablename+' WHERE id=?',[model.attributes[model.idAttribute]]);
+		self._after(result,success);
+	};
+
+	this.findAll= function (success) {
+		success = success || function () {};
+		var sql = 'SELECT * FROM '+tablename;
+		if(options.filter) {
+			var filter = model.filterquery(options, '');
+			sql = sql+" WHERE " + filter;
+		}
+		if(options.limit) {
+			var isInteger = /^\d+$/;
+			var limit = options.limit;
+			if(typeof(limit.min)=='number' && typeof(limit.max)=='number') {
+				sql = sql+" LIMIT " + parseInt(limit.min)+','+parseInt(limit.max);
+			}
+		}		
+		var result = self._execute(sql,null);
+		self._after(result,success);			
+	};
+
+	this.update= function (success) {
+		success = success || function () {};
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		var names = [], values = [], q = [];
+		
+		for (var k in columns) {
+			names.push(k+'=?');
+			values.push(model.get(k));
+			q.push('?');
+		}		
+		//var sql = 'UPDATE '+tablename+' SET '+names.join(',')+' WHERE id=?';
+	    values.push(id);
+		self._execute('UPDATE '+tablename+' SET '+names.join(',')+' WHERE id=?',values, success);
+		success({});
+	};
+	
+	this._after =  function(rs,succCallbck) { //??because Ti.Database not support callback in db.execute
+		var success = function(result) {
+			if(succCallbck) succCallbck(result);
+		};		
+		var ndata = [];
+		while(rs.isValidRow()) {
+			var o = {};
+			_.times(rs.fieldCount(),function(c){
+				var fn = rs.fieldName(c);
+				o[fn] = rs.fieldByName(fn);
+			});
+			ndata.push(o);
+			rs.next();
+		}
+		rs.close();		
+		succCallbck(ndata);
+	};
+
+	this._execute= function (SQL, params) {
+		params = params || [];
+		return db.execute(SQL, params);
+	};	
+}
+
 function InitAdapter(config) {
 	if (!db) {
 		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
@@ -87,7 +183,8 @@ function SQLiteMigrateDB() {
 	};
 	
 	this.createTable = function(name,config) {
-		Ti.API.info('create table migration called for '+config.adapter.tablename);
+		
+		Ti.API.info('create table migration called for '+config.stores.sql.name);
 		
 		var self = this,
 			columns = [];
@@ -96,8 +193,7 @@ function SQLiteMigrateDB() {
 			columns.push(k+" "+self.column(config.columns[k]));
 		}
 			
-		var sql = 'CREATE TABLE '+config.adapter.tablename+' ( '+columns.join(',')+',id' + ' )';
-		Ti.API.info(sql);
+		var sql = 'CREATE TABLE '+config.stores.sql.name+' ( '+columns.join(',')+',id' + ' )';
 		
 		db.execute(sql);
 	};
@@ -106,80 +202,6 @@ function SQLiteMigrateDB() {
 		Ti.API.info('drop table migration called for '+name);
 		db.execute('DROP TABLE IF EXISTS '+name);
 	};
-}
-
-function Sync(model, method, opts) {
-	var table =  model.config.adapter.tablename;
-	var columns = model.config.columns;
-	
-	switch (method) {
-
-		case 'create':
-			var names = [];
-			var values = [];
-			var q = [];
-			for (var k in columns) {
-				names.push(k);
-				values.push(model.get(k));
-				q.push('?');
-			}
-			var id = guid();
-			var sql = 'INSERT INTO '+table+' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)';
-			values.push(id);
-			db.execute(sql, values);
-			model.id = id;
-			break;
-
-		case 'read':
-			var sql = 'SELECT * FROM '+table;
-			
-
-			if(opts.byId) {
-				sql = sql+" WHERE id = '"+opts.byId.id+"'";
-			} else if(opts.filter) {
-				var filter = model.filterquery(opts, '');
-				sql = sql+" WHERE " + filter;
-			}
-			
-			var rs = db.execute(sql);
-			while(rs.isValidRow())
-			{
-				var o = {};
-				_.times(rs.fieldCount(),function(c){
-					var fn = rs.fieldName(c);
-					o[fn] = rs.fieldByName(fn);
-				});
-				var m = new model.config.Model(o);
-				model.models.push(m);
-				rs.next();
-			}
-			rs.close();
-			model.trigger('fetch');
-			break;
-	
-		case 'update':
-			var names = [];
-			var values = [];
-			var q = [];
-			for (var k in columns)
-			{
-				names.push(k+'=?');
-				values.push(model.get(k));
-				q.push('?');
-			}
-			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE id=?';
-			
-		    var e = sql +','+values.join(',')+','+model.id;
-		    values.push(model.id);
-			db.execute(sql,values);
-			break;
-
-		case 'delete':
-			var sql = 'DELETE FROM '+table+' WHERE id=?';
-			db.execute(sql, model.id);
-			model.id = null;
-			break;
-	}
 }
 
 function GetMigrationForCached(t,m) {
@@ -233,23 +255,17 @@ function Migrate(migrations) {
 	db.execute('COMMIT;');
 }
 
-module.exports.sync = Sync;
+module.exports.adapter = adapter;
 
 module.exports.beforeModelCreate = function(config) {
 	config = config || {};
-
     InitAdapter(config);
-
 	return config;
 };
 
 module.exports.afterModelCreate = function(Model) {
 	Model = Model || {};
-
-	
 	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
-	
-	//inspired by postegresql adapter backbonejs
 	Model.prototype.filterquery = function(options, prefix, cb){
 	    var self = this;
 	    var conds = [];
@@ -262,6 +278,7 @@ module.exports.afterModelCreate = function(Model) {
 	        conds = _.keys(options.filter.conditions).map(function(i){ return i + ' = ' + self.quote(i, options.filter.conditions[i]) });
 	      }
 	    }
+
 		if(conds.length == 0) return '';
 		return prefix + conds.join(' '+options.filter.operator+' ');
 	  };
@@ -280,12 +297,7 @@ module.exports.afterModelCreate = function(Model) {
 	Alloy.Backbone.Collection.prototype.config = Model.prototype.config;
 	Alloy.Backbone.Collection.prototype.quote = Model.prototype.quote;
 	Alloy.Backbone.Collection.prototype.filterquery = Model.prototype.filterquery;	
-	
 
 	Migrate(Model.migrations);
-
 	return Model;
 };
-
-
-
