@@ -33,7 +33,7 @@ This quick start will give you the shortest path to installing Alloy and creatin
 * Do this for each project you create:
 	4. Create a new mobile project in Titanium Studio, we'll call its path **PATH/TO/PROJECT**.
 	5. `cd PATH/TO/PROJECT`
-	6. `alloy new .`
+	6. `alloy new`
 
 After these steps, you can now run your projects in Titanium Studio. Be aware when working with an Alloy project that all files in your **Resources** directory are subject to being overwritten. All your work should be done in your project's **app** folder. 
 
@@ -79,7 +79,7 @@ Creating an App
 To create an Alloy enabled app, you must first create a project in Titanium Studio or via the Titanium CLI.  While in a console, 
 navigate to the root directory of your application and run the following command in the console
 
-	alloy new .
+	alloy new
 	
 Alternatively, you can specify an argument as the second parameter to the location of a Titanium project directory.
 
@@ -105,7 +105,6 @@ Alloy prefers to use convention over configuration for simplicity.
 The following folders are not created automatically by Alloy but can be created and used by developers to add application libraries.
 
 - *lib* - this is where you should put application specific files, typically in the CommonJS format.
-- *vendor* - this is where you should put any vendor specific modules, typically in the CommonJS format.  Do not place native modules in this folder.
 
 Compiling an App
 ----------------
@@ -116,10 +115,28 @@ You can run a Titanium project that is using Alloy like any normal build.  Howev
 
 If you run this from the projects directory, it will compile the files to the correct location automatically.
 
+Running an App
+----------------
+
+You can run an Alloy app from the command line using the run command.
+  
+  alloy run
+
+ It defaults to the iPhone simulator but you can also specify a directory and platform.
+
+  alloy run <directory> <platform>
+
+ Where `directory` is the project directory and `platform` is one of `iphone`, `android`, and `mobileweb`.
+
 Debugging an App
 ----------------
 
 Alloy apps can be debugged from within Titanium Studio by setting breakpoints in the generated controller in the Resources/alloy/controllers folder. 
+
+Deploying an App
+----------------------
+
+Deployment of Alloy apps is current done through Titanium Studio.
 
 Generating Controllers
 ----------------------
@@ -139,7 +156,6 @@ For example:
 
 	alloy generate model todo name:string active:boolean
 	
-When you generate a model, a migration file is automatically provided with the initial model details.
 
 Generating Migrations
 ---------------------
@@ -170,10 +186,9 @@ In alloy, you do not provide an `app.js` as it will be automatically generated.
 
 In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.tss` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
 
-You define a style in the JSON like this:
+You define a style file (*.tss) like this:
 
-```json
-{
+```tss
 	"#a" : {
 		"backgroundColor" : "red",
 		"width": Ti.UI.FILL,
@@ -188,7 +203,6 @@ You define a style in the JSON like this:
 		"height":Ti.UI.SIZE,
 		"color":"black"
 	}
-}
 ```
 	
 And then you would define the view such as:
@@ -200,7 +214,7 @@ And then you would define the view such as:
 </View>
 ```
 
-Note, you can use `Titanium.UI` constants in your JSON file.
+Note, you can use `Titanium.UI` constants in your *.tss file.
 
 In your controller, you can reference the view such as:
 
@@ -218,12 +232,11 @@ View Styling
 
 Alloy separates the structural elements of a View from the styling components of the View -- much like the difference between HTML and CSS.  
 
-You can use the following CSS attributes in your style name: Classes (prefix by `.`), Object Name (name of the Object Type such as `Button`) or ID (prefix by `#`).  The ID attribute will always take precedence.
+You can use the following selectors in your style name: Classes (prefix by `.`), Object Name (name of the Object Type such as `Button`) or ID (prefix by `#`).  The ID attribute will always take precedence.
 
 For example:
 
-```json
-{
+```tss
 	"Button": {
 		"width":Ti.UI.SIZE,
 		"height":Ti.UI.SIZE,
@@ -244,7 +257,6 @@ For example:
 		"width": Ti.UI.FILL,
 		"borderColor":null
 	}
-}
 ```
 	
 With the following XML:
@@ -257,12 +269,10 @@ With the following XML:
 	
 Should result in the following code properties when merged:
 
-```json
-{
+```tss
 	"width": Ti.UI.FILL,
 	"height":Ti.UI.SIZE,
 	"b":false
-}
 ```
 	
 A few notes on the code generation and style merging:
@@ -290,17 +300,17 @@ The above snippet would create a `Ti.UI.Button`. If you want to add a UI compone
 
 The above snippet would use `Ti.Map` as its namespace prefix, instead of the default `Ti.UI`, which would then give you a `Ti.Map.View` in your app.
 
-De-composing complex Views
---------------------------
+Composing Views
+---------------
 
-Alloy allows you to decompose a View into multiple subviews.  You would use the `require` attribute on a View element to import a separate view by name.  
+Alloy allows you to compose a View  utilizing into multiple subviews.  You would use the `Require` element with type set to view and then the path to the subview.  
 
 ```xml
-<View>
-	<View require="first" id="first"/>
-	<View require="second" id="second"/>
-	<View require="third" id="third"/>
-</View>
+<Alloy>
+	<Require src="first" id="first"/>
+	<Require src="second" id="second"/>
+	<Require src="third" id="third"/>
+</Alloy>
 ```
 
 In the above example, you should have 3 other view files named `first.xml`, `second.xml` and `third.xml`.  Of course, these subviews could also import their own subviews, too.
@@ -309,8 +319,6 @@ Working with Models & Collections
 -----------------------------------
 
 For models, we specify the descriptor of our model using JSON as the name of the model ending with `.json`.
-
-You should generate a model using the `alloy generate model` command so that you can get automatic migration support.
 
 A model and collection class are automatically defined and available in your controller scope as the name of the model (name of descriptor JSON file).
 
@@ -328,7 +336,6 @@ Models inherit from Backbone.Model. _NOTE: if the first character of a model is 
 
 Collections inherit from Backbone.Collections.
 	
-
 Building Application Logic
 --------------------------
 
@@ -359,7 +366,7 @@ $.index.open();
 
 If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
 
-The pattern for creating Alloy markup is to have the XML element name match the corresponding Titanium API name. Nested elements get added to parent element, for example the Button element below is added as a child to the Window element. Titanium styles are applied through the attributes of the style files described above.
+The pattern for creating Alloy markup is to have the XML element name match the corresponding Titanium API name. Nested elements get added to parent element, for example the Button element below is added as a child to the Window element. Titanium styles are applied through the selectors of the style files described above.
 
 ```xml
 <Window>
@@ -372,27 +379,26 @@ Exporting Properties & Functions from Controllers
 
 Sometimes it's necessary to provide properties and functions in your controller that can be used by other controllers as a well defined API.
 
-To export them, you would set the in the `$` object which is predefined for you in your controller.
+To export them, you would use the CommonJS exports command.
 
-```javascript
-$.foo = function()
+```javascript (myControllerWithExports)
+exports.foo = function()
 {
 	return 'a';
 }
 ```
 
-You would then use the name of the controller to reference this method such as:
+You would then use the  Alloy.getController method to get the controller instance and call the exported method:
 
 ```javascript
-$.index.foo();
+var c = Alloy.getController("myControllerWithExports"); 
+c.foo(); // 'a' is returned
 ```
 
 Building Re-usable Application Widgets
 ---------------------------------------
 
-Alloy supports the concept of a `widget` which is a package of MVC logic that can be reused inside an application.
-
-The widget is defined in a separate 'widgets' subdirectory, but we would also support a widget distribution packaging much like modules today so that you could simply reference them and then they would automatically be found and imported either by searching for local widgets in the folder of the app or by scanning the titanium distribution, etc.
+Alloy supports the powerful concept of a `widget` which is a package of MVC logic that can be reused inside an application.
 
 The widget would define its own views and controllers and they would work very similar to any normal application.
 
@@ -402,22 +408,31 @@ Example of importing a widget:
 
 ```xml
 <View>
-	<Require widgetid="com.foo.widget" id="foo"/>
+	<Require type="widget" src="com.foo.widget" id="foo"/>
 </View>
 ```
 
-The widget view styles can also be imported by the views JSON file by using a special widget ID pattern: <#widget_id #id>.
+Any imported widgets need to be listed in the app/config.json file:
+
+```json
+    ...
+	"widgets": {
+        "com.foo.widget":"1.0"
+    }
+```
+
+The widget view styles can also be imported by the view's style file by using a special widget ID pattern: <#widget_id #id>.
 
 For example, if the widget was imported to the name `foo` and the internal ID of a control was `b` - the reference would be '#foo:#b'.
 
-If your widget would like to export properties and/or functions, it should assign them to the `$` variable of the `widget.js`.
+If your widget would like to export properties and/or functions, it should use exports.
 
 In your app controller, you would then be able to access them referencing the widget reference and the name of the property.
 
 For example, in your `widget.js`:
 
 ```javascript
-$.calculatePie = function() 
+exports.calculatePie = function() 
 { 
 	return 3.14; 
 }
@@ -431,7 +446,7 @@ $.foo.calculatePie();
 
 See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
 
-_NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules._
+_NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules. Currently we scan the project directory and the alloy/widgets directory to pull in the desired widgets._
 
 Widget Assets
 -------------
@@ -499,6 +514,8 @@ The configuration will be available in your app at runtime in the variable `Allo
 
 In the config file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target.  The order of precedence for key merging is `global`, `env` and then `os`.
 
+_NOTE: The config file is also where you list you widget dependencies._
+
 Example config:
 
 ```json
@@ -531,7 +548,10 @@ Example config:
 	"os:android":
 	{
 		"foo":6
-	}
+	},
+	"widgets": {
+        "com.foo.widget":"1.0"
+    }
 }
 ```
 
@@ -597,73 +617,51 @@ task("post:compile",function(event,logger){
 });
 ```
 
-Running the Test Harness
+Running Sample Test Apps 
 ------------------------
 
-To run the sample Alloy apps in the included test harness, you will need to have the Jake build tool installed.  Jake is like Rake for Ruby, which itself is based on make.  Jake can be installed via npm:
+You can use the test harness to run your app or the sample [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) by using Jake. Jake is like Rake for Ruby. which itself is based on make. Jake should be installed automatically but if not do the following:
 
-	[sudo] npm install -g jake
+	sudo npm install jake -g
 
-To see which build targets are available, run `jake -T` at the top level project folder.  Sample Alloy apps are located in the `test/apps` directory.  Running a sample app from the command line (`jake app:run dir=masterdetail platform=iphone` e.g.) is supported for iOS and Android via `titanium.py` right now, provided you have a `TITANIUM_MOBILE_SDK` environment variable set.  Otherwise, you must pass in an `sdk` parameter pointing to your desired Titanium Mobile SDK location.
+Sample Alloy apps are located in the `test/apps` directory.  To run a sample app from the command line you would first make sure you are at the top level of the alloy folder then run the following command,
 
-To run the samples via Studio, you must first copy over the appropriate Alloy app to the "Harness application".  There are Jake build targets set up for this purpose.  If you want to run the `no_ids` test app, for instance, you would first execute:
+    sudo jake app:run dir=builtins platform=iphone tiversion=2.1.0.GA
 
-	jake app:setup dir=no_ids
+where `builtins` is the name of one of the sample apps and tiversion is the name of the installed Titanium SDK
 
-Then, you could import the Harness project into Titanium Studio, and run the project as normal.  The Alloy compiler plugin is already configured.
+To run the samples via Studio, you must first copy over the appropriate Alloy app to the "Harness application".  There are Jake build targets set up for this purpose. 
+
+	jake app:setup dir=builtins
+
+Then, you could import the Harness project into Titanium Studio, and run the project as normal. 
+
+Notes:
+* Make sure you use `sudo`, otherwise you'll get errors
+* `dir` can be the name of any [test app](https://github.com/appcelerator/alloy/tree/master/test/apps)
+* `tiversion` is optional. The latest installed Titanium SDK will be used if this option is omitted. 
+* The default location on OSX of Alloy is: /usr/local/lib/node_modules/alloy 
 
 Feedback
 --------
 
 To our intrepid developers taking an early look at alloy, please consider the following when asking questions or citing concerns:
 
-* Alloy is currently unstable and changing rapidly. Expect turbulence.
 * If you want to pose an Alloy question to the whole community on [Q&A](http://developer.appcelerator.com/questions/newest), make sure to use the **alloy** tag.
-* Since Alloy is in its earliest stages, you may first want log your issues in the [Issues section of the Github repository](https://github.com/appcelerator/alloy/issues?state=open). That way core Alloy developers will have immediate visibility into your concerns.
+* Using GitHub is a great way to get a hold of us. Log your issues in the [Issues section of the Github repository](https://github.com/appcelerator/alloy/issues?state=open).
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
-
-Running a project from the command line
----------------------------------------
-
-You can run the alloy and Titanium directly from the command line using the `run` command.
-
-	alloy run
-	
-If you are inside a Alloy based Titanium project directory, you do not need to pass any additional parameters.  The run command takes 2 optional parameters:
-
-	alloy run <directory> <platform>
-	
-Where `directory` is the project directory and `platform` is one of `iphone`, `android`, etc.
-
-_NOTE: currently, this command is only available on OSX._
-
-Running our test apps (OSX only)
---------------------------------
-
-You may want to quickly see some of our [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) in action. Here's how to do it.
-
-	cd /usr/local/lib/node_modules/alloy
-	sudo jake app:run dir=widget_complex tiversion=2.1.1.GA
-
-Notes:
-* Make sure you use `sudo`, otherwise you'll get errors
-* `dir` can be the name of any [test app](https://github.com/appcelerator/alloy/tree/master/test/apps)
-* `tiversion` is optional. The latest installed Titanium SDK will be used if this option is omitted. 
 
 TODO
 ----
 
-There's a lot of work to get Alloy to a release state.  The following are some of the major items:
+There's a lot of work to get Alloy to a production state.  The following are some of the major items:
 
 - integration into Titanium Studio wizards
 - support for ACS backed Model implementation
-- generation of scaffolding
-- possible view template support?
-- full implementation of different views based on os, screen size, etc.
-- widget packaging implementation, spec and tooling
-- ability to better integrate native modules and reference them
-- controller, view and model lifecycle events
+- view template bindings support
+- widget packaging spec and tooling
+- better documentation (documentation team is working on this)
 	
 Credits
 -------

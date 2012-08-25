@@ -9,24 +9,33 @@ Alloy will during compile will scan the views folder and create Alloy controller
 
 For example, if from the index controller object you wanted to bring in and access another view that you created with an a.xml view and a matching a.js controller you could do the following from index.js.
 
-var A = require('alloy/controllers/a');  // bring in the class
-var a = new A; // create the object
+var a = Alloy.createController('alloy/controllers/a');  // bring in the class
+
+You pass in arguments to the newly created controller using the same syntax:
+
+var a = Alloy.createController('alloy/controllers/a', args);  // pass in args
+
+In the controller you access the args using the Javascript argument object, for example:
+
+var args = arguments[0] || {};
+
+for (var k in args) {
+	$.loading[k] = args[k];	
+}
 
 This now makes the "a" available within index.js. To make methods available outside of a.js you can use the following 
 
-$.sampFunc = function() {
+exports.sampFunc = function() {
 };
 
-Make sure to put public methods in the onReady callback.
 
 Then from other components or modules you can call the method as you normally would call an exported CommonJS method. 
 
-Looking at the code in this sample you will see that getRoot() is used with the controller object variables. GetRoot() returns the Titanium Object associated with top level view element in markup. 
+Looking at the code in this sample you will see that getView() is used with the controller object variables. GetView() returns the Titanium Object associated with top level view element in markup. To get at any view element/object use getView('id').
 
-When within a component $ represents the JavaScript this keyword.
+Within a controller $ represents the Javascript this keyword.
 
-Notes:
-- We are still evaluating the use of getRoot() method.
+
 
 
 

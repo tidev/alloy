@@ -17,7 +17,7 @@ In this example, we are going to fetch data for the model (which will fetch all 
 create a table view row for each model object.  Alloy will provide a special capability on top of the base TableView to create a template
 TableViewRow and bind a model object to the row object.
 
-We subscribe for model change events on each model row and then re-bind any changes back to the row as changed.  This is done with a model `change` event.  We could also use the backbone syntax such as `change:name` to bind a specific model property instead of all changes.
+We subscribe for collection fetch events.  We could also use the backbone syntax such as `change:name` to bind a specific model to get finer event handling.
 
 
 Migrations
