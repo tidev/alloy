@@ -628,7 +628,7 @@ Running Sample Test Apps
 
 You can use the test harness to run your app or the sample [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) by using Jake. Jake is like Rake for Ruby. which itself is based on make. Jake should be installed automatically but if not do the following:
 
-	sudo npm install jake -g
+	sudo npm install -g jake
 
 Sample Alloy apps are located in the `test/apps` directory.  To run a sample app from the command line you would first make sure you are at the top level of the alloy folder then run the following command,
 
