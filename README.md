@@ -14,8 +14,8 @@ Current Status
 Release Notes
 -------------
 
-- *When targeting Mobile Web you must do ```alloy compile``` from the command line before running the app.
-- *Alloy only runs on OSX. Windows and Linux support coming soon.
+- When targeting Mobile Web you must do ```alloy compile``` from the command line before running the app.
+- Alloy only runs on OSX. Windows and Linux support coming soon.
 
 
 Goals
@@ -385,9 +385,9 @@ Exporting Properties & Functions from Controllers
 
 Sometimes it's necessary to provide properties and functions in your controller that can be used by other controllers as a well defined API.
 
-To export them, you would use the CommonJS exports command.
+To export them, you would use the CommonJS `exports` command.
 
-```javascript (myControllerWithExports)
+```javascript 
 exports.foo = function()
 {
 	return 'a';
