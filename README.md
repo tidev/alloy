@@ -128,11 +128,11 @@ You can run an Alloy app from the command line using the run command.
   
   alloy run
 
- It defaults to the iPhone simulator but you can also specify a directory and platform.
+It defaults to the iPhone simulator but you can also specify a directory and platform.
 
   alloy run <directory> <platform>
 
- Where `directory` is the project directory and `platform` is one of `iphone`, `android`, and `mobileweb`.
+Where `directory` is the project directory and `platform` is one of `iphone`, `android`, and `mobileweb`.
 
 Debugging an App
 ----------------
