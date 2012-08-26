@@ -309,7 +309,7 @@ The above snippet would use `Ti.Map` as its namespace prefix, instead of the def
 Composing Views
 ---------------
 
-Alloy allows you to compose a View utilizing multiple subviews.  You would use the `Require` element with type set to view and then the path to the subview.  
+Alloy allows you to compose a View utilizing multiple subviews.  You would use the `Require` element with the path set to the subview, the id is how you would access the subview within the container view.  
 
 ```xml
 <Alloy>
@@ -431,7 +431,7 @@ The widget view styles can also be imported by the view's style file by using a 
 
 For example, if the widget was imported to the name `foo` and the internal ID of a control was `b` - the reference would be '#foo:#b'.
 
-If your widget would like to export properties and/or functions, it should use exports.
+If your widget would like to export properties and/or functions, it should use CommonJS `exports` command.
 
 In your app controller, you would then be able to access them referencing the widget reference and the name of the property.
 
