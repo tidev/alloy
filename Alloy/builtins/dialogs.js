@@ -1,3 +1,6 @@
+/**
+ * @class Alloy.builtins.dialogs
+ */
 exports.confirm = function (args) {
     var alertDialog = Ti.UI.createAlertDialog({
         title: args.title || 'Confirm',
