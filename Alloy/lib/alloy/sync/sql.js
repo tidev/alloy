@@ -115,17 +115,23 @@ function Sync(model, method, opts) {
 	switch (method) {
 
 		case 'create':
-			var names = [];
-			var values = [];
-			var q = [];
+			var names = [],values = [],q = [],id;
+			
 			for (var k in columns) {
 				names.push(k);
 				values.push(model.get(k));
 				q.push('?');
 			}
-			var id = guid();
-			var sql = 'INSERT INTO '+table+' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)';
-			values.push(id);
+
+			//TODO:see for the 'idAttribute' backbonejs feature	
+			var sql = 'INSERT INTO '+table+' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)';	
+			if(model.get('_id')) {
+				id = model.get('_id');
+				values.push(id);
+			} else {
+				id = guid();
+				values.push(id);
+			}			
 			db.execute(sql, values);
 			model.id = id;
 			break;
