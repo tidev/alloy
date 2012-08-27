@@ -9,7 +9,8 @@ var Alloy = require('alloy'),
  *
  * Each controller is associated with a UI hierarchy, defined in an XML file in the
  * `views` folder. Each element in the view hierarchy is either a Titanium {@link Titanium.UI.View View}
- * or another Alloy controller, representing an Alloy widget.
+ * or another Alloy controller or widget. Each Alloy controller or widget can additionally contain
+ * Titanium Views and/or more controllers and widgets.
  *
  */
 var Controller = function() {
@@ -51,7 +52,7 @@ var Controller = function() {
 		 * @method getView
 		 * Returns the specified view associated with this controller.
 		 *
-		 * If no `id` is specified, returns the first view.
+		 * If no `id` is specified, returns the first top-level view.
 		 *
 		 * @param {String} [id] ID of the view to return.
 		 * @return {Titanium.UI.View/Alloy.Controller}
@@ -64,7 +65,7 @@ var Controller = function() {
 		},
 		/**
 		 * @method getViews
-		 * Returns a list of all view elements associated with this controller.
+		 * Returns a list of all IDed view elements associated with this controller.
 		 *
 		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
 		 */

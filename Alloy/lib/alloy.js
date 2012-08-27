@@ -107,6 +107,15 @@ exports.A = function(t,type,parent) {
 	return t;
 }
 
+/**
+ * @method getWidget
+ * Factory method for instaniating a widget controller. Creates and returns an instance of the 
+ * named widget.
+ * @param {String} id Id of widget to instantiate.
+ * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
+ * @param {*...} [args] Arguments to pass to the widget.
+ * @return {Alloy.Controller} Alloy widget controller object.
+ */
 exports.getWidget = function(id, name, args) {
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
 }
