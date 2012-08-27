@@ -1,3 +1,6 @@
+/**
+ * @class Alloy.builtins.eventManager
+ */
 var listeners = {};
 
 exports.addEventListener = exports.on = function (name, func) {
