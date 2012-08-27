@@ -6,12 +6,11 @@
 			</Window>
 		</NavigationGroup>
 		
-		<Label platform="mobileweb">NavigationGroup not available on Mobileweb</Label>
-		<!-- <NavigationGroup ns="Ti.UI.MobileWeb" id="navgroup" platform="mobileweb">
+		<NavigationGroup ns="Ti.UI.MobileWeb" id="navgroup" platform="mobileweb">
 			<Window title="Window 1" id="win1">
 				<Label>This is the first window</Label>
 			</Window>
-		</NavigationGroup> -->
+		</NavigationGroup>
 		
 		<Label platform="android">NavigationGroup not available on Android</Label>
 	</Window>
