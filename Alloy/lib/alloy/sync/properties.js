@@ -9,46 +9,108 @@ var Alloy = require('alloy'),
 var idList = [],
 	uniqueIdCounter = 1;
 function getUniqueId(id) {
-	if (!id || _.contains(idList,id)) {
+	id = id || uniqueIdCounter;
+	if (_.include(idList,id)) {
 		id = getUniqueId(uniqueIdCounter++);
-	} 
+	}	
 	idList.push(id);
-	return id;
+	return id;		
+	
 };
 
-function Sync(model, method, opts) {
-	var prefix = model.config.adapter.prefix ? model.config.adapter.prefix : 'default';
-	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
 
-	if (method === 'read') {
-		if (opts.parse) {
-			// is collection
-			var list = [];
-			_.each(TAP.listProperties(), function(prop) {
-				var match = prop.match(regex);
-				if (match !== null) {
-					list.push(TAP.getObject(prop));
-				}
-			});
-			model.reset(list);
-			var maxId = _.max(_.pluck(list, 'id')); 
-			model.maxId = (_.isFinite(maxId) ? maxId : 0) + 1;
-		} else {
-			// is model
-			var obj = TAP.getObject(prefix + '-' + model.get('id'));
-			model.set(obj);
-		}	
-	} 
-	else if (method === 'create' || method === 'update') {
-		TAP.setObject(prefix + '-' + model.get('id'), model.toJSON() || {});
-	} else if (method === 'delete') {
-		TAP.removeProperty(prefix + '-' + model.get('id'));
-		model.clear();
-	}
+function InitAdapter(config) {
+	var prefix = config.store.name ? config.store.name : 'default';
+	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");	
+	
+	_.each(TAP.listProperties(), function(prop) {
+		var match = prop.match(regex);
+		if (match !== null) {
+			idList.push(parseInt(match[2]));
+		}
+	});
 }
 
-module.exports.sync = Sync;
+
+var adapter = function (model,options) {
+	var prefix = model.config.store.name ? model.config.store.name : 'default';
+	//var regex = new RegExp("^(" + prefix + ")\\-(\\w+)$");
+	var regex = new RegExp('(\\b' + prefix + '\\-\\w*)','gi')
+	
+	var self=this;
+	
+	this.create= function (success) {
+		success = success || function () {};
+		if(!model.attributes[model.idAttribute]) {
+			model.set(model.idAttribute, (model.attributes._id)?(prefix +'-'+model.attributes._id):(prefix +'-'+ getUniqueId()));
+		}
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		var match = id.match(regex);
+		if (match === null) {
+			id = prefix+'-'+id;
+		}		
+		
+		//TODO:redo an object with model.config.columns
+		var save = model.toJSON();
+		
+		save.id=id;
+		delete save._id;
+		delete save._stores;
+		
+		TAP.setObject(id, save || {});
+		model.id = id;
+		model.attributes.id = id;
+		success({});
+	};
+
+	this.update= function (success) {
+		success = success || function () {};
+		self.create(success);
+	};
+
+	this.destroy= function (success) {
+		success = success || function () {};
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		var match = id.match(regex);
+		if (match === null) {
+			id = prefix+'-'+id;
+			model.set(model.idAttribute, id);
+		}
+		TAP.removeProperty(id);
+		model.clear();
+		model.id = null;
+	};
+
+	this.find= function (success) {
+		success = success || function () {};
+		var id = (model.attributes[model.idAttribute] || model.attributes.id);
+		var match = id.match(regex);
+		if (match === null) {
+			id = prefix+'-'+id;
+			model.set(model.idAttribute, id);
+		}	
+		
+		var obj = TAP.getObject(id);
+		success(obj);
+	};
+
+	this.findAll= function (success) {
+		success = success || function () {};
+		var list = [];
+		_.each(TAP.listProperties(), function(prop) {
+			var match = prop.match(regex);
+			if (match !== null) {
+				list.push(TAP.getObject(prop));
+			}
+		});
+		success(list);		
+	};
+}
+
+module.exports.adapter = adapter;
+
 module.exports.beforeModelCreate = function(config) {
+	
 	// make sure we have a populated model object
 	config = config || {};
 	config.columns = config.columns || {};
@@ -56,7 +118,6 @@ module.exports.beforeModelCreate = function(config) {
 
 	// add this adapter's values
 	config.columns.id = 'Int';
-	config.defaults.id = getUniqueId();
-
+	InitAdapter(config);
 	return config;
 };

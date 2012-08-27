@@ -10,17 +10,150 @@ var 	   _ = require('alloy/underscore')._,
 exports._ = _;
 exports.Backbone = Backbone;
 
-Backbone.sync = function(method, model, opts) {
-	var m = (model.config || {});
-	var type = (m.adapter ? m.adapter.type : null) || 'sql';
 
-	require('alloy/sync/'+type).sync(model,method,opts);
+Backbone.sync = function (method, model, options) {
+	var success, error,result={};
+	
+	var defaultstore = model.config.stores._defaults || 'sql';
+	var process=0,storeopts = {};
+
+	var stores = [];
+	stores.push(defaultstore);
+	
+	var doSync = function(adapter,callback) {
+		adapter = new adapter(model,options);		
+		switch(method) {
+			case "create":	adapter.create(callback);
+				break;
+			case "update":	adapter.update(callback);
+				break;
+			case "delete":	adapter.destroy(callback);
+				break;
+			case "read":
+				if(model.id || (model.attributes && model.attributes[model.idAttribute])) {
+					adapter.find(callback);
+				} else {
+					adapter.findAll(callback);
+				}
+				break;
+			default:
+				//error?
+		}	
+	}	
+	
+	if(options.synchronize) {
+		if(options.synchronize.options) {
+			storeopts = options.synchronize.options;
+		}
+		if(options.synchronize.stores) {
+			stores = options.synchronize.stores;
+			
+			if(_.first(stores) != defaultstore && _.indexOf(stores,defaultstore)!=-1) {
+				stores.splice(stores.indexOf(defaultstore), 1);
+				stores.unshift(defaultstore);
+			}
+		}
+	}
+		
+	var callbackSuccess = function(resp) {
+	   	process++;
+		if (!options.parse) { // only for model
+			resp = (_.isArray(resp))?resp[0] : resp;
+			
+			model.attributes._stores[model.config.store.type] = {
+				id:model.attributes.id,
+			}
+			if(model.config.store.type == defaultstore) {
+				result[model.attributes._alloyIdentifier] = resp;	
+			} else if(!result[model.attributes._alloyIdentifier]) {
+				result[model.attributes._alloyIdentifier] = resp;
+			}	
+			
+		} else {
+			for(k in resp) {
+				var obj = resp[k];
+				
+				if(!obj._stores) {
+					obj._stores = {};
+				}
+				if(model.config.store.type == defaultstore) {
+					obj._stores[model.config.store.type] = {
+						id:obj.id,
+					};
+					result[obj._alloyIdentifier]=obj;
+				} else {
+					if(result[obj._alloyIdentifier]) {
+						result[obj._alloyIdentifier]._stores[model.config.store.type] = {
+							id:obj.id,
+						};
+					} else {
+						obj._stores[model.config.store.type] = {
+							id:obj.id,
+						};						
+						result[obj._alloyIdentifier]=obj;
+					}	
+				}	
+			}
+		}
+				
+		delete model.config.store;
+		if(process == stores.length) {
+			result = _.values(result);
+			
+			if (!options.parse) {//only for model
+				result=result[0];
+			}
+			options.success(result);
+			result=[];
+		} 
+	};		
+
+	if (!options.parse) { // only for model
+		if(!model.attributes._alloyIdentifier) {
+			model.attributes._alloyIdentifier = model.generateguid();
+		}	
+		if(!model.attributes._stores) {
+			model.attributes._stores = {};
+		}
+	}	
+	
+	for(key in stores) {
+		var store = stores[key];
+
+		if(!_.has(model.config.stores, store)) {
+			throw 'No support for '+ store +' persistence.';
+		}
+
+		if(method == 'create' || method == 'update' || method == 'delete') {
+			if(!storeopts.sameId) {
+				model.id=null;
+				delete model.attributes.id;
+			}			
+
+			if(model.attributes._stores) {
+				if(model.attributes._stores[store]) {
+					var id = model.attributes._stores[store].id;
+					model.id=id;
+					model.attributes.id=id;		
+				}
+			}
+		}
+
+		model.config.store = {
+			name:model.config.stores[store].name,
+			type:store,
+		};
+		var adapter = require('alloy/sync/'+store).adapter;
+		doSync(adapter,callbackSuccess);
+	}
 };
 
-exports.M = function(name,config,modelFn,migrations) {
-    var type = (config.adapter ? config.adapter.type : null) || 'sql';
-    var adapter = require('alloy/sync/'+type);
-    var extendObj = {
+exports.M = function(name,config,modelFn,collectionFn,migrations) {
+	//add internalIdentifier
+	if(!config.columns._alloyIdentifier) {
+		config.columns._alloyIdentifier='string';
+	}
+	var extendObj = {
 		defaults: config.defaults,
 		validate: function(attrs) {
 			if (typeof __validate !== 'undefined') {
@@ -35,21 +168,44 @@ exports.M = function(name,config,modelFn,migrations) {
 			}
 		}
 	};
-
 	var extendClass = {};
-
-	// cosntruct the model based on the current adapter type
+	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
-    if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
-	var Model = Backbone.Model.extend(extendObj, extendClass); 
-	Model.prototype.config = config;
-	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
-	
-	// execute any custom scripts on the model
+	var Model = Backbone.Model.extend(extendObj, extendClass);
+
+	var c = {};
+	for(store in config.stores) {
+		if(store != '_defaults') {
+			var optsstore = config.stores[store];
+			config.store = {
+				name:optsstore.name,
+				configname:store,
+			};			
+			var adapter = require('alloy/sync/'+store);
+			if (_.isFunction(adapter.beforeModelCreate)) { 
+				var beforeConfig = adapter.beforeModelCreate(config);
+				c = _.extend(c, beforeConfig);
+			}
+		    Model.prototype.config = c;	
+			if (_.isFunction(adapter.afterModelCreate)) { 
+				adapter.afterModelCreate(Model);
+			}
+			delete Model.prototype.config.store;
+		}
+	}
+
 	Model = modelFn(Model) || Model;
 	
-	return Model;
+	var Collection = Backbone.Collection.extend();
+	Collection.prototype.config = Model.prototype.config;
+	Collection = collectionFn(Collection) || Collection;
+	
+	return {
+		model:Model,
+		collection:Collection,
+	};
 };
+
 
 exports.A = function(t,type,parent) {
 	_.extend(t,Backbone.Events);
