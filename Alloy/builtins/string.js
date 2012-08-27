@@ -64,3 +64,6 @@ exports.urlToJson = function (url){
 	ret.query = list;
 	return ret;		
 };
+exports.UpperCaseFirstLetter = function (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
