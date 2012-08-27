@@ -92,19 +92,22 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
-exports.getParserArgs = function(node, state) {
-	state = state || {};
-	var name = node.nodeName,
+exports.getParserArgs = function(node, state, opts) {
+	state || (state = {});
+	opts || (opts = {});
+
+	var defaultId = opts.defaultId || undefined,
+		doSetId = opts.doSetId === false ? false : true,
+		name = node.nodeName,
 		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name,
-		id = node.getAttribute('id') || state.defaultId || exports.generateUniqueId(),
+		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		platformObj = {};
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
-	node.setAttribute('id', id);
-	if (state.defaultId) { delete state.defaultId; }
+	if (doSetId) { node.setAttribute('id', id); }
 
 	// process the platform attribute
 	if (platform) {
@@ -158,9 +161,8 @@ exports.getParserArgs = function(node, state) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (node.nodeType != 1) return '';
-	if (defaultId) { state.defaultId = defaultId; }
 
-	var args = exports.getParserArgs(node, state),
+	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { content: '' };
 
