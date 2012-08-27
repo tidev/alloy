@@ -1,12 +1,6 @@
 <Alloy>
 	<Window id="index">
-		<NavigationGroup id="navgroup" platform="ios">
-			<Window title="Window 1" id="win1">
-				<Label>This is the first window</Label>
-			</Window>
-		</NavigationGroup>
-		
-		<NavigationGroup ns="Ti.UI.MobileWeb" id="navgroup" platform="mobileweb">
+		<NavigationGroup id="navgroup" platform="ios,mobileweb">
 			<Window title="Window 1" id="win1">
 				<Label>This is the first window</Label>
 			</Window>

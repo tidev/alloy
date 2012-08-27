@@ -333,6 +333,13 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	U.ensureDir(obj.dir.resourcesAlloy);
 	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
 
+	// update implicit namespaces, if possible
+	// TODO: pull this out to its own function, abstract to work for all potential
+	//       implicit namespace changes based on platform.
+	if (alloyConfig.platform === 'mobileweb') {
+		IMPLICIT_NAMESPACES.NavigationGroup = NS_TI_UI_MOBILEWEB;
+	}
+
 	// keep a copy of the config for this module
 	compilerConfig = obj;
 
