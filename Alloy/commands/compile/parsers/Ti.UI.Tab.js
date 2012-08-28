@@ -1,7 +1,3 @@
-// TODO: pass errors back to the calling function in the compile
-//       command to give more visibility into the error, things like view
-//       name, view file, etc...
-
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
@@ -15,6 +11,7 @@ function parse(node, state, args) {
 		code = '';
 
 	// Generate code for Tab's Window
+	// TODO: assert children[0] is actually a Window - https://jira.appcelerator.org/browse/ALOY-217
 	var winSymbol;
 	code += CU.generateNode(children[0], {
 		parent: {},

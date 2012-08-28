@@ -1,7 +1,3 @@
-// TODO: pass errors back to the calling function in the compile
-//       command to give more visibility into the error, things like view
-//       name, view file, etc...
-
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
@@ -23,7 +19,7 @@ function parse(node, state, args) {
 		// Process the Map's Annotations
 		if (childArgs.fullname === 'Ti.Map.Annotation' ||
 			childArgs.fullname === 'Alloy.Require') {
-			// TODO: ensure that <Require> is an Annotation
+			// TODO: ensure that <Require> is an Annotation - https://jira.appcelerator.org/browse/ALOY-213
 			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,

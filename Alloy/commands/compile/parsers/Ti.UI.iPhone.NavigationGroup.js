@@ -22,8 +22,7 @@ function parse(node, state, args) {
 
 	switch(childArgs.fullname) {
 		case 'Alloy.Require':
-			// TODO: need additional checks to ensure that what is contained in
-			//       <Require> is actually a Window.
+			// TODO: ensure <Require> is actually a Window - https://jira.appcelerator.org/browse/ALOY-215
 			parserType = 'Alloy.Require';
 			break;
 		case 'Ti.UI.Window':

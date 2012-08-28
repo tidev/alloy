@@ -191,7 +191,7 @@ exports.isTablet = (function() {
 			return isTabletFallback();
 		}
 	}
-	// TODO: this needs some help 
+	// TODO: mobileweb needs form factor check - https://jira.appcelerator.org/browse/ALOY-117 
 	if (OS_MOBILEWEB) {
 		return !(Math.min(
 			Ti.Platform.displayCaps.platformHeight,

@@ -6,8 +6,8 @@ def compile(config):
     if os.path.exists(f):
         print "[INFO] alloy app found at %s" % f
         rd = os.path.abspath(os.path.join(config['project_dir'], 'Resources'))
-        # FIXME path resolution
-        # FIXME - right now this works on OSX only
+
+        # FIXME - need to support all platforms - https://jira.appcelerator.org/browse/ALOY-85
         devicefamily = 'none'
         simtype = 'none'
         version = '0'
@@ -27,14 +27,12 @@ def compile(config):
         
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
+        
+        # TODO: need 2.6+ compliant error output - https://jira.appcelerator.org/browse/ALOY-221
         try:
             try: 
                 subprocess.check_output(cmd, stderr=subprocess.STDOUT)
             except AttributeError:
-                # check_output not available (needs python >= 2.7)
-                # This will NOT give the error output from alloy
-                # TODO: have an alternative method for returning error output
-                #       on python < 2.7.
                 subprocess.check_call(cmd)
         except subprocess.CalledProcessError as ex:
             if hasattr(ex, 'output'):

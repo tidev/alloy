@@ -1,7 +1,3 @@
-// TODO: pass errors back to the calling function in the compile
-//       command to give more visibility into the error, things like view
-//       name, view file, etc...
-
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
@@ -28,8 +24,7 @@ function parse(node, state, args) {
 
 		switch(childArgs.fullname) {
 			case 'Alloy.Require':
-				// TODO: need additional checks to ensure that what is contained in
-				//       <Require> is actually a Window.
+				// TODO: ensure <Require> is actually a Window - https://jira.appcelerator.org/browse/ALOY-214
 				parserType = 'Alloy.Require';
 				break;
 			case 'Ti.UI.Window':

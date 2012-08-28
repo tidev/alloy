@@ -36,8 +36,7 @@ function parse(node, state, args) {
 			U.die('Invalid <Require> type "' + type + '"');
 	}
 
-	// TODO: do a compile time check to make sure the src exists based on 
-	//       its location determined by type
+	// TODO: compile time confirm src exists - https://jira.appcelerator.org/browse/ALOY-212
 
 	// Remove <Require>-specific attributes from createArgs
 	delete args.createArgs.type;

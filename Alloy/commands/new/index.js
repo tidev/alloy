@@ -132,7 +132,7 @@ function newproject(args, program) {
 	// copy in any modules
 	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
 
-	// TODO: remove this once this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
 	U.installModule(projectPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',

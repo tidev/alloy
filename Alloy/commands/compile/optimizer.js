@@ -189,8 +189,7 @@ function processIf()
 		
 		if ((varName === 'Titanium.Platform.osname' || varName === 'Ti.Platform.osname') && (value === 'iphone' || value === 'ipad'))
 		{
-			// TODO: this requires a runtime check at this point, however, i think we should be able to 
-			// look at the compiler to determine if we're building iPad, iPhone or universal (universal would require runtime check)
+			// TODO: make compile time "universal" distinction btw iphone and ipad - https://jira.appcelerator.org/browse/ALOY-223
 			return null;
 		}
 		
