@@ -221,51 +221,6 @@ function processIf()
 	return null;
 }
 
-function processCall() {
-	// TODO: Find a way to NOT execute this on code generated via markup
-	var ret = handleAddAndRemove(this);
-	if (ret) {
-		return ret;
-	}
-	return null;
-}
-
-function handleAddAndRemove(ast) {
-	var theCall = ast[1];
-	var theArgs = ast[2];
-
-	// make sure there's only one argument
-	if (theArgs.length !== 1) {
-		return null;
-	}
-
-	// make sure the call is being made by an object
-	if (theCall[0] === 'name') {
-		return null;
-	}
-
-	// make sure it's an add() or remove()
-	if (theCall[2] !== 'add' && theCall[2] !== 'remove') {
-		return null;
-	}
-
-	// TODO: check theCall to make sure it's a Ti proxy
-	var argsStr = pro.gen_code(theArgs[0],{beautify:false});
-	
-	// Need to wrap this in a self-executing function. This is because the 
-	// argument may be a function, and we don't want to call it twice and 
-	// have unexpected results.
-	var newArgs = '(function(t) {' +
-	              'return (_.isObject(t) && t.__iamalloy ? t.getView() : t) || t;' +
-                  '})(' + argsStr + ')';
-	ast[2][0] = jsp.parse(newArgs)[1][0][1];
-
-	// console.log(require('util').inspect(ast, false, null));
-	// console.log('-');
-
-	return ast;
-}
-
 exports.optimizeStyle = function(styleList) {
 	for (var style in styleList) {
 		for (var key in styleList[style]) {
