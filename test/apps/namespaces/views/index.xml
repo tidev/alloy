@@ -13,7 +13,7 @@
 
 			<!-- annotation via <Require> tag -->
 			<!-- 
-			    TODO: https://jira.appcelerator.org/browse/TIMOB-10691
+			    TODO: https://jira.appcelerator.org/browse/ALOY-225
 			    The above ticket needs to be resolved before Annotations can be 
 			    added in markup via <Require> on Android.
 			-->
