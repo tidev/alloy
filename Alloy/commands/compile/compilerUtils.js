@@ -56,7 +56,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		SplitWindow: NS_TI_UI_IPAD,
 
 		// Ti.UI.iPhone
-		NavigationGroup: NS_TI_UI_IPHONE, // I know MobileWeb has one, but 99% will be this one
+		NavigationGroup: NS_TI_UI_IPHONE, 
 		StatusBar: NS_TI_UI_IPHONE,
 	},
 	CONDITION_MAP = {
@@ -305,6 +305,18 @@ exports.createEmptyState = function(styles) {
 	};
 };
 
+function updateImplicitNamspaces(platform) {
+	switch(platform) {
+		case 'android':
+			break;
+		case 'ios': 
+			break;
+		case 'mobileweb':
+			IMPLICIT_NAMESPACES.NavigationGroup = NS_TI_UI_MOBILEWEB;
+			break;
+	}
+}
+
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
 	var libDirs = ['builtins','template'];
@@ -334,11 +346,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
 
 	// update implicit namespaces, if possible
-	// TODO: pull this out to its own function, abstract to work for all potential
-	//       implicit namespace changes based on platform.
-	if (alloyConfig.platform === 'mobileweb') {
-		IMPLICIT_NAMESPACES.NavigationGroup = NS_TI_UI_MOBILEWEB;
-	}
+	updateImplicitNamspaces(alloyConfig.platform);
 
 	// keep a copy of the config for this module
 	compilerConfig = obj;
