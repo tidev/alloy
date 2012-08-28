@@ -12,7 +12,12 @@
 			<Annotation id="annotation3" platform="ios"/>
 
 			<!-- annotation via <Require> tag -->
-			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
+			<!-- 
+			    TODO: https://jira.appcelerator.org/browse/TIMOB-10691
+			    The above ticket needs to be resolved before Annotations can be 
+			    added in markup via <Require> on Android.
+			-->
+			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03" platform="ios,mobileweb"/>
 
 			<!-- 
 				Lets add one more UI component to show Annotations being
