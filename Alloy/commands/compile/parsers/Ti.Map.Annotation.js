@@ -15,12 +15,17 @@ function parse(node, state, args) {
 		state.extraStyle = CU.createVariableStyle(extraStyle);
 	}
 
+	var code = require('./default').parse(node, {
+		parent: {},
+		styles: state.styles
+	}).code;
+
 	return { 
 		parent: {
 			node: node,
 			symbol: args.symbol
 		},
 		styles: state.styles,
-		code: require('./default').parse(node, state).code 
+		code: code
 	};
 };
