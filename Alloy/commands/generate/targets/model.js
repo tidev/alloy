@@ -7,8 +7,9 @@ var path = require('path'),
 	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
-	var type = 'MODEL';
-	var basename = path.basename(name,'.'+CONST.FILE_EXT.MODEL);
+	var type = 'MODEL',
+		basename = path.basename(name,'.'+CONST.FILE_EXT.MODEL),
+		info;
 
 	// validate arguments and paths
 	if (args.length === 0) {
@@ -18,8 +19,11 @@ module.exports = function(name, args, program) {
 		);
 	}
 
+	// generate (optional) custom code file for model
+	info = GU.generate(name, 'MODELCODE', program);
+
 	// generate model file
-	var info = GU.generate(name, type, program, {
+	info = GU.generate(name, type, program, {
 		template: { name: basename },
 		templateFunc: function(contents) {
 			var json = JSON.parse(contents);
@@ -32,19 +36,6 @@ module.exports = function(name, args, program) {
 		}
 	});
 	logger.info('Generated ' + type.toLowerCase() + ' named ' + name);
-
-	// generate (optional) custom code file for model
-	// TODO: move to template
-	var code = '(function(Model) {\n' +
-			   '\t// add code to modify/extend your Model definition\n\n' +
-			   '\t// Example:\n' +
-			   '\t//   return Model.extend({\n' +
-			   '\t//       customProperty: 123,\n' +
-			   '\t//       customFunction: function() {}\n' +
-			   '\t//   });\n\n' +
-			   '\treturn Model;\n' + 
-			   '})';
-	fs.writeFileSync(path.join(program.outputPath,CONST.DIR.MODEL,name+'.js'),code);
 
 	// generate associated migration
 	var template = { up: '', down: '' };
