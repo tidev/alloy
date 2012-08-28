@@ -422,7 +422,7 @@ Any imported widgets need to be listed in the app/config.json file:
 
 ```json
     ...
-	"widgets": {
+	"dependencies": {
         "com.foo.widget":"1.0"
     }
 ```
@@ -555,7 +555,7 @@ Example config:
 	{
 		"foo":6
 	},
-	"widgets": {
+	"dependencies": {
         "com.foo.widget":"1.0"
     }
 }

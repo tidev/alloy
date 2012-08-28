@@ -366,11 +366,6 @@ $.authors.text = args.authors || '';
           </div><!-- /col -->
         </div><!-- /row -->
 
-
-
-
-
-
         <!-- Quick Start Row -->
         <div class="row">
           <br><br><br>
@@ -389,13 +384,13 @@ $.authors.text = args.authors || '';
     "env:production": {},
     "os:ios": {},
     "os:android": {},
-    "widgets": {
+    "dependencies": {
         "com.appcelerator.searchForBooks":"1.0"
     }
 }
 </pre>
             
-            <p>In the configuration file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target. The order of precedence for key merging is global, env and then os. You also specify widgets that your app depends on. The Book Search app depends on the com.appcelerator.searchForBooks widget.</p>
+            <p>In the configuration file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target. The order of precedence for key merging is global, env and then os. You also specify dependencies like widgets that your app depends on. The Book Search app depends on the com.appcelerator.searchForBooks widget.</p>
             <p>Runtime configurations are not used by the Book Search app, however for example had there been a global entry <code>"global":{"foo":1}</code> we could have accessed the entry using <code>Alloy.CFG.foo</code>.</p>
           </div><!-- /col -->
         </div><!-- /row -->

@@ -149,7 +149,7 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	var appWidgets = [];
 	if (path.existsSync(configPath)) {
 		var content = fs.readFileSync(configPath).toString();
-		appWidgets = JSON.parse(content).widgets;
+		appWidgets = JSON.parse(content).dependencies;
 	}
 
 	var dirs = [];
