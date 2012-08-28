@@ -82,7 +82,7 @@ exports.installModule = function(dir, opts)
 					var name = exports.XML.getNodeText(mod);
 
 					// TODO: https://jira.appcelerator.org/browse/ALOY-188
-					if (name.toLowerCase() == opts.id.toLowerCase())
+					if (name == opts.id)
 					{
 						found = true;
 						break;
@@ -100,7 +100,7 @@ exports.installModule = function(dir, opts)
 			node.setAttribute('version',opts.version || '1.0');
 
 			// TODO: https://jira.appcelerator.org/browse/ALOY-188
-			var text = doc.createTextNode(opts.id.toLowerCase());
+			var text = doc.createTextNode(opts.id);
 			node.appendChild(text);
 			
 			var pna = null;
