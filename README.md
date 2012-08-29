@@ -31,9 +31,9 @@ The following are the main goals for Alloy:
 Quick Start
 -----------
 
-This quick start will give you the shortest path to installing Alloy and creating your first Alloy-driven project. It is assumed that you have a working Titanium (Studio) environment. Check the [Titanium Quick Start](https://wiki.appcelerator.org/display/guides/Quick+Start) guide for setting that up first if you haven't done so already.
+This quick start will give you the shortest path to installing Alloy and creating your first Alloy-driven project. 
 
-Alloy Quick Start: http://projects.appcelerator.com/alloy/docs/Alloy-bootstrap/index.html 
+## [Alloy Quick Start:](http://projects.appcelerator.com/alloy/docs/Alloy-bootstrap/index.html) 
 
 **NOTE:** _Be aware when working with an Alloy project that all files in your `Resources` directory are subject to being overwritten. All your work should be done in your project's `app` folder._ 
 
