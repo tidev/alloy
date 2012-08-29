@@ -11,21 +11,20 @@
 			<Annotation id="annotation2" platform="android"/>
 			<Annotation id="annotation3" platform="ios"/>
 
-			<!-- annotation via <Require> tag -->
 			<!-- 
 			    TODO: https://jira.appcelerator.org/browse/ALOY-225
 			    The above ticket needs to be resolved before Annotations can be 
 			    added in markup via <Require> on Android.
 			-->
+			<!-- annotation via <Require> tag -->
 			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03" platform="ios,mobileweb"/>
 
 			<!-- 
-				Lets add one more UI component to show Annotations being
-			    declared side-by-side with child components. Map subviews
-			    will appear on iOS only, but will not adversely effect 
-			    other platforms. 
+				Lets add a UI component to show Annotations being declared
+			    side-by-side with child components. Map subviews will appear
+			    on iOS only.
 			-->
-			<ImageView id="footerImage"/>
+			<Require src="overlay" platform="ios"/>
 		</View>
 	</Window>
 </Alloy>

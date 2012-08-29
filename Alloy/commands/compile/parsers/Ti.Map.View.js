@@ -19,7 +19,16 @@ function parse(node, state, args) {
 		// Process the Map's Annotations
 		if (childArgs.fullname === 'Ti.Map.Annotation' ||
 			childArgs.fullname === 'Alloy.Require') {
-			// TODO: ensure that <Require> is an Annotation - https://jira.appcelerator.org/browse/ALOY-213
+			// ensure <Require> is actually a single <Annotation>
+			if (childArgs.fullname === 'Alloy.Require') {
+				var inspect = CU.inspectRequireNode(child);
+				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.Map.Annotation') {
+					// The <Require> is not an Annotation, process later
+					continue;
+				}
+			}
+
+			// generate code for the Annotation
 			code += CU.generateNode(child, {
 				parent: {},
 				styles: state.styles,
