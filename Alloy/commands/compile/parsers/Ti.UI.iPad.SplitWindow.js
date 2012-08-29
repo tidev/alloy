@@ -24,7 +24,6 @@ function parse(node, state, args) {
 
 		switch(childArgs.fullname) {
 			case 'Alloy.Require':
-				// TODO: ensure <Require> is actually a Window - https://jira.appcelerator.org/browse/ALOY-214
 				var inspect = CU.inspectRequireNode(child);
 				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Window') {
 					U.die('SplitWindow <Require> child at position ' + i + ' must contain a single Window');
