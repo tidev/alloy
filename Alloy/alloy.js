@@ -79,7 +79,7 @@ program.parse(process.argv);
 // Setup up logging output
 //if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
 Error.stackTraceLimit = Infinity;
-logger.stripColors = (program.colors===false);
+logger.stripColors = program['colors'] === false;
 banner();
 
 if (program.args.length === 0)
