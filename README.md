@@ -33,7 +33,7 @@ Quick Start
 
 This quick start will give you the shortest path to installing Alloy and creating your first Alloy-driven project. 
 
-## [Alloy Quick Start:](http://projects.appcelerator.com/alloy/docs/Alloy-bootstrap/index.html) 
+### Click here for the [Alloy Quick Start](http://projects.appcelerator.com/alloy/docs/Alloy-bootstrap/index.html) 
 
 **NOTE:** _Be aware when working with an Alloy project that all files in your `Resources` directory are subject to being overwritten. All your work should be done in your project's `app` folder._ 
 
