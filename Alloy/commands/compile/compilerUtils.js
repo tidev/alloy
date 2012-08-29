@@ -368,7 +368,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 	} else {
-		logger.warn('No "app/config."' + CONST.FILE_EXT.CONFIG + ' file found');
+		logger.warn('No "app/config.' + CONST.FILE_EXT.CONFIG + '" file found');
 	}
 
 	// write out the config runtime module
