@@ -82,7 +82,7 @@ module.exports = function(args, program) {
 		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
 		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
 	}
-	U.installModule(outputPath, {
+	U.tiapp.installModule(outputPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
@@ -126,7 +126,6 @@ module.exports = function(args, program) {
 
 	// copy assets and libraries
 	U.copyAlloyDir(inputPath, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
-	U.copyAlloyDir(inputPath, CONST.DIR.VENDOR, path.join(compileConfig.dir.resources,CONST.DIR.VENDOR));
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");

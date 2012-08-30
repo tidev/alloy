@@ -63,7 +63,6 @@ describe('the "new" command in the CLI', function() {
 				expect(exists(path.join(APP,'app', 'models'))).toBe(true);
 				expect(exists(path.join(APP,'app', 'README'))).toBe(true);
 				expect(exists(path.join(APP,'app', 'styles', 'index.json'))).toBe(true);
-				expect(exists(path.join(APP,'app', 'vendor'))).toBe(true);
 				expect(exists(path.join(APP,'app', 'views', 'index.xml'))).toBe(true);
 				expect(exists(path.join(APP,'plugins', 'ti.alloy', 'plugin.py'))).toBe(true);
 				
