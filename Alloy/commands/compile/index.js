@@ -77,8 +77,7 @@ module.exports = function(args, program) {
 	// trigger our custom compiler makefile
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
-	// TODO: remove this once the this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
-	// Make sure that ti.physicalSizeCategory is installed
+	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
 	if (!path.existsSync(path.join(outputPath,'ti.physicalSizeCategory-android-1.0.zip')) && 
 		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
 		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
@@ -105,9 +104,6 @@ module.exports = function(args, program) {
 	// Process all models
 	var models = processModels();
 
-	// include all necessary widgets
-	// TODO: include appropriate widgets automatically
-
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(outputPath, inputPath);
 	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
@@ -130,7 +126,6 @@ module.exports = function(args, program) {
 
 	// copy assets and libraries
 	U.copyAlloyDir(inputPath, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
-	U.copyAlloyDir(inputPath, CONST.DIR.VENDOR, path.join(compileConfig.dir.resources,CONST.DIR.VENDOR));
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
@@ -229,9 +224,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			]);
 		}
 		
-		// make sure we have a Window, TabGroup, or SplitWindow
-		// TODO: Make sure there is only one by eliminating "nolayout" elements
-		//       as well as platform-specific top level elements.  
+		// make sure we have a Window, TabGroup, or SplitWindow  
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index') {
 			valid = [
@@ -241,12 +234,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			];
 			_.each(rootChildren, function(node) {
 				var found = true;
-				var args = CU.getParserArgs(node);
+				var args = CU.getParserArgs(node, {}, { doSetId: false });
 
 				if (args.fullname === 'Alloy.Require') {
 					var inspect = CU.inspectRequireNode(node);
-					for (var i = 0; i < inspect.names.length; i++) {
-						if (!_.contains(valid, inspect.names[i])) {
+					for (var j = 0; j < inspect.names.length; j++) {
+						if (!_.contains(valid, inspect.names[j])) {
 							found = false;
 							break;
 						}

@@ -1,4 +1,15 @@
 "Annotation": {
 	animate:true,
 	pincolor:Ti.Map.ANNOTATION_RED
+},
+"#footerImage": {
+	image: "appc-400px.png",
+	backgroundColor: "#fff",
+	borderColor: "#a00",
+	borderWidth: 1,
+	borderRadius: 2,
+	width: "160dp",
+	height: "36dp",
+	bottom: "5dp",
+	right: "5dp"
 }

@@ -8,8 +8,6 @@ var path = require('path'),
 	alloyRoot = path.join(__dirname,'..','..','..');
 
 module.exports = function(name, args, program) {
-	// TODO: use name to give default values to widget
-	// TODO: allow parameters at CLI to fill in manifest values
 	if(name.match("^com\.")) {
 		var widgetId = args[0] || name;	
 	} else {
@@ -17,8 +15,7 @@ module.exports = function(name, args, program) {
 	}
 	var widgetDesc = args[1] || '';
 
-	// TODO: Should we use the widgetId instead of name for the folder name?
-	var widgetPath = path.join(program.outputPath,'widgets',name);
+	var widgetPath = path.join(program.outputPath,'widgets',widgetId);
 	if (path.existsSync(widgetPath) && !program.force) {
 		U.die("Widget already exists: "+widgetPath);
 	}

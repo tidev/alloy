@@ -5,7 +5,7 @@
     "env:production": {},
     "os:ios": {},
     "os:android": {},
-    "widgets": {
+    "dependencies": {
         "com.foo.widget":"1.0"
     }
 }

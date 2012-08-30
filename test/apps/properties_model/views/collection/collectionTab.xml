@@ -1,12 +1,14 @@
 <Alloy>
-	<View>
-		<TableView id="table" onClick="incrementScore" onLongpress="deleteItem"/>
-		<View id="bar" class="titlebar">
-			<TextField id="text" onReturn="addItem"/>
-			<View class="divider"/>
-			<View id="addView" onClick="addItem">
-				<ImageView id="addImage"/>
+	<Tab title="Collection" icon="KS_nav_views.png">
+		<Window title="Collection">
+			<TableView id="table" onClick="incrementScore" onLongpress="deleteItem"/>
+			<View id="bar" class="titlebar">
+				<TextField id="text" onReturn="addItem"/>
+				<View class="divider"/>
+				<View id="addView" onClick="addItem">
+					<ImageView id="addImage"/>
+				</View>
 			</View>
-		</View>
-	</View>
+		</Window>
+	</Tab>
 </Alloy>

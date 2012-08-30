@@ -1,4 +1,4 @@
-/**
+/*
  * Local SQLite sync adapter which will store all models in
  * an on device database
  */
@@ -41,7 +41,7 @@ function GetMigrationFor(table) {
 }
 
 function SQLiteMigrateDB() {
-	//TODO: we should move this into the codegen so we don't waste precious cpu cycles doing this
+	//TODO: normalize columns at compile time - https://jira.appcelerator.org/browse/ALOY-222
 	this.column = function(name)
 	{
 		switch(name)

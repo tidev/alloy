@@ -1,4 +1,5 @@
-/**
+
+/*
  * an OAuth adapter
  *
  * ATTENTION: Some efforts has been put in order to produce this code.
@@ -25,6 +26,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ /**
+  * @class Alloy.builtins.oauth
+  */
 /*
  * This library currently works only with Twitter, although I'd like to
  * spend some more time to make it generally compatible with other services
@@ -465,9 +469,9 @@ OAuth.setProperties(OAuth.SignatureMethod, // class members
             err.oauth_acceptable_signature_methods = acceptable;
             throw err;
         },
-        /** A map from signature method name to constructor. */
+        /* A map from signature method name to constructor. */
         REGISTERED: {},
-        /** Subsequently, the given constructor will be used for the named methods.
+        /* Subsequently, the given constructor will be used for the named methods.
          The constructor will be called with no parameters.
          The resulting object should usually implement getSignature(baseString).
          You can easily define such a constructor by calling makeSubclass, below.
@@ -477,7 +481,7 @@ OAuth.setProperties(OAuth.SignatureMethod, // class members
                 OAuth.SignatureMethod.REGISTERED[names[n]] = classConstructor;
             }
         },
-        /** Create a subclass of OAuth.SignatureMethod, with the given getSignature function. */
+        /* Create a subclass of OAuth.SignatureMethod, with the given getSignature function. */
         makeSubclass: function makeSubclass(getSignatureFunction) {
             var superClass = OAuth.SignatureMethod;
             var subClass = function () {

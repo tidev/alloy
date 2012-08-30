@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <!-- Masthead (redprinty thing)
+    <!-- Masthead (red printy thing)
     ================================================== -->
     <header class="jumbotron masthead" id="overview">
       <div class="inner">
@@ -72,6 +72,11 @@
     <div class="quickstart">
       <div class="container">
         <div class="row">
+
+
+          <img src="assets/img/appc_brand.png" alt="Appcelerator">
+
+
           <div  class="pull-right">
             <p>Check us out on GitHub</p>
             <p><a target="_blank" href="https://github.com/appcelerator/alloy" class="btn primary">Alloy on GitHub &raquo;</a>
@@ -236,7 +241,7 @@
 &lt;/Alloy&gt;
 </pre>
             
-            <p>Looking at the markup you can see the Alloy element, it's required in all Alloy views and must be the first element, in XML jargon the root element. You can also see where the Book Search widget is added to the app. The widget is a very basic wrapper around the <a href="https://developers.google.com/books/docs/dynamic-links">Google Books API</a>. Widget are Alloy building blocks and allow developers to quickly craft an app if the appropriate widget is available. The developer can also create widgets. See the widget section</p>
+            <p>Looking at the markup you can see the Alloy element, it's required in all Alloy views and must be the first element, in XML jargon the root element. You can also see where the Book Search widget is added to the app. The widget is a very basic wrapper around the <a href="https://developers.google.com/books/docs/dynamic-links">Google Books API</a>. Widget are Alloy building blocks and allow developers to quickly craft an app if the appropriate widget is available. Developers can also create widgets.</p>
             <p>Titanium developers should like this - the Window and TableView elements are just the objects described in the Titanium.UI module with the Titanium.UI removed. All Titanium.UI objects are supported in Alloy. For those objects that require a module like Titanium.UI.Android use the "ns" attribute. For example ns=Titanium.UI.Android. See <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api">Titanium Dev Doc</a> for details. Also check out the <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api/Titanium.UI"> UI objects</a> to see the objects that can be used with Alloy markup.</p>
             <p>Take note of the id attributes, "win" and "table". The id glues the markup to the controller and appropriate styles.</p> 
              <h3>row.xml view file</h3>
@@ -365,6 +370,36 @@ $.authors.text = args.authors || '';
             <p>Row.js contains the code that takes the values returned from Google Books for each book and saves the results in a new row. The arguments object is a Javascript construct that allows getting passed in arguments to the executable context, in this case our controller object. You can see the row will contain a small image of the book, a brief description, ant the book author.</p>
           </div><!-- /col -->
         </div><!-- /row -->
+
+        <!-- Quick Start Row -->
+        <div class="row">
+          <br><br><br>
+          <div class="span4">
+            <h3>Configurations</h3>
+            <p>Alloy provides the ability to have project configurations stored as JSON which will be compiled and conditionalized at build time. It also provides a list of widgets that the app depends on.</p>
+          </div><!-- /col -->
+          <div class="span12">
+
+          <h3>config.json configuration file</h3> 
+<pre class="prettyprint">
+{
+   "global": {},
+    "env:development": {},
+    "env:test": {},
+    "env:production": {},
+    "os:ios": {},
+    "os:android": {},
+    "dependencies": {
+        "com.appcelerator.searchForBooks":"1.0"
+    }
+}
+</pre>
+            
+            <p>In the configuration file, you can specify a set of global key/value pairs, as well as conditional configuration based on build environment and/or operating system target. The order of precedence for key merging is global, env and then os. You also specify dependencies like widgets that your app depends on. The Book Search app depends on the com.appcelerator.searchForBooks widget.</p>
+            <p>Runtime configurations are not used by the Book Search app, however for example had there been a global entry <code>"global":{"foo":1}</code> we could have accessed the entry using <code>Alloy.CFG.foo</code>.</p>
+          </div><!-- /col -->
+        </div><!-- /row -->
+
         <!-- Quick Start Row -->
         <div class="row">
           <br><br><br>
@@ -374,7 +409,7 @@ $.authors.text = args.authors || '';
         </div><!-- /row -->
       </section>
 
-      <!-- Quick Start Section
+      <!-- Footer Section
       ================================================== -->
       <section id="feedback">
         <div class="page-header">

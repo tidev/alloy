@@ -1,0 +1,4 @@
+<!-- simple image overlay for map -->
+<Alloy>
+	<ImageView id="footerImage"/>
+</Alloy>

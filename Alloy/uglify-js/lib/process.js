@@ -1425,6 +1425,7 @@ var DOT_CALL_NO_PARENS = jsp.array_to_hash([
         "defun"
 ]);
 
+// TODO: https://jira.appcelerator.org/browse/ALOY-220
 function make_string(str, ascii_only, double_quotes) {
         var dq = 0, sq = 0;
         str = str.replace(/[\\\b\f\n\r\t\x22\x27\u2028\u2029\0]/g, function(s){
@@ -1443,8 +1444,10 @@ function make_string(str, ascii_only, double_quotes) {
                 return s;
         });
         if (ascii_only) str = to_ascii(str);
-        // TODO: Need to file a PR for this
+
+        // TODO: https://jira.appcelerator.org/browse/ALOY-220
         if (dq > sq && !double_quotes) return "'" + str.replace(/\x27/g, "\\'") + "'";
+        
         else return '"' + str.replace(/\x22/g, '\\"') + '"';
 };
 
@@ -1467,7 +1470,11 @@ function gen_code(ast, options) {
                 beautify     : false,
                 ascii_only   : false,
                 inline_script: false,
+
+                // TODO: https://jira.appcelerator.org/browse/ALOY-220
                 double_quotes: false,
+
+                // TODO: https://jira.appcelerator.org/browse/ALOY-220
                 ignore_numbers: false
         });
         var beautify = !!options.beautify;
@@ -1476,7 +1483,9 @@ function gen_code(ast, options) {
             space = beautify ? " " : "";
 
         function encode_string(str) {
+                // TODO: https://jira.appcelerator.org/browse/ALOY-220
                 var ret = make_string(str, options.ascii_only, options.double_quotes);
+
                 if (options.inline_script)
                         ret = ret.replace(/<\x2fscript([>\/\t\n\f\r ])/gi, "<\\/script$1");
                 return ret;
@@ -1572,9 +1581,11 @@ function gen_code(ast, options) {
         };
 
         function make_num(num) {
+                // TODO: https://jira.appcelerator.org/browse/ALOY-220
                 if (options.ignore_numbers) {
                     return num;
                 }
+                
                 var str = num.toString(10), a = [ str.replace(/^0\./, ".") ], m;
                 if (Math.floor(num) === num) {
                         if (num >= 0) {

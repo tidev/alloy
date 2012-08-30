@@ -15,16 +15,15 @@ var program = require('commander'),
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
 
-// TODO: get the action list from the commands directory
+// TODO: https://jira.appcelerator.org/browse/ALOY-206
+//       get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
 
-//
-//TODO: we need a much more robust help from command line -- see sort of what i did in titanium
-//TODO: handle localization files and merging
-//
+// TODO: improve help - https://jira.appcelerator.org/browse/ALOY-207
+// TODO: handle localization - https://jira.appcelerator.org/browse/ALOY-208
 
 function banner()
 {
@@ -80,7 +79,7 @@ program.parse(process.argv);
 // Setup up logging output
 //if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
 Error.stackTraceLimit = Infinity;
-logger.stripColors = (program.colors===false);
+logger.stripColors = program['colors'] === false;
 banner();
 
 if (program.args.length === 0)

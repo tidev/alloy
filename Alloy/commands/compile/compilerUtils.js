@@ -56,7 +56,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		SplitWindow: NS_TI_UI_IPAD,
 
 		// Ti.UI.iPhone
-		NavigationGroup: NS_TI_UI_IPHONE, // I know MobileWeb has one, but 99% will be this one
+		NavigationGroup: NS_TI_UI_IPHONE, 
 		StatusBar: NS_TI_UI_IPHONE,
 	},
 	CONDITION_MAP = {
@@ -92,19 +92,22 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
-exports.getParserArgs = function(node, state) {
-	state = state || {};
-	var name = node.nodeName,
+exports.getParserArgs = function(node, state, opts) {
+	state || (state = {});
+	opts || (opts = {});
+
+	var defaultId = opts.defaultId || undefined,
+		doSetId = opts.doSetId === false ? false : true,
+		name = node.nodeName,
 		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name,
-		id = node.getAttribute('id') || state.defaultId || exports.generateUniqueId(),
+		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		platformObj = {};
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
-	node.setAttribute('id', id);
-	if (state.defaultId) { delete state.defaultId; }
+	if (doSetId) { node.setAttribute('id', id); }
 
 	// process the platform attribute
 	if (platform) {
@@ -158,9 +161,8 @@ exports.getParserArgs = function(node, state) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (node.nodeType != 1) return '';
-	if (defaultId) { state.defaultId = defaultId; }
 
-	var args = exports.getParserArgs(node, state),
+	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { content: '' };
 
@@ -303,6 +305,18 @@ exports.createEmptyState = function(styles) {
 	};
 };
 
+function updateImplicitNamspaces(platform) {
+	switch(platform) {
+		case 'android':
+			break;
+		case 'ios': 
+			break;
+		case 'mobileweb':
+			IMPLICIT_NAMESPACES.NavigationGroup = NS_TI_UI_MOBILEWEB;
+			break;
+	}
+}
+
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
 	var libDirs = ['builtins','template'];
@@ -331,6 +345,9 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	U.ensureDir(obj.dir.resourcesAlloy);
 	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
 
+	// update implicit namespaces, if possible
+	updateImplicitNamspaces(alloyConfig.platform);
+
 	// keep a copy of the config for this module
 	compilerConfig = obj;
 
@@ -351,7 +368,7 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 	} else {
-		logger.warn('No "app/config."' + CONST.FILE_EXT.CONFIG + ' file found');
+		logger.warn('No "app/config.' + CONST.FILE_EXT.CONFIG + '" file found');
 	}
 
 	// write out the config runtime module

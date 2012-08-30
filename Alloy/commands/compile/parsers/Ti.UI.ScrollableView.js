@@ -1,7 +1,3 @@
-// TODO: pass errors back to the calling function in the compile
-//       command to give more visibility into the error, things like view
-//       name, view file, etc...
-
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');

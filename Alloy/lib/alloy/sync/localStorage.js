@@ -1,4 +1,4 @@
-/**
+/*
  * HTML5 localStorage sync adapter 
  */
 var _ = require('alloy/underscore')._;

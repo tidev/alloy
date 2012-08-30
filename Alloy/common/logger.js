@@ -1,6 +1,7 @@
 var isNode = true;
 try {
 	var colors = require('colors');
+	var strip = require('stripcolorcodes');
 } catch (e) {
 	isNode = false;
 }
@@ -12,6 +13,7 @@ exports.ERROR = 0;
 exports.NONE = -1;
 exports.logLevel = exports.DEBUG;
 exports.stripColors = false;
+exports.showTimestamp = false;
 
 exports.debug = function(msg) {
 	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'info', 'cyan'); }
@@ -55,19 +57,6 @@ var formattedDate = function() {
 	       pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
 };
 
-function formatTag(t,m)
-{
-	var s = t;
-	if (s.length < m)
-	{
-		for (var c=s.length;c<m;c++)
-		{
-			s+=' ';
-		}
-	}
-	return s;
-}
-
 var printMessage = function(msg, level, color) {
 	// Validate arguments
 	msg = msg || '';
@@ -84,8 +73,9 @@ var printMessage = function(msg, level, color) {
 				printLine(line[i]);
 			}
 		} else {
-			var tag = formattedDate() + ' -- [' + formatTag(level.toUpperCase(),5) + '] ';
+			var tag = (exports.showTimestamp ? formattedDate() + ' -- ' : '') + '[' + level.toUpperCase() + '] ';
 			var str = (isNode ? tag.grey : tag) + (isNode ? line[color] : line);
+			if (exports.stripColors && isNode) { str = strip(str); }
 			logFunc(str);
 		}
 	}

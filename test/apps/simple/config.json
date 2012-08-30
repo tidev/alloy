@@ -6,5 +6,6 @@
     "env:development":
     {
     	"foo":2
-    }
+    },
+    "dependencies": {}
 }

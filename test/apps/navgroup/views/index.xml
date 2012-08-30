@@ -1,16 +1,10 @@
 <Alloy>
-	<Window>
-		<NavigationGroup id="navgroup" platform="ios">
+	<Window id="index">
+		<NavigationGroup id="navgroup" platform="ios,mobileweb">
 			<Window title="Window 1" id="win1">
 				<Label>This is the first window</Label>
 			</Window>
 		</NavigationGroup>
-		
-		<!-- 
-		NavigationGroup WILL be available for Mobileweb once this
-		issue is resolved: https://jira.appcelerator.org/browse/ALOY-201	
-		-->
-		<Label platform="mobileweb">NavigationGroup not available on Mobileweb</Label>
 		
 		<Label platform="android">NavigationGroup not available on Android</Label>
 	</Window>

@@ -1,7 +1,3 @@
-// TODO: pass errors back to the calling function in the compile
-//       command to give more visibility into the error, things like view
-//       name, view file, etc...
-
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
@@ -28,15 +24,17 @@ function parse(node, state, args) {
 
 		switch(childArgs.fullname) {
 			case 'Alloy.Require':
-				// TODO: need additional checks to ensure that what is contained in
-				//       <Require> is actually a Window.
+				var inspect = CU.inspectRequireNode(child);
+				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Window') {
+					U.die('SplitWindow <Require> child at position ' + i + ' must contain a single Window');
+				}
 				parserType = 'Alloy.Require';
 				break;
 			case 'Ti.UI.Window':
 				parserType = 'default';
 				break;
 			default:
-				U.die('SplitWindow child at position ' + i + ' is not a Window');
+				U.die('SplitWindow child at position ' + i + ' is not a Window, or a <Require> containing a single Window.');
 				break;
 		}
 

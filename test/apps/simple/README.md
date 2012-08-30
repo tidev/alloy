@@ -13,26 +13,26 @@ In Alloy, the controller (which is optional) must be named with the same name as
 
 In alloy, you do not provide an `app.js` as it will be automatically generated.
 
-In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.json` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
+In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.tss` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
 
 You define a style in the JSON like this:
 
-	{
-		"#a" : {
-			"backgroundColor" : "red",
-			"width": Ti.UI.FILL,
-			"height": "100"
-		},
-		"#b" : {
-			"width":Ti.UI.FIT,
-			"height":Ti.UI.FIT
-		},
-		"#t" : {
-			"width":Ti.UI.FILL,
-			"height":Ti.UI.FIT,
-			"color":"black"
-		}
+
+	"#a" : {
+		"backgroundColor" : "red",
+		"width": Ti.UI.FILL,
+		"height": "100"
+	},
+	"#b" : {
+		"width":Ti.UI.FIT,
+		"height":Ti.UI.FIT
+	},
+	"#t" : {
+		"width":Ti.UI.FILL,
+		"height":Ti.UI.FIT,
+		"color":"black"
 	}
+
 	
 And then you would define the view such as:
 
@@ -41,7 +41,7 @@ And then you would define the view such as:
 		<Label id="t"></Label>
 	</View>
 
-Note, you can use `Titanium.UI` constants in your JSON file.
+Note, you can use `Titanium.UI` constants in your Style (*.tss) file.
 
 In your controller, you can reference the view such as:
 
@@ -59,27 +59,25 @@ You can use the following CSS attributes in your style name: Classes (prefix by 
 
 For example:
 
-	{
-		"Button": {
-			"width":Ti.UI.FIT,
-			"height":Ti.UI.FIT,
-			"borderColor":"red"
-		},
-		
-		".b" : {
-			"width": "100",
-			"b":true
-		},
-		
-		".c" : {
-			"height": "50",
-			"b":false
-		},
-		
-		"#b" : {
-			"width": Ti.UI.FILL,
-			borderColor:null
-		}
+	"Button": {
+		"width":Ti.UI.FIT,
+		"height":Ti.UI.FIT,
+		"borderColor":"red"
+	},
+	
+	".b" : {
+		"width": "100",
+		"b":true
+	},
+	
+	".c" : {
+		"height": "50",
+		"b":false
+	},
+	
+	"#b" : {
+		"width": Ti.UI.FILL,
+		borderColor:null
 	}
 	
 With the following XML:
@@ -101,7 +99,7 @@ A few notes on the code generation and style merging:
 - any `null` values will be removed in any final styles to optimize code generation.  
 - classes can be separated by multiple spaces
 - classes will be merged in order
-- the order of precedence is: Object Type, Classes, ID
+- the order of precedence is like CSS: Object Type, Classes, ID where ID will override Classes and Classes will override Object Type
 
 
 

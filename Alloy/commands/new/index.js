@@ -132,7 +132,7 @@ function newproject(args, program) {
 	// copy in any modules
 	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
 
-	// TODO: remove this once this is merged: https://github.com/appcelerator/titanium_mobile/pull/2610
+	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
 	U.installModule(projectPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
@@ -144,7 +144,7 @@ function newproject(args, program) {
 	fs.writeFileSync(path.join(appPath,'alloy.jmk'), alloyJmkTemplate,'utf-8');
 		
 	// write the project config file
-	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}, "widgets":{}};
+	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}, "dependencies":{}};
 	fs.writeFileSync(path.join(appPath,"config.json"), U.stringifyJSON(cfg),'utf-8');
 
 	// install the plugin

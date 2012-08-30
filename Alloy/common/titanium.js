@@ -125,7 +125,7 @@ exports.run = function(projectDir, platform /*optional*/, version /*optional*/, 
 	}
 
 	// Get the target platform
-	// TODO: check tiapp.xml for <deployment-targets>
+	// TODO: check tiapp.xml for <deployment-targets> - https://jira.appcelerator.org/browse/ALOY-219
 	platform = platform || 'iphone';
 
 	//run the project using titanium.py
