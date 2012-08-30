@@ -126,7 +126,6 @@ module.exports = function(args, program) {
 
 	// copy assets and libraries
 	U.copyAlloyDir(inputPath, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
-	U.copyAlloyDir(inputPath, CONST.DIR.VENDOR, path.join(compileConfig.dir.resources,CONST.DIR.VENDOR));
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
