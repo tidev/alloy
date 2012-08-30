@@ -61,74 +61,152 @@ exports.XML = {
 	}
 };
 
-exports.installModule = function(dir, opts)
-{
-	var tiapp = path.join(dir,'tiapp.xml');
-	if (path.existsSync(tiapp))
-	{
-		var xml = fs.readFileSync(tiapp);
-		var doc = new DOMParser().parseFromString(String(xml));
-		var modules = doc.documentElement.getElementsByTagName("modules");
+exports.tiapp = {
+	install: function(type, dir, opts) {
+		type || (type = 'module');
+		dir || (dir = './');
+		opts || (opts = {});
+
+		var err = 'Project creation failed. Unable to install ' + type + ' "' + (opts.name || opts.id) + '"';
+		var tiappPath = path.join(dir,'tiapp.xml');
+		if (!path.existsSync(tiappPath)) {
+			U.die([ 'tiapp.xml file does not exist at "' + tiappPath + '"', err ]);
+		}
+
+		// read the tiapp.xml file
+		var xml = fs.readFileSync(tiappPath, 'utf8');
+		var doc = new DOMParser().parseFromString(xml);
+		var collection = doc.documentElement.getElementsByTagName(type + 's');
 		var found = false;
 
-		if (modules.length > 0)
-		{
-			var items = modules.item(0).getElementsByTagName('module');
-			if (items.length > 0)
-			{
-				for (var c=0;c<items.length;c++)
-				{
-					var mod = items.item(c);
-					var name = exports.XML.getNodeText(mod);
+		// Determine if the module or plugin is already installed
+		if (collection.length > 0) {
+			var items = collection.item(0).getElementsByTagName(type);
+			if (items.length > 0) {
+				for (var c = 0; c < items.length; c++) {
+					var theItem = items.item(c);
+					var theItemText = exports.XML.getNodeText(theItem);
 
 					// TODO: https://jira.appcelerator.org/browse/ALOY-188
-					if (name == opts.id)
-					{
+					if (theItemText == opts.id) {
 						found = true;
 						break;
 					}
 				}
 			}
 		}
-		
-		if (!found)
-		{
-			var node = doc.createElement('module');
-			if (opts.platform) {
-				node.setAttribute('platform',opts.platform);
-			}
-			node.setAttribute('version',opts.version || '1.0');
 
-			// TODO: https://jira.appcelerator.org/browse/ALOY-188
+		// install module or plugin
+		if (!found) {
+			// create the node to be inserted
+			var node = doc.createElement(type);
 			var text = doc.createTextNode(opts.id);
+			if (opts.platform) { 
+				node.setAttribute('platform',opts.platform); 
+			}
+			if (opts.version) { 
+				node.setAttribute('version',opts.version);
+			}
 			node.appendChild(text);
-			
+
+			// add the node into tiapp.xml
 			var pna = null;
-			
-			// install the plugin into tiapp.xml
-			if (modules.length == 0)
-			{
-				var pn = doc.createElement('modules');
+			if (collection.length === 0) {
+				var pn = doc.createElement(type + 's');
 				doc.documentElement.appendChild(pn);
 				doc.documentElement.appendChild(doc.createTextNode("\n"));
 				pna = pn;
-			}
-			else
-			{
+			} else {
 				pna = modules.item(0);
 			}
-			
 			pna.appendChild(node);
 			pna.appendChild(doc.createTextNode("\n"));
 			
+			// serialize the xml and write to tiapp.xml
 			var serializer = new XMLSerializer();
 			var newxml = serializer.serializeToString(doc);
-			
-			fs.writeFileSync(tiapp,newxml,'utf-8');
-			logger.info("Installed '" + opts.id + "' module to "+tiapp);
+			fs.writeFileSync(tiappPath,newxml,'utf8');
+
+			logger.info('Installed "' + opts.id + '" ' + type + ' to ' + tiappPath);
 		}
+
+	},
+	installModule: function(dir, opts) {
+		this.install('module', dir, opts);
+	},
+	installPlugin: function(dir, opts) {
+		this.install('plugin', dir, opts);
 	}
-}
+};
+
+// exports.installModule = function(dir, opts)
+// {
+// 	var tiapp = path.join(dir,'tiapp.xml');
+// 	if (path.existsSync(tiapp))
+// 	{
+// 		var xml = fs.readFileSync(tiapp);
+// 		var doc = new DOMParser().parseFromString(String(xml));
+// 		var modules = doc.documentElement.getElementsByTagName("modules");
+// 		var found = false;
+
+// 		if (modules.length > 0)
+// 		{
+// 			var items = modules.item(0).getElementsByTagName('module');
+// 			if (items.length > 0)
+// 			{
+// 				for (var c=0;c<items.length;c++)
+// 				{
+// 					var mod = items.item(c);
+// 					var name = exports.XML.getNodeText(mod);
+
+// 					// TODO: https://jira.appcelerator.org/browse/ALOY-188
+// 					if (name == opts.id)
+// 					{
+// 						found = true;
+// 						break;
+// 					}
+// 				}
+// 			}
+// 		}
+		
+// 		if (!found)
+// 		{
+// 			var node = doc.createElement('module');
+// 			if (opts.platform) {
+// 				node.setAttribute('platform',opts.platform);
+// 			}
+// 			node.setAttribute('version',opts.version || '1.0');
+
+// 			// TODO: https://jira.appcelerator.org/browse/ALOY-188
+// 			var text = doc.createTextNode(opts.id);
+// 			node.appendChild(text);
+			
+// 			var pna = null;
+			
+// 			// install the plugin into tiapp.xml
+// 			if (modules.length == 0)
+// 			{
+// 				var pn = doc.createElement('modules');
+// 				doc.documentElement.appendChild(pn);
+// 				doc.documentElement.appendChild(doc.createTextNode("\n"));
+// 				pna = pn;
+// 			}
+// 			else
+// 			{
+// 				pna = modules.item(0);
+// 			}
+			
+// 			pna.appendChild(node);
+// 			pna.appendChild(doc.createTextNode("\n"));
+			
+// 			var serializer = new XMLSerializer();
+// 			var newxml = serializer.serializeToString(doc);
+			
+// 			fs.writeFileSync(tiapp,newxml,'utf-8');
+// 			logger.info("Installed '" + opts.id + "' module to "+tiapp);
+// 		}
+// 	}
+// }
 
 exports.copyAlloyDir = function(appDir, sources, destDir) {
 	var sources = _.isArray(sources) ? sources : [sources];

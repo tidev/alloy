@@ -82,7 +82,7 @@ module.exports = function(args, program) {
 		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
 		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
 	}
-	U.installModule(outputPath, {
+	U.tiapp.installModule(outputPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
