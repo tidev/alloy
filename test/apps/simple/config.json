@@ -1,0 +1,11 @@
+{
+	"global":
+    {
+        "foo":1
+    },
+    "env:development":
+    {
+    	"foo":2
+    },
+    "dependencies": {}
+}
