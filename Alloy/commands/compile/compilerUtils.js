@@ -110,7 +110,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
-		platformObj = {};
+		platformObj;
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
@@ -118,6 +118,7 @@ exports.getParserArgs = function(node, state, opts) {
 
 	// process the platform attribute
 	if (platform) {
+		platformObj = {};
 		_.each((platform).split(','), function(p) {
 			var matches = U.trim(p).match(/^(\!{0,1})(.+)/);
 			if (matches !== null) {
@@ -161,7 +162,7 @@ exports.getParserArgs = function(node, state, opts) {
 		symbol: exports.generateVarName(id),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
-		platform: !platformObj ? undefined : platformObj,
+		platform: platformObj,
 		createArgs: createArgs,
 		events: events
 	};
@@ -182,13 +183,13 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 			conditionArray.push(CONDITION_MAP[k][conditionType]);
 		});
 		
-		code.condition = conditionArray.join(' || ');
+		code.condition = '(' + conditionArray.join(' || ') + ')';
 	}
 	
 	//Add form factor condition, if application form-factor specific runtime check
 	if (args.formFactor && CONDITION_MAP[args.formFactor]) {
 		var check = CONDITION_MAP[args.formFactor].runtime;
-		code.condition = (code.condition) ? code.condition += ' || ' + check : check;
+		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
 	}
 
 	// Determine which parser to use for this node
