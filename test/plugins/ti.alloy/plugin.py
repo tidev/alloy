@@ -21,7 +21,7 @@ def compile(config):
             builder = config['android_builder']
             version = builder.tool_api_level
             deploytype = config['deploy_type']
-        if config['platform']==u'mobileweb':
+		if config['platform']==u'mobileweb':
             builder = config['mobileweb_builder']
             deploytype = config['deploytype']
         
