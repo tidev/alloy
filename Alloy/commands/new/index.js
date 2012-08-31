@@ -23,70 +23,6 @@ function createPlugin(rootDir) {
 	logger.info('Deployed ti.alloy plugin to '+alloyPlugin);
 }
 
-function installPlugin(dir)
-{
-	createPlugin(dir);
-
-	var tiapp = path.join(dir,'tiapp.xml');
-	if (path.existsSync(tiapp))
-	{
-		var xml = fs.readFileSync(tiapp);
-		var doc = new DOMParser().parseFromString(String(xml));
-		var plugins = doc.documentElement.getElementsByTagName("plugins");
-		var found = false;
-
-		if (plugins.length > 0)
-		{
-			var items = plugins.item(0).getElementsByTagName('plugin');
-			if (items.length > 0)
-			{
-				for (var c=0;c<items.length;c++)
-				{
-					var plugin = items.item(c);
-					var name = U.XML.getNodeText(plugin);
-					if (name == 'ti.alloy')
-					{
-						found = true;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (!found)
-		{
-			var node = doc.createElement('plugin');
-			node.setAttribute('version','1.0');
-			var text = doc.createTextNode('ti.alloy');
-			node.appendChild(text);
-			
-			var pna = null;
-			
-			// install the plugin into tiapp.xml
-			if (plugins.length == 0)
-			{
-				var pn = doc.createElement('plugins');
-				doc.documentElement.appendChild(pn);
-				doc.documentElement.appendChild(doc.createTextNode("\n"));
-				pna = pn;
-			}
-			else
-			{
-				pna = plugins.item(0);
-			}
-			
-			pna.appendChild(node);
-			pna.appendChild(doc.createTextNode("\n"));
-			
-			var serializer = new XMLSerializer();
-			var newxml = serializer.serializeToString(doc);
-			
-			fs.writeFileSync(tiapp,newxml,'utf-8');
-			logger.info("Installed 'ti.alloy' plugin to "+tiapp);
-		}
-	}
-}
-
 function newproject(args, program) {
 	var dirs = ['controllers','styles','views','models','assets'],
 		templateDir = path.join(alloyRoot,'template'),
@@ -95,7 +31,7 @@ function newproject(args, program) {
 		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.STYLE),'utf8'),
 		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.CONTROLLER),'utf8'),
 		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
-		projectPath, appPath, resourcesPath, tmpPath, alloyJmkTemplate, cfg;
+		projectPath, appPath, resourcesPath, tmpPath, alloyJmkTemplate; //, cfg;
 
 	// validate args
 	if (!_.isArray(args) || args.length === 0) {
@@ -133,22 +69,42 @@ function newproject(args, program) {
 	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
-	U.installModule(projectPath, {
+	U.tiapp.installModule(projectPath, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
 	});
 
-	// write the build file
-	alloyJmkTemplate = fs.readFileSync(path.join(templateDir,'alloy.jmk'), 'utf8');
-	fs.writeFileSync(path.join(appPath,'alloy.jmk'), alloyJmkTemplate,'utf-8');
-		
-	// write the project config file
-	cfg = {global:{}, "env:development":{}, "env:test":{}, "env:production":{}, "os:ios":{}, "os:android":{}, "dependencies":{}};
-	fs.writeFileSync(path.join(appPath,"config.json"), U.stringifyJSON(cfg),'utf-8');
+	function writeConfigFile(name) {
+		var templateFile = path.join(templateDir,name);
+		if (!path.existsSync(templateFile)) {
+			U.die([
+				(new Error).stack,
+				'Project creation failed. Required template file "' + name + '" is missing.',
+				'Your installation of Alloy may be incomplete or corrupt. Please try updating or reinstalling.'
+			]);
+		}
 
-	// install the plugin
-	installPlugin(projectPath);
+		try {
+			fs.writeFileSync(
+				path.join(appPath,name), 
+				fs.readFileSync(templateFile, 'utf8')
+			);
+		} catch (e) {
+			U.die([
+				(new Error).stack,
+				'Project creation failed. Unable create "' + name + '" file'
+			]);
+		}
+	}
+
+	writeConfigFile('alloy.jmk');
+	writeConfigFile('config.json');
+	createPlugin(projectPath);
+	U.tiapp.installPlugin(projectPath, {
+		id: 'ti.alloy',
+		version: '1.0'
+	});
 
 	// copy original android, iphone, and mobileweb directories to assets
 	_.each(['android','iphone','mobileweb'], function(dir) {
