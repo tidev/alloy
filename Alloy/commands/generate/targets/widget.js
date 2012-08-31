@@ -4,46 +4,57 @@ var path = require('path'),
 	U = require('../../../utils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger'),
-	alloyRoot = path.join(__dirname,'..','..','..');
+	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
-	if(name.match("^com\.")) {
-		var widgetId = args[0] || name;	
-	} else {
-		var widgetId = args[0] || 'com.default.' + name;
-	}
-	var widgetDesc = args[1] || '';
+	var widgetId = args[0] || (name.match("^com\.") ? name : 'com.default.' + name);
+	var types = ['VIEW','CONTROLLER','STYLE'];
+	var paths = getPaths(program.outputPath, widgetId);
 
-	var widgetPath = path.join(program.outputPath,'widgets',widgetId);
-	if (path.existsSync(widgetPath) && !program.force) {
-		U.die("Widget already exists: "+widgetPath);
+	// don't overwrite an existing widget unless force is specified
+	if (path.existsSync(paths.widget) && !program.force) {
+		U.die("Widget already exists: " + paths.widget);
 	}
 
-	wrench.mkdirSyncRecursive(widgetPath, 0777);
-	wrench.mkdirSyncRecursive(path.join(widgetPath, 'views'), 0777);
-	wrench.mkdirSyncRecursive(path.join(widgetPath, 'controllers'), 0777);
-	wrench.mkdirSyncRecursive(path.join(widgetPath, 'styles'), 0777);
-	
-	fs.writeFileSync(path.join(widgetPath, 'widget.json'), U.stringifyJSON({
-		"id": widgetId,
-		"name": name,
-		"description" : widgetDesc,
-		"author": "",
-		"version": "1.0",
-		"copyright":"Copyright (c) 2012",
-		"license":"Public Domain",
-		"min-alloy-version": "1.0",
-		"min-titanium-version":"2.0",
-		"tags":"",
-		"platforms":"android,ios,mobileweb"
-	}));
+	// create default alloy widget folders and files
+	_.each(types, function(type) {
+		var typeFolder = path.join(paths.widget, CONST.DIR[type]);
+		var typeTemplate = path.join(paths.template,type.toLowerCase() + '.' + CONST.FILE_EXT[type]);
 
-	_.each(['VIEW','CONTROLLER','STYLE'], function(type) {
-		var templatePath = path.join(alloyRoot,'template', type.toLowerCase() + '.' + CONST.FILE_EXT[type]);
-		var contents = fs.readFileSync(templatePath,'utf8');
-		fs.writeFileSync(path.join(widgetPath, type.toLowerCase() + 's', 'widget.' + CONST.FILE_EXT[type]), contents);
+		wrench.mkdirSyncRecursive(typeFolder, 0777);
+		fs.writeFileSync(
+			path.join(typeFolder,CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
+			fs.readFileSync(typeTemplate,'utf8')
+		);
 	});
 
-	logger.info('Generated widget named '+name);
+	// create widget.json manifest file
+	fs.writeFileSync(
+		path.join(paths.widget,'widget.json'), 
+		_.template(fs.readFileSync(paths.widgetTemplate,'utf8'), {
+			id: escapeDoubleQuotes(widgetId),
+			name: escapeDoubleQuotes(name)
+		})
+	);
+
+	logger.info('Generated widget named ' + name);
+}
+
+function getPaths(appPath, widgetId) {
+	var alloy = path.join(__dirname,'..','..','..');
+	var template = path.join(alloy,'template');
+
+	return {
+		// alloy paths
+		alloy: alloy,
+		template: template,
+		widgetTemplate: path.join(template,'widget.json'),
+
+		// project paths
+		widget: path.join(appPath,'widgets',widgetId)
+	};
+}
+
+function escapeDoubleQuotes(string) {
+	return string.replace(/"/g,'\\"');
 }

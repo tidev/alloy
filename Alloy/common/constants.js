@@ -1,5 +1,6 @@
 exports.ALLOY_DIR = 'app';
 exports.NAME_DEFAULT = 'index';
+exports.NAME_WIDGET_DEFAULT = 'widget';
 exports.GLOBAL_STYLE = 'app.tss';
 exports.ROOT_NODE = 'Alloy';
 exports.NAMESPACE_DEFAULT = 'Ti.UI';
