@@ -71,10 +71,16 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		mobileweb: {
 			compile: 'OS_MOBILEWEB',
 			runtime: "Ti.Platform.osname === 'mobileweb'"
+		},
+		handheld: {
+			runtime: "!Alloy.isTablet"
+		},
+		tablet: {
+			runtime: "Alloy.isTablet"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform'],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor'],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor'],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
@@ -103,7 +109,8 @@ exports.getParserArgs = function(node, state, opts) {
 		fullname = ns + '.' + name,
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
-		platformObj = {};
+		formFactor = node.getAttribute('formFactor'),
+		platformObj;
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti');
@@ -111,6 +118,7 @@ exports.getParserArgs = function(node, state, opts) {
 
 	// process the platform attribute
 	if (platform) {
+		platformObj = {};
 		_.each((platform).split(','), function(p) {
 			var matches = U.trim(p).match(/^(\!{0,1})(.+)/);
 			if (matches !== null) {
@@ -150,10 +158,11 @@ exports.getParserArgs = function(node, state, opts) {
 		name: name,
 		id: id, 
 		fullname: fullname,
+		formFactor: node.getAttribute('formFactor'),
 		symbol: exports.generateVarName(id),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
-		platform: !platformObj ? undefined : platformObj,
+		platform: platformObj,
 		createArgs: createArgs,
 		events: events
 	};
@@ -166,15 +175,22 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { content: '' };
 
-	// Check for platform-specific considerations
+	// Check for platform specific considerations
 	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
 	if (args.platform) {
 		var conditionArray = [];
 		_.each(args.platform, function(v,k) {
 			conditionArray.push(CONDITION_MAP[k][conditionType]);
 		});
-		code.condition = conditionArray.join(' || ');
-	} 
+		
+		code.condition = '(' + conditionArray.join(' || ') + ')';
+	}
+	
+	//Add form factor condition, if application form-factor specific runtime check
+	if (args.formFactor && CONDITION_MAP[args.formFactor]) {
+		var check = CONDITION_MAP[args.formFactor].runtime;
+		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
+	}
 
 	// Determine which parser to use for this node
 	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
@@ -207,7 +223,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 			}
 		}); 
 	}
-
+	
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
 
@@ -492,7 +508,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 				}
 
 				// handle size device query
-				if (q.size === 'tablet') {
+				if (q.size === 'tablet' || q.formFactor === 'tablet') {
 					conditionals.size = 'Alloy.isTablet';
 				} else if (q.size === 'handheld') {
 					conditionals.size = 'Alloy.isHandheld';

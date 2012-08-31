@@ -1,0 +1,18 @@
+<Alloy>
+	<Window class="container">
+		<View formFactor="handheld">
+			<Label>I'm a handheld!</Label>
+		</View>
+		
+		<View formFactor="tablet">
+			<Label>I'm a tablet!</Label>
+		</View>
+		
+		<View height="50" width="200" bottom="10" backgroundColor="#cdcdcd">
+			<Label class="platformLabel" platform="android" formFactor="tablet">android tablet</Label>
+			<Label class="platformLabel" platform="android" formFactor="handheld">android handheld</Label>
+			<Label class="platformLabel" platform="ios" formFactor="tablet">ios tablet</Label>
+			<Label class="platformLabel" platform="ios" formFactor="handheld">ios handheld</Label>
+		</View>
+	</Window>
+</Alloy>
