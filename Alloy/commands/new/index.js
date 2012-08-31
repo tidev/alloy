@@ -1,124 +1,140 @@
 var path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
-	DOMParser = require("xmldom").DOMParser,
-	XMLSerializer = require("xmldom").XMLSerializer,
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	logger = require('../../common/logger'),
-	alloyRoot = path.join(__dirname,'..', '..');
+	logger = require('../../common/logger');
 
-function createPlugin(rootDir) {
-	var plugins = path.join(rootDir,"plugins");
-	U.ensureDir(plugins);
-	
-	var alloyPluginDir = path.join(plugins,"ti.alloy");
-	U.ensureDir(alloyPluginDir);
-	
-	var alloyPlugin = path.join(alloyPluginDir,"plugin.py");
-	var pi = path.join(alloyRoot,"plugin","plugin.py");
-	
-	U.copyFileSync(pi,alloyPlugin);
-	logger.info('Deployed ti.alloy plugin to '+alloyPlugin);
-}
+var BASE_ERR = 'Project creation failed. ';
 
-function newproject(args, program) {
-	var dirs = ['controllers','styles','views','models','assets'],
-		templateDir = path.join(alloyRoot,'template'),
-		defaultDir = path.join(templateDir,'default'),
-		INDEX_XML  = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.VIEW),'utf8'),
-		INDEX_JSON = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.STYLE),'utf8'),
-		INDEX_C    = fs.readFileSync(path.join(defaultDir,'index.'+CONST.FILE_EXT.CONTROLLER),'utf8'),
-		README     = fs.readFileSync(path.join(templateDir, 'README'),'utf8'),
-		projectPath, appPath, resourcesPath, tmpPath, alloyJmkTemplate; //, cfg;
+module.exports = function(args, program) {
+	var appDirs = ['controllers','styles','views','models','assets'];
+	var types = ['VIEW','STYLE','CONTROLLER'];
+	var paths = getPaths(args[0] || '.');
 
-	// validate args
-	if (!_.isArray(args) || args.length === 0) {
-		args[0] = '.';
-	}
-
-	// get app path, create if necessary
-	projectPath = args[0];
-	appPath = path.join(projectPath,'app');
-	resourcesPath = path.join(projectPath,'Resources');
-	if (path.existsSync(appPath)) {
+	// only overwrite existing app path if given the force option
+	if (path.existsSync(paths.app)) {
 		if (!program.force) {
-			U.die("Directory already exists at: " + appPath);
+			U.die(BASE_ERR + '"app" directory already exists at "' + paths.app + '"');
 		} else {
-			wrench.rmdirSyncRecursive(appPath);
+			wrench.rmdirSyncRecursive(paths.app);
 		}
 	}
-	wrench.mkdirSyncRecursive(appPath, 0777);
-	
-	// create alloy app directories
-	for (var c = 0; c < dirs.length; c++) {
-		tmpPath = path.join(appPath, dirs[c]);
-		if (!path.existsSync(tmpPath)) {
-			wrench.mkdirSyncRecursive(tmpPath, 0777);
-		}
-	}
-	
-	// create default view, controller, style, and config. 
-	fs.writeFileSync(path.join(appPath,'views','index.'+CONST.FILE_EXT.VIEW),INDEX_XML,'utf-8');
-	fs.writeFileSync(path.join(appPath,'styles','index.'+CONST.FILE_EXT.STYLE),INDEX_JSON,'utf-8');
-	fs.writeFileSync(path.join(appPath,'controllers','index.'+CONST.FILE_EXT.CONTROLLER),INDEX_C,'utf-8');
-	fs.writeFileSync(path.join(appPath,'README'),README,'utf-8');
+	wrench.mkdirSyncRecursive(paths.app, 0777);
 
-	// copy in any modules
-	wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), projectPath, {preserve:true});
+	// add alloy-specific folders
+	_.each(appDirs, function(dir) {
+		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0777);
+	});
+
+	// add alloy default project files
+	_.each(types, function(type) {
+		var filename = CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT[type];
+		fs.writeFileSync(
+			path.join(paths.app,CONST.DIR[type],filename),
+			fs.readFileSync(path.join(paths.default,filename),'utf8')
+		);
+	});
+	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
-	U.tiapp.installModule(projectPath, {
+	// handle any necessary alloy native modules
+	wrench.copyDirSyncRecursive(paths.modules, paths.project, {preserve:true});
+	U.tiapp.installModule(paths.project, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
 	});
 
-	function writeConfigFile(name) {
-		var templateFile = path.join(templateDir,name);
-		if (!path.existsSync(templateFile)) {
-			U.die([
-				(new Error).stack,
-				'Project creation failed. Required template file "' + name + '" is missing.',
-				'Your installation of Alloy may be incomplete or corrupt. Please try updating or reinstalling.'
-			]);
-		}
+	// create default config files and install compiler plugin
+	writeConfigFile('alloy.jmk', paths);
+	writeConfigFile('config.json', paths);
+	installPlugin(paths);
 
-		try {
-			fs.writeFileSync(
-				path.join(appPath,name), 
-				fs.readFileSync(templateFile, 'utf8')
-			);
-		} catch (e) {
-			U.die([
-				(new Error).stack,
-				'Project creation failed. Unable create "' + name + '" file'
-			]);
-		}
-	}
-
-	writeConfigFile('alloy.jmk');
-	writeConfigFile('config.json');
-	createPlugin(projectPath);
-	U.tiapp.installPlugin(projectPath, {
-		id: 'ti.alloy',
-		version: '1.0'
-	});
-
-	// copy original android, iphone, and mobileweb directories to assets
+	// copy Resources android, iphone, and mobileweb directories to assets
 	_.each(['android','iphone','mobileweb'], function(dir) {
-		var rDir = path.join(resourcesPath,dir);
+		var rDir = path.join(paths.Resources,dir);
 		if (!path.existsSync(rDir)) {
 			return;
 		}
 
-		var p = path.join(appPath,'assets',dir);
+		var p = path.join(paths.app,'assets',dir);
 		wrench.mkdirSyncRecursive(p, 0777);
-		wrench.copyDirSyncRecursive(path.join(resourcesPath,dir), p);
+		wrench.copyDirSyncRecursive(rDir, p);
 	});
 	
-	logger.info('Generated new project at: ' + appPath);
+	logger.info('Generated new project at: ' + paths.app);
 }
 
-module.exports = newproject;
+function getPaths(project) {
+	var alloy = path.join(__dirname,'..', '..');
+	var template = path.join(alloy,'template');
+	var paths = {
+		// alloy paths
+		alloy: alloy,
+		modules: path.join(alloy,'modules'),
+		template: path.join(alloy,'template'),
+		default: path.join(template,'default'),
+		readme: path.join(template, 'README'),
+
+		// project paths
+		project: project,
+		resources: path.join(project,'Resources')
+	}
+
+	// validate the existence of the paths
+	_.each(paths, function(v,k) {
+		if (!path.existsSync(v)) {
+			U.die(BASE_ERR + '"' + v + '" not found.');
+		}
+	});
+
+	// Added after validation, since they won't exist yet
+	_.extend(paths, {
+		app: path.join(paths.project,'app'),
+		plugins: path.join(paths.project,'plugins')
+	});
+
+	return paths;
+}
+
+function writeConfigFile(name, paths) {
+	var file = path.join(paths.template,name);
+	if (!path.existsSync(file)) {
+		U.die([
+			BASE_ERR + 'Required template file "' + file + '" is missing.',
+			'Your installation of Alloy may be incomplete or corrupt. Please try updating or reinstalling.'
+		]);
+	}
+
+	try {
+		fs.writeFileSync(path.join(paths.app,name), fs.readFileSync(file, 'utf8'));
+	} catch (e) {
+		U.die([
+			(new Error).stack,
+			BASE_ERR + 'Unable create "' + file + '".'
+		]);
+	}
+}
+
+function installPlugin(paths) {
+	var file = 'plugin.py'
+	var id = 'ti.alloy';
+	var source = path.join(paths.alloy,'plugin',file);
+	var dest = path.join(paths.project,'plugins',id);
+
+	// create plugin path and add to project
+	U.ensureDir(dest);
+	dest = path.join(dest,file);
+	U.copyFileSync(source, dest);
+
+	// add the plugin to tiapp.xml
+	U.tiapp.installPlugin(paths.project, {
+		id: 'ti.alloy',
+		version: '1.0'
+	});
+
+	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
+}
+

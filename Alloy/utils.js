@@ -117,7 +117,7 @@ exports.tiapp = {
 				doc.documentElement.appendChild(doc.createTextNode("\n"));
 				pna = pn;
 			} else {
-				pna = modules.item(0);
+				pna = collection.item(0);
 			}
 			pna.appendChild(node);
 			pna.appendChild(doc.createTextNode("\n"));
@@ -230,8 +230,6 @@ exports.resolveAppHome = function() {
 	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
 }
 
-
-
 exports.copyFileSync = function(srcFile, destFile) 
 {
 	var BUF_LENGTH = 64 * 1024, 
@@ -254,10 +252,8 @@ exports.copyFileSync = function(srcFile, destFile)
 	return fs.closeSync(fdw);
 }
 
-exports.ensureDir = function(p)
-{
-	if (!path.existsSync(p))
-	{
+exports.ensureDir = function(p) {
+	if (!path.existsSync(p)) {
 		logger.debug("Creating directory: "+p);
 		wrench.mkdirSyncRecursive(p, 0777);
 	}
