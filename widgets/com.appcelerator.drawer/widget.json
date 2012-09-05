@@ -1,0 +1,13 @@
+{
+    "id": "com.appcelerator.drawer",
+    "name": "drawer",
+    "description": "A drawer of buttons to pull up from the bottom of the screen",
+    "author": "Carl Orthlieb",
+    "version": "1.0",
+    "copyright": "Copyright (c) 2012 Appcelerator Inc. All rights reserved",
+    "license": "Apache 2.0",
+    "min-alloy-version": "1.0",
+    "min-titanium-version": "2.1",
+    "tags": "ui,drawer,buttonbar,activitymenu,panel",
+    "platforms": "android,ios,mobileweb"
+}

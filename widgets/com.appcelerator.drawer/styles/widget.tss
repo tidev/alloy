@@ -1,0 +1,30 @@
+{
+	"#drawer": {
+		left: 0,
+		right: 0,
+		bottom: -48,
+		width: Ti.UI.FILL,
+		height: 64,
+		layout: "vertical",
+        opacity: 0.75
+  	},
+
+	"#pulltab": {
+		backgroundImage: "/images/com.appcelerator.drawer/PullTabUp.png",
+	    center: {
+            x: "50%"
+        },
+        top: 0,
+        width: 48,
+        height: 16,
+    },
+    
+    "#buttonbar": {
+        left: 0,
+        top: 0,
+        width: Ti.UI.FILL,
+        height: 48,
+		backgroundColor: "black",
+        layout: "horizontal"        
+    },
+}

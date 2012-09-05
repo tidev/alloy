@@ -1,0 +1,6 @@
+<Alloy>
+    <View id="drawer" platforms="ios,mobileweb">
+        <Button id="pulltab" onClick="pullTabClick"/>
+        <View id="buttonbar"/>
+    </View>
+</Alloy>
