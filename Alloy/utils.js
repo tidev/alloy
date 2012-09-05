@@ -269,14 +269,20 @@ exports.copyFilesAndDirs = function(f,d)
 		var stats = fs.lstatSync(fpath);
 		var rd = path.join(d,file);
 		logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
-		if (stats.isDirectory())
-		{
-			exports.ensureDir(rd);
-			wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
+		try {
+			if (stats.isDirectory())
+			{
+				exports.ensureDir(rd);
+				wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
+			}
+			else
+			{
+				exports.copyFileSync(fpath,rd);
+			}
 		}
-		else
-		{
-			exports.copyFileSync(fpath,rd);
+		catch (e) {
+			logger.info(e);
+			logger.warn('Could not copy ' + fpath + ': ');
 		}
 	}
 }
