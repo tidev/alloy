@@ -1,6 +1,55 @@
 /**
  * @class Alloy.builtins.social
+ * A collection of useful social media provider utilities. Currently, this module only supports
+ * Twitter and the following features:
+ *
+ * - Logging into Twitter and authorizing the application through the OAuth protocol.
+ * - Posting tweets to the user's Twitter account.
+ *
+ * To use the social builtin library, require it with the `alloy` root 
+ * directory in your `require` call. For example:
+ * 
+ *     var social = require('alloy/social');
+ *     social.create({
+ *         consumerSecret: 'consumer-secret',
+ *         consumerKey: 'consumer-key'
+ *     });
+ *
+ * ## Login and Authorization
+ * 
+ * To use a social media provider, a user must log in and authorize the application to perform
+ * certain actions, such as accessing profile information or posting messages.
+ *
+ * Call `authorize` to prompt the user to login and authorize the application.  For Twitter, a
+ * dialog box will appear asking the user for their permission and login credentials.
+ *
+ * Before calling `authorize`, the application will need a consumer key and secret provided by the
+ * social media service provider for the OAuth protocol, used when calling `create`.
+ * For Twitter, these are provided when registering an application:
+ * [https://dev.twitter.com/apps/new](https://dev.twitter.com/apps/new)
+ *
+ * ## Example
+ * 
+ * This example authorizes the application, posts a message to the user's Twitter account, then
+ * deauthorizes the application.
+ *
+ *		// If not authorized, get authorization from the user
+ *		if(!social.isAuthorized()) { 
+ *			social.authorize();
+ *		}
+ *		
+ *		// Post a message
+ *		// Setup both callbacks for confirmation
+ *		social.share({
+ *			message: "Salut, Monde!",
+ *			success: function(e) {alert('Success!')},
+ *			error: function(e) {alert('Error!')}
+ *		});	
+ *
+ *		// Deauthorize the application
+ *		social.deauthorize(); 
  */
+
 function hex_sha1(s) {
     return binb2hex(core_sha1(str2binb(s), s.length * chrsz));
 }
@@ -529,17 +578,46 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
     }
 };
 
+/**
+ * @method create
+ * Initializes an OAuth session to the service provider.
+ * If a previous access token exists, it will be loaded.
+ * @param {...*} settings OAuth session settings.
+ * @param {String} [settings.site="twitter"] Site to access. Only 'twitter' is working.
+ * @param {String} settings.consumerSecret Shared secret used to authenticate the key.
+ * @param {String} settings.consumerKey Key used to identify the client to the service provider.
+ */  
+
 exports.create = function(settings) {
     var site = (settings.site || "twitter").toLowerCase(), adapter = new OAuthAdapter(settings.consumerSecret, settings.consumerKey, "HMAC-SHA1");
     adapter.loadAccessToken(site);
     var urls = supportedSites[site];
     return urls == null ? (alert("The Social.js module does not support " + site + " yet!"), null) : {
+        /**
+         * @method isAuthorized
+         * Returns 'true' if the client is authorized by the service provider.
+         * @return {Boolean} Returns 'true' is authorized else 'false'.
+         */
         isAuthorized: function() {
             return adapter.isAuthorized();
         },
+        /**
+         * @method deauthorize
+         * Deauthorizes the client and clears the access token.
+         */
         deauthorize: function() {
             adapter.clearAccessToken(site);
         },
+        /** 
+         * @method authorize
+         * Authorizes the client to the service provider to access user data. 
+         * If successful, the client will receive an access token, which will be saved for future 
+         * usage.
+         * Call this function after opening the parent view or else the authorize UI window will
+         * appear in the background behind the view and unusable to the user.
+         * @param {Function} [callback] Callback function executed after successfully retrieving 
+         * an access token.
+         */
         authorize: function(callback) {
             if (!adapter.isAuthorized()) {
                 function receivePin() {
@@ -552,6 +630,14 @@ exports.create = function(settings) {
                 });
             } else callback && callback();
         },
+        /**
+         * @method share
+         * Sends an update to the service provider.
+         * @param {...*} options Update parameters.
+         * @param {String} options.message Message to send.
+         * @param {Function} [options.success] Callback function executed after a successful update.
+         * @param {Function} [options.error] Callback function executed after a failed update.
+         */
         share: function(options) {
             this.authorize(function() {
                 adapter.send({

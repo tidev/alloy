@@ -1,5 +1,11 @@
 /**
  * @class Alloy.builtins.sha1
+ * A collection of utilities for calculating SHA-1 or HMAC-SHA-1 values.
+ * To use the sha1 builtin library,
+ * require it with the `alloy` root directory in your `require` call. For example:
+ *
+ *     var sha1 = require('alloy/sha1');
+ *     var sha1_digest = sha1.hex_sha1('The quick brown fox jumps over the lazy dog.');
  */
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
@@ -26,26 +32,65 @@ var chrsz = 8;
  * They take string arguments and return either hex or base-64 encoded strings
  */
 
+/**
+ * @method hex_sha1
+ * Calculates the SHA-1 of a string and returns the value in hexadecimal.
+ * @param {String} s String to use.
+ * @return {String} SHA-1 value of the string in hexadecimal.
+ */
 function hex_sha1(s) {
     return binb2hex(core_sha1(str2binb(s), s.length * chrsz));
 }
 
+/**
+ * @method b64_sha1
+ * Calculates the SHA-1 of a string and returns the value in base-64.
+ * @param {String} s String to use.
+ * @return {String} SHA-1 value of the string in base-64.
+ */
 function b64_sha1(s) {
     return binb2b64(core_sha1(str2binb(s), s.length * chrsz));
 }
 
+/**
+ * @method str_sha1
+ * Calculates the SHA-1 of a string and returns the value as a string.
+ * @param {String} s String to use.
+ * @return {String} SHA-1 value of the string as a string.
+ */
 function str_sha1(s) {
     return binb2str(core_sha1(str2binb(s), s.length * chrsz));
 }
 
+/**
+ * @method hex_hmac_sha1
+ * Calculates the HMAC-SHA-1 of a key and some data, and returns the value in hexadecimal.
+ * @param {String} key Key to use.
+ * @param {String} data Data to use.
+ * @return {String} HMAC-SHA-1 value of the string in hexadecimal.
+ */
 function hex_hmac_sha1(key, data) {
     return binb2hex(core_hmac_sha1(key, data));
 }
 
+/**
+ * @method b64_hmac_sha1
+ * Calculates the HMAC-SHA-1 of a key and some data, and returns the value in base-64.
+ * @param {String} key Key to use.
+ * @param {String} data Data to use.
+ * @return {String} HMAC-SHA-1 value of the string in base-64.
+ */
 function b64_hmac_sha1(key, data) {
     return binb2b64(core_hmac_sha1(key, data));
 }
 
+/**
+ * @method str_hmac_sha1
+ * Calculates the HMAC-SHA-1 of a key and some data, and returns the value as a string.
+ * @param {String} key Key to use.
+ * @param {String} data Data to use.
+ * @return {String} HMAC-SHA-1 value of the string as a string.
+ */
 function str_hmac_sha1(key, data) {
     return binb2str(core_hmac_sha1(key, data));
 }
