@@ -31,13 +31,12 @@ function pullTabClick(e) {
     $.drawer.animate(animation);
 }
 
-
 /**
  * Request that the drawer run all the associated enabled callbacks for the buttons and set
  * their state.
  */
 exports.checkEnabled = function DrawerCheckEnabled() {
-    if (_params.overrideMenu) {
+    if (OS_IOS || OS_MOBILEWEB || _params.overrideMenu) {
         Object.keys(_buttons).forEach(
             function (key) {
                 var i = parseInt(key);

@@ -1,4 +1,4 @@
-![Alloy Icon](img/Alloy.png)
+![Alloy Icon](./img/Alloy.png)
 
 # Alloy Widget: Drawer
 
@@ -6,11 +6,11 @@
 
 The **Drawer** widget provides a sliding panel of buttons to pull up from the bottom of the screen. As an option, the drawer can automatically close after it has been used. On Android, the drawer manifests itself as the activity menu, unless the developer wants to specifically override that capability.
 
-![iOS Drawer Closed](img/ios_closed.png)
-![iOS Drawer Closed](img/ios_open.png)
+![iOS Drawer Closed](./img/ios_closed.png)
+![iOS Drawer Closed](./img/ios_open.png)
 
-![Android Activity Menu Version](img/android_overridemenu_false.png)
-![Android Drawer Version](img/android_overridemenu_true.png)
+![Android Activity Menu Version](./img/android_overridemenu_false.png)
+![Android Drawer Version](./img/android_overridemenu_true.png)
 
 ## Manifest
 * Version: 1.0 (stable)
@@ -96,7 +96,6 @@ function webviewLoad(e) {
     $.drawer.checkEnabled();
 }; 
 ```
-Note that calling `checkEnabled()` on Android will still call your `enable()` callbacks if they have been set.
 
 ## Binding
 Because you are passing in functions to be called when a button is clicked, be aware of your binding. The *this* object is not the same when the `click()` and `enable()` callbacks are called as when they are defined. There are many excellent articles that talk about this issue:
