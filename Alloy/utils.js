@@ -281,8 +281,7 @@ exports.copyFilesAndDirs = function(f,d)
 			}
 		}
 		catch (e) {
-			logger.info(e);
-			logger.warn('Could not copy ' + fpath + ': ');
+			logger.warn('Could not copy ' + fpath);
 		}
 	}
 }
