@@ -14,7 +14,8 @@ var Alloy = require('alloy'),
  *
  */
 var Controller = function() {
-	var roots = [];
+	var roots = [],
+		controllerEvents = {};
 
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
@@ -86,6 +87,45 @@ var Controller = function() {
 			} else {
 				return this.getView();
 			}
+		},
+		
+		/**
+		 * @method on
+		 * Add an event listener to the controller object, which can be fired manually later by the control
+		 *
+		 * @param {String} [evt] the name of the event you wish to listen for on this controller
+		 * @param {Function} [cb] the callback function to be fired when this event is triggered
+		 * @return callback added
+		 */
+		on: function(evt,cb) {
+			controllerEvents[evt] || (controllerEvents[evt] = []);
+			controllerEvents[evt].push(cb);
+		},
+		
+		/**
+		 * @method off
+		 * Remove an event listener to the controller object for the given event
+		 *
+		 * @param {String} [evt] the name of the event you wish to remove from this controller
+		 * @param {Function} [cb] the callback function to be fired when this event is 
+		 * @return callback added
+		 */
+		off: function (evt,cb) {
+			controllerEvents[evt] = _.without(controllerEvents[evt], cb);
+		},
+		
+		/**
+		 * @method fire
+		 * Fire an event on this controller, with the given data
+		 *
+		 * @param {String} [evt] the name of the event you wish to fire on this controller
+		 * @param {Object} [data] the callback function to be fired when this event is triggered
+		 * @return callback added
+		 */
+		fire: function(evt,data) {
+			_.each(controllerEvents[evt], function(cb) {
+				cb.call(this, data);
+			});
 		}
 	});
 }

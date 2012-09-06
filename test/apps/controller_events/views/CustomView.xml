@@ -1,0 +1,6 @@
+<Alloy>
+	<View layout="vertical" height="300" backgroundColor="blue">
+		<TextField id="text" top="10" height="44" width="250"/>
+		<Button id="btn" top="10" height="44" width="250">Fire Event</Button>
+	</View>
+</Alloy>
