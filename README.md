@@ -435,7 +435,7 @@ Now, if your widget reference was `foo` as in the example above, you would acces
 $.foo.calculatePie();
 ```
 
-See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/examples/widget) for an example of building and using a widget.
+See the [Widget Example](https://github.com/appcelerator/alloy/tree/master/test/apps/widget) for an example of building and using a widget.
 
 _NOTE: we have not finalized the distribution packaging for an Alloy widget but it will be similar to native modules. Currently we scan the project directory and the alloy/widgets directory to pull in the desired widgets._
 

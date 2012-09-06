@@ -12,7 +12,7 @@ body {
   position: relative;
 }
 section {
-  padding-top: 60px;
+  padding-top: 40px;
 }
 section > .row {
   margin-bottom: 10px;
@@ -27,7 +27,7 @@ section > .row {
 }
 .jumbotron .inner {
   background: transparent url(../img/grid-18px.png) top center;
-  padding: 0px 0;
+  padding: 15px 0;
   -webkit-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
      -moz-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
 /*          box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
