@@ -117,7 +117,8 @@ exports.A = function(t,type,parent) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.getWidget = function(id, name, args) {
-	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
+	Ti.API.warn('Alloy.getWidget() is deprecated, use Alloy.createWidget() instead.');
+	return exports.createWidget(id, name, args);
 }
 
 /**
@@ -143,7 +144,8 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.getController = function(name, args) {
-	return new (require('alloy/controllers/' + name))(args);
+	Ti.API.warn('Alloy.getController() is deprecated, use Alloy.createController() instead.');
+	return exports.createController(name, args);
 }
 
 /**
@@ -170,7 +172,8 @@ exports.createController = function(name, args) {
  * @return {Backbone.Model} Backbone model object.
  */
 exports.getModel = function(name, args) {
-	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
+	Ti.API.warn('Alloy.getModel() is deprecated, use Alloy.createModel() instead.');
+	return exports.createModel(name, args);
 }
 
 /**
@@ -202,7 +205,8 @@ exports.createModel = function(name, args) {
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.getCollection = function(name, args) {
-	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
+	Ti.API.warn('Alloy.getCollection() is deprecated, use Alloy.createCollection() instead.');
+	return exports.createCollection(name, args);
 }
 
 /**
