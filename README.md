@@ -313,13 +313,13 @@ For models, we specify the descriptor of our model using JSON as the name of the
 
 A model and collection class are automatically defined and available in your controller scope as the name of the model (name of descriptor JSON file).
 
-For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.getCollection('Book') or Alloy.getModel('Book'). 
+For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.createCollection('Book') or Alloy.createModel('Book'). 
 
 To create a new collection with a single model:
 
 ```javascript
-var books = Alloy.getCollection('Book');
-var book = Alloy.getModel('Book', {book:"Jungle Book", author:"Kipling"});
+var books = Alloy.createCollection('Book');
+var book = Alloy.createModel('Book', {book:"Jungle Book", author:"Kipling"});
 books.add(book);
 ```
 
@@ -355,7 +355,7 @@ $.b.addEventListener("click",function(){
 $.index.open();
 ```
 
-If you don't add an `id` attribute to an element, it will not be referencable directly in your controller.
+If you don't add an `id` attribute to an element, it will not be referenceable directly in your controller.
 
 The pattern for creating Alloy markup is to have the XML element name match the corresponding Titanium API name. Nested elements get added to parent element, for example the Button element below is added as a child to the Window element. Titanium styles are applied through the selectors of the style files described above.
 
@@ -379,10 +379,10 @@ exports.foo = function()
 }
 ```
 
-You would then use the  Alloy.getController method to get the controller instance and call the exported method:
+You would then use the  Alloy.createController method to get the controller instance and call the exported method:
 
 ```javascript
-var c = Alloy.getController("myControllerWithExports"); 
+var c = Alloy.createController("myControllerWithExports"); 
 c.foo(); // 'a' is returned
 ```
 
@@ -639,7 +639,8 @@ Feedback
 To our intrepid developers taking an early look at alloy, please consider the following when asking questions or citing concerns:
 
 * If you want to pose an Alloy question to the whole community on [Q&A](http://developer.appcelerator.com/questions/newest), make sure to use the **alloy** tag.
-* Using GitHub is a great way to get a hold of us. Log your issues in the [Issues section of the Github repository](https://github.com/appcelerator/alloy/issues?state=open).
+* Using the [Titanium Community Issue Tracker](https://jira.appcelerator.org/browse/TC). Make sure to select the Alloy project when creating an issue.
+* Using [Google Groups](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy). You'll need a gmail or Google Groups account 
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
 
@@ -649,10 +650,11 @@ TODO
 There's a lot of work to get Alloy to a production state.  The following are some of the major items:
 
 - integration into Titanium Studio wizards
-- support for ACS backed Model implementation
+- support for ACS backed model 
 - view template bindings support
 - widget packaging spec and tooling
 - better documentation (documentation team is working on this)
+- improved debugging
 	
 Credits
 -------

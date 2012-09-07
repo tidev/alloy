@@ -2,7 +2,7 @@ $.sfb.setHandlers({
 	success: function(books) {
 		var data = [];
 		_.each(books, function(book) {
-			var row = Alloy.getController('row', {
+			var row = Alloy.createController('row', {
 				title: book.title,
 				authors: book.authors,
 				image: book.image

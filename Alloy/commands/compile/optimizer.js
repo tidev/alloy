@@ -358,9 +358,6 @@ if (require.main === module)
 		["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", androidDefines],
 		["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", iosDefines],
 
-		// check Alloy namespace shorthand methods
-		//["Alloy.Models.ModelName","Alloy.getModel('ModelName')",defaultDefines],
-		//["Alloy['Models'].ModelName","Alloy.getModel('ModelName')",defaultDefines]
 	];
 	
 	var succeeded = 0;

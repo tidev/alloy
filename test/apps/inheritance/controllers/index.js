@@ -1,7 +1,7 @@
 $.index.open();
 
 function openDialog(e) {  
-    Alloy.getController(e.source.title, {
+    Alloy.createController(e.source.title, {
     	message: 'Opened ' + e.source.title
     }).openDialog($.index);
 }

@@ -1,4 +1,4 @@
-var controller = Alloy.getController('a');
+var controller = Alloy.createController('a');
 controller.setDelegate($);
 	
 exports.showAlert = function() {
