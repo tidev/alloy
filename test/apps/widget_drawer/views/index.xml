@@ -1,6 +1,8 @@
 <Alloy>
-	<Window class="container">
-		<Label id="label" onClick="doClick">Hello, World</Label>
-       <Require type="widget" src="com.appcelerator.drawer" id="drawer"/>
-	</Window>
+    <Window onOpen="IndexOpen">
+        <View id="fill">
+            <View id="logo" />
+            <Require type="widget" src="com.appcelerator.drawer" id="drawer"/>
+        </View>
+    </Window>
 </Alloy>

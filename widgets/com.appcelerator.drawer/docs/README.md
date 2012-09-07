@@ -1,6 +1,4 @@
-![Alloy Icon](./img/Alloy.png)
-
-# Alloy Widget: Drawer
+![Widget Header](./img/header.png)
 
 ## Overview
 

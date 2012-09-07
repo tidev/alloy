@@ -1,5 +1,12 @@
-function doClick(e) {  
-    alert($.label.text);
+function IndexOpen(e) {
+    // Bounce in the logo
+    setTimeout(function() {
+        $.logo.animate({ top:"33%", opacity: 1.0, duration: 500 }, 
+            function (e) { 
+                $.logo.animate({ top: "25%", duration: 250 }) ;
+            }
+        );
+    }, 1000);
 }
 
 // Initialize the drawer with our buttons

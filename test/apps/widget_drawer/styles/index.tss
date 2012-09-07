@@ -1,9 +1,19 @@
-".container": {
-	backgroundColor:"white",
-	fullscreen: false
+"#index": {
+    height: Ti.UI.FILL,
+    top: "0dp",
+    fullscreen: false
 },
-"Label": {
-	width: Ti.UI.SIZE,
-	height: Ti.UI.SIZE,
-	color: "#000"
-} 
+
+"#fill": {
+    backgroundImage: "/images/granite.png",
+    backgroundRepeat: true,
+    height: Ti.UI.FILL,
+    top: "0dp"
+},
+
+"#logo": {
+    bottom: "100%",
+    width: "216dp",
+    height: "200dp",
+    backgroundImage: "/images/alloy.png"
+}
