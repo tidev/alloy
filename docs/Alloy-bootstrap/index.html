@@ -328,7 +328,7 @@ $.sfb.setHandlers({
         authors: book.authors,
         image: book.image
       };
-      var row = Alloy.getController('row', args).getView();
+      var row = Alloy.createController('row', args).getView();
       data.push(row);
     });
     $.table.setData(data);
@@ -400,7 +400,7 @@ $.authors.text = args.authors || '';
             <p>Since we are still in the early days with Alloy your feedback as suggestions, criticisms, bugs or anything is most welcome. Below is where to find us.
             <ul>
               <li><a href="http://developer.appcelerator.com/questions/newest">Alloy Community Questions &amp; Answerers</a> - make sure to include the Alloy tag</li>
-              <li><a href="http://developer.appcelerator.com/questions/newest">GitHub Alloy Issues</a>  - create a new issue, expect a reply in one to two days</li>
+              <li><a href="https://jira.appcelerator.org/browse/TC">Titanium Community Issue Tracker</a>  - create a new issue and make sure to select the Alloy project</li>
               <li><a href="https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy">Google Groups</a>  - you'll need a gmail or Google Groups account</li>
             </ul>
           </div>

@@ -26,10 +26,10 @@ function parse(node, state, args) {
 	var extraArgs = '';
 	switch(type) {
 		case 'view':
-			method = 'getController';
+			method = 'createController';
 			break;
 		case 'widget':
-			method = 'getWidget';
+			method = 'createWidget';
 			extraArgs = "'widget',";
 			break;
 		default:

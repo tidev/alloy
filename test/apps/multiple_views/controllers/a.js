@@ -1,4 +1,4 @@
-var controller = Alloy.getController('b');
+var controller = Alloy.createController('b');
 
 exports.setDelegate = function(o) {
 	controller.setDelegate(o);

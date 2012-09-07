@@ -1,4 +1,4 @@
-var items = Alloy.getCollection('collectionTab'), 
+var items = Alloy.createCollection('collectionTab'), 
 	rowControllers = [];
 
 // update the row and save the model when the score changes
@@ -33,7 +33,7 @@ function resetTableData() {
 
 	// create row controllers based on all models in the collection
 	_.each(items.toJSON(), function(i) {
-		rowControllers.push(Alloy.getController('collection/row', {
+		rowControllers.push(Alloy.createController('collection/row', {
 			id: i.id,
 			name: i.name,
 			score: i.score

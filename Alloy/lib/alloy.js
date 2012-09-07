@@ -121,6 +121,20 @@ exports.getWidget = function(id, name, args) {
 }
 
 /**
+ * @method createWidget
+ * Factory method for instaniating a widget controller. Creates and returns an instance of the 
+ * named widget.
+ * @param {String} id Id of widget to instantiate.
+ * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
+ * @param {*...} [args] Arguments to pass to the widget.
+ * @return {Alloy.Controller} Alloy widget controller object.
+ */
+exports.createWidget = function(id, name, args) {
+	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
+}
+
+
+/**
  * @method getController
  * Factory method for instaniating a controller. Creates and returns an instance of the 
  * named controller.
@@ -129,6 +143,18 @@ exports.getWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.getController = function(name, args) {
+	return new (require('alloy/controllers/' + name))(args);
+}
+
+/**
+ * @method createController
+ * Factory method for instaniating a controller. Creates and returns an instance of the 
+ * named controller.
+ * @param {String} name Name of controller to instantiate.
+ * @param {*...} [args] Arguments to pass to the controller.
+ * @return {Alloy.Controller} Alloy controller object.
+ */
+exports.createController = function(name, args) {
 	return new (require('alloy/controllers/' + name))(args);
 }
 
@@ -147,6 +173,21 @@ exports.getModel = function(name, args) {
 	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
 }
 
+/**
+ * @method createModel
+ * Factory method for instaniating a Backbone Model object. Creates and returns an instance of the 
+ * named model.
+ *
+ * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
+ * information on the methods and properties provided by the Model object.
+ * @param {String} name Name of model to instantiate.
+ * @param {*...} [args] Arguments to pass to the model.
+ * @return {Backbone.Model} Backbone model object.
+ */
+exports.createModel = function(name, args) {
+	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
+}
+
 
 /**
  * @method getCollection
@@ -161,6 +202,22 @@ exports.getModel = function(name, args) {
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.getCollection = function(name, args) {
+	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
+}
+
+/**
+ * @method createCollection
+ * Factory method for instaniating a Backbone collection of model objects. Creates and returns a
+ * collection for holding the named type of model objects.
+ *
+ * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
+ * documentation for  information on the methods and  properties provided by the
+ * Collection object.
+ * @param {String} name Name of model to hold in this collection.
+ * @param {*...} [args] Arguments to pass to the collection.
+ * @return {Backbone.Collection} Backbone collection object.
+ */
+exports.createCollection = function(name, args) {
 	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
 }
 

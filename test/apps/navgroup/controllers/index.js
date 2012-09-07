@@ -8,7 +8,7 @@ if (OS_IOS || OS_MOBILEWEB) {
 	// TODO: find out why nav buttons and titles don't work for mobileweb
 	var button = Ti.UI.createButton({ title: 'next' });
 	button.addEventListener('click', function(e) {
-		$.navgroup.open(Alloy.getController('win2').getView());
+		$.navgroup.open(Alloy.createController('win2').getView());
 	});
 	$.win1.rightNavButton = button;
 }

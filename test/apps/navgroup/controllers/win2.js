@@ -3,6 +3,6 @@
 var button = Ti.UI.createButton({ title: 'next' });
 button.addEventListener('click', function(e) {
 	// Access navgroup from Alloy.CFG, set in index.js
-	Alloy.CFG.navgroup.open(Alloy.getController('win3').getView());
+	Alloy.CFG.navgroup.open(Alloy.createController('win3').getView());
 });
 $.win2.rightNavButton = button;

@@ -1,4 +1,4 @@
-var app = Alloy.getModel('modelTab'); 
+var app = Alloy.createModel('modelTab'); 
 
 // persist all changes
 app.on('change', function() { app.save(); });
