@@ -1,0 +1,3 @@
+TextField: {
+	borderStyle:Ti.UI.INPUT_BORDERSTYLE_ROUNDED
+}
