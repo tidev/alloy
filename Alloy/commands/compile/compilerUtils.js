@@ -98,6 +98,14 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 }
 
+exports.getNodeFullname = function(node) {
+	var name = node.nodeName,
+		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
+		fullname = ns + '.' + name;
+
+	return fullname;
+}
+
 exports.getParserArgs = function(node, state, opts) {
 	state || (state = {});
 	opts || (opts = {});
@@ -228,17 +236,16 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 }
 
 exports.expandRequireNode = function(requireNode, doRecursive) {
-	var cloneNode = requireNode.cloneNode(true),
-		requires;
+	var cloneNode = requireNode.cloneNode(true);
 
-	function processRequire(node, isFirst) {
+	function getViewRequirePath(node) {
 		var src = node.getAttribute('src'),
-			type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT;
+			type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
+			fullname = exports.getNodeFullname(node);
 
-		// if no "src", just skip it, it'll get validated later
-		if (!src) { 
-			console.warn('Skipping element ' + node.nodeName + ' in "' + filename + '", no "src" attribute...');
-			return; 
+		// Must be a view, with a valid src, in a <Require> element
+		if (fullname !== 'Alloy.Require' || !src || type !== 'view') {
+			return null;
 		}
 
 		// Create view path and see if its already got the proper extension
@@ -250,7 +257,17 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 
 		// Make sure fullpath exists, skip if it doesn't
 		if (!path.existsSync(fullpath)) {
-			console.warn('Skipping element ' + node.nodeName + ' in "' + filename + '", no "src" path does not exist...');
+			console.warn('Skipping element ' + node.nodeName + ', no "src" path "' + src + '" does not exist...');
+			return null;
+		}
+
+		return fullpath;
+	}
+
+	function processRequire(node, isFirst) {
+		// make sure we have a valid required view and get its path
+		var fullpath = getViewRequirePath(node);
+		if (fullpath === null) {
 			return;
 		}
 
@@ -261,15 +278,25 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			var newDocRoot = U.XML.getDocRootFromFile(fullpath);
 			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function(n) {
 				node.parentNode.appendChild(n);
+
 			});
 			node.parentNode.removeChild(node);
 		}
 	}
 
-	processRequire(cloneNode, true);
-	if (doRecursive) {
-		while ((requires = cloneNode.getElementsByTagName('Require')).length > 0) {
-			_.each(requires, processRequire);
+	// Expand the <Require>, recursively if specified
+	if (getViewRequirePath(cloneNode) !== null) {
+		processRequire(cloneNode, true);
+		while (doRecursive) {
+			var requires = cloneNode.getElementsByTagName('Require');
+			var viewRequires = _.filter(requires, function(req) {
+				return getViewRequirePath(req) !== null;
+			});
+
+			if (viewRequires.length === 0) {
+				break;
+			}
+			_.each(viewRequires, processRequire);
 		}
 	}
 
