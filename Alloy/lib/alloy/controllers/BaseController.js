@@ -14,7 +14,8 @@ var Alloy = require('alloy'),
  *
  */
 var Controller = function() {
-	var roots = [];
+	var roots = [],
+		controllerEvents = {};
 
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
