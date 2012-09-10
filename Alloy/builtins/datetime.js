@@ -1,6 +1,13 @@
 /** 
  * @class Alloy.builtins.datetime
- * Collection of Date and Time utilities
+ * A collection of utilities for manipulating Date objects.
+ * To use the datetime builtin library, 
+ * require it with the `alloy` root directory in your `require` call. For example:
+ *
+ *		var datetime = require('alloy/datetime');
+ *		var date = new Date('2012/08/31 13:44:45');
+ *		Ti.API.info(datetime.formatAsDOWMonthDayYear(date)); // --> 'Friday August 31st, 2012'
+ *		Ti.API.info(datetime.formatAsTime(date)); // --> '1:30 PM' 	
  */
 
 exports.stringToDate = function (str) {
@@ -16,6 +23,13 @@ exports.stringToDate = function (str) {
     return str;
 };
 
+/**
+ * @method formatAsTime
+ * Converts a JavaScript Date object to a 12-hour time string in the format 'hh:mm' followed by 
+ * 'AM' or 'PM'.
+ * @param {Date} time Date object to convert.
+ * @return {String} Formatted time string.
+ */
 exports.formatAsTime = function (time) {
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
@@ -40,6 +54,12 @@ exports.formatAsTime = function (time) {
     return hours + ':' + minutes + ' ' + aa;
 };
 
+/**
+ * @method formatDayMonth
+ * Converts a JavaScript Date object to a date string in the format 'MM/DD'.
+ * @param {Date} time Date object to convert.
+ * @return {String} Formatted date string.
+ */
 exports.formatAsDayMonth = function (time) {
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
@@ -54,6 +74,12 @@ exports.formatAsDayMonth = function (time) {
     return month + '/' + day;
 };
 
+/**
+ * @method formatAsDOWMonthDayYear
+ * Converts a JavaScript Date object to a date string in the format 'Day_of_Week Month Ordinal_Day, Year'.
+ * @param {Date} time Date object to convert.
+ * @return {String} Formatted date string.
+ */
 exports.formatAsDOWMonthDayYear = function (time) {
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
@@ -83,6 +109,14 @@ exports.formatAsDOWMonthDayYear = function (time) {
     return dow + ' ' + month + ' ' + day + ', ' + year;
 };
 
+/**
+ * @method formatAsShort
+ * Converts a JavaScript Date object to a string describing the date. Values can be 'Today', 
+ * 'Tomorrow', 'Yesterday', day of the week if it is within seven days of the current day
+ * or the format 'MM/DD/YYYY' for all other cases.
+ * @param {Date} time Date object to convert.
+ * @return {String} Short string describing the date or in the format 'MM/DD/YYYY'.
+ */
 exports.formatAsShort = function (time) {
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
@@ -119,6 +153,12 @@ exports.formatAsShort = function (time) {
     return day; // + ' @' + exports.getTime(date);
 };
 
+/**
+ * @method getMonth
+ * Retrieves the name of the month from the JavaScript Data object.
+ * @param {Date} date Date object to use.
+ * @return {String} Name of the month.
+ */
 exports.getMonth = function(date) {
     switch (date.getMonth()) {
         case 0:
@@ -148,6 +188,12 @@ exports.getMonth = function(date) {
     }
 }
 
+/**
+ * @method getDayOfWeek
+ * Retrieves the day of the week from the JavaScript Data object.
+ * @param {Date} date Date object to use.
+ * @return {String} Day of the week.
+ */
 exports.getDayOfWeek = function(date) {
     switch (date.getDay()) {
         case 0:
@@ -167,6 +213,12 @@ exports.getDayOfWeek = function(date) {
     }
 }
 
+/**
+ * @method getTime
+ * Retrieves the 12-hour time from the JavaScript Data object.
+ * @param {Date} date Date object to use.
+ * @return {String} Time in the format 'hh:mm' followed by 'am' or 'pm'.
+ */
 exports.getTime = function(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -177,6 +229,13 @@ exports.getTime = function(date) {
     return hours + ':' + minutes + period;
 }
 
+/**
+ * @method areDatesEqual
+ * Compares two Javascript Date objects.
+ * @param {Date} date1 First date object to compare.
+ * @param {Date} date2 Second date object to compare.
+ * @return {Boolean} Returns 'true' if the two Date objects are the same else 'false'.
+ */
 exports.areDatesEqual = function(date1, date2) {
     return (date1.getMonth() + '/' + date1.getDate() + '/' + date1.getFullYear()) ===
         (date2.getMonth() + '/' + date2.getDate() + '/' + date2.getFullYear());
