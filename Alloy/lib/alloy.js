@@ -38,7 +38,7 @@ exports.M = function(name,config,modelFn,migrations) {
 
 	var extendClass = {};
 
-	// cosntruct the model based on the current adapter type
+	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
     if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
 	var Model = Backbone.Model.extend(extendObj, extendClass); 
@@ -139,7 +139,7 @@ exports.createWidget = function(id, name, args) {
 
 /**
  * @method getController
- * Factory method for instaniating a controller. Creates and returns an instance of the 
+ * Factory method for instantiating a controller. Creates and returns an instance of the 
  * named controller.
  * @param {String} name Name of controller to instantiate.
  * @param {*...} [args] Arguments to pass to the controller.
@@ -154,7 +154,7 @@ exports.getController = function(name, args) {
 
 /**
  * @method createController
- * Factory method for instaniating a controller. Creates and returns an instance of the 
+ * Factory method for instantiating a controller. Creates and returns an instance of the 
  * named controller.
  * @param {String} name Name of controller to instantiate.
  * @param {*...} [args] Arguments to pass to the controller.
@@ -166,7 +166,7 @@ exports.createController = function(name, args) {
 
 /**
  * @method getModel
- * Factory method for instaniating a Backbone Model object. Creates and returns an instance of the 
+ * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the 
  * named model.
  *
  * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
@@ -184,7 +184,7 @@ exports.getModel = function(name, args) {
 
 /**
  * @method createModel
- * Factory method for instaniating a Backbone Model object. Creates and returns an instance of the 
+ * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the 
  * named model.
  *
  * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
@@ -200,7 +200,7 @@ exports.createModel = function(name, args) {
 
 /**
  * @method getCollection
- * Factory method for instaniating a Backbone collection of model objects. Creates and returns a
+ * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
  * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
@@ -219,7 +219,7 @@ exports.getCollection = function(name, args) {
 
 /**
  * @method createCollection
- * Factory method for instaniating a Backbone collection of model objects. Creates and returns a
+ * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
  * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js

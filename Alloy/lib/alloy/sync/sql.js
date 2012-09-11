@@ -142,6 +142,7 @@ function Sync(model, method, opts) {
 			}
 			
 			var rs = db.execute(sql);
+			var len = 0;
 			while(rs.isValidRow())
 			{
 				var o = {};
@@ -151,9 +152,11 @@ function Sync(model, method, opts) {
 				});
 				var m = new model.config.Model(o);
 				model.models.push(m);
+				len++;
 				rs.next();
 			}
 			rs.close();
+			model.length = len;
 			model.trigger('fetch');
 			break;
 	
