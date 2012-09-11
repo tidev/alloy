@@ -37,10 +37,14 @@ function Sync(model, method, opts) {
 			var store = localStorage.getItem(name);
 			var store_data = (store && JSON.parse(store)) || {};
             
+            var len = 0;
             for (var key in store_data) {
             	var m = new model.config.Model(store_data[key]);
             	model.models.push(m);
+            	len++;
             }
+
+            model.length = len;
             model.trigger('fetch');
 			break;
 
