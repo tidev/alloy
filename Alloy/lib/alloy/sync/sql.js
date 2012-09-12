@@ -2,8 +2,7 @@
  * Local SQLite sync adapter which will store all models in
  * an on device database
  */
-var Alloy = require('alloy'),
-	_ = require('alloy/underscore')._, 
+var _ = require('alloy/underscore')._, 
 	db;
 
 function S4() {
