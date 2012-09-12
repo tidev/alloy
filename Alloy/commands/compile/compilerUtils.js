@@ -264,6 +264,21 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		return fullpath;
 	}
 
+	//create function, it expects 2 values.
+	function insertAfter(newElement,targetElement) {
+		//target is what you want it to go after. Look for this elements parent.
+		var parent = targetElement.parentNode;
+	 
+		//if the parents lastchild is the targetElement...
+		if(parent.lastchild == targetElement) {
+			//add the newElement after the target element.
+			parent.appendChild(newElement);
+			} else {
+			// else the target has siblings, insert the new element between the target and it's next sibling.
+			parent.insertBefore(newElement, targetElement.nextSibling);
+			}
+	}
+
 	function processRequire(node, isFirst) {
 		// make sure we have a valid required view and get its path
 		var fullpath = getViewRequirePath(node);
@@ -277,9 +292,9 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		} else {
 			var newDocRoot = U.XML.getDocRootFromFile(fullpath);
 			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function(n) {
-				node.parentNode.appendChild(n);
-
+				insertAfter(n, node);
 			});
+
 			node.parentNode.removeChild(node);
 		}
 	}
@@ -296,7 +311,10 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			if (viewRequires.length === 0) {
 				break;
 			}
-			_.each(viewRequires, processRequire);
+
+			// TODO: https://jira.appcelerator.org/browse/ALOY-256
+			//_.each(viewRequires, processRequire);
+			processRequire(viewRequires[0]);
 		}
 	}
 
