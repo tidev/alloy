@@ -1,0 +1,13 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Label": {
+	color: '#000',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+},
+"TableViewRow": {
+	height: '50dp'
+}
