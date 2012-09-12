@@ -98,7 +98,7 @@ module.exports = function(args, program) {
 		compileConfig.globalStyle = CU.loadStyle(path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
 	} catch(e) {
 		logger.error(e.stack);
-		U.die('Error processing global style at "' + globalStylePath + '"');
+		U.die('Error processing global style at "' + path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE) + '"');
 	}
 
 	// Process all models
