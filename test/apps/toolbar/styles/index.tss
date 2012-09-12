@@ -1,0 +1,18 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Toolbar": {
+	bottom: 0,
+    borderTop: true,
+    borderBottom: false
+},
+"Button": {
+	width: Ti.UI.SIZE
+},
+"Label": {
+	color: '#000',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	}
+}

@@ -1,0 +1,19 @@
+<Alloy>
+	<Window>
+		<Toolbar platform="ios">
+			<!-- These get added to the Toolbar "items" array -->
+			<Items>
+				<Button>button 1</Button>
+				<FlexSpace/>
+				<Button>button 2</Button>
+			</Items>
+
+			<!-- 
+				additional views get added as normal, over the items, as
+			    per the documentation of the add() function.
+			 -->
+			<!-- <View opacity="0.25" backgroundColor="#a00" width="50%"/> -->
+		</Toolbar>
+		<Label platform="android,mobileweb">Ti.UI.iOS.Toolbar only supported on iOS</Label>
+	</Window>
+</Alloy>
