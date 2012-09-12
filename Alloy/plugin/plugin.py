@@ -1,6 +1,28 @@
 
 import os, sys, subprocess, hashlib
 
+import subprocess
+
+def check_output(*popenargs, **kwargs):
+    r"""Run command with arguments and return its output as a byte string.
+
+    Backported from Python 2.7 as it's implemented as pure python on stdlib.
+
+    >>> check_output(['/usr/bin/python', '--version'])
+    Python 2.6.2
+    """
+    process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
+    output, unused_err = process.communicate()
+    retcode = process.poll()
+    if retcode:
+        cmd = kwargs.get("args")
+        if cmd is None:
+            cmd = popenargs[0]
+        error = subprocess.CalledProcessError(retcode, cmd)
+        error.output = output
+        raise error
+    return output
+
 def compile(config):
     f = os.path.abspath(os.path.join(config['project_dir'], 'app'))
     if os.path.exists(f):
@@ -28,12 +50,8 @@ def compile(config):
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = ["/usr/local/bin/node","/usr/local/bin/alloy", "compile", f, "--no-colors", "--config", cfg]
         
-        # TODO: need 2.6+ compliant error output - https://jira.appcelerator.org/browse/ALOY-221
         try:
-            try: 
-                subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-            except AttributeError:
-                subprocess.check_call(cmd)
+            print check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
             if hasattr(ex, 'output'):
                 print ex.output
@@ -42,3 +60,7 @@ def compile(config):
             if hasattr(ex, 'returncode'):
                 retcode = ex.returncode
             sys.exit(retcode)
+        except:
+            print "Unexpected error with Alloy compiler plugin:", sys.exc_info()[0]
+            sys.exit(2)
+
