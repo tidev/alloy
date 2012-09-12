@@ -155,7 +155,7 @@ exports.formatAsShort = function (time) {
 
 /**
  * @method getMonth
- * Retrieves the name of the month from the JavaScript Data object.
+ * Retrieves the name of the month from the JavaScript Date object.
  * @param {Date} date Date object to use.
  * @return {String} Name of the month.
  */
@@ -190,7 +190,7 @@ exports.getMonth = function(date) {
 
 /**
  * @method getDayOfWeek
- * Retrieves the day of the week from the JavaScript Data object.
+ * Retrieves the day of the week from the JavaScript Date object.
  * @param {Date} date Date object to use.
  * @return {String} Day of the week.
  */
@@ -215,7 +215,7 @@ exports.getDayOfWeek = function(date) {
 
 /**
  * @method getTime
- * Retrieves the 12-hour time from the JavaScript Data object.
+ * Retrieves the 12-hour time from the JavaScript Date object.
  * @param {Date} date Date object to use.
  * @return {String} Time in the format 'hh:mm' followed by 'am' or 'pm'.
  */
