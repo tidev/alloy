@@ -37,8 +37,6 @@ function parse(node, state, args) {
 		} 
 	});
 
-	console.log(code);
-
 	// Create the initial Toolbar code and let it process its remaing children, if any
 	state.extraStyle = CU.createVariableStyle('items', arrayName);
 	var toolbarState = require('./default').parse(node, state);
