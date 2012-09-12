@@ -596,7 +596,7 @@ exports.create = function(settings) {
         /**
          * @method isAuthorized
          * Returns 'true' if the client is authorized by the service provider.
-         * @return {Boolean} Returns 'true' is authorized else 'false'.
+         * @return {Boolean} Returns 'true' if authorized else 'false'.
          */
         isAuthorized: function() {
             return adapter.isAuthorized();
