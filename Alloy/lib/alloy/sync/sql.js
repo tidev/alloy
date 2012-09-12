@@ -132,21 +132,19 @@ function Sync(model, method, opts) {
 
 		case 'read':
 			var sql = 'SELECT * FROM '+table;
-			
-
-			if(opts.byId) {
-				sql = sql+" WHERE id = '"+opts.byId.id+"'";
-			} else if(opts.filter) {
-				var filter = model.filterquery(opts, '');
-				sql = sql+" WHERE " + filter;
-			}
-			
 			var rs = db.execute(sql);
 			var len = 0;
 			while(rs.isValidRow())
 			{
 				var o = {};
-				_.times(rs.fieldCount(),function(c){
+                var fc = 0;
+                if (Ti.Platform.osname === 'android') {
+                    fc = rs.fieldCount;
+                }
+                else {
+                	 fc = rs.fieldCount();
+                }
+				_.times(fc,function(c){
 					var fn = rs.fieldName(c);
 					o[fn] = rs.fieldByName(fn);
 				});
@@ -251,39 +249,6 @@ module.exports.afterModelCreate = function(Model) {
 
 	
 	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
-	
-	//inspired by postegresql adapter backbonejs
-	Model.prototype.filterquery = function(options, prefix, cb){
-	    var self = this;
-	    var conds = [];
-	    if (!prefix) prefix = '';
-	    // Process the filter parameter to further filter the select
-	    if('filter' in options){
-	      if(options.filter.conditions instanceof Array){
-	        conds = options.filter.conditions;
-	      }else if(options.filter.conditions instanceof Object){
-	        conds = _.keys(options.filter.conditions).map(function(i){ return i + ' = ' + self.quote(i, options.filter.conditions[i]) });
-	      }
-	    }
-		if(conds.length == 0) return '';
-		return prefix + conds.join(' '+options.filter.operator+' ');
-	  };
-	Model.prototype.quote = function(column_name, value){
-		var self = this;    
-		var col_type = null;
-		
-		_.map(self.config.columns, function(type,col){ 
-			if(col === column_name) { col_type = type; }
-		});	
-		
-		if(col_type === 'text' || col_type === 'string') return "'" + value + "'";
-		return value;
-	  };
-	
-	Alloy.Backbone.Collection.prototype.config = Model.prototype.config;
-	Alloy.Backbone.Collection.prototype.quote = Model.prototype.quote;
-	Alloy.Backbone.Collection.prototype.filterquery = Model.prototype.filterquery;	
-	
 
 	Migrate(Model.migrations);
 
