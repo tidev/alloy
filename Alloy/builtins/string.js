@@ -46,7 +46,7 @@ exports.ucfirst = function (text) {
 
 /**
  * @method lcfirst
- * Lowercaes the first character in the string.
+ * Lowercases the first character in the string.
  * @param {String} text String to lowercase.
  * @return {String} String with first character lowercased.
  */
@@ -88,7 +88,7 @@ exports.urlDecode = function (string){
 
 /**
  * @method urlToJson
- * Parses an URL and converts it to JSON-formattted data.
+ * Parses an URL and converts it to JSON-formatted data.
  * For example, an URL with a query string will produce a JSON object with each query field paired
  * with its value as well as the base URL.
  * @param {String} url URL to process.
