@@ -53,6 +53,10 @@ module.exports = function(args, program) {
 	installPlugin(paths);
 
 	// copy Resources android, iphone, and mobileweb directories to assets
+	U.copyFileSync(
+		path.join(paths.template,'gitignore.txt'), 
+		path.join(paths.project,'.gitignore')
+	);
 	_.each(['android','iphone','mobileweb'], function(dir) {
 		var rDir = path.join(paths.Resources,dir);
 		if (!path.existsSync(rDir)) {
