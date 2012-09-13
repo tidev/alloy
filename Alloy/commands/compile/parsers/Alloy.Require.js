@@ -24,19 +24,30 @@ function parse(node, state, args) {
 
 	// determine which Alloy method to use
 	var extraArgs = '';
+	var appPath = CU.getCompilerConfig().dir.home;
+	var requirePath;
 	switch(type) {
 		case 'view':
 			method = 'createController';
+			requirePath = path.join(appPath,CONST.DIR.VIEW,src);
 			break;
 		case 'widget':
 			method = 'createWidget';
 			extraArgs = "'widget',";
+			requirePath = path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
 	}
 
-	// TODO: compile time confirm src exists - https://jira.appcelerator.org/browse/ALOY-212
+	// make sure the required file exists at compile time, rather than
+	// waiting til runtime. 
+	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(requirePath)) {
+		requirePath += '.' + CONST.FILE_EXT.VIEW;
+	}
+	if (!path.existsSync(requirePath)) {
+		U.die(type + ' "' + src + '" at path "' + requirePath + '" does not exist.');
+	}
 
 	// Remove <Require>-specific attributes from createArgs
 	delete args.createArgs.type;
