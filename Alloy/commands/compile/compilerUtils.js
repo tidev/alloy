@@ -257,8 +257,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 
 		// Make sure fullpath exists, skip if it doesn't
 		if (!path.existsSync(fullpath)) {
-			console.warn('Skipping element ' + node.nodeName + ', no "src" path "' + src + '" does not exist...');
-			return null;
+			U.die('view "' + src + '" at path "' + fullpath + '" does not exist.');
 		}
 
 		return fullpath;
