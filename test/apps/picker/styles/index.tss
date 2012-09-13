@@ -1,0 +1,17 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Label": {
+	color: '#000',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+},
+"Picker": {
+	top: 0,
+	selectionIndicator: true
+},
+"Picker[platform=android]": {
+	useSpinner: true
+}

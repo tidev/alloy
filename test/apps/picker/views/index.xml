@@ -1,0 +1,50 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="Single Column">
+			<Window title="Single Column">
+				<Picker>
+					<PickerRow title="row 1"/>
+					<PickerRow title="row 2"/>
+					<PickerRow title="row 3"/>
+					<PickerRow title="row 4"/>
+				</Picker>
+			</Window>
+		</Tab>
+		<Tab title="Multi-Column">
+			<Window title="Multi-Column">
+				<Picker>
+					<PickerColumn>
+						<PickerRow title="row 1"/>
+						<PickerRow title="row 2"/>
+						<PickerRow title="row 3"/>
+						<PickerRow title="row 4"/>
+					</PickerColumn>
+					<PickerColumn>
+						<PickerRow title="row 5"/>
+						<PickerRow title="row 6"/>
+						<PickerRow title="row 7"/>
+						<PickerRow title="row 8"/>
+					</PickerColumn>
+				</Picker>
+			</Window>
+		</Tab>
+		<Tab title="Shorthand">
+			<Window title="Shorthand">
+				<Picker>
+					<Column>
+						<Row title="row 1"/>
+						<Row title="row 2"/>
+						<Row title="row 3"/>
+						<Row title="row 4"/>
+					</Column>
+					<Column>
+						<Row title="row 5"/>
+						<Row title="row 6"/>
+						<Row title="row 7"/>
+						<Row title="row 8"/>
+					</Column>
+				</Picker>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
