@@ -17,9 +17,9 @@ var books = Alloy.createCollection('Book');
 
 // You can bind any Backbone event to models or collections but fetch is convenient because
 // fetch occurs when the persistent store is sync'd to the local Backbone server.
-books.bind("fetch", function() { $.table.updateContent(books); });
+books.on("fetch", function() { $.table.updateContent(books); });
 
-// Fetch will load models from persistent starage, sync'ing Backbone and persistent store.
+// Fetch will load models from persistent storage, sync'ing Backbone and persistent store.
 books.fetch();
 
 // Now we can add items to the model.
@@ -30,18 +30,18 @@ books.add(book);
 // thing as the creating a new model and then adding it to the collection.
 books.add({book:"War and Peace", author:"Tolstoy"});
 
-// Add will add models to local Backbone server but save triggers the CRUD create opperation
+// Add will add models to local Backbone server but save triggers the CRUD create operation
 // causing the model to get added to the persistent store. During create an id is added to the 
 // model signaling that the model has been persisted and no longer in the new state.
 books.forEach(function(model){ model.save();});
 
-// UPDATE - update the model save here triggers the CRUD update opperation
+// UPDATE - update the model save here triggers the CRUD update operation
 book.save({author:"R Kipling"});
 
-// Okay time to show the results. Remember this sync's local Backbone server with persitent store.
+// Okay time to show the results. Remember this sync's local Backbone server with persistent store.
 books.fetch();
 
-// DELETE - destroy triggers the CRUD delete opperation
+// DELETE - destroy triggers the CRUD delete operation
 for(i=books.length-1; i>=0; i--) {
     var model = books.at(i);
     model.destroy();

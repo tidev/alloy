@@ -23,10 +23,10 @@ exports.M = function(name,config,modelFn,migrations) {
     var extendObj = {
 		defaults: config.defaults,
 		validate: function(attrs) {
-			if (typeof __validate !== 'undefined') {
-				if (_.isFunction(__validate)) {
+			if (typeof Model.__validate !== 'undefined') {
+				if (_.isFunction(Model.__validate)) {
 					for (var k in attrs) {
-						var t = __validate(k, attrs[k]);
+						var t = Model.__validate(k, attrs[k]);
 						if (!t) {
 							return "validation failed for: "+k;
 						}
@@ -109,7 +109,7 @@ exports.A = function(t,type,parent) {
 
 /**
  * @method getWidget
- * Factory method for instaniating a widget controller. Creates and returns an instance of the 
+ * Factory method for instantiating a widget controller. Creates and returns an instance of the 
  * named widget.
  * @param {String} id Id of widget to instantiate.
  * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
@@ -125,7 +125,7 @@ exports.getWidget = function(id, name, args) {
 
 /**
  * @method createWidget
- * Factory method for instaniating a widget controller. Creates and returns an instance of the 
+ * Factory method for instantiating a widget controller. Creates and returns an instance of the 
  * named widget.
  * @param {String} id Id of widget to instantiate.
  * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
