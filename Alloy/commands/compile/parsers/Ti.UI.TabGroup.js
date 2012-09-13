@@ -14,11 +14,6 @@ function parse(node, state, args) {
 	// Create the initial TabGroup code
 	code += require('./default').parse(node, state).code;
 
-	// Gotta have at least one Tab
-	if (children.length === 0) {
-		U.die('TabGroup must have at least one Tab as a child');
-	}
-
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
 		var child = children[i],
