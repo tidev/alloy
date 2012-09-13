@@ -21,7 +21,6 @@ function parse(node, state, args) {
 	}
 
 	// Generate code for Tab's Window
-	// TODO: assert children[0] is actually a Window - https://jira.appcelerator.org/browse/ALOY-217
 	var child = children[0],
 		childArgs = CU.getParserArgs(child),
 		winSymbol;
