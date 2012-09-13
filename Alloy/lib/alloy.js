@@ -259,13 +259,12 @@ exports.isTablet = (function() {
 			Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
 			return isTabletFallback();
 		}
-	}
-	// TODO: mobileweb needs form factor check - https://jira.appcelerator.org/browse/ALOY-117 
+	} 
 	if (OS_MOBILEWEB) {
 		return !(Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
-		) < 700);
+		) < 400);
 	} 
 
 	// Last resort. Don't worry, uglifyjs cleans up this dead code if necessary.
