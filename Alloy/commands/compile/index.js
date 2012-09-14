@@ -43,6 +43,11 @@ module.exports = function(args, program) {
 	outputPath = outputPath ? outputPath : (program.outputPath || path.join(U.resolveAppHome(),".."));
 	U.ensureDir(outputPath);
 
+	// make sure the output path is actually a ti project
+	if (!path.existsSync(path.join(outputPath,'tiapp.xml'))) {
+		U.die('Project path "' + outputPath + '" has no tiapp.xml file.');
+	}
+
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
