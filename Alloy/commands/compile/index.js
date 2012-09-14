@@ -218,10 +218,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		try {
 			state.styles = CU.loadAndSortStyle(files.STYLE);
 		} catch (e) {
-			U.die([
-				e.stack,
-				'Error processing style for view "' + view + '" in "' + view + '.' + CONST.FILE_EXT.STYLE + '"'
-			]);
+			var errs = ['Error processing style for view "' + view + '" in "' + view + '.' + CONST.FILE_EXT.STYLE + '"'];
+			if (e.message && typeof e.line !== 'undefined') {
+				errs.push(e.message);
+				errs.push('line ' + e.line + ', column ' + e.col + ', position ' + e.pos);
+			} else {
+				errs.unshift(e.stack);
+			}
+			U.die(errs);
 		}
 
 		// Load view from file into an XML document root node
