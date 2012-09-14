@@ -48,6 +48,11 @@ module.exports = function(args, program) {
 		U.die('Project path "' + outputPath + '" has no tiapp.xml file.');
 	}
 
+	// remove the project's Resources directory, as it will all 
+	// be replaced by Alloy.
+	wrench.rmdirSyncRecursive(path.join(outputPath,'Resources'), true);
+	wrench.mkdirSyncRecursive(path.join(outputPath,'Resources'), 0777);
+
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
