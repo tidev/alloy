@@ -216,7 +216,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// Load view from file into an XML document root node
 		try {
-			var docRoot = U.XML.getDocRootFromFile(files.VIEW);
+			var docRoot = U.XML.getAlloyFromFile(files.VIEW);
 		} catch (e) {
 			U.die([
 				e.stack,

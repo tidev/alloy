@@ -287,9 +287,9 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 
 		// re-assemble XML with required elements
 		if (isFirst) {
-			cloneNode = U.XML.getDocRootFromFile(fullpath);
+			cloneNode = U.XML.getAlloyFromFile(fullpath);
 		} else {
-			var newDocRoot = U.XML.getDocRootFromFile(fullpath);
+			var newDocRoot = U.XML.getAlloyFromFile(fullpath);
 			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function(n) {
 				insertAfter(n, node);
 			});

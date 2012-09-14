@@ -36,14 +36,27 @@ exports.XML = {
 		}
 		return elems;
 	},
+	parseFromString: function(string) {
+		// TODO: https://jira.appcelerator.org/browse/ALOY-267
+		var warn = console.warn;
+		console.warn = function(msg) {
+			exports.die(['Error parsing XML document', msg]);
+		};
+		var doc = new DOMParser().parseFromString(string);
+		console.warn = warn;
+
+		return doc;
+	},
+	parseFromFile: function(filename) {
+		var xml = fs.readFileSync(filename,'utf8');
+		return exports.XML.parseFromString(xml);
+	},
 	createEmptyNode: function(name, ns) {
 		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';
-		return new DOMParser().parseFromString(str).documentElement;
+		return exports.XML.parseFromString(str).documentElement;
 	},
-	getDocRootFromFile: function(filename) {
-		// read and parse the view file
-		var xml = fs.readFileSync(filename,'utf8');
-		var doc = new DOMParser().parseFromString(xml);
+	getAlloyFromFile: function(filename) {
+		var doc = exports.XML.parseFromFile(filename);
 		var docRoot = doc.documentElement;
 
 		// Make sure the markup has a top-level <Alloy> tag
@@ -74,8 +87,7 @@ exports.tiapp = {
 		}
 
 		// read the tiapp.xml file
-		var xml = fs.readFileSync(tiappPath, 'utf8');
-		var doc = new DOMParser().parseFromString(xml);
+		var doc = exports.XML.parseFromFile(tiappPath);
 		var collection = doc.documentElement.getElementsByTagName(type + 's');
 		var found = false;
 
