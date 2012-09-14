@@ -23,6 +23,16 @@ module.exports = function(args, program) {
 	}
 	wrench.mkdirSyncRecursive(paths.app, 0777);
 
+	// copy platform-specific folders from Resources to app/assets
+	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
+		var rPath = path.join(paths.resources,platform);
+		if (path.existsSync(rPath)) {
+			var aPath = path.join(paths.app,CONST.DIR.ASSETS,platform);
+			wrench.mkdirSyncRecursive(aPath, 0777);
+			wrench.copyDirSyncRecursive(rPath,aPath,{preserve:true});
+		}
+	});
+
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
 		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0777);
