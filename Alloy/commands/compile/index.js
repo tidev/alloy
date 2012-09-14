@@ -162,7 +162,7 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 function parseAlloyComponent(view,dir,manifest,noView) {
 	var parseType = noView ? 'controller' : 'view';
-	logger.debug('Now parsing ' + parseType + ' ' + view + '...');
+	logger.debug('Now parsing ' + (manifest ? manifest.id + ' ' : '') + parseType + ' ' + view + '...');
 
 	// validate parameters
 	if (!view) { U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()'); }
