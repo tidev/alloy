@@ -7,7 +7,7 @@ var path = require('path'),
 	logger = require('../../../common/logger');
 
 module.exports = function(name, args, program) {
-	var widgetId = args[0] || (name.match("^com\.") ? name : 'com.default.' + name);
+	var widgetId = args[0] || name;
 	var types = ['VIEW','CONTROLLER','STYLE'];
 	var paths = getPaths(program.outputPath, widgetId);
 
