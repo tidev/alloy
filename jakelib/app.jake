@@ -6,7 +6,8 @@ var fs = require('fs'),
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
-	resourcesPath = path.join(harnessAppPath,'Resources');
+	resourcesPath = path.join(harnessAppPath,'Resources'),
+	appsTemplatePath = path.join(process.cwd(),'test','apps','_template');
 
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
@@ -31,7 +32,8 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				console.log('Staging sample app "'+process.env.dir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath);
+				wrench.copyDirSyncRecursive(appsTemplatePath, targetAppPath, {preserve:true});
+				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
 			}
 		});
 	});
