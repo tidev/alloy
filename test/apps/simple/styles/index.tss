@@ -1,11 +1,16 @@
 "Window": {
 	backgroundColor: '#fff'
 },
+"Label": {
+	font: {
+		fontSize: 32,
+		fontWeight: 'bold'
+	}
+},
 "Button" : {
 	width: expr(Ti.Platform.displayCaps.platformWidth/2),
 	height: Ti.UI.SIZE
-}
-
+},
 ".button" : {
 	randomProp: 'OK'
 }
