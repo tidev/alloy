@@ -49,9 +49,22 @@ module.exports = function(args, program) {
 	}
 
 	// remove the project's Resources directory, as it will all 
-	// be replaced by Alloy.
-	wrench.rmdirSyncRecursive(path.join(outputPath,'Resources'), true);
-	wrench.mkdirSyncRecursive(path.join(outputPath,'Resources'), 0777);
+	// be replaced by Alloy. Only do it if the "assets" path is 
+	// properly prepared.
+	var resourcesPath = path.join(outputPath,'Resources');
+	var appAssetsPath = path.join(inputPath,'assets');
+	var cleanResources = true;
+	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
+		if (path.existsSync(path.join(resourcesPath,platform)) && 
+			!path.existsSync(path.join(appAssetsPath,platform))) {
+			logger.warn('"' + platform + '" folder found in Resources, but not app/assets. Not cleaning Resources...');
+			cleanResources = false;
+		}
+	});
+	if (cleanResources) {
+		wrench.rmdirSyncRecursive(resourcesPath, true);
+		wrench.mkdirSyncRecursive(resourcesPath, 0777);
+	}
 
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
