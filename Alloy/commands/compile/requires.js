@@ -53,16 +53,6 @@ function findAllRequires(fn,filterFn)
 		U.die(errs);
 	}
 
-
-	// try {
-	// 	ast = jsp.parse(code); 
-	// } catch(e) {
-	// 	U.die([
-	// 		code,
-	// 		e.stack,
-	// 		'Failed to parse code in ' + fn 
-	// 	]);
-	// }
 	var w = pro.ast_walker();
 	var requires = [];
 	
