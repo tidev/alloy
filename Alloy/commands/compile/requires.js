@@ -38,15 +38,31 @@ function findAllRequires(fn,filterFn)
 	var basedir = path.dirname(path.resolve(fn));
 	var code = String(fs.readFileSync(fn,'utf-8'));
 	var ast;
+
+
 	try {
 		ast = jsp.parse(code); 
-	} catch(e) {
-		U.die([
-			code,
-			e.stack,
-			'Failed to parse code in ' + fn 
-		]);
+	} catch (e) {
+		var errs = ['Error processing require() calls for file "' + fn];
+		if (e.message && typeof e.line !== 'undefined') {
+			errs.push(e.message);
+			errs.push('line ' + e.line + ', column ' + e.col + ', position ' + e.pos);
+		} else {
+			errs.unshift(e.stack);
+		}
+		U.die(errs);
 	}
+
+
+	// try {
+	// 	ast = jsp.parse(code); 
+	// } catch(e) {
+	// 	U.die([
+	// 		code,
+	// 		e.stack,
+	// 		'Failed to parse code in ' + fn 
+	// 	]);
+	// }
 	var w = pro.ast_walker();
 	var requires = [];
 	
