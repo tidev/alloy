@@ -205,6 +205,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		state = { parent: {} },
 		files = {};
 
+	console.log('DIRNAME: ' + dirname);
+	if (_.contains(CONST.PLATFORM_FOLDERS,dirname) || /^(?:iphone|android|mobileweb)[\/\\]/.test(dirname)) {
+		console.log('skipping ' + view);
+		return;
+	}
+
 	// create a list of file paths
 	_.each(['VIEW','STYLE','CONTROLLER'], function(fileType) {
 		// get the path values for the file
@@ -214,7 +220,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// check for platform-specific versions of the file
 		var baseFile = path.join(fileTypeRoot,filepath);
-		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
+		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform === 'ios' ? 'iphone' : buildPlatform,filepath);
 		files[fileType] = path.existsSync(platformSpecificFile) ? platformSpecificFile : baseFile;
 	});
 	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
