@@ -192,8 +192,6 @@ function processIf()
 
 		var varName = getVariableStringValue(lhs);
 		var value = getVariableStringValue(rhs);
-
-		console.log(rhs);
 		
 		if ((varName === 'Titanium.Platform.osname' || varName === 'Ti.Platform.osname') && (value === 'iphone' || value === 'ipad'))
 		{

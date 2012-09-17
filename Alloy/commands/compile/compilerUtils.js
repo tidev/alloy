@@ -732,7 +732,10 @@ exports.formatAST = function(ast,config,fn)
 	};
 
 	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
-	ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
+	
+	// TODO: re-enable when complete -> https://jira.appcelerator.org/browse/ALOY-273
+	//ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
+	
 	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
 	return pro.gen_code(ast,options.codegen_options); 
 };
