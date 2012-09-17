@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<CoverFlowView id="coverflow"/>
+		<Label id="apilabel">Ti.UI.iOS.CoverFlowView</Label>
+	</Window>
+</Alloy>
