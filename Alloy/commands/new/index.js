@@ -10,8 +10,8 @@ var BASE_ERR = 'Project creation failed. ';
 
 module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
-	var types = ['VIEW','STYLE','CONTROLLER'];
-	var paths = getPaths(args[0] || '.');
+	var templateName = args[1] || 'default';
+	var paths = getPaths(args[0] || '.', templateName);
 
 	// only overwrite existing app path if given the force option
 	if (path.existsSync(paths.app)) {
@@ -38,14 +38,8 @@ module.exports = function(args, program) {
 		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0777);
 	});
 
-	// add alloy default project files
-	_.each(types, function(type) {
-		var filename = CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT[type];
-		fs.writeFileSync(
-			path.join(paths.app,CONST.DIR[type],filename),
-			fs.readFileSync(path.join(paths.default,filename),'utf8')
-		);
-	});
+	// add alloy project template files
+	wrench.copyDirSyncRecursive(paths.projectTemplate, paths.project, {preserve:true});
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
@@ -57,9 +51,7 @@ module.exports = function(args, program) {
 		version: '1.0'
 	});
 
-	// create default config files and install compiler plugin
-	writeConfigFile('alloy.jmk', paths);
-	writeConfigFile('config.json', paths);
+	// install ti.alloy compiler plugin
 	installPlugin(paths);
 
 	// copy Resources android, iphone, and mobileweb directories to assets
@@ -81,16 +73,18 @@ module.exports = function(args, program) {
 	logger.info('Generated new project at: ' + paths.app);
 }
 
-function getPaths(project) {
+function getPaths(project, templateName) {
 	var alloy = path.join(__dirname,'..', '..');
 	var template = path.join(alloy,'template');
+	var projectTemplates = path.join(alloy,'..','templates');
+
 	var paths = {
 		// alloy paths
 		alloy: alloy,
 		modules: path.join(alloy,'modules'),
 		template: path.join(alloy,'template'),
-		default: path.join(template,'default'),
 		readme: path.join(template, 'README'),
+		projectTemplate: path.join(projectTemplates,templateName),
 
 		// project paths
 		project: project,
@@ -100,7 +94,19 @@ function getPaths(project) {
 	// validate the existence of the paths
 	_.each(paths, function(v,k) {
 		if (!path.existsSync(v)) {
-			U.die(BASE_ERR + '"' + v + '" not found.');
+			var errs = [BASE_ERR];
+			switch(k) {
+				case 'projectTemplate':
+					errs.push('Project template "' + templateName + '" not found at "' + v + '"');
+					break;
+				case 'project':
+					errs.push('Project path not found at "' + v + '"');
+					break;
+				default:
+					errs.push('"' + v + '" not found.');
+					break;
+			}
+			U.die(errs);
 		}
 	});
 
@@ -111,25 +117,6 @@ function getPaths(project) {
 	});
 
 	return paths;
-}
-
-function writeConfigFile(name, paths) {
-	var file = path.join(paths.template,name);
-	if (!path.existsSync(file)) {
-		U.die([
-			BASE_ERR + 'Required template file "' + file + '" is missing.',
-			'Your installation of Alloy may be incomplete or corrupt. Please try updating or reinstalling.'
-		]);
-	}
-
-	try {
-		fs.writeFileSync(path.join(paths.app,name), fs.readFileSync(file, 'utf8'));
-	} catch (e) {
-		U.die([
-			(new Error).stack,
-			BASE_ERR + 'Unable create "' + file + '".'
-		]);
-	}
 }
 
 function installPlugin(paths) {
