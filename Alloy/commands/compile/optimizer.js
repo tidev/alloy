@@ -192,6 +192,8 @@ function processIf()
 
 		var varName = getVariableStringValue(lhs);
 		var value = getVariableStringValue(rhs);
+
+		console.log(rhs);
 		
 		if ((varName === 'Titanium.Platform.osname' || varName === 'Ti.Platform.osname') && (value === 'iphone' || value === 'ipad'))
 		{
@@ -242,7 +244,14 @@ function optimize(ast, defines, fn)
 	try
 	{
 		platformDefines = defines;
-		platformName = platformDefines.OS_IOS ? 'iPhone OS' : platformDefines.OS_ANDROID ? 'android' : platformDefines.OS_MOBILEWEB ? 'mobileweb' : 'unknown';
+
+		// determine platform name from defines
+		if (platformDefines.OS_IOS) { platformName = 'iPhone OS'; }
+		else if (platformDefines.OS_ANDROID) { platformName = 'android'; }
+		else if (platformDefines.OS_MOBILEWEB) { platformName = 'mobileweb'; }
+		else { platformName = 'unknown'; }
+
+		// walk the AST looking for ifs and vars
 		var w = pro.ast_walker();
 		return w.with_walkers(
 			{
@@ -345,12 +354,9 @@ if (require.main === module)
 		["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 2; } else { var a = 1; }","var a=1",iosDefines],
 		["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
 		["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
-
-		["if (Ti.Platform.osname === 'android') var a = 1; else var a = 2;","var a=1;",androidDefines],
-		
 		["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
 		["if (Titanium.Platform['name'] !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
-		
+
 		// check platform conditional assignments
 		["var platform = Ti.Platform['name'] === 'iPhone OS'", "var platform=1", iosDefines],
 		["var platform = Ti.Platform[\"name\"] === 'iPhone OS'", "var platform=1", iosDefines],
@@ -366,6 +372,14 @@ if (require.main === module)
 		["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", androidDefines],
 		["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", iosDefines],
 
+		// FAIL: doesn't properly handle conditionals without curly braces (false negative, breaks code)
+		["if (Ti.Platform.osname === 'android') var a = 1; else var a = 2;","var a=1;",androidDefines],
+		
+		// PASS: shouldn't attempt to process anything other than strings
+		["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if(Ti.Platform.name===couldBeAnything()){var a=1}else{var a=2}",iosDefines],
+
+		// FAIL: Only works if Ti.Platform.* is on the left hand side (false negative)
+		["if ('android' === Ti.Platform.osname) { var a = 1; } else { a = 2; }","var a=1;",androidDefines],
 	];
 	
 	var succeeded = 0;
