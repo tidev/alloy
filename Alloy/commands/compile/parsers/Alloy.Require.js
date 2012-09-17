@@ -3,6 +3,7 @@ var path = require('path'),
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
+	moduleRoot = path.join(__dirname,'..','..','..','..'),
 	TYPES = ['view','widget'];
 
 exports.parse = function(node, state) {
@@ -25,7 +26,7 @@ function parse(node, state, args) {
 	// determine which Alloy method to use
 	var extraArgs = '';
 	var appPath = CU.getCompilerConfig().dir.home;
-	var requirePath;
+	var requirePath, alloyRequirePath;
 	switch(type) {
 		case 'view':
 			method = 'createController';
@@ -35,6 +36,7 @@ function parse(node, state, args) {
 			method = 'createWidget';
 			extraArgs = "'widget',";
 			requirePath = path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
+			alloyRequirePath = path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
@@ -45,8 +47,12 @@ function parse(node, state, args) {
 	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(requirePath)) {
 		requirePath += '.' + CONST.FILE_EXT.VIEW;
 	}
-	if (!path.existsSync(requirePath)) {
-		U.die(type + ' "' + src + '" at path "' + requirePath + '" does not exist.');
+	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(alloyRequirePath)) {
+		alloyRequirePath += '.' + CONST.FILE_EXT.VIEW;
+	}
+
+	if (!(path.existsSync(requirePath) || (type === 'widget' && path.existsSync(alloyRequirePath)))) {
+		U.die(type + ' "' + src + '" at path "' + requirePath + '"' + (type === 'widget' ? ' or "' + alloyRequirePath + '"' : '')  + ' does not exist.');
 	}
 
 	// Remove <Require>-specific attributes from createArgs
