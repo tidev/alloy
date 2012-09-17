@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label>Congrats! You found a way to build for something other than Android, iOS, or Mobileweb!</Label>
+	</Window>
+</Alloy>

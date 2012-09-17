@@ -187,6 +187,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	var parseType = noView ? 'controller' : 'view';
 	logger.debug('Now parsing ' + (manifest ? manifest.id + ' ' : '') + parseType + ' ' + view + '...');
 
+	var buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
+
 	// validate parameters
 	if (!view) { U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()'); }
 	if (!dir) { U.die('Failed to parse ' + parseType + ' "' + view + '", no directory given'); }
@@ -205,9 +207,15 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// create a list of file paths
 	_.each(['VIEW','STYLE','CONTROLLER'], function(fileType) {
-		var tmp = path.join(dir,CONST.DIR[fileType]);
-		if (dirname) { tmp = path.join(tmp,dirname); }
-		files[fileType] = path.join(tmp,viewName+'.'+CONST.FILE_EXT[fileType]);
+		// get the path values for the file
+		var fileTypeRoot = path.join(dir,CONST.DIR[fileType]);
+		var filename = viewName+'.'+CONST.FILE_EXT[fileType];
+		var filepath = dirname ? path.join(dirname,filename) : filename;
+
+		// check for platform-specific versions of the file
+		var baseFile = path.join(fileTypeRoot,filepath);
+		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
+		files[fileType] = path.existsSync(platformSpecificFile) ? platformSpecificFile : baseFile;
 	});
 	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
 	if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
