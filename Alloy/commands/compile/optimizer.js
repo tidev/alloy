@@ -339,6 +339,8 @@ if (require.main === module)
 		["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 2; } else { var a = 1; }","var a=1",iosDefines],
 		["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
 		["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
+
+		["if (Ti.Platform.osname === 'android') var a = 1; else var a = 2;","var a=1;",androidDefines],
 		
 		["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
 		["if (Titanium.Platform['name'] !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
