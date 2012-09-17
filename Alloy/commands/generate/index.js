@@ -1,7 +1,7 @@
 var _ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils');
 
-var TARGETS = ['controller', 'model', 'migration', 'widget'];
+var TARGETS = ['controller', 'model', 'migration', 'view', 'widget'];
 
 function generate(args, program) {
 	args = args || [];
