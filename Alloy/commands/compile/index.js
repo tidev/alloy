@@ -205,7 +205,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		state = { parent: {} },
 		files = {};
 
-	console.log('DIRNAME: ' + dirname);
 	if (_.contains(CONST.PLATFORM_FOLDERS,dirname) || /^(?:iphone|android|mobileweb)[\/\\]/.test(dirname)) {
 		console.log('skipping ' + view);
 		return;
