@@ -184,6 +184,12 @@ function processIf()
 		var lhs = this[1][2];
 		var rhs = this[1][3];
 		var op = this[1][1];
+
+		// right hand must be a string
+		if (rhs[0] !== 'string') {
+			return null;
+		}
+
 		var varName = getVariableStringValue(lhs);
 		var value = getVariableStringValue(rhs);
 		
