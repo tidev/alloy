@@ -151,6 +151,58 @@ exports.tiapp = {
 	}
 };
 
+exports.getAndValidateProjectPaths = function(argPath) {
+	var projectPath = path.resolve(argPath);
+
+	// See if we got the "app" path or the project path as an argument
+	projectPath = path.existsSync(path.join(projectPath,'..','tiapp.xml')) ? path.join(projectPath,'..') : projectPath;
+
+	// Assign paths objects
+	var paths = {
+		project: projectPath,
+		app: path.join(projectPath,'app'),
+		indexBase: path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW)
+	};
+	paths.index = path.join(paths.app,paths.indexBase);
+	paths.assets = path.join(paths.app,'assets');
+	paths.resources = path.join(paths.project,'Resources');
+	paths.resourcesAlloy = path.join(paths.resources,'alloy');
+
+	// validate project and "app" paths
+	if (!path.existsSync(paths.project)) {
+		exports.die('Titanium project path does not exist at "' + paths.project + '".');
+	} else if (!path.existsSync(path.join(paths.project,'tiapp.xml'))) {
+		exports.die('Invalid Titanium project path (no tiapp.xml) at "' + paths.project + '"');
+	} else if (!path.existsSync(paths.app)) {
+		exports.die('Alloy "app" directory does not exist at "' + paths.app + '"');
+	} else if (!path.existsSync(paths.index)) {
+		exports.die('Alloy "app" directory has no "' + paths.indexBase + '" file at "' + paths.index + '".');
+	}
+
+	return paths;
+}
+
+exports.createErrorOutput = function(msg, e) {
+	var errs = [msg || 'An unknown error occurred'];
+	var posArray = [];
+
+	if (e) {
+		var line = e.line || e.lineNumber;
+		if (e.message) { errs.push(e.message.split('\n')) }
+		if (line)  { posArray.push('line ' + line) }
+		if (e.col) { posArray.push('column ' + e.col) }
+		if (e.pos) { posArray.push('position ' + e.pos) }
+		if (posArray.length) { errs.push(posArray.join(', ')) }
+
+		// add the stack trace if we don't get anything good
+		if (errs.length < 2) { errs.unshift(e.stack) }
+	} else {
+		errs.unshift(e.stack);
+	}
+	
+	return errs;
+}
+
 exports.copyAlloyDir = function(appDir, sources, destDir) {
 	var sources = _.isArray(sources) ? sources : [sources];
 	_.each(sources, function(source) {
@@ -229,17 +281,22 @@ exports.trim = function(line) {
 }
 
 exports.resolveAppHome = function() {
-	var f = path.join("./","app");
-	if (path.existsSync(f))
-	{
-		return f;
+	var indexView = path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW);
+	var paths = [ path.join('.','app'), path.join('.') ];
+
+	// Do we have an Alloy project? Find views/index.xml.
+	for (var i = 0; i < paths.length; i++) {
+		paths[i] = path.resolve(paths[i]);
+		var testPath = path.join(paths[i],indexView);
+		if (path.existsSync(testPath)) {
+			return paths[i];
+		}
 	}
-	var cf = path.join('./', 'alloy.jmk');
-	if (path.existsSync(cf))
-	{
-		return path.resolve(path.join('.'));
-	}
-	exports.die("This directory: "+path.resolve(f)+" does not look like an Alloy directory");
+
+	// Report error, show the paths searched.
+	var errs = [ 'No valid Alloy project found at the following paths (no "views/index.xml"):' ];
+	errs.push(paths);
+	exports.die(errs);
 }
 
 exports.copyFileSync = function(srcFile, destFile) 
@@ -311,9 +368,13 @@ exports.stringifyJSON = function(j)
 	return final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
 }
 
-exports.die = function(msg) 
+exports.die = function(msg, e) 
 {
-	logger.error(msg);
+	if (e) {
+		logger.error(exports.createErrorOutput(msg, e));
+	} else {
+		logger.error(msg);
+	}
 	process.exit(1);
 }
 
