@@ -3,6 +3,7 @@ var U = require('../../utils'),
 	path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	jsonlint = require('jsonlint'),
 	logger = require('../../common/logger'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	pro = require("../../uglify-js/uglify-js").uglify,
@@ -486,14 +487,34 @@ exports.loadController = function(file) {
 
 exports.loadStyle = function(tssFile) {
 	if (path.existsSync(tssFile)) {
-		var contents = fs.readFileSync(tssFile, 'utf8');
-		if (!/^\s*$/gi.test(contents)) {
-			contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{' + contents + '}';
-			var code = processTssFile(contents);
-			var json = JSON.parse(code);
-			optimizer.optimizeStyle(json);
-			return json;
+		logger.debug('Processing style file "' + tssFile + '"...');
+
+		// read the style file
+		try {
+			var contents = fs.readFileSync(tssFile, 'utf8');
+		} catch (e) {
+			U.die('Failed to read style file "' + tssFile + '"', e);
 		}
+
+		// skip if the file is empty
+		if (/^\s*$/gi.test(contents)) {
+			return {};
+		}
+
+		// Add enclosing curly braces, if necessary
+		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{' + contents + '}';
+			
+		// Process tss file then convert to JSON
+		try {
+			var code = processTssFile(contents);
+			// var json = JSON.parse(code);
+			var json = jsonlint.parse(code);
+			optimizer.optimizeStyle(json);
+		} catch (e) {
+			U.die('Error processing style "' + tssFile + '"', e);
+		}
+
+		return json;
 	}
 	return {};
 };

@@ -2,6 +2,8 @@ var path = require('path'),
 	colors = require('colors'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	util = require('util'),
+	vm = require('vm'),
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
@@ -20,47 +22,24 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ////////// command function //////////
 //////////////////////////////////////
 module.exports = function(args, program) {
-	var inputPath = args.length > 0 ? args[0] : U.resolveAppHome(),
-		alloyConfig = {},
-		outputPath, tmpPath, compilerMakeFile;
-
-	// validate input and output paths
-	if (!path.existsSync(inputPath)) {
-		U.die('inputPath "' + inputPath + '" does not exist');
-	} else if (!path.existsSync(path.join(inputPath,'views','index.' + CONST.FILE_EXT.VIEW))) {
-		U.die('inputPath has no views/index.' + CONST.FILE_EXT.VIEW + ' file.');
-	}	
-
-	if (!program.outputPath) {
-		tmpPath = path.join(inputPath,'views','index.'+CONST.FILE_EXT.VIEW);
-		if (path.existsSync(tmpPath)) {
-			outputPath = path.join(inputPath,'..');
-		}
-	}
-	outputPath = outputPath ? outputPath : (program.outputPath || path.join(U.resolveAppHome(),".."));
-	U.ensureDir(outputPath);
-
-	// make sure the output path is actually a ti project
-	if (!path.existsSync(path.join(outputPath,'tiapp.xml'))) {
-		U.die('Project path "' + outputPath + '" has no tiapp.xml file.');
-	}
+	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
+	var alloyConfig = {},
+		tmpPath, compilerMakeFile;
 
 	// remove the project's Resources directory, as it will all 
 	// be replaced by Alloy. Only do it if the "assets" path is 
-	// properly prepared.
-	var resourcesPath = path.join(outputPath,'Resources');
-	var appAssetsPath = path.join(inputPath,'assets');
+	// properly prepared with the platform-specific folders.
 	var cleanResources = true;
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
-		if (path.existsSync(path.join(resourcesPath,platform)) && 
-			!path.existsSync(path.join(appAssetsPath,platform))) {
-			logger.warn('"' + platform + '" folder found in Resources, but not app/assets. Not cleaning Resources...');
+		if (path.existsSync(path.join(paths.resources,platform)) && 
+			!path.existsSync(path.join(paths.assets,platform))) {
+			logger.warn('"' + platform + '" folder found in Resources, but not "app/assets". Not cleaning Resources...');
 			cleanResources = false;
 		}
 	});
 	if (cleanResources) {
-		wrench.rmdirSyncRecursive(resourcesPath, true);
-		wrench.mkdirSyncRecursive(resourcesPath, 0777);
+		wrench.rmdirSyncRecursive(paths.resources, true);
+		wrench.mkdirSyncRecursive(paths.resources, 0777);
 	}
 
 	// construct compiler config from command line config parameters
@@ -75,22 +54,21 @@ module.exports = function(args, program) {
 
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
-	compileConfig = CU.createCompileConfig(inputPath, outputPath, alloyConfig);
-	logger.info("Generating to " + compileConfig.dir.resources.yellow + " from ".cyan + inputPath.yellow);
+	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	logger.info("Generating to " + paths.resources.yellow + " from ".cyan + paths.app.yellow);
 
 	// process project makefiles
-	var alloyJMK = path.resolve(path.join(inputPath,"alloy.jmk"));
+	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
 	if (path.existsSync(alloyJMK)) {
 		logger.info("Found project specific makefile at " + "app/alloy.jmk".yellow);
-		var vm = require('vm'),
-			util = require('util');
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
 		
+		// process alloy.jmk compile file
 		try {
 			script.runInNewContext(compilerMakeFile);
 		} catch(e) {
 			logger.error(e.stack);
-			U.die("project build at "+alloyJMK.yellow + " generated an error during load.");
+			U.die('Project build at "' + alloyJMK.yellow + '" generated an error during load.');
 		}
 	}
 	
@@ -98,35 +76,30 @@ module.exports = function(args, program) {
 	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
-	if (!path.existsSync(path.join(outputPath,'ti.physicalSizeCategory-android-1.0.zip')) && 
-		!path.existsSync(path.join(outputPath,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
-		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), outputPath, {preserve:true})
+	if (!path.existsSync(path.join(paths.project,'ti.physicalSizeCategory-android-1.0.zip')) && 
+		!path.existsSync(path.join(paths.project,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
+		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), paths.project, {preserve:true})
 	}
-	U.tiapp.installModule(outputPath, {
+	U.tiapp.installModule(paths.project, {
 		id: 'ti.physicalSizeCategory',
 		platform: 'android',
 		version: '1.0'
 	});
 
 	// create generated controllers folder in resources 
-	U.copyAlloyDir(alloyRoot, 'lib', compileConfig.dir.resources); 
-	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
-	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, 'widgets'), 0777);
+	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
+	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
+	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
 
 	// create the global style, if it exists
-	try {
-		compileConfig.globalStyle = CU.loadStyle(path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
-	} catch(e) {
-		logger.error(e.stack);
-		U.die('Error processing global style at "' + path.join(inputPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE) + '"');
-	}
+	compileConfig.globalStyle = CU.loadStyle(path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
 
 	// Process all models
 	var models = processModels();
 
 	// Process all views, including all those belonging to widgets
-	var viewCollection = U.getWidgetDirectories(outputPath, inputPath);
-	viewCollection.push({ dir: path.join(outputPath,CONST.ALLOY_DIR) });
+	var viewCollection = U.getWidgetDirectories(paths.project, paths.app);
+	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
@@ -145,7 +118,7 @@ module.exports = function(args, program) {
 	});
 
 	// copy assets and libraries
-	U.copyAlloyDir(inputPath, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
+	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
@@ -238,18 +211,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// Load the style and update the state
-		try {
-			state.styles = CU.loadAndSortStyle(files.STYLE);
-		} catch (e) {
-			var errs = ['Error processing style for view "' + view + '" in "' + view + '.' + CONST.FILE_EXT.STYLE + '"'];
-			if (e.message && typeof e.line !== 'undefined') {
-				errs.push(e.message);
-				errs.push('line ' + e.line + ', column ' + e.col + ', position ' + e.pos);
-			} else {
-				errs.unshift(e.stack);
-			}
-			U.die(errs);
-		}
+		state.styles = CU.loadAndSortStyle(files.STYLE);
 
 		// Load view from file into an XML document root node
 		try {
