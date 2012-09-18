@@ -216,7 +216,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// check for platform-specific versions of the file
 		var baseFile = path.join(fileTypeRoot,filepath);
-		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform === 'ios' ? 'iphone' : buildPlatform,filepath);
+		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
 		files[fileType] = path.existsSync(platformSpecificFile) ? platformSpecificFile : baseFile;
 	});
 	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
