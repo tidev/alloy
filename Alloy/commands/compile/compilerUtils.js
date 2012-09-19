@@ -236,6 +236,35 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	return code.condition ? _.template(codeTemplate, code) : code.content;
 }
 
+exports.componentExists = function(appRelativePath, manifest) {
+	var isWidget = manifest;
+	var config = exports.getCompilerConfig();
+
+	// Prepare the path the is relative the the "app" directory
+	var stripPsRegex  = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
+	var stripExtRegex = new RegExp('\\.(?:' + CONST.FILE_EXT.VIEW + '|' + CONST.FILE_EXT.CONTROLLER + ')$');
+	var basename = appRelativePath.replace(stripPsRegex,'').replace(stripExtRegex,'');
+
+	// compose potential component path
+	var componentPath = path.join(
+		config.dir.resourcesAlloy,
+		CONST.DIR.COMPONENT,
+		basename + '.' + CONST.FILE_EXT.COMPONENT
+	);
+
+	if (isWidget) {
+		componentPath = path.join(
+			config.dir.resourcesAlloy, 
+			CONST.DIR.WIDGET, 
+			manifest.id, 
+			CONST.DIR.COMPONENT, 
+			basename + '.' + CONST.FILE_EXT.COMPONENT
+		);
+	} 
+
+	return path.existsSync(componentPath);
+}
+
 exports.expandRequireNode = function(requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
 
