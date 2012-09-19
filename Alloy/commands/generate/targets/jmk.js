@@ -1,5 +1,7 @@
 var path = require('path'),
 	fs = require('fs'),
+	logger = require('../../../common/logger'),
+	U = require('../../../utils'),
 	alloyRoot = path.join(__dirname,'..','..','..');
 
 module.exports = function(name, args, program) {
