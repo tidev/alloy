@@ -62,6 +62,7 @@ module.exports = function(args, program) {
 	});
 	logger.debug('project path = ' + paths.project);
 	logger.debug('app path = ' + paths.app);
+	logger.debug('');
 
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
@@ -77,6 +78,7 @@ module.exports = function(args, program) {
 		// process alloy.jmk compile file
 		try {
 			script.runInNewContext(compilerMakeFile);
+			compilerMakeFile.isActive = true;
 		} catch(e) {
 			logger.error(e.stack);
 			U.die('Project build at "' + alloyJMK.yellow + '" generated an error during load.');
@@ -84,7 +86,9 @@ module.exports = function(args, program) {
 	}
 	
 	// trigger our custom compiler makefile
-	compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
+	if (compilerMakeFile.isActive) {
+		compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
+	}
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
 	if (!path.existsSync(path.join(paths.project,'ti.physicalSizeCategory-android-1.0.zip')) && 
@@ -179,7 +183,9 @@ module.exports = function(args, program) {
 	optimizeCompiledCode(alloyConfig);
 
 	// trigger our custom compiler makefile
-	compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
+	if (compilerMakeFile.isActive) {
+		compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
+	}
 };
 
 
