@@ -544,7 +544,6 @@ exports.loadStyle = function(tssFile) {
 		// Process tss file then convert to JSON
 		try {
 			var code = processTssFile(contents);
-			// var json = JSON.parse(code);
 			var json = jsonlint.parse(code);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
@@ -922,4 +921,3 @@ function sortStyles(componentStyle) {
 
 	return _.sortBy(sortedStyles, 'priority');
 }
-
