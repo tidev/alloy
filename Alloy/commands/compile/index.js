@@ -34,31 +34,39 @@ module.exports = function(args, program) {
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		if (path.existsSync(path.join(paths.resources,platform)) && 
 			!path.existsSync(path.join(paths.assets,platform))) {
-			logger.warn('"' + platform + '" folder found in Resources, but not "app/assets". Not cleaning Resources...');
+			logger.warn('"' + platform + '" folder found in "Resources", but not "app/assets". Will not recreate "Resources" folder...');
 			cleanResources = false;
 		}
 	});
 	if (cleanResources) {
+		logger.debug('Recreating "Resources" folder...');
 		wrench.rmdirSyncRecursive(paths.resources, true);
 		wrench.mkdirSyncRecursive(paths.resources, 0777);
 	}
+	logger.debug('');
 
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
-			var a = v.split('=');
-			alloyConfig[a[0]]=a[1];
+			var parts = v.split('=');
+			alloyConfig[parts[0]] = parts[1];
 		});
 	}
 	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
 	alloyConfig.beautify = alloyConfig.beautify || alloyConfig.deploytype === 'development';
 
+	// log configuration data
+	logger.debug('----- CONFIGURATION -----');
+	_.each(alloyConfig, function(v,k) {
+		logger.debug(k + ' = ' + v);
+	});
+	logger.debug('project path = ' + paths.project);
+	logger.debug('app path = ' + paths.app);
+
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
-
-	logger.info("Generating to " + paths.resources.yellow + " from ".cyan + paths.app.yellow);
 
 	// process project makefiles
 	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
