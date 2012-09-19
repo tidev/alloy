@@ -12,15 +12,15 @@ var program = require('commander'),
 	path = require('path'),
 	fs = require('fs');
 
+// patch to remove the warning in node >=0.8
+path.existsSync = fs.existsSync || path.existsSync;
+
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
 
 // TODO: https://jira.appcelerator.org/browse/ALOY-206
 //       get the action list from the commands directory
 var ACTIONS = ['compile', 'generate', 'new', 'run'];
-
-// patch to remove the warning in node >=0.8
-path.existsSync = fs.existsSync || path.existsSync;
 
 // TODO: improve help - https://jira.appcelerator.org/browse/ALOY-207
 // TODO: handle localization - https://jira.appcelerator.org/browse/ALOY-208
