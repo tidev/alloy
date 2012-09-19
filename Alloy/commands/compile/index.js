@@ -45,6 +45,14 @@ module.exports = function(args, program) {
 	}
 	logger.debug('');
 
+	// create generated controllers folder in resources 
+	logger.debug('----- BASE RUNTIME FILES -----');
+	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
+	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
+	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
+	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB], paths.resources);
+	logger.debug('');
+
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
@@ -101,12 +109,6 @@ module.exports = function(args, program) {
 		version: '1.0'
 	});
 
-	// create generated controllers folder in resources 
-	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	logger.debug('');
-
 	// create the global style, if it exists
 	logger.debug('----- MVC GENERATION -----');
 	loadGlobalStyle(path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
@@ -154,11 +156,6 @@ module.exports = function(args, program) {
 			}
 		});
 	});
-	logger.debug('');
-
-	// copy assets and libraries
-	logger.debug('----- ASSETS & LIBS -----');
-	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
 	logger.debug('');
 
 	// generate app.js
