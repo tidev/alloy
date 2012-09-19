@@ -450,8 +450,13 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 
 	// parse config.json, if it exists
 	if (path.existsSync(cf)) {
-		var jf = fs.readFileSync(cf);
-		var j = JSON.parse(jf);
+		try {
+			var jf = fs.readFileSync(cf, 'utf8');
+			var j = jsonlint.parse(jf);
+		} catch (e) {
+			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
+		}
+
 		o = j.global || {};
 		if (alloyConfig) {
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);

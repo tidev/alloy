@@ -4,6 +4,7 @@ var path = require('path'),
 	fs = require('fs'),
 	colors = require('colors'),
 	wrench = require('wrench'),
+	jsonlint = require('jsonlint'),
 	logger = require('./common/logger'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	DOMParser = require("xmldom").DOMParser,
@@ -221,8 +222,12 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	var configPath = path.join(appDir, 'config.json');
 	var appWidgets = [];
 	if (path.existsSync(configPath)) {
-		var content = fs.readFileSync(configPath).toString();
-		appWidgets = JSON.parse(content).dependencies;
+		try {
+			var content = fs.readFileSync(configPath,'utf8');
+			appWidgets = jsonlint.parse(content).dependencies;
+		} catch (e) {
+			exports.die('Error parsing "config.json"', e);
+		}
 	}
 
 	var dirs = [];
@@ -239,7 +244,12 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
 
-                    var manifest = JSON.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+					try {
+						var manifest = jsonlint.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+					} catch (e) {
+						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) + '"', e);
+					}
+                    
 					collections[manifest.id] = {
 						dir: wDir,
 						manifest: manifest
