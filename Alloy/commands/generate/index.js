@@ -1,7 +1,8 @@
-var _ = require("../../lib/alloy/underscore")._,
+var path = require('path'),
+	_ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils');
 
-var TARGETS = ['controller', 'model', 'migration', 'view', 'widget'];
+var TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 
 function generate(args, program) {
 	args = args || [];
@@ -12,11 +13,18 @@ function generate(args, program) {
 
 	// validate arguments
 	program.outputPath = program.outputPath || U.resolveAppHome();
+	if (!path.existsSync(program.outputPath)) {
+		U.die('"' + program.outputPath + '" is not a valid Alloy project path.');
+	}
 	if (!target) {
 		U.die('generate requires a TYPE as second argument: [' + TARGETS.join(',') + ']');
 	} 
 	if (!name) {
-		U.die('generate requires a NAME such as third argument');
+		if (target === 'jmk') {
+			name = 'alloy';
+		} else {
+			U.die('generate requires a NAME such as third argument');
+		}
 	} 
 	if (!_.contains(TARGETS, target)) {
 		U.die(

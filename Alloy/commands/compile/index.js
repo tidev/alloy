@@ -71,7 +71,7 @@ module.exports = function(args, program) {
 	// process project makefiles
 	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
 	if (path.existsSync(alloyJMK)) {
-		logger.info("Found project specific makefile at " + "app/alloy.jmk".yellow);
+		logger.debug("Found project specific makefile at " + "app/alloy.jmk".yellow);
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
 		
 		// process alloy.jmk compile file
