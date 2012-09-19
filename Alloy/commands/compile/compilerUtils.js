@@ -715,26 +715,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	return code;
 }
 
-exports.processSourceCode = function(code, config, fn) 
-{
-	function show_copyright(comments) {
-	        var ret = "";
-	        for (var i = 0; i < comments.length; ++i) {
-	                var c = comments[i];
-	                if (c.type == "comment1") {
-	                        ret += "//" + c.value + "\n";
-	                } else {
-	                        ret += "/*" + c.value + "*/";
-	                }
-	        }
-	        return ret;
-	};
-	var c = jsp.tokenizer(code)();
-	// extract header copyright so we can preserve it (if at the top of the file)
-    var copyrights = show_copyright(c.comments_before);
-	return (copyrights ? copyrights + '\n' : '' ) + code;
-};
-
 exports.formatAST = function(ast,config,fn)
 {
 	// use the general defaults from the uglify command line

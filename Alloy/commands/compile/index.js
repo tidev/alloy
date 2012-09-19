@@ -16,6 +16,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
+	buildPlatform,
 	compileConfig = {};
 
 //////////////////////////////////////
@@ -55,6 +56,8 @@ module.exports = function(args, program) {
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
+
 	logger.info("Generating to " + paths.resources.yellow + " from ".cyan + paths.app.yellow);
 
 	// process project makefiles
@@ -97,25 +100,54 @@ module.exports = function(args, program) {
 	// Process all models
 	var models = processModels();
 
+	// create a regex for determining which platform-specific
+	// folders should be used in the compile process
+	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) { return p === buildPlatform; });
+	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
+	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
+
 	// Process all views, including all those belonging to widgets
+	logger.debug('');
+	logger.debug('----- BEGIN CONTROLLER GENERATION -----');
+                    
 	var viewCollection = U.getWidgetDirectories(paths.project, paths.app);
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
-			if (viewRegex.test(view)) {
+			if (viewRegex.test(view) && filterRegex.test(view)) {
+				// Make sure this view isn't already generated
+				if (CU.componentExists(view, collection.manifest)) {
+					// logger.debug('- Skipping "' + view + '", already processed...');
+					return;
+				}
+
+				// generate runtime controller
+				logger.debug('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 				parseAlloyComponent(view, collection.dir, collection.manifest);
+				logger.debug('');
 			}
 		});
 
 		// generate runtime controllers from any controller code that has no 
 		// corresponding view markup
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.CONTROLLER)), function(controller) {
-			if (controllerRegex.test(controller)) {
-				parseAlloyComponent(controller, collection.dir, collection.manifest,true);
+			if (controllerRegex.test(controller) && filterRegex.test(controller)) {
+				// Make sure this controller isn't already generated
+				if (CU.componentExists(controller, collection.manifest)) {
+					// logger.debug('- Skipping "' + view + '", already processed...');
+					return;
+				}
+
+				logger.debug('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
+				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
+				logger.debug('');
 			}
 		});
 	});
+
+	logger.debug('----- BEGIN CONTROLLER GENERATION -----');
+	logger.debug('');
 
 	// copy assets and libraries
 	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB], compileConfig.dir.resources);
@@ -123,13 +155,6 @@ module.exports = function(args, program) {
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
 	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{models:models});
-	
-	try {
-		code = CU.processSourceCode(code, alloyConfig, 'app.js');
-	} catch(e) {
-		logger.error(code);
-		U.die(e.stack);
-	}
 
 	// trigger our custom compiler makefile
 	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
@@ -155,16 +180,13 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 function parseAlloyComponent(view,dir,manifest,noView) {
 	var parseType = noView ? 'controller' : 'view';
-	logger.debug('Now parsing ' + (manifest ? manifest.id + ' ' : '') + parseType + ' ' + view + '...');
-
-	var buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
 
 	// validate parameters
 	if (!view) { U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()'); }
 	if (!dir) { U.die('Failed to parse ' + parseType + ' "' + view + '", no directory given'); }
 
 	var basename = path.basename(view, '.' + CONST.FILE_EXT[parseType.toUpperCase()]);
-		dirname = path.dirname(view),
+		dirname = path.dirname(view).replace(/^(?:android|ios|mobileweb)[\\\/]*/,''),
 		viewName = basename,
 		template = {
 			viewCode: '',
@@ -175,13 +197,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		state = { parent: {} },
 		files = {};
 
-	if (_.contains(CONST.PLATFORM_FOLDERS,dirname) || /^(?:iphone|android|mobileweb)[\/\\]/.test(dirname)) {
-		console.log('skipping ' + view);
-		return;
-	}
-
 	// create a list of file paths
-	_.each(['VIEW','STYLE','CONTROLLER'], function(fileType) {
+	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
+	_.each(searchPaths, function(fileType) {
 		// get the path values for the file
 		var fileTypeRoot = path.join(dir,CONST.DIR[fileType]);
 		var filename = viewName+'.'+CONST.FILE_EXT[fileType];
@@ -189,18 +207,18 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// check for platform-specific versions of the file
 		var baseFile = path.join(fileTypeRoot,filepath);
-		var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
-		files[fileType] = path.existsSync(platformSpecificFile) ? platformSpecificFile : baseFile;
+		if (buildPlatform) {
+			var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
+			if (path.existsSync(platformSpecificFile)) {
+				files[fileType] = platformSpecificFile;
+				return;
+			}
+		}
+		files[fileType] = baseFile;
 	});
 	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
 	if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
 	files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
-
-	// skip if we've already processed this component
-	var testExistsFile = manifest ? path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js') : files.COMPONENT;
-	if (path.existsSync(testExistsFile) && noView) {
-		return;
-	}
 
 	// we are processing a view, not just a controller
 	if (!noView) {
@@ -211,10 +229,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// Load the style and update the state
+		if (path.existsSync(files.STYLE)) {
+			logger.debug('- STYLE: loading from "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
+		}
 		state.styles = CU.loadAndSortStyle(files.STYLE);
 
 		// Load view from file into an XML document root node
 		try {
+			logger.debug('- VIEW: loading from "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
 			var docRoot = U.XML.getAlloyFromFile(files.VIEW);
 		} catch (e) {
 			U.die([
@@ -264,6 +286,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	}
 
 	// process the controller code
+	if (path.existsSync(files.CONTROLLER)) {
+		logger.debug('- CONTROLLER: loading from "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
+	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
 	template.controllerCode += cCode.controller;
@@ -271,18 +296,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
-	try {
-		code = CU.processSourceCode(code, compileConfig.alloyConfig, files.COMPONENT);
-	} catch (e) {
-		U.die([
-			e.stack,
-			'Error parsing view "' + view + '".'
-		]);
-	}
 
 	// Write the view or widget to its runtime file
 	if (manifest) {
-		
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
