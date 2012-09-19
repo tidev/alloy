@@ -476,10 +476,15 @@ exports.loadController = function(file) {
 		exports: ''
 	};
 
-	if (!path.existsSync(file)) {
-		return code;
+	// Read the controller file
+	try {
+		if (!path.existsSync(file)) {
+			return code;
+		}
+		var contents = fs.readFileSync(file,'utf8');
+	} catch (e) {
+		U.die('Error reading controller file "' + file + '".', e);
 	}
-	var contents = fs.readFileSync(file,'utf8');
 
     function checkAssigment() {
     	var target = this[2];
@@ -501,23 +506,26 @@ exports.loadController = function(file) {
     	}
     }
 
-    var ast = jsp.parse(contents);
-	var walker = pro.ast_walker();
-	var new_ast = walker.with_walkers({
-		"stat": do_stat
-	}, function(){
-        return walker.walk(ast);
-    });
-
-    code.controller = pro.gen_code(new_ast);
+    // Manipulate the controller AST, finding the baseController 
+    // assignment if present.
+    try {
+	    var ast = jsp.parse(contents);
+		var walker = pro.ast_walker();
+		var new_ast = walker.with_walkers({
+			"stat": do_stat
+		}, function(){
+	        return walker.walk(ast);
+	    });
+	    code.controller = pro.gen_code(new_ast);
+	} catch (e) {
+		U.die('Error while processing the controller "' + file + '".', e);
+	}
 
 	return code;
 };
 
 exports.loadStyle = function(tssFile) {
 	if (path.existsSync(tssFile)) {
-		logger.debug('Processing style file "' + tssFile + '"...');
-
 		// read the style file
 		try {
 			var contents = fs.readFileSync(tssFile, 'utf8');
