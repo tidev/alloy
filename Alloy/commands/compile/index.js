@@ -34,14 +34,21 @@ module.exports = function(args, program) {
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		if (path.existsSync(path.join(paths.resources,platform)) && 
 			!path.existsSync(path.join(paths.assets,platform))) {
-			logger.warn('"' + platform + '" folder found in "Resources", but not "app/assets". Will not recreate "Resources" folder...');
+			logger.warn('"' + platform + '" folder found in "Resources", but not "app/assets". Not cleaning "Resources" folder...');
 			cleanResources = false;
 		}
 	});
 	if (cleanResources) {
-		logger.debug('Recreating "Resources" folder...');
-		wrench.rmdirSyncRecursive(paths.resources, true);
-		wrench.mkdirSyncRecursive(paths.resources, 0777);
+		logger.debug('Cleaning "Resources" folder...');
+
+		// delete everything out of each platform-specific folder
+		_.each(CONST.PLATFORM_FOLDERS, function(p) {
+			U.rmdirContents(path.join(paths.resources,p));
+		});
+
+		// delete everything else out of Resources, except Node ACS files
+		var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
+		U.rmdirContents(paths.resources, _.union(CONST.PLATFORM_FOLDERS,[nodeAcsRegex]));
 	}
 	logger.debug('');
 
@@ -63,7 +70,6 @@ module.exports = function(args, program) {
 	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
 	alloyConfig.beautify = alloyConfig.beautify || alloyConfig.deploytype === 'development';
 
-	// log configuration data
 	logger.debug('----- CONFIGURATION -----');
 	_.each(alloyConfig, function(v,k) {
 		if (k) {

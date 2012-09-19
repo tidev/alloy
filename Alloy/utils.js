@@ -290,6 +290,39 @@ exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 
+exports.rmdirContents = function(dir, exceptions) {
+	try {
+		var files = fs.readdirSync(dir);
+	} catch (e) {
+		return;
+	}
+
+	for (var i = 0, l = files.length; i < l; i++) {
+		var currFile = path.join(dir,files[i]);
+		var stat = fs.lstatSync(currFile);
+
+		// process the exceptions
+		var result = _.find(exceptions, function(exception) {
+			if (exception instanceof RegExp) {
+				return exception.test(files[i]);
+			} else {
+				return files[i] === exception;
+			}
+		});
+
+		// skip any exceptions
+		if (result) {
+			continue;
+		// use wrench to delete directories
+		} else if (stat.isDirectory()) {
+			wrench.rmdirSyncRecursive(currFile, true);
+		// unlink any files or links
+		} else {
+			fs.unlinkSync(currFile);
+		}
+	}
+}
+
 exports.resolveAppHome = function() {
 	var indexView = path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW);
 	var paths = [ path.join('.','app'), path.join('.') ];
