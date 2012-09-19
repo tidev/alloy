@@ -41,14 +41,18 @@ module.exports = function(args, program) {
 	if (cleanResources) {
 		logger.debug('Cleaning "Resources" folder...');
 
-		// delete everything out of each platform-specific folder
-		_.each(CONST.PLATFORM_FOLDERS, function(p) {
-			U.rmdirContents(path.join(paths.resources,p));
-		});
+		if (!path.existsSync(paths.resources)) {
+			wrench.mkdirSyncRecursive(paths.resources,0777);
+		} else {
+			// delete everything out of each platform-specific folder
+			_.each(CONST.PLATFORM_FOLDERS, function(p) {
+				U.rmdirContents(path.join(paths.resources,p));
+			});
 
-		// delete everything else out of Resources, except Node ACS files
-		var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
-		U.rmdirContents(paths.resources, _.union(CONST.PLATFORM_FOLDERS,[nodeAcsRegex]));
+			// delete everything else out of Resources, except Node ACS files
+			var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
+			U.rmdirContents(paths.resources, _.union(CONST.PLATFORM_FOLDERS,[nodeAcsRegex]));
+		}
 	}
 	logger.debug('');
 
