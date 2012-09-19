@@ -17,7 +17,8 @@ exports.FILE_EXT = {
 	MIGRATION: 'js',
 	CONTROLLER: 'js',
 	COMPONENT: 'js',
-	CONFIG: 'json'
+	CONFIG: 'json',
+	JMK: 'jmk'
 };
 
 exports.DIR = {
