@@ -50,7 +50,7 @@ module.exports = function(args, program) {
 	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB], paths.resources);
+	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB,'vendor'], paths.resources);
 	logger.debug('');
 
 	// construct compiler config from command line config parameters
