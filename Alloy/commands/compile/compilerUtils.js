@@ -923,19 +923,3 @@ function sortStyles(componentStyle) {
 	return _.sortBy(sortedStyles, 'priority');
 }
 
-// testing style priority
-if (require.main === module) {
-	console.log(require('util').inspect(sortStyles({
-		"#myview": {},
-		"#myview[platform=ios]": {},
-		"#myview[size=tablet]": {},
-		".container[platform=android size=tablet]": {},
-		"View[platform=ios]": {},
-		"Label": {},
-		".container[platform=android size=handheld]": {},
-		".container": {}
-	}), false, null));
-	console.log('------------------------------');
-
-}
-
