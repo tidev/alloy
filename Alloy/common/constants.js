@@ -7,6 +7,7 @@ exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
+exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 
 exports.FILE_EXT = {
 	VIEW: 'xml',
@@ -15,6 +16,7 @@ exports.FILE_EXT = {
 	MODELCODE: 'js',
 	MIGRATION: 'js',
 	CONTROLLER: 'js',
+	COMPONENT: 'js',
 	CONFIG: 'json'
 };
 
