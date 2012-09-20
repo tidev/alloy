@@ -3,7 +3,7 @@
  * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
  * See LICENSE for more information on licensing.
  */
-var program = require('commander'),
+ var program = require('commander'),
 	logger = require("./common/logger"),
 	U = require('./utils'),
 	colors = require("colors"),
@@ -18,30 +18,7 @@ path.existsSync = fs.existsSync || path.existsSync;
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
 
-// TODO: https://jira.appcelerator.org/browse/ALOY-206
-//       get the action list from the commands directory
-var ACTIONS = ['compile', 'generate', 'new', 'run'];
-
 // TODO: improve help - https://jira.appcelerator.org/browse/ALOY-207
-// TODO: handle localization - https://jira.appcelerator.org/browse/ALOY-208
-
-function banner()
-{
-	var str = 
-	"       .__  .__                \n"+
-	"_____  |  | |  |   ____ ___.__.\n"+
-	"\\__  \\ |  | |  |  /  _ <   |  |\n"+
-	" / __ \\|  |_|  |_(  <_> )___  |\n"+
-	"(____  /____/____/\\____// ____|\n"+
-	"     \\/                 \\/";
-	
-	if (!program.dump)
-	{
-		console.log(logger.stripColors ? str : str.blue);
-		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
-		console.log(logger.stripColors ? colors.stripColors(m) : m);
-	}
-}
 
 ////////////////////////////////////
 ////////// MAIN EXECUTION //////////
@@ -51,7 +28,7 @@ function banner()
 program
 	.version(module.exports.version)
 	.description('Alloy command line')
-	.usage('ACTION [ARGS] [OPTIONS]')
+	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
@@ -85,18 +62,47 @@ banner();
 if (program.args.length === 0)
 {
 	var help = program.helpInformation();
-	help = help.replace('Usage: alloy ACTION [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' ACTION'.white+' [ARGS] [OPTIONS]'.grey);
+	help = help.replace('Usage: alloy COMMAND [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' COMMAND'.white+' [ARGS] [OPTIONS]'.grey);
 	help = logger.stripColors ? colors.stripColors(help) : help;
 	console.log(help);
 	process.exit(1);
 }
 
-// Validate the command line action
-var action = program.args[0];
-if (!_.contains(ACTIONS, action)) {
-	U.die('Unknown action: ' + action.red);
+// Validate the given command
+var command = program.args[0];
+if (!_.contains(getCommands(), command)) {
+	U.die('Unknown command: ' + command.red);
 }
 
 // Launch command with given arguments and options
-(require('./commands/' + action + '/index'))(program.args.slice(1), program);
+(require('./commands/' + command + '/index'))(program.args.slice(1), program);
 
+///////////////////////////////
+////////// FUNCTIONS //////////
+///////////////////////////////
+function banner() {
+	var str = 
+	"       .__  .__                \n"+
+	"_____  |  | |  |   ____ ___.__.\n"+
+	"\\__  \\ |  | |  |  /  _ <   |  |\n"+
+	" / __ \\|  |_|  |_(  <_> )___  |\n"+
+	"(____  /____/____/\\____// ____|\n"+
+	"     \\/                 \\/";
+	
+	if (!program.dump) {
+		console.log(logger.stripColors ? str : str.blue);
+		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
+		console.log(logger.stripColors ? colors.stripColors(m) : m);
+	}
+}
+
+function getCommands() {
+	try {
+		var commandsPath = path.join(__dirname,'commands');
+		return _.filter(fs.readdirSync(commandsPath), function(file) {
+			return path.existsSync(path.join(commandsPath,file,'index.js'));
+		});
+	} catch (e) {
+		U.die('Error getting command list', e);
+	}
+}
