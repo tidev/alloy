@@ -17,6 +17,7 @@ Release Notes
 
 - When targeting Mobile Web you must do ```alloy compile``` from the command line before running the app.
 - Alloy only runs on OSX. Windows and Linux support coming soon.
+- npm version 0.2.34 has a modified model description file that is note compatible with earlier versions. This only effects applications that make use of the Backbone model functionality of Alloy. See the release notes on [Google Groups](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy) for migration instructions.
 
 
 Goals
