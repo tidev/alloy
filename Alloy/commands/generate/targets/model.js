@@ -32,7 +32,7 @@ module.exports = function(name, args, program) {
 				var arr = pair.split(':');
 				json.columns[arr[0]] = arr[1];
 			});
-			return U.stringifyJSON(json);
+			return U.prettyPrintJson(json); 
 		}
 	});
 	logger.info('Generated ' + type.toLowerCase() + ' named ' + name);

@@ -403,16 +403,14 @@ exports.isTiProject = function(dir)
 	return (path.existsSync(path.join(dir,'tiapp.xml')));
 }
 
-exports.stringifyJSON = function(j)
-{
+exports.prettyPrintJson = function(j) {
 	var ast = jsp.parse("("+JSON.stringify(j)+")");
 	ast = pro.ast_mangle(ast);
 	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
-	return final_code = final_code.substring(1,final_code.length-2); // remove ( ) needed for parsing
+	return final_code = final_code.substring(1,final_code.length-2);
 }
 
-exports.die = function(msg, e) 
-{
+exports.die = function(msg, e) {
 	if (e) {
 		logger.error(exports.createErrorOutput(msg, e));
 	} else {
