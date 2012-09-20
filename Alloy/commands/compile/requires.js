@@ -39,18 +39,10 @@ function findAllRequires(fn,filterFn)
 	var code = String(fs.readFileSync(fn,'utf-8'));
 	var ast;
 
-
 	try {
 		ast = jsp.parse(code); 
 	} catch (e) {
-		var errs = ['Error processing require() calls for file "' + fn];
-		if (e.message && typeof e.line !== 'undefined') {
-			errs.push(e.message);
-			errs.push('line ' + e.line + ', column ' + e.col + ', position ' + e.pos);
-		} else {
-			errs.unshift(e.stack);
-		}
-		U.die(errs);
+		U.die('Error processing require() calls for file "' + fn, e);
 	}
 
 	var w = pro.ast_walker();
