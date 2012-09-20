@@ -149,11 +149,21 @@ For example:
 
 Adapters are the interface to the persistent storage for the model data. The current list of adapters are shown below. Note: Not all adapters require the column definition.
 
-Adapter Name 	Require Column Definition 	Notes
-sql				yes 						For local iOS and Android persistence. Store is SQLite
-localStorage	no  						For local MobileWeb persistence. Store is HTML5 localStorage
-localDefault	yes 						For local iOS, Android and MobileWeb persistence
-properties      yes                         For local iOS, Android and MobileWeb persistence of Ti.API.Properties 
+name - sql 
+requires column definition - yes 					
+notes - for local iOS and Android persistence. Store is SQLite
+
+name - localStorage 
+requires column definition - no					
+notes - For local MobileWeb persistence. Store is HTML5 localStorage
+
+name - localDefault
+requires column definition - yes 					
+notes - for local iOS, Android and MobileWeb persistence. Uses sql or localStorage based on runtime platform
+
+name - properties
+requires column definition - yes 					
+notes - For local iOS, Android and MobileWeb persistence of Ti.API.Properties 
 
 Generating Migrations
 ---------------------
