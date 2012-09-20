@@ -1,13 +1,20 @@
+
+<%= modelJs %>
+
+
 var Alloy = require('alloy'),
+    _ = require("alloy/underscore")._,
 	model, collection;
 
 model = Alloy.M('<%= basename %>',
-	<%= modelConfig %>,
-	<%= modelJs %>,
+	 exports.definition,
 	[<%= migrations %>]
 );
-collection = Alloy.Backbone.Collection.extend({model:model});
-collection.prototype.config = model.prototype.config;
+
+collection = Alloy.C('<%= basename %>',
+	 exports.definition, 
+	 model
+);
 
 exports.Model = model;
 exports.Collection = collection;

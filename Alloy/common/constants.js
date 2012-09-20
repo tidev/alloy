@@ -12,7 +12,7 @@ exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 exports.FILE_EXT = {
 	VIEW: 'xml',
 	STYLE: 'tss',
-	MODEL: 'json',
+	MODEL: 'js',
 	MODELCODE: 'js',
 	MIGRATION: 'js',
 	CONTROLLER: 'js',

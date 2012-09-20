@@ -141,12 +141,19 @@ Generating Models
 
 To generate a model, you can run the following command:
 
-	alloy generate model <name> [column_name:type, ...]
+	alloy generate model <name> <adapter> [column_name:type column_name2:type ...]
 	
 For example:
 
-	alloy generate model todo name:string active:boolean
-	
+	alloy generate model todo sql name:string active:boolean
+
+Adapters are the interface to the persistent storage for the model data. The current list of adapters are shown below. Note: Not all adapters require the column definition.
+
+Adapter Name 	Require Column Definition 	Notes
+sql				yes 						For local iOS and Android persistence. Store is SQLite
+localStorage	no  						For local MobileWeb persistence. Store is HTML5 localStorage
+localDefault	yes 						For local iOS, Android and MobileWeb persistence
+properties      yes                         For local iOS, Android and MobileWeb persistence of Ti.API.Properties 
 
 Generating Migrations
 ---------------------
@@ -309,9 +316,9 @@ In the above example, you should have 3 other view files named `first.xml`, `sec
 Working with Models & Collections
 -----------------------------------
 
-For models, we specify the descriptor of our model using JSON as the name of the model ending with `.json`.
+For models, we specify the descriptor of our model using Javascript as the name of the model ending with `.js`.
 
-A model and collection class are automatically defined and available in your controller scope as the name of the model (name of descriptor JSON file).
+A model and collection class are automatically defined and available in your controller scope as the name of the model (name of descriptor Javascript file).
 
 For example, if you defined a model named `Book`, it would be available as the same name in Alloy using the methods Alloy.createCollection('Book') or Alloy.createModel('Book'). 
 
@@ -326,7 +333,9 @@ books.add(book);
 Models inherit from Backbone.Model. _NOTE: if the first character of a model is lower case, it will be automatically converted to uppercase for referencing the Model class._
 
 Collections inherit from Backbone.Collections.
-	
+
+Make sure to check out the model samples under alloy/test/apps/model_apps to see how to create a model description. Also for advanced developers check out alloy/Alloy/lib/alloy/sync. There you will see the list of adapters. They provide the CRUD interface to the persistent store. They are dynamically loaded through the model descriptor and it's fairly straight for to create you own.  
+
 Building Application Logic
 --------------------------
 

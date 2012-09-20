@@ -86,8 +86,8 @@ function SQLiteMigrateDB() {
 		return 'TEXT';
 	};
 	
-	this.createTable = function(name,config) {
-		Ti.API.info('create table migration called for '+config.adapter.tablename);
+	this.createTable = function(config) {
+		Ti.API.info('create table migration called for '+config.adapter.collection_name);
 		
 		var self = this,
 			columns = [];
@@ -96,7 +96,7 @@ function SQLiteMigrateDB() {
 			columns.push(k+" "+self.column(config.columns[k]));
 		}
 			
-		var sql = 'CREATE TABLE '+config.adapter.tablename+' ( '+columns.join(',')+',id' + ' )';
+		var sql = 'CREATE TABLE '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
 		Ti.API.info(sql);
 		
 		db.execute(sql);
@@ -109,7 +109,7 @@ function SQLiteMigrateDB() {
 }
 
 function Sync(model, method, opts) {
-	var table =  model.config.adapter.tablename;
+	var table =  model.config.adapter.collection_name;
 	var columns = model.config.columns;
 	
 	switch (method) {

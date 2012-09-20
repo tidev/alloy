@@ -1,9 +1,33 @@
-(function(Model) {
-	// add code to modify/extend your Model definition
-	// Example:
-	//   return Model.extend({
-	//       customProperty: 123,
-	//       customFunction: function() {}
-	//   });
-	return Model; 
-})
+exports.definition = {
+	
+	config: {
+<%= schema %>
+		"adapter": {
+			"type": "<%= adapter %>",
+			"collection_name": "<%= name %>"
+		}
+	},		
+
+	extendModel: function(Model) {		
+		_.extend(Model.prototype, {
+						
+			// extended functions go here
+
+		}); // end extend
+		
+		return Model;
+	},
+	
+	
+	extendCollection: function(Collection) {		
+		_.extend(Collection.prototype, {
+			
+			// extended functions go here			
+			
+		}); // end extend
+		
+		return Collection;
+	}
+		
+}
+
