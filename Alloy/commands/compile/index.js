@@ -505,8 +505,12 @@ function optimizeCompiledCode(config) {
 			logger.debug('Optimizing runtime javascript file "' + file + '"');
 
 			// we fix require paths to make sure they are correct and relative to the project
-			var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
-			fs.writeFileSync(f,newSrc,'utf-8');
+			try {
+				var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
+				fs.writeFileSync(f,newSrc,'utf-8');
+			} catch (e) {
+				U.die('Error while checking require() calls in "' + f + '"', e);
+			}
 		}
 	});
 	logger.debug('');
