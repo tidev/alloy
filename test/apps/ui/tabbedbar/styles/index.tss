@@ -2,7 +2,6 @@
 	backgroundColor: '#fff'
 },
 "TabbedBar": {
-	top: 5,
 	width: '90%',
 	height: Ti.UI.SIZE
 },

@@ -1,11 +1,11 @@
 <Alloy>
 	<Window>
-		<TabbedBar platform="ios" onClick="sayHi">
+		<ButtonBar platform="ios" onClick="sayHi">
 			<!-- These get added to the TabbedBar "labels" array -->
 			<Labels>
 				<!-- Specify text with node text or "title" attribute. -->
-				<Label>tab 1</Label>
-				<Label title="tab 2"/>
+				<Label>button 1</Label>
+				<Label title="button 2"/>
 
 				<!-- uses images and/or widths -->
 				<Label width="40" image="/KS_nav_ui.png"/>
@@ -22,7 +22,7 @@
 			    per the documentation of the add() function.
 			 -->
 			<!-- <View opacity="0.25" backgroundColor="#a00" width="50%"/> -->
-		</TabbedBar>
+		</ButtonBar>
 		<Label platform="android,mobileweb">Ti.UI.iOS.Toolbar only supported on iOS</Label>
 	</Window>
 </Alloy>
