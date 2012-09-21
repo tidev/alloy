@@ -4,6 +4,8 @@ var fs = require('fs'),
 	ConsoleReporter = require('../test/lib/ConsoleReporter'),
 	_ = require('../Alloy/lib/alloy/underscore');
 
+path.existsSync = fs.existsSync || path.existsSync;
+
 //globalize the Jasmine functions
 _.extend(global, jlib);
 
