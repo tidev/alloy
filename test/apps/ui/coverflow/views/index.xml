@@ -1,0 +1,19 @@
+<Alloy>
+	<Window>
+		<CoverFlowView id="coverflow" platform="ios">
+			<Images>
+				<!-- Assign image by node text or "image" attribute -->
+				<Image>appc1.png</Image>
+				<Image image="appc2.png"/>
+
+				<!-- you can also change the width and height -->
+				<Image width="100" height="100" image="appc3.png"/>
+				<Image width="50" height="50">appc4.png</Image>
+			</Images>
+
+			<!-- additional views for the CoverFlowView -->
+			<Label id="apilabel">Ti.UI.iOS.CoverFlowView</Label>
+		</CoverFlowView>
+		<Label platform="!ios">Ti.UI.iOS.CoverFlowView only supported on iOS</Label>
+	</Window>
+</Alloy>
