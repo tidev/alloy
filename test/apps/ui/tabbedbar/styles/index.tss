@@ -1,0 +1,18 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"TabbedBar": {
+	top: 5,
+	width: '90%',
+	height: Ti.UI.SIZE
+},
+"Button": {
+	width: Ti.UI.SIZE
+},
+"Label": {
+	color: '#000',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	}
+}
