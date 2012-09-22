@@ -9,7 +9,7 @@ exports.definition = {
 		},
 		"adapter": {
 			"type": "properties",
-			"prefix": "singleModel"
+			"collection_name": "singleModel"
 		}
 	}
 }

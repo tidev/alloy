@@ -17,7 +17,7 @@ function getUniqueId(id) {
 };
 
 function Sync(model, method, opts) {
-	var prefix = model.config.adapter.prefix ? model.config.adapter.prefix : 'default';
+	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
 	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
 
 	if (method === 'read') {

@@ -13,7 +13,7 @@ exports.definition = {
 		},
 		"adapter": {
 			"type": "properties",
-			"prefix": "collection"
+			"collection_name": "collection"
 		}
 	}
 }

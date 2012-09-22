@@ -15,12 +15,12 @@ exports.definition = {
 					var value = attrs[key];
 					if (key === "book") {
 						if (value.length <= 0) {
-							return false;
+							return 'Error: No book!';
 						}
 					}
 					if (key === "author") {
 						if (value.length <= 0) {
-							return false;
+							return 'Error: No author!';
 						}	
 					}	
 				}
