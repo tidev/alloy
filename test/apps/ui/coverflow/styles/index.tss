@@ -5,8 +5,7 @@
 	color: '#000'
 },
 "#coverflow": {
-	backgroundColor: '#000',
-	images: ['/appc1.png', '/appc2.png', '/appc3.png', '/appc4.png']
+	backgroundColor: '#000'
 },
 "#apilabel": {
 	color: '#fff',
