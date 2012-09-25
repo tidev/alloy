@@ -1,6 +1,55 @@
 /**
- * The drawer widget manifests itself as a sliding panel on iOS and MobileWeb and as additions to the activity menu on Android.
- * The sliding panel has a row of horizontal buttons that take a 48x48 icon by default.
+ * @class Alloy.widgets.drawer
+ * The drawer widget appears as a sliding panel on iOS and Mobile Web, and as additions to
+ * the activity menu or as a sliding panel on Android.
+ * The sliding panel has a row of horizontal buttons. By default, the buttons are a set of
+ * 48x48-pixel PNG images.
+ *
+ * ### Usage
+ *
+ * To use the widget, first add it as a dependency in the `config.json` file:
+ *
+ *      "dependencies": {
+ *          "com.appcelerator.drawer":"1.0"
+ *      }
+ *
+ * Next, add it to a view in the project, using the Require tag:
+ *
+ *     <Require id="drawer" type="widget" src="com.appcelerator.drawer"/>
+ *
+ * Note: the `id` attribute is a unique identfier and can be anything. `drawer` is just an example.
+ *
+ * In the controller, use the `init` method to initialize the drawer configration before opening
+ * the window:
+ *
+ *     $.drawer.init({
+ *         mainWindow: $.index,
+ *         buttons: [
+ *             { id: 'One', text: 'One', click: function (e) { alert("One"); } },
+ *             { id: 'Two', text: 'Two',  click: function (e) { alert("Two"); } },
+ *             { id: 'Three', text: 'Three',  click: function (e) { alert("Three"); } }
+ *         ],
+ *         autoClose: true,
+ *         gutter: 5
+ *     });
+ *
+ * In the 'assets' folder, add a folder called 'images' and place the drawer icons inside it.
+ * Each button will have its own enabled and disabled icon.  The icon images will need to be called
+ * '<button.id>Enabled.png' and '<button.id>Disabled.png'. For instance, in this example,
+ * the project will need the following icons: OneEnabled.png, OneDisabled.png, TwoEnabled.png,
+ * TwoDisabled.png, ThreeEnabled.png and ThreeDisabled.png.
+ *
+ * ### Accessing View Elements
+ *
+ * The following is a list of GUI elements in the widget's view.  These IDs can be used to
+ * override or access the properties of these elements:
+ *
+ * - `drawer`: Titanium.UI.View for the entire widget.
+ * - `pulltab`: Titanium.UI.Button for the pull tab button.
+ * - `buttonbar`: Titanium.UI.View for the row of buttons.
+ *
+ * Prefix the special variable `$` and the widget ID to the element ID, to access
+ * that view element, for example, `$.drawer.pulltab` will give you access to the Button.
  */
 
 var DRAWER_PULLTAB_HEIGHT = 16;
@@ -32,8 +81,14 @@ function pullTabClick(e) {
 }
 
 /**
- * Request that the drawer run all the associated enabled callbacks for the buttons and set
- * their state.
+ * @method checkEnabled
+ * Request that the drawer run all the associated `enabled` callbacks for the buttons and set
+ * their state. Call this function whenever a state change could affect the enable state of
+ * buttons in the drawer.
+ *
+ * On Android, if `overrideMenu` is `false`, the `enabled` callback is called automatically
+ * before the menu is shown. In all other cases, you will need to explicitly call the
+ * `checkEnabled` method in order to get those callbacks to fire.
  */
 exports.checkEnabled = function DrawerCheckEnabled() {
     if (OS_IOS || OS_MOBILEWEB || _params.overrideMenu) {
@@ -48,24 +103,25 @@ exports.checkEnabled = function DrawerCheckEnabled() {
 }
 
 /**
- * Initialize the drawer
- * @param {TiUIWindow} mainWindow Window to add the menu items to on Android.
- * @param {Array} buttons
- * @example
- * [{
- *      id: STRING the id of this item.  Also selects the image icon for this item. (should be 48x48)
- *      title: STRING the text for this item (Android only).
- *      click: FUNCTION the callback to call when the button is clicked
- *      enabled: FUNCTION the callback to call to determine if the button should be enabled (returns true/false)
- * }]
- * @param {boolean} autoClose Automatically close the drawer after a button has been selected. default: false
- * @param {integer} iconSize Size of the icon to be used in the drawer. default: 48x48
- * @param {number} openOpacity Opacity of the drawer when it is open in the view. default: 0.9
- * @param {number} closeOpacity Opacity of the drawer when it is closed in the view. default: 0.75
- * @param {integer} animationDuration Duration, in milliseconds, to close/open the drawer. default: 500
- * @param {integer} gutter Offset used to space buttons from each other. default: 0
- * @param {string} overrideMenu Override the use of the menu in Android and use a drawer like in iOS/MobileWeb
- * * */
+ * @method init
+ * Initializes the drawer.
+ * @param {Titanium.UI.Window} mainWindow Window to add the menu items to on Android.
+ * @param {Array.<Object>} buttons Array of button objects.
+ * @param {String} buttons.id ID of this button and identifies the image icon.
+ * @param {String} buttons.title Text for this button in the Android menu.
+ * @param {function(Object)} [buttons.click] Callback fired when the button is clicked.
+ * Passed context is an event object, which is the same as the one from Titanium.UI.Button.click.
+ * @param {function(void):Boolean} [buttons.enabled] Callback to determine if the button should
+ * be enabled. No context is passed. Returned value is a boolean.
+ * @param {Boolean} [autoClose=false] Automatically close the drawer after a button has been selected.
+ * @param {Number} [iconSize=48] Size of the icon to be used in the drawer.
+ * @param {Number} [openOpacity=0.9] Opacity of the drawer when it is open in the view.
+ * @param {Number} [closeOpacity=0.75] Opacity of the drawer when it is closed in the view.
+ * @param {Number} [animationDuration=500] Duration, in milliseconds, to close or open the drawer.
+ * @param {Number} [gutter=0] Offset used to space buttons from each other.
+ * @param {String} [overrideMenu=false] Overrides the use of the menu in Android and use a drawer
+ * like in iOS and Mobile Web.
+ */
 
 exports.init = function DrawerInit(args) {
     _buttons = args.buttons;
