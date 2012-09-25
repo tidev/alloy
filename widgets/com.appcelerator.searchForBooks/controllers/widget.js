@@ -1,3 +1,54 @@
+/**
+ * @class Alloy.widgets.searchForBooks
+ * The searchForBooks widget sends a query to the Google Books API to retrieve book data.
+ * In the view, it appears as a search bar with a textbox and a button icon.
+ *
+ * ### Usage
+ *
+ * To use the widget, first add it as a dependency in the `config.json` file:
+ *
+ *     "dependencies": {
+ *         "com.appcelerator.searchForBooks":"1.0"
+ *     }
+ *
+ * Next, add it to a view in the project, using the Require tag:
+ *
+ *     <Require id="sfb" type="widget" src="com.appcelerator.searchForBooks"/>
+ *
+ * Note: the `id` attribute is a unique identfier and can be anything. `sfb` is just an example.
+ *
+ * In the controller, use the `setHandlers` method to register a callback to process the retrieved data.
+ *
+ *     function processData(books){
+ *        var data = [];
+ *        books.forEach(function(book){
+ * 	          var label = book.title + ' by ' + book.authors;
+ *            var row = Ti.UI.createTableViewRow({title:label});
+ *            data.push(row)
+ *        });
+ *        // tableView is a Ti.UI.TableView object in the view
+ *        $.tableView.setData(data);
+ *     }
+ *     $.sfb.setHandlers({
+ * 	       success: processData
+ *     });
+ *
+ * ### Accessing View Elements
+ *
+ * The following is a list of GUI elements in the widget's view.  These IDs can be used to
+ * override or access the properties of these elements:
+ *
+ * - `bar`: Titanium.UI.View for the entire widget.
+ * - `text`: Titanium.UI.TextField for the search box.
+ * - `searchView`: Titanium.UI.View for the icons and acts as a button.
+ * - `search`: Titanium.UI.ImageView for the search icon.
+ * - `loading`: Alloy.widgets.loading for the loading icon.
+ *
+ * Prefix the special variable `$` and the widget ID to the element ID, to access
+ * that view element, for example, `$.sfb.text` will give you access to the TextField.
+ */
+
+
 var API_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 var HANDLERS = ['success','error'];
 var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
@@ -22,6 +73,16 @@ model.on('change:loading', function(m) {
 ////////////////////////////////////
 ///////// public functions /////////
 ////////////////////////////////////
+/**
+ * @method setHandlers
+ * Binds callback handlers to events
+ * @param {Object} args Callbacks to register.
+ * @param {function(Array.<Object>)} args.success Callback fired after successfully retrieving book data.
+ * Passed context is an array of book data {`title`:String, `authors`:String, `image`:String}.
+ * @param {function(Object)} [args.error] Callback to override the default error handling.
+ * Passed context is an error object, which is the same as the one from Titanium.Network.HTTPClient.onerror.
+ */
+
 exports.setHandlers = function(args) {
 	_.each(HANDLERS, function(h) {
 		if (args[h]) {
