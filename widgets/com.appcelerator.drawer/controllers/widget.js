@@ -69,8 +69,10 @@ _buttons = [];          // Button descriptions.
 _params = {};           // Behavior and styling parameters for the drawer. Originally set to defaults.
 
 function pullTabClick(e) {
-   _isOpen = !_isOpen;
-   $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + (_isOpen ? "PullTabDown.png" : "PullTabUp.png");
+    _isOpen = !_isOpen;
+    $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + (_isOpen ? "PullTabDown.png" : "PullTabUp.png");
+    
+    Ti.API.info((_isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + _params.iconSize + _params.gutter * 2 + ", drawer=" + $.drawer.size.height + ")");
     
     var animation = Ti.UI.createAnimation({
         bottom: _isOpen ? 0 : -(_params.iconSize + _params.gutter * 2),
