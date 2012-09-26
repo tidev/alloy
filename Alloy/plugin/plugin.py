@@ -25,15 +25,26 @@ def check_output(*popenargs, **kwargs):
 
 def compile(config):
     binaries = ["node","alloy"]
+    environVars = {
+        "node":"ALLOY_NODE_PATH",
+        "alloy":"ALLOY_PATH"
+    }
     paths = {}
-    nodeCmd = None
-    alloyCmd = None
     
     # Find the paths for both node and alloy
     for binary in binaries:
+        # Check for environment variables first
+        try:
+            paths[binary] = os.environ[environVars[binary]]
+            continue
+        except KeyError as ex:
+            # didn't find environment variable, keep looking
+            pass
+        
+        # next try PATH, and then our guess paths
         if sys.platform == "darwin" or sys.platform.startswith('linux'):
             userPath = os.environ["HOME"]
-            pathChecks = [
+            guessPaths = [
                 "/usr/local/bin/"+binary,
                 "/opt/local/bin/"+binary,
                 userPath+"/local/bin/"+binary,
@@ -49,7 +60,7 @@ def compile(config):
                 print "[WARN]   %s" % os.environ["PATH"]
                 print "[WARN]"
                 print "[WARN] Checking for %s in a few default locations:" % binary
-                for p in pathChecks:
+                for p in guessPaths:
                     sys.stdout.write("[WARN]   %s -> " % p)
                     if os.path.exists(p):
                         binaryPath = p
@@ -96,6 +107,9 @@ def compile(config):
         
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
         cmd = [paths["node"], paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
+        
+        print "[INFO] Executing Alloy compile:"
+        print "[INFO]   %s" % " ".join(cmd)
         
         try:
             print check_output(cmd, stderr=subprocess.STDOUT)
