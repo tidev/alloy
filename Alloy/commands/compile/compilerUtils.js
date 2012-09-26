@@ -803,7 +803,11 @@ function processTssFile(f, manifest) {
     			var wpath = path.join(path.dirname(content),manifest.id,path.basename(content));
     			
     			// TODO: http://jira.appcelerator.org/browse/ALOY-296
-    			if (!/^\//.test(wpath)) { wpath = '/' + wpath; } 
+    			if (compilerConfig && compilerConfig.alloyConfig &&
+    				compilerConfig.alloyConfig.platform === 'android' && 
+    				!/^\//.test(wpath)) { 
+    				wpath = '/' + wpath; 
+    			} 
     			
     			return ['string', wpath];
     		} else {
