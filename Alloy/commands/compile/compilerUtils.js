@@ -36,7 +36,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	IMPLICIT_NAMESPACES = {
 		// Alloy
 		Require: NS_ALLOY,
-		Include: NS_ALLOY,
+		Widget: NS_ALLOY
 
 		// Ti.Map
 		Annotation: NS_TI_MAP,
