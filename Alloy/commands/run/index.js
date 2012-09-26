@@ -25,6 +25,11 @@ module.exports = function(args, program) {
 
 	// Check for platform
 	var platform = args[1] || 'iphone';
+
+	// TODO: http://jira.appcelerator.org/browse/ALOY-299
+	if (platform === 'mobileweb') {
+		U.die('`alloy run` not supported by mobileweb');	
+	}
 	var checkPath = path.join(inputPath,'Resources',platform);
 
 	// assert that the platform directory exists
