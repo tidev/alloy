@@ -14,7 +14,7 @@ var SDK_PATHS = {
 		suffix: 'mobilesdk/osx'
 	},
 	linux: {
-		path: '~/.titanium/',
+		path: path.join(HOME,'.titanium/'),
 		suffix: 'mobilesdk/linux'
 	},
 	win32: {
