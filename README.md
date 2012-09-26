@@ -1,3 +1,5 @@
+*NOTICE* We are closing the Github Issues section. Please go to the [Titanium Community Jira](http://jira.appcelerator.org/browse/TC) to log future tickets for Alloy. Be sure to add the label "alloy" to your ticket.
+
 Alloy
 =====
 
