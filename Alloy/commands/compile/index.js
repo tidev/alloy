@@ -209,7 +209,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		template = {
 			viewCode: '',
 			controllerCode: '',
-			exportsCode: ''
+			exportsCode: '',
+			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
 		state = { parent: {} },
@@ -250,7 +251,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		if (path.existsSync(files.STYLE)) {
 			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
-		state.styles = CU.loadAndSortStyle(files.STYLE);
+		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
 
 		// Load view from file into an XML document root node
 		try {

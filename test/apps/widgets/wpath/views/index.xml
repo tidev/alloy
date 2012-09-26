@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Widget src="com.test.hellobutton"/>
+	</Window>
+</Alloy>

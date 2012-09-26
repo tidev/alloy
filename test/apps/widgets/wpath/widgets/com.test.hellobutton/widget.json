@@ -1,0 +1,14 @@
+{
+	"id": "com.test.hellobutton",
+	"name": "Hello Button",
+	"description" : "A button, that when pressed, says hello",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 by Tony Lukasavage",
+	"license":"Public Domain",
+	"min-alloy-version": "0.2.35",
+	"min-titanium-version":"2.1",
+	"tags":"",
+	"platforms":"android,ios,mobileweb",
+	"dependencies": {}
+}

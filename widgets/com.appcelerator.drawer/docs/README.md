@@ -1,14 +1,14 @@
-![Widget Header](./img/header.png)
+![Widget Header](img/header.png)
 
 ## Overview
 
 The **Drawer** widget provides a sliding panel of buttons to pull up from the bottom of the screen. As an option, the drawer can automatically close after it has been used. On Android, the drawer manifests itself as the activity menu, unless the developer wants to specifically override that capability.
 
-![iOS Drawer Closed](./img/ios_closed.png)
-![iOS Drawer Closed](./img/ios_open.png)
+![iOS Drawer Closed](img/ios_closed.png)
+![iOS Drawer Closed](img/ios_open.png)
 
-![Android Activity Menu Version](./img/android_overridemenu_false.png)
-![Android Drawer Version](./img/android_overridemenu_true.png)
+![Android Activity Menu Version](img/android_overridemenu_false.png)
+![Android Drawer Version](img/android_overridemenu_true.png)
 
 ## Manifest
 * Version: 1.0 (stable)
@@ -45,9 +45,9 @@ The drawer doesn't have any buttons in it until you initialize it in your contro
 $.drawer.init({
 	mainWindow: $.index,
 	buttons: [
-    	{ id: 'One', text: 'One', click: function (e) { alert("One"); } },
-        { id: 'Two', text: 'Two',  click: function (e) { alert("Two"); } },    
-        { id: 'Three', text: 'Three',  click: function (e) { alert("Three"); } }    
+    	{ id: 'One', title: 'One', click: function (e) { alert("One"); } },
+        { id: 'Two', title: 'Two',  click: function (e) { alert("Two"); } },    
+        { id: 'Three', title: 'Three',  click: function (e) { alert("Three"); } }    
     ],
     autoClose: true,
     gutter: 5

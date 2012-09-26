@@ -3,6 +3,8 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	A$ = Alloy.A;
 
+<%= WPATH %>
+
 function Controller() {
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	

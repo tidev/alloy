@@ -36,7 +36,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	IMPLICIT_NAMESPACES = {
 		// Alloy
 		Require: NS_ALLOY,
-		Include: NS_ALLOY,
+		Widget: NS_ALLOY,
 
 		// Ti.Map
 		Annotation: NS_TI_MAP,
@@ -529,7 +529,7 @@ exports.loadController = function(file) {
 	return code;
 };
 
-exports.loadStyle = function(tssFile) {
+exports.loadStyle = function(tssFile, manifest) {
 	if (path.existsSync(tssFile)) {
 		// read the style file
 		try {
@@ -548,7 +548,7 @@ exports.loadStyle = function(tssFile) {
 			
 		// Process tss file then convert to JSON
 		try {
-			var code = processTssFile(contents);
+			var code = processTssFile(contents, manifest);
 			var json = jsonlint.parse(code);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
@@ -560,8 +560,8 @@ exports.loadStyle = function(tssFile) {
 	return {};
 };
 
-exports.loadAndSortStyle = function(tssFile) {
-	return sortStyles(exports.loadStyle(tssFile));
+exports.loadAndSortStyle = function(tssFile, manifest) {
+	return sortStyles(exports.loadStyle(tssFile, manifest));
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
@@ -785,7 +785,9 @@ exports.formatAST = function(ast,config,fn)
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function processTssFile(f) {
+function processTssFile(f, manifest) {
+	var widgetId = manifest && manifest.id ? manifest.id : null;
+
 	// Handle "call" ASTs, where we look for expr() syntax
     function do_call() {
     	var name = this[1][1];
@@ -794,6 +796,23 @@ function processTssFile(f) {
     		code = pro.gen_code(this[2][0]);
     	} else if (name === 'L') {
     		code = pro.gen_code(this);
+    	} else if (name === 'WPATH' && widgetId) {
+    		var node = this[2][0];
+    		if (node[0] === 'string') {
+    			var content = node[1];
+    			var wpath = path.join(path.dirname(content),manifest.id,path.basename(content));
+    			
+    			// TODO: http://jira.appcelerator.org/browse/ALOY-296
+    			if (compilerConfig && compilerConfig.alloyConfig &&
+    				compilerConfig.alloyConfig.platform === 'android' && 
+    				!/^\//.test(wpath)) { 
+    				wpath = '/' + wpath; 
+    			} 
+    			
+    			return ['string', wpath];
+    		} else {
+    			U.die('WPATH() can only be used on literal strings in tss style files');
+    		}
     	} else {
     		return null;
     	}
