@@ -250,7 +250,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		if (path.existsSync(files.STYLE)) {
 			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
-		state.styles = CU.loadAndSortStyle(files.STYLE);
+		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
 
 		// Load view from file into an XML document root node
 		try {
