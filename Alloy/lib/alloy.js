@@ -71,7 +71,11 @@ exports.C = function(name, modelDesc, model) {
 	};
 
 	var Collection = Backbone.Collection.extend(extendObj); 
-	Collection.prototype.config = model.prototype.config;
+	var config = Collection.prototype.config = model.prototype.config;
+
+	var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
+	var adapter = require('alloy/sync/'+type);
+	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
 
 	if (_.isFunction(modelDesc.extendModel)) {
 		Collection = modelDesc.extendCollection(Collection) || Collection;
