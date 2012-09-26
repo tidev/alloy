@@ -57,6 +57,10 @@ function findAllRequires(fn,filterFn)
 		}
 		if (entries[0]=='name' && entries[1]=='require')
 		{
+			// only check literal strings, since this is performed at compile time
+			if (this[2][0][0] !== 'string') {
+				return;
+			}
 			var requirePath = makeFullPath(basedir,this[2][0][1]);
 			if (filterFn && _.isFunction(filterFn))
 			{
