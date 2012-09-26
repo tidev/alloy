@@ -6,6 +6,6 @@
     "os:ios": {},
     "os:android": {},
     "dependencies": {
-        "com.test.mywidget":"1.0"
+        "com.test.hellobutton":"1.0"
     }
 }
