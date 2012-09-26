@@ -1,5 +1,3 @@
-*NOTICE* We are closing the Github Issues section. Please go to the [Titanium Community Jira](http://jira.appcelerator.org/browse/TC) to log future tickets for Alloy. Be sure to add the label "alloy" to your ticket.
-
 Alloy
 =====
 
@@ -13,6 +11,7 @@ Current Status
 
 * 2012-06-10 - _Unstable_
 * 2012-08-29 - _Pre-Release_
+* 2012-09-26 - Github Issues closed. Use the [Titanium Community Jira](http://jira.appcelerator.org/browse/TC) instead. 
 
 Release Notes
 -------------
