@@ -52,7 +52,7 @@
 	width: Ti.UI.FILL,
 	color: "#fff",
 	backgroundColor: "transparent",
-	image: "/com.testing.searchForBooks/ic_search.png",
+	image: WPATH("ic_search.png"),
 	touchEnabled: false
 },
 "#loading": {

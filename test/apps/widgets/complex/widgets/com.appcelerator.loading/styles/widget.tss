@@ -2,11 +2,17 @@
 	height: 20,
 	width: 20,
 	images: [
-		"/images/com.appcelerator.loading/00.png", "/images/com.appcelerator.loading/01.png",
-        "/images/com.appcelerator.loading/02.png", "/images/com.appcelerator.loading/03.png",
-        "/images/com.appcelerator.loading/04.png", "/images/com.appcelerator.loading/05.png",
-        "/images/com.appcelerator.loading/06.png", "/images/com.appcelerator.loading/07.png",
-        "/images/com.appcelerator.loading/08.png", "/images/com.appcelerator.loading/09.png",
-        "/images/com.appcelerator.loading/10.png", "/images/com.appcelerator.loading/11.png"
+		WPATH("/images/00.png"),
+		WPATH("/images/01.png"),
+		WPATH("/images/02.png"),
+		WPATH("/images/03.png"),
+		WPATH("/images/04.png"),
+		WPATH("/images/05.png"),
+		WPATH("/images/06.png"),
+		WPATH("/images/07.png"),
+		WPATH("/images/08.png"),
+		WPATH("/images/09.png"),
+		WPATH("/images/10.png"),
+		WPATH("/images/11.png") 
 	]
 }
