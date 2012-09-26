@@ -138,12 +138,11 @@ function Sync(model, method, opts) {
 			{
 				var o = {};
                 var fc = 0;
-                if (Ti.Platform.osname === 'android') {
-                    fc = rs.fieldCount;
-                }
-                else {
-                	 fc = rs.fieldCount();
-                }
+
+                // Pre-3.0.0, Android supported fieldCount as a property, iOS
+                // supported it as a function. Post-3.0.0, both are a property.
+				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
+
 				_.times(fc,function(c){
 					var fn = rs.fieldName(c);
 					o[fn] = rs.fieldByName(fn);
