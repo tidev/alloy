@@ -63,6 +63,12 @@ function py(pyScript, args, version /*optional*/, sdkDir /*optional*/) {
 	function filterLog(line) {
 		line =U.trim(line);
 		if (!line) return;
+
+		// Hack to give an appropriate message for android alloy run.
+		// This will disappear when we integrate with the new CLI.
+		// TODO: http://jira.appcelerator.org/browse/ALOY-258
+		line = line.replace('required argument \'--android\' missing (you can also set the environment variable ANDROID_SDK)','[ERROR] You need to set the ANDROID_SDK environment variable to point to your Android SDK');
+
 		var lines = line.split('\n');
 		if (lines.length > 1) {
 			_.each(lines,function(l) {
