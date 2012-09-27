@@ -24,23 +24,12 @@ def check_output(*popenargs, **kwargs):
     return output
 
 def compile(config):
-    binaries = ["node","alloy"]
-    environVars = {
-        "node":"ALLOY_NODE_PATH",
-        "alloy":"ALLOY_PATH"
-    }
     paths = {}
-    
-    # Find the paths for both node and alloy
-    for binary in binaries:
-        # Check for environment variables first
-        try:
-            paths[binary] = os.environ[environVars[binary]]
-            continue
-        except KeyError as ex:
-            # didn't find environment variable, keep looking
-            pass
-        
+    binary = "alloy"
+    try:
+        # see if the environment variable is defined
+        paths[binary] = os.environ["ALLOY_PATH"]
+    except KeyError as ex:
         # next try PATH, and then our guess paths
         if sys.platform == "darwin" or sys.platform.startswith('linux'):
             userPath = os.environ["HOME"]
@@ -75,12 +64,11 @@ def compile(config):
             else:
                 paths[binary] = binaryPath
     
-        # TODO: http://jira.appcelerator.org/browse/ALOY-57
-        # Windows not working yet, the values below are placeholders
+        # no guesses on windows, just use the PATH
         elif sys.platform == "win32":
-            userPath = os.environ["USERPROFILE"]
-            paths["node"] = "node.exe"
-            paths["alloy"] = "alloy.exe"
+            paths["alloy"] = "alloy.cmd"
+
+
             
     f = os.path.abspath(os.path.join(config['project_dir'], 'app'))
     if os.path.exists(f):
@@ -106,8 +94,8 @@ def compile(config):
             deploytype = config['deploytype']
         
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
-        cmd = [paths["node"], paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
-        
+        cmd = [paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
+
         print "[INFO] Executing Alloy compile:"
         print "[INFO]   %s" % " ".join(cmd)
         
