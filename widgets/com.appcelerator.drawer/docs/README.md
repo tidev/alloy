@@ -35,7 +35,7 @@ You can add a drawer to a view by *requiring* the Drawer widget.
 
 	<Require type="widget" src="com.appcelerator.drawer" id="drawer"/>
 
-Assign it an ID that you can use in your controller. E.g. `id="drawer"` You can now access the drawer via `$.drawer` in your controller.
+Assign it an ID that you can use in your controller. E.g. `id="drawer"` You can now access the drawer via `$.drawer` in your controller. Note that the containing view needs to have a layout of "absolute", which is the default, and not "horizontal" or "vertical", in order to have the drawer work properly.
 
 ## Initializing the Drawer in the Controller
 

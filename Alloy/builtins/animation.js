@@ -67,6 +67,21 @@ exports.fadeIn = function (to, duration) {
 };
 
 /**
+ * @method fadeOut
+ * Fades out the specified view.
+ * @param {Titanium.UI.View} to View to fade out.
+ * @param {Number} duration Fade duration in milliseconds.
+ */
+exports.fadeOut = function (to, duration) {
+    if (to) {
+        to.animate({
+            opacity: 0,
+            duration: duration
+        });
+    }
+};
+
+/**
  * @method popIn
  * Makes the specified view appear using a "pop-in" animation, which combines a fade-in
  * with a slight expanding and contracting animation, to call attention to the new view.

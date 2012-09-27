@@ -72,7 +72,7 @@ function pullTabClick(e) {
     _isOpen = !_isOpen;
     $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + (_isOpen ? "PullTabDown.png" : "PullTabUp.png");
     
-    Ti.API.info((_isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + _params.iconSize + _params.gutter * 2 + ", drawer=" + $.drawer.size.height + ")");
+    Ti.API.info((_isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + (_params.iconSize + _params.gutter * 2) + ", drawer=" + $.drawer.size.height + ")");
     
     var animation = Ti.UI.createAnimation({
         bottom: _isOpen ? 0 : -(_params.iconSize + _params.gutter * 2),
@@ -139,6 +139,7 @@ exports.init = function DrawerInit(args) {
         Object.keys(_buttons).forEach(
             function (key) {
                 var i = parseInt(key); 
+                Ti.API.info("Setting enabled image " + '/images/' + _buttons[i].id + 'Enabled.png');
                 _buttons[i].button = Ti.UI.createButton({
                     top: _params.gutter, left: _params.gutter, width: _params.iconSize, height: _params.iconSize,
                     backgroundImage: '/images/' + _buttons[i].id + 'Enabled.png',
