@@ -41,7 +41,7 @@ function parse(node, state, args) {
 		// create the code for the window
 		var winState = require('./' + parserType).parse(child, CU.createEmptyState(state.styles));
 		subParents.push(winState.parent);
-		code += winState.code;
+		code += CU.generateNode(child, CU.createEmptyState(state.styles));
 	}
 
 	// For now, we will assume the first window is the master, the second 

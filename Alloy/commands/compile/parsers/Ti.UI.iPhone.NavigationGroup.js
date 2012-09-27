@@ -50,9 +50,10 @@ function parse(node, state, args) {
 	}
 
 	// create the code for the window
+	code += CU.generateNode(child, CU.createEmptyState(state.styles));
 	var winState = require('./' + parserType).parse(child, CU.createEmptyState(state.styles));
-	code += winState.code;
 
+	// create navgroup with window 
 	state.extraStyle = CU.createVariableStyle('window', winState.parent.symbol);
 	var navState = require('./default').parse(node, state);
 	code += navState.code;
