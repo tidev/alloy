@@ -746,32 +746,6 @@ exports.formatAST = function(ast,config,fn)
 	}
 
 	var isDev = config.deploytype === 'development';
-	// var options = 
-	// {
-	//         ast: false,
-	//         consolidate: !isDev,
-	//         mangle: !isDev,
-	//         mangle_toplevel: false,
-	//         no_mangle_functions: false,
-	//         squeeze: !isDev,
-	//         make_seqs: !isDev,
-	//         dead_code: true,
-	//         unsafe: false,
-	//         defines: defines,
-	//         lift_vars: false,
-	//         codegen_options: {
-	//                 ascii_only: false,
-	//                 beautify: true, //config.beautify,
-	//                 indent_level: 4,
-	//                 indent_start: 0,
-	//                 quote_keys: false,
-	//                 space_colon: false,
-	//                 inline_script: false
-	//         },
-	//         make: false,
-	//         output: false,
-	// 		except: ['Ti','Titanium','Alloy']
-	// };
 
 	var opts = {
 		mangle: {
