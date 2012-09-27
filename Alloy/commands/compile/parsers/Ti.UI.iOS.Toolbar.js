@@ -13,11 +13,13 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n';
+		code = 'var ' + arrayName + ' = [];\n',
+		hasItems = false;
 
 	// process all Items and create their array, if present
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
 		if (theNode.nodeName === 'Items' && !theNode.getAttribute('ns')) {
+			hasItems = true;
 			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item) {
 				if (item.nodeName === 'FlexSpace' && !item.getAttribute('ns')) {
 					code += arrayName + '.push(' + FLEXSPACE + ');\n';
@@ -38,7 +40,9 @@ function parse(node, state, args) {
 	});
 
 	// Create the initial Toolbar code and let it process its remaing children, if any
-	state.extraStyle = CU.createVariableStyle('items', arrayName);
+	if (hasItems) {
+		state.extraStyle = CU.createVariableStyle('items', arrayName);
+	}
 	var toolbarState = require('./default').parse(node, state);
 	code += toolbarState.code;
 

@@ -10,20 +10,17 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n';
+		code = 'var ' + arrayName + ' = [];\n',
+		hasLabels = false;
 
 	// process all Items and create their array, if present
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
 		if (theNode.nodeName === 'Labels' && !theNode.getAttribute('ns')) {
+			hasLabels = true;
 			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item, index) {
 				if (item.nodeName === 'Label' && !item.getAttribute('ns')) {
-					// per the Titanium docs, these "labels" can be represented as
-					// either strings or object literals. The object literal can have the
-					// following properties
-					// * enabled 
-					// * image 
-					// * title 
-					// * width 
+					/// per the Titanium docs, these "labels" can be represented as
+					// either strings or BarItemTypes.
 					var obj = {};
 					var title = (U.XML.getNodeText(item) || item.getAttribute('title') || '');
 					var image = item.getAttribute('image');
@@ -57,7 +54,9 @@ function parse(node, state, args) {
 	});
 
 	// Create the initial Toolbar code and let it process its remaing children, if any
-	state.extraStyle = CU.createVariableStyle('labels', arrayName);
+	if (hasLabels) {
+		state.extraStyle = CU.createVariableStyle('labels', arrayName);
+	}
 	var tabbedBarState = require('./default').parse(node, state);
 	code += tabbedBarState.code;
 

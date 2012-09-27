@@ -10,11 +10,13 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n';
+		code = 'var ' + arrayName + ' = [];\n',
+		hasImages = false;
 
 	// process all Images and create their array, if present
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
 		if (theNode.nodeName === 'Images' && !theNode.getAttribute('ns')) {
+			hasImages = true;
 			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item, index) {
 				if (item.nodeName === 'Image' && !item.getAttribute('ns')) {
 					// per the Titanium docs, these "images" can be represented as
@@ -50,7 +52,9 @@ function parse(node, state, args) {
 	});
 
 	// Create the initial Toolbar code and let it process its remaing children, if any
-	state.extraStyle = CU.createVariableStyle('images', arrayName);
+	if (hasImages) {
+		state.extraStyle = CU.createVariableStyle('images', arrayName);
+	}
 	var cfvState = require('./default').parse(node, state);
 	code += cfvState.code;
 

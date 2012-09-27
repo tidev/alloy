@@ -10,11 +10,13 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n';
+		code = 'var ' + arrayName + ' = [];\n',
+		hasLabels = false;
 
 	// process all Labels and create their array, if present
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
 		if (theNode.nodeName === 'Labels' && !theNode.getAttribute('ns')) {
+			hasLabels = true;
 			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item, index) {
 				if (item.nodeName === 'Label' && !item.getAttribute('ns')) {
 					// per the Titanium docs, these "labels" can be represented as
@@ -52,7 +54,9 @@ function parse(node, state, args) {
 	});
 
 	// Create the initial Toolbar code and let it process its remaing children, if any
-	state.extraStyle = CU.createVariableStyle('labels', arrayName);
+	if (hasLabels) {
+		state.extraStyle = CU.createVariableStyle('labels', arrayName);
+	}
 	var buttonBarState = require('./default').parse(node, state);
 	code += buttonBarState.code;
 
