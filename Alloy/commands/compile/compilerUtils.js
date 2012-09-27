@@ -746,40 +746,68 @@ exports.formatAST = function(ast,config,fn)
 	}
 
 	var isDev = config.deploytype === 'development';
-	var options = 
-	{
-	        ast: false,
-	        consolidate: !isDev,
-	        mangle: !isDev,
-	        mangle_toplevel: false,
-	        no_mangle_functions: false,
-	        squeeze: !isDev,
-	        make_seqs: !isDev,
-	        dead_code: true,
-	        unsafe: false,
-	        defines: defines,
-	        lift_vars: false,
-	        codegen_options: {
-	                ascii_only: false,
-	                beautify: config.beautify,
-	                indent_level: 4,
-	                indent_start: 0,
-	                quote_keys: false,
-	                space_colon: false,
-	                inline_script: false
-	        },
-	        make: false,
-	        output: false,
-			except: ['Ti','Titanium','Alloy']
-	};
+	// var options = 
+	// {
+	//         ast: false,
+	//         consolidate: !isDev,
+	//         mangle: !isDev,
+	//         mangle_toplevel: false,
+	//         no_mangle_functions: false,
+	//         squeeze: !isDev,
+	//         make_seqs: !isDev,
+	//         dead_code: true,
+	//         unsafe: false,
+	//         defines: defines,
+	//         lift_vars: false,
+	//         codegen_options: {
+	//                 ascii_only: false,
+	//                 beautify: true, //config.beautify,
+	//                 indent_level: 4,
+	//                 indent_start: 0,
+	//                 quote_keys: false,
+	//                 space_colon: false,
+	//                 inline_script: false
+	//         },
+	//         make: false,
+	//         output: false,
+	// 		except: ['Ti','Titanium','Alloy']
+	// };
 
-	ast = pro.ast_mangle(ast,options); // get a new AST with mangled names
-	
+	var opts = {
+		mangle: {
+			mangle: false,                    // Mangle any names?
+			no_functions: true,               // Don't mangle functions?
+			toplevel: false,                  // Mangle toplevel names?
+			defines: defines,                 // A list of definitions to process
+			except: ['Ti','Titanium','Alloy'] // A list of names to leave untouched
+		},
+		squeeze: {
+            make_seqs   : false,  // Make sequences out of multiple statements?
+            dead_code   : true,   // Remove dead code?
+            no_warnings : true,   // Don't print squeeze warning?
+            keep_comps  : true,   // Don't try to optimize comparison operators? (unsafe)
+            unsafe      : false   // Alloy potentially unsafe optimizations?
+        },
+        gen_code: {
+            indent_start : 0,     // Base indentation for lines
+            indent_level : 4,     // Indentation increment for nested lines
+            quote_keys   : false, // Quote keys in objects?
+            space_colon  : false, // Put a space between keys and colons?
+            beautify     : true,  // Beautify the generated code?
+            ascii_only   : false, // Process only ascii characters
+            inline_script: false, // Compress <script> tags?
+            double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
+            ignore_numbers: true  // Don't try to compress numbers
+        }
+	}
+
+	ast = pro.ast_mangle(ast, opts.mangle);
+
 	// TODO: re-enable when complete -> https://jira.appcelerator.org/browse/ALOY-273
-	//ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
-	
-	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
-	return pro.gen_code(ast,options.codegen_options); 
+	// ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
+
+	ast = pro.ast_squeeze(ast, opts.squeeze);
+	return pro.gen_code(ast, opts.gen_code);
 };
 
 ///////////////////////////////////////
