@@ -99,6 +99,10 @@ exports.A = function(t, type, parent) {
 		   cbs = [],
 		   ctx = {};
 
+		if (!al || !rl) {
+			return;
+		}
+
 		t.on = function(e,cb,context) {
 			var wcb = function(evt) {
 				try {
