@@ -36,7 +36,8 @@
     "xmldom":"0.1.9",
     "jake":">=0.3",
     "stripcolorcodes":">0",
-    "jsonlint":"1.5.1"
+    "jsonlint":"1.5.1",
+    "node-appc":"git://github.com/appcelerator/node-appc.git"
   },
   "license":"Apache Public License v2",
   "bin": {
