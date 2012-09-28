@@ -321,50 +321,10 @@ Collections inherit from Backbone.Collections.
 
 Make sure to check out the model samples under alloy/test/apps/model_apps to see how to create a model description. Also for advanced developers check out alloy/Alloy/lib/alloy/sync. There you will see the list of adapters. They provide the CRUD interface to the persistent store. They are dynamically loaded through the model descriptor and it's fairly straight for to create you own.  
 
-Building Application Logic
---------------------------
-
-In Alloy, you separate the application logic from the View logic (the `C` part of `MVC`) with `Controllers`.  
-
-Controllers automagically will have pre-defined your View objects, as long as you've added a unique `id` attribute on the XML.
-
-Each `id` value will reference the corresponding Titanium object in your controller automatically.
-
-For example, if you have a view named `index.xml` with the following:
-
-```xml
-<Window>
-	<Button id="b"></Button>
-</Window>
-```
-	
-You would then define a controller named `index.js` and you could automatically bind events inline in your controller code:
-
-```javascript
-$.b.addEventListener("click",function(){
-	alert("You clicked the button");
-});
-
-// "$.index" is the default variable for a top-level container inside the index.xml
-$.index.open();
-```
-
-If you don't add an `id` attribute to an element, it will not be referenceable directly in your controller.
-
-The pattern for creating Alloy markup is to have the XML element name match the corresponding Titanium API name. Nested elements get added to parent element, for example the Button element below is added as a child to the Window element. Titanium styles are applied through the selectors of the style files described above.
-
-```xml
-<Window>
-	<Button id="b"></Button>
-</Window>
-```
-
 Exporting Properties & Functions from Controllers
 -------------------------------------------------
 
 Sometimes it's necessary to provide properties and functions in your controller that can be used by other controllers as a well defined API.
-
-To export them, you would use the CommonJS `exports` command.
 
 ```javascript 
 exports.foo = function()
@@ -373,11 +333,11 @@ exports.foo = function()
 }
 ```
 
-You would then use the  Alloy.createController method to get the controller instance and call the exported method:
+You would then use the  Alloy.createController method to create a controller instance and call the exported method:
 
 ```javascript
 var c = Alloy.createController("myControllerWithExports"); 
-c.foo(); // 'a' is returned
+var value = c.foo(); // 'a' is returned
 ```
 
 Building Re-usable Application Widgets
@@ -637,12 +597,6 @@ To our intrepid developers taking an early look at alloy, please consider the fo
 * Using [Google Groups](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy). You'll need a gmail or Google Groups account 
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
-
-Caveats
--------
-
-- Mobileweb does not support compiler plugins, so when you want to run an Alloy Mobileweb app through TiStudio, you'll need to manually compile it for alloy first like this:
-```alloy compile --config platform=mobileweb``` 
 	
 Credits
 -------
