@@ -79,11 +79,19 @@ The following folders are not created automatically by Alloy but can be added fo
 Compiling an App
 ----------------
 
-You can run a Titanium project that is using Alloy like any normal build.  However, you can also use Alloy's command line tool to build from the command line.
+### in Titanium Studio:
 
-	alloy compile
+There's nothing to do! Alloy will add a compiler plugin to your project automatically, which will take care of compiling your app with Alloy on every run.
 
-If you run this from the projects directory, it will compile the files to the correct location automatically.
+_**CAVEAT:** Mobileweb does not support compiler plugins, so you'll need to follow the steps for command line compiling when building for Mobileweb._
+
+### on the command line:
+
+While in your Alloy app's project directory, execute the following command
+
+```bash
+alloy compile --config platform=mobileweb   # platform can be "android", "ios", or "mobileweb"
+``` 
 
 Running an App
 ----------------
@@ -101,66 +109,50 @@ Where `directory` is the project directory and `platform` is one of `iphone`, `a
 Debugging an App
 ----------------
 
-Alloy apps can be debugged from within Titanium Studio by setting breakpoints in the generated controller in the Resources/alloy/controllers folder. 
+While Alloy apps are all generated from the code in the `app` directory, you can still use Titanium Studio's runtime debugging to debug your generated code, set breakpoints, etc... You will find all your generated code in the `Resources/alloy/controllers` folder. If you have models and/or widgets in your app, you'll also find generated code in `Resources/alloy/models` and `Resources/alloy/widgets` respectively.
 
-Deploying an App
+_**NOTE:** We are actively persuing source mapping between the Alloy and generated code to allow you to do your runtime debugging right in your Alloy files. Stay tuned for that._
+
+Generating Alloy Files
 ----------------------
 
-Deployment of Alloy apps is current done through Titanium Studio.
+```bash
+# generates a view and style with the given NAME
+alloy generate view NAME 
 
-Generating Controllers
-----------------------
+# generates a view, style, and controller with the give NAME
+alloy generate controller NAME 
 
-To generate an empty controller, style and view file you can run the following command:
+# generates a default widget with the given ID (i.e. com.appcelerator.mywidget)
+alloy generate widget ID 
 
-	alloy generate controller <name>
+# generates an alloy.jmk for compiler pre and post hooks
+alloy generate jmk 
+
+# generates an empty migration file with the given NAME
+alloy generate migration NAME
+
+# generates a model with the given NAME and ADAPTER with column_name:column_type pairs
+# More details in the following section
+alloy generate model NAME ADAPTER [col1:type col2:type ...]
+```
 
 Generating Models
 -----------------
 
 To generate a model, you can run the following command:
 
-	alloy generate model <name> <adapter> [column_name:type column_name2:type ...]
+	alloy generate model NAME ADAPTER col1:type col2:type ...
 	
 For example:
 
 	alloy generate model todo sql name:string active:boolean
 
-Adapters are the interface to the persistent storage for the model data. The current list of adapters are shown below. Note: Not all adapters require the column definition.
+Adapters are the interface to the persistent storage for the model data. They do so by overriding the [sync](http://backbonejs.org/#Sync) function builtin to Backbone.js. The current list of adapters are shown below. Note: Not all adapters require the column definition.
 
-name - sql 
-requires column definition - yes 					
-notes - for local iOS and Android persistence. Store is SQLite
-
-name - localStorage 
-requires column definition - no					
-notes - For local MobileWeb persistence. Store is HTML5 localStorage
-
-name - localDefault
-requires column definition - yes 					
-notes - for local iOS, Android and MobileWeb persistence. Uses sql or localStorage based on runtime platform
-
-name - properties
-requires column definition - yes 					
-notes - For local iOS, Android and MobileWeb persistence of Ti.API.Properties 
-
-Generating Migrations
----------------------
-
-To generate a standalone migration for a specific model, you can run the following command:
-
-	alloy generate migration <name>
-
-This will create a timestamp-ordered migration file for the model specified.	
-
-Generating Widgets
-------------------
-
-To generate a basic widget, you run the following command
-
-	alloy generate widget <name>
-
-This will create a default widget in your projects's `app/widgets` path.
+* **sql** - Persistent storage via SQLite. _[Android,iOS]_
+* **properties** - Persistent storage via Ti.App.Properties. _[Android,iOS,Mobileweb]_
+* **localStorage** - Persistent storage via HTML5 localStarge. _[Mobileweb]_
 
 Developing in Alloy
 -------------------
