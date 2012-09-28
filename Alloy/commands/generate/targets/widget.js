@@ -30,6 +30,7 @@ module.exports = function(name, args, program) {
 			fs.readFileSync(typeTemplate,'utf8')
 		);
 	});
+	wrench.mkdirSyncRecursive(path.join(paths.widget,CONST.DIR.ASSETS), 0777);
 
 	// create widget.json manifest file
 	fs.writeFileSync(
