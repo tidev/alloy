@@ -157,110 +157,114 @@ Adapters are the interface to the persistent storage for the model data. They do
 Developing in Alloy
 -------------------
 
-You are required to only define one file at a minimum, which is the default view file, `index.xml`, which must be placed in the `views` folder.  
+All Alloy development happens in the `app` directory. MAKE NO CHANGES IN RESOURCES, THEY WILL GET DELETED! That includes the `app.js`. The main entry point for your Alloy app will be your `index.xml` file, and optionally its associated controller and styles, named `index.js` and `index.tss` respectively. 
 
-In Alloy, the controller (which is optional) must be named with the same name as the view with the `.js` file extension and placed in the `controllers` folder.
+Let's take a look at what a simple Hello World would look like in Alloy. We'll disect each section.
 
-In alloy, you do not provide an `app.js` as it will be automatically generated.
-
-In Alloy, any view styles will automatically be loaded from a file with the same name as the view and an `.tss` file extension and located in the `styles` directory.  The file format is JSON.  Each of the objects in the view that you want to be referenceable either through styling or programmatically must have an `id` attribute on the object.
-
-You define a style file (*.tss) like this:
-
-```tss
-	"#a" : {
-		"backgroundColor" : "red",
-		"width": Ti.UI.FILL,
-		"height": "100"
-	},
-	"#b" : {
-		"width":Ti.UI.SIZE,
-		"height":Ti.UI.SIZE
-	},
-	"#t" : {
-		"width":Ti.UI.FILL,
-		"height":Ti.UI.SIZE,
-		"color":"black"
-	}
+### index.xml
+```xml
+<Alloy>
+    <Window>
+    	<Label id="mylabel">Hello, World!</Label>
+    </Window>
+</Alloy>
 ```
-	
-And then you would define the view such as:
+
+### index.tss
+```javascript
+"Window": {
+    backgroundColor: '#fff'
+},
+"#mylabel": {
+    color: '#000',
+    font: {
+    	fontSize: '18dp',
+    	fontWeight: 'bold'
+    },
+    height: Ti.UI.SIZE,
+    width: Ti.UI.SIZE
+}
+```
+
+### index.js
+```javascript
+// open the window from markup
+$.index.open();
+
+// alert the text of the label
+alert($.mylabel.text);
+
+exports.someExposedFunction = function () {}
+```
+
+Alloy XML View Markup
+---------------------
 
 ```xml
-<View id="a">
-	<Button id="b">Hello</Button>
-	<Label id="t"></Label>
-</View>
+<Alloy>
+    <Window>
+    	<Label id="mylabel">Hello, World!</Label>
+    </Window>
+</Alloy>
 ```
 
-Note, you can use `Titanium.UI` constants in your *.tss file.
+* Every Alloy XML view file is enclosed in an <Alloy> tag. No exceptions.
+* The `index.xml` must have a single top-level UI component under <Alloy>. This is specific to the `index.xml`, all other views can have whatever UI format they want. Valid top-level UI components for `index.xml` are
+	* Ti.UI.Window
+ 	* Ti.UI.TabGroup
+  	* Ti.UI.iPad.SplitWindow
+* That top-level UI component, if not explicitly given an `id` attribute, will get an `id` equal to the name of the view file. In the above case, the <Window> will receive the `id` of `index`.
+* All UI components in markup with `id` attributes will be accessible in the associated controller, `index.js` in this case, on the `$` variable. This is shown in the controller's line: `alert($.mylabel.text);`
+* `id`s must be unique in each view, but are not global. Two different views can have elements with the same `id`
+* You can also use the more generic `class` attribute to help identify and group UI components.
+* As you'll see below, IDed elements are referenced with the `#` prefix in TSS files, classes with the `.` prefix, just like CSS
 
-In your controller, you can reference the view such as:
+Alloy TSS Styles
+----------------
 
 ```javascript
-$.a.backgroundColor = "blue";
-$.b.addEventListener("click",function(e){
-	$.t.text = "You clicked a button";
-});
+"Window": {
+    backgroundColor: '#fff'
+},
+"#mylabel": {
+    color: '#000',
+    font: {
+    	fontSize: '18dp',
+    	fontWeight: 'bold'
+    },
+    height: Ti.UI.SIZE,
+    width: Ti.UI.SIZE
+}
 ```
 
-All objects which have an `id` in your view will automatically be defined and available as a property in the special variable `$` in your controller.  For example, if you use the id `foo`, your object would be available as `$.foo`.
+* Each style is associated by name with a view and controller
+* You can create a global style that will be applied to all views/controllers by making a style in the `styles` folder named `app.tss`
+* Each style definition is separated by a comma
+* IDed elements are referenced with the `#` prefix in TSS files, classes with the `.` prefix, just like CSS
+* You can apply styles to Titanium API components as well. For example, the `Window` style defined above will apply to any `Ti.UI.Window`
+* Precedence: ID > class > Ti API > order of declaration
+* Aside from the standard JSON valid values, TSS files can handle a few other values:
+	* Titanium constants (i.e., `Ti.UI.SIZE` or `Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE`)
+ 	* The localization function `Ti.Locale.getString()` and its shorthand `L()`
+  	* `expr()` which can contain any valid javascript which will get executed at runtime
 
-View Styling
------------
+Alloy JS Controllers
+--------------------
 
-Alloy separates the structural elements of a View from the styling components of the View -- much like the difference between HTML and CSS.  
+```javascript
+// open the window from markup
+$.index.open();
 
-You can use the following selectors in your style name: Classes (prefix by `.`), Object Name (name of the Object Type such as `Button`) or ID (prefix by `#`).  The ID attribute will always take precedence.
+// alert the text of the label
+alert($.mylabel.text);
 
-For example:
-
-```tss
-	"Button": {
-		"width":Ti.UI.SIZE,
-		"height":Ti.UI.SIZE,
-		"borderColor":"red"
-	},
-	
-	".b" : {
-		"width": "100",
-		"b":true
-	},
-	
-	".c" : {
-		"height": "50",
-		"b":false
-	},
-	
-	"#b" : {
-		"width": Ti.UI.FILL,
-		"borderColor":null
-	}
+exports.someExposedFunction = function () {}
 ```
-	
-With the following XML:
 
-```xml
-<View>
-	<Button id="b" class="b c" />
-</View>
-```
-	
-Should result in the following code properties when merged:
-
-```tss
-	"width": Ti.UI.FILL,
-	"height":Ti.UI.SIZE,
-	"b":false
-```
-	
-A few notes on the code generation and style merging:
-
-- any `null` values will be removed in any final styles to optimize code generation.  
-- classes can be separated by multiple spaces
-- classes will be merged in order
-- the order of precedence is: Object Type, Classes, ID
-- You can put globals is a file called app.tss
+* This is where your standard app logic goes. Anything you can do in regular Titanium you can do here.
+* All IDed markup elements are accessible on the `$` object
+* You can expose a function publicly from the controllers by attaching it to the `exports` object
+* Controller code is executed after your styles have been applied and the view hierarchy has been established
 
 Titanium Namespacing
 --------------------
