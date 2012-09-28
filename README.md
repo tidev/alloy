@@ -1,10 +1,7 @@
 Alloy
 =====
 
-Alloy is a new application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform).
-
-It provides a nice [MVC](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) framework for developers 
-that are building Titanium apps.  
+Alloy is a new application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). It provides a nice [MVC](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) framework for developers that are building Titanium apps.  
 
 Current Status
 --------------
@@ -12,14 +9,7 @@ Current Status
 * 2012-06-10 - _Unstable_
 * 2012-08-29 - _Pre-Release_
 * 2012-09-26 - Github Issues closed. Use the [Titanium Community Jira](http://jira.appcelerator.org/browse/TC) instead. 
-
-Release Notes
--------------
-
-- When targeting Mobile Web you must do ```alloy compile``` from the command line before running the app.
-- Alloy only runs on OSX. Windows and Linux support coming soon.
-- npm version 0.2.34 has a modified model description file that is note compatible with earlier versions. This only effects applications that make use of the Backbone model functionality of Alloy. See the release notes on [Google Groups](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy) for migration instructions.
-
+* 2012-09-27 - Windows & Linux support (Bleeding edge)
 
 Goals
 ------
@@ -37,67 +27,54 @@ Quick Start
 
 **NOTE:** _Be aware when working with an Alloy project that all files in your `Resources` directory are subject to being overwritten. All your work should be done in your project's `app` folder._ 
 
-Manual Installation
--------------------
+Installation
+------------
 
-Alloy is available as a Node.JS NPM module by running the following command:
+Alloy is available as an npm module. So... you're gonna need [node.js](http://nodejs.org/).
 
-	[sudo] npm install -g alloy
+### from npm:
 
-Local Installation
-------------------
+```bash
+[sudo] npm install -g alloy
+```
 
-To install your own local copy (with executable), clone this repository, navigate to the top level directory, and install via:
+### from source: 
 
-	[sudo] npm install -g .
-
-Bleeding Edge
--------------
-
-If you want to be using the latest version of Alloy at all times, here's what you can do:
-
-	// do this once
-	git clone https://github.com/appcelerator/alloy.git
-
-	// do this frequently
-	cd /path/to/alloy
-	git pull origin master
-	sudo npm install -g .
-
-This will pull the latest changes from Alloy's repository and then install them locally via npm.
+```bash
+git clone https://github.com/appcelerator/alloy.git
+cd alloy
+[sudo] npm install -g .
+```
 
 Creating an App
 ---------------
 
-To create an Alloy enabled app, you must first create a project in Titanium Studio or via the Titanium CLI.  While in a console, 
-navigate to the root directory of your application and run the following command in the console
+Alloy is a framework for [Titanium](http://www.appcelerator.com/platform/titanium-studio/), so if you don't have it, go get it!
 
-	alloy new
-	
-Alternatively, you can specify an argument as the second parameter to the location of a Titanium project directory.
+To create an Alloy enabled app, you must first create a mobile project in Titanium Studio or via the Titanium CLI.  While in a console, navigate to the root directory of your application and run the following command in the console
 
-As part of Alloy-enabling your Titanium project, Alloy will install a special compiler plugin that will help Studio or the CLI know how to use the Alloy compiler.  _NOTE: this currently only works on OSX and will be resolved prior to the production release._
+```bash
+alloy new [PATH]      # PATH is optional. It is the current working directory by default 
+```
 
-Your new Alloy project will have a new folder named `app` that will contain the skeleton Alloy app.
+Your new Alloy project will have a folder named `app` that will contain the skeleton Alloy app.
 
 Directory Structure
 -------------------
 
-Alloy has directories that should be familiar if you've used any of the popular web MVC frameworks like Ruby on Rails.  
+Alloy has directories that should be familiar if you've used any of the popular web MVC frameworks like Ruby on Rails.  Alloy prefers to use convention over configuration for simplicity.  
 
-Alloy prefers to use convention over configuration for simplicity.  
+- **views** - XML files that describe the layout of the UI.
+- **controllers** - JS files that contain your app logic and Titanium API calls.
+- **styles** - TSS files that contain the styling for your UI components defined in _views_. TSS files are a JSON derivative syntax that share many common conventiosn with CSS. They'll be discussed in more detail below.
+- **models** - JS files that include the definition and extensions of [Backbone.js](http://backbonejs.org/)-based models and collections.
+- **assets** - All your various project assets, like images, icons, data files, etc... Basically anything you want to end up in the Titanium `Resources` directory.
+- **lib** - All of your JS libraries and commonjs modules. Like _assets_, these will also be copied to your Titanium `Resources` directory.
 
-- *views* - this is where your views should go in the format _*view*.xml_
-- *controllers* - this is where your controllers should go in the format _*view*.js_. 
-- *styles* - this is where your view styling logic should go in the format _*view*.json_.
-- *models* - this is where your model files will go.
-- *assets* - this is where you should put your image assets and other misc. files that you want copied into the _Resources_ directory.
-- *migrations* - this is where your database migration files will be stored.
+The following folders are not created automatically by Alloy but can be added for even more functionality.
 
-
-The following folders are not created automatically by Alloy but can be created and used by developers to add application libraries.
-
-- *lib* - this is where you should put application specific files, typically in the CommonJS format.
+- **migrations** - JS files that define model migrations
+- **widgets** - These are self-contained, cross-platform, reusable components that can be dropped right into any Alloy project. More on these below.
 
 Compiling an App
 ----------------
@@ -665,17 +642,11 @@ To our intrepid developers taking an early look at alloy, please consider the fo
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
 
-TODO
-----
+Caveats
+-------
 
-There's a lot of work to get Alloy to a production state.  The following are some of the major items:
-
-- integration into Titanium Studio wizards
-- support for ACS backed model 
-- view template bindings support
-- widget packaging spec and tooling
-- better documentation (documentation team is working on this)
-- improved debugging
+- Mobileweb does not support compiler plugins, so when you want to run an Alloy Mobileweb app through TiStudio, you'll need to manually compile it for alloy first like this:
+```alloy compile --config platform=mobileweb``` 
 	
 Credits
 -------
