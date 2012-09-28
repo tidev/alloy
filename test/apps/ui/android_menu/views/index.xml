@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<Menu>
+			<MenuItem title="option 1"/>
+			<MenuItem title="option 2"/>
+		</Menu>
+	</Window>
+</Alloy>
