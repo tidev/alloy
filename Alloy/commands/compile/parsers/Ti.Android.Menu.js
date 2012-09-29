@@ -45,7 +45,7 @@ function parse(node, state, args) {
 	}
 
 	// close the onCreateOptionsMenu() call
-	code += '}';
+	code += '};';
 
 	// Update the parsing state
 	return {
