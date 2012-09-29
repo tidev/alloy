@@ -1,3 +1,13 @@
 "#index": {
-	fullscreen: false
+	backgroundColor: '#000',
+	fullscreen: true
+},
+"Label": {
+	color: '#fff',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
 }

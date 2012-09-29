@@ -1,8 +1,12 @@
 <Alloy>
 	<Window>
+		<!-- This will add an Android menu -->
 		<Menu>
-			<MenuItem title="option 1"/>
-			<MenuItem title="option 2"/>
+			<MenuItem title="option 1" onClick="doClick"/>
+			<MenuItem title="option 2" onClick="doClick"/>
 		</Menu>
+		
+		<!-- Build the rest of your UI as usual -->
+		<Label>Press the menu button</Label>
 	</Window>
 </Alloy>
