@@ -36,11 +36,11 @@ function parse(node, state, args) {
 
 		// generate code for the MenuItem
 		code += CU.generateNode(child, {
-			parent: {},
-			styles: state.styles,
-			post: function(node, state, args) {
-				return eventObject + '.menu.add(' + state.parent.symbol + ');'
-			}
+			parent: { 
+				node: node,
+				symbol: eventObject + '.menu'
+			},
+			styles: state.styles
 		});
 	}
 
