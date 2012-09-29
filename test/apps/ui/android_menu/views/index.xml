@@ -2,8 +2,8 @@
 	<Window>
 		<!-- This will add an Android menu -->
 		<Menu>
-			<MenuItem title="option 1" onClick="doClick"/>
-			<MenuItem title="option 2" onClick="doClick"/>
+			<MenuItem title="option 1" icon="/ic_menu_help.png" onClick="doClick"/>
+			<MenuItem title="option 2" icon="/ic_menu_home.png" onClick="doClick"/>
 		</Menu>
 		
 		<!-- Build the rest of your UI as usual -->
