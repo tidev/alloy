@@ -263,7 +263,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				'Error parsing XML for view "' + view + '"'
 			]);
 		}
-		
+
 		// make sure we have a Window, TabGroup, or SplitWindow  
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index') {
