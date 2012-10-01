@@ -33,7 +33,7 @@
     "pkginfo": "0.2.2",
     "commander": "0.6.1",
     "wrench": "1.3.9",
-    "xmldom":"0.1.9",
+    "xmldom":"git://github.com/appcelerator/xmldom.git",
     "jake":">=0.3",
     "stripcolorcodes":">0",
     "jsonlint":"1.5.1",
