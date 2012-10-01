@@ -169,8 +169,13 @@ module.exports = function(args, program) {
 	logger.debug('');
 
 	// generate app.js
+	var alloyJsPath = path.join(paths.app,'alloy.js');
+	var alloyJs = path.existsSync(alloyJsPath) ? fs.readFileSync(alloyJsPath,'utf8') : '';
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{});
+	var code = _.template(
+		fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
+		{alloyJs:alloyJs}
+	);
 
 	// trigger our custom compiler makefile
 	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
