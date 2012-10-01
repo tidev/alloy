@@ -71,7 +71,7 @@ module.exports = function(args, program) {
 	});
 
 	// delete the build folder to give us a fresh run
-	rmdirSyncRecursive(paths.build, true);
+	wrench.rmdirSyncRecursive(paths.build, true);
 	
 	logger.info('Generated new project at: ' + paths.app);
 }
