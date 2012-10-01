@@ -18,7 +18,7 @@ module.exports = function(args, program) {
 		if (!program.force) {
 			U.die(BASE_ERR + '"app" directory already exists at "' + paths.app + '"');
 		} else {
-			wrench.rmdirSyncRecursive(paths.app);
+			wrench.rmdirSyncRecursive(paths.app, true);
 		}
 	}
 	wrench.mkdirSyncRecursive(paths.app, 0777);
@@ -69,6 +69,9 @@ module.exports = function(args, program) {
 		wrench.mkdirSyncRecursive(p, 0777);
 		wrench.copyDirSyncRecursive(rDir, p);
 	});
+
+	// delete the build folder to give us a fresh run
+	rmdirSyncRecursive(paths.build, true);
 	
 	logger.info('Generated new project at: ' + paths.app);
 }
@@ -88,7 +91,8 @@ function getPaths(project, templateName) {
 
 		// project paths
 		project: project,
-		resources: path.join(project,'Resources')
+		resources: path.join(project,'Resources'),
+		build: path.join(project,'build')
 	}
 
 	// validate the existence of the paths
