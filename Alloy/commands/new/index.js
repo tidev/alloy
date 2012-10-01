@@ -100,6 +100,9 @@ function getPaths(project, templateName) {
 		if (!path.existsSync(v)) {
 			var errs = [BASE_ERR];
 			switch(k) {
+				case 'build':
+					// skip
+					return;
 				case 'projectTemplate':
 					errs.push('Project template "' + templateName + '" not found at "' + v + '"');
 					break;
