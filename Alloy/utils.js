@@ -39,14 +39,25 @@ exports.XML = {
 	},
 	parseFromString: function(string) {
 		// TODO: https://jira.appcelerator.org/browse/ALOY-267
-		var warn = console.warn;
-		console.warn = function(msg) {
-			exports.die(['Error parsing XML document', msg]);
-		};
+		// var warn = console.warn;
+		// console.warn = function(msg) {
+		// 	exports.die(['Error parsing XML document', msg]);
+		// };
 
 		// TODO: https://jira.appcelerator.org/browse/ALOY-309
-		var doc = new DOMParser().parseFromString(string);
-		console.warn = warn;
+		try {
+			var errorHandler = {};
+			errorHandler.error = errorHandler.fatalError = function(m) { 
+				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/))); 
+			};
+			errorHandler.warn = errorHandler.warning = function(m) {
+				logger.warn((m || '').split(/[\r\n]/));
+			};
+			var doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
+		} catch (e) {
+			exports.die('Error parsing XML file.', e);
+		}
+		//console.warn = warn;
 
 		return doc;
 	},
