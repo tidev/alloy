@@ -170,7 +170,7 @@ module.exports = function(args, program) {
 
 	// generate app.js
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{models:models});
+	var code = _.template(fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),{});
 
 	// trigger our custom compiler makefile
 	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
