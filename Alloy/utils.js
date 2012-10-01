@@ -43,6 +43,8 @@ exports.XML = {
 		console.warn = function(msg) {
 			exports.die(['Error parsing XML document', msg]);
 		};
+
+		// TODO: https://jira.appcelerator.org/browse/ALOY-309
 		var doc = new DOMParser().parseFromString(string);
 		console.warn = warn;
 
