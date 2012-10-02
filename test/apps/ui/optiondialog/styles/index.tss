@@ -1,0 +1,7 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Button": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}

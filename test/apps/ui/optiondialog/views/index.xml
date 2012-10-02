@@ -1,0 +1,24 @@
+<Alloy>
+	<Window>
+		<!-- 
+			Declare option dialog, which will be opened by an event. 
+			The OptionDialog is not part of the view hierarchy.
+	    -->
+		<OptionDialog id="options" title="App Options">
+			<Options>
+				<Option>option 1</Option>
+				<Option>option 2</Option>
+				<Option>option 3</Option>
+			</Options>
+
+			<!-- buttonNames only supported by Android -->
+			<ButtonNames platform="android">
+				<ButtonName>button 1</ButtonName>
+				<ButtonName>button 2</ButtonName>
+			</ButtonNames>
+		</OptionDialog>
+
+		<!-- The actual view hierarchy code -->
+		<Button onClick="showOptions">options</Button>
+	</Window>
+</Alloy>
