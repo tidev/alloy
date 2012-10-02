@@ -108,12 +108,15 @@ module.exports = function(print, doneCallback, showColors) {
 
 	this.reportSpecResults = function(spec) {
 		var results = spec.results();
+		var testName = spec.suite.description + ' ' + results.description;
+
 		if (results.skipped) {
 			yellowStar();
 		} else if (results.passed()) {
-			greenDot();
+			print(greenStr('[PASS] ') + testName);
 		} else {
-			redF();
+			print(redStr('[FAIL] ') + testName);
+			//redF();
 		}
 	};
 
