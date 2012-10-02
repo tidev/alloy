@@ -1,6 +1,13 @@
 var fs = require('fs');
 var path = require('path');
+var wrench = require('wrench');
 var exec = require('child_process').exec;
+var _ = require('../../Alloy/lib/alloy/underscore')._;
+var alloyRoot = path.join(__dirname,'..','..');
+
+var paths = {
+	apps: path.join(alloyRoot,'test','apps')
+};
 
 function getExecObject(args) {
 	args = Array.prototype.slice.call(args, 0);
@@ -29,18 +36,10 @@ describe('alloy command', function() {
 			expect(o.error).toBeFalsy();
 			expect(/\d+\.\d+\.\d+(?:\-\d+){0,1}/.test(o.stdout)).toBe(true);
 		});
-
 	});
 
-	
+	//wrench.readdirSyncRecursive();
+	it('is available from the command line ala `alloy --version`', function() {
+
+	});
 });
-
-
-runs(function() {
-      flag = false;
-      value = 0;
-
-      setTimeout(function() {
-        flag = true;
-      }, 500);
-    });
