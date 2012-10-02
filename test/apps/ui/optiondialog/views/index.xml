@@ -11,8 +11,8 @@
 				<Option>option 3</Option>
 			</Options>
 
-			<!-- buttonNames only supported by Android -->
-			<ButtonNames platform="android">
+			<!-- buttonNames only rendered on Android -->
+			<ButtonNames>
 				<ButtonName>button 1</ButtonName>
 				<ButtonName>button 2</ButtonName>
 			</ButtonNames>
