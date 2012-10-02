@@ -25,48 +25,50 @@ def check_output(*popenargs, **kwargs):
 
 def compile(config):
     paths = {}
-    binary = "alloy"
-    try:
-        # see if the environment variable is defined
-        paths[binary] = os.environ["ALLOY_PATH"]
-    except KeyError as ex:
-        # next try PATH, and then our guess paths
-        if sys.platform == "darwin" or sys.platform.startswith('linux'):
-            userPath = os.environ["HOME"]
-            guessPaths = [
-                "/usr/local/bin/"+binary,
-                "/opt/local/bin/"+binary,
-                userPath+"/local/bin/"+binary,
-                "/opt/bin/"+binary,
-                "/usr/bin/"+binary
-            ]
-            
-            try:
-                binaryPath = check_output(["which",binary], stderr=subprocess.STDOUT).strip()
-                print "[DEBUG] %s installed at '%s'" % (binary,binaryPath)
-            except:
-                print "[WARN] Couldn't find %s on your PATH:" % binary
-                print "[WARN]   %s" % os.environ["PATH"]
-                print "[WARN]"
-                print "[WARN] Checking for %s in a few default locations:" % binary
-                for p in guessPaths:
-                    sys.stdout.write("[WARN]   %s -> " % p)
-                    if os.path.exists(p):
-                        binaryPath = p
-                        print "FOUND"
-                        break
-                    else:
-                        print "not found"
-                    
-            if binaryPath == None:
-                print "[ERROR] Couldn't find %s" % binary
-                sys.exit(1)
-            else:
-                paths[binary] = binaryPath
-    
-        # no guesses on windows, just use the PATH
-        elif sys.platform == "win32":
-            paths["alloy"] = "alloy.cmd"
+    binaries = ["alloy","node"]
+
+    for binary in binaries:
+        try:
+            # see if the environment variable is defined
+            paths[binary] = os.environ["ALLOY_" + ("NODE_" if binary == "node" else "") + "PATH"]
+        except KeyError as ex:
+            # next try PATH, and then our guess paths
+            if sys.platform == "darwin" or sys.platform.startswith('linux'):
+                userPath = os.environ["HOME"]
+                guessPaths = [
+                    "/usr/local/bin/"+binary,
+                    "/opt/local/bin/"+binary,
+                    userPath+"/local/bin/"+binary,
+                    "/opt/bin/"+binary,
+                    "/usr/bin/"+binary
+                ]
+                
+                try:
+                    binaryPath = check_output(["which",binary], stderr=subprocess.STDOUT).strip()
+                    print "[DEBUG] %s installed at '%s'" % (binary,binaryPath)
+                except:
+                    print "[WARN] Couldn't find %s on your PATH:" % binary
+                    print "[WARN]   %s" % os.environ["PATH"]
+                    print "[WARN]"
+                    print "[WARN] Checking for %s in a few default locations:" % binary
+                    for p in guessPaths:
+                        sys.stdout.write("[WARN]   %s -> " % p)
+                        if os.path.exists(p):
+                            binaryPath = p
+                            print "FOUND"
+                            break
+                        else:
+                            print "not found"
+                        
+                if binaryPath == None:
+                    print "[ERROR] Couldn't find %s" % binary
+                    sys.exit(1)
+                else:
+                    paths[binary] = binaryPath
+        
+            # no guesses on windows, just use the PATH
+            elif sys.platform == "win32":
+                paths["alloy"] = "alloy.cmd"
 
 
             
@@ -94,7 +96,11 @@ def compile(config):
             deploytype = config['deploytype']
         
         cfg = "platform=%s,version=%s,simtype=%s,devicefamily=%s,deploytype=%s," % (config['platform'],version,simtype,devicefamily,deploytype)
-        cmd = [paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
+        
+        if sys.platform == "win32":
+            cmd = [paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
+        else:
+            cmd = [paths["node"], paths["alloy"], "compile", f, "--no-colors", "--config", cfg]
 
         print "[INFO] Executing Alloy compile:"
         print "[INFO]   %s" % " ".join(cmd)
