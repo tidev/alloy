@@ -8,6 +8,7 @@ var alloyRoot = path.join(__dirname,'..','..');
 var paths = {
 	apps: path.join(alloyRoot,'test','apps')
 };
+var platforms = ['android','ios','mobileweb'];
 
 function getExecObject(args) {
 	args = Array.prototype.slice.call(args, 0);
@@ -38,8 +39,14 @@ describe('alloy command', function() {
 		});
 	});
 
-	//wrench.readdirSyncRecursive();
-	it('is available from the command line ala `alloy --version`', function() {
-
+	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+		var indexXml = path.join(paths.apps,file,'views','index.xml');
+		if (path.existsSync(indexXml)) {
+			_.each(platforms, function(platform) {
+				it('can compile "' + file + '" test app for platform "' + platform + '"', function() {
+					expect(true).toBe(true);
+				});
+			});
+		}
 	});
 });
