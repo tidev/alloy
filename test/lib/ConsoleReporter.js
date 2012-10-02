@@ -116,7 +116,6 @@ module.exports = function(print, doneCallback, showColors) {
 			print(greenStr('[PASS] ') + testName);
 		} else {
 			print(redStr('[FAIL] ') + testName);
-			//redF();
 		}
 	};
 
