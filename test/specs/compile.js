@@ -4,12 +4,16 @@ var fs = require('fs'),
 	exec = require('child_process').exec,
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 	
-// Paths and constants
-var alloyRoot = path.join(__dirname,'..','..'),
-	appsPath = path.join(alloyRoot,'test','apps'),
-	platforms = ['android','ios','mobileweb'],
+var PLATFORMS = ['android','ios','mobileweb'],
+	TIMEOUT_COMPILE = 10000,
 	TIMEOUT_DEFAULT = 750;
 
+var alloyRoot = path.join(__dirname,'..','..'),
+	paths = {
+		apps: path.join(alloyRoot,'test','apps'),
+		harness: path.join(alloyRoot,'test','projects','Harness') 
+	};
+	
 // Turns the arguments given to the callback of the exec() function
 // into an object literal. 
 //
@@ -39,6 +43,7 @@ function getExecObject(args) {
 //
 // Return: none
 function asyncExecTest(cmd, timeout, testFn) {
+	//console.log(cmd);
 	runs(function() {
 		var self = this;
 		self.done = false;
@@ -69,12 +74,21 @@ describe('alloy command', function() {
 	});
 
 	// Iterate through each test app and make sure it compiles for all platforms
-	_.each(wrench.readdirSyncRecursive(appsPath), function(file) {
-		var indexXml = path.join(appsPath,file,'views','index.xml');
+	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+		var indexXml = path.join(paths.apps,file,'views','index.xml');
 		if (path.existsSync(indexXml)) {
-			_.each(platforms, function(platform) {
+			_.each(PLATFORMS, function(platform) {
 				it('can compile "' + file + '" test app for platform "' + platform + '"', function() {
-					expect(true).toBe(true);
+					var cmds = [
+						'jake app:setup dir=' + file + ' quiet=1',
+						'alloy compile ' + paths.harness + ' --config platform=' + platform
+					];
+					asyncExecTest(cmds.join(' && '), TIMEOUT_COMPILE, function() {
+						var o = this.output;
+
+						// Make sure there were no compile errors
+						expect(o.error).toBeFalsy();
+					});
 				});
 			});
 		}
