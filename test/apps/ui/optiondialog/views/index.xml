@@ -3,12 +3,15 @@
 		<!-- 
 			Declare option dialog, which will be opened by an event. 
 			The OptionDialog is not part of the view hierarchy.
+
+			On iOS, descructive and cancel will change the characteristics
+			of the options. 
 	    -->
-		<OptionDialog id="options" title="App Options">
+		<OptionDialog id="options" title="App Options" destructive="2" cancel="1">
 			<Options>
 				<Option>option 1</Option>
-				<Option>option 2</Option>
-				<Option>option 3</Option>
+				<Option>cancel</Option>
+				<Option>destructive</Option>
 			</Options>
 
 			<!-- buttonNames only rendered on Android -->
@@ -16,6 +19,15 @@
 				<ButtonName>button 1</ButtonName>
 				<ButtonName>button 2</ButtonName>
 			</ButtonNames>
+
+			<!-- 
+				On Android, an additional view can be added to be rendered in
+				the OptionDialog. It will be assigned to the underlying 
+				"androidView" property of the OptionDialog. You must specify
+				the platform="android" as it will cause an error on other 
+				platforms.
+			-->
+			<ImageView platform="android" image="/appc.png" height="40dp" width="40dp"/>
 		</OptionDialog>
 
 		<!-- The actual view hierarchy code -->
