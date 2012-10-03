@@ -9,7 +9,7 @@ function parse(node, state, args) {
 	// Get label text from node text, if present
 	var nodeText = U.XML.getNodeText(node);
 	if (nodeText) {
-		state.extraStyle = CU.createVariableStyle('text', "'" + nodeText.replace(/'/g, "\\'") + "'");
+		state.extraStyle = CU.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
 	}
 
 	// Generate runtime code using default
