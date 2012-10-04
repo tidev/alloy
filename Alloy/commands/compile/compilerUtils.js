@@ -96,7 +96,14 @@ exports.getCompilerConfig = function() {
 	return compilerConfig;
 }
 
-exports.generateVarName = function(id) {
+exports.generateVarName = function(id, name) {
+	if (_.contains(CONST.JS_RESERVED_ALL,id)) {
+		U.die([
+			'Invalid ID "' + id + '" for <' + name + '>.',
+			'Can\'t use reserved Javascript words as IDs.',
+			'Reserved words: [' + CONST.JS_RESERVED_ALL.sort().join(',') + ']'
+		]);
+	}
 	return '$.__views.' + id;
 }
 
@@ -173,7 +180,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id: id, 
 		fullname: fullname,
 		formFactor: node.getAttribute('formFactor'),
-		symbol: exports.generateVarName(id),
+		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
 		platform: platformObj,
