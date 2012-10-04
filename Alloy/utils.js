@@ -293,6 +293,12 @@ exports.properCase = function(n) {
 	return n.charAt(0).toUpperCase() + n.substring(1);
 };
 
+exports.ucfirst = function (text) {
+    if (!text)
+        return text;
+    return text[0].toUpperCase() + text.substr(1);
+};
+
 exports.lcfirst = function (text) {
     if (!text)
         return text;
