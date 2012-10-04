@@ -10,13 +10,13 @@ var 	   _ = require('alloy/underscore')._,
 exports._ = _;
 exports.Backbone = Backbone;
 
-Ti.Analytics.featureEvent('alloy.start', {
-	guid: Ti.Platform.id,
-	tiversion: Ti.version,
-	osname: Ti.Platform.osname,
-	osversion: Ti.Platform.version,
-	locale: Ti.Platform.locale
-});
+// Ti.Analytics.featureEvent('alloy.start', {
+// 	guid: Ti.Platform.id,
+// 	tiversion: Ti.version,
+// 	osname: Ti.Platform.osname,
+// 	osversion: Ti.Platform.version,
+// 	locale: Ti.Platform.locale
+// });
 
 exports.M = function(name, modelDesc, migrations) {
 	var config = modelDesc.config;
