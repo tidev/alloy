@@ -10,6 +10,7 @@
 		<OptionDialog id="options" title="App Options" destructive="2" cancel="1">
 			<Options>
 				<Option>option 1</Option>
+				<Option>option 2</Option>
 				<Option>cancel</Option>
 				<Option>destructive</Option>
 			</Options>
@@ -21,13 +22,14 @@
 			</ButtonNames>
 
 			<!-- 
-				On Android, an additional view can be added to be rendered in
-				the OptionDialog. It will be assigned to the underlying 
-				"androidView" property of the OptionDialog. You must specify
-				the platform="android" as it will cause an error on other 
-				platforms.
+				Only on Android, an additional view can be added to be rendered in
+				the OptionDialog, replacing any declared options. It will be 
+				assigned to the underlying "androidView" property of the OptionDialog.  
 			-->
-			<ImageView platform="android" image="/appc.png" height="40dp" width="40dp"/>
+			<View layout="horizontal" platform="android">
+				<ImageView id="avImage" image="/appc4.png" height="40dp" width="40dp"/>
+				<Label id="avLabel">This is an androidView</Label>
+			</View>
 		</OptionDialog>
 
 		<!-- The actual view hierarchy code -->

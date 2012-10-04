@@ -4,4 +4,20 @@
 "Button": {
 	height: Ti.UI.SIZE,
 	width: Ti.UI.SIZE
+},
+"#avImage": {
+	image: '/appc4.png',
+	height: '50dp',
+	width: '50dp',
+	left: '10dp'
+},
+"#avLabel": {
+	color: '#fff',
+	left: '80dp',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center',
+	font: {
+		fontSize: '16dp'
+	}
 }
