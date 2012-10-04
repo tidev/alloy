@@ -1,3 +1,5 @@
+var _ = require('../lib/alloy/underscore')._;
+
 exports.ALLOY_DIR = 'app';
 exports.NAME_DEFAULT = 'index';
 exports.NAME_WIDGET_DEFAULT = 'widget';
@@ -34,3 +36,16 @@ exports.DIR = {
 	LIB: 'lib',
 	COMPONENT: 'controllers'
 };
+
+exports.JS_RESERVED = [
+	'break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete',
+	'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof',
+	'new', 'return', 'switch', 'this', 'throw', 'try', 'typeof', 'var',
+	'void', 'while', 'with'
+];
+exports.JS_RESERVED_FUTURE = [
+	'class', 'enum', 'export', 'extends', 'import', 'super', 'implements',
+	'interface', 'let', 'package', 'private', 'protected', 'public',
+	'static', 'yield'
+];
+exports.JS_RESERVED_ALL = _.union(exports.JS_RESERVED, exports.JS_RESERVED_FUTURE);
