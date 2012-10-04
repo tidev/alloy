@@ -64,6 +64,10 @@ module.exports = function(args, program) {
 	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB,'vendor'], paths.resources);
 	logger.debug('');
 
+	// update alloy.js with current Alloy version (Alloy.version)
+	var aFile = path.join(paths.resources,'alloy.js');
+	fs.writeFileSync(aFile, fs.readFileSync(aFile,'utf8') + '\nexports.version = "' + program._version + '";\n');
+
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
 		_.each(program.config.split(','), function(v) {
