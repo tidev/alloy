@@ -8,49 +8,71 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		types = {
-			options: {
-				collectionName: 'Options',
-				itemName: 'Option',
-				arrayName: CU.generateUniqueId(),
-				first: true
-			},
-			buttonNames: {
-				collectionName: 'ButtonNames',
-				itemName: 'ButtonName',
-				arrayName: CU.generateUniqueId(),
-				first: true
-			}
+	var types = {
+			options: {},
+			buttonNames: {}
 		},
+		config = CU.getCompilerConfig(),
+		isAndroid = config && config.alloyConfig && config.alloyConfig.platform === 'android',
+		androidView = null,
 		extras = [],
 		code = '';
 
-	// process all options and button names and create their arrays, if present
-	_.each(types, function(type, typeName) {
-		_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
-			if (theNode.nodeName === type.collectionName && !theNode.getAttribute('ns')) {
-				_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item, index) {
-					if (item.nodeName === type.itemName && !item.getAttribute('ns')) {
-						var string = U.XML.getNodeText(item) || '';
-						if (type.first) { 
-							type.first = false;
-							code += 'var ' + type.arrayName + ' = [];'; 
-							extras.push([typeName, type.arrayName]);
-						}
-						code += type.arrayName + '.push("' + string.replace(/"/g,'\\"') + '");\n';
-					} else {
-						U.die([
-							'Child element of <OptionDialog> at index ' + index + ' is not an <Option> or <ButtonName>',
-							'All child elements of <OptionDialog> must be an <Option> or <ButtonName>.'
-						]);
+	// Add properties for types
+	_.each(_.keys(types), function(key) {
+		var uc = U.ucfirst(key);
+		types[key] = {
+			collection: uc,
+			item: uc.substr(0,uc.length-1),
+			array: CU.generateUniqueId(),
+			first: true
+		};
+	});
+
+	// Process options, buttonNames, and androidView
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+		var typeName = U.lcfirst(child.nodeName);
+		var def = types[typeName];
+
+		// Process options and buttonNames
+		if (def && !child.getAttribute('ns')) {
+			_.each(U.XML.getElementsFromNodes(child.childNodes), function(item, index) {
+				if (item.nodeName === def.item && !item.getAttribute('ns')) {
+					var string = U.trim(U.XML.getNodeText(item) || '');
+					if (def.first) { 
+						def.first = false;
+						code += 'var ' + def.array + ' = [];'; 
+						extras.push([typeName, def.array]);
+					}
+					code += def.array + '.push("' + string.replace(/"/g,'\\"') + '");\n';
+				} else {
+					U.die('Child element of OptionDialog\'s <' + def.collection + '> at index ' + index + ' is not a <' + def.item + '>');
+				}
+			});
+
+			// get rid of the items when done
+			node.removeChild(child);
+
+		// Process a potential androidView
+		} else {
+			if (androidView === null) {
+				var tmpExtra = [];
+				androidView = CU.generateNode(child, {
+					parent: {},
+					styles: state.styles,
+					post: function(node, state, args) {
+						tmpExtra.push(['androidView', state.parent.symbol]);
 					}
 				});
 
-				// get rid of the items when done
-				node.removeChild(theNode);
-			} 
-		});
+				if (isAndroid) {
+					code += androidView;
+					extras = _.union(extras, tmpExtra);
+				}
+			} else {
+				U.die('Can only have one androidView');
+			}	
+		}
 	});
 
 	// Add options and button names to the style, if present
@@ -63,5 +85,9 @@ function parse(node, state, args) {
 	code += optionState.code;
 
 	// Update the parsing state
-	return _.extend(optionState, {code:code}); 
+	return {
+		parent: {},
+		styles: state.styles,
+		code: code
+	};
 };
