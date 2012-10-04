@@ -26,7 +26,7 @@ pkginfo(module,'name','version');
 
 // Process command line input
 program
-	.version(module.exports.version)
+	.version(module.exports.version, '-v, --version')
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
