@@ -18,8 +18,6 @@ path.existsSync = fs.existsSync || path.existsSync;
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
 
-// TODO: improve help - https://jira.appcelerator.org/browse/ALOY-207
-
 ////////////////////////////////////
 ////////// MAIN EXECUTION //////////
 ////////////////////////////////////
