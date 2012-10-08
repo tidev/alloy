@@ -4,6 +4,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	util = require('util'),
 	vm = require('vm'),
+	jsp = require("../../uglify-js/uglify-js").parser,
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
 	requires = require('./requires'),
@@ -190,10 +191,10 @@ module.exports = function(args, program) {
 	logger.info("compiling alloy to " + appJS.yellow);
 
 	// copy builtins and fix their require paths
-	copyBuiltins();
+	//copyBuiltins();
 
 	// optimize code
-	optimizeCompiledCode(alloyConfig);
+	optimizeCompiledCode(alloyConfig, paths);
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
@@ -503,25 +504,98 @@ function loadGlobalStyle(filepath) {
 	}
 }
 
-function optimizeCompiledCode(config) {
-	var resourcesDir =  compileConfig.dir.resources, 
-		files = wrench.readdirSyncRecursive(resourcesDir);
+function optimizeCompiledCode() {
+	var mods = [
+			'builtins',
+			'mangle',
+			'squeeze'
+		],
+		modLocation = './ast/';
+		report = {};
 
-	logger.debug('----- OPTIMIZATIONS -----');
-	_.each(files,function(file){
-		var ext = file.substring(file.length-3);
-		if (ext == '.js') {
-			var f = path.join(resourcesDir,file);
-			logger.debug('Optimizing runtime javascript file "' + file + '"');
+	function getJsFiles() {
+		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
+			return /\.js\s*$/.test(f);
+		});
+	}
 
-			// we fix require paths to make sure they are correct and relative to the project
+	var lastFiles = [], 
+		files;
+
+	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
+		_.each(files, function(file) {
+			// generate AST from file
+			var fullpath = path.join(compileConfig.dir.resources,file);
+			logger.debug('Parsing AST for "' + file + '"...');
 			try {
-				var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
-				fs.writeFileSync(f,newSrc,'utf-8');
+				var ast = jsp.parse(fs.readFileSync(fullpath,'utf8'));
 			} catch (e) {
-				U.die('Error while checking require() calls in "' + f + '"', e);
+				U.die('Error generating AST for "' + fullpath + '"', e);
 			}
-		}
-	});
-	logger.debug('');
+
+			// process all AST operations
+			_.each(mods, function(mod) {
+				logger.debug('- Processing "' + mod + '" module...')
+				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
+			});
+			fs.writeFileSync(fullpath, CU.generateCode(ast));
+		});
+
+		// Combine lastFiles and files, so on the next iteration we can make sure that the 
+		// list of files to be processed has not grown, like in the case of builtins.
+		lastFiles = _.union(lastFiles, files);
+	}
+
+	// iterate through all JS files in Resources
+	// _.each(files, function(file) {
+	// 	// only process JS files
+	// 	if (!/\.js\s*$/.test(file)) { return; }
+
+	// 	// generate AST from file
+	// 	var fullpath = path.join(resourcesDir,file);
+	// 	logger.debug('Parsing AST for "' + file + '"...');
+
+	// 	try {
+	// 		var ast = jsp.parse(fs.readFileSync(fullpath,'utf8'));
+	// 	} catch (e) {
+	// 		U.die('Error generating AST for "' + fullpath + '"', e);
+	// 	}
+
+	// 	// process all AST operations
+	// 	_.each(mods, function(mod) {
+	// 		logger.debug('- Processing "' + mod + '" module...')
+	// 		ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
+	// 	});
+	// 	fs.writeFileSync(fullpath, CU.generateCode(ast));
+	// });
+
+	// process any post operations 
+	// _.each(mods, function(mod) {
+	// 	var req = require(modLocation+mod);
+	// 	if (_.isFunction(req.post)) { req.post(compileConfig, report); }
+	// });
+
+	// logger.debug('----- OPTIMIZATIONS -----');
+	// _.each(files,function(file){
+	// 	var ext = file.substring(file.length-3);
+	// 	if (ext == '.js') {
+	// 		var f = path.join(resourcesDir,file);
+	// 		logger.debug('Optimizing runtime javascript file "' + file + '"');
+
+	// 		(require('./ast/builtins')).process(
+	// 			require("../../uglify-js/uglify-js").parser.parse(fs.readFileSync(f,'utf8')), 
+	// 				config, 
+	// 				report
+	// 		);  
+
+	// 		// we fix require paths to make sure they are correct and relative to the project
+	// 		try {
+	// 			var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
+	// 			fs.writeFileSync(f,newSrc,'utf-8');
+	// 		} catch (e) {
+	// 			U.die('Error while checking require() calls in "' + f + '"', e);
+	// 		}
+	// 	}
+	// });
+	// logger.debug('');
 }
