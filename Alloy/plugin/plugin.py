@@ -116,6 +116,6 @@ def compile(config):
                 retcode = ex.returncode
             sys.exit(retcode)
         except EnvironmentError as ex:
-            print "[ERROR] Unexpected error with Alloy compiler plugin: %s (%s)" % ex.strerror
+            print "[ERROR] Unexpected error with Alloy compiler plugin: %s" % ex.strerror
             sys.exit(2)
 
