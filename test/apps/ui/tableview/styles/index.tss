@@ -10,4 +10,10 @@
 },
 "TableViewRow": {
 	height: '50dp'
+},
+"SearchBar": {
+	height: "43dp", 
+	top: 0, 
+	barColor: "#444", 
+	showCancel: true
 }

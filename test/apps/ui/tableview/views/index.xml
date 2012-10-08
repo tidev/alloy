@@ -13,7 +13,8 @@
 		</Tab>
 		<Tab title="Sections &amp; Rows">
 			<Window title="Sections &amp; Rows">
-				<TableView>
+				<TableView filterAttribute="title">
+					<SearchBar/>
 					<TableViewSection headerTitle="Section 1">
 						<TableViewRow title="Row 1"/>
 						<TableViewRow title="Row 2"/>
