@@ -332,7 +332,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			} else {
 			// else the target has siblings, insert the new element between the target and it's next sibling.
 			parent.insertBefore(newElement, targetElement.nextSibling);
-			}
+		}
 	}
 
 	function processRequire(node, isFirst) {
@@ -359,8 +359,8 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	if (getViewRequirePath(cloneNode) !== null) {
 		processRequire(cloneNode, true);
 		while (doRecursive) {
-			var requires = cloneNode.getElementsByTagName('Require');
-			var viewRequires = _.filter(requires, function(req) {
+			var reqs = cloneNode.getElementsByTagName('Require');
+			var viewRequires = _.filter(reqs, function(req) {
 				return getViewRequirePath(req) !== null;
 			});
 
