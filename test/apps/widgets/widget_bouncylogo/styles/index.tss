@@ -1,0 +1,13 @@
+"#index": {
+    height: Ti.UI.FILL,
+    top: "0dp",
+    fullscreen: false
+},
+
+"#fill": {
+    backgroundImage: "/images/granite.png",
+    backgroundRepeat: true,
+    width: Ti.UI.FILL,
+    height: Ti.UI.FILL,
+    top: "0dp"
+},

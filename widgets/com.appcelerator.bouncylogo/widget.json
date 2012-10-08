@@ -1,0 +1,13 @@
+{
+	"id": "com.appcelerator.bouncylogo",
+	"name": "com.appcelerator.bouncylogo",
+	"description" : "Nice bouncy logo that sits in the background on your window, handles orientation",
+	"author": "Carl Orthlieb",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 Appcelerator Inc",
+	"license":"Apache 2.0",
+	"min-alloy-version": "1.0",
+	"min-titanium-version":"2.1",
+	"tags":"logo,animation",
+	"platforms":"android,ios,mobileweb"
+}
