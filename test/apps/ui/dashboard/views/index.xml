@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<Label>DashboardView not yet implemented</Label>
+		<!--
+		<DashboardView>
+			<DashboardItem/>
+		</DashboardView>
+		-->
+	</Window>
+</Alloy>
