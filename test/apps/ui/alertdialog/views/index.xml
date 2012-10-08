@@ -1,0 +1,27 @@
+<Alloy>
+	<Window>
+		<!-- 
+			Declare AlertDialog, which will be opened by an event. 
+			The AlertDialog is not part of the view hierarchy.
+	    -->
+		<AlertDialog id="alertDialog" title="title" message="This is my message" cancel="1">
+			<ButtonNames>
+				<ButtonName>OK</ButtonName>
+				<ButtonName>cancel</ButtonName>
+			</ButtonNames>
+
+			<!-- 
+				Only on Android, an additional view can be added to be rendered in
+				the AlertDialog, replacing any declared buttons. It will be added
+				to the AlertDialog's view hierarchy like any other View.  
+			-->
+			<View layout="horizontal" platform="android">
+				<ImageView id="avImage" image="/appc4.png" height="40dp" width="40dp"/>
+				<Label id="avLabel">custom view label</Label>
+			</View>
+		</AlertDialog>
+
+		<!-- The actual view hierarchy code -->
+		<Button onClick="showAlert">show alert</Button>
+	</Window>
+</Alloy>
