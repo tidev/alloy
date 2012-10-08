@@ -17,7 +17,7 @@
 		fontWeight: "bold"
 	}
 },
-"Label[size=tablet]": {
+"Label[formFactor=tablet]": {
 	font: {
 		fontSize: 96,
 		fontWeight: "bold"
@@ -29,17 +29,17 @@
 "#osLabel[platform=ios]": {
 	text: "iOS device\n(size unknown)"
 },
-"#osLabel[platform=ios size=tablet]": {
+"#osLabel[platform=ios formFactor=tablet]": {
 	text: "iPad"
 },
-"#osLabel[platform=ios size=handheld]": {
+"#osLabel[platform=ios formFactor=handheld]": {
 	text: "iPhone"
 },
 "#osLabel[platform=android]": {
 	text: "Android",
 	color: "#000"
 },
-"#osLabel[platform=android size=tablet]": {
+"#osLabel[platform=android formFactor=tablet]": {
 	text: "Android\nTablet",
 	color: "#000"
 },

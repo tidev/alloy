@@ -189,6 +189,21 @@ exports.getParserArgs = function(node, state, opts) {
 	};
 };
 
+exports.generateCode = function(ast) {
+	var opts = {
+        indent_start : 0,     // Base indentation for lines
+        indent_level : 4,     // Indentation increment for nested lines
+        quote_keys   : false, // Quote keys in objects?
+        space_colon  : false, // Put a space between keys and colons?
+        beautify     : true,  // Beautify the generated code?
+        ascii_only   : false, // Process only ascii characters
+        inline_script: false, // Compress <script> tags?
+        double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
+        ignore_numbers: true  // Don't try to compress numbers
+    };
+	return pro.gen_code(ast, opts);
+}
+
 exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (node.nodeType != 1) return '';
 
@@ -317,7 +332,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			} else {
 			// else the target has siblings, insert the new element between the target and it's next sibling.
 			parent.insertBefore(newElement, targetElement.nextSibling);
-			}
+		}
 	}
 
 	function processRequire(node, isFirst) {
@@ -344,8 +359,8 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	if (getViewRequirePath(cloneNode) !== null) {
 		processRequire(cloneNode, true);
 		while (doRecursive) {
-			var requires = cloneNode.getElementsByTagName('Require');
-			var viewRequires = _.filter(requires, function(req) {
+			var reqs = cloneNode.getElementsByTagName('Require');
+			var viewRequires = _.filter(reqs, function(req) {
 				return getViewRequirePath(req) !== null;
 			});
 

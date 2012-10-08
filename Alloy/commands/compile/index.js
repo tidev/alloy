@@ -4,9 +4,9 @@ var path = require('path'),
 	wrench = require('wrench'),
 	util = require('util'),
 	vm = require('vm'),
+	jsp = require("../../uglify-js/uglify-js").parser,
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
-	requires = require('./requires'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
@@ -189,11 +189,8 @@ module.exports = function(args, program) {
 	fs.writeFileSync(appJS,code);
 	logger.info("compiling alloy to " + appJS.yellow);
 
-	// copy builtins and fix their require paths
-	copyBuiltins();
-
 	// optimize code
-	optimizeCompiledCode(alloyConfig);
+	optimizeCompiledCode(alloyConfig, paths);
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
@@ -422,80 +419,6 @@ function processModels() {
 	return models;
 };
 
-function copyBuiltins() {
-	// this method will allow an app to do a require
-	// of special built-in alloy libraries that we provide 
-	// as part of the framework and then auto-deploy them at 
-	// compile time, only copying the libraries that we 
-	// actually require in our app - saving space and memory
-	var builtInsDir = compileConfig.dir.builtins; 
-	
-	function alloyFilter(fn) {
-		var exclude = ['backbone','underscore'];
-		var matches = fn.match(/^alloy\/(.+)$/);
-		var builtin, filepath;
-
-		if (matches !== null) {
-			builtin = matches[1];
-			if (!_.contains(exclude, builtin)) {
-				filepath = path.join(builtInsDir,builtin+'.js');
-				if (path.existsSync(filepath)) {
-					return filepath;
-				}
-			}
-		}
-		return null;
-	}
-
-	var alloyLibs = [];
-	var resourcesDir = compileConfig.dir.resources; 
-	var files = wrench.readdirSyncRecursive(resourcesDir);
-	_.each(files, function(file) {
-		var ext = file.substring(file.length-3);
-		if (ext == '.js') {
-			var f = path.join(resourcesDir,file);
-			// this method will use the AST of the code to resolve all
-			// the requires in the code and filter only the ones which are 
-			// alloy builtins
-			var found = requires.findAllRequires(f,alloyFilter);
-			alloyLibs = _.union(alloyLibs,found);
-		}
-	});
-	
-	if (alloyLibs.length > 0) {
-		logger.debug('');
-		logger.debug('----- BUILTINS -----');
-		// now find all our builtin libs and then copy them into 
-		// the project relative to the alloy directory so that 
-		// when they are required in the real project they will be available
-		var alloyDir = compileConfig.dir.resourcesAlloy; 
-		alloyLibs = _.uniq(alloyLibs);
-
-		_.each(alloyLibs,function(lib) {
-			// find all dependencies that look to be relative to our dependency
-			var depends = requires.findAllRequires(lib);
-			var libdir = path.dirname(lib);
-			_.each(depends,function(depend) {
-				var ext = depend.substring(depend.length-3);
-				if (ext == '.js' && depend.substring(0,libdir.length)==libdir)  {
-					if (path.existsSync(depend)) {
-						var rel = depend.substring(libdir.length);
-						var depDest = path.join(alloyDir,rel);
-						logger.debug('[' + rel + '] "' + depend + '" -> "' + depDest + '"');
-						U.copyFileSync(depend,depDest);
-					}
-				}
-			});
-			// now copy our builtin
-			var name = path.basename(lib);
-			var dest = path.join(alloyDir,name);
-			logger.debug('[' + name + '] "' + lib + '" --> "' + dest + '"');
-			U.copyFileSync(lib,dest);
-		});
-		logger.debug('');
-	}
-}
-
 function loadGlobalStyle(filepath) {
 	if (path.existsSync(filepath)) {
 		logger.debug('[app.tss] global style processing...');
@@ -503,25 +426,45 @@ function loadGlobalStyle(filepath) {
 	}
 }
 
-function optimizeCompiledCode(config) {
-	var resourcesDir =  compileConfig.dir.resources, 
-		files = wrench.readdirSyncRecursive(resourcesDir);
+function optimizeCompiledCode() {
+	var mods = [
+			'builtins',
+			'mangle',
+			'squeeze'
+		],
+		modLocation = './ast/';
+		report = {};
 
-	logger.debug('----- OPTIMIZATIONS -----');
-	_.each(files,function(file){
-		var ext = file.substring(file.length-3);
-		if (ext == '.js') {
-			var f = path.join(resourcesDir,file);
-			logger.debug('Optimizing runtime javascript file "' + file + '"');
+	function getJsFiles() {
+		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
+			return /\.js\s*$/.test(f);
+		});
+	}
 
-			// we fix require paths to make sure they are correct and relative to the project
+	var lastFiles = [], 
+		files;
+
+	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
+		_.each(files, function(file) {
+			// generate AST from file
+			var fullpath = path.join(compileConfig.dir.resources,file);
+			logger.debug('Parsing AST for "' + file + '"...');
 			try {
-				var newSrc = requires.makeRequiresRelative(f,resourcesDir,config);
-				fs.writeFileSync(f,newSrc,'utf-8');
+				var ast = jsp.parse(fs.readFileSync(fullpath,'utf8'));
 			} catch (e) {
-				U.die('Error while checking require() calls in "' + f + '"', e);
+				U.die('Error generating AST for "' + fullpath + '"', e);
 			}
-		}
-	});
-	logger.debug('');
+
+			// process all AST operations
+			_.each(mods, function(mod) {
+				logger.debug('- Processing "' + mod + '" module...')
+				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
+			});
+			fs.writeFileSync(fullpath, CU.generateCode(ast));
+		});
+
+		// Combine lastFiles and files, so on the next iteration we can make sure that the 
+		// list of files to be processed has not grown, like in the case of builtins.
+		lastFiles = _.union(lastFiles, files);
+	}
 }

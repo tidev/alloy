@@ -1,4 +1,4 @@
-var pro = require("../../uglify-js/uglify-js").uglify;
+var pro = require("../../../uglify-js/uglify-js").uglify;
 
 exports.process = function(ast, config, report) {
 	var opts = {
@@ -9,5 +9,5 @@ exports.process = function(ast, config, report) {
         unsafe      : false   // Alloy potentially unsafe optimizations?
     };
 
-	return pro.ast_squeeze(ast, opts);
+	return pro.ast_squeeze(ast, opts); 
 }

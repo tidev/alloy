@@ -1,7 +1,8 @@
-var pro = require("../../uglify-js/uglify-js").uglify;
+var pro = require("../../../uglify-js/uglify-js").uglify,
+	_ = require('../../../lib/alloy/underscore')._;
 
 exports.process = function(ast, config, report) {
-	config = config || {};
+	config = config ? config.alloyConfig : {};
 	config.deploytype = config.deploytype || 'development';
 
 	// create list of platform and deploy type defines

@@ -32,15 +32,20 @@ exports.process = function(ast, config, report) {
 		if (func[0] === 'name' && func[1] === 'require' &&  // Is this a require call?
 			params[0] && params[0][0] === 'string' &&       // Is the 1st param a literal string?
 			(match = params[0][1].match(rx)) !== null &&    // Is it an alloy builtin?
-			!_.contains(EXCLUDE, match[1])                  // Make sure it's not excluded. 
+			!_.contains(EXCLUDE, match[1]) &&               // Make sure it's not excluded.
+			!_.contains(report.builtins, match[1])          // Make sure we didn't find it already 
 		) {
 			var name = appendExtension(match[1], 'js');
 			var source = path.join(BUILTINS_PATH,name);
-
-			// add builtin to array if we find it
-			if (path.existsSync(source)) {
-				report.builtins = _.union(report.builtins, [source]);
+			if (!path.existsSync(source)) {
+				return;
 			}
+
+			var dest = path.join(config.dir.resources,'alloy',name);
+			logger.debug('  - [' + name + '] --> "' + dest + '"');
+			U.copyFileSync(source, dest);
+
+			report.builtins = _.union(report.builtins, [name]);
 		}
 	}
 
@@ -51,8 +56,4 @@ exports.process = function(ast, config, report) {
 	);
 	
 	return ast;
-}
-
-exports.postProcess = function(config, report) {
-
 }
