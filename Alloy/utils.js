@@ -438,12 +438,22 @@ exports.die = function(msg, e) {
 	process.exit(1);
 }
 
-exports.installPlugin = function(alloyPath, projectPath) {
+exports.installPlugin = function(alloyPath, projectPath, doExistingCheck) {
 	var file = 'plugin.py'
+	var hookFile = 'alloy.js';
 	var id = 'ti.alloy';
 	var source = path.join(alloyPath,'Alloy','plugin',file);
 	var dest = path.join(projectPath,'plugins',id);
 	var hookDest = path.join(dest,'hooks');
+
+	// Check to see if the appropriate structure is already in place
+	if (doExistingCheck &&
+		path.existsSync(path.join(dest,file)) &&
+		path.existsSync(path.join(hookDest,hookFile))) 
+	{
+		logger.debug('Plugin and hook already installed');
+		return;
+	}
 
 	// create plugin path and add to project
 	exports.ensureDir(dest);
@@ -458,7 +468,7 @@ exports.installPlugin = function(alloyPath, projectPath) {
 
 	// copy the new cli hook
 	exports.ensureDir(hookDest);
-	exports.copyFileSync(path.join(alloyPath,'hooks','alloy.js'), path.join(hookDest,'alloy.js'));
+	exports.copyFileSync(path.join(alloyPath,'hooks',hookFile), path.join(hookDest,hookFile));
 
 	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
 	logger.info('Deployed ti.alloy hooks to ' + hookDest);
