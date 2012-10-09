@@ -1,55 +1,5 @@
-/**
- * @class Alloy.widgets.drawer
- * The drawer widget appears as a sliding panel on iOS and Mobile Web, and as additions to
- * the activity menu or as a sliding panel on Android.
- * The sliding panel has a row of horizontal buttons. By default, the buttons are a set of
- * 48x48-pixel PNG images.
- *
- * ### Usage
- *
- * To use the widget, first add it as a dependency in the `config.json` file:
- *
- *      "dependencies": {
- *          "com.appcelerator.drawer":"1.0"
- *      }
- *
- * Next, add it to a view in the project, using the Require tag:
- *
- *     <Require id="drawer" type="widget" src="com.appcelerator.drawer"/>
- *
- * Note: the `id` attribute is a unique identfier and can be anything. `drawer` is just an example.
- *
- * In the controller, use the `init` method to initialize the drawer configration before opening
- * the window:
- *
- *     $.drawer.init({
- *         mainWindow: $.index,
- *         buttons: [
- *             { id: 'One', text: 'One', click: function (e) { alert("One"); } },
- *             { id: 'Two', text: 'Two',  click: function (e) { alert("Two"); } },
- *             { id: 'Three', text: 'Three',  click: function (e) { alert("Three"); } }
- *         ],
- *         autoClose: true,
- *         gutter: 5
- *     });
- *
- * In the 'assets' folder, add a folder called 'images' and place the drawer icons inside it.
- * Each button will have its own enabled and disabled icon.  The icon images will need to be called
- * '<button.id>Enabled.png' and '<button.id>Disabled.png'. For instance, in this example,
- * the project will need the following icons: OneEnabled.png, OneDisabled.png, TwoEnabled.png,
- * TwoDisabled.png, ThreeEnabled.png and ThreeDisabled.png.
- *
- * ### Accessing View Elements
- *
- * The following is a list of GUI elements in the widget's view.  These IDs can be used to
- * override or access the properties of these elements:
- *
- * - `drawer`: Titanium.UI.View for the entire widget.
- * - `pulltab`: Titanium.UI.Button for the pull tab button.
- * - `buttonbar`: Titanium.UI.View for the row of buttons.
- *
- * Prefix the special variable `$` and the widget ID to the element ID, to access
- * that view element, for example, `$.drawer.pulltab` will give you access to the Button.
+ /**
+ * @class com.appcelerator.drawer, see the documentation in the docs folder for more details.
  */
 
 var DRAWER_PULLTAB_HEIGHT = 16;

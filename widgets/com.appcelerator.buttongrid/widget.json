@@ -1,0 +1,13 @@
+{
+	"id": "com.appcelerator.buttongrid",
+	"name": "com.appcelerator.buttongrid",
+	"description" : "",
+	"author": "",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012",
+	"license":"Public Domain",
+	"min-alloy-version": "1.0",
+	"min-titanium-version":"2.1",
+	"tags":"",
+	"platforms":"android,ios,mobileweb"
+}

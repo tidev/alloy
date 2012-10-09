@@ -1,5 +1,5 @@
 ![Header](./img/header.png)
-#WIDGET EXAMPLE APPLICATION
+# BouncyLogo Widget Sample
 
 The **BouncyLogo** widget provides a animated logo that is suitable for displaying when your application first starts.
 

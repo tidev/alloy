@@ -1,5 +1,6 @@
 ![Widget Header](img/header.png)
 
+# Drawer Widget
 ## Overview
 
 The **Drawer** widget provides a sliding panel of buttons to pull up from the bottom of the screen. As an option, the drawer can automatically close after it has been used. On Android, the drawer manifests itself as the activity menu, unless the developer wants to specifically override that capability.

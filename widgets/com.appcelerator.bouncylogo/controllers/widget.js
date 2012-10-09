@@ -1,3 +1,7 @@
+ /**
+ * @class com.appcelerator.bouncylogo, see the documentation in the docs folder for more details.
+ */
+
 var defaults = {
     opacity: 0.5,           // Fade into the background after it settles
     durationIn: 1000,        // Duration to slide onto the screen and become opaque

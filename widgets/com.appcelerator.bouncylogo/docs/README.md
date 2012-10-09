@@ -1,5 +1,6 @@
 ![Widget Header](img/header.png)
 
+# BouncyLogo Widget
 ## Overview
 
 The **BouncyLogo** widget provides a animated logo that is suitable for displaying when your application first starts.
@@ -32,7 +33,7 @@ You can add a bouncy logo to a view by using the *Widget* tag to bring in the Bo
 
 	<Widget src="com.appcelerator.bouncylogo" id="logo"/>
 
-Assign it an ID that you can use in your controller. E.g. `id="logo"` You can now access the drawer via `$.logo` in your controller. Note that the containing view needs to have a layout of "absolute", which is the default, and not "horizontal" or "vertical", in order to have BouncyLogo work properly. 
+Assign it an ID that you can use in your controller. E.g. `id="logo"` You can now access the BouncyLogo via `$.logo` in your controller. Note that the containing view needs to have a layout of "absolute", which is the default, and not "horizontal" or "vertical", in order to have BouncyLogo work properly. 
 
 Note that the logo starts offscreen and hidden, you will need to initialize it after your window is open. Change your window to register for the `open` event if it has not already done so:
 
