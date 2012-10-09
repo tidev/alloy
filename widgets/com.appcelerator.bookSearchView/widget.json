@@ -1,0 +1,16 @@
+{
+	"id": "com.appcelerator.bookSearchView",
+	"name": "bookSearchView",
+	"description" : "Google API Book search with toolbar and table representation",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 by Appcelerator",
+	"license":"Public Domain",
+	"min-alloy-version": "0.2.40",
+	"min-titanium-version":"2.1",
+	"tags":"utility,google,search",
+	"platforms":"android,ios,mobileweb",
+	"dependencies": {
+		"com.appcelerator.searchForBooks":"1.0"
+	}
+}

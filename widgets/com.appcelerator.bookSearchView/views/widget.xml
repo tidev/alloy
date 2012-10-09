@@ -1,0 +1,6 @@
+<Alloy>
+	<View>
+		<Widget src="com.appcelerator.searchForBooks" id="sfb"/>
+		<TableView id="table"/>
+	</View>
+</Alloy>
