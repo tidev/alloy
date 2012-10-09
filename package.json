@@ -13,15 +13,15 @@
     "html5",
     "mobileweb"
   ],
-  "version": "0.2.40",
+  "version": "0.2.41",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
-  	{"name":"Russ McMahon","email":"rmcmahon@appcelerator.com"},
   	{"name":"Tony Lukasavage","email":"tlukasavage@appcelerator.com"}
   ],
   "contributors":[
     {"name":"Jeff Haynie","email":"jhaynie@appcelerator.com"},
-    {"name":"Kevin Whinnery","email":"kwhinnery@appcelerator.com"}
+    {"name":"Kevin Whinnery","email":"kwhinnery@appcelerator.com"},
+    {"name":"Russ McMahon","email":"rmcmahon@appcelerator.com"}
   ],
   "repository": {
     "type": "git",
