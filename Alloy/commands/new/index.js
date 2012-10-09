@@ -131,6 +131,7 @@ function installPlugin(paths) {
 	var id = 'ti.alloy';
 	var source = path.join(paths.alloy,'plugin',file);
 	var dest = path.join(paths.project,'plugins',id);
+	var hookDest = path.join(dest,'hooks');
 
 	// create plugin path and add to project
 	U.ensureDir(dest);
@@ -142,6 +143,10 @@ function installPlugin(paths) {
 		id: 'ti.alloy',
 		version: '1.0'
 	});
+
+	// copy the new cli hook
+	U.ensureDir(hookDest);
+	U.copyFileSync(path.join(paths.alloy,'hooks','alloy.js'), path.join(hookDest,'alloy.js'));
 
 	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
 }
