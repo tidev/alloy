@@ -52,7 +52,7 @@ module.exports = function(args, program) {
 	});
 
 	// install ti.alloy compiler plugin
-	installPlugin(paths);
+	U.installPlugin(path.join(paths.alloy,'..'), paths.project);
 
 	// copy Resources android, iphone, and mobileweb directories to assets
 	U.copyFileSync(
@@ -126,28 +126,28 @@ function getPaths(project, templateName) {
 	return paths;
 }
 
-function installPlugin(paths) {
-	var file = 'plugin.py'
-	var id = 'ti.alloy';
-	var source = path.join(paths.alloy,'plugin',file);
-	var dest = path.join(paths.project,'plugins',id);
-	var hookDest = path.join(dest,'hooks');
+// function installPlugin(paths) {
+// 	var file = 'plugin.py'
+// 	var id = 'ti.alloy';
+// 	var source = path.join(paths.alloy,'plugin',file);
+// 	var dest = path.join(paths.project,'plugins',id);
+// 	var hookDest = path.join(dest,'hooks');
 
-	// create plugin path and add to project
-	U.ensureDir(dest);
-	dest = path.join(dest,file);
-	U.copyFileSync(source, dest);
+// 	// create plugin path and add to project
+// 	U.ensureDir(dest);
+// 	dest = path.join(dest,file);
+// 	U.copyFileSync(source, dest);
 
-	// add the plugin to tiapp.xml
-	U.tiapp.installPlugin(paths.project, {
-		id: 'ti.alloy',
-		version: '1.0'
-	});
+// 	// add the plugin to tiapp.xml
+// 	U.tiapp.installPlugin(paths.project, {
+// 		id: 'ti.alloy',
+// 		version: '1.0'
+// 	});
 
-	// copy the new cli hook
-	U.ensureDir(hookDest);
-	U.copyFileSync(path.join(paths.alloy,'..','hooks','alloy.js'), path.join(hookDest,'alloy.js'));
+// 	// copy the new cli hook
+// 	U.ensureDir(hookDest);
+// 	U.copyFileSync(path.join(paths.alloy,'..','hooks','alloy.js'), path.join(hookDest,'alloy.js'));
 
-	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
-}
+// 	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
+// }
 

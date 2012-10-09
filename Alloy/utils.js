@@ -438,5 +438,31 @@ exports.die = function(msg, e) {
 	process.exit(1);
 }
 
+exports.installPlugin = function(alloyPath, projectPath) {
+	var file = 'plugin.py'
+	var id = 'ti.alloy';
+	var source = path.join(alloyPath,'Alloy','plugin',file);
+	var dest = path.join(projectPath,'plugins',id);
+	var hookDest = path.join(dest,'hooks');
+
+	// create plugin path and add to project
+	exports.ensureDir(dest);
+	dest = path.join(dest,file);
+	exports.copyFileSync(source, dest);
+
+	// add the plugin to tiapp.xml
+	exports.tiapp.installPlugin(projectPath, {
+		id: 'ti.alloy',
+		version: '1.0'
+	});
+
+	// copy the new cli hook
+	exports.ensureDir(hookDest);
+	exports.copyFileSync(path.join(alloyPath,'hooks','alloy.js'), path.join(hookDest,'alloy.js'));
+
+	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
+	logger.info('Deployed ti.alloy hooks to ' + hookDest);
+}
+
 
 
