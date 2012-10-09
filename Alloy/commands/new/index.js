@@ -146,7 +146,7 @@ function installPlugin(paths) {
 
 	// copy the new cli hook
 	U.ensureDir(hookDest);
-	U.copyFileSync(path.join(paths.alloy,'hooks','alloy.js'), path.join(hookDest,'alloy.js'));
+	U.copyFileSync(path.join(paths.alloy,'..','hooks','alloy.js'), path.join(hookDest,'alloy.js'));
 
 	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
 }
