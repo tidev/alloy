@@ -58,6 +58,7 @@ module.exports = function(args, program) {
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
+	U.installPlugin(path.join(alloyRoot,'..'), paths.project, true);
 	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
