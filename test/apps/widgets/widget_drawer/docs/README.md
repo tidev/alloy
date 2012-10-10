@@ -19,8 +19,9 @@ Alternatively, if you have downloaded the alloy project from github you can:
 
 1. Open a terminal window
 1. `cd <alloydir>`
-1. `sudo jake app:run dir=widget_drawer platform=<platform> tiversion=2.1.0.GA` where \<platform\> is one of iphone, ipad, mobileweb, android.
+1. `sudo jake app:run dir=widgets/widget_drawer platform=<platform> tiversion=<version>` 
 
+Where `<platform>` is one of iphone, ipad, mobileweb, android and `<version>` is the version of the SDK you want to use (e.g. 2.1.3.GA).
 
 The drawer widget is defined in a separate 'widgets' subdirectory. See the documentation for [com.appcelerator.drawer](https://github.com/appcelerator/alloy/blob/master/widgets/com.appcelerator.drawer/docs/README.md) for more information.
 

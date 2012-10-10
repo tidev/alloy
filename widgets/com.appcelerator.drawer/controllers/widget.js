@@ -14,20 +14,20 @@ var defaults = {
     overrideMenu: false     // Override the use of the menu in Android and use a drawer like in iOS/MobileWeb.
 };
 
-_isOpen = false;        // Whether the drawer is open or not.
-_buttons = [];          // Button descriptions.
-_params = {};           // Behavior and styling parameters for the drawer. Originally set to defaults.
+$._isOpen = false;        // Whether the drawer is open or not.
+$._buttons = [];          // Button descriptions.
+$._params = {};           // Behavior and styling parameters for the drawer. Originally set to defaults.
 
 function pullTabClick(e) {
-    _isOpen = !_isOpen;
-    $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + (_isOpen ? "PullTabDown.png" : "PullTabUp.png");
+    $._isOpen = !$._isOpen;
+    $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + ($._isOpen ? "PullTabDown.png" : "PullTabUp.png");
     
-    Ti.API.info((_isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + (_params.iconSize + _params.gutter * 2) + ", drawer=" + $.drawer.size.height + ")");
+    Ti.API.info(($._isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + ($._params.iconSize + $._params.gutter * 2) + ", drawer=" + $.drawer.size.height + ")");
     
     var animation = Ti.UI.createAnimation({
-        bottom: _isOpen ? 0 : -(_params.iconSize + _params.gutter * 2),
-        opacity: _isOpen ? _params.openOpacity : _params.closeOpacity,
-        duration: _params.animationDuration
+        bottom: $._isOpen ? 0 : -($._params.iconSize + $._params.gutter * 2),
+        opacity: $._isOpen ? $._params.openOpacity : $._params.closeOpacity,
+        duration: $._params.animationDuration
     });
     $.drawer.animate(animation);
 }
@@ -43,12 +43,12 @@ function pullTabClick(e) {
  * `checkEnabled` method in order to get those callbacks to fire.
  */
 exports.checkEnabled = function DrawerCheckEnabled() {
-    if (OS_IOS || OS_MOBILEWEB || _params.overrideMenu) {
-        Object.keys(_buttons).forEach(
+    if (OS_IOS || OS_MOBILEWEB || $._params.overrideMenu) {
+        Object.keys($._buttons).forEach(
             function (key) {
                 var i = parseInt(key);
-                if (_buttons[i].enabled)
-                    _buttons[i].button.enabled = _buttons[i].enabled();
+                if ($._buttons[i].enabled)
+                    $._buttons[i].button.enabled = $._buttons[i].enabled();
             }
         );
     }
@@ -76,60 +76,60 @@ exports.checkEnabled = function DrawerCheckEnabled() {
  */
 
 exports.init = function DrawerInit(args) {
-    _buttons = args.buttons;
-    _params = _.defaults(args, defaults);
+    $._buttons = args.buttons;
+    $._params = _.defaults(args, defaults);
      
-    if (OS_IOS || OS_MOBILEWEB || _params.overrideMenu) {
+    if (OS_IOS || OS_MOBILEWEB || $._params.overrideMenu) {
         // Resize the drawer based on the icon size
-        $.buttonbar.height = _params.iconSize + _params.gutter * 2;   
+        $.buttonbar.height = $._params.iconSize + $._params.gutter * 2;   
         $.drawer.height = DRAWER_PULLTAB_HEIGHT + $.buttonbar.height;
         $.drawer.bottom = - $.buttonbar.height;
         
         // Create and add buttons to the drawer
-        Object.keys(_buttons).forEach(
+        Object.keys($._buttons).forEach(
             function (key) {
                 var i = parseInt(key); 
-                Ti.API.info("Setting enabled image " + '/images/' + _buttons[i].id + 'Enabled.png');
-                _buttons[i].button = Ti.UI.createButton({
-                    top: _params.gutter, left: _params.gutter, width: _params.iconSize, height: _params.iconSize,
-                    backgroundImage: '/images/' + _buttons[i].id + 'Enabled.png',
-                    backgroundDisabledImage: '/images/' + _buttons[i].id + 'Disabled.png'
+                Ti.API.info("Setting enabled image " + '/images/' + $._buttons[i].id + 'Enabled.png');
+                $._buttons[i].button = Ti.UI.createButton({
+                    top: $._params.gutter, left: $._params.gutter, width: $._params.iconSize, height: $._params.iconSize,
+                    backgroundImage: '/images/' + $._buttons[i].id + 'Enabled.png',
+                    backgroundDisabledImage: '/images/' + $._buttons[i].id + 'Disabled.png'
                 });
         
-                _buttons[i].button.addEventListener('click', function (e) {
-                    _buttons[i].click(e);
-                    if (_params.autoClose)
+                $._buttons[i].button.addEventListener('click', function (e) {
+                    $._buttons[i].click(e);
+                    if ($._params.autoClose)
                         pullTabClick(e);    // Close the drawer.
                 });
                 
-                $.buttonbar.add(_buttons[i].button);      
+                $.buttonbar.add($._buttons[i].button);      
             }
         );   
-    } else if (OS_ANDROID && !_params.overrideMenu) {
+    } else if (OS_ANDROID && !$._params.overrideMenu) {
         // On Android, the drawer takes the form of the standard Android menu.
         $.drawer.visible = false;   // Hide the drawer, not needed.
         
-        var activity = _params.mainWindow.activity;
+        var activity = $._params.mainWindow.activity;
 
         activity.onCreateOptionsMenu = function(e) {
             var menu = e.menu;
-            Object.keys(_buttons).forEach(
+            Object.keys($._buttons).forEach(
                 function (key) {
                     var i = parseInt(key);
-                    var menuItem = menu.add({ title: _buttons[i].title, itemId: i });
-                    menuItem.setIcon('/images/' + _buttons[i].id + 'Enabled.png');
-                    if (_buttons[i].click)
-                        menuItem.addEventListener("click", _buttons[i].click);
+                    var menuItem = menu.add({ title: $._buttons[i].title, itemId: i });
+                    menuItem.setIcon('/images/' + $._buttons[i].id + 'Enabled.png');
+                    if ($._buttons[i].click)
+                        menuItem.addEventListener("click", $._buttons[i].click);
                 }
             );
         };
         activity.onPrepareOptionsMenu = function(e) {
              var menu = e.menu;
-             Object.keys(_buttons).forEach(
+             Object.keys($._buttons).forEach(
                 function (key) {
                     var i = parseInt(key);
                     var menuItem = menu.findItem(i);
-                    menuItem.enabled = _buttons[i].enabled ? _buttons[i].enabled() : true;
+                    menuItem.enabled = $._buttons[i].enabled ? $._buttons[i].enabled() : true;
                 }
             );
         };

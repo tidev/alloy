@@ -1,12 +1,5 @@
 function IndexOpen(e) {
-    // Bounce in the logo
-    setTimeout(function() {
-        $.logo.animate({ top:"33%", opacity: 1.0, duration: 500 }, 
-            function (e) { 
-                $.logo.animate({ top: "25%", duration: 250 }) ;
-            }
-        );
-    }, 1000);
+    $.logo.init({ image: '/images/alloy.png', width: 216, height: 200 });
 }
 
 // Initialize the drawer with our buttons

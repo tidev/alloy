@@ -6,6 +6,7 @@
     "os:ios": {},
     "os:android": {},
     "dependencies": {
+        "com.appcelerator.bouncylogo": "1.0",
         "com.appcelerator.drawer":"1.0"
     }
 }
