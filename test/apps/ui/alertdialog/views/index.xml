@@ -8,6 +8,7 @@
 			<ButtonNames>
 				<ButtonName>OK</ButtonName>
 				<ButtonName>cancel</ButtonName>
+				<ButtonName platform="android">android</ButtonName>
 			</ButtonNames>
 
 			<!-- 
