@@ -979,3 +979,24 @@ function sortStyles(componentStyle) {
 
 	return _.sortBy(sortedStyles, 'priority');
 }
+
+exports.validateNodeName = function(node, names) {
+	var fullname = exports.getNodeFullname(node);
+	var ret = null;
+	_.isArray(names) || (names = [names]);
+
+	// Is the node name in the given list of valid names?
+	ret = _.find(names, function(name) { return name === fullname });
+	if (ret) { return ret; }
+
+	// Is it an Alloy.Require?
+	if (fullname === 'Alloy.Require') {
+		var inspect = exports.inspectRequireNode(node);
+		ret = _.find(names, function(name) { return inspect.names[0] === fullname });
+		if (inspect.length === 1 && ret) { 
+			return ret;
+		}
+	}
+
+	return null;
+}
