@@ -36,8 +36,7 @@
     "xmldom":          "0.1.13",
     "jake":            ">=0.3",
     "stripcolorcodes": "0.1.0",
-    "jsonlint":        "1.5.1",
-    "node-appc":       "0.1.0"
+    "jsonlint":        "1.5.1"
   },
   "license":"Apache Public License v2",
   "bin": {
