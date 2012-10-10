@@ -139,7 +139,7 @@ exports.getParserArgs = function(node, state, opts) {
 		platformObj;
 
 	// cleanup namespaces and nodes
-	ns = ns.replace(/^Titanium\./, 'Ti');
+	ns = ns.replace(/^Titanium\./, 'Ti.');
 	if (doSetId) { node.setAttribute('id', id); }
 
 	// process the platform attribute
