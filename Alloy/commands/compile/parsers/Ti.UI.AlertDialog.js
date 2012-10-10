@@ -3,74 +3,52 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	logger = require('../../../common/logger');
 
+var VALID = [
+	'Alloy.Abstract.ButtonNames'
+];
+
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	var types = {
-			buttonNames: {}
-		},
-		config = CU.getCompilerConfig(),
+	var config = CU.getCompilerConfig(),
 		isAndroid = config && config.alloyConfig && config.alloyConfig.platform === 'android',
 		androidView = null,
 		extras = [],
 		code = '';
 
-	// Add properties for types
-	_.each(_.keys(types), function(key) {
-		var uc = U.ucfirst(key);
-		types[key] = {
-			collection: uc,
-			item: uc.substr(0,uc.length-1),
-			array: CU.generateUniqueId(),
-			first: true
-		};
-	});
-
-	// Process buttonNames and androidView
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-		var typeName = U.lcfirst(child.nodeName);
-		var def = types[typeName];
-
-		// Process buttonNames
-		if (def && !child.getAttribute('ns')) {
-			_.each(U.XML.getElementsFromNodes(child.childNodes), function(item, index) {
-				if (item.nodeName === def.item && !item.getAttribute('ns')) {
-					var string = U.trim(U.XML.getNodeText(item) || '');
-					if (def.first) { 
-						def.first = false;
-						code += 'var ' + def.array + ' = [];'; 
-						extras.push([typeName, def.array]);
-					}
-					code += def.array + '.push("' + string.replace(/"/g,'\\"') + '");\n';
-				} else {
-					U.die('Child element of AlertDialog\'s <' + def.collection + '> at index ' + index + ' is not a <' + def.item + '>');
-				}
-			});
-
-			// get rid of the items when done
-			node.removeChild(child);
-
-		// Process a potential androidView
-		} else {
-			if (androidView === null) {
-				var tmpExtra = [];
-				androidView = CU.generateNode(child, {
+		switch(CU.validateNodeName(child, VALID)) {
+			case 'Alloy.Abstract.ButtonNames': 
+				var bnState = {
 					parent: {},
 					styles: state.styles,
-					post: function(node, state, args) {
-						tmpExtra.push(['androidView', state.parent.symbol]);
-					}
-				});
+					buttonNameArray: CU.generateUniqueId()
+				};
 
-				if (isAndroid) {
-					code += androidView;
-					extras = _.union(extras, tmpExtra);
-				}
-			} else {
-				U.die('AlertDialog can only have one androidView');
-			}	
+				code += CU.generateNode(child, bnState);
+				extras.push(['buttonNames', bnState.buttonNameArray]);
+				break;
+			default:
+				// process potential androidView
+				if (androidView === null) {
+					if (isAndroid) {
+						androidView = CU.generateNode(child, {
+							parent: {},
+							styles: state.styles,
+							post: function(node, state, args) {
+								extras.push(['androidView', state.parent.symbol]);
+							}
+						});
+						code += androidView;
+					} else {
+						logger.warn('Additional views in AlertDialog only supported on Android');
+					}
+				} else {
+					U.die('AlertDialog can only have one androidView');
+				}	
+				break;
 		}
 	});
 
@@ -80,8 +58,8 @@ function parse(node, state, args) {
 	}
 	state.parent = {};
 
-	var optionState = require('./default').parse(node, state);
-	code += optionState.code;
+	var alertState = require('./default').parse(node, state);
+	code += alertState.code;
 
 	// Update the parsing state
 	return {
