@@ -27,6 +27,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	PLATFORMS = ['ios', 'android', 'mobileweb'],
 	NS_ALLOY = 'Alloy',
+	NS_ALLOY_ABSTRACT = 'Alloy.Abstract',
 	NS_TI_ANDROID = 'Ti.Android',
 	NS_TI_MAP = 'Ti.Map',
 	NS_TI_MEDIA = 'Ti.Media',
@@ -38,6 +39,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		// Alloy
 		Require: NS_ALLOY,
 		Widget: NS_ALLOY,
+
+		// Alloy.Abstract
+		ButtonNames: NS_ALLOY_ABSTRACT,
+		ButtonName: NS_ALLOY_ABSTRACT,
 
 		// Ti.Android
 		Menu: NS_TI_ANDROID,
