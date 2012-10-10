@@ -257,10 +257,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 			var parent = p.node;
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
-				code.content += exports.generateNode(parent.childNodes.item(i), {
-					parent: p,
-					styles: state.styles,
-				});
+				var newState = _.defaults({ parent: p }, state);
+				code.content += exports.generateNode(parent.childNodes.item(i), newState); 
 			}
 		}); 
 	}
