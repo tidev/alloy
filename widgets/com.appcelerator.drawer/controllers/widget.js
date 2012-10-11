@@ -17,6 +17,7 @@ var defaults = {
 $._isOpen = false;        // Whether the drawer is open or not.
 $._buttons = [];          // Button descriptions.
 $._params = {};           // Behavior and styling parameters for the drawer. Originally set to defaults.
+$._annoy = false;         // Annoy interval variable, useful for clearInterval.
 
 function pullTabClick(e) {
     $._isOpen = !$._isOpen;
@@ -24,13 +25,34 @@ function pullTabClick(e) {
     
     Ti.API.info(($._isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + ($._params.iconSize + $._params.gutter * 2) + ", drawer=" + $.drawer.size.height + ")");
     
-    var animation = Ti.UI.createAnimation({
+    $.drawer.animate({
         bottom: $._isOpen ? 0 : -($._params.iconSize + $._params.gutter * 2),
         opacity: $._isOpen ? $._params.openOpacity : $._params.closeOpacity,
         duration: $._params.animationDuration
     });
-    $.drawer.animate(animation);
+    
+    if ($._isOpen && $._annoy)
+        clearInterval($._annoy);
 }
+
+/**
+ * @method jiggle
+ * Jiggles the drawer up and down slightly to draw the user's attention to it. Does nothing if the drawer is already open or the
+ * Android activity menu is being used.
+ */
+exports.jiggle = function DrawerJiggle() {
+    if ($._isOpen || (OS_ANDROID && !$._params.overrideMenu))
+        return;
+        
+    var animation = require('alloy/animation');
+      
+    var chain = [ // Fade out and move off screen, fade in and move below center, bounce up above center, bring down to center, fade
+        Ti.UI.createAnimation({ bottom: -($._params.iconSize + $._params.gutter * 2) + DRAWER_PULLTAB_HEIGHT, duration: 250 }),
+        Ti.UI.createAnimation({ bottom: -($._params.iconSize + $._params.gutter * 2) - DRAWER_PULLTAB_HEIGHT / 2, duration: 125 }),
+        Ti.UI.createAnimation({ bottom: -($._params.iconSize + $._params.gutter * 2), duration: 125 })
+     ];
+    animation.chainAnimate($.drawer, chain);           
+};
 
 /**
  * @method checkEnabled
@@ -71,8 +93,8 @@ exports.checkEnabled = function DrawerCheckEnabled() {
  * @param {Number} [closeOpacity=0.75] Opacity of the drawer when it is closed in the view.
  * @param {Number} [animationDuration=500] Duration, in milliseconds, to close or open the drawer.
  * @param {Number} [gutter=0] Offset used to space buttons from each other.
- * @param {String} [overrideMenu=false] Overrides the use of the menu in Android and use a drawer
- * like in iOS and Mobile Web.
+ * @param {String} [overrideMenu=false] Overrides the use of the menu in Android and use a drawer like in iOS and Mobile Web.
+ * @param {Boolean} [annoy=false] Jiggle the drawer up and down until the user opens it the first time.
  */
 
 exports.init = function DrawerInit(args) {
@@ -104,7 +126,13 @@ exports.init = function DrawerInit(args) {
                 
                 $.buttonbar.add($._buttons[i].button);      
             }
-        );   
+        );  
+        
+        if ($._params.annoy) {
+            $._annoy = setInterval(function DrawerAnnoy() {
+                $.jiggle();
+            }, 2000);
+        } 
     } else if (OS_ANDROID && !$._params.overrideMenu) {
         // On Android, the drawer takes the form of the standard Android menu.
         $.drawer.visible = false;   // Hide the drawer, not needed.

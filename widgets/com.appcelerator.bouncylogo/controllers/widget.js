@@ -13,12 +13,12 @@ var defaults = {
 var animation = require('alloy/animation');
 
 function BouncyLogoInit(args) {
-    _params = _.defaults(args, defaults);
-    $.imageview.image = _params.image;
-    $.imageview.width = _params.width;  
-    $.imageview.height = _params.height;
+    $._params = _.defaults(args, defaults);
+    $.imageview.image = $._params.image;
+    $.imageview.width = $._params.width;  
+    $.imageview.height = $._params.height;
 
-    BouncyLogoBounce(_params);
+    BouncyLogoBounce($._params);
     Ti.Gesture.addEventListener('orientationchange', BouncyLogoRelayout); 
 };
 exports.init = BouncyLogoInit;
@@ -44,7 +44,7 @@ function BouncyLogoRelayout(e) {
     var chain = [ 
         Ti.UI.createAnimation({ opacity: 0, duration: 100 }),
         Ti.UI.createAnimation({ center: { x: w / 2, y: h / 2 }, duration: 100 }),
-        Ti.UI.createAnimation({ opacity: _params.opacity, duration: _params.durationIn })
+        Ti.UI.createAnimation({ opacity: $._params.opacity, duration: $._params.durationIn })
     ];
     Ti.API.info("BouncyLogo animating on re-orientation " + Ti.Gesture.orientation + " (" + w + "x" + h + ")");
     animation.chainAnimate($.imageview, chain);       
@@ -52,6 +52,6 @@ function BouncyLogoRelayout(e) {
 exports.relayout = BouncyLogoRelayout;
 
 function BouncyLogoReset(e) {
-    BouncyLogoBounce(_params);
+    BouncyLogoBounce($._params);
 };
 exports.reset = BouncyLogoReset;

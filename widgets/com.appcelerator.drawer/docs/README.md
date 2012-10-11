@@ -76,12 +76,14 @@ There are number of aspects of the Drawer that you can change, you can include t
 | Parameter | Type | Affects | Description |
 | --------- | ---- | ------- | ----------- |
 | animationDuration | *integer* | iOS, MW | The duration, in milliseconds, of the animation to close/open the drawer. Default: *500* |
+| annoy | *boolean* | iOS, MW | Bounce the drawer slightly every two seconds to draw attention to it. Once the drawer has been opened, disable the bounce. Default: *false* |
 | autoClose | *boolean* | iOS, MW | If true, automatically closes the drawer after a button has been pressed. Default: *false* |
 | closeOpacity| *number* | iOS, MW | A number between 0 (transparent) and 1 (opaque) that denotes the opacity of the drawer when it is closed. Default: *0.75* |
 | gutter | *integer* | iOS, MW | The offset, in pixels, used to space buttons from each other in the drawer. Default: *0* |
 | iconSize | *integer* | iOS, MW | Size of the icon, in pixels, to used on buttons in the drawer. Default: *48x48* |
 | openOpacity | *number* | iOS, MW | A number between 0 (transparent) and 1 (opaque) that denotes the opacity of the drawer when it is open. Default: *0.9* |
 | overrideMenu | *boolean* | Android | Override the use of the activity menu in Android and use a drawer like in iOS/MobileWeb. In this case, the above parameters do affect Android. Default: *false* |
+
 
 ## Enabling and Disabling Buttons
 
