@@ -17,8 +17,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var def = fixDefinition(state.itemArrayDefinition);
 
-	// Ensure that this _ItemArray has an appropriate parent based on the given
-	// array key name
+	// Ensure that this _ItemArray has an appropriate parent 
 	if (!state.itemsArray) {
 		U.die([
 			'Invalid use of <' + node.nodeName + '> at line ' + node.lineNumber, 
@@ -26,22 +25,49 @@ function parse(node, state, args) {
 		]);
 	}
 
+	var children = U.XML.getElementsFromNodes(node.childNodes);
+	var code = children.length ? 'var ' + state.itemsArray + ' = [];' : '';
+
 	// Run the translations and/or validations
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+	_.each(children, function(child) {
 		var childArgs = CU.getParserArgs(child, state);
 		_.each(def.translations, function(t) {
 			if (childArgs.fullname === t.from) { 
 				var match = t.to.match(/^(.+)\.(.+)$/);
 				child.nodeName = match[2];
 				child.setAttribute('ns', match[1]); 
-			} else if (!_.contains(def.parents, childArgs.fullname)) {
-				U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
-			}
+			} 
 		});
+
+		// This ItemArray processes all types, so we need to process 
+		// them manually
+		if (def.children[0] === 'ALL') {
+			code += CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				post: function(node, s, args) {
+					return state.itemsArray + '.push(' + s.parent.symbol + ');';
+				}
+			});
+
+		// Make sure the children match the parent
+		} else if (!_.contains(def.children, childArgs.fullname)) {
+			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
+		} 
 	});
 
-	return _.extend(state, {
-		parent: { node: node },
-		code: 'var ' + state.itemsArray + ' = [];'
-	});
+	// return an empty state if we already processed
+	if (def.children[0] === 'ALL') {
+		return {
+			parent: {},
+			code: code
+		};
+
+	// return the current modified state if we need to continue processing
+	} else {
+		return _.extend(state, {
+			parent: { node: node },
+			code: code
+		});
+	}
 }
