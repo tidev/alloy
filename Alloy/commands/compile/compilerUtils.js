@@ -43,6 +43,9 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		// Alloy.Abstract
 		ButtonNames: NS_ALLOY_ABSTRACT,
 		ButtonName: NS_ALLOY_ABSTRACT,
+		BarItemTypes: NS_ALLOY_ABSTRACT,
+		BarItemType: NS_ALLOY_ABSTRACT,
+		Labels: NS_ALLOY_ABSTRACT,
 
 		// Ti.Android
 		Menu: NS_TI_ANDROID,
