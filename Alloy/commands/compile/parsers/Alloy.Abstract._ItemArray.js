@@ -36,6 +36,11 @@ function parse(node, state, args) {
 				var match = t.to.match(/^(.+)\.(.+)$/);
 				child.nodeName = match[2];
 				child.setAttribute('ns', match[1]); 
+				_.extend(childArgs, {
+					fullname: t.to,
+					name: match[2],
+					ns: match[1]
+				});
 			} 
 		});
 
