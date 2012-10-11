@@ -1,7 +1,6 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
-	CU = require('../compilerUtils'),
-	logger = require('../../../common/logger');
+	CU = require('../compilerUtils');
 
 var VALID = [
 	'Alloy.Abstract.BarItemTypes',
