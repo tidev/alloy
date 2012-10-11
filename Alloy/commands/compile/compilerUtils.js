@@ -49,6 +49,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		CoverFlowImageType: NS_ALLOY_ABSTRACT,
 		Images: NS_ALLOY_ABSTRACT,
 		Labels: NS_ALLOY_ABSTRACT,
+		Option: NS_ALLOY_ABSTRACT,
+		Options: NS_ALLOY_ABSTRACT,
 
 		// Ti.Android
 		Menu: NS_TI_ANDROID,
