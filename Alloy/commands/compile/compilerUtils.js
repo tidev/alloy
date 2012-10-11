@@ -45,6 +45,9 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		ButtonName: NS_ALLOY_ABSTRACT,
 		BarItemTypes: NS_ALLOY_ABSTRACT,
 		BarItemType: NS_ALLOY_ABSTRACT,
+		CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
+		CoverFlowImageType: NS_ALLOY_ABSTRACT,
+		Images: NS_ALLOY_ABSTRACT,
 		Labels: NS_ALLOY_ABSTRACT,
 
 		// Ti.Android
