@@ -3,59 +3,47 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	logger = require('../../../common/logger');
 
+var VALID = [
+	'Alloy.Abstract.BarItemTypes',
+	'Alloy.Abstract.Labels'
+];
+
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n',
-		hasLabels = false;
+	var extras = [],
+		code = '';
 
-	// process all Labels and create their array, if present
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
-		if (theNode.nodeName === 'Labels' && !theNode.getAttribute('ns')) {
-			hasLabels = true;
-			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item, index) {
-				if (item.nodeName === 'Label' && !item.getAttribute('ns')) {
-					// per the Titanium docs, these "labels" can be represented as
-					// either strings or BarItemTypes.
-					var obj = {};
-					var title = (U.XML.getNodeText(item) || item.getAttribute('title') || '');
-					var image = item.getAttribute('image');
-					var enabled = item.getAttribute('enabled') !== 'false'; // defaults to true
-					var width = item.getAttribute('width');
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child, index) {
+		switch(CU.validateNodeName(child, VALID)) {
+			case 'Alloy.Abstract.Labels':
+				child.nodeName = 'BarItemTypes';
+				child.setAttribute('ns', 'Alloy.Abstract');
+			case 'Alloy.Abstract.BarItemTypes': 
+				var bitState = {
+					parent: {},
+					styles: state.styles,
+					barItemTypesArray: CU.generateUniqueId()
+				};
 
-					if (title) { obj.title = title; }
-					if (image) { obj.image = image; }
-					if (!enabled) { obj.enabled = false; }
-					if (width) { obj.width = width; }
+				code += CU.generateNode(child, bitState);
+				extras.push(['labels', bitState.barItemTypesArray]);
 
-					if (_.isEmpty(obj)) {
-						// warn if ther ewas no properties assigned
-						logger.warn('Child element of <ButtonBar> at index ' + index + ' has no properties');
-					} else if (obj.title && obj.length === 1) {
-						obj = obj.title;
-					}
-
-					code += arrayName + '.push(' + JSON.stringify(obj) + ');\n';
-				} else {
-					U.die([
-						'Child element of <ButtonBar> at index ' + index + ' is not a <Label>',
-						'All child elements of <ButtonBar> must be a <Label>.'
-					]);
-				}
-			});
-
-			// get rid of the items when done
-			node.removeChild(theNode);
-		} 
+				// get rid of the node when we're done so we can pass the current state
+				// back to generateNode() and then process any additional views that 
+				// need to be added to the view hierarchy
+				node.removeChild(child);
+				break;
+			default:
+				// do nothing, additional views will be processed on the next pass
+				break;
+		}
 	});
 
-	// Create the initial Toolbar code and let it process its remaing children, if any
-	if (hasLabels) {
-		state.extraStyle = CU.createVariableStyle('labels', arrayName);
+	if (extras.length) {	
+		state.extraStyle = CU.createVariableStyle(extras);
 	}
 	var buttonBarState = require('./default').parse(node, state);
 	code += buttonBarState.code;
