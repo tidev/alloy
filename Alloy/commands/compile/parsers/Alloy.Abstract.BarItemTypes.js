@@ -3,7 +3,6 @@ var _ = require('../../../lib/alloy/underscore')._;
 exports.parse = function(node, state) {
 	_.extend(state, {
 		itemArrayDefinition: {
-			arrayKey: 'barItemTypesArray',
 			parents: [
 				'Ti.UI.ButtonBar',
 				'Ti.UI.iOS.TabbedBar'

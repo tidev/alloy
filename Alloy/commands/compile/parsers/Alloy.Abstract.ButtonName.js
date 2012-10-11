@@ -7,7 +7,7 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	if (!state.buttonNameArray) {
+	if (!state.itemsArray) {
 		U.die('Invalid use of <ButtonName>. Must be the child of <ButtonNames>.');
 	}
 	var string = U.trim(U.XML.getNodeText(node) || '').replace(/"/g,'\\"');
@@ -15,6 +15,6 @@ function parse(node, state, args) {
 	return {
 		parent: {},
 		styles: state.styles,
-		code: state.buttonNameArray + '.push("' + string + '");'
+		code: state.itemsArray + '.push("' + string + '");'
 	};
 }

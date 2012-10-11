@@ -7,7 +7,7 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	if (!state.barItemTypesArray) {
+	if (!state.itemsArray) {
 		U.die('Invalid use of <Label>. Must be the child of <Labels>.');
 	}
 
@@ -35,6 +35,6 @@ function parse(node, state, args) {
 	return {
 		parent: {},
 		styles: state.styles,
-		code: state.barItemTypesArray + '.push(' + JSON.stringify(obj) + ');'
+		code: state.itemsArray + '.push(' + JSON.stringify(obj) + ');'
 	};
 }

@@ -19,7 +19,7 @@ function parse(node, state, args) {
 
 	// Ensure that this _ItemArray has an appropriate parent based on the given
 	// array key name
-	if (!state[def.arrayKey]) {
+	if (!state.itemsArray) {
 		U.die([
 			'Invalid use of <' + node.nodeName + '> at line ' + node.lineNumber, 
 			'Must be the child one of the following: [' + def.parents.join(',') + ']'
@@ -42,6 +42,6 @@ function parse(node, state, args) {
 
 	return _.extend(state, {
 		parent: { node: node },
-		code: 'var ' + state[def.arrayKey] + ' = [];'
+		code: 'var ' + state.itemsArray + ' = [];'
 	});
 }
