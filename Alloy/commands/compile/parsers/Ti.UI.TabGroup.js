@@ -33,43 +33,6 @@ function parse(node, state, args) {
 		}
 	});
 
-
-
-
-	// // iterate through all children
-	// for (var i = 0, l = children.length; i < l; i++) {
-	// 	var child = children[i],
-	// 		childArgs = CU.getParserArgs(child),
-	// 		err = errBase + ' Invalid child at position ' + i,
-	// 		isRequire;
-
-	// 	// Make sure all children are Tabs
-	// 	switch(childArgs.fullname) {
-	// 		case 'Ti.UI.Tab':
-	// 			isRequire = false;
-	// 			break;
-	// 		case 'Alloy.Require': 
-	// 			var inspect = CU.inspectRequireNode(child);
-	// 			if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Tab') {
-	// 				U.die(err);
-	// 			}
-	// 			isRequire = true;
-	// 			break;
-	// 		default:
-	// 			U.die(err);
-	// 			break;
-	// 	}
-
-	// 	// Generate each Tab, and the views contained within it
-	// 	code += CU.generateNode(child, {
-	// 		parent: {},
-	// 		styles: state.styles,
-	// 		post: function(n,s,a) {
-	// 			return args.symbol + '.addTab(' + (isRequire ? s.parent.symbol : a.symbol) + ');\n';
-	// 		}
-	// 	});
-	// }
-
 	// Update the parsing state
 	return {
 		parent: {},
