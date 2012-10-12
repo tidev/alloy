@@ -13,50 +13,39 @@ function parse(node, state, args) {
 
 	// SplitWindow must have 2 windows as children
 	if (children.length !== 2) {
-		U.die('SplitWindow must have exactly 2 children that are Windows');
+		U.die('SplitWindow must have exactly 2 children that are Windows, a master and detail respectively');
 	}
 
-	// iterate through all children
-	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child),
-			parserType;
-
-		switch(childArgs.fullname) {
-			case 'Alloy.Require':
-				var inspect = CU.inspectRequireNode(child);
-				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Window') {
-					U.die('SplitWindow <Require> child at position ' + i + ' must contain a single Window');
+	_.each(children, function(child) {
+		var theNode = CU.validateNodeName(child, 'Ti.UI.Window');
+		var childArgs = CU.getParserArgs(child);
+		if (theNode) {
+			code += CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				post: function(node, state, args) {
+					subParents.push(state.parent.symbol);
 				}
-				parserType = 'Alloy.Require';
-				break;
-			case 'Ti.UI.Window':
-				parserType = 'default';
-				break;
-			default:
-				U.die('SplitWindow child at position ' + i + ' is not a Window, or a <Require> containing a single Window.');
-				break;
+			});
+		} else {
+			U.die([
+				'Invalid <SplitWindow> child type: ' + childArgs.fullname,
+				'<SplitWindow> must have 2 Windows as children'
+			]);
 		}
+	});
 
-		// create the code for the window
-		var winState = require('./' + parserType).parse(child, CU.createEmptyState(state.styles));
-		subParents.push(winState.parent);
-		code += CU.generateNode(child, CU.createEmptyState(state.styles));
-	}
-
-	// For now, we will assume the first window is the master, the second 
-	// window is the detail. There are a few different ways we could handle this:
-	// Check this for details: https://jira.appcelerator.org/browse/ALOY-80
+	// The first window is the master, the second window is the detail
 	state.extraStyle = CU.createVariableStyle([
-		['masterView', subParents[0].symbol],
-		['detailView', subParents[1].symbol]
+		['masterView', subParents[0]],
+		['detailView', subParents[1]]
 	]);
 	var splitState = require('./default').parse(node, state);
 	code += splitState.code;
 
 	// Update the parsing state
 	return {
-		parent: subParents,
+		parent: {},
 		styles: state.styles,
 		code: code
 	} 

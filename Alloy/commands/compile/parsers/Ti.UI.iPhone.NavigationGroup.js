@@ -10,12 +10,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		err = [
-			'NavigationGroup must have only one child element.',
-			'Valid elements:',
-			'    <Window>',
-			'    <Require>, which must contain only one top-level element and that element must be a <Window>'
-		];
+		err = ['NavigationGroup must have only one child element, which must be a Window'];
 		code = '';
 
 	// NavigationGroup must have 1 window as a child
@@ -23,44 +18,32 @@ function parse(node, state, args) {
 		U.die(err);
 	} 
 
-	// create code for the contained Window
 	var child = children[0],
 		childArgs = CU.getParserArgs(child),
-		parserType;
+		theNode = CU.validateNodeName(child, 'Ti.UI.Window'),
+		windowSymbol;
 
-	switch(childArgs.fullname) {
-		case 'Alloy.Require':
-			var inspect = CU.inspectRequireNode(child);
-			if (inspect.length !== 1) {
-				err.unshift('NavigationGroup <Require> child element contains ' + inspect.length + ' top-level elements.');
-				U.die(err);
-			} else if (inspect.names[0] !== 'Ti.UI.Window') {
-				err.unshift('NavigationGroup <Require> child element does not contain a <Window>');
-				U.die(err);
-			} 
-			parserType = 'Alloy.Require';
-			break;
-		case 'Ti.UI.Window':
-			parserType = 'default';
-			break;
-		default:
-			err.unshift('Invalid NavigationGroup child "' + childArgs.fullname + '"');
-			U.die(err);
-			break;
+	// generate the code for the Window first
+	if (theNode) {
+		code += CU.generateNode(child, {
+			parent: {},
+			styles: state.styles,
+			post: function(node, state, args) {
+				windowSymbol = state.parent.symbol;
+			}
+		});
+	} else {
+		err.unshift('Invalid NavigationGroup child "' + childArgs.fullname + '"');
+		U.die(err);
 	}
 
-	// create the code for the window
-	code += CU.generateNode(child, CU.createEmptyState(state.styles));
-	var winState = require('./' + parserType).parse(child, CU.createEmptyState(state.styles));
-
 	// create navgroup with window 
-	state.extraStyle = CU.createVariableStyle('window', winState.parent.symbol);
-	var navState = require('./default').parse(node, state);
-	code += navState.code;
+	state.extraStyle = CU.createVariableStyle('window', windowSymbol);
+	code += require('./default').parse(node, state).code;
 
 	// Update the parsing state
 	return {
-		parent: winState.parent,
+		parent: {},
 		styles: state.styles,
 		code: code
 	} 
