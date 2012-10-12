@@ -8,61 +8,41 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		err = [
-			'Tab must have only one child element.',
-			'Valid elements:',
-			'    <Window>',
-			'    <Require>, which must contain only one top-level element and that element must be a <Window>'
-		],
+		err = ['Tab must have only one child element, which must be a Window'];
 		code = '';
 
+	// Tab must have 1 window as a child
 	if (children.length !== 1) {
+		U.die(err);
+	} 
+
+	var child = children[0],
+		childArgs = CU.getParserArgs(child),
+		theNode = CU.validateNodeName(child, 'Ti.UI.Window'),
+		windowSymbol;
+
+	// generate the code for the Window first
+	if (theNode) {
+		code += CU.generateNode(child, {
+			parent: {},
+			styles: state.styles,
+			post: function(node, state, args) {
+				windowSymbol = state.parent.symbol;
+			}
+		});
+	} else {
+		err.unshift('Invalid Tab child "' + childArgs.fullname + '"');
 		U.die(err);
 	}
 
-	// Generate code for Tab's Window
-	var child = children[0],
-		childArgs = CU.getParserArgs(child),
-		winSymbol;
-
-	switch(childArgs.fullname) {
-		case 'Alloy.Require':
-			var inspect = CU.inspectRequireNode(child);
-			if (inspect.length !== 1) {
-				err.unshift('Tab <Require> child element contains ' + inspect.length + ' top-level elements.');
-				U.die(err);
-			} else if (inspect.names[0] !== 'Ti.UI.Window') {
-				err.unshift('Invalid Tab <Require> child "' + inspect.names[0] + '"');
-				U.die(err);
-			} 
-			break;
-		case 'Ti.UI.Window':
-			break;
-		default:
-			err.unshift('Invalid Tab child "' + childArgs.fullname + '"');
-			U.die(err);
-			break;
-	}
-
-	code += CU.generateNode(child, {
-		parent: {},
-		styles: state.styles,
-		post: function(n,s,a) {
-			winSymbol = s.parent.symbol;
-		}
-	});
-
-	// Generate the code for the Tab itself, with the Window in it
-	code += require('./default').parse(node, {
-		parent: {},
-		styles: state.styles,
-		extraStyle: CU.createVariableStyle('window', winSymbol)
-	}).code;
+	// create tab with window 
+	state.extraStyle = CU.createVariableStyle('window', windowSymbol);
+	code += require('./default').parse(node, state).code;
 
 	// Update the parsing state
 	return {
-		parent: {}, 
+		parent: {},
 		styles: state.styles,
 		code: code
-	}
-};
+	} 
+}

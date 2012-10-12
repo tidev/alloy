@@ -2,8 +2,6 @@ var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
-var VALID_ELEMENT = 'Ti.UI.Window';
-
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
