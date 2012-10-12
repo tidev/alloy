@@ -1001,7 +1001,7 @@ exports.validateNodeName = function(node, names) {
 	// Is it an Alloy.Require?
 	if (fullname === 'Alloy.Require') {
 		var inspect = exports.inspectRequireNode(node);
-		ret = _.find(names, function(name) { return inspect.names[0] === fullname });
+		ret = _.find(names, function(name) { return inspect.names[0] === name });
 		if (inspect.length === 1 && ret) { 
 			return ret;
 		}
