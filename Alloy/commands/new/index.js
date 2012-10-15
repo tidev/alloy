@@ -33,6 +33,9 @@ module.exports = function(args, program) {
 		}
 	});
 
+	// copy in any Alloy-specific Resources files
+	wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
 		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0777);
@@ -88,6 +91,7 @@ function getPaths(project, templateName) {
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
 		projectTemplate: path.join(projectTemplates,templateName),
+		alloyResources: path.join(alloy,'..','Resources'),
 
 		// project paths
 		project: project,
@@ -120,34 +124,9 @@ function getPaths(project, templateName) {
 	// Added after validation, since they won't exist yet
 	_.extend(paths, {
 		app: path.join(paths.project,'app'),
+		assets: path.join(paths.project,'app','assets'),
 		plugins: path.join(paths.project,'plugins')
 	});
 
 	return paths;
 }
-
-// function installPlugin(paths) {
-// 	var file = 'plugin.py'
-// 	var id = 'ti.alloy';
-// 	var source = path.join(paths.alloy,'plugin',file);
-// 	var dest = path.join(paths.project,'plugins',id);
-// 	var hookDest = path.join(dest,'hooks');
-
-// 	// create plugin path and add to project
-// 	U.ensureDir(dest);
-// 	dest = path.join(dest,file);
-// 	U.copyFileSync(source, dest);
-
-// 	// add the plugin to tiapp.xml
-// 	U.tiapp.installPlugin(paths.project, {
-// 		id: 'ti.alloy',
-// 		version: '1.0'
-// 	});
-
-// 	// copy the new cli hook
-// 	U.ensureDir(hookDest);
-// 	U.copyFileSync(path.join(paths.alloy,'..','hooks','alloy.js'), path.join(hookDest,'alloy.js'));
-
-// 	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
-// }
-
