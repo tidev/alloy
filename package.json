@@ -13,7 +13,7 @@
     "html5",
     "mobileweb"
   ],
-  "version": "0.2.42",
+  "version": "0.3.0",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
   	{"name":"Tony Lukasavage","email":"tlukasavage@appcelerator.com"}
