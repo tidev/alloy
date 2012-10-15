@@ -10,8 +10,7 @@ var	wrench = require('wrench'),
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
-	resourcesPath = path.join(harnessAppPath,'Resources'),
-	appsTemplatePath = path.join(process.cwd(),'test','apps','_template');
+	resourcesPath = path.join(harnessAppPath,'Resources');
 
 function log(message) {
 	if (!process.env.quiet) {
@@ -42,7 +41,6 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				log('Staging sample app "'+process.env.dir+'" for launch...');
-				wrench.copyDirSyncRecursive(appsTemplatePath, targetAppPath, {preserve:true});
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
 			}
 		});
