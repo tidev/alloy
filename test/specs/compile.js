@@ -4,7 +4,9 @@ var fs = require('fs'),
 	exec = require('child_process').exec,
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 	
-var PLATFORMS = ['android','ios','mobileweb'],
+
+
+var PLATFORMS = process.platform === 'darwin' ? ['android','ios','mobileweb'] : ['android','mobileweb'],
 	TIMEOUT_COMPILE = 10000,
 	TIMEOUT_DEFAULT = 750;
 
