@@ -67,7 +67,7 @@ if (program.args.length === 0)
 	help = help.replace('Usage: alloy COMMAND [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' COMMAND'.white+' [ARGS] [OPTIONS]'.grey);
 	help = logger.stripColors ? colors.stripColors(help) : help;
 	console.log(help);
-	process.exit(1);
+	process.exit(0);
 }
 
 // Validate the given command
