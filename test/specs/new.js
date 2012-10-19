@@ -1,11 +1,13 @@
 var fs = require('fs'),
 	wrench = require('wrench'),
 	path = require('path'),
+	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 
 var TIMEOUT_DEFAULT = 2000;
+var PLATFORMS = ['android','ios','mobileweb'];
 
 var alloyRoot = path.join(__dirname,'..','..');
 var TiAppRoot = path.join(alloyRoot,'test','projects','TiApp');
@@ -27,11 +29,18 @@ var TO_BE_CREATED = [
 	path.join('app','controllers'),
 	path.join('app','controllers','index.js'),
 	path.join('app','assets'),
+	path.join('app','assets','android'),
+	path.join('app','assets','iphone'),
+	path.join('app','assets','mobileweb'),
 	path.join('plugins'),
 	path.join('plugins','ti.alloy'),
 	path.join('plugins','ti.alloy','plugin.py'),
 	path.join('plugins','ti.alloy','hooks'),
-	path.join('plugins','ti.alloy','hooks','alloy.js')
+	path.join('plugins','ti.alloy','hooks','alloy.js'),
+	path.join('tiapp.xml'),
+
+	// TODO: http://jira.appcelerator.org/browse/ALOY-209
+	path.join('ti.physicalSizeCategory-android-1.0.zip')
 ];
 
 // The alloy command test suite
@@ -48,9 +57,55 @@ describe('`alloy new`', function() {
 		});
 	});
 
-	// TODO: ensure any platform-specific folders that were in Resources got copied to assets
-	// TODO: ensure modules got added to tiapp.xml
+	var doc;
+	it('generates a tiapp.xml in valid XML format', function() {
+		var tiapp = fs.readFileSync(path.join(TiAppCopy,'tiapp.xml'),'utf8');
+		doc = new DOMParser().parseFromString(tiapp);
+		expect(doc).toBeTruthy();
+	});
+
+	// TODO: http://jira.appcelerator.org/browse/ALOY-209
+	it('adds ti.physicalSizeCategory to tiapp.xml modules list', function() {
+		var modules = doc.getElementsByTagName('module');
+		var found = false;
+
+		for (var i = 0; i < modules.length; i++) {
+			var module = modules.item(i);
+			if (module.nodeType === 1 &&
+				module.getAttribute('platform') === 'android' &&
+				module.getAttribute('version') === '1.0' &&
+				module.childNodes[0] &&
+				/ti\.physicalSizeCategory/i.test(module.childNodes[0].nodeValue)) 
+			{
+				found = true;
+				break;
+			}
+		}
+
+		expect(found).toBe(true);
+	});
+
 	// TODO: ensure plugin got added to tiapp.xml
+	it('adds alloy plugin/hook to tiapp.xml plugins list', function() {
+		var plugins = doc.getElementsByTagName('plugin');
+		var found = false;
+
+		for (var i = 0; i < plugins.length; i++) {
+			var plugin = plugins.item(i);
+			if (plugin.nodeType === 1 &&
+				plugin.getAttribute('version') === '1.0' &&
+				plugin.childNodes[0] &&
+				/ti\.alloy/i.test(plugin.childNodes[0].nodeValue)) 
+			{
+				found = true;
+				break;
+			}
+		}
+
+		expect(found).toBe(true);
+	});
+
+
 	// TODO: test templates
 	// TODO: test alternate command line args (no path, with template, etc...)
 	// TODO: create some purposely failing cases
