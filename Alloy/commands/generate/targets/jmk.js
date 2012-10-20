@@ -6,7 +6,7 @@ var path = require('path'),
 
 module.exports = function(name, args, program) {
 	var filename = 'alloy.jmk';
-	var filepath = path.join(program.outputPath,filename);
+	var filepath = path.join(program.projectDir,'app',filename);
 	var templatePath = path.join(alloyRoot,'template',filename);
 	
 	// only overwrite if using force option
@@ -17,5 +17,5 @@ module.exports = function(name, args, program) {
 	// write template to Alloy project
 	fs.writeFileSync(filepath, fs.readFileSync(templatePath, 'utf8'));
 
-	logger.info('Generated "alloy.jmk" compiler hooks file.');
+	logger.info('Generated "' + filename + '" compiler hooks file.');
 }
