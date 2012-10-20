@@ -69,8 +69,6 @@ describe('`alloy generate`', function() {
 				'exec("' + 'alloy generate jmk' + '") timed out', 2000
 			);
 			runs(function() {
-				console.log(this.output.stdout);
-				console.log(this.output.stderr);
 				expect(this.output.error).toBeNull();
 			});
 		});
