@@ -29,11 +29,12 @@ program
 	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
 	.option('-b, --noBanner', 'Disable the banner')
-	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
-	.option('-f, --force','Force the command to execute')
-	.option('-n, --no-colors','Turn off colors')
 	.option('-c, --config <config>','Pass in compiler configuration')
+	.option('-f, --force','Force the command to execute')
+	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
+	.option('-n, --no-colors','Turn off colors')
+	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
+	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
 	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
 	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
 
