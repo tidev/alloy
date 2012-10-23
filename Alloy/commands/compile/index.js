@@ -118,11 +118,16 @@ module.exports = function(args, program) {
 		!path.existsSync(path.join(paths.project,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
 		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), paths.project, {preserve:true})
 	}
-	U.tiapp.installModule(paths.project, {
-		id: 'ti.physicalSizeCategory',
-		platform: 'android',
-		version: '1.0'
-	});
+
+	if (buildPlatform === 'android') {
+		U.tiapp.installModule(paths.project, {
+			id: 'ti.physicalSizeCategory',
+			platform: 'android',
+			version: '1.0'
+		});
+
+		U.tiapp.upStackSizeForRhino(paths.project);
+	}
 
 	// create the global style, if it exists
 	logger.debug('----- MVC GENERATION -----');
