@@ -4,6 +4,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	util = require('util'),
 	vm = require('vm'),
+	jsonlint = require('jsonlint'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
@@ -126,7 +127,22 @@ module.exports = function(args, program) {
 
 	// create the global style, if it exists
 	logger.debug('----- MVC GENERATION -----');
-	loadGlobalStyle(path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+	var configJson = path.join(paths.app,'config.json');
+	var pathToLoad = path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	if (path.existsSync(configJson)) {
+		try {
+			var json = jsonlint.parse(fs.readFileSync(configJson,'utf8'));
+		} catch (e) {
+			exports.die('Error parsing "config.json"', e);
+		}
+		if (json.theme) {
+		 	var thePath = path.join(paths.app,'themes',json.theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+			if (path.existsSync(thePath)) {
+				pathToLoad = thePath;
+			}
+		}
+	}
+	loadGlobalStyle(pathToLoad);
 	
 	// Process all models
 	var models = processModels();
