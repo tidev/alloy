@@ -16,6 +16,7 @@ var path = require('path'),
 
 exports.XML = {
 	getNodeText: function(node) {
+		if (!node) { return ''; }
 		var serializer = new XMLSerializer(),
 			str = '';
 		for (var c = 0; c < node.childNodes.length; c++) {
