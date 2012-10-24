@@ -59,6 +59,101 @@ function isSameFile(file1, file2) {
 	return fs.readFileSync(file1,'utf8') === fs.readFileSync(file2,'utf8');
 }
 
+function itViewStyleController(type) {
+	var viewName = 'testView';
+	var viewPath = path.join(TiAppCopy,'app',CONST.DIR.VIEW,viewName + '.' + CONST.FILE_EXT.VIEW);
+	var stylePath = path.join(TiAppCopy,'app',CONST.DIR.STYLE,viewName + '.' + CONST.FILE_EXT.STYLE);
+	var controllerPath = path.join(TiAppCopy,'app',CONST.DIR.CONTROLLER,viewName + '.' + CONST.FILE_EXT.CONTROLLER);
+	var viewTemplate = path.join(templatePath,'view.xml');
+	var styleTemplate = path.join(templatePath,'style.tss');
+	var controllerTemplate = path.join(templatePath,'controller.js');
+	var cmd = 'alloy generate ' + type + ' ' + viewName + ' --project-dir "' + TiAppCopy + '"';
+	var doc;
+
+	it('ends in error when no name is given', function() {
+		var badCmd = 'alloy generate ' + type + ' --project-dir "' + TiAppCopy + '"';
+		asyncExecTestWithReset(badCmd, 2000, function() {
+			expect(this.output.error).toBeTruthy();
+		});
+	});
+
+	it('ends in error when no valid project path is found', function() {
+		var badCmd = 'alloy generate ' + type + ' ' + viewName;
+		asyncExecTestWithReset(badCmd, 2000, function() {
+			expect(this.output.error).toBeTruthy();
+		});
+	});
+
+	it('executes `' + cmd + '` without error', function() {
+		asyncExecTestWithReset(cmd, 2000, function() {
+			expect(this.output.error).toBeNull();
+		});
+	});
+
+	it('generates a view named "' + viewName + '"', function() {
+		expect(path.existsSync(viewPath)).toBe(true);
+	});
+
+	it('generated view matches the one in the alloy distribution', function() {
+		expect(isSameFile(viewPath, viewTemplate)).toBe(true);
+	});
+
+	it('generated view is valid XML', function() {
+		var theFunction = function() {
+			var xml = fs.readFileSync(viewPath, 'utf8');
+			var errorHandler = {};
+			errorHandler.error = errorHandler.fatalError = function(m) { 
+				throw m;
+			};
+			doc = new DOMParser({
+				errorHandler: errorHandler,
+				locator: {}
+			}).parseFromString(xml);
+		};
+		expect(theFunction).not.toThrow();
+		expect(doc).not.toBeFalsy();
+	});
+
+	it('generated view has <Alloy> at root element', function() {
+		expect(doc.documentElement.nodeName).toBe('Alloy');
+	});
+
+	it('generate a style named "' + viewName + '"', function() {
+		expect(path.existsSync(stylePath)).toBe(true);
+	});
+
+	it('generated style matches the one in the alloy distribution', function() {
+		expect(isSameFile(stylePath, styleTemplate)).toBe(true);
+	});
+
+	it('generated style is valid TSS', function() {
+		var style;
+		var theFunction = function() {
+			var die = U.die;
+			U.die = function(msg, e) {
+				U.die = die;
+				throw U.createErrorOutput(msg, e);
+			};
+			style = CU.loadStyle(stylePath);
+			U.die = die;
+		};
+
+		expect(theFunction).not.toThrow();
+		expect(_.isObject(style)).toBe(true);
+		expect(_.isEmpty(style)).toBe(false);
+	});
+
+	if (type === 'controller') {
+		it('generate a controller named "' + viewName + '"', function() {
+			expect(path.existsSync(controllerPath)).toBe(true);
+		});
+
+		it('generated controller matches the one in the alloy distribution', function() {
+			expect(isSameFile(controllerPath, controllerTemplate)).toBe(true);
+		});
+	}
+}
+
 describe('`alloy generate`', function() {
 	it('exits with error and help when no target is given', function() {
 		TU.asyncExecTest('alloy generate', TIMEOUT_DEFAULT, function() {
@@ -106,85 +201,10 @@ describe('`alloy generate`', function() {
 	});
 
 	describe('`alloy generate view`', function() {
-		var viewName = 'testView';
-		var viewPath = path.join(TiAppCopy,'app',CONST.DIR.VIEW,viewName + '.' + CONST.FILE_EXT.VIEW);
-		var stylePath = path.join(TiAppCopy,'app',CONST.DIR.STYLE,viewName + '.' + CONST.FILE_EXT.STYLE);
-		var viewTemplate = path.join(templatePath,'view.xml');
-		var styleTemplate = path.join(templatePath,'style.tss');
-		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + TiAppCopy + '"';
-		var doc;
+		itViewStyleController('view');
+	});
 
-		it('ends in error when no name is given', function() {
-			var badCmd = 'alloy generate view --project-dir "' + TiAppCopy + '"';
-			asyncExecTestWithReset(badCmd, 2000, function() {
-				expect(this.output.error).toBeTruthy();
-			});
-		});
-
-		it('ends in error when no valid project path is found', function() {
-			var badCmd = 'alloy generate view ' + viewName;
-			asyncExecTestWithReset(badCmd, 2000, function() {
-				expect(this.output.error).toBeTruthy();
-			});
-		});
-
-		it('executes `' + cmd + '` without error', function() {
-			asyncExecTestWithReset(cmd, 2000, function() {
-				expect(this.output.error).toBeNull();
-			});
-		});
-
-		it('generates a view named "' + viewName + '"', function() {
-			expect(path.existsSync(viewPath)).toBe(true);
-		});
-
-		it('generated view matches the one in the alloy distribution', function() {
-			expect(isSameFile(viewPath, viewTemplate)).toBe(true);
-		});
-
-		it('generated view is valid XML', function() {
-			var theFunction = function() {
-				var xml = fs.readFileSync(viewPath, 'utf8');
-				var errorHandler = {};
-				errorHandler.error = errorHandler.fatalError = function(m) { 
-					throw m;
-				};
-				doc = new DOMParser({
-					errorHandler: errorHandler,
-					locator: {}
-				}).parseFromString(xml);
-			};
-			expect(theFunction).not.toThrow();
-			expect(doc).not.toBeFalsy();
-		});
-
-		it('generated view has <Alloy> at root element', function() {
-			expect(doc.documentElement.nodeName).toBe('Alloy');
-		});
-
-		it('generate a style named "' + viewName + '"', function() {
-			expect(path.existsSync(stylePath)).toBe(true);
-		});
-
-		it('generated style matches the one in the alloy distribution', function() {
-			expect(isSameFile(stylePath, styleTemplate)).toBe(true);
-		});
-
-		it('generated style is valid TSS', function() {
-			var style;
-			var theFunction = function() {
-				var die = U.die;
-				U.die = function(msg, e) {
-					U.die = die;
-					throw U.createErrorOutput(msg, e);
-				};
-				style = CU.loadStyle(stylePath);
-				U.die = die;
-			};
-
-			expect(theFunction).not.toThrow();
-			expect(_.isObject(style)).toBe(true);
-			expect(_.isEmpty(style)).toBe(false);
-		});
+	describe('`alloy generate controller`', function() {
+		itViewStyleController('controller');
 	});
 });
