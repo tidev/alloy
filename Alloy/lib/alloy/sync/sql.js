@@ -111,6 +111,7 @@ function SQLiteMigrateDB() {
 function Sync(model, method, opts) {
 	var table =  model.config.adapter.collection_name;
 	var columns = model.config.columns;
+	var resp = null;
 	
 	switch (method) {
 
@@ -128,12 +129,14 @@ function Sync(model, method, opts) {
 			values.push(id);
 			db.execute(sql, values);
 			model.id = id;
+			resp = model.toJSON();
 			break;
 
 		case 'read':
 			var sql = 'SELECT * FROM '+table;
 			var rs = db.execute(sql);
 			var len = 0;
+			var values = [];
 			while(rs.isValidRow())
 			{
 				var o = {};
@@ -147,14 +150,13 @@ function Sync(model, method, opts) {
 					var fn = rs.fieldName(c);
 					o[fn] = rs.fieldByName(fn);
 				});
-				var m = new model.config.Model(o);
-				model.models.push(m);
+				values.push(o);
 				len++;
 				rs.next();
 			}
 			rs.close();
 			model.length = len;
-			model.trigger('fetch');
+			len === 1 ? resp = values[0] : resp = values;
 			break;
 	
 		case 'update':
@@ -172,14 +174,21 @@ function Sync(model, method, opts) {
 		    var e = sql +','+values.join(',')+','+model.id;
 		    values.push(model.id);
 			db.execute(sql,values);
+			resp = model.toJSON();
 			break;
 
 		case 'delete':
 			var sql = 'DELETE FROM '+table+' WHERE id=?';
 			db.execute(sql, model.id);
 			model.id = null;
+			resp = model.toJSON();
 			break;
 	}
+    if (resp) {
+        opts.success(resp);
+        method === "read" && model.trigger("fetch");
+    } else opts.error("Record not found");
+	
 }
 
 function GetMigrationForCached(t,m) {
