@@ -3,7 +3,8 @@ var fs = require('fs'),
 	wrench = require('wrench'),
 	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
-	jsp = require("../../Alloy/uglify-js/uglify-js").parser
+	jsp = require("../../Alloy/uglify-js/uglify-js").parser,
+	U = require('../../Alloy/utils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 
@@ -51,6 +52,10 @@ function asyncExecTestWithReset(cmd, timeout, testFn) {
 	runs(testFn);
 }
 
+function isSameFile(file1, file2) {
+	return fs.readFileSync(file1,'utf8') === fs.readFileSync(file2,'utf8');
+}
+
 describe('`alloy generate`', function() {
 	it('exits with error and help when no target is given', function() {
 		TU.asyncExecTest('alloy generate', TIMEOUT_DEFAULT, function() {
@@ -81,7 +86,6 @@ describe('`alloy generate`', function() {
 		});
 
 		it('generates an alloy.jmk file', function() {
-			console.log(projectJmk);
 			expect(path.existsSync(projectJmk)).toBe(true);
 		});
 
@@ -95,6 +99,42 @@ describe('`alloy generate`', function() {
 				jsp.parse(jmkContent);
 			};
 			expect(theFunction).not.toThrow();
+		});
+	});
+
+	describe('`alloy generate view`', function() {
+		var viewName = 'testView';
+		var viewPath = path.join(TiAppCopy,'app','views',viewName + '.' + CONST.FILE_EXT.VIEW);
+		var viewTemplate = path.join(templatePath,'view.xml');
+		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + TiAppCopy + '"';
+		var doc;
+
+		it('executes `' + cmd + '` without error', function() {
+			asyncExecTestWithReset(cmd, 2000, function() {
+				expect(this.output.error).toBeNull();
+			});
+		});
+
+		it('generates a view named "' + viewName + '"', function() {
+			expect(path.existsSync(viewPath)).toBe(true);
+		});
+
+		it('generated view matches the one in the alloy distribution', function() {
+			expect(isSameFile(viewPath, viewTemplate)).toBe(true);
+		});
+
+		// Can't use U.XML.parseFromString cause it never throws in its current state.
+		// Need to setup an xmldom event handler to throw
+		it('generated view is valid XML', function() {
+			var theFunction = function() {
+				doc = U.XML.parseFromString(fs.readFileSync(viewPath, 'utf8'));
+			};
+			expect(theFunction).not.toThrow();
+			expect(doc).not.toBeFalsy();
+		});
+
+		it('generated view has <Alloy> at root element', function() {
+			expect(doc.documentElement.nodeName).toBe('Alloy');
 		});
 	});
 });
