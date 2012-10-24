@@ -17,7 +17,8 @@
         top: 0,
         width: 48,
         height: 16,
-        accessibilityLabel: "Pull Tab",
+        accessibilityLabel: "Drawer",
+        accessibilityValue: "Closed",
         accessibilityHint: "Click to open the drawer"
     },
     

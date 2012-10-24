@@ -73,6 +73,7 @@ There are number of aspects of the BouncyLogo that you can change, you can inclu
 | durationBounce | *integer* | The duration, in milliseconds, for the logo to bounce before settling. Default: *500* |
 | durationFade | *integer* | The duration, in milliseconds, for the logo to fade after it has settled. Default: *2000* |
 | bounciness | *number* | The "bounciness" of the animation, where 0 is no bounce and 1 is a full logo height bounce. Default: *0.25* |
+| finishCallback | *function* | Callback to invoke once the logo has bounced in and animation is complete. |
 
 ## Future Work
 
