@@ -87,12 +87,13 @@ module.exports = function(args, program) {
 	});
 	logger.debug('project path = ' + paths.project);
 	logger.debug('app path = ' + paths.app);
-	logger.debug('');
 
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
+	logger.debug('platform = ' + buildPlatform);
+	logger.debug('');
 
 	// process project makefiles
 	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
