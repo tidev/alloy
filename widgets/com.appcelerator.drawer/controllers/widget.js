@@ -224,7 +224,8 @@ exports.init = function DrawerInit(args) {
                 $._buttons[i].button = Ti.UI.createButton(buttonDesc);
         
                 $._buttons[i].button.addEventListener('click', function (e) {
-                    $._buttons[i].click(e);
+                    if ($._buttons[i].click)    // Invoke the button click fn if it exists.
+                        $._buttons[i].click(e);
                     if ($._params.autoClose)
                         pullTabClick(e);    // Close the drawer.
                 });

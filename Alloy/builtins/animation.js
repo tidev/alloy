@@ -191,11 +191,14 @@ exports.flash = function (view, delay) {
  *
  * @param {Titanium.UI.View} view View to animate.
  * @param {Titanium.UI.Animation[]} animations A set of animations to execute on `view` in sequence.
+ * @param {Function} finishCallback Callback to invoke once the chain animation is complete.
  */
-exports.chainAnimate = function (view, animations) {
+exports.chainAnimate = function (view, animations, finishCallback) {
     function step() {
         if (animations.length == 0) {
             view = animations = null;
+            if (finishCallback)
+                finishCallback();
             return;
         }
         var animation = animations.shift();
