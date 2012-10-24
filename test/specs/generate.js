@@ -1,11 +1,13 @@
 var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
+	vm = require('vm'),
 	exec = require('child_process').exec,
 	DOMParser = require("xmldom").DOMParser,
 	TU = require('../lib/testUtils'),
 	jsp = require("../../Alloy/uglify-js/uglify-js").parser,
 	U = require('../../Alloy/utils'),
+	CU = require('../../Alloy/commands/compile/compilerUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 
@@ -105,10 +107,26 @@ describe('`alloy generate`', function() {
 
 	describe('`alloy generate view`', function() {
 		var viewName = 'testView';
-		var viewPath = path.join(TiAppCopy,'app','views',viewName + '.' + CONST.FILE_EXT.VIEW);
+		var viewPath = path.join(TiAppCopy,'app',CONST.DIR.VIEW,viewName + '.' + CONST.FILE_EXT.VIEW);
+		var stylePath = path.join(TiAppCopy,'app',CONST.DIR.STYLE,viewName + '.' + CONST.FILE_EXT.STYLE);
 		var viewTemplate = path.join(templatePath,'view.xml');
+		var styleTemplate = path.join(templatePath,'style.tss');
 		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + TiAppCopy + '"';
 		var doc;
+
+		it('ends in error when no name is given', function() {
+			var badCmd = 'alloy generate view --project-dir "' + TiAppCopy + '"';
+			asyncExecTestWithReset(badCmd, 2000, function() {
+				expect(this.output.error).toBeTruthy();
+			});
+		});
+
+		it('ends in error when no valid project path is found', function() {
+			var badCmd = 'alloy generate view ' + viewName;
+			asyncExecTestWithReset(badCmd, 2000, function() {
+				expect(this.output.error).toBeTruthy();
+			});
+		});
 
 		it('executes `' + cmd + '` without error', function() {
 			asyncExecTestWithReset(cmd, 2000, function() {
@@ -142,6 +160,31 @@ describe('`alloy generate`', function() {
 
 		it('generated view has <Alloy> at root element', function() {
 			expect(doc.documentElement.nodeName).toBe('Alloy');
+		});
+
+		it('generate a style named "' + viewName + '"', function() {
+			expect(path.existsSync(stylePath)).toBe(true);
+		});
+
+		it('generated style matches the one in the alloy distribution', function() {
+			expect(isSameFile(stylePath, styleTemplate)).toBe(true);
+		});
+
+		it('generated style is valid TSS', function() {
+			var style;
+			var theFunction = function() {
+				var die = U.die;
+				U.die = function(msg, e) {
+					U.die = die;
+					throw U.createErrorOutput(msg, e);
+				};
+				style = CU.loadStyle(stylePath);
+				U.die = die;
+			};
+
+			expect(theFunction).not.toThrow();
+			expect(_.isObject(style)).toBe(true);
+			expect(_.isEmpty(style)).toBe(false);
 		});
 	});
 });
