@@ -2,6 +2,7 @@ var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
 	exec = require('child_process').exec,
+	DOMParser = require("xmldom").DOMParser,
 	TU = require('../lib/testUtils'),
 	jsp = require("../../Alloy/uglify-js/uglify-js").parser,
 	U = require('../../Alloy/utils'),
@@ -123,11 +124,17 @@ describe('`alloy generate`', function() {
 			expect(isSameFile(viewPath, viewTemplate)).toBe(true);
 		});
 
-		// Can't use U.XML.parseFromString cause it never throws in its current state.
-		// Need to setup an xmldom event handler to throw
 		it('generated view is valid XML', function() {
 			var theFunction = function() {
-				doc = U.XML.parseFromString(fs.readFileSync(viewPath, 'utf8'));
+				var xml = fs.readFileSync(viewPath, 'utf8');
+				var errorHandler = {};
+				errorHandler.error = errorHandler.fatalError = function(m) { 
+					throw m;
+				};
+				doc = new DOMParser({
+					errorHandler: errorHandler,
+					locator: {}
+				}).parseFromString(xml);
 			};
 			expect(theFunction).not.toThrow();
 			expect(doc).not.toBeFalsy();
