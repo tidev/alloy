@@ -25,7 +25,30 @@ function resetTestApp(callback) {
 		}
 		callback();
 	});
+}
 
+function asyncExecTestWithReset(cmd, timeout, testFn) {
+	runs(function() {
+		var self = this;
+		self.done = false;
+
+		resetTestApp(function() {
+			exec(cmd, function() {
+				self.done = true;
+				var args = Array.prototype.slice.call(arguments, 0);
+				self.output = {
+					error: args[0],
+					stdout: args[1],
+					stderr: args[2]
+				};
+			});
+		});
+	});
+	waitsFor(
+		function() { return this.done; }, 
+		'exec("' + cmd + '") timed out', timeout
+	);
+	runs(testFn);
 }
 
 describe('`alloy generate`', function() {
@@ -48,29 +71,13 @@ describe('`alloy generate`', function() {
 		var jmkContent;
 
 		it('executes without error', function() {
-			runs(function() {
-				var self = this;
-				self.done = false;
-
-				resetTestApp(function() {
-					exec('alloy generate jmk --project-dir "' + TiAppCopy + '"', function() {
-						self.done = true;
-						var args = Array.prototype.slice.call(arguments, 0);
-						self.output = {
-							error: args[0],
-							stdout: args[1],
-							stderr: args[2]
-						};
-					});
-				});
-			});
-			waitsFor(
-				function() { return this.done; }, 
-				'exec("' + 'alloy generate jmk' + '") timed out', 2000
+			asyncExecTestWithReset(
+				'alloy generate jmk --project-dir "' + TiAppCopy + '"',
+				2000, 
+				function() {
+					expect(this.output.error).toBeNull();
+				}
 			);
-			runs(function() {
-				expect(this.output.error).toBeNull();
-			});
 		});
 
 		it('generates an alloy.jmk file', function() {
