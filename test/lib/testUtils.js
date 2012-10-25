@@ -1,4 +1,6 @@
-var exec = require('child_process').exec;
+var exec = require('child_process').exec,
+	fs = require('fs'),
+	jsp = require("../../Alloy/uglify-js/uglify-js").parser;
 
 // Turns the arguments given to the callback of the exec() function
 // into an object literal. 
@@ -43,4 +45,41 @@ exports.asyncExecTest = function(cmd, timeout, testFn) {
 		'exec("' + cmd + '") timed out', timeout || TIMEOUT_DEFAULT
 	);
 	runs(testFn);
+}
+
+function toBeJavascript(expected) {
+	try {
+		return jsp.parse(this.actual);
+	} catch (e) {
+		return false;
+	}
+}
+
+function toBeJavascriptFile(expected) {
+	var actual = this.actual;
+    var notText = this.isNot ? " not" : "";
+	this.message = function () {
+        return "Expected " + actual + notText + " to be a Javascript file";
+    }
+
+	try { 
+		var js = fs.readFileSync(this.actual,'utf8');
+		return toBeJavascript.call({actual:js}, expected);
+	} catch (e) {
+		return false;
+	}
+}
+
+function toHaveSameContentAs(expected) {
+	return fs.readFileSync(this.actual,'utf8') === fs.readFileSync(expected,'utf8');
+}
+
+exports.addMatchers = function() {
+	beforeEach(function() {
+		this.addMatchers({
+			toBeJavascript: toBeJavascript,
+			toBeJavascriptFile: toBeJavascriptFile,
+			toHaveSameContentAs: toHaveSameContentAs
+		});
+	});
 }
