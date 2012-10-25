@@ -1,5 +1,6 @@
 var exec = require('child_process').exec,
 	fs = require('fs'),
+	path = require('path'),
 	jsp = require("../../Alloy/uglify-js/uglify-js").parser;
 
 // Turns the arguments given to the callback of the exec() function
@@ -79,7 +80,10 @@ exports.addMatchers = function() {
 		this.addMatchers({
 			toBeJavascript: toBeJavascript,
 			toBeJavascriptFile: toBeJavascriptFile,
-			toHaveSameContentAs: toHaveSameContentAs
+			toHaveSameContentAs: toHaveSameContentAs,
+			toExist: function(expected) {
+				return path.existsSync(this.actual);
+			}
 		});
 	});
 }
