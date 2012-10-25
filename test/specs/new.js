@@ -67,7 +67,7 @@ var TO_BE_CREATED = [
 
 _.each(RUNS, function(run) {
 	// The alloy new command test suite
-	describe('alloy new command', function() {
+	describe('alloy new', function() {
 		it('executes `' + run.cmd + '` with ' + (run.success ? 'success' : 'error'), function() {
 			// Create a copy of TiApp to work with
 			wrench.rmdirSyncRecursive(TiAppCopy, true);
