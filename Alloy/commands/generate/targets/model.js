@@ -1,5 +1,6 @@
 var path = require('path'),
 	fs = require('fs'),
+	wrench = require('wrench'),
 	U = require('../../../utils'),
 	_ = require('../../../lib/alloy/underscore')._,
 	logger = require('../../../common/logger'),
@@ -8,7 +9,8 @@ var path = require('path'),
 
 module.exports = function(name, args, program) {
 	var modelTemplateFile = MODELCODETEMPLATE_FILE,
-		adapter = 'localDefault';
+		adapter = 'localDefault',
+		paths = U.getAndValidateProjectPaths(program.outputPath || program.projectDir);
     
 	// validate arguments and paths
 	if (args.length >= 1) {
@@ -43,7 +45,8 @@ module.exports = function(name, args, program) {
 		schema: columns
 	});	
 
-	var file = path.join(program.outputPath,'models', name+'.js');
+	wrench.mkdirSyncRecursive(path.join(paths.app,'models'));
+	var file = path.join(paths.app,'models', name+'.js');
     fs.writeFileSync(file, code);
 	
 	logger.info('Generated model description named ' + name);
