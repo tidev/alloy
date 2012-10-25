@@ -108,7 +108,15 @@ module.exports = function(print, doneCallback, showColors) {
 
 	this.reportSpecResults = function(spec) {
 		var results = spec.results();
-		var testName = spec.suite.description + ' ' + results.description;
+		var desc = '';
+
+		function getDescription(suite) {
+			if (!suite) { return; }
+			desc = suite.description + ' ' + desc;
+			getDescription(suite.parentSuite);
+		}
+		getDescription(spec.suite);
+		var testName = desc + '--> ' + results.description;
 
 		if (results.skipped) {
 			yellowStar();
