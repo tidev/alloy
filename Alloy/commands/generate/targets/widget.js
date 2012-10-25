@@ -12,7 +12,8 @@ var VERSION_DEFAULT = '1.0';
 module.exports = function(name, args, program) {
 	var widgetId = args[0] || name;
 	var types = ['VIEW','CONTROLLER','STYLE'];
-	var paths = getPaths(program.outputPath, widgetId);
+	var thePaths = U.getAndValidateProjectPaths(program.outputPath || program.projectDir);
+	var paths = getPaths(thePaths.app, widgetId);
 
 	// don't overwrite an existing widget unless force is specified
 	if (path.existsSync(paths.widget) && !program.force) {
