@@ -42,7 +42,7 @@ module.exports = function(args, program) {
 	});
 
 	// add alloy project template files
-	wrench.copyDirSyncRecursive(paths.projectTemplate, paths.project, {preserve:true});
+	wrench.copyDirSyncRecursive(path.join(paths.projectTemplate,'app'), paths.app, {preserve:true});
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
