@@ -29,13 +29,13 @@ var info = {
 				name: "default", 
 				label: "Default Alloy Project", 
 				Description: "Basic \"Hello, World!\" application using the Alloy MVC framework.", 
-				icon: "url1"
+				icon: "app.png"
 			},
   			{
   				name: "two_tabbed", 
   				label: "Two-tabbed Alloy Application", 
   				Description: "Titanium's traditional two-tabbed application created using the Alloy MVC framework.", 
-  				icon: "url2"
+  				icon: "app.png"
   			}
 		];
 		console.log(JSON.stringify(desc));
