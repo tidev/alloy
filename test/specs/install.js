@@ -20,38 +20,52 @@ var alloy = {
 }
 
 // The alloy command test suite
-describe('`alloy install', function() {
-	it('plugin` is supported', function() {
-		TU.asyncExecTest('alloy install plugin "' + harness.root + '"', TIMEOUT_DEFAULT, function() {
-			expect(this.output.error).toBeFalsy();
+describe('alloy install', function() {
+	describe('plugin', function() {
+		it('is supported', function() {
+			TU.asyncExecTest('alloy install plugin "' + harness.root + '"', {
+				timeout: TIMEOUT_DEFAULT, 
+				test: function() {
+					expect(this.output.error).toBeFalsy();
+				}
+			});
 		});
-	});
 
-	it('plugin` generates plugins and hooks', function() {
-		expect(path.existsSync(harness.hook)).toBeTruthy();
-		expect(path.existsSync(harness.plugin)).toBeTruthy();
-	});
-
-	it('plugin` generated files match those in Alloy', function() {
-		expect(fs.readFileSync(alloy.hook,'utf8')).toBe(fs.readFileSync(harness.hook,'utf8'));
-		expect(fs.readFileSync(alloy.plugin,'utf8')).toBe(fs.readFileSync(harness.plugin,'utf8'));
-	});
-
-	it('plugin` fails when given a non-existent project path', function() {
-		TU.asyncExecTest('alloy install plugin /some/path/that/does/not/exist', TIMEOUT_DEFAULT, function() {
-			expect(this.output.error).toBeTruthy();
+		it('generates plugins and hooks', function() {
+			expect(path.existsSync(harness.hook)).toBeTruthy();
+			expect(path.existsSync(harness.plugin)).toBeTruthy();
 		});
-	});
 
-	it('plugin` fails when given a non-alloy project path', function() {
-		TU.asyncExecTest('alloy install plugin "' + TiAppRoot + '"', TIMEOUT_DEFAULT, function() {
-			expect(this.output.error).toBeTruthy();
+		it('plugins and hooks match those in Alloy', function() {
+			expect(fs.readFileSync(alloy.hook,'utf8')).toBe(fs.readFileSync(harness.hook,'utf8'));
+			expect(fs.readFileSync(alloy.plugin,'utf8')).toBe(fs.readFileSync(harness.plugin,'utf8'));
 		});
-	});
 
-	it('` fails when an invalid type is used', function() {
-		TU.asyncExecTest('alloy install invalidType "' + harness.root + '"', TIMEOUT_DEFAULT, function() {
-			expect(this.output.error).toBeTruthy();
+		it('fails when given a non-existent project path', function() {
+			TU.asyncExecTest('alloy install plugin /some/path/that/does/not/exist', {
+				timeout: TIMEOUT_DEFAULT, 
+				test: function() {
+					expect(this.output.error).toBeTruthy();
+				}
+			});
+		});
+
+		it('fails when given a non-alloy project path', function() {
+			TU.asyncExecTest('alloy install plugin "' + TiAppRoot + '"', {
+				timeout: TIMEOUT_DEFAULT, 
+				test: function() {
+					expect(this.output.error).toBeTruthy();
+				}
+			});
+		});
+
+		it('fails when an invalid type is used', function() {
+			TU.asyncExecTest('alloy install invalidType "' + harness.root + '"', {
+				timeout: TIMEOUT_DEFAULT, 
+				test: function() {
+					expect(this.output.error).toBeTruthy();
+				}
+			});
 		});
 	});
 });

@@ -58,7 +58,7 @@ program.parse(process.argv);
 Error.stackTraceLimit = Infinity;
 logger.stripColors = program['colors'] === false;
 
-if (!program.noBanner) {
+if (!program.noBanner && program.args[0] !== 'info') {
 	banner();
 }
 

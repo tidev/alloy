@@ -113,9 +113,10 @@ $._annoy = false;         // Annoy interval variable, useful for clearInterval.
 function pullTabClick(e) {
     $._isOpen = !$._isOpen;
     $.pulltab.backgroundImage = "/images/com.appcelerator.drawer/" + ($._isOpen ? "PullTabDown.png" : "PullTabUp.png");
-    
     Ti.API.info(($._isOpen ? "Opening" : "Closing") + " the drawer (buttonbar=" + ($._params.iconSize + $._params.gutter * 2) + ", drawer=" + $.drawer.size.height + ")");
-    $.pulltab.accessibilityHint = "Click to " + ($._isOpen ? "close" : "open") + " the drawer";
+    
+    $.pulltab.accessibilityValue = $._isOpen ? "Open" : "Closed";                                   // TODO: localize.
+    $.pulltab.accessibilityHint = "Click to " + ($._isOpen ? "close" : "open") + " the drawer";     // TODO: localize.
     
     $.drawer.animate({
         bottom: $._isOpen ? 0 : -($._params.iconSize + $._params.gutter * 2),
@@ -160,7 +161,7 @@ exports.checkEnabled = function DrawerCheckEnabled() {
     if (OS_IOS || OS_MOBILEWEB || $._params.overrideMenu) {
         Object.keys($._buttons).forEach(
             function (key) {
-                var i = parseInt(key);
+                var i = parseInt(key, 10);
                 if ($._buttons[i].enabled)
                     $._buttons[i].button.enabled = $._buttons[i].enabled();
             }
@@ -189,6 +190,17 @@ exports.checkEnabled = function DrawerCheckEnabled() {
  * @param {Number} [annoy=0] Jiggle the drawer up and down <annoy> times until the user opens it the first time. Setting annoy to -1 causes it to happen forever.
  * */
 
+// TODO: This is from underscore 1.4.2: remove when Alloy updates.
+// Return a copy of the object without the blacklisted properties.
+function omit(obj) {
+    var ArrayProto = Array.prototype, slice = ArrayProto.slice, concat = ArrayProto.concat, copy = {};
+    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
+    for (var key in obj) {
+      if (!_.contains(keys, key)) copy[key] = obj[key];
+    }
+    return copy;
+};
+
 exports.init = function DrawerInit(args) {
     $._buttons = args.buttons;
     $._params = _.defaults(args, defaults);
@@ -202,16 +214,18 @@ exports.init = function DrawerInit(args) {
         // Create and add buttons to the drawer
         Object.keys($._buttons).forEach(
             function (key) {
-                var i = parseInt(key); 
-                Ti.API.info("Setting enabled image " + '/images/' + $._buttons[i].id + 'Enabled.png');
-                $._buttons[i].button = Ti.UI.createButton({
+                var i = parseInt(key, 10); 
+                var buttonDesc = omit($._buttons[i], ['id','title', 'click', 'enabled']); // Pass through all extra parameters for Button.
+                _.extend(buttonDesc, {
                     top: $._params.gutter, left: $._params.gutter, width: $._params.iconSize, height: $._params.iconSize,
                     backgroundImage: '/images/' + $._buttons[i].id + 'Enabled.png',
                     backgroundDisabledImage: '/images/' + $._buttons[i].id + 'Disabled.png'
                 });
+                $._buttons[i].button = Ti.UI.createButton(buttonDesc);
         
                 $._buttons[i].button.addEventListener('click', function (e) {
-                    $._buttons[i].click(e);
+                    if ($._buttons[i].click)    // Invoke the button click fn if it exists.
+                        $._buttons[i].click(e);
                     if ($._params.autoClose)
                         pullTabClick(e);    // Close the drawer.
                 });
@@ -241,7 +255,7 @@ exports.init = function DrawerInit(args) {
             var menu = e.menu;
             Object.keys($._buttons).forEach(
                 function (key) {
-                    var i = parseInt(key);
+                    var i = parseInt(key, 10);
                     var menuItem = menu.add({ title: $._buttons[i].title, itemId: i });
                     menuItem.setIcon('/images/' + $._buttons[i].id + 'Enabled.png');
                     if ($._buttons[i].click)
@@ -253,7 +267,7 @@ exports.init = function DrawerInit(args) {
              var menu = e.menu;
              Object.keys($._buttons).forEach(
                 function (key) {
-                    var i = parseInt(key);
+                    var i = parseInt(key, 10);
                     var menuItem = menu.findItem(i);
                     menuItem.enabled = $._buttons[i].enabled ? $._buttons[i].enabled() : true;
                 }
