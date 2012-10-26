@@ -21,18 +21,37 @@ var info = {
 				platforms: ['mobileweb']
 			}
 		};
-		console.log(U.prettyPrintJson(desc));
+		console.log(JSON.stringify(desc));
+	},
+	templates: function() {
+		var desc = [
+			{
+				name: "default", 
+				label: "Default Alloy Project", 
+				Description: "Basic \"Hello, World!\" application using the Alloy MVC framework.", 
+				icon: "url1"
+			},
+  			{
+  				name: "two_tabbed", 
+  				label: "Two-tabbed Alloy Application", 
+  				Description: "Titanium's traditional two-tabbed application created using the Alloy MVC framework.", 
+  				icon: "url2"
+  			}
+		];
+		console.log(JSON.stringify(desc));
+		//console.log(U.prettyPrintJson(desc));
 	}
 };
 
 module.exports = function(args, program) {
-	var target = args[0] || 'ALL';
+	var target = args[0]; // || 'ALL';
 
-	if (target === 'ALL') {
-		_.each(_.keys(info), function(a) {
-			info[a]();
-		});
-	} else if (!info[target]) {
+	// if (target === 'ALL') {
+	// 	_.each(_.keys(info), function(a) {
+	// 		info[a]();
+	// 	});
+	// } else 
+	if (!info[target]) {
 		U.die('Invalid target for `alloy info`: ' + target);
 	} else {
 		info[target]();
