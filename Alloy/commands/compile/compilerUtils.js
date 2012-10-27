@@ -449,7 +449,7 @@ function updateImplicitNamspaces(platform) {
 }
 
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
-	var dirs = ['assets','config','controllers','migrations','models','styles','views','widgets'];
+	var dirs = ['assets','config','controllers','lib','migrations','models','styles','themes','vendor','views','widgets'];
 	var libDirs = ['builtins','template'];
 	var resources = path.resolve(path.join(outputPath,'Resources'));
 
@@ -474,7 +474,9 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	// validation
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
-	exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
+	
+	var config = exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
+	obj.theme = config.theme;
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
@@ -498,8 +500,15 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 		}
 
-		o = j.global || {};
+		_.each(j, function(v,k) {
+			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
+				o[k] = v;
+			} 
+		});
+
+		//o = j.global || {};
 		if (alloyConfig) {
+			o = _.extend(o, j['global']);
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
@@ -513,6 +522,8 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 		path.join(resourceAlloyDir,'CFG.js'),
 		"module.exports = " + JSON.stringify(o) + ";\n"
 	);
+
+	return o;
 };
 
 exports.loadController = function(file) {

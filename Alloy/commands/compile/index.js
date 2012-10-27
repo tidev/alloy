@@ -18,7 +18,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	buildPlatform,
-	compileConfig = {};
+	compileConfig = {},
+	theme;
 
 //////////////////////////////////////
 ////////// command function //////////
@@ -92,7 +93,8 @@ module.exports = function(args, program) {
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-	buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
+	buildPlatform = compileConfig.alloyConfig.platform;
+	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
 	logger.debug('');
 
@@ -133,19 +135,11 @@ module.exports = function(args, program) {
 
 	// create the global style, if it exists
 	logger.debug('----- MVC GENERATION -----');
-	var configJson = path.join(paths.app,'config.json');
 	var pathToLoad = path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	if (path.existsSync(configJson)) {
-		try {
-			var json = jsonlint.parse(fs.readFileSync(configJson,'utf8'));
-		} catch (e) {
-			exports.die('Error parsing "config.json"', e);
-		}
-		if (json.theme) {
-		 	var thePath = path.join(paths.app,'themes',json.theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-			if (path.existsSync(thePath)) {
-				pathToLoad = thePath;
-			}
+	if (theme) {
+		var thePath = path.join(paths.app,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+		if (path.existsSync(thePath)) {
+			pathToLoad = thePath;
 		}
 	}
 	loadGlobalStyle(pathToLoad);
