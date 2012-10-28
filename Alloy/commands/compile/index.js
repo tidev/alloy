@@ -96,6 +96,15 @@ module.exports = function(args, program) {
 	buildPlatform = compileConfig.alloyConfig.platform;
 	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
+	logger.debug('theme = ' + theme);
+
+	// check theme for assets
+	if (theme) {
+		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
+		if (path.existsSync(themeAssetsPath)) {
+			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+		}
+	}
 	logger.debug('');
 
 	// process project makefiles
@@ -133,16 +142,10 @@ module.exports = function(args, program) {
 		U.tiapp.upStackSizeForRhino(paths.project);
 	}
 
-	// create the global style, if it exists
 	logger.debug('----- MVC GENERATION -----');
-	var pathToLoad = path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	if (theme) {
-		var thePath = path.join(paths.app,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-		if (path.existsSync(thePath)) {
-			pathToLoad = thePath;
-		}
-	}
-	loadGlobalStyle(pathToLoad);
+
+	// create the global style, if it exists
+	loadGlobalStyles(paths.app, theme);
 	
 	// Process all models
 	var models = processModels();
@@ -275,6 +278,21 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
 		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
+
+		if (theme && !manifest) {
+			var themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
+			var theStyle = dirname ? path.join(dirname,viewName+'.tss') : viewName+'.tss';
+			var themeStylesFile = path.join(themeStylesDir,theStyle);
+			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);	
+
+			if (path.existsSync(psThemeStylesFile)) {
+				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
+				_.extend(state.styles, CU.loadAndSortStyle(psThemeStylesFile,manifest));
+			} else if (path.existsSync(themeStylesFile)) {
+				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
+				_.extend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
+			}
+		}
 
 		// Load view from file into an XML document root node
 		try {
@@ -436,11 +454,21 @@ function processModels() {
 	return models;
 };
 
-function loadGlobalStyle(filepath) {
-	if (path.existsSync(filepath)) {
+function loadGlobalStyles(appPath, theme) {
+	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+
+	compileConfig.globalStyle = {};
+	if (path.existsSync(appGlobal)) {
 		logger.debug('[app.tss] global style processing...');
-		compileConfig.globalStyle = CU.loadStyle(filepath);
-	}
+		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
+		//compileConfig.globalStyle = CU.loadStyle(appGlobal);
+	} 
+	if (theme && path.existsSync(themeGlobal)) {
+		logger.debug('[app.tss (theme:' + theme + ')] global style processing...');
+		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+		//compileConfig.globalStyle = CU.loadStyle(themeGlobal);
+	} 	
 }
 
 function optimizeCompiledCode() {
