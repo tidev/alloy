@@ -462,12 +462,10 @@ function loadGlobalStyles(appPath, theme) {
 	if (path.existsSync(appGlobal)) {
 		logger.debug('[app.tss] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
-		//compileConfig.globalStyle = CU.loadStyle(appGlobal);
 	} 
 	if (theme && path.existsSync(themeGlobal)) {
 		logger.debug('[app.tss (theme:' + theme + ')] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
-		//compileConfig.globalStyle = CU.loadStyle(themeGlobal);
 	} 	
 }
 
