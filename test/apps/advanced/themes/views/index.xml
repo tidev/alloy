@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+	  <Label id="title">Patience Tester</Label>
+	  <View id="container">
+	    <Label id="label"/>
+	  </View>
+		<Slider id="slider" onChange="updateLabel"/>
+    <Button id="testButton" onClick="testPatience">Test Patience</Button>	
+  </Window>
+</Alloy>

@@ -1,0 +1,41 @@
+"Label": {
+	color: '#000'
+},
+"Button": {
+	backgroundImage: '/button_green.png'
+},
+"#title": {
+	backgroundImage: '/title_green.png'
+},
+"#container": {
+	backgroundGradient: {
+		type: 'linear',
+		startPoint: { x: '0%', y: '0%' },
+		endPoint: { x: '0%', y: '100%' },
+		colors: ['#4db33e', '#1e8010']
+	},
+	right: 10
+},
+"#testButton":{
+	right: 15
+},
+"#index": {
+	backgroundImage: '/bg_tan.png'
+},
+"#slider": {
+	leftTrackImage: '/title_green.png',
+	top: 228, 
+	left: -145,
+	width: 350,
+	transform: expr(Titanium.UI.create2DMatrix().rotate(-90))
+},
+"#mainView": {
+	backgroundImage: '/bg_tan.png',
+	borderColor: '#3da22f'
+},
+"#progressBack": {
+	backgroundColor: '#333'
+},
+"#progressFront": {
+	backgroundImage: '/title_green.png'
+}
