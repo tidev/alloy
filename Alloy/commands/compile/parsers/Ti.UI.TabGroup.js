@@ -20,8 +20,6 @@ function parse(node, state, args) {
 				parent: {},
 				styles: state.styles,
 				post: function(node, state, args) {
-					console.log(state);
-					console.log(args);
 					return groupState.parent.symbol + '.addTab(' + state.parent.symbol + ');';
 				}
 			});
