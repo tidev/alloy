@@ -286,7 +286,15 @@ describe('alloy generate', function() {
 		var alloyJmk = path.join(templatePath,'alloy.jmk');
 		var jmkContent;
 
-		it('executes without error', function() {
+		it('executes without error from project directory', function() {
+			TU.asyncExecTest('cd "' + TiAppCopy + '" && alloy generate jmk', {reset:true});
+		});		
+
+		it('executes without error from app directory', function() {
+			TU.asyncExecTest('cd "' + path.join(TiAppCopy,'app') + '" && alloy generate jmk', {reset:true});
+		});		
+
+		it('executes without error with --projectDir', function() {
 			TU.asyncExecTest('alloy generate jmk --project-dir "' + TiAppCopy + '"', {reset:true});
 		});
 

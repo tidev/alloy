@@ -16,10 +16,8 @@ function generate(args, program) {
 	} 
 
 	// make sure we have a valid project path
-	program.projectDir = program.outputPath = program.projectDir || program.outputPath || U.resolveAppHome();
-	if (!path.existsSync(program.outputPath)) {
-		U.die('"' + program.outputPath + '" is not a valid Alloy project path.');
-	}
+	var paths = U.getAndValidateProjectPaths(program.projectDir || program.outputPath || process.cwd());
+	program.projectDir = program.outputPath = paths.project;
 
 	// grab the name
 	if (!name && target !== 'jmk') {
