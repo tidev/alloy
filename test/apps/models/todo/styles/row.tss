@@ -1,0 +1,26 @@
+"#row": {
+	height: '50dp',
+	backgroundColor: '#fff',
+	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
+	focusable: false
+},
+"#check": {
+	image: '/tick_gray_64.png',
+	left: 0,
+	height: '50dp',
+	width: '50dp'
+},
+"#task": {
+  left: '50dp',
+  right: '50dp',
+  height: Ti.UI.SIZE,
+	font: {
+		fontSize: '18dp'
+	}
+},
+"#remove": {
+	image: '/red_x.png',
+	right: 0,
+	height: '50dp',
+	width: '50dp'
+}

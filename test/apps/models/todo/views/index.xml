@@ -1,0 +1,17 @@
+<Alloy>
+  <Window id="todoWin" title="Todo">
+    <!-- header -->
+    <View id="header">
+      <Label id="title">Alloy Todo</Label>
+      <View class="divider"/>
+      <View id="addView" onClick="addToDoItem">
+        <ImageView id="addImage"/>
+      </View>
+    </View>
+    
+    <!-- main table for tasks -->
+    <TableView id="todoTable"/>
+    
+    <!-- footer with buttons -->
+  </Window>
+</Alloy>
