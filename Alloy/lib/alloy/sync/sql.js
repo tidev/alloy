@@ -96,7 +96,7 @@ function SQLiteMigrateDB() {
 			columns.push(k+" "+self.column(config.columns[k]));
 		}
 			
-		var sql = 'CREATE TABLE '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
+		var sql = 'CREATE TABLE IF NOT EXISTS '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
 		Ti.API.info(sql);
 		
 		db.execute(sql);
@@ -202,41 +202,45 @@ function GetMigrationForCached(t,m) {
 	return v;
 }
 
-function Migrate(migrations) {
+function Migrate(migrations, config) {
 	var prev;
 	var sqlMigration = new SQLiteMigrateDB;
 	var migrationIds = {}; // cache for latest mid by model name
 	
 	db.execute('BEGIN;');
 	
-	// iterate through all our migrations and call up/down and the last migration should
-	// have the up called but never the down -- the migrations come in pre sorted from
-	// oldest to newest based on timestamp
-	_.each(migrations,function(migration) {
-		var mctx = {};
-		migration(mctx);
-		var mid = GetMigrationForCached(mctx.name,migrationIds);
-		Ti.API.info('mid = '+mid+', name = '+mctx.name);
-		if (!mid || mctx.id > mid) {
-			Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
-			if (prev && _.isFunction(prev.down)) {
-				prev.down(sqlMigration);
+	if (migrations.length) {
+		// iterate through all our migrations and call up/down and the last migration should
+		// have the up called but never the down -- the migrations come in pre sorted from
+		// oldest to newest based on timestamp
+		_.each(migrations,function(migration) {
+			var mctx = {};
+			migration(mctx);
+			var mid = GetMigrationForCached(mctx.name,migrationIds);
+			Ti.API.info('mid = '+mid+', name = '+mctx.name);
+			if (!mid || mctx.id > mid) {
+				Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
+				if (prev && _.isFunction(prev.down)) {
+					prev.down(sqlMigration);
+				}
+				if (_.isFunction(mctx.up)) {
+					mctx.down(sqlMigration);
+					mctx.up(sqlMigration);
+				}
+				prev = mctx;
 			}
-			if (_.isFunction(mctx.up)) {
-				mctx.down(sqlMigration);
-				mctx.up(sqlMigration);
+			else {
+				Ti.API.info('skipping migration '+mctx.id+', already performed');
+				prev = null;
 			}
-			prev = mctx;
+		});
+		
+		if (prev && prev.id) {
+			db.execute('DELETE FROM migrations where model = ?', prev.name);
+			db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
 		}
-		else {
-			Ti.API.info('skipping migration '+mctx.id+', already performed');
-			prev = null;
-		}
-	});
-	
-	if (prev && prev.id) {
-		db.execute('DELETE FROM migrations where model = ?', prev.name);
-		db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
+	} else {
+		sqlMigration.createTable(config);
 	}
 	
 	db.execute('COMMIT;');
@@ -258,7 +262,7 @@ module.exports.afterModelCreate = function(Model) {
 	
 	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
 
-	Migrate(Model.migrations);
+	Migrate(Model.migrations, Model.prototype.config);
 
 	return Model;
 };
