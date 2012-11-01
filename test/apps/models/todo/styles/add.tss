@@ -1,5 +1,6 @@
 "#addWin":{
-	layout: 'vertical'
+	layout: 'vertical',
+	barColor: '#a00'
 },
 "#itemField":{
 	width: '90%',

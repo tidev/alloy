@@ -12,6 +12,22 @@
     <!-- main table for tasks -->
     <TableView id="todoTable"/>
     
-    <!-- footer with buttons -->
+    <!-- iOS: footer with buttons -->
+    <View platform="ios" id="footer">
+      <TabbedBar onClick="showTasks" id="tabbedbar">
+        <Labels>
+          <Label>All</Label>
+          <Label>Active</Label>
+          <Label>Done</Label>
+        </Labels>
+      </TabbedBar>
+    </View>
+    
+    <!-- Android: menu -->
+    <Menu platform="android">
+      <MenuItem title="All" onClick="showTasks"/>
+      <MenuItem title="Active" onClick="showTasks"/>
+      <MenuItem title="Done" onClick="showTasks"/>
+    </Menu>
   </Window>
 </Alloy>

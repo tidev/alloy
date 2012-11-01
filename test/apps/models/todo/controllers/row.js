@@ -3,11 +3,11 @@ var todos = Alloy.globals.todos;
 var args = arguments[0] || {};
 var id;
 
-if (args.item) {
-	$.task.text = args.item.get('item');
-	id = args.item.get('id');
+if (args.todo) {
+	$.task.text = args.todo.get('item');
+	id = args.todo.get('id');
 
-	if (args.item.get('done') && !args.doneTab) {
+	if (args.todo.get('done')) {
 		$.row.backgroundColor = '#eee';
 		$.check.backgroundColor = '#eee';
 		$.task.color = '#ccc';
