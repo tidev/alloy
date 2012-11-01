@@ -21,24 +21,20 @@ exports.Backbone = Backbone;
 exports.M = function(name, modelDesc, migrations) {
 	var config = modelDesc.config;
     var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-	if (Ti.Platform.osname === 'mobileweb' && type === 'localDefault') {
-		type = 'localStorage';
-	}
-	else if (type === 'localDefault') {
-		type = 'sql';
-	}
+    if (type === 'localDefault') {
+    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+    }
+
 	var adapter = require('alloy/sync/'+type);
     var extendObj = {
 		defaults: config.defaults,
         sync: function(method, model, opts) {
-			var config = (model.config || {});
+			var config = model.config || {};
+			var adapterObj = config.adapter || {};
 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-			if (Ti.Platform.osname === 'mobileweb' && type === 'localDefault') {
-				type = 'localStorage';
-			}
-			else if (type === 'localDefault') {
-				type = 'sql';
-			}
+			if (type === 'localDefault') {
+		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+		    }
 
 			require('alloy/sync/'+type).sync(model,method,opts);
 		}
@@ -66,12 +62,9 @@ exports.C = function(name, modelDesc, model) {
         sync: function(method, model, opts) {
 			var config = (model.config || {});
 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-			if (Ti.Platform.osname === 'mobileweb' && type === 'localDefault') {
-				type = 'localStorage';
-			}
-			else if (type === 'localDefault') {
-				type = 'sql';
-			}
+			if (type === 'localDefault') {
+		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+		    }
 
 			require('alloy/sync/'+type).sync(model,method,opts);
 		}
