@@ -1,4 +1,3 @@
-
 import os, sys, subprocess, hashlib
 
 import subprocess
@@ -40,7 +39,8 @@ def compile(config):
                     "/opt/local/bin/"+binary,
                     userPath+"/local/bin/"+binary,
                     "/opt/bin/"+binary,
-                    "/usr/bin/"+binary
+                    "/usr/bin/"+binary,
+                    "/usr/local/share/npm/bin/"+binary
                 ]
                 
                 try:
@@ -59,8 +59,9 @@ def compile(config):
                             break
                         else:
                             print "not found"
+                            binaryPath = None
                         
-                if binaryPath == None:
+                if binaryPath is None:
                     print "[ERROR] Couldn't find %s" % binary
                     sys.exit(1)
                 else:
