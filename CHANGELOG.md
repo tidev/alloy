@@ -19,8 +19,7 @@
 
 ### Coming features
 The following are planned features for the next release:
-* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-103). Add dynamic binding support to markup for properties like text for controls that have a text property.
-* [ALOY-104](http://jira.appcelerator.org/browse/ALOY-104). Add dynamic binding support to markup for tableview rows and listbox rows to update the source as the backbone model collection changes.
+* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-360). Model-View binding in markup
 
 0.3.0 (beta)
 ------------
