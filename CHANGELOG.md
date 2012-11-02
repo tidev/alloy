@@ -19,7 +19,7 @@
 
 ### Coming features
 The following are planned features for the next release:
-* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-360). Model-View binding in markup
+* [ALOY-360](http://jira.appcelerator.org/browse/ALOY-360). Model-View binding in markup
 
 0.3.0 (beta)
 ------------
