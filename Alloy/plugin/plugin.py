@@ -78,7 +78,6 @@ def compile(config):
         print "[INFO] alloy app found at %s" % f
         rd = os.path.abspath(os.path.join(config['project_dir'], 'Resources'))
 
-        # FIXME - need to support all platforms - https://jira.appcelerator.org/browse/ALOY-85
         devicefamily = 'none'
         simtype = 'none'
         version = '0'
