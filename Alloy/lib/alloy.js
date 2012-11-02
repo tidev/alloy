@@ -96,8 +96,8 @@ exports.A = function(t, type, parent) {
 			oo = t.on,
 			of = t.off,
 			tg = t.trigger,
-		   cbs = [],
-		   ctx = {};
+		   cbs = {},
+		   ctx = _.extend({}, Backbone.Events);
 
 		if (!al || !rl) {
 			return;
@@ -112,29 +112,34 @@ exports.A = function(t, type, parent) {
 					Ti.API.error("Error triggering '"+e+"' event: "+E);
 				}
 			};
-			cbs[cb]=wcb;
 
-			if (OS_IOS) {
-				al(e, wcb);
-			} else {
-				al.call(t, e, wcb);
+			if (!cbs[e]) {
+				cbs[e] = {};
+				if (OS_IOS) {
+					al(e, wcb);
+				} else {
+					al.call(t, e, wcb);
+				}
 			}
+			cbs[e][cb] = wcb;
 
 			_.bind(oo,ctx,e,cb,context)();
 		};
 
 		t.off = function(e,cb,context) {
-			var f = cbs[cb];
+			var f = cbs[e] ? cbs[e][cb] : null;
 			if (f) {
 				_.bind(of,ctx,e,cb,context)();
-
-				if (OS_IOS) {
-					rl(e, f);
-				} else {
-					rl.call(t, e, f);
-				}
+				delete cbs[e][cb];
 				
-				delete cbs[cb];
+				if (cbs[e].length === 0) {
+					delete cbs[e];
+					if (OS_IOS) {
+						rl(e, f);
+					} else {
+						rl.call(t, e, f);
+					}
+				}
 				f = null;
 			}
 		};
