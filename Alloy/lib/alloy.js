@@ -4,11 +4,15 @@
  * 
  */
 var 	   _ = require('alloy/underscore')._,
-	Backbone = require('alloy/backbone'),
-	STR = require('alloy/string');
+	Backbone = require('alloy/backbone');
 	
 exports._ = _;
 exports.Backbone = Backbone;
+
+function ucfirst(text) {
+    if (!text) { return text; }
+    return text[0].toUpperCase() + text.substr(1);
+};
 
 // Ti.Analytics.featureEvent('alloy.start', {
 // 	guid: Ti.Platform.id,
@@ -236,7 +240,7 @@ exports.getModel = function(name, args) {
  * @return {Backbone.Model} Backbone model object.
  */
 exports.createModel = function(name, args) {
-	return new (require('alloy/models/' + STR.ucfirst(name)).Model)(args);
+	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
 }
 
 
@@ -272,7 +276,7 @@ exports.getCollection = function(name, args) {
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.createCollection = function(name, args) {
-	return new (require('alloy/models/' + STR.ucfirst(name)).Collection)(args);
+	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
 }
 
 function isTabletFallback() {
