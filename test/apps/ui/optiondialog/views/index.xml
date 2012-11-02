@@ -7,7 +7,7 @@
 			On iOS, descructive and cancel will change the characteristics
 			of the options. 
 	    -->
-		<OptionDialog id="options" title="App Options" destructive="2" cancel="1">
+		<OptionDialog id="options" title="App Options" destructive="3" cancel="2">
 			<Options>
 				<Option>option 1</Option>
 				<Option>option 2</Option>

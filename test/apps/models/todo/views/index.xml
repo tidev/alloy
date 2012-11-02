@@ -1,0 +1,33 @@
+<Alloy>
+  <Window id="todoWin" title="Todo">
+    <!-- header -->
+    <View id="header">
+      <Label id="title">Alloy Todo</Label>
+      <View class="divider"/>
+      <View id="addView" onClick="addToDoItem">
+        <ImageView id="addImage"/>
+      </View>
+    </View>
+    
+    <!-- main table for tasks -->
+    <TableView id="todoTable"/>
+    
+    <!-- iOS: footer with buttons -->
+    <View platform="ios" id="footer">
+      <TabbedBar onClick="showTasks" id="tabbedbar">
+        <Labels>
+          <Label>All</Label>
+          <Label>Active</Label>
+          <Label>Done</Label>
+        </Labels>
+      </TabbedBar>
+    </View>
+    
+    <!-- Android: menu -->
+    <Menu platform="android">
+      <MenuItem title="All" onClick="showTasks"/>
+      <MenuItem title="Active" onClick="showTasks"/>
+      <MenuItem title="Done" onClick="showTasks"/>
+    </Menu>
+  </Window>
+</Alloy>

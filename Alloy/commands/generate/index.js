@@ -1,8 +1,7 @@
 var path = require('path'),
 	_ = require("../../lib/alloy/underscore")._,
-	U = require('../../utils');
-
-var TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
+	U = require('../../utils'),
+	CONST = require('../../common/constants');
 
 function generate(args, program) {
 	args = args || [];
@@ -11,25 +10,25 @@ function generate(args, program) {
 	var target = args[0];	
 	var name = args[1];
 
-	// validate arguments
-	program.outputPath = program.outputPath || U.resolveAppHome();
-	if (!path.existsSync(program.outputPath)) {
-		U.die('"' + program.outputPath + '" is not a valid Alloy project path.');
-	}
+	// make sure we have a generate target
 	if (!target) {
-		U.die('generate requires a TYPE as second argument: [' + TARGETS.join(',') + ']');
+		U.die('generate requires a TYPE as second argument: [' + CONST.GENERATE_TARGETS.join(',') + ']');
 	} 
-	if (!name) {
-		if (target === 'jmk') {
-			name = 'alloy';
-		} else {
-			U.die('generate requires a NAME such as third argument');
-		}
+
+	// make sure we have a valid project path
+	var paths = U.getAndValidateProjectPaths(program.projectDir || program.outputPath || process.cwd());
+	program.projectDir = program.outputPath = paths.project;
+
+	// grab the name
+	if (!name && target !== 'jmk') {
+		U.die('generate requires a NAME such as third argument');
 	} 
-	if (!_.contains(TARGETS, target)) {
+
+	// validate the generate target
+	if (!_.contains(CONST.GENERATE_TARGETS, target)) {
 		U.die(
 			'Invalid generate target "' + target + '"\n' + 
-			'Must be one of the following: [' + TARGETS.join(',') + ']'
+			'Must be one of the following: [' + CONST.GENERATE_TARGETS.join(',') + ']'
 		);
 	}
 

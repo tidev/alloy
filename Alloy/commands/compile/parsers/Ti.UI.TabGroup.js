@@ -7,46 +7,29 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		errBase = 'All <TabGroup> children must be a <Tab>, or a <Require> that contains a single tab. '
-		code = '';
+	var code = '';
 
 	// Create the initial TabGroup code
-	code += require('./default').parse(node, state).code;
+	var groupState = require('./default').parse(node, state);
+	code += groupState.code;
 
-	// iterate through all children
-	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child),
-			err = errBase + ' Invalid child at position ' + i,
-			isRequire;
-
-		// Make sure all children are Tabs
-		switch(childArgs.fullname) {
-			case 'Ti.UI.Tab':
-				isRequire = false;
-				break;
-			case 'Alloy.Require': 
-				var inspect = CU.inspectRequireNode(child);
-				if (inspect.length !== 1 || inspect.names[0] !== 'Ti.UI.Tab') {
-					U.die(err);
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+		var theNode = CU.validateNodeName(child, 'Ti.UI.Tab');
+		if (theNode) {
+			code += CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				post: function(node, state, args) {
+					return groupState.parent.symbol + '.addTab(' + state.parent.symbol + ');';
 				}
-				isRequire = true;
-				break;
-			default:
-				U.die(err);
-				break;
+			});
+		} else {
+			U.die([
+				'Invalid <TabGroup> child type: ' + CU.getNodeFullname(child),
+				'All <TabGroup> children must be <Tab>'
+			]);
 		}
-
-		// Generate each Tab, and the views contained within it
-		code += CU.generateNode(child, {
-			parent: {},
-			styles: state.styles,
-			post: function(n,s,a) {
-				return args.symbol + '.addTab(' + (isRequire ? s.parent.symbol : a.symbol) + ');\n';
-			}
-		});
-	}
+	});
 
 	// Update the parsing state
 	return {

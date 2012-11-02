@@ -1,0 +1,40 @@
+"#title": {
+	top: 0,
+	height: 46,
+	width: Ti.UI.FILL,
+	textAlign: 'center',
+	font: {
+		fontSize: 24,
+		fontWeight: 'bold'
+	}
+},
+"#container": {
+	height: 170,
+	width: 250,
+	top: 80,
+	borderColor: '#000',
+	borderWidth: 2,
+	borderRadius: 16
+},
+"#label": {
+	text: '5s',
+	top:10,
+	font: {
+		fontSize: 140,
+		fontWeight: 'bold'
+	},
+	textAlign: 'center'
+},
+"#label[platform=android]": {
+	top: 0
+},
+"#slider": {
+	min: 1,
+	max: 10,
+	value: 5
+},
+"#testButton": {
+	bottom: 30,
+	height: 50,
+	width: 180
+}

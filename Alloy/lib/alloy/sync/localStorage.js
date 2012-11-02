@@ -12,7 +12,7 @@ function guid() {
 };
 
 function InitAdapter(config) {
-	if (Ti.Platform.osname !== 'mobileweb') {
+	if (!OS_MOBILEWEB) {
 		throw 'No support for localStorage persistence in non MobileWeb environments.';
 	}
 }

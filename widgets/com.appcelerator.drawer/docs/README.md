@@ -76,6 +76,7 @@ There are number of aspects of the Drawer that you can change, you can include t
 | Parameter | Type | Affects | Description |
 | --------- | ---- | ------- | ----------- |
 | animationDuration | *integer* | iOS, MW | The duration, in milliseconds, of the animation to close/open the drawer. Default: *500* |
+| annoy | *integer* | iOS, MW | Jiggle the drawer up and down *annoy* times in order to draw attention to it until the user opens it the first time. Setting annoy to -1 causes it to happen forever. Default: *0* |
 | autoClose | *boolean* | iOS, MW | If true, automatically closes the drawer after a button has been pressed. Default: *false* |
 | closeOpacity| *number* | iOS, MW | A number between 0 (transparent) and 1 (opaque) that denotes the opacity of the drawer when it is closed. Default: *0.75* |
 | gutter | *integer* | iOS, MW | The offset, in pixels, used to space buttons from each other in the drawer. Default: *0* |

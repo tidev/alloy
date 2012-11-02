@@ -1,0 +1,36 @@
+"Label": {
+	color: '#fff'
+},
+"Button": {
+	color: '#fff',
+	backgroundImage: '/button_blue.png'
+},
+"#title": {
+	backgroundImage: '/title_blue.png'
+},
+"#container": {
+	backgroundGradient: {
+		type: 'linear',
+		startPoint: { x: '0%', y: '0%' },
+		endPoint: { x: '0%', y: '100%' },
+		colors: ['#39abfb', '#0285ff']
+	}
+},
+"#slider": {
+	leftTrackImage: '/title_blue.png',
+	bottom: 100,
+	width: 250
+},
+"#index": {
+	backgroundImage: '/bg_gray.png'
+},
+"#mainView": {
+	backgroundImage: '/bg_gray.png',
+	borderColor: '#1e99fd'
+},
+"#progressBack": {
+	backgroundColor: '#333'
+},
+"#progressFront": {
+	backgroundImage: '/title_blue.png'
+}

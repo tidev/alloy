@@ -28,11 +28,13 @@ program
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
-	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
-	.option('-f, --force','Force the command to execute')
-	.option('-n, --no-colors','Turn off colors')
+	.option('-b, --noBanner', 'Disable the banner')
 	.option('-c, --config <config>','Pass in compiler configuration')
+	.option('-f, --force','Force the command to execute')
+	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
+	.option('-n, --no-colors','Turn off colors')
+	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
+	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
 	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
 	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
 
@@ -55,7 +57,10 @@ program.parse(process.argv);
 //if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
 Error.stackTraceLimit = Infinity;
 logger.stripColors = program['colors'] === false;
-banner();
+
+if (!program.noBanner && program.args[0] !== 'info') {
+	banner();
+}
 
 if (program.args.length === 0)
 {
@@ -63,7 +68,7 @@ if (program.args.length === 0)
 	help = help.replace('Usage: alloy COMMAND [ARGS] [OPTIONS]','Usage: '+'alloy'.blue+' COMMAND'.white+' [ARGS] [OPTIONS]'.grey);
 	help = logger.stripColors ? colors.stripColors(help) : help;
 	console.log(help);
-	process.exit(1);
+	process.exit(0);
 }
 
 // Validate the given command

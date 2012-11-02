@@ -16,6 +16,7 @@ var path = require('path'),
 
 exports.XML = {
 	getNodeText: function(node) {
+		if (!node) { return ''; }
 		var serializer = new XMLSerializer(),
 			str = '';
 		for (var c = 0; c < node.childNodes.length; c++) {
@@ -89,6 +90,49 @@ exports.XML = {
 };
 
 exports.tiapp = {
+	parse: function(dir) {
+		dir || (dir = './');
+		var tiappPath = path.join(dir,'tiapp.xml');
+		if (!path.existsSync(tiappPath)) {
+			U.die('tiapp.xml file does not exist at "' + tiappPath + '"');
+		}
+		return exports.XML.parseFromFile(tiappPath);
+	},
+	getProperty: function(doc, name) {
+		var props = doc.documentElement.getElementsByTagName('property');
+		for (var i = 0; i < props.length; i++) {
+			if (props.item(i).getAttribute('name') === name) {
+				return props.item(i);
+			}
+		}
+		return null;
+	},	
+	upStackSizeForRhino: function(dir) {
+		var doc = exports.tiapp.parse(dir);
+		var runtime = exports.XML.getNodeText(exports.tiapp.getProperty(doc, 'ti.android.runtime'));
+
+		if (runtime === 'rhino') {
+			var stackSize = exports.tiapp.getProperty(doc, 'ti.android.threadstacksize');
+			if (stackSize !== null) {
+				if (parseInt(stackSize.nodeValue) < 32768) {
+					stackSize.nodeValue('32768');
+				}
+			} else {
+				var node = doc.createElement('property');
+				var text = doc.createTextNode('32768');
+				node.setAttribute('name','ti.android.threadstacksize');
+				node.setAttribute('type','int');
+				node.appendChild(text);
+
+				doc.documentElement.appendChild(node);
+			}
+
+			// serialize the xml and write to tiapp.xml
+			var serializer = new XMLSerializer();
+			var newxml = serializer.serializeToString(doc);
+			fs.writeFileSync(path.join(dir,'tiapp.xml'),newxml,'utf8');
+		}
+	},
 	install: function(type, dir, opts) {
 		type || (type = 'module');
 		dir || (dir = './');

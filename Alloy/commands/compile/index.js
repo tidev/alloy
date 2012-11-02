@@ -4,6 +4,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	util = require('util'),
 	vm = require('vm'),
+	jsonlint = require('jsonlint'),
 	jsp = require("../../uglify-js/uglify-js").parser,
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
@@ -17,7 +18,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	buildPlatform,
-	compileConfig = {};
+	compileConfig = {},
+	theme;
 
 //////////////////////////////////////
 ////////// command function //////////
@@ -87,12 +89,23 @@ module.exports = function(args, program) {
 	});
 	logger.debug('project path = ' + paths.project);
 	logger.debug('app path = ' + paths.app);
-	logger.debug('');
 
 	// create compile config from paths and various alloy config files
 	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-	buildPlatform = compileConfig && compileConfig.alloyConfig && compileConfig.alloyConfig.platform ? compileConfig.alloyConfig.platform : null;
+	buildPlatform = compileConfig.alloyConfig.platform;
+	theme = compileConfig.theme;
+	logger.debug('platform = ' + buildPlatform);
+	logger.debug('theme = ' + theme);
+
+	// check theme for assets
+	if (theme) {
+		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
+		if (path.existsSync(themeAssetsPath)) {
+			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+		}
+	}
+	logger.debug('');
 
 	// process project makefiles
 	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
@@ -118,15 +131,21 @@ module.exports = function(args, program) {
 		!path.existsSync(path.join(paths.project,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
 		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), paths.project, {preserve:true})
 	}
-	U.tiapp.installModule(paths.project, {
-		id: 'ti.physicalSizeCategory',
-		platform: 'android',
-		version: '1.0'
-	});
+
+	if (buildPlatform === 'android') {
+		U.tiapp.installModule(paths.project, {
+			id: 'ti.physicalSizeCategory',
+			platform: 'android',
+			version: '1.0'
+		});
+
+		U.tiapp.upStackSizeForRhino(paths.project);
+	}
+
+	logger.debug('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
-	logger.debug('----- MVC GENERATION -----');
-	loadGlobalStyle(path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+	loadGlobalStyles(paths.app, theme);
 	
 	// Process all models
 	var models = processModels();
@@ -259,6 +278,21 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
 		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
+
+		if (theme && !manifest) {
+			var themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
+			var theStyle = dirname ? path.join(dirname,viewName+'.tss') : viewName+'.tss';
+			var themeStylesFile = path.join(themeStylesDir,theStyle);
+			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);	
+
+			if (path.existsSync(psThemeStylesFile)) {
+				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
+				_.extend(state.styles, CU.loadAndSortStyle(psThemeStylesFile,manifest));
+			} else if (path.existsSync(themeStylesFile)) {
+				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
+				_.extend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
+			}
+		}
 
 		// Load view from file into an XML document root node
 		try {
@@ -420,11 +454,19 @@ function processModels() {
 	return models;
 };
 
-function loadGlobalStyle(filepath) {
-	if (path.existsSync(filepath)) {
+function loadGlobalStyles(appPath, theme) {
+	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+
+	compileConfig.globalStyle = {};
+	if (path.existsSync(appGlobal)) {
 		logger.debug('[app.tss] global style processing...');
-		compileConfig.globalStyle = CU.loadStyle(filepath);
-	}
+		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
+	} 
+	if (theme && path.existsSync(themeGlobal)) {
+		logger.debug('[app.tss (theme:' + theme + ')] global style processing...');
+		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+	} 	
 }
 
 function optimizeCompiledCode() {

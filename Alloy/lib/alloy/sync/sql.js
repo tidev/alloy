@@ -96,7 +96,7 @@ function SQLiteMigrateDB() {
 			columns.push(k+" "+self.column(config.columns[k]));
 		}
 			
-		var sql = 'CREATE TABLE '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
+		var sql = 'CREATE TABLE IF NOT EXISTS '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
 		Ti.API.info(sql);
 		
 		db.execute(sql);
@@ -111,6 +111,7 @@ function SQLiteMigrateDB() {
 function Sync(model, method, opts) {
 	var table =  model.config.adapter.collection_name;
 	var columns = model.config.columns;
+	var resp = null;
 	
 	switch (method) {
 
@@ -128,12 +129,14 @@ function Sync(model, method, opts) {
 			values.push(id);
 			db.execute(sql, values);
 			model.id = id;
+			resp = model.toJSON();
 			break;
 
 		case 'read':
 			var sql = 'SELECT * FROM '+table;
 			var rs = db.execute(sql);
 			var len = 0;
+			var values = [];
 			while(rs.isValidRow())
 			{
 				var o = {};
@@ -147,14 +150,13 @@ function Sync(model, method, opts) {
 					var fn = rs.fieldName(c);
 					o[fn] = rs.fieldByName(fn);
 				});
-				var m = new model.config.Model(o);
-				model.models.push(m);
+				values.push(o);
 				len++;
 				rs.next();
 			}
 			rs.close();
 			model.length = len;
-			model.trigger('fetch');
+			len === 1 ? resp = values[0] : resp = values;
 			break;
 	
 		case 'update':
@@ -172,14 +174,21 @@ function Sync(model, method, opts) {
 		    var e = sql +','+values.join(',')+','+model.id;
 		    values.push(model.id);
 			db.execute(sql,values);
+			resp = model.toJSON();
 			break;
 
 		case 'delete':
 			var sql = 'DELETE FROM '+table+' WHERE id=?';
 			db.execute(sql, model.id);
 			model.id = null;
+			resp = model.toJSON();
 			break;
 	}
+    if (resp) {
+        opts.success(resp);
+        method === "read" && model.trigger("fetch");
+    } else opts.error("Record not found");
+	
 }
 
 function GetMigrationForCached(t,m) {
@@ -193,41 +202,45 @@ function GetMigrationForCached(t,m) {
 	return v;
 }
 
-function Migrate(migrations) {
+function Migrate(migrations, config) {
 	var prev;
 	var sqlMigration = new SQLiteMigrateDB;
 	var migrationIds = {}; // cache for latest mid by model name
 	
 	db.execute('BEGIN;');
 	
-	// iterate through all our migrations and call up/down and the last migration should
-	// have the up called but never the down -- the migrations come in pre sorted from
-	// oldest to newest based on timestamp
-	_.each(migrations,function(migration) {
-		var mctx = {};
-		migration(mctx);
-		var mid = GetMigrationForCached(mctx.name,migrationIds);
-		Ti.API.info('mid = '+mid+', name = '+mctx.name);
-		if (!mid || mctx.id > mid) {
-			Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
-			if (prev && _.isFunction(prev.down)) {
-				prev.down(sqlMigration);
+	if (migrations.length) {
+		// iterate through all our migrations and call up/down and the last migration should
+		// have the up called but never the down -- the migrations come in pre sorted from
+		// oldest to newest based on timestamp
+		_.each(migrations,function(migration) {
+			var mctx = {};
+			migration(mctx);
+			var mid = GetMigrationForCached(mctx.name,migrationIds);
+			Ti.API.info('mid = '+mid+', name = '+mctx.name);
+			if (!mid || mctx.id > mid) {
+				Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
+				if (prev && _.isFunction(prev.down)) {
+					prev.down(sqlMigration);
+				}
+				if (_.isFunction(mctx.up)) {
+					mctx.down(sqlMigration);
+					mctx.up(sqlMigration);
+				}
+				prev = mctx;
 			}
-			if (_.isFunction(mctx.up)) {
-				mctx.down(sqlMigration);
-				mctx.up(sqlMigration);
+			else {
+				Ti.API.info('skipping migration '+mctx.id+', already performed');
+				prev = null;
 			}
-			prev = mctx;
+		});
+		
+		if (prev && prev.id) {
+			db.execute('DELETE FROM migrations where model = ?', prev.name);
+			db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
 		}
-		else {
-			Ti.API.info('skipping migration '+mctx.id+', already performed');
-			prev = null;
-		}
-	});
-	
-	if (prev && prev.id) {
-		db.execute('DELETE FROM migrations where model = ?', prev.name);
-		db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
+	} else {
+		sqlMigration.createTable(config);
 	}
 	
 	db.execute('COMMIT;');
@@ -249,7 +262,7 @@ module.exports.afterModelCreate = function(Model) {
 	
 	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
 
-	Migrate(Model.migrations);
+	Migrate(Model.migrations, Model.prototype.config);
 
 	return Model;
 };

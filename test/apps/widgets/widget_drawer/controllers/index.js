@@ -12,7 +12,8 @@ $.drawer.init({
     ], 
     autoClose: true,
     gutter: 5,
-    overrideMenu: false // Set to true to see the drawer vs the activity menu
+    overrideMenu: false, // Set to true to see the drawer vs the activity menu
+    annoy: true
 });
 $.drawer.checkEnabled();
 

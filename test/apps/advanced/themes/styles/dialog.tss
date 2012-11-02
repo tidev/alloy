@@ -1,0 +1,38 @@
+"Window": {
+	backgroundColor: 'transparent'
+},
+"#cover": {
+	backgroundColor: "#000", 
+	opacity: 0.65
+},
+"#mainView": {
+	height: 155,
+	width: '85%',
+	borderWidth: 2,
+	borderRadius: 8
+},
+"#patienceLabel": {
+	top: 10
+},
+"#progressBack": {
+	width: 200, 
+	height: 30, 
+	top: 15
+},
+"#progressBack[platform=ios]": {
+	borderRadius: 16
+},
+"#progressFront": {
+	width: 50, 
+	left: 1, 
+	top: 1,
+	height: 28
+},
+"#progressFront[platform=ios]": {
+	borderRadius: 16
+},
+"#button": {
+	top: 15,
+	height: 50,
+	width: 120
+}

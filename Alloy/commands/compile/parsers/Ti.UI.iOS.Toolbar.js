@@ -1,51 +1,12 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils'),
-	CU = require('../compilerUtils');
-
-var FLEXSPACE = 'Ti.UI.createButton({\n' +
-'	systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE\n' +
-'})';
+var _ = require('../../../lib/alloy/underscore')._;
 
 exports.parse = function(node, state) {
-	return require('./base').parse(node, state, parse);
-};
-
-function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n',
-		hasItems = false;
-
-	// process all Items and create their array, if present
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(theNode) {
-		if (theNode.nodeName === 'Items' && !theNode.getAttribute('ns')) {
-			hasItems = true;
-			_.each(U.XML.getElementsFromNodes(theNode.childNodes), function(item) {
-				if (item.nodeName === 'FlexSpace' && !item.getAttribute('ns')) {
-					code += arrayName + '.push(' + FLEXSPACE + ');\n';
-				} else {
-					code += CU.generateNode(item, {
-						parent: {},
-						styles: state.styles,
-						post: function(node, state, args) {
-							return arrayName + '.push(' + state.parent.symbol + ');\n';
-						}
-					});
-				}
-			});
-
-			// get rid of the items when done
-			node.removeChild(theNode);
-		} 
+	state = _.extend(state, {
+		itemContainerDefinition: {
+			children: [
+				{ name:'Alloy.Abstract.Items', property:'items' }
+			]
+		}
 	});
-
-	// Create the initial Toolbar code and let it process its remaing children, if any
-	if (hasItems) {
-		state.extraStyle = CU.createVariableStyle('items', arrayName);
-	}
-	var toolbarState = require('./default').parse(node, state);
-	code += toolbarState.code;
-
-	// Update the parsing state
-	return _.extend(toolbarState, {code:code}); 
+	return require('./Alloy.Abstract._ItemContainer').parse(node, state);
 };

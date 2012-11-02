@@ -17,21 +17,16 @@ function parse(node, state, args) {
 	// Start the onCreateOptionsMenu() call
 	var code = activitySymbol + '.onCreateOptionsMenu = function(' + eventObject + ') {';
 
-	// iterate through all children
-	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child);
-
-		// make sure we are dealing with MenuItems
-		if (childArgs.fullname === 'Alloy.Require') {
-			var inspect = CU.inspectRequireNode(child);
-			_.each(inspect.names, function(name) {
-				if (name !== 'Ti.Android.MenuItem') {
-					U.die('Menu <Require> child at position ' + i + ' has elements that are not MenuItems.');
-				}
-			});
-		} else if (childArgs.fullname !== 'Ti.Android.MenuItem') {
-			U.die('Menu child at position ' + i + ' is not a MenuItem, or a <Require> containing MenuItems.');
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+		var childArgs = CU.getParserArgs(child, state);
+		var theNode = CU.validateNodeName(child, 'Ti.Android.MenuItem');
+		
+		// Make sure we are dealing with MenuItems
+		if (!theNode) {
+			U.die([
+				'Invalid child type under <Menu>: ' + childArgs.fullname,
+				'<Menu> must have only <MenuItem> elements as children'
+			]);
 		}
 
 		// generate code for the MenuItem
@@ -42,7 +37,7 @@ function parse(node, state, args) {
 			},
 			styles: state.styles
 		});
-	}
+	});
 
 	// close the onCreateOptionsMenu() call
 	code += '};';

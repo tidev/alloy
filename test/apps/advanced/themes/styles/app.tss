@@ -1,0 +1,19 @@
+"Label": {
+	color: '#000'
+},
+"#index": {
+	backgroundColor: '#fff'
+},
+"#slider": {
+	bottom: 100,
+	width: 250
+},
+"#mainView": {
+	backgroundColor: '#fff'
+},
+"#progressBack": {
+	backgroundColor: '#333'
+},
+"#progressFront": {
+	backgroundColor: '#00f'
+}

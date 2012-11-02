@@ -23,8 +23,9 @@ exports.generateMigrationFileName = function(t) {
 exports.generate = function(name, type, program, args) {
 	args = args || {};
 	var ext = '.'+CONST.FILE_EXT[type];
+	var paths = U.getAndValidateProjectPaths(program.outputPath);
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
-	var dir = path.join(program.outputPath,CONST.DIR[type],path.dirname(name));
+	var dir = path.join(paths.app,CONST.DIR[type],path.dirname(name));
 	var file = path.join(dir,path.basename(name,ext)+ext);
 
 	if (path.existsSync(file) && !program.force) {

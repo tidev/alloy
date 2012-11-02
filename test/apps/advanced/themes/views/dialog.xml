@@ -1,0 +1,12 @@
+<Alloy>
+  <Window>
+    <View id="cover"/>
+    <View id="mainView" layout="vertical">
+      <Label id="patienceLabel">Testing your patience...</Label>
+      <View id="progressBack">
+        <View id="progressFront"/>
+      </View>
+      <Button id="button" onClick="closeDialog">I quit!</Button>
+    </View>
+  </Window>
+</Alloy>

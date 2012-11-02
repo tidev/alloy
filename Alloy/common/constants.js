@@ -7,9 +7,14 @@ exports.GLOBAL_STYLE = 'app.tss';
 exports.ROOT_NODE = 'Alloy';
 exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
+exports.PLUGIN_NAME = 'ti.alloy';
 
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
+
+exports.INSTALL_TYPES = ['plugin'];
+
+exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 
 exports.FILE_EXT = {
 	VIEW: 'xml',
