@@ -1,13 +1,13 @@
-/** 
+/**
  * @class Alloy.builtins.datetime
  * A collection of utilities for manipulating Date objects.
- * To use the datetime builtin library, 
+ * To use the datetime builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
  *		var datetime = require('alloy/datetime');
  *		var date = new Date('2012/08/31 13:44:45');
  *		Ti.API.info(datetime.formatAsDOWMonthDayYear(date)); // --> 'Friday August 31st, 2012'
- *		Ti.API.info(datetime.formatAsTime(date)); // --> '1:30 PM' 	
+ *		Ti.API.info(datetime.formatAsTime(date)); // --> '1:30 PM'
  */
 
 exports.stringToDate = function (str) {
@@ -25,7 +25,7 @@ exports.stringToDate = function (str) {
 
 /**
  * @method formatAsTime
- * Converts a JavaScript Date object to a 12-hour time string in the format 'hh:mm' followed by 
+ * Converts a JavaScript Date object to a 12-hour time string in the format 'hh:mm' followed by
  * 'AM' or 'PM'.
  * @param {Date} time Date object to convert.
  * @return {String} Formatted time string.
@@ -111,7 +111,7 @@ exports.formatAsDOWMonthDayYear = function (time) {
 
 /**
  * @method formatAsShort
- * Converts a JavaScript Date object to a string describing the date. Values can be 'Today', 
+ * Converts a JavaScript Date object to a string describing the date. Values can be 'Today',
  * 'Tomorrow', 'Yesterday', day of the week if it is within seven days of the current day
  * or the format 'MM/DD/YYYY' for all other cases.
  * @param {Date} time Date object to convert.
@@ -151,6 +151,62 @@ exports.formatAsShort = function (time) {
         day = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
     }
     return day; // + ' @' + exports.getTime(date);
+};
+
+/**
+ * @method formatAsRFC822
+ * Converts a JavaScript Date object to a string in RFC822 format
+ * For more information see: http://www.w3.org/Protocols/rfc822/#z28
+ * @param {Date} time Date object to convert.
+ * @param {Boolean} omitDOW If true, the day-of-week won't be included in the date (default false)
+ * @return {String} Date formatted in RFC822 format.
+ */
+exports.formatAsRFC822 = function (time, omitDOW) {
+    var date = exports.stringToDate(time);
+    if (!date || !date.getTime)
+        return '';
+
+    var dow = exports.getDayOfWeek(date);
+    var month = exports.getMonth(date);
+    var day = date.getDate();
+    if (day < 10)
+        day = '0' + day;
+    var year = date.getFullYear();
+
+    var hours = date.getHours();
+    if (hours < 10)
+        hours = '0' + hours;
+    var minutes = date.getMinutes();
+    if (minutes < 10)
+        minutes = '0' + minutes;
+    var seconds = date.getSeconds();
+    if (seconds < 10)
+        seconds = '0' + seconds;
+
+    var tz = date.getTimezoneOffset();
+    var tzHours = Math.floor(tz/60);
+    var tzMinutes = Math.abs(tz%60);
+
+    var timezone = new String();
+    timezone += (tzHours > 0) ? "-" : "+";
+    var absHours = Math.abs(tzHours)
+    timezone += (absHours < 10) ? "0" + absHours : absHours;
+    timezone += ((tzMinutes == 0) ? "00" : tzMinutes);
+
+    var dtm = new String();
+
+    if (omitDOW != true)
+        dtm = dow.substring(0, 3) + ", ";
+
+    dtm += day + " ";
+    dtm += month.substring(0, 3) + " ";
+    dtm += year + " ";
+    dtm += hours + ":";
+    dtm += minutes + ":";
+    dtm += seconds + " ";
+    dtm += timezone;
+
+    return dtm;
 };
 
 /**
