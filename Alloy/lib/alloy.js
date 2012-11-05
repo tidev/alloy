@@ -107,6 +107,10 @@ exports.A = function(t, type, parent) {
 			return;
 		}
 
+		t.trigger = function() {
+			ctx.trigger.apply(ctx, Array.prototype.slice.apply(arguments));
+		}
+
 		t.on = function(e,cb,context) {
 			var wcb = function(evt) {
 				try {
