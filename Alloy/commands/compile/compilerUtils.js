@@ -101,8 +101,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			runtime: "Alloy.isTablet"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor'],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', 'collection'],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', 'collection'],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
