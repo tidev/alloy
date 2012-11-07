@@ -37,6 +37,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
 	IMPLICIT_NAMESPACES = {
 		// Alloy
+		Collection: NS_ALLOY,
 		Require: NS_ALLOY,
 		Widget: NS_ALLOY,
 
@@ -149,6 +150,9 @@ exports.getParserArgs = function(node, state, opts) {
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
 
+	// handle collections
+	var collection = node.getAttribute('collection');
+
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
 	if (doSetId) { node.setAttribute('id', id); }
@@ -177,7 +181,8 @@ exports.getParserArgs = function(node, state, opts) {
 	}
 
 	// get create arguments and events from attributes
-	var createArgs = {}, events = [];
+	var createArgs = {}, 
+		events = [];
 	var attrs = _.contains(['Alloy.Require'], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
@@ -196,6 +201,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id: id, 
 		fullname: fullname,
 		formFactor: node.getAttribute('formFactor'),
+		collection: collection,
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
@@ -254,6 +260,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
+	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
 	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
