@@ -335,7 +335,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
-				'Ti.UI.TabGroup'
+				'Ti.UI.TabGroup',
+				'Alloy.Collection'
 			];
 			_.each(rootChildren, function(node) {
 				var found = true;
@@ -363,9 +364,19 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// Generate each node in the view
+		var assignedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-			var defaultId = i === 0 ? viewName : undefined;
-			template.viewCode += CU.generateNode(node, state, defaultId, true);
+			var defaultId = undefined;
+			var isTopLevel = true;
+			if (!assignedDefaultId && CU.getNodeFullname(node) !== 'Alloy.Collection') {
+				assignedDefaultId = true;
+				defaultId = viewName;
+			} else if (CU.getNodeFullname(node) === 'Alloy.Collection') {
+				isTopLevel = false;
+			}
+
+			//var defaultId = !assignedDefaultId ? viewName : undefined;
+			template.viewCode += CU.generateNode(node, state, defaultId, isTopLevel);
 		});
 	}
 
