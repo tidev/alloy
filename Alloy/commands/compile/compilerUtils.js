@@ -641,6 +641,7 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
 	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
+		bindingRegex = /^\{(.+)\}$/,
 		styleCollection = [],
 		lastObj = {};
 
@@ -703,6 +704,21 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// add in any final styles
 	_.extend(lastObj, extraStyle || {});
 	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
+
+	// substitutions for binding
+	_.each(styleCollection, function(style) {
+		_.each(style.style, function(v,k) {
+			if (k.indexOf('title') !== -1) {
+				console.log(k + ' = ' + v);
+			}
+			if (_.isString(v)) {
+				var match = v.match(bindingRegex);
+				if (match !== null) {
+					style.style[k] = STYLE_EXPR_PREFIX + CONST.MODEL_VAR + ".get('" + match[1] + "')";
+				}
+			}
+		});
+	});
 
 	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
 	// console.log(require('util').inspect(styleCollection, false, null));
