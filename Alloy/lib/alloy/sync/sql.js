@@ -187,7 +187,9 @@ function Sync(model, method, opts) {
     if (resp) {
         opts.success(resp);
         method === "read" && model.trigger("fetch");
-    } else opts.error("Record not found");
+    } else {
+    	opts.error("Record not found");
+    }
 	
 }
 
