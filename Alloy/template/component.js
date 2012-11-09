@@ -1,13 +1,15 @@
 var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._,
-	A$ = Alloy.A;
+	A$ = Alloy.A,
+	<%= modelVariable %>;
 
 <%= WPATH %>
 
 function Controller() {
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	
+	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
 	var $ = this;
 	var exports = {};
 	<%= exportsCode %>
