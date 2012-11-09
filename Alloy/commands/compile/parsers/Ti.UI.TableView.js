@@ -10,6 +10,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
+		localModel = CU.generateUniqueId(),
 		code = '',
 		isSearchBar = false,
 		hasRows = false,
@@ -25,10 +26,12 @@ function parse(node, state, args) {
 			var child = children[i],
 				childArgs = CU.getParserArgs(child);
 
-			// validate children of tableview
+			// TODO: validate children of tableview
 
 			itemCode += CU.generateNode(child, {
 				parent: {},
+				local: true,
+				model: localModel,
 				styles: state.styles,
 				post: function(node, state, args) {
 					return 'rows.push(' + state.parent.symbol + ');\n';
@@ -37,12 +40,13 @@ function parse(node, state, args) {
 		}
 
 		// create fetch handler
+
 		var col = 'Alloy.Collections[\'' + args.collection + '\']';
 		code += col + ".on('fetch', function(e) { ";
 		code += "	var len = " + col + ".models.length;";
 		code += "	var rows = [];";
 		code += "	for (var i = 0; i < len; i++) {";
-		code += "		var " + CONST.MODEL_VAR + " = " + col + ".models[i];";
+		code += "		var " + localModel + " = " + col + ".models[i];";
 		code += itemCode;
 		code += "	}";
 		code += tableState.parent.symbol + ".setData(rows);";
