@@ -9,8 +9,13 @@ function parse(node, state, args) {
 	var createFunc = 'create' + node.nodeName,
 		code = '';
 
+	// make symbol a local variable if necessary
+	if (state.local) {
+		args.symbol = CU.generateUniqueId(); 
+	}
+
 	// Generate runtime code
-	code += args.symbol + " = A$(" + args.ns + "." + createFunc + "(\n";
+	code += (state.local ? 'var ' : '') + args.symbol + " = A$(" + args.ns + "." + createFunc + "(\n";
 	code += CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
@@ -29,6 +34,7 @@ function parse(node, state, args) {
 			node: node,
 			symbol: args.symbol
 		},
+		local: state.local || false,
 		styles: state.styles,
 		code: code
 	}
