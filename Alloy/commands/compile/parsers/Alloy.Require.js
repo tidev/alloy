@@ -67,7 +67,7 @@ function parse(node, state, args) {
 	// add model to createArgs if binding
 	if (state.model) {
 		var modelObj = {};
-		modelObj[CONST.MODEL_VAR] = '__ALLOY_EXPR__--'+state.model;
+		modelObj[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model;
 		args.createArgs = _.extend(args.createArgs || {}, modelObj);
 	}
 

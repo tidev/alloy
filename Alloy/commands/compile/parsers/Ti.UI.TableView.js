@@ -16,7 +16,7 @@ function parse(node, state, args) {
 		hasRows = false,
 		searchBarName;
 
-	if (args.collection) {
+	if (args[CONST.BIND_COLLECTION]) {
 		var tableState = require('./default').parse(node, state);
 		code += tableState.code;
 
@@ -41,7 +41,7 @@ function parse(node, state, args) {
 
 		// create fetch handler
 
-		var col = 'Alloy.Collections[\'' + args.collection + '\']';
+		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
 		code += col + ".on('fetch', function(e) { ";
 		code += "	var len = " + col + ".models.length;";
 		code += "	var rows = [];";

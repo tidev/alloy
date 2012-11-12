@@ -102,8 +102,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			runtime: "Alloy.isTablet"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', 'collection'],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', 'collection'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
@@ -150,8 +150,10 @@ exports.getParserArgs = function(node, state, opts) {
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
 
-	// handle collections
-	var collection = node.getAttribute('collection');
+	// handle binding arguments
+	var bindObj = {};
+	bindObj[CONST.BIND_COLLECTION] = node.getAttribute(CONST.BIND_COLLECTION);
+	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE); 
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
@@ -195,20 +197,19 @@ exports.getParserArgs = function(node, state, opts) {
 		}
 	});
 	
-	return {
+	return _.extend({
 		ns: ns,
 		name: name,
 		id: id, 
 		fullname: fullname,
 		formFactor: node.getAttribute('formFactor'),
-		collection: collection,
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
 		platform: platformObj,
 		createArgs: createArgs,
 		events: events
-	};
+	}, bindObj);
 };
 
 exports.generateCode = function(ast) {
@@ -714,7 +715,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					style.style[k] = STYLE_EXPR_PREFIX + CONST.MODEL_VAR + ".get('" + match[1] + "')";
+					style.style[k] = STYLE_EXPR_PREFIX + CONST.BIND_MODEL_VAR + ".get('" + match[1] + "')";
 				}
 			}
 		});
