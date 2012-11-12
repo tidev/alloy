@@ -17,6 +17,7 @@ function parse(node, state, args) {
 		searchBarName;
 
 	if (args[CONST.BIND_COLLECTION]) {
+		var where = args[CONST.BIND_WHERE];
 		var tableState = require('./default').parse(node, state);
 		code += tableState.code;
 
@@ -40,13 +41,13 @@ function parse(node, state, args) {
 		}
 
 		// create fetch handler
-
 		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
 		code += col + ".on('fetch', function(e) { ";
-		code += "	var len = " + col + ".models.length;";
+		code += "	var models = " + (where ? where + "(" + col + ")" : col + ".models") + ";";
+		code += "	var len = models.length;";
 		code += "	var rows = [];";
 		code += "	for (var i = 0; i < len; i++) {";
-		code += "		var " + localModel + " = " + col + ".models[i];";
+		code += "		var " + localModel + " = models[i];";
 		code += itemCode;
 		code += "	}";
 		code += tableState.parent.symbol + ".setData(rows);";
