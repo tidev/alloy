@@ -14,6 +14,7 @@ exports.BIND_COLLECTION = 'dataCollection';
 exports.BIND_WHERE = 'dataWhere';
 exports.BIND_MODEL_VAR = '$model';
 
+exports.EXPR_PREFIX = '#';
 
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
