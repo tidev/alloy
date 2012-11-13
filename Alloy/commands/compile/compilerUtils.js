@@ -154,6 +154,7 @@ exports.getParserArgs = function(node, state, opts) {
 	var bindObj = {};
 	bindObj[CONST.BIND_COLLECTION] = node.getAttribute(CONST.BIND_COLLECTION);
 	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE); 
+	bindObj[CONST.BIND_TRANSFORM] = node.getAttribute(CONST.BIND_TRANSFORM); 
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
@@ -715,7 +716,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					style.style[k] = STYLE_EXPR_PREFIX + CONST.BIND_MODEL_VAR + ".get('" + match[1] + "')";
+					var transform = CONST.BIND_MODEL_VAR + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+					var standard = CONST.BIND_MODEL_VAR + ".get('" + match[1] + "')";
+					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
+					style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
 				}
 			}
 		});
