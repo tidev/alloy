@@ -716,8 +716,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					var transform = CONST.BIND_MODEL_VAR + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-					var standard = CONST.BIND_MODEL_VAR + ".get('" + match[1] + "')";
+					var modelVar = CONST.BIND_MODEL_VAR;
+					var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+					var standard = modelVar + ".get('" + match[1] + "')";
 					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
 					style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
 				}
