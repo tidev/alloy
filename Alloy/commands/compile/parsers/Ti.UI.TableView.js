@@ -18,6 +18,7 @@ function parse(node, state, args) {
 
 	if (args[CONST.BIND_COLLECTION]) {
 		var where = args[CONST.BIND_WHERE];
+		var transform = args[CONST.BIND_TRANSFORM];
 		var tableState = require('./default').parse(node, state);
 		code += tableState.code;
 
@@ -42,12 +43,15 @@ function parse(node, state, args) {
 
 		// create fetch handler
 		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-		code += col + ".on('fetch', function(e) { ";
-		code += "	var models = " + (where ? where + "(" + col + ")" : col + ".models") + ";";
+		var whereCode = where ? where + "(" + col + ")" : col + ".models";
+		var transformCode = transform ? transform + "(" + localModel + ")" : "{}";
+		code += col + ".on('fetch change', function(e) { ";
+		code += "	var models = " + whereCode + ";";
 		code += "	var len = models.length;";
 		code += "	var rows = [];";
 		code += "	for (var i = 0; i < len; i++) {";
 		code += "		var " + localModel + " = models[i];";
+		code += "		" + localModel + ".__transform = " + transformCode + ";";
 		code += itemCode;
 		code += "	}";
 		code += tableState.parent.symbol + ".setData(rows);";
