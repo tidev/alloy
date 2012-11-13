@@ -697,9 +697,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	_.extend(lastObj, extraStyle || {});
 	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
 
-	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
-	// console.log(require('util').inspect(styleCollection, false, null));
-
 	function processStyle(style, fromArray) {
 		style = fromArray ? {0:style} : style;
 		for (var sn in style) {
