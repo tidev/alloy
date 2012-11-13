@@ -725,9 +725,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 		});
 	});
 
-	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
-	// console.log(require('util').inspect(styleCollection, false, null));
-
 	function processStyle(style, fromArray) {
 		style = fromArray ? {0:style} : style;
 		for (var sn in style) {
