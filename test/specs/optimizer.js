@@ -38,52 +38,42 @@ var tests = [
 	['var a = -1.02;', 'var a=-1.02'],
 	['var a = !1', 'var a=!1'],
 	['var a = true ? 1 : 0;', 'var a=true?1:0'],
+	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num=isNaN(amount)||amount===""||amount===null?0:amount'],
 
-];
-
-/*
-var tests = 
-[
-
-	
-	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num=isNaN(amount)||amount===""||amount===null?0:amount', iosDefines],
-	
 	// make sure we didn't break normal if conditions
-	['if (true) { var a = 1; } else { var a = 2; }', "if(true){var a=1}else{var a=2}", iosDefines],
-	
+	['if (true) { var a = 1; } else { var a = 2; }', "if(true){var a=1}else{var a=2}"],
+
 	// check platform conditionals (if/else)
-	["if (Titanium.Platform.name === 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
-	["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 2; } else { var a = 1; }","var a=1",iosDefines],
-	["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
-	["if (Titanium.Platform['name'] == 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",iosDefines],
-	["if (Titanium.Platform.name !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
-	["if (Titanium.Platform['name'] !== 'iPhone OS'){ var a = 1; } else { var a = 2; }","var a=1",androidDefines],
+	["if (Titanium.Platform.name === '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=1"],
+	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
+	["if (Titanium.Platform['name'] == '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=1"],
+	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
+	["if (Titanium.Platform['name'] !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
 
 	// check platform conditional assignments
-	["var platform = Ti.Platform['name'] === 'iPhone OS'", "var platform=1", iosDefines],
-	["var platform = Ti.Platform[\"name\"] === 'iPhone OS'", "var platform=1", iosDefines],
-	["var platform = Ti.Platform.name === 'iPhone OS'", "var platform=1", iosDefines],
-	["var platform = Ti.Platform.name === 'iPhone OS'", "var platform=0", androidDefines],
-	["var platform = (Ti.Platform.name === 'iPhone OS')", "var platform=1", iosDefines],
-	["var platform = (Ti.Platform.name === 'iPhone OS') ? 1 : 0", "var platform=1", iosDefines],
-	["var platform = (Ti.Platform.name === 'iPhone OS') ? true : false", "var platform=true", iosDefines],
-	["var platform = (Ti.Platform.name === 'iPhone OS') ? 1 : 0", "var platform=0", androidDefines],
-	["var platform = (Ti.Platform.name === 'iPhone OS') ? true : false", "var platform=false", androidDefines],
-	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"true\"", iosDefines],
-	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"false\"", androidDefines],
-	["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", androidDefines],
-	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", iosDefines],
+	["var platform = Ti.Platform['name'] === '<%= Ti_Platform_name %>'", "var platform=1"],
+	["var platform = Ti.Platform[\"name\"] === '<%= Ti_Platform_name %>'", "var platform=1"],
+	["var platform = Ti.Platform.name === '<%= Ti_Platform_name %>'", "var platform=1"],
+	["var platform = Ti.Platform.name === 'iPhone OS'", "var platform=0", notPlatform('ios')],
+	["var platform = (Ti.Platform.name === '<%= Ti_Platform_name %>')", "var platform=1"],
+	["var platform = (Ti.Platform.name === '<%= Ti_Platform_name %>') ? 1 : 0", "var platform=1"],
+	["var platform = (Ti.Platform.name === '<%= Ti_Platform_name %>') ? true : false", "var platform=true"],
+	["var platform = (Ti.Platform.name === 'iPhone OS') ? 1 : 0", "var platform=0", notPlatform('ios')],
+	["var platform = (Ti.Platform.name === 'iPhone OS') ? true : false", "var platform=false", notPlatform('ios')],
+	["var platform = (Ti.Platform.name == '<%= Ti_Platform_name %>') ? 'true' : 'false'", "var platform=\"true\""],
+	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"false\"", notPlatform('ios')],
+	["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", ['android']],
+	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0"],
+
+	// shouldn't attempt to process anything other than strings
+	["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if(Ti.Platform.name===couldBeAnything()){var a=1}else{var a=2}"],
 
 	// FAIL: doesn't properly handle conditionals without curly braces (false negative, breaks code)
-	["if (Ti.Platform.osname === 'android') var a = 1; else var a = 2;","var a=1;",androidDefines],
-	
-	// PASS: shouldn't attempt to process anything other than strings
-	["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if(Ti.Platform.name===couldBeAnything()){var a=1}else{var a=2}",iosDefines],
+	["if (Ti.Platform.name === '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=1;"],
 
 	// FAIL: Only works if Ti.Platform.* is on the left hand side (false negative)
-	["if ('android' === Ti.Platform.osname) { var a = 1; } else { a = 2; }","var a=1;",androidDefines],
+	["if ('<%= Ti_Platform_name %>' === Ti.Platform.osname) { var a = 1; } else { a = 2; }","var a=1;"],
 ];
-*/
 
 // Prepare each platform with values we can swap out at compile time.
 // This means less walks over the native bridge, which means better performance.
