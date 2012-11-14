@@ -9,6 +9,7 @@ exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.PLUGIN_NAME = 'ti.alloy';
 
+exports.PLATFORMS = ['android','ios','mobileweb'];
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 
