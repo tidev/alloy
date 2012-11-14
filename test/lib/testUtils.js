@@ -155,6 +155,12 @@ exports.addMatchers = function() {
 			},
 			toExist: function(expected) {
 				return path.existsSync(this.actual);
+			},
+			toBeArray: function(expected) {
+				return _.isArray(this.actual);
+			},
+			toBeObject: function(expected) {
+				return _.isObject(this.actual);
 			}
 		});
 	});
