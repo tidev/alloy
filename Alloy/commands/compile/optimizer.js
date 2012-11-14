@@ -92,6 +92,11 @@ function processVarEntry()
 		{
 			return ["var",[[rhs[0],["string","android"]]]]
 		}
+		if ((varname == 'Ti.Platform.osname' || varname == 'Titanium.Platform.osname') &&
+			platformDefines.OS_MOBILEWEB && platformName === 'mobileweb')
+		{
+			return ["var",[[rhs[0],["string","mobileweb"]]]]
+		}
 	}
 	var isConditionalAssignment;
 	try
