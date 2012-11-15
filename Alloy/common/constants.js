@@ -9,7 +9,6 @@ exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.PLUGIN_NAME = 'ti.alloy';
 
-
 exports.BIND_COLLECTION = 'dataCollection';
 exports.BIND_WHERE = 'dataFilter';
 exports.BIND_TRANSFORM = 'dataTransform';
@@ -18,6 +17,7 @@ exports.BIND_MODEL_VAR = '$model';
 
 exports.EXPR_PREFIX = '#';
 
+exports.PLATFORMS = ['android','ios','mobileweb'];
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 exports.INSTALL_TYPES = ['plugin'];

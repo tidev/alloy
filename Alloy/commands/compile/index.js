@@ -509,6 +509,10 @@ function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
 			'mangle',
+
+			// TODO: http://jira.appcelerator.org/browse/ALOY-393
+			// 'optimizer',
+			
 			'squeeze'
 		],
 		modLocation = './ast/';
