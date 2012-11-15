@@ -2,7 +2,8 @@
 	height: '50dp',
 	backgroundColor: '#fff',
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
-	focusable: false
+	focusable: false,
+	className: 'myrow'
 },
 "#check": {
 	image: '/tick_gray_64.png',
