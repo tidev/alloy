@@ -10,7 +10,7 @@ var jsp = require("../../uglify-js/uglify-js").parser,
 	logger = require('../../common/logger.js'),
 	U = require('../../utils'),
 	platformDefines,
-	platformName
+	platformName, platformOsName
 ;
 
 var JSON_NULL = JSON.parse('null');
@@ -40,13 +40,11 @@ function getVariableStringValue(a)
 	return p.substring(0,p.length-1);
 }
 
-function isEqualityOperation(v)
-{
+function isEqualityOperation(v) {
 	return (v in EQUALITY_SIGNS);
 }
 
-function isEqualOp(v)
-{
+function isEqualOp(v) {
 	return (v === '===' || v === '==');
 }
 
@@ -178,17 +176,27 @@ function processVar()
 	return this;
 }
 
+function processObject() {
+	var translate = getVariableStringValue(this);
+	if (_.contains(['Ti.Platform.name','Titanium.Platform.name'], translate) && platformName) {
+		return ['string',platformName];
+	} else if (_.contains(['Ti.Platform.osname','Titanium.Platform.osname'], translate) && platformOsName) {
+		return ['string',platformOsName];
+	}
+	return null;
+}
+
 function processIf() 
 {
 	// if [0]
 	// binary [1],
 	// iflogic [2],
 	// elselogic [3]
-	if (this[1][0] === 'binary' && isEqualityOperation(this[1][1]))
+	var op = this[1][1];
+	if (this[1][0] === 'binary' && isEqualityOperation(op))
 	{
 		var lhs = this[1][2];
 		var rhs = this[1][3];
-		var op = this[1][1];
 
 		// right hand must be a string
 		if (rhs[0] !== 'string') {
@@ -249,16 +257,24 @@ function optimize(ast, defines, fn) {
 		platformDefines = defines;
 
 		// determine platform name from defines
-		if (platformDefines.OS_IOS) { platformName = 'iPhone OS'; }
-		else if (platformDefines.OS_ANDROID) { platformName = 'android'; }
-		else if (platformDefines.OS_MOBILEWEB) { platformName = 'mobileweb'; }
-		else { platformName = 'unknown'; }
+		if (platformDefines.OS_IOS) { 
+			platformName = 'iPhone OS'; 
+			platformOsName = null;
+		} else if (platformDefines.OS_ANDROID) { 
+			platformOsName = platformName = 'android'; 
+		} else if (platformDefines.OS_MOBILEWEB) { 
+			platformOsName = platformName = 'mobileweb'; 
+		} else {
+			platformName = platformOsName = null;
+		}
 
 		// walk the AST looking for ifs and vars
 		var w = pro.ast_walker();
 		return w.with_walkers({
-				"if" : processIf,
-				"var" :processVar
+				"dot": processObject,
+				"sub": processObject,
+				//"if" : processIf,
+				//"var" :processVar
 		}, function() {
 			return w.walk(ast);
 		});
