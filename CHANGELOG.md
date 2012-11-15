@@ -5,11 +5,12 @@
 ## Coming Features
 The following are planned features for the next release:
 * [ALOY-360](http://jira.appcelerator.org/browse/ALOY-360). Model-View binding in markup.
+* [ALOY-104](http://jira.appcelerator.org/browse/ALOY-104). Enable Model-View binding on TableViews.
 
 ## 0.3.2 (15 November 2012)
 
 ### Bug fixes and improvements
-* [ALOY-353](http://jira.appcelerator.org/browse/ALOY-353). Support Backbone trigger method with Titanium proxies.
+* [ALOY-353](http://jira.appcelerator.org/browse/ALOY-353). Support all Backbone eventing in Titanium proxies, on(), off(), trigger(). Fixed multiple event firing bug with on().
 * [ALOY-355](http://jira.appcelerator.org/browse/ALOY-355). Improve path handling in compiler plugin for OS X.
 * [ALOY-356](http://jira.appcelerator.org/browse/ALOY-356). Remove string builtin dependency to shorten compilation time.
 * [ALOY-365](http://jira.appcelerator.org/browse/ALOY-365). Add Alloy.globals namespace for global context.
