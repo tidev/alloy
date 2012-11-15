@@ -231,21 +231,21 @@ function processIf()
 	return null;
 }
 
+// strips null and undefined values out of Alloy styles
 exports.optimizeStyle = function(styleList) {
 	for (var style in styleList) {
 		for (var key in styleList[style]) {
 			var v = styleList[style][key];
-			if (v == JSON_NULL || typeof(v)==='undefined' || typeof(v)==='null') {
+			if (v == JSON_NULL || typeof(v) === 'undefined' || typeof(v) === 'null') {
 				delete styleList[style][key];
 			} 
 		}
 	}
 }
 
-function optimize(ast, defines, fn)
-{
-	try
-	{
+// main function for optimizing runtime Titanium Javascript code
+function optimize(ast, defines, fn) {
+	try {
 		platformDefines = defines;
 
 		// determine platform name from defines
@@ -256,19 +256,14 @@ function optimize(ast, defines, fn)
 
 		// walk the AST looking for ifs and vars
 		var w = pro.ast_walker();
-		return w.with_walkers(
-			{
+		return w.with_walkers({
 				"if" : processIf,
 				"var" :processVar
-			}
-		, function()
-		{
+		}, function() {
 			return w.walk(ast);
 		});
-	}
-	catch(E)
-	{
-		logger.error('Error compiling source ('+fn+'). '+E+'\n'+E.stack);
+	} catch (e) {
+		logger.error('Error compiling source (' + fn + '). ' + e + '\n' + e.stack);
 		return ast;
 	}
 }
