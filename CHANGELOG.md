@@ -8,7 +8,7 @@ The following are planned features for the next release:
 
 ## 0.3.2 (15 November 2012)
 
-### Bugs fixes and improvements
+### Bug fixes and improvements
 * [ALOY-353](http://jira.appcelerator.org/browse/ALOY-353). Support Backbone trigger method with Titanium proxies.
 * [ALOY-355](http://jira.appcelerator.org/browse/ALOY-355). Improve path handling in compiler plugin for OS X.
 * [ALOY-356](http://jira.appcelerator.org/browse/ALOY-356). Remove string builtin dependency to shorten compilation time.
