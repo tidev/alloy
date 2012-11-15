@@ -497,6 +497,7 @@ function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
 			'mangle',
+			// 'optimizer',
 			'squeeze'
 		],
 		modLocation = './ast/';
