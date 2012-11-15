@@ -19,6 +19,13 @@ var tests = [
 	['var a = Ti.Platform.name!="iPhone OS"', 'var a=!1', ['ios']],
 	['var a = Ti.Platform.name=="iPhone OS"', 'var a=!1', notPlatform('ios')],
 	['var a, b = Ti.Platform.name=="<%= Titanium_Platform_name %>", c = 2;', 'var a,b=!0,c=2'],
+	['var a = "<%= Titanium_Platform_name %>"==Ti.Platform.name ? 1 : 0', 'var a=1'],
+	['var a = "<%= Titanium_Platform_name %>"==Ti.Platform.name, b', 'var a=!0,b'],
+	['var a = "<%= Titanium_Platform_name %>"==Ti.Platform.name, b, c = 2', 'var a=!0,b,c=2'],
+	['var a = "<%= Titanium_Platform_name %>"==Ti.Platform.name', 'var a=!0'],
+	['var a = "iPhone OS"!=Ti.Platform.name', 'var a=!1', ['ios']],
+	['var a = "iPhone OS"==Ti.Platform.name', 'var a=!1', notPlatform('ios')],
+	['var a, b = "<%= Titanium_Platform_name %>"==Ti.Platform.name, c = 2;', 'var a,b=!0,c=2'],
 	['var a = "1"', 'var a="1"'],
 	['var a = true', 'var a=!0'],
 	['var a = 1', 'var a=1'],
@@ -74,11 +81,13 @@ var tests = [
 	["if (Ti.Platform.name === some.Other.Value) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"===some.Other.Value)var a=1;else var a=2"],
 	["if (Ti.Platform.name !== aVariable) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"!==aVariable)var a=1;else var a=2"],
 
-	// FAIL: doesn't properly handle conditionals without curly braces (false negative, breaks code)
+	// properly handles conditionals without curly braces
 	["if (Ti.Platform.name === '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=1"],
 	["if (Ti.Platform.name !== '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=2"],
+	["if ('<%= Ti_Platform_name %>' === Ti.Platform.name) var a = 1; else var a = 2;","var a=1"],
+	["if ('<%= Ti_Platform_name %>' !== Ti.Platform.name) var a = 1; else var a = 2;","var a=2"],
 
-	// FAIL: Only works if Ti.Platform.* is on the left hand side (false negative)
+	// works if Ti.Platform.* is on the left or right hand side 
 	["if ('<%= Ti_Platform_name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }","var a=1"],
 ];
 
