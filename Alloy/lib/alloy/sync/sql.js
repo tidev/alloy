@@ -108,7 +108,7 @@ function SQLiteMigrateDB() {
 	};
 }
 
-function Sync(model, method, opts) {
+function Sync(method, model, opts) {
 	var table =  model.config.adapter.collection_name;
 	var columns = model.config.columns;
 	var resp = null;
