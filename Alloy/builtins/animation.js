@@ -5,7 +5,7 @@
  * `require` call. For example:
  * 
  *     var animation = require('alloy/animation');
- *     animation.crossFade(view1, view2, 500, callback);
+ *     animation.crossFade(view1, view2, 500, finishCallback);
  */
 
 
@@ -15,9 +15,9 @@
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {Number} duration Fade duration in milliseconds.
- * @param {function()} callback Callback function, invoked after the fade completes. 
+ * @param {function()} finishCallback Callback function, invoked after the fade completes. 
  */
-exports.crossFade = function (from, to, duration, callback) {
+exports.crossFade = function (from, to, duration, finishCallback) {
     if (from)
         from.animate({
             opacity: 0,
@@ -28,8 +28,8 @@ exports.crossFade = function (from, to, duration, callback) {
             opacity: 1,
             duration: duration
         });
-    if (callback)
-        setTimeout(callback, duration + 300);
+    if (finishCallback)
+        setTimeout(finishCallback, duration + 300);
 };
 
 /**
@@ -38,8 +38,9 @@ exports.crossFade = function (from, to, duration, callback) {
  * @param {Titanium.UI.View} from View to remove.
  * @param {Number} duration Fade duration in milliseconds.
  * @param {Titanium.UI.View} container Parent container view.
+ * @param {function()} finishCallback Callback function, invoked after the fadeAndRemove completes.
  */
-exports.fadeAndRemove = function (from, duration, container) {
+exports.fadeAndRemove = function (from, duration, container, finishCallback) {
     if (from && container) {
         from.animate({
             opacity: 0,
@@ -47,6 +48,8 @@ exports.fadeAndRemove = function (from, duration, container) {
         }, function () {
             container.remove(from);
             container = from = duration = null;
+            if (finishCallback)
+                finishCallback();
         });
     }
 };
@@ -56,13 +59,14 @@ exports.fadeAndRemove = function (from, duration, container) {
  * Fades in the specified view.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {Number} duration Fade duration in milliseconds.
+ * @param {function()} finishCallback Callback function, invoked after the fadeIn completes.
  */
-exports.fadeIn = function (to, duration) {
+exports.fadeIn = function (to, duration, finishCallback) {
     if (to) {
         to.animate({
             opacity: 1,
             duration: duration
-        });
+        }, finishCallback);
     }
 };
 
@@ -71,13 +75,14 @@ exports.fadeIn = function (to, duration) {
  * Fades out the specified view.
  * @param {Titanium.UI.View} to View to fade out.
  * @param {Number} duration Fade duration in milliseconds.
+ * @param {function()} finishCallback Callback function, invoked after the fadeOut completes.
  */
-exports.fadeOut = function (to, duration) {
+exports.fadeOut = function (to, duration, finishCallback) {
     if (to) {
         to.animate({
             opacity: 0,
             duration: duration
-        });
+        }, finishCallback);
     }
 };
 
@@ -85,10 +90,10 @@ exports.fadeOut = function (to, duration) {
  * @method popIn
  * Makes the specified view appear using a "pop-in" animation, which combines a fade-in
  * with a slight expanding and contracting animation, to call attention to the new view.
- * 
  * @param {Titanium.UI.View} view View to animate.
+ * @param {function()} finishCallback Callback function, invoked after the popIn completes.
  */
-exports.popIn = function (view) {
+exports.popIn = function (view, finishCallback) {
 	if (!OS_IOS) 
 	{
         view.transform = Ti.UI.create2DMatrix();
@@ -106,7 +111,7 @@ exports.popIn = function (view) {
         duration: 300
     });
 
-    exports.chainAnimate(view, [ animate1, animate2 ]);
+    exports.chainAnimate(view, [ animate1, animate2 ], finishCallback);
     view = null;
 };
 
@@ -116,8 +121,9 @@ exports.popIn = function (view) {
  *
  * @param {Titanium.UI.View} view View to animate.
  * @param {Number} [delay] If specified, animation starts after `delay` milliseconds.
+ * @param {function()} finishCallback Callback function, invoked after the shake completes.
  */
-exports.shake = function (view, delay) {
+exports.shake = function (view, delay, finishCallback) {
     var shake1 = Ti.UI.createAnimation({
         transform: Ti.UI.create2DMatrix().translate(5, 0),
         duration: 100
@@ -140,12 +146,12 @@ exports.shake = function (view, delay) {
     });
     if (delay) {
         setTimeout(function () {
-            exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ]);
+            exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ], finishCallback);
             view = shake1 = shake2 = shake3 = shake4 = shake5 = null;
         }, delay);
     }
     else {
-        exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ]);
+        exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ], finishCallback);
     }
 };
 
@@ -156,8 +162,9 @@ exports.shake = function (view, delay) {
  *
  * @param {Titanium.UI.View} view View to animate.
  * @param {Number} [delay] If specified, animation starts after `delay` milliseconds.
+ * @param {function()} finishCallback Callback function, invoked after the flash completes.
  */
-exports.flash = function (view, delay) {
+exports.flash = function (view, delay, finishCallback) {
     var flash1 = Ti.UI.createAnimation({
         opacity: 0.7,
         duration: 100
@@ -176,12 +183,12 @@ exports.flash = function (view, delay) {
     });
     if (delay) {
         setTimeout(function () {
-            exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ]);
+            exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ], finishCallback);
             view = flash1 = flash2 = flash3 = flash4 = null;
         }, delay);
     }
     else {
-        exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ]);
+        exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ], finishCallback);
     }
 };
 

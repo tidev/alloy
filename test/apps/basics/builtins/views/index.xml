@@ -3,10 +3,11 @@
 		<View id="backdrop"/>
 		<View class="container">
 			<View id="mover">
-				<Label id="label">     trimmable string     </Label>
+				<Label id="label">     Trimmable String     </Label>
 			</View>
-			<Button id="shake">shake</Button>
-			<Button id="trim">trim string</Button>
+            <Button id="shake" onClick="ShakeClick">Shake</Button>
+            <Button id="flash" onClick="FlashClick">Flash</Button>
+			<Button id="trim" onClick="TrimClick">Trim</Button>
 		</View>
 	</Window>
 </Alloy>

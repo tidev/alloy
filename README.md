@@ -116,7 +116,8 @@ _**NOTE:** We are actively persuing source mapping between the Alloy and generat
 Generating Alloy Files
 ----------------------
 
-```bash
+```
+bash 
 # generates a view and style with the given NAME
 alloy generate view NAME 
 
