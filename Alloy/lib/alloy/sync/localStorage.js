@@ -17,7 +17,7 @@ function InitAdapter(config) {
 	}
 }
 
-function Sync(model, method, opts) {
+function Sync(method, model, opts) {
 	var name =  model.config.adapter.collection_name;
 	var data =  model.config.data;
 

@@ -40,7 +40,7 @@ exports.M = function(name, modelDesc, migrations) {
 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
 		    }
 
-			require('alloy/sync/'+type).sync(model,method,opts);
+			require('alloy/sync/'+type).sync(method,model,opts);
 		}
 	};
 
@@ -70,7 +70,7 @@ exports.C = function(name, modelDesc, model) {
 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
 		    }
 
-			require('alloy/sync/'+type).sync(model,method,opts);
+			require('alloy/sync/'+type).sync(method,model,opts);
 		}
 	};
 
