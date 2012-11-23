@@ -499,7 +499,7 @@ function optimizeCompiledCode() {
 			'mangle',
 
 			// TODO: http://jira.appcelerator.org/browse/ALOY-393
-			// 'optimizer',
+			'optimizer',
 			
 			'squeeze'
 		],
