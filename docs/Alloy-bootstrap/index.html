@@ -83,12 +83,12 @@
             <h3>Titanium support</h3>
             <p>Alloy is tested and supported on Titanium SDK and Studio 2.1 or greater.</p>
             <p>Development is currently only supported on OSX 10.6 or greater, however Windows and Linux support is in the works.</p>
-            <p><a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide/Titanium_Compatibility_Matrix">Supported platforms:</a></p>
+            <p><a href="http://docs.appcelerator.com/titanium/3.0/#!/guide/Titanium_Compatibility_Matrix">Supported platforms:</a></p>
             <ul>
               <li>Android - 2.2 (API8) or greater</li>
               <li>iPad - 4.2 or greater</li>
               <li>iPhone - 4.2 or greater</li>
-              <li><a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide/Mobile_Web_Platform_Overview">Mobile Web</a></li>
+              <li><a href="http://docs.appcelerator.com/titanium/3.0/#!/guide/Mobile_Web_Platform_Overview">Mobile Web</a></li>
             </ul>
           </div>
           <div class="span-one-third">
@@ -136,7 +136,7 @@
             <br>
             <p>Alloy runs on top of Titanium so before developing in Alloy we will need to get Titanium installed and setup.</p>
             <p>Download and install <a href="http://docs.appcelerator.com/titanium/2.0/#!/guide/Quick_Start"> Titanium</a>.</p>
-            <p>If you're brand new to Titanium you may want to go through the quick start <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/guide">guides</a>.</p>
+            <p>If you're brand new to Titanium you may want to go through the quick start <a href="http://docs.appcelerator.com/titanium/3.0/#!/guide">guides</a>.</p>
             <p>There is a Titanium Studio <a href="http://preview.appcelerator.com/studio/">preview release</a> with Alloy support that assists when working with Alloy projects. It's not discussed in this guide but the Alloy developer should find it useful.
           </div>
           <div class="span5">
@@ -222,7 +222,7 @@
 </pre>
             
             <p>Looking at the markup you can see the Alloy element, it's required in all Alloy views and must be the first element, in XML jargon the root element. You can also see where the Book Search widget is added to the app. The widget is a very basic wrapper around the <a href="https://developers.google.com/books/docs/dynamic-links">Google Books API</a>. Widget are Alloy building blocks and allow developers to quickly craft an app if the appropriate widget is available. Developers can also create widgets.</p>
-            <p>Titanium developers should like this - the Window and TableView elements are just the objects described in the Titanium.UI module with the Titanium.UI removed. All Titanium.UI objects are supported in Alloy. For those objects that require a module like Titanium.UI.Android use the "ns" attribute. For example ns=Titanium.UI.Android. See <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api">Titanium Dev Doc</a> for details. Also check out the <a href="http://docs.appcelerator.com/titanium/2.1/index.html#!/api/Titanium.UI"> UI objects</a> to see the objects that can be used with Alloy markup.</p>
+            <p>Titanium developers should like this - the Window and TableView elements are just the objects described in the Titanium.UI module with the Titanium.UI removed. All Titanium.UI objects are supported in Alloy. For those objects that require a module like Titanium.UI.Android use the "ns" attribute. For example ns=Titanium.UI.Android. See <a href="http://docs.appcelerator.com/titanium/3.0/#!/api">Titanium Dev Doc</a> for details. Also check out the <a href="http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.UI"> UI objects</a> to see the objects that can be used with Alloy markup.</p>
             <p>Take note of the id attributes, "win" and "table". The id glues the markup to the controller and appropriate styles.</p> 
              <h3>row.xml view file</h3>
 <pre class="prettyprint">
@@ -399,6 +399,7 @@ $.authors.text = args.authors || '';
           <div class="span16">
             <p>Since we are still in the early days with Alloy your feedback as suggestions, criticisms, bugs or anything is most welcome. Below is where to find us.
             <ul>
+              <li><a href="http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework">Alloy Documentation</a></li>
               <li><a href="http://developer.appcelerator.com/questions/newest">Alloy Community Questions &amp; Answerers</a> - make sure to include the Alloy tag</li>
               <li><a href="https://jira.appcelerator.org/browse/TC">Titanium Community Issue Tracker</a>  - create a new issue and make sure to select the Alloy project</li>
               <li><a href="https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy">Google Groups</a>  - you'll need a gmail or Google Groups account</li>
