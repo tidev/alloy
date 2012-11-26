@@ -376,7 +376,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				isTopLevel = false;
 			}
 
-			//var defaultId = !assignedDefaultId ? viewName : undefined;
 			template.viewCode += CU.generateNode(node, state, defaultId, isTopLevel);
 		});
 	}
