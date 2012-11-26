@@ -369,14 +369,22 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		_.each(rootChildren, function(node, i) {
 			var defaultId = undefined;
 			var isTopLevel = true;
+			var isModelOrCollection = false;
 			if (!assignedDefaultId && CU.getNodeFullname(node) !== 'Alloy.Collection') {
 				assignedDefaultId = true;
 				defaultId = viewName;
 			} else if (CU.getNodeFullname(node) === 'Alloy.Collection') {
+				isModelOrCollection = true;
 				isTopLevel = false;
-			}
+			} 
 
-			template.viewCode += CU.generateNode(node, state, defaultId, isTopLevel);
+			if (!isModelOrCollection) {
+				template.viewCode += CU.generateNode(node, state, defaultId, isTopLevel);
+			} else {
+				var vCode = CU.generateNode(node, state, defaultId, isTopLevel, isModelOrCollection);
+				template.viewCode += vCode.content;
+				template.preCode += vCode.pre;
+			}
 		});
 	}
 

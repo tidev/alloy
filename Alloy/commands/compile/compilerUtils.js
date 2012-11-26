@@ -228,12 +228,15 @@ exports.generateCode = function(ast) {
 	return pro.gen_code(ast, opts);
 }
 
-exports.generateNode = function(node, state, defaultId, isTopLevel) {
+exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
-		code = { content: '' };
+		code = { 
+			content: '',
+			pre: '' 
+		};
 
 	// Check for platform specific considerations
 	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
@@ -264,6 +267,14 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	code.content += state.code;
 	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
 	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
+
+	// handle any model/collection code
+	if (state.modelCode) {
+		code.pre += state.modelCode;
+		delete state.modelCode;
+	}
+
+	// handle any events from markup
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
 			code.content += args.symbol + ".on('" + ev.name + "',function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
@@ -283,7 +294,14 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 		}); 
 	}
 	
-	return code.condition ? _.template(codeTemplate, code) : code.content;
+	if (!isModelOrCollection) {
+		return code.condition ? _.template(codeTemplate, code) : code.content;
+	} else {
+		return {
+			content: code.condition ? _.template(codeTemplate, code) : code.content,
+			pre: code.condition ? _.template(codeTemplate, {content:code.pre}) : code.pre
+		};
+	}
 }
 
 exports.componentExists = function(appRelativePath, manifest) {

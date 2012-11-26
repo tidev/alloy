@@ -39,7 +39,8 @@ function parse(node, state, args) {
 	code += col + ' || (' + col + ' = Alloy.createCollection(\'' + id + '\'));'
 	
 	return {
-		code: code,
+		code: '',
+		modelCode: code,
 		args: {
 			symbol: col
 		}
