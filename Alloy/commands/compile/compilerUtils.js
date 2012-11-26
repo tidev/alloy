@@ -539,7 +539,7 @@ exports.loadController = function(file) {
 	var code = {
 		parentControllerName: '',
 		controller: '',
-		exports: ''
+		pre: ''
 	};
 
 	// Read the controller file

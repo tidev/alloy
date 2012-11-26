@@ -12,8 +12,13 @@ function Controller() {
 	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
 	var $ = this;
 	var exports = {};
-	<%= exportsCode %>
+	
+	// Generated code that must be executed before all UI and/or
+	// controller code. One example in all model and collection 
+	// declarations from markup.
+	<%= preCode %>
 
+	// Generated UI code
 	<%= viewCode %>
 
 	// make all IDed elements in $.__views available right on the $ in a 
