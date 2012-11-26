@@ -259,7 +259,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		template = {
 			viewCode: '',
 			controllerCode: '',
-			exportsCode: '',
+			preCode: '',
 			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
@@ -376,7 +376,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
 	template.controllerCode += cCode.controller;
-	template.exportsCode += cCode.exports;
+	template.preCode += cCode.pre;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
