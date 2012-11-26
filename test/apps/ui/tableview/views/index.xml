@@ -14,7 +14,7 @@
 		<Tab title="Sections &amp; Rows">
 			<Window title="Sections &amp; Rows">
 				<TableView filterAttribute="title">
-					<SearchBar/>
+					<SearchBar platform="android,ios"/>
 					<TableViewSection headerTitle="Section 1">
 						<TableViewRow title="Row 1"/>
 						<TableViewRow title="Row 2"/>
