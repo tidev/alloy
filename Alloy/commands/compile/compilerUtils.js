@@ -266,7 +266,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
+			code.content += args.symbol + ".on('" + ev.name + "',function(e){" + ev.value + "(e)});\n";	
 		});	
 	}
 
