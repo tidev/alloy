@@ -263,10 +263,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
 	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
-	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
+	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "',function(e){" + ev.value + "(e)});\n";
+			code.content += args.symbol + ".on('" + ev.name + "',function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
 		});	
 	}
 
