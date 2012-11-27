@@ -337,7 +337,10 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
 				'Ti.UI.TabGroup',
-				'Alloy.Collection'
+
+				// valid non-UI elements
+				'Alloy.Collection',
+				'Alloy.Model'
 			];
 			_.each(rootChildren, function(node) {
 				var found = true;
