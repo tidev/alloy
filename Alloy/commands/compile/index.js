@@ -371,22 +371,18 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		var assignedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
 			var defaultId = undefined;
-			var isTopLevel = true;
-			var isModelOrCollection = false;
 			var fullname = CU.getNodeFullname(node);
+			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
 
-			if (!assignedDefaultId && fullname !== 'Alloy.Collection') {
+			if (!assignedDefaultId && !isModelElement) {
 				assignedDefaultId = true;
 				defaultId = viewName;
-			} else if (fullname === 'Alloy.Collection') {
-				isModelOrCollection = true;
-				isTopLevel = false;
 			} 
 
-			if (!isModelOrCollection) {
-				template.viewCode += CU.generateNode(node, state, defaultId, isTopLevel);
+			if (!isModelElement) {
+				template.viewCode += CU.generateNode(node, state, defaultId, true);
 			} else {
-				var vCode = CU.generateNode(node, state, defaultId, isTopLevel, isModelOrCollection);
+				var vCode = CU.generateNode(node, state, defaultId, false, isModelElement);
 				template.viewCode += vCode.content;
 				template.preCode += vCode.pre;
 			}
