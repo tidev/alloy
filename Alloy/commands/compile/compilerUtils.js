@@ -231,7 +231,10 @@ exports.generateCode = function(ast) {
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
-	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
+	var args = exports.getParserArgs(node, state, { 
+			defaultId: defaultId,
+			doSetId: isModelOrCollection ? false : true
+		}),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { 
 			content: '',
