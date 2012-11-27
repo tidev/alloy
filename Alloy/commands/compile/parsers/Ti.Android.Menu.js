@@ -16,7 +16,7 @@ function parse(node, state, args) {
 	// if this isn't android, generate no code, but show a warning
 	var config = CU.getCompilerConfig();
 	var platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
-	if (platform !== 'android') {
+	if (platform !== 'android' && node.getAttribute('platform') !== 'android') {
 		logger.warn([
 			'<Menu> is only available in Android',
 			'To get rid of this warning, add platform="android" to your <Menu> element'
