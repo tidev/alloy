@@ -23,6 +23,8 @@ exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 exports.INSTALL_TYPES = ['plugin'];
 exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 
+exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
+
 exports.FILE_EXT = {
 	VIEW: 'xml',
 	STYLE: 'tss',
