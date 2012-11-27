@@ -12,6 +12,7 @@ function parse(node, state, args) {
 	var isSingleton = node.getAttribute('instance') !== 'true';
 	var id = node.getAttribute('id');
 	var src = node.getAttribute('src');
+	var collectionVar;
 	
 	if (!src) { 
 		U.die([
@@ -21,28 +22,29 @@ function parse(node, state, args) {
 	} else {
 		// TODO: validate the src exists
 	}
+	var createCall = 'Alloy.createCollection(\'' + src + '\')';
 
 	if (isSingleton) {
 		if (id) {
 			logger.warn([
-				'id attribute ignored in singleton <Collection>',
+				'id attribute with value "' + id + '" ignored in singleton <Collection>',
 				'id is always equal to src attribute with singleton',
 				'Use the attribute `instance="true"` to create a new instance of the collection.'
 			]);
 		} 
-		id = src;
+		collectionVar = 'Alloy.Collections[\'' + src + '\']';
+		code += collectionVar + ' || (' + collectionVar + ' = ' + createCall + ');';
 	} else {
 		id || (id = args.id);
+		collectionVar = '$.' + id;
+		code += collectionVar + ' = ' + createCall + ';';
 	}
-
-	var col = 'Alloy.Collections[\'' + id + '\']';
-	code += col + ' || (' + col + ' = Alloy.createCollection(\'' + id + '\'));'
 	
 	return {
 		code: '',
 		modelCode: code,
 		args: {
-			symbol: col
+			symbol: collectionVar
 		}
 	};
 };
