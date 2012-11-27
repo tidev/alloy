@@ -27,9 +27,9 @@ function parse(node, state, args) {
 	if (isSingleton) {
 		if (id) {
 			logger.warn([
-				'id attribute with value "' + id + '" ignored in singleton <Collection>',
+				'id="' + id + '" ignored in singleton <Collection> at line ' + node.lineNumber,
 				'id is always equal to src attribute with singleton',
-				'Use the attribute `instance="true"` to create a new instance of the collection.'
+				'Use instance="true" to create a new instance of the collection.'
 			]);
 		} 
 		collectionVar = 'Alloy.Collections[\'' + src + '\']';
