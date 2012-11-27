@@ -158,7 +158,9 @@ exports.getParserArgs = function(node, state, opts) {
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
-	if (doSetId) { node.setAttribute('id', id); }
+	if (doSetId && !_.contains(['Alloy.Collection','Alloy.Model'], fullname)) { 
+		node.setAttribute('id', id); 
+	}
 
 	// process the platform attribute
 	if (platform) {
@@ -231,10 +233,7 @@ exports.generateCode = function(ast) {
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
-	var args = exports.getParserArgs(node, state, { 
-			defaultId: defaultId,
-			doSetId: isModelOrCollection ? false : true
-		}),
+	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { 
 			content: '',
