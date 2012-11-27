@@ -378,8 +378,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			if (!assignedDefaultId && fullname !== 'Alloy.Collection') {
 				assignedDefaultId = true;
 				defaultId = viewName;
-			} else if (fullname === 'Alloy.Collection' && !isTopLevel) {
-				U.die('<' + node.nodeName + '> can only be the child of the root <Alloy> element');
 			} else if (fullname === 'Alloy.Collection') {
 				isModelOrCollection = true;
 				isTopLevel = false;
