@@ -14,6 +14,7 @@ function parse(node, state, args) {
 	var src = node.getAttribute('src');
 	var collectionVar;
 	
+	// Make sure we have a valid model src
 	if (!src) { 
 		U.die([
 			'Error processing <Collection>:',
@@ -24,6 +25,7 @@ function parse(node, state, args) {
 	}
 	var createCall = 'Alloy.createCollection(\'' + src + '\')';
 
+	// create code based on whether the collection is a singleton or instance
 	if (isSingleton) {
 		if (id) {
 			logger.warn([
@@ -42,7 +44,7 @@ function parse(node, state, args) {
 	
 	return {
 		code: '',
-		modelCode: code,
+		modelCode: code, // modelCode will add this before the UI code
 		args: {
 			symbol: collectionVar
 		}
