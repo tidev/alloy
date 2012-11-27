@@ -726,9 +726,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	// substitutions for binding
 	_.each(styleCollection, function(style) {
 		_.each(style.style, function(v,k) {
-			if (k.indexOf('title') !== -1) {
-				console.log(k + ' = ' + v);
-			}
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
