@@ -13,6 +13,14 @@ function parse(node, state, args) {
 	var id = node.getAttribute('id');
 	var src = node.getAttribute('src');
 	var collectionVar;
+
+	// Make sure the parent is <Alloy>
+	if (!node.parentNode || node.parentNode.nodeName !== 'Alloy') {
+		U.die([
+			'<Collection> at line ' + node.lineNumber + ' is not a child of <Alloy> element',
+			'All <Collection> elements must be a direct child of <Alloy>.'
+		]);
+	}
 	
 	// Make sure we have a valid model src
 	if (!src) { 
