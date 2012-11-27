@@ -158,7 +158,7 @@ exports.getParserArgs = function(node, state, opts) {
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
-	if (doSetId && !_.contains(['Alloy.Collection','Alloy.Model'], fullname)) { 
+	if (doSetId && !_.contains(CONST.MODEL_ELEMENTS, fullname)) { 
 		node.setAttribute('id', id); 
 	}
 

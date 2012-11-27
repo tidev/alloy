@@ -337,11 +337,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
 				'Ti.UI.TabGroup',
-
-				// valid non-UI elements
-				'Alloy.Collection',
-				'Alloy.Model'
-			];
+			].concat(CONST.MODEL_ELEMENTS);
 			_.each(rootChildren, function(node) {
 				var found = true;
 				var args = CU.getParserArgs(node, {}, { doSetId: false });
@@ -361,7 +357,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				if (!found) {
 					U.die([
 						'Compile failed. index.xml must have a top-level container element.',
-						'Valid elements: [ Window, TabGroup, SplitWindow]'
+						'Valid elements: [' + valid.join(',') + ']'
 					]);
 				}
 			});
