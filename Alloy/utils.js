@@ -482,6 +482,12 @@ exports.die = function(msg, e) {
 	process.exit(1);
 }
 
+exports.dieWithNode = function(node, msg) {
+	msg = _.isArray(msg) ? msg : [msg];
+	msg.unshift('Error with <' + node.nodeName + '> at line ' + node.lineNumber);
+	exports.die(msg);
+}
+
 exports.installPlugin = function(alloyPath, projectPath, doExistingCheck) {
 	var file = 'plugin.py'
 	var hookFile = 'alloy.js';
