@@ -1,15 +1,6 @@
 var CU = require('../compilerUtils'),
 	_ = require('../../../lib/alloy/underscore')._;
 
-// This is part of the Ti.Android.Menu.add() API docs
-var ADD_ARGS = [
-	 'itemId', 
-	 'groupId', 
-	 'title', 
-	 'order'
-];
-var addArgsString = '[' + _.map(ADD_ARGS, function(a) { return "'" + a + "'"}).join(',') + ']';
-
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
@@ -24,17 +15,14 @@ function parse(node, state, args) {
 		_.defaults(state.extraStyle || {}, args.createArgs || {}) 
 	);
 	var styleObjectSymbol = CU.generateUniqueId(); 
-	var initStyle = '_.pick(' + styleObjectSymbol + ',' + addArgsString + ')';
-
-	// TODO: http://jira.appcelerator.org/browse/ALOY-311
-	//       http://jira.appcelerator.org/browse/ALOY-312
-	//var postStyle = '_.omit(' + styleObjectSymbol + ',' + addArgsString + ')';
+	var initStyle = '_.pick(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
+	var postStyle = '_.omit(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
 
 	code += 'var ' + styleObjectSymbol + '=' + styleObjectCode + ';';
 	code += args.symbol + '=A$(' + state.parent.symbol + ".add(" + initStyle + "), '" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");";
 	
 	// TODO: http://jira.appcelerator.org/browse/ALOY-313
-	code += '_.each(' + styleObjectSymbol + ',function(v,k) { ' + args.symbol + '[k] = v; });';
+	code += '_.each(' + postStyle + ',function(v,k) { ' + args.symbol + '[k] = v; });';
 
 	return {
 		parent: {},

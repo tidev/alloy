@@ -328,3 +328,8 @@ exports.isTablet = (function() {
  *
  */
 exports.isHandheld = !exports.isTablet;
+
+if (OS_ANDROID) {
+	exports.Android = {};
+	exports.Android.menuItemCreateArgs = ['itemId','groupId','title','order'];
+}
