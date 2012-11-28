@@ -41,6 +41,10 @@ function addToDoItem() {
 
 // Show task list based on selected status type
 function showTasks(e) {
-	whereIndex = e.index;
+	if (typeof e.index !== 'undefined' && e.index !== null) {
+		whereIndex = e.index; // TabbedBar
+	} else {
+		whereIndex = INDEXES[e.source.title]; // Android menu
+	}
 	todos.fetch();
 }
