@@ -291,9 +291,8 @@ function isTabletFallback() {
 }
 
 /**
- * @method isTablet
- * Returns `true` if the current device is a tablet.
- * @return {boolean}
+ * @property {Boolean} [readOnly=false] isTablet
+ * `true` if the current device is a tablet.
  *
  */
 exports.isTablet = (function() {
@@ -322,9 +321,8 @@ exports.isTablet = (function() {
 })();
 
 /**
- * @method isHandheld
- * Returns `true` if the current device is a handheld device (not a tablet).
- * @return {boolean}
+ * @property {Boolean} [readOnly=false] isHandheld
+ * `true` if the current device is a handheld device (not a tablet).
  *
  */
 exports.isHandheld = !exports.isTablet;
