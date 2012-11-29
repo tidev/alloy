@@ -166,7 +166,7 @@ exports.A = function(t, type, parent) {
  * @param {*...} [args] Arguments to pass to the widget.
  * @return {Alloy.Controller} Alloy widget controller object.
  *
- * @deprecated 1.0 Use {Alloy#createWidget} instead
+ * @deprecated 0.3 Use {Alloy#createWidget} instead
  */
 exports.getWidget = function(id, name, args) {
 	Ti.API.warn('Alloy.getWidget() is deprecated, use Alloy.createWidget() instead.');
@@ -195,7 +195,7 @@ exports.createWidget = function(id, name, args) {
  * @param {*...} [args] Arguments to pass to the controller.
  * @return {Alloy.Controller} Alloy controller object.
  *
- * @deprecated 1.0 Use {Alloy#createController} instead
+ * @deprecated 0.3 Use {Alloy#createController} instead
  */
 exports.getController = function(name, args) {
 	Ti.API.warn('Alloy.getController() is deprecated, use Alloy.createController() instead.');
@@ -225,7 +225,7 @@ exports.createController = function(name, args) {
  * @param {*...} [args] Arguments to pass to the model.
  * @return {Backbone.Model} Backbone model object.
  *
- * @deprecated 1.0 Use {Alloy#createModel} instead
+ * @deprecated 0.3 Use {Alloy#createModel} instead
  */
 exports.getModel = function(name, args) {
 	Ti.API.warn('Alloy.getModel() is deprecated, use Alloy.createModel() instead.');
@@ -260,7 +260,7 @@ exports.createModel = function(name, args) {
  * @param {*...} [args] Arguments to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  *
- * @deprecated 1.0 Use {Alloy#createCollection} instead
+ * @deprecated 0.3 Use {Alloy#createCollection} instead
  */
 exports.getCollection = function(name, args) {
 	Ti.API.warn('Alloy.getCollection() is deprecated, use Alloy.createCollection() instead.');
