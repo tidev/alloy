@@ -170,6 +170,7 @@ exports.A = function(t, type, parent) {
  */
 exports.getWidget = function(id, name, args) {
 	Ti.API.warn('Alloy.getWidget() is deprecated, use Alloy.createWidget() instead.');
+	Ti.API.warn('Alloy.getWidget() will be removed in Alloy 0.4.0');
 	return exports.createWidget(id, name, args);
 }
 
@@ -199,6 +200,7 @@ exports.createWidget = function(id, name, args) {
  */
 exports.getController = function(name, args) {
 	Ti.API.warn('Alloy.getController() is deprecated, use Alloy.createController() instead.');
+	Ti.API.warn('Alloy.getController() will be removed in Alloy 0.4.0');
 	return exports.createController(name, args);
 }
 
@@ -229,6 +231,7 @@ exports.createController = function(name, args) {
  */
 exports.getModel = function(name, args) {
 	Ti.API.warn('Alloy.getModel() is deprecated, use Alloy.createModel() instead.');
+	Ti.API.warn('Alloy.getModel() will be removed in Alloy 0.4.0');
 	return exports.createModel(name, args);
 }
 
@@ -264,6 +267,7 @@ exports.createModel = function(name, args) {
  */
 exports.getCollection = function(name, args) {
 	Ti.API.warn('Alloy.getCollection() is deprecated, use Alloy.createCollection() instead.');
+	Ti.API.warn('Alloy.getCollection() will be removed in Alloy 0.4.0');
 	return exports.createCollection(name, args);
 }
 
