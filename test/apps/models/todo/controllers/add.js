@@ -1,6 +1,6 @@
 $.addBtn.addEventListener('click', function() {
     // add todo item
-    var todos = Alloy.globals.todos;
+    var todos = Alloy.Globals.todos;
     var todo = Alloy.createModel('Todo', {
         item : $.itemField.value,
         done : 0
