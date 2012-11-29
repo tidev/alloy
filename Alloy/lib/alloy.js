@@ -373,6 +373,18 @@ exports.Globals = {};
 exports.Models = {};
 
 /**
+ * @method instance
+ * Creates a singleton instance of a Model based on the given model, or
+ * returns an existing instance if one has already been created.
+ * @param {String} the name of the base model for the Model
+ * @return An Alloy Model object singleton 
+ *
+ */
+ exports.Models.instance = function(name) {
+ 	return Alloy.Models[name] || (Alloy.Models[name] = Alloy.createModel(name));
+ };
+
+/**
  * @property {Object} Collections
  * An object for storing globally accessible Alloy collections. Singleton collections 
  * created via markup will be stored on this object.
@@ -387,6 +399,18 @@ exports.Models = {};
  *
  */
 exports.Collections = {};
+
+/**
+ * @method instance
+ * Creates a singleton instance of a Collection based on the given model, or
+ * returns an existing instance if one has already been created.
+ * @param {String} the name of the base model for the collection
+ * @return An Alloy Collection object singleton 
+ *
+ */
+ exports.Collections.instance = function(name) {
+ 	return Alloy.Collections[name] || (Alloy.Collections[name] = Alloy.createCollection(name));
+ };
 
 /**
  * @property {Object} CFG
