@@ -327,6 +327,95 @@ exports.isTablet = (function() {
  */
 exports.isHandheld = !exports.isTablet;
 
+/**
+ * @property {Object} globals
+ * An object for storing globally accessible variables and functions. Items
+ * added to Alloy.globals will be accessible in any controller in your app.
+ *
+ * @deprecated 0.3.3 Use {Alloy#Globals} instead
+ */
+exports.globals = {};
+
+/**
+ * @property {Object} Globals
+ * An object for storing globally accessible variables and functions. 
+ * Alloy.CFG is accessible in any controller in your app:
+ *
+ *     Alloy.Globals.someGlobalObject = { key: 'value' };
+ *     Alloy.Globals.someGlobalFunction = function(){};
+ *
+ * Alloy.Globals can be accessed in other non-controller Javascript files 
+ * like this:
+ *
+ *     var theObject = require('alloy').Globals.someGlobalObject;
+ *
+ */
+exports.Globals = {};
+
+/**
+ * @property {Object} Models
+ * An object for storing globally accessible Alloy models. Singleton models 
+ * created via markup will be stored on this object.
+ *
+ *     <Model src="myModel"/>
+ *
+ * The above markup would effectively generate the following code:
+ *
+ *     Alloy.Models.myModel = Alloy.createModel('MyModel');
+ *
+ * Alloy.Models.myModel would then be accessible in any controller in your app.
+ *
+ */
+exports.Models = {};
+
+/**
+ * @property {Object} Collections
+ * An object for storing globally accessible Alloy collections. Singleton collections 
+ * created via markup will be stored on this object.
+ *
+ *     <Collection src="myModel"/>
+ *
+ * The above markup would effectively generate the following code:
+ *
+ *     Alloy.Collections.myModel = Alloy.createCollection('MyModel');
+ *
+ * Alloy.Collections.myModel would then be accessible in any controller in your app.
+ *
+ */
+exports.Collections = {};
+
+/**
+ * @property {Object} CFG
+ * An object that stores Alloy configuration values as defined in your app's
+ * app/config.json file. Here's a what a typical config.json file might look 
+ * like in an Alloy app.
+ *
+ *     {
+ *         "global": { "key": "defaultValue", "anotherKey": 12345 }, 
+ *         "env:development": {}, 
+ *         "env:test": {}, 
+ *         "env:production": {}, 
+ *         "os:ios": { "key": "iosValue" }, 
+ *         "os:android": { "key": "androidValue" }, 
+ *         "dependencies": {}
+ *     }
+ *
+ * If this app was compiled for iOS, the Alloy.CFG would look like this:
+ *
+ *     Alloy.CFG = {
+ *         "key": "iosValue",
+ *         "anotherKey": 12345
+ *     }
+ *
+ * Alloy.CFG is accessible in any controller in your app, and can be accessed
+ * in other non-controller Javascript files like this:
+ *
+ *     var theKey = require('alloy').CFG.key;
+ *
+ */
+exports.CFG = require('alloy/CFG');
+
+
 if (OS_ANDROID) {
 	exports.Android = {};
 	exports.Android.menuItemCreateArgs = ['itemId','groupId','title','order'];

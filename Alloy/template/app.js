@@ -4,10 +4,8 @@
  * Copyright (c) 2012 by Appcelerator, Inc.
  */
 var Alloy = require('alloy'),
-	_ = require('alloy/underscore')._;
+	_ = Alloy._,
+	Backbone = Alloy.Backbone;
 
-Alloy.Collections = {};
-Alloy.globals = {};
-Alloy.CFG = require('alloy/CFG');
 <%= alloyJs %>
 Alloy.createController('index');
