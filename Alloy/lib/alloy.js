@@ -381,7 +381,7 @@ exports.Models = {};
  *
  */
  exports.Models.instance = function(name) {
- 	return Alloy.Models[name] || (Alloy.Models[name] = Alloy.createModel(name));
+ 	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
  };
 
 /**
@@ -409,7 +409,7 @@ exports.Collections = {};
  *
  */
  exports.Collections.instance = function(name) {
- 	return Alloy.Collections[name] || (Alloy.Collections[name] = Alloy.createCollection(name));
+ 	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
  };
 
 /**
