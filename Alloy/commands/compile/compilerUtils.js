@@ -38,6 +38,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	IMPLICIT_NAMESPACES = {
 		// Alloy
 		Collection: NS_ALLOY,
+		Model: NS_ALLOY,
 		Require: NS_ALLOY,
 		Widget: NS_ALLOY,
 
