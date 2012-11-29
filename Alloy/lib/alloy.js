@@ -166,10 +166,11 @@ exports.A = function(t, type, parent) {
  * @param {*...} [args] Arguments to pass to the widget.
  * @return {Alloy.Controller} Alloy widget controller object.
  *
- * @deprecated 1.0 Use {Alloy#createWidget} instead
+ * @deprecated 0.3 Use {Alloy#createWidget} instead
  */
 exports.getWidget = function(id, name, args) {
 	Ti.API.warn('Alloy.getWidget() is deprecated, use Alloy.createWidget() instead.');
+	Ti.API.warn('Alloy.getWidget() will be removed in Alloy 0.4.0');
 	return exports.createWidget(id, name, args);
 }
 
@@ -195,10 +196,11 @@ exports.createWidget = function(id, name, args) {
  * @param {*...} [args] Arguments to pass to the controller.
  * @return {Alloy.Controller} Alloy controller object.
  *
- * @deprecated 1.0 Use {Alloy#createController} instead
+ * @deprecated 0.3 Use {Alloy#createController} instead
  */
 exports.getController = function(name, args) {
 	Ti.API.warn('Alloy.getController() is deprecated, use Alloy.createController() instead.');
+	Ti.API.warn('Alloy.getController() will be removed in Alloy 0.4.0');
 	return exports.createController(name, args);
 }
 
@@ -225,10 +227,11 @@ exports.createController = function(name, args) {
  * @param {*...} [args] Arguments to pass to the model.
  * @return {Backbone.Model} Backbone model object.
  *
- * @deprecated 1.0 Use {Alloy#createModel} instead
+ * @deprecated 0.3 Use {Alloy#createModel} instead
  */
 exports.getModel = function(name, args) {
 	Ti.API.warn('Alloy.getModel() is deprecated, use Alloy.createModel() instead.');
+	Ti.API.warn('Alloy.getModel() will be removed in Alloy 0.4.0');
 	return exports.createModel(name, args);
 }
 
@@ -260,10 +263,11 @@ exports.createModel = function(name, args) {
  * @param {*...} [args] Arguments to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  *
- * @deprecated 1.0 Use {Alloy#createCollection} instead
+ * @deprecated 0.3 Use {Alloy#createCollection} instead
  */
 exports.getCollection = function(name, args) {
 	Ti.API.warn('Alloy.getCollection() is deprecated, use Alloy.createCollection() instead.');
+	Ti.API.warn('Alloy.getCollection() will be removed in Alloy 0.4.0');
 	return exports.createCollection(name, args);
 }
 
@@ -291,9 +295,8 @@ function isTabletFallback() {
 }
 
 /**
- * @method isTablet
- * Returns `true` if the current device is a tablet.
- * @return {boolean}
+ * @property {Boolean} isTablet
+ * `true` if the current device is a tablet.
  *
  */
 exports.isTablet = (function() {
@@ -322,12 +325,100 @@ exports.isTablet = (function() {
 })();
 
 /**
- * @method isHandheld
- * Returns `true` if the current device is a handheld device (not a tablet).
- * @return {boolean}
+ * @property {Boolean} isHandheld
+ * `true` if the current device is a handheld device (not a tablet).
  *
  */
 exports.isHandheld = !exports.isTablet;
+
+/**
+ * @property {Object} globals
+ * An object for storing globally accessible variables and functions. Items
+ * added to Alloy.globals will be accessible in any controller in your app.
+ *
+ * @deprecated 0.3.3 Use {Alloy#Globals} instead
+ */
+exports.globals = {};
+
+/**
+ * @property {Object} Globals
+ * An object for storing globally accessible variables and functions. 
+ * Alloy.CFG is accessible in any controller in your app:
+ *
+ *     Alloy.Globals.someGlobalObject = { key: 'value' };
+ *     Alloy.Globals.someGlobalFunction = function(){};
+ *
+ * Alloy.Globals can be accessed in other non-controller Javascript files 
+ * like this:
+ *
+ *     var theObject = require('alloy').Globals.someGlobalObject;
+ *
+ */
+exports.Globals = {};
+
+/**
+ * @property {Object} Models
+ * An object for storing globally accessible Alloy models. Singleton models 
+ * created via markup will be stored on this object.
+ *
+ *     <Model src="myModel"/>
+ *
+ * The above markup would effectively generate the following code:
+ *
+ *     Alloy.Models.myModel = Alloy.createModel('MyModel');
+ *
+ * Alloy.Models.myModel would then be accessible in any controller in your app.
+ *
+ */
+exports.Models = {};
+
+/**
+ * @property {Object} Collections
+ * An object for storing globally accessible Alloy collections. Singleton collections 
+ * created via markup will be stored on this object.
+ *
+ *     <Collection src="myModel"/>
+ *
+ * The above markup would effectively generate the following code:
+ *
+ *     Alloy.Collections.myModel = Alloy.createCollection('MyModel');
+ *
+ * Alloy.Collections.myModel would then be accessible in any controller in your app.
+ *
+ */
+exports.Collections = {};
+
+/**
+ * @property {Object} CFG
+ * An object that stores Alloy configuration values as defined in your app's
+ * app/config.json file. Here's a what a typical config.json file might look 
+ * like in an Alloy app.
+ *
+ *     {
+ *         "global": { "key": "defaultValue", "anotherKey": 12345 }, 
+ *         "env:development": {}, 
+ *         "env:test": {}, 
+ *         "env:production": {}, 
+ *         "os:ios": { "key": "iosValue" }, 
+ *         "os:android": { "key": "androidValue" }, 
+ *         "dependencies": {}
+ *     }
+ *
+ * If this app was compiled for iOS, the Alloy.CFG would look like this:
+ *
+ *     Alloy.CFG = {
+ *         "key": "iosValue",
+ *         "anotherKey": 12345
+ *     }
+ *
+ * Alloy.CFG is accessible in any controller in your app, and can be accessed
+ * in other non-controller Javascript files like this:
+ *
+ *     var theKey = require('alloy').CFG.key;
+ *
+ */
+exports.CFG = require('alloy/CFG');
+
 
 if (OS_ANDROID) {
 	exports.Android = {};

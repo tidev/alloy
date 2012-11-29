@@ -1,5 +1,5 @@
 var moment = require('moment');
-var todos = Alloy.globals.todos;
+var todos = Alloy.Globals.todos;
 var args = arguments[0] || {};
 var id;
 
