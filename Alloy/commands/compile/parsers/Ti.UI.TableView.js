@@ -41,7 +41,7 @@ function parse(node, state, args) {
 			});
 		}
 
-		// create fetch handler
+		// create fetch/change handler
 		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
 		var whereCode = where ? where + "(" + col + ")" : col + ".models";
 		var transformCode = transform ? transform + "(" + localModel + ")" : "{}";

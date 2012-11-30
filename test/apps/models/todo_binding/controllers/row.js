@@ -21,22 +21,30 @@ if ($model) {
 	}
 }
 
+// toggle the "done" status of the IDed todo
 function toggleStatus(e) {
-	// toggle the "done" status of the IDed todo
+	// finc the todo task by id
 	var todo = todos.get(id);
+
+	// set the current done and date_completed fields for the model
 	todo.set({
     		"done": todo.get('done') ? 0 : 1,
     		"date_completed": moment().unix()
-  	}).save();
+  	}).save(); // save to presistence
 
   	// update views from sql storage
   	todos.fetch();
 }
 
+// delete the IDed todo from the collection
 function deleteTask(e) {
-	// delete the IDed todo from the collection
+	// find the todo task by id
 	var todo = todos.get(id);
+
+	// remove the model from the collection
 	todos.remove(todo);
+
+	// destroy the model from persistence
 	todo.destroy();
 
   	// update views from sql storage
