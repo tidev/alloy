@@ -45,7 +45,7 @@ function parse(node, state, args) {
 		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
 		var whereCode = where ? where + "(" + col + ")" : col + ".models";
 		var transformCode = transform ? transform + "(" + localModel + ")" : "{}";
-		code += col + ".on('fetch change', function(e) { ";
+		code += col + ".on('fetch change add remove', function(e) { ";
 		code += "	var models = " + whereCode + ";";
 		code += "	var len = models.length;";
 		code += "	var rows = [];";
