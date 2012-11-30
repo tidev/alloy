@@ -41,8 +41,15 @@ function parse(node, state, args) {
 			});
 		}
 
+		// Do we use an instance or singleton collection reference?
+		var col;
+		if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
+			col = args[CONST.BIND_COLLECTION];
+		} else {
+			col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
+		}
+		
 		// create fetch/change handler
-		var col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
 		var whereCode = where ? where + "(" + col + ")" : col + ".models";
 		var transformCode = transform ? transform + "(" + localModel + ")" : "{}";
 		code += col + ".on('fetch change add remove', function(e) { ";
