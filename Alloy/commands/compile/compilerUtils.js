@@ -659,7 +659,7 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 	return style;
 };
 
-exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
+exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
 	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
 	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
 		bindingRegex = /^\{(.+)\}$/,
@@ -732,7 +732,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					var modelVar = CONST.BIND_MODEL_VAR;
+					var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 					var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
 					var standard = modelVar + ".get('" + match[1] + "')";
 					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
