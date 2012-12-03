@@ -36,6 +36,7 @@ function parse(node, state, args) {
 			symbol: args.symbol
 		},
 		local: state.local || false,
+		model: state.model || undefined,
 		styles: state.styles,
 		code: code
 	}
