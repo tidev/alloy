@@ -1,9 +1,19 @@
 <Alloy>
-	<Tab title="singleton/<Require>">
-		<Window title="singleton/<Require>">
-			<TableView id="table" dataCollection="myModel">
+	<Collection src="myModel" id="myModelId" instance="true"/>
+
+	<Tab title="local/<Require>">
+		<Window id="window" title="local/<Require>">
+
+			<!-- use a local reference attached to the controller -->
+			<TableView id="table" dataCollection="$.myModelId" onClick="removeItem">
+
+				<!-- use a <Require> for our repeated TableViewRow --> 
 				<Require src="row"/>
 			</TableView>
+
+			<Menu platform="android">
+				<MenuItem title="add item" onClick="addItem"/>
+			</Menu>
 		</Window>
 	</Tab>
 </Alloy>

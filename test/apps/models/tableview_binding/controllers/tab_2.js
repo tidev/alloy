@@ -1,6 +1,6 @@
 // Use global reference to the collection. When changes occur in this
 // collection reference, you'll notice that they also occur at the same
-// time in tab_2, as they both make use of the global collection 
+// time in tab_1, as they both make use of the global collection 
 // reference.
 var myModels = Alloy.Collections.myModel;
 var common = require('common');

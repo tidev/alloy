@@ -1,6 +1,6 @@
 <Alloy>
-	<TableViewRow>
-		<Label id="title" text="{title}"/>
-		<ImageView id="image" image="{image}"/>
+	<TableViewRow class="row">
+		<Label class="rowTitle" text="{title}"/>
+		<ImageView class="rowImage" image="{image}"/>
 	</TableViewRow>
 </Alloy>
