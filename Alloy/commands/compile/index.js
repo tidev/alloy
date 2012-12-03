@@ -363,25 +363,35 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			});
 		}
 
-		// Generate each node in the view
+		// process any model/colletion nodes
+		_.each(rootChildren, function(node, i) {
+			var fullname = CU.getNodeFullname(node);
+			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
+
+			if (isModelElement) {
+				var vCode = CU.generateNode(node, state, undefined, false, true);
+				template.viewCode += vCode.content;
+				template.preCode += vCode.pre;
+
+				// remove the model/collection nodes when done
+				docRoot.removeChild(node);
+			}
+		});
+
+		// rebuild the children list since model elements have been removed
+		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+
+		// process the UI nodes
 		var assignedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
 			var defaultId = undefined;
 			var fullname = CU.getNodeFullname(node);
-			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
 
-			if (!assignedDefaultId && !isModelElement) {
+			if (!assignedDefaultId) {
 				assignedDefaultId = true;
 				defaultId = viewName;
 			} 
-
-			if (!isModelElement) {
-				template.viewCode += CU.generateNode(node, state, defaultId, true);
-			} else {
-				var vCode = CU.generateNode(node, state, defaultId, false, isModelElement);
-				template.viewCode += vCode.content;
-				template.preCode += vCode.pre;
-			}
+			template.viewCode += CU.generateNode(node, state, defaultId, true);
 		});
 	}
 
