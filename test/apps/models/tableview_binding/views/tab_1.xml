@@ -1,6 +1,6 @@
 <Alloy>
-	<Colllection src="myModel"/>
-	
+	<Collection src="myModel"/>
+
 	<Tab title="singleton/<Require>">
 		<Window id="window" title="singleton/<Require>">
 			<TableView id="table" dataCollection="myModel">
