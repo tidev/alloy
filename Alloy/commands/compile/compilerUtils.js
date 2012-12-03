@@ -428,12 +428,19 @@ exports.inspectRequireNode = function(node) {
 
 	_.each(children, function(c) {
 		var args = exports.getParserArgs(c);
+
+		// skip model elements when inspecting nodes for <Require>
+		if (_.contains(CONST.MODEL_ELEMENTS, args.fullname)) {
+			newNode.removeChild(c);
+			return;
+		}
+
 		names.push(args.fullname);
 	});
 
 	return {
-		children: children,
-		length: children.length,
+		children: U.XML.getElementsFromNodes(newNode.childNodes),
+		length: names.length,
 		names: names
 	};
 }
@@ -1054,6 +1061,9 @@ exports.validateNodeName = function(node, names) {
 	// Is it an Alloy.Require?
 	if (fullname === 'Alloy.Require') {
 		var inspect = exports.inspectRequireNode(node);
+
+		console.log(inspect);
+
 		ret = _.find(names, function(name) { return inspect.names[0] === name });
 		if (inspect.length === 1 && ret) { 
 			return ret;
