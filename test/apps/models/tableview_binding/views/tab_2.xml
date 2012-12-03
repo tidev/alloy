@@ -1,0 +1,9 @@
+<Alloy>
+	<Tab title="singleton/<Require>">
+		<Window title="singleton/<Require>">
+			<TableView id="table" dataCollection="myModel">
+				<Require src="row"/>
+			</TableView>
+		</Window>
+	</Tab>
+</Alloy>

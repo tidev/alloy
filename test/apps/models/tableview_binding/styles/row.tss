@@ -1,0 +1,19 @@
+"#row": {
+	backgroundColor: '#fff',
+	height: '50dp'
+},
+"#title": {
+	color: '#222',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	left: '10dp',
+	right: '60dp'
+},
+"#image": {
+	height: '33dp',
+	width: '33dp',
+	right: '10dp'
+}
