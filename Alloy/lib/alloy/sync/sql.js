@@ -1,7 +1,3 @@
-/*
- * Local SQLite sync adapter which will store all models in
- * an on device database
- */
 var _ = require('alloy/underscore')._, 
 	db;
 

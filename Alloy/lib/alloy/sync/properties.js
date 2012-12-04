@@ -1,6 +1,3 @@
-/*
- * Ti.App.Properties sync adapter which will store all models locally
- */
 var Alloy = require('alloy'),
 	_ = require("alloy/underscore")._,
 	TAP = Ti.App.Properties;
