@@ -2,7 +2,7 @@
 exports.definition = {
 	config: {
 		"columns": {
-			"id": "Int",
+			"id": "String",
 			"name": "String",
 			"score": "Int"
 		},

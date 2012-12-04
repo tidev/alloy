@@ -17,9 +17,8 @@ items.on('change:score', function(model) {
 // reset the table whenever a model is added or destroyed
 // completely. Also reset whenever the collection is reset.
 // Save the model changes if necessary.
-items.on('add destroy reset', function(model) { 
+items.on('fetch change add remove', function(model) { 
 	resetTableData();
-	if (model && model.save) { model.save(); }
 });
 
 // fetch collection from Ti.App.Properties adapter
@@ -56,6 +55,7 @@ function deleteItem(e) {
 	if (model) {
 		model.destroy();
 	}
+	items.fetch();
 }
 
 function incrementScore(e) {
@@ -66,10 +66,12 @@ function incrementScore(e) {
 }
 
 function addItem(e) {
-	items.add(items.create({
-		id: items.maxId++,
+	var model = items.create({
 		name: $.text.value || '<no name>',
 		score: 0
-	}));
+	});
+	items.add(model);
+	model.save();
+	items.fetch();
 	$.text.value = '';
 }
