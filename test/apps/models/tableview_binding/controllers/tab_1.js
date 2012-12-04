@@ -17,7 +17,5 @@ if (OS_IOS || OS_MOBILEWEB) {
 	common.prepNavBar($.window, addItem);
 } 
 
-myModels.comparator = function(model) {
-	return model.get('timestamp');
-};	
+myModels.comparator = common.comparator;
 myModels.fetch();

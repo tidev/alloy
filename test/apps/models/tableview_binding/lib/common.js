@@ -39,3 +39,7 @@ exports.prepNavBar = function(window, callback) {
 	button.addEventListener('click', callback);
 	window.rightNavButton = button;
 };
+
+exports.comparator = function(model) {
+	return model.get('timestamp');
+};
