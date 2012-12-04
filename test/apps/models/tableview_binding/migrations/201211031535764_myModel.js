@@ -2,7 +2,8 @@ migration.up = function(db) {
 	db.createTable({
 		"columns": {
 			"title":"string",
-			"image":"string"
+			"image":"string",
+			"timestamp":"string"
 		},
 		"adapter": {
 			"type": "sql",
