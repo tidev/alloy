@@ -13,6 +13,9 @@
 					<ImageView class="rowImage" image="{image}"/>
 				</TableViewRow>
 			</TableView>
+
+			<!-- let's use a simple button or android -->
+			<Button class="addButton" onClick="addItem" platform="android"/>
 		</Window>
 	</Tab>
 </Alloy>

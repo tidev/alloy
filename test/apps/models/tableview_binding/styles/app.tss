@@ -16,4 +16,11 @@
 	height: '33dp',
 	width: '33dp',
 	right: '10dp'
+},
+".addButton": {
+	height: '40dp',
+	width: '40dp',
+	title: '+',
+	bottom: 0,
+	right: 0
 }

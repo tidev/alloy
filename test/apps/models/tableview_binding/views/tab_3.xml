@@ -10,6 +10,9 @@
 				<!-- use a <Require> for our repeated TableViewRow --> 
 				<Require src="row"/>
 			</TableView>
+
+			<!-- let's use a simple button or android -->
+			<Button class="addButton" onClick="addItem" platform="android"/>
 		</Window>
 	</Tab>
 </Alloy>
