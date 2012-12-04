@@ -34,8 +34,8 @@ function Sync(model, method, opts) {
 			resp = model.toJSON();
 		}	
 	} 
-	else if (method === 'create' || method === 'update') {
-		TAP.setObject(prefix + '-' + (model.get('id') || guid()), model.toJSON() || {});
+	else if (method === 'create' || method === 'update') { 
+		TAP.setObject(prefix + '-' + (model.get('id') || (_.isFunction(model.config.defaults.id) ? model.config.defaults.id() : guid())), model.toJSON() || {});
 		resp = model.toJSON();
 	} else if (method === 'delete') {
 		TAP.removeProperty(prefix + '-' + model.get('id'));
@@ -59,9 +59,14 @@ module.exports.beforeModelCreate = function(config) {
 	config.columns = config.columns || {};
 	config.defaults = config.defaults || {};
 
-	// add this adapter's values
-	config.columns.id = 'String';
-	config.defaults.id = guid();
+	// give it a default id if it doesn't exist already
+	if (typeof config.columns.id === 'undefined' || config.columns.id === null) {
+		config.columns.id = 'String';
+	}
+
+	if (typeof config.defaults.id === 'undefined' || config.defaults.id === null) {
+		config.defaults.id = guid;
+	}
 
 	return config;
 };
