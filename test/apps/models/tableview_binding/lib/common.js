@@ -5,7 +5,8 @@ exports.addItem = function(collection) {
 	var random = Math.ceil(Math.random() * 12);
     var model = Alloy.createModel('MyModel', {
         title : 'title ' + random,
-        image: '/' + random + '.png'
+        image: '/' + random + '.png',
+        timestamp: new Date().getTime()
     });
     
     // add new model to local collection
