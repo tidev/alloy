@@ -184,11 +184,13 @@ function Sync(model, method, opts) {
 			resp = model.toJSON();
 			break;
 	}
-    if (resp) {
-        opts.success(resp);
+    
+    // process success/error handlers, if present
+	if (resp) {
+        _.isFunction(opts.success) && opts.success(resp);
         method === "read" && model.trigger("fetch");
     } else {
-    	opts.error("Record not found");
+    	_.isFunction(opts.error) && opts.error("Record not found");
     }
 	
 }

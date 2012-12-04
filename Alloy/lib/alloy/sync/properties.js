@@ -19,6 +19,7 @@ function getUniqueId(id) {
 function Sync(model, method, opts) {
 	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
 	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
+	var resp = null;
 
 	if (method === 'read') {
 		if (opts.parse) {
@@ -45,6 +46,14 @@ function Sync(model, method, opts) {
 		TAP.removeProperty(prefix + '-' + model.get('id'));
 		model.clear();
 	}
+
+	// process success/error handlers, if present
+	if (resp) {
+        _.isFunction(opts.success) && opts.success(resp);
+        method === "read" && model.trigger("fetch");
+    } else {
+    	_.isFunction(opts.error) && opts.error("Record not found");
+    }
 }
 
 module.exports.sync = Sync;
