@@ -15,12 +15,6 @@ function Sync(model, method, opts) {
 	var regex = new RegExp("^(" + prefix + ")\\-(.+)$");
 	var resp = null;
 
-	if (!opts.parse) {
-		if (!model.get('id')) {
-			model.set('id', guid());
-		}
-	}
-
 	if (method === 'read') {
 		if (opts.parse) {
 			// is collection
