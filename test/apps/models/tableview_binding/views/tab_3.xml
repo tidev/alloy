@@ -10,10 +10,6 @@
 				<!-- use a <Require> for our repeated TableViewRow --> 
 				<Require src="row"/>
 			</TableView>
-
-			<Menu platform="android">
-				<MenuItem title="add item" onClick="addItem"/>
-			</Menu>
 		</Window>
 	</Tab>
 </Alloy>

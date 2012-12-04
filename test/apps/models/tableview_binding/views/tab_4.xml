@@ -13,10 +13,6 @@
 					<ImageView class="rowImage" image="{image}"/>
 				</TableViewRow>
 			</TableView>
-
-			<Menu platform="android">
-				<MenuItem title="add item" onClick="addItem"/>
-			</Menu>
 		</Window>
 	</Tab>
 </Alloy>
