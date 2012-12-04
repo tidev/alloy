@@ -2,21 +2,24 @@ var Alloy = require('alloy'),
 	_ = require("alloy/underscore")._,
 	TAP = Ti.App.Properties;
 
-// make sure we have a unique list of IDs for adapter models
-var idList = [],
-	uniqueIdCounter = 1;
-function getUniqueId(id) {
-	if (!id || _.contains(idList,id)) {
-		id = getUniqueId(uniqueIdCounter++);
-	} 
-	idList.push(id);
-	return id;
+function S4() {
+   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 };
+
+function guid() {
+   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+};	
 
 function Sync(model, method, opts) {
 	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
-	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
+	var regex = new RegExp("^(" + prefix + ")\\-(.+)$");
 	var resp = null;
+
+	if (!opts.parse) {
+		if (!model.get('id')) {
+			model.set('id', guid());
+		}
+	}
 
 	if (method === 'read') {
 		if (opts.parse) {
@@ -29,19 +32,21 @@ function Sync(model, method, opts) {
 				}
 			});
 			model.reset(list);
-			var maxId = _.max(_.pluck(list, 'id')); 
-			model.maxId = (_.isFinite(maxId) ? maxId : 0) + 1;
+			resp = list;
 		} else {
 			// is model
 			var obj = TAP.getObject(prefix + '-' + model.get('id'));
 			model.set(obj);
+			resp = model.toJSON();
 		}	
 	} 
 	else if (method === 'create' || method === 'update') {
-		TAP.setObject(prefix + '-' + model.get('id'), model.toJSON() || {});
+		TAP.setObject(prefix + '-' + (model.get('id') || guid()), model.toJSON() || {});
+		resp = model.toJSON();
 	} else if (method === 'delete') {
 		TAP.removeProperty(prefix + '-' + model.get('id'));
 		model.clear();
+		resp = model.toJSON();
 	}
 
 	// process success/error handlers, if present
@@ -61,8 +66,8 @@ module.exports.beforeModelCreate = function(config) {
 	config.defaults = config.defaults || {};
 
 	// add this adapter's values
-	config.columns.id = 'Int';
-	config.defaults.id = getUniqueId();
+	config.columns.id = 'String';
+	config.defaults.id = guid();
 
 	return config;
 };
