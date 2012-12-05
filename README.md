@@ -6,10 +6,7 @@ Alloy is a new application framework by [Appcelerator](http://www.appcelerator.c
 Current Status
 --------------
 
-* 2012-06-10 - _Unstable_
-* 2012-08-29 - _Pre-Release_
-* 2012-09-26 - Github Issues closed. Use the [Titanium Community Jira](http://jira.appcelerator.org/browse/TC) instead. 
-* 2012-09-27 - Windows & Linux support (Bleeding edge)
+* 2012-12-06 - Alloy 0.3.3 released
 
 Goals
 ------
