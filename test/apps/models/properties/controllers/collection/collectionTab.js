@@ -17,7 +17,7 @@ items.on('change:score', function(model) {
 // reset the table whenever a model is added or destroyed
 // completely. Also reset whenever the collection is reset.
 // Save the model changes if necessary.
-items.on('fetch change add remove', function(model) { 
+items.on('fetch', function(model) { 
 	resetTableData();
 });
 
