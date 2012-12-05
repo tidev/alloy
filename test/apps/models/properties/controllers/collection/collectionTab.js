@@ -41,10 +41,10 @@ function resetTableData() {
 
 	// fill table with the controllers' TableViewRow, and sort
 	// by the row's ID
-	$.table.setData(_.sortBy(
-		_.map(rowControllers, function(r) { return r.getView(); }),
-		function(r) { return r.id; }
-	));
+	var theArray = _.sortBy(rowControllers, function(r) {
+		return r.getView('name').text;
+	});
+	$.table.setData(_.map(theArray, function(r) {return r.getView();}));
 }
 
 ////////////////////////////////////
@@ -71,7 +71,6 @@ function addItem(e) {
 		score: 0
 	});
 	items.add(model);
-	model.save();
 	items.fetch();
 	$.text.value = '';
 }
