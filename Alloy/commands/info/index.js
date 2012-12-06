@@ -2,6 +2,7 @@ var path = require('path'),
 	logger = require('../../common/logger'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
+	CONST = require('../../common/constants'),
 	alloyRoot = path.join(__dirname,'..','..','..'); 
 
 var info = {
@@ -40,6 +41,9 @@ var info = {
 		];
 		console.log(JSON.stringify(desc));
 		//console.log(U.prettyPrintJson(desc));
+	},
+	namespaces: function() {
+		console.log(JSON.stringify(CONST.IMPLICIT_NAMESPACES));
 	}
 };
 
