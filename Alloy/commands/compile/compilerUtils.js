@@ -974,6 +974,13 @@ function sortStyles(componentStyle) {
 					if (q === 'platform') {
 						priority += VALUES.PLATFORM + VALUES.SUM;
 						v = v.split(',');
+					} else if (q === 'formFactor' || q === 'size') {
+						// TODO: https://jira.appcelerator.org/browse/ALOY-402
+						if (q === 'size') {
+							logger.warn('"size" has been deprecated and will be removed in Alloy 0.4.0, use "formFactor" for device queries instead');
+							q = 'formFactor';
+						}
+
 						priority += VALUES.FORMFACTOR + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
