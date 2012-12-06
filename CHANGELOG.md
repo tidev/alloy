@@ -27,9 +27,11 @@ The following are planned features for the next release:
 * [ALOY-370](http://jira.appcelerator.org/browse/ALOY-370). Fix ability to assign functions with variable assigned functions in controllers.
 * [ALOY-376](http://jira.appcelerator.org/browse/ALOY-376). Improve handling of Ti.Android.Menu component.
 * [ALOY-393](http://jira.appcelerator.org/browse/ALOY-393). (Re-)enable optimizer.js as part of runtime JavaScript file optimization.
-* [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Change Alloy.globals namespace to Alloy.Globals.
 * [ALOY-417](https://jira.appcelerator.org/browse/ALOY-417). properties adapter improvements.
 * [ALOY-403](http://jira.appcelerator.org/browse/ALOY-403). Alloy.Collection and Alloy.Model code optimization.
+
+### Deprecations
+* [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Alloy.globals depreacted, use Alloy.Globals instead.
 
 ## 0.3.2 (15 November 2012)
 
