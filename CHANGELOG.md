@@ -20,7 +20,6 @@ The following are planned features for the next release:
 * [ALOY-373](http://jira.appcelerator.org/browse/ALOY-373). [ALOY-379](http://jira.appcelerator.org/browse/ALOY-379). Add Collection tag in markup to create a singleton or instance(s) of a collection.
 * [ALOY-390](http://jira.appcelerator.org/browse/ALOY-390). [ALOY-391](http://jira.appcelerator.org/browse/ALOY-391). Add Model tag in markup to create a singleton or instance(s) of a model.
 * [ALOY-396](http://jira.appcelerator.org/browse/ALOY-396). [ALOY-397](http://jira.appcelerator.org/browse/ALOY-397). [ALOY-156](http://jira.appcelerator.org/browse/ALOY-156). Add completion callback to all methods in the animation.js builtin library.
-* [ALOY-403](http://jira.appcelerator.org/browse/ALOY-403). Add Alloy.Collection.instance() and Alloy.Models.instance() methods to create an instance of a collection or model, respectively.
 * [ALOY-367](http://jira.appcelerator.org/browse/ALOY-367). [ALOY-377](http://jira.appcelerator.org/browse/ALOY-377). Alloy apps now work with Soasta touch test.
 
 ### Bugs fixes and improvements
@@ -30,6 +29,7 @@ The following are planned features for the next release:
 * [ALOY-393](http://jira.appcelerator.org/browse/ALOY-393). (Re-)enable optimizer.js as part of runtime JavaScript file optimization.
 * [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Change Alloy.globals namespace to Alloy.Globals.
 * [ALOY-417](https://jira.appcelerator.org/browse/ALOY-417). properties adapter improvements.
+* [ALOY-403](http://jira.appcelerator.org/browse/ALOY-403). Alloy.Collection and Alloy.Model code optimization.
 
 ## 0.3.2 (15 November 2012)
 
