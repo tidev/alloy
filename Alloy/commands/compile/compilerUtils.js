@@ -624,7 +624,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			// manage potential runtime conditions for the style
 			var conditionals = {
 				platform: [],
-				size: ''
+				formFactor: ''
 			};
 
 			if (style.queries) {
@@ -644,17 +644,17 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					}
 				}
 
-				// handle size device query
+				// handle formFactor device query
 				if (q.size === 'tablet' || q.formFactor === 'tablet') {
-					conditionals.size = 'Alloy.isTablet';
-				} else if (q.size === 'handheld') {
-					conditionals.size = 'Alloy.isHandheld';
+					conditionals.formFactor = 'Alloy.isTablet';
+				} else if (q.size === 'handheld' || q.formFactor === 'handheld') {
+					conditionals.formFactor = 'Alloy.isHandheld';
 				}
 
 				// assemble runtime query
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
-				var joinString = pcond && conditionals.size ? ' && ' : '';
-				var conditional = pcond + joinString + conditionals.size;
+				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
+				var conditional = pcond + joinString + conditionals.formFactor;
 
 				// push styles if we need to insert a conditional
 				if (conditional) {
@@ -920,12 +920,13 @@ function sortStyles(componentStyle) {
 		sortedStyles = [],
 		ctr = 1,
 		VALUES = {
-			ID:     10000,
-			CLASS:   1000,
-			API:      100,
-			PLATFORM:  10,
-			SUM:        1,
-			ORDER:      0.001
+			ID:     100000,
+			CLASS:   10000,
+			API:      1000,
+			PLATFORM:  100,
+			FORMFACTOR: 10,
+			SUM:         1,
+			ORDER:       0.001
 		};
 
 	// add global style to processing, if present
@@ -973,6 +974,7 @@ function sortStyles(componentStyle) {
 					if (q === 'platform') {
 						priority += VALUES.PLATFORM + VALUES.SUM;
 						v = v.split(',');
+						priority += VALUES.FORMFACTOR + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
 					}
