@@ -91,7 +91,8 @@ var defaults = {
     buttonHeight: 75,
     textSize: TEXTSIZE + 'dp',  // Font size of the label for the button.
     textColor: 'white',         // Text color of the label.
-    textSelectedColor: 'black'  // Text color of the label when the button is selected.
+    textSelectedColor: 'black',  // Text color of the label when the button is selected.
+    assetDir: '/images/'		// Subdirectory to find the button assets.
 };
 /**
  * @method init
@@ -99,7 +100,7 @@ var defaults = {
  * @param {Array.<Object>} buttons The buttons array is an array of button objects each of which  describes a button to create in the grid.
  * @param {String} buttons.id Unique id for this item. This id also selects the image icons for this button. The ButtonGrid expects to find the image at app/assets/images/\<id\>.png.
  * @param {String} [buttons.title] The text that describes this button that will appear underneath the icon.
- * @param {function(Object)} [buttons.click] The callback to call when the button is clicked. The function has an event parameter similar to that used for Titanium.UI.Button.click. If you do not specify a click callback, then the button does nothing.
+ * @param {function(Object)} [buttons.click] The callback to call when the button is clicked. The function has an event parameter similar to that used for Titanium.UI.Button.click. Overrides the global click callback, if any. 
  * @param {String} [buttons.backgroundColor=transparent] RGB triplet or named color to use as the background for the button. This overrides any ButtonGrid level backgroundColor.
  * @param {String} [buttons.backgroundSelectedColor=transparent] RGB triplet or named color to use as the background for the button when it is selected. This overrides any ButtonGrid level backgroundColor.         
  * @param {Number} buttonWidth Width of a button in pixels.
@@ -110,6 +111,8 @@ var defaults = {
  * @param {Number/String} [fontSize=10dp] Size of the text label in the button.
  * @param {String} [textColor=white] RGB triplet or named color to use for the text label on the button.
  * @param {String} [textSelectedColor=black] RGB triplet or named color to use for the text label on the button when it is selected.
+ * @param {String} [assetDir='/images/'] Directory where assets for the button grid can be found. 
+ * @param {function(Object)} [click] The general callback to call when any button is clicked. The function has an event parameter similar to that used for Titanium.UI.Button.click. Can be overridden by the individual button click callbacks.
  */
 exports.init = function ButtonGridInit(args) {
     $._buttons = args.buttons;
@@ -117,16 +120,16 @@ exports.init = function ButtonGridInit(args) {
     
     _.each($._buttons, function (button, index) {
         Ti.API.info('Buttongrid: creating button ' + button.id);
-           
-        var buttonProps = {
+            
+        var buttonProps = _.defaults(button, {
             center: { x: "50%", y: "50%" },    
-            id: button.id,
-            backgroundImage: '/images/' + button.id + '.png',
-            backgroundColor: button.backgroundColor || $._params.backgroundColor || 'transparent',
-            backgroundSelectedColor: button.backgroundSelectedColor || $._params.backgroundSelectedColor || 'transparent',
+            backgroundImage: $._params.assetDir + button.id + '.png',
+            backgroundColor: $._params.backgroundColor || 'transparent',
+            backgroundSelectedColor: $._params.backgroundSelectedColor || 'transparent',
             width: $._params.buttonWidth,
-            height: $._params.buttonHeight
-        };
+            height: $._params.buttonHeight,
+            click: $._params.click
+        });
             
         if (OS_ANDROID || OS_MOBILEWEB) {
             if (button.title) {
@@ -160,7 +163,8 @@ exports.init = function ButtonGridInit(args) {
                 textAlign: 'center',
                 touchEnabled: false
             });
-            $._buttons[index].b.add(theLabel);                  
+            $._buttons[index].b.add(theLabel);  
+            $._buttons[index].b.title = ''; // Override the default title, which doesn't work well with the icon.                
         }
     });
     
