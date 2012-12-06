@@ -63,3 +63,62 @@ exports.JS_RESERVED_FUTURE = [
 	'static', 'yield'
 ];
 exports.JS_RESERVED_ALL = _.union(exports.JS_RESERVED, exports.JS_RESERVED_FUTURE);
+
+var NS_ALLOY = 'Alloy',
+	NS_ALLOY_ABSTRACT = 'Alloy.Abstract',
+	NS_TI_ANDROID = 'Ti.Android',
+	NS_TI_MAP = 'Ti.Map',
+	NS_TI_MEDIA = 'Ti.Media',
+	NS_TI_UI_IOS = 'Ti.UI.iOS',
+	NS_TI_UI_IPAD = 'Ti.UI.iPad',
+	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
+	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb';
+
+exports.IMPLICIT_NAMESPACES = {
+	// Alloy
+	Collection: NS_ALLOY,
+	Model: NS_ALLOY,
+	Require: NS_ALLOY,
+	Widget: NS_ALLOY,
+
+	// Alloy.Abstract
+	ButtonNames: NS_ALLOY_ABSTRACT,
+	ButtonName: NS_ALLOY_ABSTRACT,
+	BarItemTypes: NS_ALLOY_ABSTRACT,
+	BarItemType: NS_ALLOY_ABSTRACT,
+	CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
+	CoverFlowImageType: NS_ALLOY_ABSTRACT,
+	FlexSpace: NS_ALLOY_ABSTRACT,
+	Images: NS_ALLOY_ABSTRACT,
+	Item: NS_ALLOY_ABSTRACT,
+	Items: NS_ALLOY_ABSTRACT,
+	Labels: NS_ALLOY_ABSTRACT,
+	Option: NS_ALLOY_ABSTRACT,
+	Options: NS_ALLOY_ABSTRACT,
+
+	// Ti.Android
+	Menu: NS_TI_ANDROID,
+	MenuItem: NS_TI_ANDROID,
+
+	// Ti.Map
+	Annotation: NS_TI_MAP,
+
+	// Ti.Media
+	VideoPlayer: NS_TI_MEDIA,
+	MusicPlayer: NS_TI_MEDIA,
+
+	// Ti.UI.iOS
+	AdView: NS_TI_UI_IOS,
+	CoverFlowView: NS_TI_UI_IOS,
+	TabbedBar: NS_TI_UI_IOS,
+	Toolbar: NS_TI_UI_IOS,
+
+	// Ti.UI.iPad
+	DocumentViewer: NS_TI_UI_IPAD,
+	Popover: NS_TI_UI_IPAD,
+	SplitWindow: NS_TI_UI_IPAD,
+
+	// Ti.UI.iPhone
+	NavigationGroup: NS_TI_UI_IPHONE, 
+	StatusBar: NS_TI_UI_IPHONE,
+};
