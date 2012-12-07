@@ -35,6 +35,7 @@ program
 	.option('-n, --no-colors','Turn off colors')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
+	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
 	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
 	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
 
