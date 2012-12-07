@@ -1,0 +1,28 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: '#000',
+	font: {
+		fontSize: '20dp',
+		fontFamily: 'Helvetica Neue'
+	},
+	textAlign: 'center'
+},
+"#headerPull": {
+    height: '60dp',
+    backgroundColor: '#aaa'
+},
+"#pullLabel": {
+    bottom: '30dp'
+},
+"#headerView": {
+    height: '50dp',
+    backgroundColor: '#a00'
+},
+"#footerView": {
+    height: '50dp',
+    backgroundColor: '#00a'
+}
