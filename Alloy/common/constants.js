@@ -125,5 +125,11 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.UI.Window
 	LeftNavButton: 'Ti.UI.Window',
 	RightNavButton: 'Ti.UI.Window',
-	TitleControl: 'Ti.UI.Window'
+	TitleControl: 'Ti.UI.Window',
+
+	// Ti.UI.TableView
+	HeaderView: 'Ti.UI.TableView',
+	HeaderPullView: 'Ti.UI.TableView',
+	FooterView: 'Ti.UI.TableView',
+	Search: 'Ti.UI.TableView'
 };
