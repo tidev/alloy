@@ -10,19 +10,4 @@
 		fontFamily: 'Helvetica Neue'
 	},
 	textAlign: 'center'
-},
-"#headerPull": {
-    height: '60dp',
-    backgroundColor: '#aaa'
-},
-"#pullLabel": {
-    bottom: '30dp'
-},
-"#headerView": {
-    height: '50dp',
-    backgroundColor: '#a00'
-},
-"#footerView": {
-    height: '50dp',
-    backgroundColor: '#00a'
 }

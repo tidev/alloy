@@ -14,21 +14,7 @@
 	    		</RightNavButton>
 	    		
 	    		<!-- test rest of the Window markup -->
-	    		<TableView id="table">
-	    			
-	    			<!-- proxy properties for the table -->
-	    			<HeaderView>
-	    				<View id="headerView"/>
-	    			</HeaderView>
-	    			<HeaderPullView>
-	    				<View id="headerPull">
-	    					<Label id="pullLabel">Would be refreshing...</Label>
-	    				</View>
-	    			</HeaderPullView>
-	    			<FooterView>
-	    				<View id="footerView"/>
-	    			</FooterView>
-	    		</TableView>
+	    		<Require src="table"/>
 		    </Window>
 	    </NavigationGroup>
     </Window>
