@@ -5,7 +5,8 @@ var path = require('path'),
 	alloyRoot = path.join(__dirname,'..','..'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	U = require(basePath + 'utils'),
-	CONST = require(basePath + 'common/constants');
+	CONST = require(basePath + 'common/constants'),
+	logger = require(basePath + 'common/logger');
 
 function pad(x) {
 	if (x < 10) {
@@ -25,7 +26,15 @@ exports.generate = function(name, type, program, args) {
 	var ext = '.'+CONST.FILE_EXT[type];
 	var paths = U.getAndValidateProjectPaths(program.outputPath);
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
-	var dir = path.join(paths.app,CONST.DIR[type],path.dirname(name));
+	
+	var dir = path.join(paths.app,CONST.DIR[type]);
+	if (program.platform) {
+		if (_.contains(['VIEW','CONTROLLER','STYLE'],type)) {
+			dir = path.join(dir,program.platform);
+		} else {
+			logger.warn('platform "' + program.platform + '" ignored, not used with type "' + type + '"');
+		}
+	}
 	var file = path.join(dir,path.basename(name,ext)+ext);
 
 	if (path.existsSync(file) && !program.force) {
