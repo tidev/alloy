@@ -82,6 +82,11 @@
  *     $.buttongrid.relayout();
  * 
  * The grid will calculate a new gutter between the buttons and animate the buttons into place one at a time.
+ * **Note**: If you use autoLayout="true" (default) then a Ti.Gesture event handler will be used to relayout 
+ * the widget based on orientation changes. To avoid any potential memory leaks associated with using these 
+ * global event handlers, you must call the **destroy()** function on the widget when you are done using it.
+ * This will free all memory resources associated with the widget. If you have autoLayout="false", then you are
+ * not required to call **destroy()** when you are done with the widget.
  */
 
 var TEXTSIZE = 10;
@@ -96,6 +101,7 @@ var defaults = {
 /**
  * @method init
  * Initializes the button grid.
+ * @param {Boolean} [autoLayout=true] If true, the widget will automatically adjust the layout for orientation events, which requires you to execute destroy() when you are done. if false, the widget does not adjust its layout automatically, and you are not required to call destroy() when finished using it.
  * @param {Array.<Object>} buttons The buttons array is an array of button objects each of which  describes a button to create in the grid.
  * @param {String} buttons.id Unique id for this item. This id also selects the image icons for this button. The ButtonGrid expects to find the image at app/assets/images/\<id\>.png.
  * @param {String} [buttons.title] The text that describes this button that will appear underneath the icon.
@@ -164,8 +170,28 @@ exports.init = function ButtonGridInit(args) {
         }
     });
     
-    Ti.Gesture.addEventListener("orientationchange", $.relayout);
-    $.relayout();
+    var autoLayout = $._params.autoLayout || typeof $._params.autoLayout === 'undefined';
+    if (autoLayout) {
+        Ti.Gesture.addEventListener("orientationchange", exports.relayout);
+    }
+    exports.relayout();
+};
+
+/** 
+ * @method destroy
+ * Frees all resources associated with the button grid when done using it.
+ * This function should be called when the button grid is no longer being 
+ * used to ensure that all memory allocated to it is released.
+ */
+exports.destroy = function() {
+    Ti.Gesture.removeEventListener('orientationchange', exports.relayout);
+    _.each($._buttons, function(button) {
+        if (button.click) {
+            button.b.removeEventListener('click', button.click);
+        }
+        $.scrollview.remove(button.b);
+        button.b = null;
+    });
 };
 
 /**
