@@ -10,7 +10,8 @@
 	_ = require("./lib/alloy/underscore")._,
 	pkginfo = require('pkginfo'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	CONST = require('./common/constants');
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
@@ -70,6 +71,10 @@ if (program.args.length === 0)
 	help = logger.stripColors ? colors.stripColors(help) : help;
 	console.log(help);
 	process.exit(0);
+}
+
+if (program.platform && !_.contains(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
+	U.die('Invalid platform "' + program.platform + '" specified, must be [' + CONST.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
 }
 
 // Validate the given command
