@@ -121,4 +121,9 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.UI.iPhone
 	NavigationGroup: NS_TI_UI_IPHONE, 
 	StatusBar: NS_TI_UI_IPHONE,
+
+	// Ti.UI.Window
+	LeftNavButton: 'Ti.UI.Window',
+	RightNavButton: 'Ti.UI.Window',
+	TitleControl: 'Ti.UI.Window'
 };
