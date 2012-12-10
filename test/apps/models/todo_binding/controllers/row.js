@@ -30,8 +30,8 @@ function toggleStatus(e) {
 	// then save to presistence, and model-view binding will automatically
 	// reflect this in the tableview
 	todo.set({
-    		"done": todo.get('done') ? 0 : 1,
-    		"date_completed": moment().unix()
+		"done": todo.get('done') ? 0 : 1,
+		"date_completed": moment().unix()
   	}).save(); 
 }
 
