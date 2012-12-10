@@ -41,12 +41,8 @@ function deleteTask(e) {
 	// find the todo task by id
 	var todo = todos.get(id);
 
-	// remove the model from the collection
-	todos.remove(todo);
-
-	// destroy the model from persistence
+	// destroy the model from persistence, which will in turn remove
+	// it from the collection, and model-view binding will automatically
+	// reflect this in the tableview
 	todo.destroy();
-
-  	// update views from sql storage
-  	todos.fetch();
 }
