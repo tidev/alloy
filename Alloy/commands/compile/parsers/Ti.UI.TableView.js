@@ -98,29 +98,6 @@ function parse(node, state, args) {
 			} else if (_.contains(PROXY_PROPERTIES, theNode)) {
 				isProxyProperty = true;
 			}
-
-			// make sure we are dealing with rows and sections
-			// if (childArgs.fullname === 'Alloy.Require') {
-			// 	var inspect = CU.inspectRequireNode(child);
-			// 	_.each(inspect.names, function(name) {
-			// 		if (name === 'Ti.UI.TableViewRow' ||
-			// 			name === 'Ti.UI.TableViewSection') {
-			// 			isSearchBar = false;
-			// 		} else if (name === 'Ti.UI.SearchBar') {
-			// 			isSearchBar = true;
-			// 		} else {
-			// 			U.die('TableView <Require> child at position ' + i + ' has elements that are not rows, sections, or SearchBar');
-			// 		}
-			// 	});
-			// } else if (childArgs.fullname === 'Ti.UI.TableViewRow' ||
-			// 		   childArgs.fullname === 'Ti.UI.TableViewSection') {
-			// 	isSearchBar = false;
-			// } else if (childArgs.fullname === 'Ti.UI.SearchBar') {
-			// 	isSearchBar = true;
-			// } else {
-			// 	U.die('TableView child at position ' + i + ' is not a row or section, or a <Require> containing rows, sections, or SearchBar');
-			// }
-
 			
 			if (isProxyProperty) {
 				// generate code for proxy property assigments
