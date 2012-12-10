@@ -23,7 +23,7 @@ if ($model) {
 
 // toggle the "done" status of the IDed todo
 function toggleStatus(e) {
-	// finc the todo task by id
+	// find the todo task by id
 	var todo = todos.get(id);
 
 	// set the current "done" and "date_completed" fields for the model,
@@ -32,7 +32,7 @@ function toggleStatus(e) {
 	todo.set({
     		"done": todo.get('done') ? 0 : 1,
     		"date_completed": moment().unix()
-  	}).save(); // save to presistence
+  	}).save(); 
 }
 
 // delete the IDed todo from the collection
