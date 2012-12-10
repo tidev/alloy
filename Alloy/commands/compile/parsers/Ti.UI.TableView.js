@@ -22,29 +22,50 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		arrayName = CU.generateUniqueId(),
-		localModel = CU.generateUniqueId(),
 		code = '',
 		proxyPropertyCode = '',
-		hasRows = false,
-		searchBarName,
-		proxyProperties = [];
+		itemCode = '',
+		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
+		searchBarName, localModel, arrayName;
 
-	// are we using collection binding with this table?
-	if (args[CONST.BIND_COLLECTION]) {
-		var where = args[CONST.BIND_WHERE];
-		var transform = args[CONST.BIND_TRANSFORM];
-		var tableState = require('./default').parse(node, state);
-		code += tableState.code;
+	// iterate through all children of the TableView
+	_.each(children, function(child) {
+		var childArgs = CU.getParserArgs(child),
+			isSearchBar = false,
+			isProxyProperty = false;
 
-		// iterate through all children
-		var itemCode = '';
-		for (var i = 0, l = children.length; i < l; i++) {
-			var child = children[i],
-				childArgs = CU.getParserArgs(child);
+		// validate the child element and determine if it's part of
+		// the table data, a searchbar, or a proxy property assigment
+		var theNode = CU.validateNodeName(child, ALL_VALID);
+		if (!theNode) {
+			U.dieWithNode(child, 'Child element must be on of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (theNode === 'Ti.UI.SearchBar') {
+			isSearchBar = true;
+		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+			isProxyProperty = true;
+		}
 
-			// TODO: validate children of tableview
-
+		// generate code for proxy property assigments
+		if (isProxyProperty) {
+			proxyPropertyCode += CU.generateNode(child, {
+				parent: { 
+					node: node, 
+					symbol: '<%= proxyPropertyParent %>' 
+				},
+				styles: state.styles
+			});
+		// generate code for search bar
+		} else if (isSearchBar) {
+			code += CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				post: function(node, state, args) {
+					searchBarName = state.parent.symbol;
+				}
+			});
+		// generate code for template row for model-view binding
+		} else if (isDataBound) {
+			localModel || (localModel = CU.generateUniqueId());
 			itemCode += CU.generateNode(child, {
 				parent: {},
 				local: true,
@@ -54,90 +75,48 @@ function parse(node, state, args) {
 					return 'rows.push(' + state.parent.symbol + ');\n';
 				}
 			});
-		}
-
-		// Do we use an instance or singleton collection reference?
-		var col;
-		if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
-			col = args[CONST.BIND_COLLECTION];
+		// generate code for the static row/section/searchbar
 		} else {
-			col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-		} 
-		
-		// create fetch/change handler
-		var whereCode = where ? where + "(" + col + ")" : col + ".models";
-		var transformCode = transform ? transform + "(" + localModel + ")" : "{}";
-		code += col + ".on('fetch destroy change add remove', function(e) { ";
-		code += "	var models = " + whereCode + ";";
-		code += "	var len = models.length;";
-		code += "	var rows = [];";
-		code += "	for (var i = 0; i < len; i++) {";
-		code += "		var " + localModel + " = models[i];";
-		code += "		" + localModel + ".__transform = " + transformCode + ";";
-		code += itemCode;
-		code += "	}";
-		code += tableState.parent.symbol + ".setData(rows);";
-		code += "});";
-	} else {
-		code = 'var ' + arrayName + ' = [];\n';
-
-		// iterate through all children
-		for (var i = 0, l = children.length; i < l; i++) {
-			var child = children[i],
-				childArgs = CU.getParserArgs(child),
-				isSearchBar = false,
-				isProxyProperty = false;
-
-			// validate the child element and determine if it's part of
-			// the table data, a searchbar, or a proxy property assigment
-			var theNode = CU.validateNodeName(child, ALL_VALID);
-			if (!theNode) {
-				U.dieWithNode(child, 'Child element must be on of the following: [' + ALL_VALID.join(',') + ']');
-			} else if (theNode === 'Ti.UI.SearchBar') {
-				isSearchBar = true;
-			} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-				isProxyProperty = true;
-			}
-			
-			if (isProxyProperty) {
-				// generate code for proxy property assigments
-				proxyPropertyCode += CU.generateNode(child, {
-					parent: { 
-						node: node, 
-						symbol: '<%= proxyPropertyParent %>' 
-					},
-					styles: state.styles
-				});
-			} else {
-				// generate code for the row/section/searchbar
-				code += CU.generateNode(child, {
-					parent: {},
-					styles: state.styles,
-					post: function(node, state, args) {
-						if (isSearchBar) {
-							searchBarName = state.parent.symbol;
-						} else {
-							hasRows = true;
-							return arrayName + '.push(' + state.parent.symbol + ');\n';
-						}
+			code += CU.generateNode(child, {
+				parent: {},
+				styles: state.styles,
+				post: function(node, state, args) {
+					var postCode = '';
+					if (!arrayName) {
+						arrayName = CU.generateUniqueId();
+						postCode += 'var ' + arrayName + '=[];';
 					}
-				});
-			}
+					postCode += arrayName + '.push(' + state.parent.symbol + ');'; 
+					return postCode;
+				}
+			});
 		}
+	});
 
-		// Create the initial TableView code
-		var extras = [];
-		if (hasRows) { extras.push(['data', arrayName]); }
-		if (searchBarName) { extras.push(['search', searchBarName]) }
-		if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
+	// Create the initial TableView code
+	var extras = [];
+	if (arrayName) { extras.push(['data', arrayName]); }
+	if (searchBarName) { extras.push(['search', searchBarName]) }
+	if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
 
-		// generate the code for the table itself
-		var tableState = require('./default').parse(node, state);
-		code += tableState.code;
+	// generate the code for the table itself
+	var tableState = require('./default').parse(node, state);
+	code += tableState.code;
 
-		// fill in the proxy property assignment template with the
-		// symbol used to represent the table
-		code += _.template(proxyPropertyCode, {proxyPropertyParent:tableState.parent.symbol});
+	// fill in the proxy property assignment template with the
+	// symbol used to represent the table
+	code += _.template(proxyPropertyCode, {
+		proxyPropertyParent: tableState.parent.symbol
+	});
+
+	// finally, fill in any model-view binding code, if present
+	if (isDataBound) {
+		localModel || (localModel = CU.generateUniqueId());
+		code += _.template(getBindingCode(args), {
+			localModel: localModel,
+			itemCode: itemCode,
+			parentSymbol: tableState.parent.symbol 
+		});
 	}
 
 	// Update the parsing state
@@ -146,4 +125,36 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	}
-};
+}
+
+function getBindingCode(args) {
+	var code = '';
+
+	// Do we use an instance or singleton collection reference?
+	var col;
+	if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
+		col = args[CONST.BIND_COLLECTION];
+	} else {
+		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
+	} 
+	
+	// create fetch/change handler
+	var where = args[CONST.BIND_WHERE];
+	var transform = args[CONST.BIND_TRANSFORM];
+	var whereCode = where ? where + "(" + col + ")" : col + ".models";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
+	code += col + ".on('fetch destroy change add remove', function(e) { ";
+	code += "	var models = " + whereCode + ";";
+	code += "	var len = models.length;";
+	code += "	var rows = [];";
+	code += "	for (var i = 0; i < len; i++) {";
+	code += "		var <%= localModel %> = models[i];";
+	code += "		<%= localModel %>.__transform = " + transformCode + ";";
+	code += "<%= itemCode %>";
+	code += "	}";
+	code += "<%= parentSymbol %>.setData(rows);";
+	code += "});";
+
+	return code;
+}
+
