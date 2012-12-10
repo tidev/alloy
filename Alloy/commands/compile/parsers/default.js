@@ -1,4 +1,6 @@
 var CU = require('../compilerUtils'),
+	U = require('../../../utils'),
+	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._;
 
 exports.parse = function(node, state) {
@@ -7,6 +9,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var createFunc = 'create' + node.nodeName,
+		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
 		code = '';
 
 	// make symbol a local variable if necessary
@@ -29,9 +32,32 @@ function parse(node, state, args) {
 		code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 	} 
 
+	if (isCollectionBound) {
+		var localModel = CU.generateUniqueId();
+		var itemCode = '';
+
+		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+			itemCode += CU.generateNode(child, {
+				parent: {
+					node: node,
+					symbol: args.symbol
+				},
+				local: true,
+				model: localModel,
+				styles: state.styles
+			});
+		});
+
+		code += _.template(getBindingCode(args), {
+			localModel: localModel,
+			itemCode: itemCode,
+			parentSymbol: args.symbol 
+		});
+	}
+
 	// Update the parsing state
 	return {
-		parent: {
+		parent: isCollectionBound ? {} : {
 			node: node,
 			symbol: args.symbol
 		},
@@ -41,3 +67,38 @@ function parse(node, state, args) {
 		code: code
 	}
 };
+
+function getBindingCode(args) {
+	var code = '';
+
+	// Do we use an instance or singleton collection reference?
+	var col;
+	if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
+		col = args[CONST.BIND_COLLECTION];
+	} else {
+		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
+	} 
+
+	var where = args[CONST.BIND_WHERE];
+	var transform = args[CONST.BIND_TRANSFORM];
+	var whereCode = where ? where + "(" + col + ")" : col + ".models";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
+	code += col + ".on('fetch destroy change add remove', function(e) { ";
+	code += "	var models = " + whereCode + ";";
+	code += "	var len = models.length;";
+	code += "	while(<%= parentSymbol %>.children.length > 0) {";
+	code += "		var child = <%= parentSymbol %>.children[0];";
+	code += "		if (child) {";
+	code += "			<%= parentSymbol %>.remove(child);";
+	code += "			child = null;";
+	code += "		}";
+	code += "	}";
+	code += "	for (var i = 0; i < len; i++) {";
+	code += "		var <%= localModel %> = models[i];";
+	code += "		<%= localModel %>.__transform = " + transformCode + ";";
+	code += "		<%= itemCode %>";
+	code += "	}";
+	code += "});";
+
+	return code;
+}
