@@ -1,5 +1,0 @@
-<Alloy>
-	<Window class="container">
-		<TableView id="table"/>	
-	</Window>
-</Alloy>
