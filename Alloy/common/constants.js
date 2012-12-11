@@ -1,5 +1,6 @@
 var _ = require('../lib/alloy/underscore')._;
 
+// General default values
 exports.ALLOY_DIR = 'app';
 exports.NAME_DEFAULT = 'index';
 exports.NAME_WIDGET_DEFAULT = 'widget';
@@ -8,23 +9,25 @@ exports.ROOT_NODE = 'Alloy';
 exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.PLUGIN_NAME = 'ti.alloy';
+exports.EXPR_PREFIX = '#';
 
+// Constants related to model-view binding
+exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform'];
 exports.BIND_COLLECTION = 'dataCollection';
 exports.BIND_WHERE = 'dataFilter';
 exports.BIND_TRANSFORM = 'dataTransform';
 exports.BIND_TRANSFORM_VAR = '__transform';
 exports.BIND_MODEL_VAR = '$model';
+exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
 
-exports.EXPR_PREFIX = '#';
-
+// Listings for supported platforms and commands
 exports.PLATFORMS = ['android','ios','mobileweb'];
 exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
 exports.INSTALL_TYPES = ['plugin'];
 exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 
-exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
-
+// mappings of file extensions and folders for each file type
 exports.FILE_EXT = {
 	VIEW: 'xml',
 	STYLE: 'tss',
@@ -36,7 +39,6 @@ exports.FILE_EXT = {
 	CONFIG: 'json',
 	JMK: 'jmk'
 };
-
 exports.DIR = {
 	VIEW: 'views',
 	STYLE: 'styles',
@@ -51,6 +53,7 @@ exports.DIR = {
 	COMPONENT: 'controllers'
 };
 
+// constants identifying JS reserved words
 exports.JS_RESERVED = [
 	'break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete',
 	'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof',
@@ -64,6 +67,7 @@ exports.JS_RESERVED_FUTURE = [
 ];
 exports.JS_RESERVED_ALL = _.union(exports.JS_RESERVED, exports.JS_RESERVED_FUTURE);
 
+// constants for implicit namespaces in markup
 var NS_ALLOY = 'Alloy',
 	NS_ALLOY_ABSTRACT = 'Alloy.Abstract',
 	NS_TI_ANDROID = 'Ti.Android',
