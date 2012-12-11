@@ -1,0 +1,31 @@
+"#container": {
+	height: '100dp',
+	width: '95%',
+	backgroundColor: '#f8f8f8',
+	borderColor: '#88f',
+	borderWidth: 3,
+	borderRadius: 8,
+	top: '10dp'
+},
+"#title": {
+	top: '5dp',
+	left: '10dp',
+	right: '100dp',
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'bold'
+	}
+},
+"#date": {
+	bottom: '5dp',
+	left: '10dp',
+	right: '10dp',
+	color: '#888',
+	textAlign: 'right'
+},
+"#text": {
+	top: '25dp',
+	bottom: '25dp',
+	left: '10dp',
+	right: '10dp'
+}

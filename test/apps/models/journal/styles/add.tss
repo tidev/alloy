@@ -1,0 +1,27 @@
+"#addWin":{
+	layout: 'vertical'
+},
+"#title":{
+	width: '90%',
+	top: '25dp',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	returnKeyType: Ti.UI.RETURNKEY_NEXT
+},
+"#mood": {
+	top: '10dp'
+},
+"#text": {
+	width: '90%',
+	top: '10dp',
+	height: '120dp',
+	borderColor: '#88f',
+	borderWidth: 2,
+	borderRadius: '8dp',
+	returnKeyType: Ti.UI.RETURNKEY_DONE
+},
+".button":{
+	width: '50%',
+	top: '10dp'
+}
+
+

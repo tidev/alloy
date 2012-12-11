@@ -1,0 +1,27 @@
+"#index": {
+	fullscreen: false,
+	exitOnClose: true
+},
+"#scroll": {
+	layout: 'vertical',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	showVerticalScrollIndicator: false,
+	showHorizontalScrollIndicator: true
+},
+"#scroll[platform=android]": {
+	top: '40dp',
+	bottom: 0
+},
+".titlebar": {
+	top: 0,
+	height: '40dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#88f',
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'center'
+}

@@ -1,0 +1,7 @@
+<Alloy>
+	<View id="container" borderColor="{moodColor}">
+		<Label id="title" text="{title}"/>
+		<Label id="text" text="{text}"/>
+		<Label id="date" text="{dateSince}"/>
+	</View>
+</Alloy>

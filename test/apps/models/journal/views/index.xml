@@ -1,0 +1,19 @@
+<Alloy>
+	<!-- create a global reference to the journal collection -->
+	<Collection src="journal"/>
+
+	<Window>
+		<NavigationGroup platform="ios,mobileweb">
+			<Window title="Journal">
+				<RightNavButton>
+					<Button onClick="addEntry">add entry</Button>
+				</RightNavButton>
+
+				<!-- render each journal entry as an instance of the required view -->
+				<ScrollView id="scroll" dataCollection="journal" dataTransform="doTransform">
+					<Require src="entry"/>
+				</ScrollView>
+			</Window>
+		</NavigationGroup>
+	</Window>
+</Alloy>

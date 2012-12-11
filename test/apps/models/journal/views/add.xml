@@ -1,0 +1,23 @@
+<Alloy>
+  	<Window id="addWin" title="Add Entry" modal="true">
+    	<TextField id="title" hintText="entry title" onReturn="focusText"/>
+    	<TextArea id="text" onReturn="closeKeyboard"/>
+
+    	<!-- use a TabbedBar on iOS, a Picker otherwise -->
+    	<TabbedBar id="mood" platform="ios" index="1">
+    		<Labels>
+    			<Label>happy</Label>
+    			<Label>neutral</Label>
+    			<Label>mad</Label>
+    		</Labels>
+    	</TabbedBar>
+    	<Picker id="mood" platform="!ios">
+    		<Row title="happy"/>
+    		<Row title="neutral"/>
+    		<Row title="mad"/>
+    	</Picker>
+
+    	<Button class="button" onClick="addEntry">Add</Button>
+    	<Button class="button" onClick="closeWindow">Cancel</Button>
+  	</Window>
+</Alloy>
