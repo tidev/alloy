@@ -100,6 +100,11 @@ function parse(node, state, args) {
 	if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
 
 	// generate the code for the table itself
+	if (isDataBound) {
+		_.each(CONST.BIND_PROPERTIES, function(p) {
+			node.removeAttribute(p);
+		});
+	}
 	var tableState = require('./default').parse(node, state);
 	code += tableState.code;
 
