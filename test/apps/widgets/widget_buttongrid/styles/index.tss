@@ -1,6 +1,6 @@
 "#index": {
     height: Ti.UI.FILL,
-    top: "0dp",
+    top: 0,
     fullscreen: false
 },
 
@@ -9,5 +9,5 @@
     backgroundRepeat: true,
     width: Ti.UI.FILL,
     height: Ti.UI.FILL,
-    top: "0dp"
+    top: 0
 },

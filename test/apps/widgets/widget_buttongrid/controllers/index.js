@@ -1,7 +1,6 @@
 var animation = require('alloy/animation');
 
 function IndexOpen(e) {
- 
     $.logo.init({ image: '/images/alloy.png', width: 216, height: 200, opacity: 0.1 });
     $.buttongrid.relayout(e);    
 }
