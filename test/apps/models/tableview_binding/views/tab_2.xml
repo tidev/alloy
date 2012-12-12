@@ -1,0 +1,21 @@
+<Alloy>
+	<Collection src="myModel"/>
+
+	<Tab title="global/inline">
+		<Window id="window" title="global/inline">
+
+			<!-- use the global reference to the dataCollection -->
+			<TableView id="table" dataCollection="myModel" onClick="removeItem">
+				
+				<!-- create the repeated TableViewRow inline -->
+				<TableViewRow class="row">
+					<Label class="rowTitle" text="{title}"/>
+					<ImageView class="rowImage" image="{image}"/>
+				</TableViewRow>
+			</TableView>
+
+			<!-- let's use a simple button or android -->
+			<Button class="addButton" onClick="addItem" platform="android"/>
+		</Window>
+	</Tab>
+</Alloy>

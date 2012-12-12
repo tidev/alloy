@@ -59,8 +59,20 @@ function parse(node, state, args) {
 	delete args.createArgs.type;
 	delete args.createArgs.src;
 
+	// make symbol a local variable if necessary, used for binding
+	if (state.local) {
+		args.symbol = CU.generateUniqueId(); 
+	}
+
+	// add model to createArgs if binding
+	if (state.model) {
+		var modelObj = {};
+		modelObj[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model;
+		args.createArgs = _.extend(args.createArgs || {}, modelObj);
+	}
+
 	// Generate runtime code
-	code += args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
+	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
 		args.id, 

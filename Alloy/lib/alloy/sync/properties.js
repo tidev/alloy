@@ -1,24 +1,19 @@
-/*
- * Ti.App.Properties sync adapter which will store all models locally
- */
 var Alloy = require('alloy'),
 	_ = require("alloy/underscore")._,
 	TAP = Ti.App.Properties;
 
-// make sure we have a unique list of IDs for adapter models
-var idList = [],
-	uniqueIdCounter = 1;
-function getUniqueId(id) {
-	if (!id || _.contains(idList,id)) {
-		id = getUniqueId(uniqueIdCounter++);
-	} 
-	idList.push(id);
-	return id;
+function S4() {
+   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 };
+
+function guid() {
+   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+};	
 
 function Sync(model, method, opts) {
 	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
-	var regex = new RegExp("^(" + prefix + ")\\-(\\d+)$");
+	var regex = new RegExp("^(" + prefix + ")\\-(.+)$");
+	var resp = null;
 
 	if (method === 'read') {
 		if (opts.parse) {
@@ -31,20 +26,32 @@ function Sync(model, method, opts) {
 				}
 			});
 			model.reset(list);
-			var maxId = _.max(_.pluck(list, 'id')); 
-			model.maxId = (_.isFinite(maxId) ? maxId : 0) + 1;
+			resp = list;
 		} else {
 			// is model
 			var obj = TAP.getObject(prefix + '-' + model.get('id'));
 			model.set(obj);
+			resp = model.toJSON();
 		}	
 	} 
-	else if (method === 'create' || method === 'update') {
-		TAP.setObject(prefix + '-' + model.get('id'), model.toJSON() || {});
+	else if (method === 'create' || method === 'update') { 
+		var newId = model.get('id') || guid();
+		model.set({id: newId}, {silent:true});
+		TAP.setObject(prefix + '-' + newId, model.toJSON() || {});
+		resp = model.toJSON();
 	} else if (method === 'delete') {
 		TAP.removeProperty(prefix + '-' + model.get('id'));
 		model.clear();
+		resp = model.toJSON();
 	}
+
+	// process success/error handlers, if present
+	if (resp) {
+        _.isFunction(opts.success) && opts.success(resp);
+        method === "read" && model.trigger("fetch");
+    } else {
+    	_.isFunction(opts.error) && opts.error("Record not found");
+    }
 }
 
 module.exports.sync = Sync;
@@ -54,9 +61,10 @@ module.exports.beforeModelCreate = function(config) {
 	config.columns = config.columns || {};
 	config.defaults = config.defaults || {};
 
-	// add this adapter's values
-	config.columns.id = 'Int';
-	config.defaults.id = getUniqueId();
+	// give it a default id if it doesn't exist already
+	if (typeof config.columns.id === 'undefined' || config.columns.id === null) {
+		config.columns.id = 'String';
+	}
 
 	return config;
 };

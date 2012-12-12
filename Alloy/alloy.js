@@ -10,7 +10,8 @@
 	_ = require("./lib/alloy/underscore")._,
 	pkginfo = require('pkginfo'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	CONST = require('./common/constants');
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
@@ -35,6 +36,7 @@ program
 	.option('-n, --no-colors','Turn off colors')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
+	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
 	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
 	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
 
@@ -69,6 +71,10 @@ if (program.args.length === 0)
 	help = logger.stripColors ? colors.stripColors(help) : help;
 	console.log(help);
 	process.exit(0);
+}
+
+if (program.platform && !_.contains(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
+	U.die('Invalid platform "' + program.platform + '" specified, must be [' + CONST.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
 }
 
 // Validate the given command

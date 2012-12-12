@@ -21,11 +21,19 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	compileConfig = {},
 	theme;
 
+var times = {
+	first: null,
+	last: null,
+	msgs: []
+};
+
 //////////////////////////////////////
 ////////// command function //////////
 //////////////////////////////////////
 module.exports = function(args, program) {
+//	BENCHMARK();
 	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
+//	BENCHMARK('getAndValidateProjectPaths');
 	var alloyConfig = {},
 		compilerMakeFile;
 
@@ -57,15 +65,19 @@ module.exports = function(args, program) {
 		}
 	}
 	logger.debug('');
+//	BENCHMARK('clean Resources');
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project, true);
+//	BENCHMARK('install Alloy plugins/hooks');
+
 	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
 	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB,'vendor'], paths.resources);
 	logger.debug('');
+//	BENCHMARK('Copy Alloy libs and assets into project');
 
 	// update alloy.js with current Alloy version (Alloy.version)
 	var aFile = path.join(paths.resources,'alloy.js');
@@ -91,12 +103,12 @@ module.exports = function(args, program) {
 	logger.debug('app path = ' + paths.app);
 
 	// create compile config from paths and various alloy config files
-	compilerMakeFile = new CompilerMakeFile();
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	buildPlatform = compileConfig.alloyConfig.platform;
 	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
 	logger.debug('theme = ' + theme);
+//	BENCHMARK('generate Alloy configurations');
 
 	// check theme for assets
 	if (theme) {
@@ -106,8 +118,10 @@ module.exports = function(args, program) {
 		}
 	}
 	logger.debug('');
+//	BENCHMARK('copy theme assets');
 
 	// process project makefiles
+	compilerMakeFile = new CompilerMakeFile();
 	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
 	if (path.existsSync(alloyJMK)) {
 		logger.debug('Loading "alloy.jmk" compiler hooks...');
@@ -125,6 +139,7 @@ module.exports = function(args, program) {
 		compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 		logger.debug('');
 	}
+//	BENCHMARK('process Alloy jmk file');
 
 	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
 	if (!path.existsSync(path.join(paths.project,'ti.physicalSizeCategory-android-1.0.zip')) && 
@@ -141,14 +156,17 @@ module.exports = function(args, program) {
 
 		U.tiapp.upStackSizeForRhino(paths.project);
 	}
+//	BENCHMARK('install android modules and tiapp fixes');
 
 	logger.debug('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
 	loadGlobalStyles(paths.app, theme);
+//	BENCHMARK('load global styles');
 	
 	// Process all models
 	var models = processModels();
+//	BENCHMARK('process models');
 
 	// create a regex for determining which platform-specific
 	// folders should be used in the compile process
@@ -191,6 +209,7 @@ module.exports = function(args, program) {
 		});
 	});
 	logger.debug('');
+//	BENCHMARK('process all controllers');
 
 	// generate app.js
 	var alloyJsPath = path.join(paths.app,'alloy.js');
@@ -208,14 +227,19 @@ module.exports = function(args, program) {
 	}
 	fs.writeFileSync(appJS,code);
 	logger.info("compiling alloy to " + appJS.yellow);
+//	BENCHMARK('generate app.js');
 
 	// optimize code
 	optimizeCompiledCode(alloyConfig, paths);
+//	BENCHMARK('optimize runtime code')
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
 	}
+//	BENCHMARK('post:compile');
+//
+//	BENCHMARK('TOTAL', true);
 };
 
 
@@ -235,7 +259,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		template = {
 			viewCode: '',
 			controllerCode: '',
-			exportsCode: '',
+			modelVariable: CONST.BIND_MODEL_VAR,
+			preCode: '',
 			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
@@ -311,8 +336,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
-				'Ti.UI.TabGroup'
-			];
+				'Ti.UI.TabGroup',
+			].concat(CONST.MODEL_ELEMENTS);
 			_.each(rootChildren, function(node) {
 				var found = true;
 				var args = CU.getParserArgs(node, {}, { doSetId: false });
@@ -332,15 +357,40 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				if (!found) {
 					U.die([
 						'Compile failed. index.xml must have a top-level container element.',
-						'Valid elements: [ Window, TabGroup, SplitWindow]'
+						'Valid elements: [' + valid.join(',') + ']'
 					]);
 				}
 			});
 		}
 
-		// Generate each node in the view
+		// process any model/colletion nodes
 		_.each(rootChildren, function(node, i) {
-			var defaultId = i === 0 ? viewName : undefined;
+			var fullname = CU.getNodeFullname(node);
+			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
+
+			if (isModelElement) {
+				var vCode = CU.generateNode(node, state, undefined, false, true);
+				template.viewCode += vCode.content;
+				template.preCode += vCode.pre;
+
+				// remove the model/collection nodes when done
+				docRoot.removeChild(node);
+			}
+		});
+
+		// rebuild the children list since model elements have been removed
+		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
+
+		// process the UI nodes
+		var assignedDefaultId = false;
+		_.each(rootChildren, function(node, i) {
+			var defaultId = undefined;
+			var fullname = CU.getNodeFullname(node);
+
+			if (!assignedDefaultId) {
+				assignedDefaultId = true;
+				defaultId = viewName;
+			} 
 			template.viewCode += CU.generateNode(node, state, defaultId, true);
 		});
 	}
@@ -352,7 +402,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
 	template.controllerCode += cCode.controller;
-	template.exportsCode += cCode.exports;
+	template.preCode += cCode.pre;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
@@ -473,6 +523,10 @@ function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
 			'mangle',
+
+			// TODO: http://jira.appcelerator.org/browse/ALOY-393
+			'optimizer',
+			
 			'squeeze'
 		],
 		modLocation = './ast/';
@@ -509,5 +563,29 @@ function optimizeCompiledCode() {
 		// Combine lastFiles and files, so on the next iteration we can make sure that the 
 		// list of files to be processed has not grown, like in the case of builtins.
 		lastFiles = _.union(lastFiles, files);
+	}
+}
+
+function BENCHMARK(desc, isFinished) {
+	var places = Math.pow(10,5);
+	desc || (desc = '<no description>');
+	if (times.first === null) {
+		times.first = process.hrtime();
+		return;
+	}
+
+	function hrtimeInSeconds(t) {
+		return t[0] + (t[1] / 1000000000);
+	}
+
+	var total = process.hrtime(times.first);
+	var current = hrtimeInSeconds(total) - (times.last ? hrtimeInSeconds(times.last) : 0);
+	times.last = total;
+	times.msgs.push('[' + Math.round((isFinished ? hrtimeInSeconds(total) : current)*places)/places + 's] ' + desc);
+	if (isFinished) { 
+		logger.trace(' ');
+		logger.trace('Benchmarking');
+		logger.trace('------------');
+		logger.trace(times.msgs); 
 	}
 }

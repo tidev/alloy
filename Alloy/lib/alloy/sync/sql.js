@@ -1,7 +1,3 @@
-/*
- * Local SQLite sync adapter which will store all models in
- * an on device database
- */
 var _ = require('alloy/underscore')._, 
 	db;
 
@@ -184,10 +180,14 @@ function Sync(model, method, opts) {
 			resp = model.toJSON();
 			break;
 	}
-    if (resp) {
-        opts.success(resp);
+    
+    // process success/error handlers, if present
+	if (resp) {
+        _.isFunction(opts.success) && opts.success(resp);
         method === "read" && model.trigger("fetch");
-    } else opts.error("Record not found");
+    } else {
+    	_.isFunction(opts.error) && opts.error("Record not found");
+    }
 	
 }
 

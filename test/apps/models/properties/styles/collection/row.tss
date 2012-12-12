@@ -1,5 +1,6 @@
 "#row": {
-	height: '50dp'
+	height: '50dp',
+	className: 'itemrow'
 },
 "#name": {
 	height: Ti.UI.SIZE,

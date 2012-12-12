@@ -26,61 +26,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	PLATFORMS = ['ios', 'android', 'mobileweb'],
-	NS_ALLOY = 'Alloy',
-	NS_ALLOY_ABSTRACT = 'Alloy.Abstract',
-	NS_TI_ANDROID = 'Ti.Android',
-	NS_TI_MAP = 'Ti.Map',
-	NS_TI_MEDIA = 'Ti.Media',
-	NS_TI_UI_IOS = 'Ti.UI.iOS',
-	NS_TI_UI_IPAD = 'Ti.UI.iPad',
-	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
-	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
-	IMPLICIT_NAMESPACES = {
-		// Alloy
-		Require: NS_ALLOY,
-		Widget: NS_ALLOY,
-
-		// Alloy.Abstract
-		ButtonNames: NS_ALLOY_ABSTRACT,
-		ButtonName: NS_ALLOY_ABSTRACT,
-		BarItemTypes: NS_ALLOY_ABSTRACT,
-		BarItemType: NS_ALLOY_ABSTRACT,
-		CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
-		CoverFlowImageType: NS_ALLOY_ABSTRACT,
-		FlexSpace: NS_ALLOY_ABSTRACT,
-		Images: NS_ALLOY_ABSTRACT,
-		Item: NS_ALLOY_ABSTRACT,
-		Items: NS_ALLOY_ABSTRACT,
-		Labels: NS_ALLOY_ABSTRACT,
-		Option: NS_ALLOY_ABSTRACT,
-		Options: NS_ALLOY_ABSTRACT,
-
-		// Ti.Android
-		Menu: NS_TI_ANDROID,
-		MenuItem: NS_TI_ANDROID,
-
-		// Ti.Map
-		Annotation: NS_TI_MAP,
-
-		// Ti.Media
-		VideoPlayer: NS_TI_MEDIA,
-		MusicPlayer: NS_TI_MEDIA,
-
-		// Ti.UI.iOS
-		AdView: NS_TI_UI_IOS,
-		CoverFlowView: NS_TI_UI_IOS,
-		TabbedBar: NS_TI_UI_IOS,
-		Toolbar: NS_TI_UI_IOS,
-
-		// Ti.UI.iPad
-		DocumentViewer: NS_TI_UI_IPAD,
-		Popover: NS_TI_UI_IPAD,
-		SplitWindow: NS_TI_UI_IPAD,
-
-		// Ti.UI.iPhone
-		NavigationGroup: NS_TI_UI_IPHONE, 
-		StatusBar: NS_TI_UI_IPHONE,
-	},
 	CONDITION_MAP = {
 		android: {
 			compile: 'OS_ANDROID',
@@ -101,8 +46,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 			runtime: "Alloy.isTablet"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor'],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor'],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 //////////////////////////////////////
@@ -129,7 +74,7 @@ exports.generateUniqueId = function() {
 
 exports.getNodeFullname = function(node) {
 	var name = node.nodeName,
-		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
+		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name;
 
 	return fullname;
@@ -142,16 +87,24 @@ exports.getParserArgs = function(node, state, opts) {
 	var defaultId = opts.defaultId || undefined,
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
-		ns = node.getAttribute('ns') || IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
+		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name,
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
 
+	// handle binding arguments
+	var bindObj = {};
+	bindObj[CONST.BIND_COLLECTION] = node.getAttribute(CONST.BIND_COLLECTION);
+	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE); 
+	bindObj[CONST.BIND_TRANSFORM] = node.getAttribute(CONST.BIND_TRANSFORM); 
+
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
-	if (doSetId) { node.setAttribute('id', id); }
+	if (doSetId && !_.contains(CONST.MODEL_ELEMENTS, fullname)) { 
+		node.setAttribute('id', id); 
+	}
 
 	// process the platform attribute
 	if (platform) {
@@ -177,7 +130,8 @@ exports.getParserArgs = function(node, state, opts) {
 	}
 
 	// get create arguments and events from attributes
-	var createArgs = {}, events = [];
+	var createArgs = {}, 
+		events = [];
 	var attrs = _.contains(['Alloy.Require'], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
@@ -190,7 +144,7 @@ exports.getParserArgs = function(node, state, opts) {
 		}
 	});
 	
-	return {
+	return _.extend({
 		ns: ns,
 		name: name,
 		id: id, 
@@ -202,7 +156,7 @@ exports.getParserArgs = function(node, state, opts) {
 		platform: platformObj,
 		createArgs: createArgs,
 		events: events
-	};
+	}, bindObj);
 };
 
 exports.generateCode = function(ast) {
@@ -220,12 +174,15 @@ exports.generateCode = function(ast) {
 	return pro.gen_code(ast, opts);
 }
 
-exports.generateNode = function(node, state, defaultId, isTopLevel) {
+exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
-		code = { content: '' };
+		code = { 
+			content: '',
+			pre: '' 
+		};
 
 	// Check for platform specific considerations
 	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
@@ -254,10 +211,19 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 	// Execute the appropriate tag parser and append code
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');\n'; }
+	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
+	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
+
+	// handle any model/collection code
+	if (state.modelCode) {
+		code.pre += state.modelCode;
+		delete state.modelCode;
+	}
+
+	// handle any events from markup
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + ");\n";	
+			code.content += args.symbol + ".on('" + ev.name + "',function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
 		});	
 	}
 
@@ -274,7 +240,14 @@ exports.generateNode = function(node, state, defaultId, isTopLevel) {
 		}); 
 	}
 	
-	return code.condition ? _.template(codeTemplate, code) : code.content;
+	if (!isModelOrCollection) {
+		return code.condition ? _.template(codeTemplate, code) : code.content;
+	} else {
+		return {
+			content: code.condition ? _.template(codeTemplate, code) : code.content,
+			pre: code.condition ? _.template(codeTemplate, {content:code.pre}) : code.pre
+		};
+	}
 }
 
 exports.componentExists = function(appRelativePath, manifest) {
@@ -398,12 +371,19 @@ exports.inspectRequireNode = function(node) {
 
 	_.each(children, function(c) {
 		var args = exports.getParserArgs(c);
+
+		// skip model elements when inspecting nodes for <Require>
+		if (_.contains(CONST.MODEL_ELEMENTS, args.fullname)) {
+			newNode.removeChild(c);
+			return;
+		}
+
 		names.push(args.fullname);
 	});
 
 	return {
-		children: children,
-		length: children.length,
+		children: U.XML.getElementsFromNodes(newNode.childNodes),
+		length: names.length,
 		names: names
 	};
 }
@@ -443,7 +423,7 @@ function updateImplicitNamspaces(platform) {
 		case 'ios': 
 			break;
 		case 'mobileweb':
-			IMPLICIT_NAMESPACES.NavigationGroup = NS_TI_UI_MOBILEWEB;
+			CONST.IMPLICIT_NAMESPACES.NavigationGroup = 'Ti.UI.MobileWeb';
 			break;
 	}
 }
@@ -530,7 +510,7 @@ exports.loadController = function(file) {
 	var code = {
 		parentControllerName: '',
 		controller: '',
-		exports: ''
+		pre: ''
 	};
 
 	// Read the controller file
@@ -552,8 +532,6 @@ exports.loadController = function(file) {
             if (match[1] === 'baseController') {
     			code.parentControllerName = pro.gen_code(value);
     		} 		
-    		code.exports += pro.gen_code(this) + ';\n';
-    		return ['block'];
     	}
     }
 
@@ -631,9 +609,10 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 	return style;
 };
 
-exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
+exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
 	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
 	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
+		bindingRegex = /^\{(.+)\}$/,
 		styleCollection = [],
 		lastObj = {};
 
@@ -645,7 +624,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 			// manage potential runtime conditions for the style
 			var conditionals = {
 				platform: [],
-				size: ''
+				formFactor: ''
 			};
 
 			if (style.queries) {
@@ -665,17 +644,17 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 					}
 				}
 
-				// handle size device query
+				// handle formFactor device query
 				if (q.size === 'tablet' || q.formFactor === 'tablet') {
-					conditionals.size = 'Alloy.isTablet';
-				} else if (q.size === 'handheld') {
-					conditionals.size = 'Alloy.isHandheld';
+					conditionals.formFactor = 'Alloy.isTablet';
+				} else if (q.size === 'handheld' || q.formFactor === 'handheld') {
+					conditionals.formFactor = 'Alloy.isHandheld';
 				}
 
 				// assemble runtime query
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
-				var joinString = pcond && conditionals.size ? ' && ' : '';
-				var conditional = pcond + joinString + conditionals.size;
+				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
+				var conditional = pcond + joinString + conditionals.formFactor;
 
 				// push styles if we need to insert a conditional
 				if (conditional) {
@@ -697,8 +676,21 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle) {
 	_.extend(lastObj, extraStyle || {});
 	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
 
-	// console.log('--------' + id + ':' + classes + ':' + apiName + '-------------');
-	// console.log(require('util').inspect(styleCollection, false, null));
+	// substitutions for binding
+	_.each(styleCollection, function(style) {
+		_.each(style.style, function(v,k) {
+			if (_.isString(v)) {
+				var match = v.match(bindingRegex);
+				if (match !== null) {
+					var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+					var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+					var standard = modelVar + ".get('" + match[1] + "')";
+					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
+					style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+				}
+			}
+		});
+	});
 
 	function processStyle(style, fromArray) {
 		style = fromArray ? {0:style} : style;
@@ -928,12 +920,13 @@ function sortStyles(componentStyle) {
 		sortedStyles = [],
 		ctr = 1,
 		VALUES = {
-			ID:     10000,
-			CLASS:   1000,
-			API:      100,
-			PLATFORM:  10,
-			SUM:        1,
-			ORDER:      0.001
+			ID:     100000,
+			CLASS:   10000,
+			API:      1000,
+			PLATFORM:  100,
+			FORMFACTOR: 10,
+			SUM:         1,
+			ORDER:       0.001
 		};
 
 	// add global style to processing, if present
@@ -981,6 +974,14 @@ function sortStyles(componentStyle) {
 					if (q === 'platform') {
 						priority += VALUES.PLATFORM + VALUES.SUM;
 						v = v.split(',');
+					} else if (q === 'formFactor' || q === 'size') {
+						// TODO: https://jira.appcelerator.org/browse/ALOY-402
+						if (q === 'size') {
+							logger.warn('"size" has been deprecated and will be removed in Alloy 0.4.0, use "formFactor" for device queries instead');
+							q = 'formFactor';
+						}
+
+						priority += VALUES.FORMFACTOR + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
 					}

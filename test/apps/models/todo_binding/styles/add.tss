@@ -1,0 +1,16 @@
+"#addWin":{
+	layout: 'vertical',
+	barColor: '#a00'
+},
+"#itemField":{
+	width: '90%',
+	top: '25dp',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	returnKeyType: Ti.UI.RETURNKEY_DONE
+},
+".button":{
+	width: '50%',
+	top: '20dp'
+}
+
+

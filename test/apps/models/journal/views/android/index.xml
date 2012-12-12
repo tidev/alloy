@@ -1,0 +1,15 @@
+<Alloy>
+	<!-- create a global reference to the journal collection -->
+	<Collection src="journal"/>
+
+	<Window>
+		<Menu>
+			<MenuItem onClick="addEntry" title="add entry" icon="/ic_menu_add.png"></MenuItem>
+		</Menu>
+
+		<Label class="titlebar">Journal</Label>
+		<ScrollView id="scroll" dataCollection="journal" dataTransform="doTransform">
+			<Require src="entry"/>
+		</ScrollView>
+	</Window>
+</Alloy>

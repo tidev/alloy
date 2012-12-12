@@ -1,0 +1,21 @@
+<Alloy>
+	<Window>
+		<NavigationGroup>
+		    <Window>
+	    		<!-- proxy properties for the window -->
+	    		<LeftNavButton>
+	    			<Button onClick="sayHi">say hi</Button>
+	    		</LeftNavButton>
+	    		<TitleControl>
+	    			<Label>title control</Label>
+	    		</TitleControl>
+	    		<RightNavButton>
+	    			<Button onClick="doAlert">alert</Button>
+	    		</RightNavButton>
+	    		
+	    		<!-- test rest of the Window markup -->
+	    		<Require src="table"/>
+		    </Window>
+	    </NavigationGroup>
+    </Window>
+</Alloy>

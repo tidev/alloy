@@ -1,0 +1,26 @@
+".row": {
+	backgroundColor: '#fff',
+	height: '50dp'
+},
+".rowTitle": {
+	color: '#222',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	left: '10dp',
+	right: '60dp'
+},
+".rowImage": {
+	height: '33dp',
+	width: '33dp',
+	right: '10dp'
+},
+".addButton": {
+	height: '40dp',
+	width: '40dp',
+	title: '+',
+	bottom: 0,
+	right: 0
+}

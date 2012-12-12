@@ -18,10 +18,16 @@
 	}
 },
 "#shake": {
-	width: Ti.UI.SIZE,
-	height: Ti.UI.SIZE,
-	color: "#000",
-	top: "20dp"
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE,
+    color: "#000",
+    top: "20dp"
+},
+"#flash": {
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE,
+    color: "#000",
+    top: "20dp"
 },
 "#trim": {
 	height: Ti.UI.SIZE,

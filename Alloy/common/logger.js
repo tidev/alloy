@@ -6,17 +6,22 @@ try {
 	isNode = false;
 }
 
+exports.TRACE = 4;
 exports.DEBUG = 3;
 exports.INFO = 2;
 exports.WARN = 1;
 exports.ERROR = 0;
 exports.NONE = -1;
-exports.logLevel = exports.DEBUG;
+exports.logLevel = exports.TRACE;
 exports.stripColors = false;
 exports.showTimestamp = false;
 
+exports.trace = function(msg) {
+	if (exports.logLevel >= exports.TRACE) { printMessage(msg, 'trace', 'grey'); }
+}
+
 exports.debug = function(msg) {
-	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'info', 'cyan'); }
+	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'debug', 'cyan'); }
 }
 
 exports.info = function(msg) {
@@ -33,7 +38,7 @@ exports.error = function(msg) {
 
 
 // Private functions and members
-var levels = ['info','debug','error','warn'];
+var levels = ['info','debug','error','warn','trace'];
 var has = function(array, item) {
 	var len = array.length;
 	for (var i = 0; i < len; i++) {
@@ -65,7 +70,7 @@ var printMessage = function(msg, level, color) {
 	color = color || 'white';
 
 	// Have to wrap in a function to avoid "Illegal invocation" error on android
-	var logFunc = function(msg){console[level](msg)};
+	var logFunc = function(msg){(level === 'debug' || level === 'trace' ? console.log : console[level])(msg)};
 
 	function printLine(line) {
 		if (isArray(line)) {

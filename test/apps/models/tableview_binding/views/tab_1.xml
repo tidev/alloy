@@ -1,0 +1,18 @@
+<Alloy>
+	<Collection src="myModel"/>
+
+	<Tab title="global/<Require>">
+		<Window id="window" title="global/<Require>">
+
+			<!-- use the global reference to the dataCollection -->
+			<TableView id="table" dataCollection="myModel" onClick="removeItem">
+
+				<!-- use a <Require> for our repeated TableViewRow -->
+				<Require src="row"/>
+			</TableView>
+
+			<!-- let's use a simple button or android -->
+			<Button class="addButton" onClick="addItem" platform="android"/>
+		</Window>
+	</Tab>
+</Alloy>

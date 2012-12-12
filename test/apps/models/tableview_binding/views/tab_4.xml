@@ -1,0 +1,21 @@
+<Alloy>
+	<Collection src="myModel" id="myModelId" instance="true"/>
+
+	<Tab title="local/inline">
+		<Window id="window" title="local/inline">
+
+			<!-- use a local reference attached to the controller -->
+			<TableView id="table" dataCollection="$.myModelId" onClick="removeItem">
+				
+				<!-- create the repeated TableViewRow inline -->
+				<TableViewRow class="row">
+					<Label class="rowTitle" text="{title}"/>
+					<ImageView class="rowImage" image="{image}"/>
+				</TableViewRow>
+			</TableView>
+
+			<!-- let's use a simple button or android -->
+			<Button class="addButton" onClick="addItem" platform="android"/>
+		</Window>
+	</Tab>
+</Alloy>

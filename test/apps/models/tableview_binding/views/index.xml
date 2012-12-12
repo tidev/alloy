@@ -1,0 +1,8 @@
+<Alloy>
+	<TabGroup>
+		<Require src="tab_1"/>
+		<Require src="tab_2"/>
+		<Require src="tab_3"/>
+		<Require src="tab_4"/>
+	</TabGroup>
+</Alloy>
