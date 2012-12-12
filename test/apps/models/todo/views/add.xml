@@ -1,7 +1,0 @@
-<Alloy>
-  <Window id="addWin" title="Add Item" class="container" modal="true">
-    <TextField id="itemField" hintText="What do you need to do?" />
-    <Button id="addBtn" class="button">Add Item</Button>
-    <Button id="cancelBtn" class="button">Cancel</Button>
-  </Window>
-</Alloy>
