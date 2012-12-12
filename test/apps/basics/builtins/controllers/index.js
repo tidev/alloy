@@ -4,8 +4,7 @@
 // in your Titanium project as "Resources/alloy/animation.js" and
 // "Resources/alloy/string.js" automatically.
 var animation = require('alloy/animation'),
-	string = require('alloy/string'),
-	datetime = require('alloy/datetime');
+	string = require('alloy/string');
 
 function ShakeClick(e) { 
     animation.shake($.mover, 0, function (){ alert("Shake ended."); });
@@ -18,7 +17,5 @@ function FlashClick(e) {
 function TrimClick(e) {
 	$.label.text = string.trim($.label.text);
 }
-
-$.label.text = "   " + datetime.formatAsRFC822(new Date()) + "   ";
 
 $.index.open();
