@@ -1,7 +1,8 @@
 var moment = require('alloy/moment');
 
 var USERNAME = 'user',
-    PASSWORD = 'password';
+    PASSWORD = 'password',
+    AUTHKEY = 'somelongauthkeyforvalidation';
 
 exports.definition = {
 	config: {
@@ -9,7 +10,8 @@ exports.definition = {
 			"username":"text",
             "email":"text",
 			"loggedIn":"integer",
-            "loggedInSince":"text"
+            "loggedInSince":"text",
+            "authKey":"text"
 		},
 		"adapter": {
 			"type": "sql",
@@ -28,7 +30,8 @@ exports.definition = {
                 if (username === USERNAME && password === PASSWORD) {
                     this.set({
                         loggedIn: 1,
-                        loggedInSince: moment.format('YYYY-MM-DD HH:mm:ss.SSS')
+                        loggedInSince: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+                        authKey: AUTHKEY
                     });
                     this.save();
                     return true;
@@ -41,6 +44,19 @@ exports.definition = {
                     loggedIn: 0
                 });
                 this.save();
+            },
+            validateAuth: function() {
+                // Again, this would be done against an auth server in a real world
+                // scenario. We're just keeping it simple here.
+                if (this.get('loggedIn') === 1 && this.get('authKey') === AUTHKEY) {
+                    return true;
+                } else {
+                    this.set({
+                        loggedIn: 0
+                    });
+                    this.save();
+                    return false;
+                }
             }
         });
 

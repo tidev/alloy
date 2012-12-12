@@ -4,7 +4,8 @@ migration.up = function(db) {
 			"username":"text",
             "email":"text",
 			"loggedIn":"integer",
-            "loggedInSince":"text"
+            "loggedInSince":"text",
+            "authKey":"text"
 		},
 		"adapter": {
 			"type": "sql",
