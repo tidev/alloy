@@ -11,6 +11,8 @@
  */
 
 exports.stringToDate = function (str) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     if (!str || str == '0000-00-00T00:00:00') {
         return null;
     }
@@ -31,6 +33,8 @@ exports.stringToDate = function (str) {
  * @return {String} Formatted time string.
  */
 exports.formatAsTime = function (time) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
         return '';
@@ -61,6 +65,8 @@ exports.formatAsTime = function (time) {
  * @return {String} Formatted date string.
  */
 exports.formatAsDayMonth = function (time) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
         return '';
@@ -81,6 +87,8 @@ exports.formatAsDayMonth = function (time) {
  * @return {String} Formatted date string.
  */
 exports.formatAsDOWMonthDayYear = function (time) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
         return '';
@@ -118,6 +126,8 @@ exports.formatAsDOWMonthDayYear = function (time) {
  * @return {String} Short string describing the date or in the format 'MM/DD/YYYY'.
  */
 exports.formatAsShort = function (time) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
         return '';
@@ -162,6 +172,8 @@ exports.formatAsShort = function (time) {
  * @return {String} Date formatted in RFC822 format.
  */
 exports.formatAsRFC822 = function (time, omitDOW) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var date = exports.stringToDate(time);
     if (!date || !date.getTime)
         return '';
@@ -216,6 +228,8 @@ exports.formatAsRFC822 = function (time, omitDOW) {
  * @return {String} Name of the month.
  */
 exports.getMonth = function(date) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     switch (date.getMonth()) {
         case 0:
             return 'January';
@@ -251,6 +265,8 @@ exports.getMonth = function(date) {
  * @return {String} Day of the week.
  */
 exports.getDayOfWeek = function(date) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     switch (date.getDay()) {
         case 0:
             return 'Sunday';
@@ -276,6 +292,8 @@ exports.getDayOfWeek = function(date) {
  * @return {String} Time in the format 'hh:mm' followed by 'am' or 'pm'.
  */
 exports.getTime = function(date) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var period = hours > 11 ? 'pm' : 'am';
@@ -293,6 +311,8 @@ exports.getTime = function(date) {
  * @return {Boolean} Returns 'true' if the two Date objects are the same else 'false'.
  */
 exports.areDatesEqual = function(date1, date2) {
+    Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
+    Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
     return (date1.getMonth() + '/' + date1.getDate() + '/' + date1.getFullYear()) ===
         (date2.getMonth() + '/' + date2.getDate() + '/' + date2.getFullYear());
 }
