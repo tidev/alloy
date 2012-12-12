@@ -15,6 +15,7 @@
 },
 "TextField": {
 	width: '200dp',
+	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE,
 	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
 },
 "#username": {
