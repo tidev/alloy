@@ -81,7 +81,7 @@ exports.C = function(name, modelDesc, model) {
 	var adapter = require('alloy/sync/'+type);
 	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
 
-	if (_.isFunction(modelDesc.extendModel)) {
+	if (_.isFunction(modelDesc.extendCollection)) {
 		Collection = modelDesc.extendCollection(Collection) || Collection;
 	}
 	
