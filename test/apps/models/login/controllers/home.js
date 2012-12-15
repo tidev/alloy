@@ -12,7 +12,7 @@ function setTheme(e) {
 		currentRow.hasCheck = false;
 		currentRow = e.row;
 		currentRow.hasCheck = true;
-		user.set({theme:e.index});
+		user.set({theme:e.index-1});
 	} else {
 		user.set({theme:e.rowIndex});
 	}
