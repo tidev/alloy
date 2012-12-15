@@ -33,6 +33,7 @@
 				</TableView>
 
 				<!-- use pickers for settings on android -->
+				<TextField id="email" value="{user.email}" onBlur="setEmail"/>
 				<Picker id="themes" platform="android" onChange="setTheme">
 					<Row title="Default"/>
 					<Row title="Banana Stand"/>
