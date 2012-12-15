@@ -11,8 +11,12 @@ exports.definition = {
             "email":"text",
 			"loggedIn":"integer",
             "loggedInSince":"text",
-            "authKey":"text"
+            "authKey":"text",
+            "theme":"integer"
 		},
+        "defaults": {
+            "theme":0
+        },
 		"adapter": {
 			"type": "sql",
 			"collection_name": "user"
@@ -29,6 +33,7 @@ exports.definition = {
                 // time like we are here.
                 if (username === USERNAME && password === PASSWORD) {
                     this.set({
+                        username: username,
                         loggedIn: 1,
                         loggedInSince: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
                         authKey: AUTHKEY

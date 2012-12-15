@@ -5,7 +5,11 @@ migration.up = function(db) {
             "email":"text",
 			"loggedIn":"integer",
             "loggedInSince":"text",
-            "authKey":"text"
+            "authKey":"text",
+            "theme":"integer"
+		},
+		"defaults": {
+			"theme":0
 		},
 		"adapter": {
 			"type": "sql",
