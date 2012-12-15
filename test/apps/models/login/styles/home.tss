@@ -12,5 +12,6 @@
 	right: 10,
 	hintText: 'email', 
 	height: 40, 
-	textAlign: 'left'
+	textAlign: 'left',
+	clearButtonMode: Ti.UI.INPUT_BUTTONMODE_ONFOCUS
 }
