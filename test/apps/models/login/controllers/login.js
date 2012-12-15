@@ -5,14 +5,12 @@ function focusPassword() {
 }
 
 function login(e) {
+	// blur textfield, if login() was launched from textfield
 	if (e && e.source && _.isFunction(e.source.blur)) {
 		e.source.blur();
 	}
-
-	var u = $.username.value;
-	var p = $.password.value;
 	
-	if (user.login(u,p)) {
+	if (user.login($.username.value, $.password.value)) {
 		Alloy.createController('home').getView().open();
 		$.login.close();
 	} else {
