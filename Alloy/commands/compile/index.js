@@ -408,10 +408,18 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
+	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
+	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');" 
 	_.each(CU.bindingsMap, function(v,k) {
 		template.viewCode += k + ".on('fetch change', function() {";
 		_.each(v, function(b) {
-			template.viewCode += '$.' + b.id + '.' + b.prop + '=' + k + '.get(\'' + b.attr + '\');';
+			template.viewCode += _.template(bTemplate, {
+				id: b.id,
+				prop: b.prop,
+				model: k,
+				attr: b.attr
+			});
+			//template.viewCode += '$.' + b.id + '.' + b.prop + '=_.isFunction(' + k + '.transform)?' + k + '.transform()[\'' +  + '\']' + k + '.get(\'' + b.attr + '\');';
 		});
 		template.viewCode += "});";
 	});
