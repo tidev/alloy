@@ -8,6 +8,7 @@ exports.definition = {
 	config: {
 		"columns": {
 			"username":"text",
+            "realname":"text",
             "email":"text",
 			"loggedIn":"integer",
             "loggedInSince":"text",
@@ -15,6 +16,8 @@ exports.definition = {
             "theme":"integer"
 		},
         "defaults": {
+            "realname":"Tobias Funke",
+            "email":"tfunke@bluth.com",
             "theme":0
         },
 		"adapter": {
@@ -34,6 +37,8 @@ exports.definition = {
                 if (username === USERNAME && password === PASSWORD) {
                     this.set({
                         username: username,
+                        realname: 'Tobias Funke',
+                        email: 'tfunke@bluth.com',
                         loggedIn: 1,
                         loggedInSince: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
                         authKey: AUTHKEY
@@ -62,6 +67,12 @@ exports.definition = {
                     this.save();
                     return false;
                 }
+            },
+            transform: function() {
+                var t = this.toJSON();
+                t.themeBGColor = t.theme === 2 ? '#00f' : t.theme === 1 ? '#ff0' : '#963';
+                t.themeImage = t.theme === 2 ? '/jeans.png' : t.theme === 1 ? '/banana.jpg' : '/family.jpg';
+                return t;
             }
         });
 
