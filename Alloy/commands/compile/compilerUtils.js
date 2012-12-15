@@ -684,6 +684,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 
+// TODO: all binding code needs to abide by conditionals
+
+
 				if (match !== null) {
 					var parts = match[1].split('.');
 					
