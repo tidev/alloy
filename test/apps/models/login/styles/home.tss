@@ -1,0 +1,16 @@
+".logout": {
+	title: 'logout'
+},
+"#themes[platform=ios]": {
+	style: Ti.UI.iPhone.TableViewStyle.GROUPED
+},
+"#themes[platform=android]": {
+	type: Ti.UI.PICKER_TYPE_PLAIN
+},
+"#email": {
+	left: 10,
+	right: 10,
+	hintText: 'email', 
+	height: 40, 
+	textAlign: 'left'
+}
