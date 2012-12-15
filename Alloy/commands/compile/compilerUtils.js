@@ -50,6 +50,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
+exports.bindingsMap = {};
+
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
@@ -681,12 +683,39 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		_.each(style.style, function(v,k) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
+
 				if (match !== null) {
-					var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-					var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-					var standard = modelVar + ".get('" + match[1] + "')";
-					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
-					style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+					var parts = match[1].split('.');
+					
+					// model binding
+					if (parts.length > 1) {
+						// are we bound to a global or controller-specific model?
+						var modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
+						var attr = parts[0] === '$' ? parts[2] : parts[1];
+
+						// add this property to the global bindings map for the 
+						// current controller component
+						if (!_.isArray(exports.bindingsMap[modelVar])) {
+							exports.bindingsMap[modelVar] = [];
+						}
+						exports.bindingsMap[modelVar].push({
+							id: id,
+							prop: k,
+							attr: attr
+						});
+
+						// since this property is data bound, don't include it in 
+						// the style statically
+						delete style.style[k];
+					} 
+					// collection binding
+					else {
+						var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+						var standard = modelVar + ".get('" + match[1] + "')";
+						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
+						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+					}
 				}
 			}
 		});

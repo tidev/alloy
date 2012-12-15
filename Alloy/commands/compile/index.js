@@ -267,6 +267,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		state = { parent: {} },
 		files = {};
 
+	// reset the bindings map
+	CU.bindingsMap = {};
+
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
 	_.each(searchPaths, function(fileType) {
@@ -403,6 +406,15 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
 	template.controllerCode += cCode.controller;
 	template.preCode += cCode.pre;
+
+	// process the bindingsMap, if it contains any data bindings
+	_.each(CU.bindingsMap, function(v,k) {
+		template.viewCode += k + ".on('fetch change', function() {";
+		_.each(v, function(b) {
+			template.viewCode += '$.' + b.id + '.' + b.prop + '=' + k + '.get(\'' + b.attr + '\');';
+		});
+		template.viewCode += "});";
+	});
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
