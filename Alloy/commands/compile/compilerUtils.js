@@ -176,6 +176,10 @@ exports.generateCode = function(ast) {
 	return pro.gen_code(ast, opts);
 }
 
+exports.generateNodeExtended = function(node, state, newState) {
+	return exports.generateNode(node, _.extend(_.clone(state), newState));
+}
+
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
