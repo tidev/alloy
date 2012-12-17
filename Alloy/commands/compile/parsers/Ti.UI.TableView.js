@@ -47,18 +47,16 @@ function parse(node, state, args) {
 
 		// generate code for proxy property assigments
 		if (isProxyProperty) {
-			proxyPropertyCode += CU.generateNode(child, {
+			proxyPropertyCode += CU.generateNodeExtended(child, state, {
 				parent: { 
 					node: node, 
 					symbol: '<%= proxyPropertyParent %>' 
-				},
-				styles: state.styles
+				}
 			});
 		// generate code for search bar
 		} else if (isSearchBar) {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					searchBarName = state.parent.symbol;
 				}
@@ -66,20 +64,18 @@ function parse(node, state, args) {
 		// generate code for template row for model-view binding
 		} else if (isDataBound) {
 			localModel || (localModel = CU.generateUniqueId());
-			itemCode += CU.generateNode(child, {
+			itemCode += CU.generateNodeExtended(child, state, {
 				parent: {},
 				local: true,
 				model: localModel,
-				styles: state.styles,
 				post: function(node, state, args) {
 					return 'rows.push(' + state.parent.symbol + ');\n';
 				}
 			});
 		// generate code for the static row/section/searchbar
 		} else {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					var postCode = '';
 					if (!arrayName) {

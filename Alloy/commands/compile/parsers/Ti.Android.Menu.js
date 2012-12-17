@@ -53,12 +53,11 @@ function parse(node, state, args) {
 		}
 
 		// generate code for the MenuItem
-		code += CU.generateNode(child, {
+		code += CU.generateNodeExtended(child, state, {
 			parent: { 
 				node: node,
 				symbol: eventObject + '.menu'
-			},
-			styles: state.styles
+			}
 		});
 	});
 

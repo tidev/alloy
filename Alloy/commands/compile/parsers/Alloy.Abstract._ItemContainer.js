@@ -42,11 +42,10 @@ function parse(node, state, args) {
 		if (_.find(def.children, function(c){ return c.name === theNode; })) {
 			var childState = {
 				parent: {},
-				styles: state.styles,
 				itemsArray: CU.generateUniqueId()
 			};
 
-			code += CU.generateNode(child, childState);
+			code += CU.generateNodeExtended(child, state, childState);
 			var prop = _.find(def.children, function(c) { return c.name === theNode; }).property;
 			extras.push([prop, childState.itemsArray]);
 
@@ -61,9 +60,8 @@ function parse(node, state, args) {
 		} else if (def.androidView) {
 			if (androidView === null) {
 				if (isAndroid) {
-					androidView = CU.generateNode(child, {
+					androidView = CU.generateNodeExtended(child, state, {
 						parent: {},
-						styles: state.styles,
 						post: function(node, state, args) {
 							extras.push(['androidView', state.parent.symbol]);
 						}

@@ -37,9 +37,8 @@ function parse(node, state, args) {
 		}
 
 		// generate proxy property
-		code += CU.generateNode(child, {
+		code += CU.generateNodeExtended(child, state, {
 			parent: {},
-			styles: state.styles,
 			post: function(node, state, args) {
 				proxy = state.parent.symbol;
 			}

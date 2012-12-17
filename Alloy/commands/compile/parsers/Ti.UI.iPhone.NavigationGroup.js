@@ -23,9 +23,8 @@ function parse(node, state, args) {
 
 	// generate the code for the Window first
 	if (theNode) {
-		code += CU.generateNode(child, {
+		code += CU.generateNodeExtended(child, state, {
 			parent: {},
-			styles: state.styles,
 			post: function(node, state, args) {
 				windowSymbol = state.parent.symbol;
 			}

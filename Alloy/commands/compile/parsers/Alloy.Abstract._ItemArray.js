@@ -47,9 +47,8 @@ function parse(node, state, args) {
 		// This ItemArray processes all types, so we need to process 
 		// them manually
 		if (def.children[0] === 'ALL') {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, s, args) {
 					return state.itemsArray + '.push(' + s.parent.symbol + ');';
 				}

@@ -16,9 +16,8 @@ function parse(node, state, args) {
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var theNode = CU.validateNodeName(child, 'Ti.UI.Tab');
 		if (theNode) {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					return groupState.parent.symbol + '.addTab(' + state.parent.symbol + ');';
 				}

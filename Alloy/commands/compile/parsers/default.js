@@ -37,14 +37,13 @@ function parse(node, state, args) {
 		var itemCode = '';
 
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-			itemCode += CU.generateNode(child, {
+			itemCode += CU.generateNodeExtended(child, state, {
 				parent: {
 					node: node,
 					symbol: args.symbol
 				},
 				local: true,
-				model: localModel,
-				styles: state.styles
+				model: localModel
 			});
 		});
 
@@ -63,6 +62,7 @@ function parse(node, state, args) {
 		},
 		local: state.local || false,
 		model: state.model || undefined,
+		condition: state.condition || undefined,
 		styles: state.styles,
 		code: code
 	}
