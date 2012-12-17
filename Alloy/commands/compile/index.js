@@ -409,16 +409,34 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// process the bindingsMap, if it contains any data bindings
 	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
-	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');" 
-	_.each(CU.bindingsMap, function(v,k) {
-		template.viewCode += k + ".on('fetch change', function() {";
-		_.each(v, function(b) {
-			template.viewCode += _.template(bTemplate, {
-				id: b.id,
-				prop: b.prop,
-				model: k,
-				attr: b.attr
+	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');";
+
+	// for each model variable in the bindings map... 
+	_.each(CU.bindingsMap, function(mapping,modelVar) {
+
+		// open the model binding handler
+		template.viewCode += modelVar + ".on('fetch change', function() {";
+
+		// for each specific conditional within the bindings map....
+		_.each(_.groupBy(mapping, function(b) { return b.condition; }), function(bindings,condition) {
+			var bCode = '';
+
+			// for each binding belonging to this model/conditional pair...
+			_.each(bindings, function(binding) {
+				bCode += _.template(bTemplate, {
+					id: binding.id,
+					prop: binding.prop,
+					model: modelVar,
+					attr: binding.attr
+				});
 			});
+			
+			// if this is a legit conditional, wrap the binding code in it
+			if (typeof condition !== 'undefined' && condition !== 'undefined') {
+				bCode = 'if(' + condition + '){' + bCode + '}';
+			}
+			template.viewCode += bCode;
+			
 		});
 		template.viewCode += "});";
 	});

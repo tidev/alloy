@@ -207,6 +207,15 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
 	}
 
+	// pass relevant conditional information in state
+	if (code.condition) {
+		if (state.condition) {
+			state.condition += '&&' + code.condition;
+		} else {
+			state.condition = code.condition;
+		}
+	}
+
 	// Determine which parser to use for this node
 	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
 	var parserRequire = 'default';
@@ -687,29 +696,36 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		_.each(style.style, function(v,k) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
-
-// TODO: all binding code needs to abide by conditionals
-
-
 				if (match !== null) {
 					var parts = match[1].split('.');
-					
+
 					// model binding
 					if (parts.length > 1) {
 						// are we bound to a global or controller-specific model?
 						var modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
 						var attr = parts[0] === '$' ? parts[2] : parts[1];
 
-						// add this property to the global bindings map for the 
-						// current controller component
+						// ensure that the bindings for this model have been initialized
 						if (!_.isArray(exports.bindingsMap[modelVar])) {
 							exports.bindingsMap[modelVar] = [];
 						}
-						exports.bindingsMap[modelVar].push({
+
+						// create the binding object
+						var bindingObj = {
 							id: id,
 							prop: k,
 							attr: attr
-						});
+						};
+
+						// make sure bindings are wrapped in any conditionals
+						// relevant to the curent style
+						if (theState.condition) {
+							bindingObj.condition = theState.condition;
+						}
+
+						// add this property to the global bindings map for the 
+						// current controller component
+						exports.bindingsMap[modelVar].push(bindingObj);
 
 						// since this property is data bound, don't include it in 
 						// the style statically
