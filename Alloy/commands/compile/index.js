@@ -419,7 +419,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				model: k,
 				attr: b.attr
 			});
-			//template.viewCode += '$.' + b.id + '.' + b.prop + '=_.isFunction(' + k + '.transform)?' + k + '.transform()[\'' +  + '\']' + k + '.get(\'' + b.attr + '\');';
 		});
 		template.viewCode += "});";
 	});
