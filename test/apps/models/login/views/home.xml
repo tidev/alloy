@@ -33,12 +33,20 @@
 				</TableView>
 
 				<!-- use pickers for settings on android -->
-				<TextField id="email" value="{user.email}" onBlur="setEmail" platform="android"/>
-				<Picker id="themes" platform="android" onChange="setTheme">
-					<Row title="Default"/>
-					<Row title="Banana Stand"/>
-					<Row title="Never-Nude Blue Man"/>
-				</Picker>
+				<View platform="android" layout="vertical" top="10dp">
+					<View>
+						<Label left="5dp">Email</Label>
+						<TextField id="email" value="{user.email}" onBlur="setEmail"/>
+					</View>
+					<View>
+						<Label left="5dp">Theme</Label>
+						<Picker id="themes" onChange="setTheme">
+							<Row title="Default"/>
+							<Row title="Banana Stand"/>
+							<Row title="Never-Nude Blue Man"/>
+						</Picker>
+					</View>
+				</View>
 			</Window>
 		</Tab>
 	</TabGroup>
