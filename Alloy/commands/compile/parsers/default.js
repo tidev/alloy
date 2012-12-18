@@ -83,7 +83,7 @@ function getBindingCode(args) {
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + col + ")" : col + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	code += col + ".on('fetch destroy change add remove', function(e) { ";
+	code += col + ".on('fetch destroy change add remove reset', function(e) { ";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "	while(<%= parentSymbol %>.children.length > 0) {";
