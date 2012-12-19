@@ -1,0 +1,7 @@
+<Alloy>
+	<Window layout="vertical">
+		<Label text="{info.name}"/>
+		<Label text="{info.email}"/>
+		<Label text="{info.twitter}"/>
+	</Window>
+</Alloy>
