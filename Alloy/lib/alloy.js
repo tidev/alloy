@@ -187,7 +187,6 @@ exports.createWidget = function(id, name, args) {
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
 }
 
-
 /**
  * @method getController
  * Factory method for instantiating a controller. Creates and returns an instance of the 
