@@ -568,10 +568,7 @@ function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
 			'mangle',
-
-			// TODO: http://jira.appcelerator.org/browse/ALOY-393
 			'optimizer',
-			
 			'squeeze'
 		],
 		modLocation = './ast/';
@@ -599,7 +596,7 @@ function optimizeCompiledCode() {
 
 			// process all AST operations
 			_.each(mods, function(mod) {
-				logger.debug('- Processing "' + mod + '" module...')
+				logger.debug('- Processing "' + mod + '" module...');
 				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
 			});
 			fs.writeFileSync(fullpath, CU.generateCode(ast));
