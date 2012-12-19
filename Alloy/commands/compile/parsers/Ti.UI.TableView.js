@@ -146,9 +146,7 @@ function getBindingCode(args) {
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
 	var handlerVar = CU.generateUniqueId();
 
-	//code += col + ".on('fetch destroy change add remove reset', function(e) { ";
 	code += "var " + handlerVar + "=function(e) {";
-
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "	var rows = [];";
@@ -158,8 +156,6 @@ function getBindingCode(args) {
 	code += "<%= itemCode %>";
 	code += "	}";
 	code += "<%= parentSymbol %>.setData(rows);";
-	
-	//code += "});";
 	code += "};";
 	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
 
