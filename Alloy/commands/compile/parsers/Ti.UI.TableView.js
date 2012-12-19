@@ -144,7 +144,11 @@ function getBindingCode(args) {
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + col + ")" : col + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	code += col + ".on('fetch destroy change add remove reset', function(e) { ";
+	var handlerVar = CU.generateUniqueId();
+
+	//code += col + ".on('fetch destroy change add remove reset', function(e) { ";
+	code += "var " + handlerVar + "=function(e) {";
+
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "	var rows = [];";
@@ -154,7 +158,12 @@ function getBindingCode(args) {
 	code += "<%= itemCode %>";
 	code += "	}";
 	code += "<%= parentSymbol %>.setData(rows);";
-	code += "});";
+	
+	//code += "});";
+	code += "};";
+	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+
+	CU.destroyCode += col + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
 
 	return code;
 }
