@@ -10,6 +10,8 @@ exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.PLUGIN_NAME = 'ti.alloy';
 exports.EXPR_PREFIX = '#';
+exports.PLUGIN_FILE = 'plugin.py';
+exports.HOOK_FILE = 'alloy.js';
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform'];
