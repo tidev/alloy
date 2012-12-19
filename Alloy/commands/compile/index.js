@@ -69,7 +69,7 @@ module.exports = function(args, program) {
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
-	U.installPlugin(path.join(alloyRoot,'..'), paths.project, true);
+	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 //	BENCHMARK('install Alloy plugins/hooks');
 
 	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
