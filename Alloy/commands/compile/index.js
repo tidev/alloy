@@ -269,6 +269,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// reset the bindings map
 	CU.bindingsMap = {};
+	CU.destroyCode = '';
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
@@ -415,7 +416,10 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	_.each(CU.bindingsMap, function(mapping,modelVar) {
 
 		// open the model binding handler
-		template.viewCode += modelVar + ".on('fetch change', function() {";
+		// template.viewCode += modelVar + ".on('fetch change', function() {";
+		var handlerVar = CU.generateUniqueId();
+		template.viewCode += 'var ' + handlerVar + '=function() {';
+		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 
 		// for each specific conditional within the bindings map....
 		_.each(_.groupBy(mapping, function(b) { return b.condition; }), function(bindings,condition) {
@@ -438,8 +442,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			template.viewCode += bCode;
 			
 		});
-		template.viewCode += "});";
+		template.viewCode += "};";
+		template.viewCode += modelVar + ".on('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 	});
+
+	// add destroy() function to view for cleaning up bindings
+	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);

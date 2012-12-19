@@ -51,6 +51,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 exports.bindingsMap = {};
+exports.destroyCode = '';
 
 //////////////////////////////////////
 ////////// public interface //////////
