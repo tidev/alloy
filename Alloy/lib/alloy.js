@@ -301,8 +301,7 @@ function isTabletFallback() {
 exports.isTablet = (function() {
 	if (OS_IOS) {
 		return Ti.Platform.osname === 'ipad';
-	}
-	if (OS_ANDROID) {
+	} else if (OS_ANDROID) {
 		try {
 			var psc = require('ti.physicalSizeCategory');
 			return psc.physicalSizeCategory === 'large' ||
@@ -311,16 +310,14 @@ exports.isTablet = (function() {
 			Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
 			return isTabletFallback();
 		}
-	} 
-	if (OS_MOBILEWEB) {
+	} else if (OS_MOBILEWEB) {
 		return !(Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
 		) < 400);
-	} 
-
-	// Last resort. Don't worry, uglifyjs cleans up this dead code if necessary.
-	return isTabletFallback();
+	} else {
+		return isTabletFallback();
+	}
 })();
 
 /**
