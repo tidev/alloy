@@ -57,6 +57,7 @@ exports.init = function (logger, config, cli, appc) {
 				e.toString().split('\n').forEach(function (line) {
 					line && logger.error(line);
 				});
+				process.exit(1);
 			}
 			Error.stackTraceLimit = origLimit;
 			finished();
@@ -124,6 +125,7 @@ exports.init = function (logger, config, cli, appc) {
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
+						process.exit(1);
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
 					}
