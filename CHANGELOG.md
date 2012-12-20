@@ -1,4 +1,4 @@
-## General Information
+## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
 * Install Alloy by version: `[sudo] npm install -g alloy@0.3.0`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
@@ -6,32 +6,47 @@
 
 ## Coming Features
 The following are planned features for the next release:
-* [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Model-view binding on Views using collections, allowing for arbitrary component repetition.
-* [ALOY-387](https://jira.appcelerator.org/browse/ALOY-387). [ALOY-388](https://jira.appcelerator.org/browse/ALOY-388). View (XML) and controller (JS) code completion in Titanium Studio.
-* [ALOY-382](https://jira.appcelerator.org/browse/ALOY-382). [ALOY-383](https://jira.appcelerator.org/browse/ALOY-383). Support in markup for attributes like rightNavButton, leftNavButton, and searchbar
-* [ALOY-103](https://jira.appcelerator.org/browse/ALOY-103). Model-view binding of models to discrete properties on UI components.
+* [ALOY-95](http://jira.appcelerator.org/browse/ALOY-95). Create ACS adapter that will persist backbone objects in cloud.
+* [ALOY-191](http://jira.appcelerator.org/browse/ALOY-191). Add a model verifcation application to validate all sync adapters.
+
+## 0.3.4 (14 December 2012)
+
+### New features
+* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-103). Support model-view binding of models to discrete properties on UI components.
+* [ALOY-382](http://jira.appcelerator.org/browse/ALOY-382), [ALOY-383](https://jira.appcelerator.org/browse/ALOY-383). Support in markup for attributes like rightNavButton, leftNavButton, and searchbar
+* [ALOY-387](http://jira.appcelerator.org/browse/ALOY-387), [ALOY-388](https://jira.appcelerator.org/browse/ALOY-388). Support view (XML) and controller (JS) code completion in Titanium Studio.
+* [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Support model-view binding on Views using collections, allowing for arbitrary component repetition.
+
+### Bug fixes and improvements
+* [ALOY-342](http://jira.appcelerator.org/browse/ALOY-342). Support '--platform' option with 'alloy generate' command to create platform-specific views and controllers.
+* [ALOY-359](http://jira.appcelerator.org/browse/ALOY-359), [ALOY-423](http://jira.appcelerator.org/browse/ALOY-423). Improve buttongrid widget and fix a memory link.
+* [ALOY-361](http://jira.appcelerator.org/browse/ALOY-361). Fix a bug with style prioritization as it relates to the formFactor attribute.
+* [ALOY-420](http://jira.appcelerator.org/browse/ALOY-420). Refactor TableView parser to allow model-bound tables to use proxy properties.
+* [ALOY-421](http://jira.appcelerator.org/browse/ALOY-421). Replace datetime.js builtin with moment.js.
+
 
 ## 0.3.3 (6 December 2012)
 
 ### New features
 * [ALOY-104](http://jira.appcelerator.org/browse/ALOY-104). Enable Model-View binding on TableViews. For more information, see the basic [tableview_binding test app](https://github.com/appcelerator/alloy/tree/master/test/apps/models/tableview_binding) or the slightly more complete [todo_binding sample app](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo_binding) which shows how to do data filtering and transformations on bound data.
-**NOTE:** This is brand new stuff with lots more functionality coming, so any feedback on the current state is very welcome. It's best to let us know at the [Alloy google group](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy).
-* [ALOY-312](http://jira.appcelerator.org/browse/ALOY-312). Update Underscore.js to version 1.4.2 and Backbone.js to minified production 0.9.2 version.
-* [ALOY-373](http://jira.appcelerator.org/browse/ALOY-373). [ALOY-379](http://jira.appcelerator.org/browse/ALOY-379). Add Collection tag in markup to create a singleton or instance(s) of a collection.
-* [ALOY-390](http://jira.appcelerator.org/browse/ALOY-390). [ALOY-391](http://jira.appcelerator.org/browse/ALOY-391). Add Model tag in markup to create a singleton or instance(s) of a model.
-* [ALOY-396](http://jira.appcelerator.org/browse/ALOY-396). [ALOY-397](http://jira.appcelerator.org/browse/ALOY-397). [ALOY-156](http://jira.appcelerator.org/browse/ALOY-156). Add completion callback to all methods in the animation.js builtin library.
-* [ALOY-367](http://jira.appcelerator.org/browse/ALOY-367). [ALOY-377](http://jira.appcelerator.org/browse/ALOY-377). Alloy apps now work with Soasta touch test.
 
-### Bugs fixes and improvements
+    **NOTE:** This is brand new stuff with lots more functionality coming, so any feedback on the current state is very welcome. It's best to let us know at the [Alloy google group](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy).
+* [ALOY-312](http://jira.appcelerator.org/browse/ALOY-312). Update Underscore.js to version 1.4.2 and Backbone.js to minified production 0.9.2 version.
+* [ALOY-367](http://jira.appcelerator.org/browse/ALOY-367), [ALOY-377](http://jira.appcelerator.org/browse/ALOY-377). Support Soasta touch test.
+* [ALOY-373](http://jira.appcelerator.org/browse/ALOY-373), [ALOY-379](http://jira.appcelerator.org/browse/ALOY-379). Add Collection tag in markup to create a singleton or instance(s) of a collection.
+* [ALOY-390](http://jira.appcelerator.org/browse/ALOY-390), [ALOY-391](http://jira.appcelerator.org/browse/ALOY-391). Add Model tag in markup to create a singleton or instance(s) of a model.
+* [ALOY-396](http://jira.appcelerator.org/browse/ALOY-396), [ALOY-397](http://jira.appcelerator.org/browse/ALOY-397), [ALOY-156](http://jira.appcelerator.org/browse/ALOY-156). Add completion callback to all methods in the animation.js builtin library.
+
+### Bug fixes and improvements
 * [ALOY-311](http://jira.appcelerator.org/browse/ALOY-311). Improve Ti.UI.Android.MenuItem parser.
 * [ALOY-370](http://jira.appcelerator.org/browse/ALOY-370). Fix ability to assign functions with variable assigned functions in controllers.
 * [ALOY-376](http://jira.appcelerator.org/browse/ALOY-376). Improve handling of Ti.Android.Menu component.
 * [ALOY-393](http://jira.appcelerator.org/browse/ALOY-393). (Re-)enable optimizer.js as part of runtime JavaScript file optimization.
-* [ALOY-417](https://jira.appcelerator.org/browse/ALOY-417). properties adapter improvements.
-* [ALOY-403](http://jira.appcelerator.org/browse/ALOY-403). Alloy.Collection and Alloy.Model code optimization.
+* [ALOY-403](http://jira.appcelerator.org/browse/ALOY-403). Improve Alloy.Collection and Alloy.Model code optimization.
+* [ALOY-417](http://jira.appcelerator.org/browse/ALOY-417). Improve properties adapter.
 
 ### Deprecations
-* [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Alloy.globals depreacted, use Alloy.Globals instead.
+* [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Deprecate Alloy.globals; use Alloy.Globals instead.
 
 ## 0.3.2 (15 November 2012)
 
