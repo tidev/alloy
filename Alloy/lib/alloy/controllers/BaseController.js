@@ -74,21 +74,6 @@ var Controller = function() {
 			return this.__views;
 		},
 
-		/**
-		 * @method destroy
-		 * Frees binding resources associated with this controller and its
-		 * UI components. It is critical that this is called when employing
-		 * model/collection binding in order to avoid potential memory leaks.
-		 * $.destroy() should be called whenever a controller's UI is to
-		 * be "closed" or removed from the app. For more details, see the 
-		 * example app found here: 
-		 * https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy
-		 */
-		destroy: function(){
-			// destroy() is defined during the compile process based on 
-			// the UI components and binding contained within the controller.
-		},
-
 		// getViewEx for advanced parsing and element traversal
 		getViewEx: function(opts) {
 			var recurse = opts.recurse || false;
