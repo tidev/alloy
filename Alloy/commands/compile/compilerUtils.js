@@ -239,7 +239,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	// handle any events from markup
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "',function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
+			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + " || function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
 		});	
 	}
 
