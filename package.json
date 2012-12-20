@@ -42,7 +42,7 @@
   "bin": {
     "alloy": "./bin/alloy"
   },
-  "main": "./Alloy/alloy",
+  "main": "./Alloy/lib/alloy",
   "engines": {
     "node": ">= 0.6.0"
   }
