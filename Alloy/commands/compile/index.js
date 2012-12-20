@@ -451,6 +451,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	// add destroy() function to view for cleaning up bindings
 	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
 
+	// add any postCode after the controller code
+	template.postCode += CU.postCode;
+
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 

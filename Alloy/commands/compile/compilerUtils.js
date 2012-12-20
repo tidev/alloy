@@ -239,8 +239,23 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// handle any events from markup
 	if (args.events && args.events.length > 0) {
+		// add immediate handler creation to view code, deferred to post-controller code
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "'," + ev.value + " || function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
+			var eventObj = {
+				obj: args.symbol,
+				ev: ev.name,
+				cb: ev.value
+			};
+
+			// create templates for immediate and deferred event handler creation
+			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= cb %>']", eventObj);
+			var theEvent = _.template("<%= obj %>.on('<%= ev %>',<%= cb %>)", eventObj);
+			var immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
+			var deferTemplate = theDefer + " && " + theEvent + ";";
+
+			// add the generated code to the view code and post-controller code respectively
+			code.content += _.template(immediateTemplate, eventObj);
+			exports.postCode += _.template(deferTemplate, eventObj);
 		});	
 	}
 
