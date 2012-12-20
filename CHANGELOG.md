@@ -12,7 +12,7 @@ The following are planned features for the next release:
 * [ALOY-419](https://jira.appcelerator.org/browse/ALOY-419). `alloy generate adapter` command for easier creation of sync adapters.
 * [ALOY-389](https://jira.appcelerator.org/browse/ALOY-389). Support for code assist of TSS files in Titanium Studio.
 
-## 0.3.4 (14 December 2012)
+## 0.3.4 (20 December 2012)
 
 ### Important Note for Model/Collection Binding Feature
 
