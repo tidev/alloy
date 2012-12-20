@@ -10,22 +10,27 @@ The following are planned features for the next release:
 * [ALOY-133](https://jira.appcelerator.org/browse/ALOY-133). [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Models and themes for widgets.
 * [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). Alloy support for Android fastdev server.
 * [ALOY-419](https://jira.appcelerator.org/browse/ALOY-419). `alloy generate adapter` command for easier creation of sync adapters.
+* [ALOY-389](https://jira.appcelerator.org/browse/ALOY-389). Support for code assist of TSS files in Titanium Studio.
 
 ## 0.3.4 (14 December 2012)
 
 ### New features
 * [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Support collection binding on Views, allowing for arbitrary component repetition. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/journal)\)
-* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-103). Support model-view binding of models to discrete properties on UI components.
-* [ALOY-382](http://jira.appcelerator.org/browse/ALOY-382), [ALOY-383](https://jira.appcelerator.org/browse/ALOY-383). Support in markup for attributes like rightNavButton, leftNavButton, and searchbar
+* [ALOY-103](http://jira.appcelerator.org/browse/ALOY-103). Support model binding of models to discrete properties on UI components. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/login)\)
+* [ALOY-382](http://jira.appcelerator.org/browse/ALOY-382), [ALOY-383](https://jira.appcelerator.org/browse/ALOY-383). Support in markup for proxy properties, like rightNavButton, leftNavButton, titleControl, etc... \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/ui/proxy_properties)\)
 * [ALOY-387](http://jira.appcelerator.org/browse/ALOY-387), [ALOY-388](https://jira.appcelerator.org/browse/ALOY-388). Support view (XML) and controller (JS) code completion in Titanium Studio.
-
+* [ALOY-421](http://jira.appcelerator.org/browse/ALOY-421). Add moment.js as builtin. Deprecates datetime.s builtin.
+* [ALOY-432](https://jira.appcelerator.org/browse/ALOY-432). Added $.destroy() function to all controllers. Must be used to ensure no memory leaks occur with model/collection binding, specifically when binding references a global model/collection. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy)\)
 
 ### Bug fixes and improvements
 * [ALOY-342](http://jira.appcelerator.org/browse/ALOY-342). Support '--platform' option with 'alloy generate' command to create platform-specific views and controllers.
-* [ALOY-359](http://jira.appcelerator.org/browse/ALOY-359), [ALOY-423](http://jira.appcelerator.org/browse/ALOY-423). Improve buttongrid widget and fix a memory link.
+* [ALOY-359](http://jira.appcelerator.org/browse/ALOY-359), [ALOY-423](http://jira.appcelerator.org/browse/ALOY-423). Improve buttongrid widget and fix a memory leak.
 * [ALOY-361](http://jira.appcelerator.org/browse/ALOY-361). Fix a bug with style prioritization as it relates to the formFactor attribute.
 * [ALOY-420](http://jira.appcelerator.org/browse/ALOY-420). Refactor TableView parser to allow model-bound tables to use proxy properties.
-* [ALOY-421](http://jira.appcelerator.org/browse/ALOY-421). Replace datetime.js builtin with moment.js.
+* [ALOY-430](https://jira.appcelerator.org/browse/ALOY-430). Collection binding now responds to the Backbone "reset" event.
+* [ALOY-433](https://jira.appcelerator.org/browse/ALOY-433). Removed "unreachable code" warning in production Android builds.
+* [ALOY-436](https://jira.appcelerator.org/browse/ALOY-436). Alloy compile failures will now abort the Titanium build process, as expected, with the Titanium 3.0+ SDK.
+* [ALOY-438](https://jira.appcelerator.org/browse/ALOY-438). Fixed bug where the Backbone off() function on Titanium proxies created from markup was not working.
 
 
 ## 0.3.3 (6 December 2012)
