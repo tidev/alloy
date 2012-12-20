@@ -239,7 +239,6 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// handle any events from markup
 	if (args.events && args.events.length > 0) {
-		// add immediate handler creation to view code, deferred to post-controller code
 		_.each(args.events, function(ev) {
 			var eventObj = {
 				obj: args.symbol,
