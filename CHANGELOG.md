@@ -6,16 +6,19 @@
 
 ## Coming Features
 The following are planned features for the next release:
-* [ALOY-95](http://jira.appcelerator.org/browse/ALOY-95). Create ACS adapter that will persist backbone objects in cloud.
-* [ALOY-191](http://jira.appcelerator.org/browse/ALOY-191). Add a model verifcation application to validate all sync adapters.
+* [ALOY-95](http://jira.appcelerator.org/browse/ALOY-95). Integrated ACS sync adapter.
+* [ALOY-133](https://jira.appcelerator.org/browse/ALOY-133). [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Models and themes for widgets.
+* [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). Alloy support for Android fastdev server.
+* [ALOY-419](https://jira.appcelerator.org/browse/ALOY-419). `alloy generate adapter` command for easier creation of sync adapters.
 
 ## 0.3.4 (14 December 2012)
 
 ### New features
+* [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Support collection binding on Views, allowing for arbitrary component repetition. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/journal)\)
 * [ALOY-103](http://jira.appcelerator.org/browse/ALOY-103). Support model-view binding of models to discrete properties on UI components.
 * [ALOY-382](http://jira.appcelerator.org/browse/ALOY-382), [ALOY-383](https://jira.appcelerator.org/browse/ALOY-383). Support in markup for attributes like rightNavButton, leftNavButton, and searchbar
 * [ALOY-387](http://jira.appcelerator.org/browse/ALOY-387), [ALOY-388](https://jira.appcelerator.org/browse/ALOY-388). Support view (XML) and controller (JS) code completion in Titanium Studio.
-* [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Support model-view binding on Views using collections, allowing for arbitrary component repetition.
+
 
 ### Bug fixes and improvements
 * [ALOY-342](http://jira.appcelerator.org/browse/ALOY-342). Support '--platform' option with 'alloy generate' command to create platform-specific views and controllers.
