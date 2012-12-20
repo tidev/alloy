@@ -12,9 +12,10 @@ function Controller() {
 	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
 	var $ = this;
 	var exports = {};
+	var __defers = {};
 	
 	// Generated code that must be executed before all UI and/or
-	// controller code. One example in all model and collection 
+	// controller code. One example is all model and collection 
 	// declarations from markup.
 	<%= preCode %>
 
@@ -26,7 +27,14 @@ function Controller() {
 	// be accessed with getView().
 	_.extend($, $.__views);
 
+	// Controller code directly from the developer's controller file
 	<%= controllerCode %>
+
+	// Generated code that must be executed after all UI and
+	// controller code. One example deferred event handlers whose
+	// functions are not defined until after the controller code
+	// is executed.
+	<%= postCode %>
 
 	// Extend the $ instance with all functions and properties 
 	// defined on the exports object.
