@@ -271,6 +271,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	// reset the bindings map
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
+	CU.postCode = '';
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
