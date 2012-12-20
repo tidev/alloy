@@ -8,8 +8,9 @@
  *		var date = new Date('2012/08/31 13:44:45');
  *		Ti.API.info(datetime.formatAsDOWMonthDayYear(date)); // --> 'Friday August 31st, 2012'
  *		Ti.API.info(datetime.formatAsTime(date)); // --> '1:30 PM'
+ *
+ * @deprecated 0.3.4 Use Alloy.builtins.moment instead.
  */
-
 exports.stringToDate = function (str) {
     Ti.API.warn('datetime.js builtin is deprecated and will be removed in Alloy 0.4.0.');
     Ti.API.warn('Use moment.js builtin instead for datetime manipulations.');
