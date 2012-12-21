@@ -51,12 +51,12 @@ You can use these apps through Titanium Studio too. The easiest way to do that w
 ### Additional Notes
 
 * Options for the `jake` command
-  * **tiversion** - Set the Titanium SDK version to be used. Defaults to the latest installed SDK.
-  * **platform** - The target mobile platform. Defaults to `iphone`. Must be `android` or `iphone`, `mobileweb` and `ipad` are not supported.
-  * Examples
-    * `jake app:run dir=basics/simple platform=iphone`
-    * `jake app:run dir=basics/simple platform=android tiversion=3.0.0.GA`
-    * `jake app:run dir=basics/simple tiversion=2.1.4`
+	* **tiversion** - Set the Titanium SDK version to be used. Defaults to the latest installed SDK.
+	* **platform** - The target mobile platform. Defaults to `iphone`. Must be `android` or `iphone`, `mobileweb` and `ipad` are not supported.
+	* Examples
+		* `jake app:run dir=basics/simple platform=iphone`
+		* `jake app:run dir=basics/simple platform=android tiversion=3.0.0.GA`
+		* `jake app:run dir=basics/simple tiversion=2.1.4`
 * For `android`, the Android emulator must already be running
 * If you get permissions errors on OSX or Linux, try using `sudo` with the `jake` command
 
