@@ -36,27 +36,29 @@ cd alloy
 
 ## Running Sample Test Apps 
 
-You can use the test harness to run your app or the sample [test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) by using Jake. Jake is like Rake for Ruby. which itself is based on make. Jake should be installed automatically but if not do the following:
+This is primarily done by Alloy devs just for testing purposes, but you may find it useful.
 
-	sudo npm install -g jake
+1. install jake: `[sudo] npm install -g jake`
+2. Get into the root directory of the cloned alloy repository.
+3. Find a test app in **test/apps** folder you want to run. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
+4. Run jake: `jake app:run dir=basics/simple`
+5. Lather, rinse, repeat
 
-Sample Alloy apps are located in the `test/apps` directory.  To run a sample app from the command line you would first make sure you are at the top level of the alloy folder then run the following command,
+## Importing the "Harness" to Titanium Studio
 
-    sudo jake app:run dir=builtins platform=iphone tiversion=2.1.0.GA
+You can use these apps through Titanium Studio too. The easiest way to do that would be to import the **test/project/Harness** into Titanium Studio. After that, everytime you run `jake`, your project in Studio will be updated. Once in Studio, you can run for any platform, Titanium SDK version, or change any settings you want. This will give you a lot more options and power than running solely from the command line.
 
-where `builtins` is the name of one of the sample apps and tiversion is the name of the installed Titanium SDK
+### Additional Notes
 
-To run the samples via Studio, you must first copy over the appropriate Alloy app to the "Harness application".  There are Jake build targets set up for this purpose. 
-
-	jake app:setup dir=builtins
-
-Then, you could import the Harness project into Titanium Studio, and run the project as normal. 
-
-Notes:
-* Make sure you use `sudo`, otherwise you'll get errors
-* `dir` can be the name of any [test app](https://github.com/appcelerator/alloy/tree/master/test/apps)
-* `tiversion` is optional. The latest installed Titanium SDK will be used if this option is omitted. 
-* The default location on OSX of Alloy is: /usr/local/lib/node_modules/alloy 
+* Options for the `jake` command
+  * **tiversion** - Set the Titanium SDK version to be used. Defaults to the latest installed SDK.
+  * **platform** - The target mobile platform. Defaults to `iphone`. Must be `android` or `iphone`, `mobileweb` and `ipad` are not supported.
+  * Examples
+    * `jake app:run dir=basics/simple platform=iphone`
+    * `jake app:run dir=basics/simple platform=android tiversion=3.0.0.GA`
+    * `jake app:run dir=basics/simple tiversion=2.1.4`
+* For `android`, the Android emulator must already be running
+* If you get permissions errors on OSX or Linux, try using `sudo` with the `jake` command
 
 ## Feedback
 
