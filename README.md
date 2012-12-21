@@ -44,7 +44,7 @@ This is primarily done by Alloy devs just for testing purposes, but you may find
 4. Run jake: `jake app:run dir=basics/simple`
 5. Lather, rinse, repeat
 
-## Importing the "Harness" to Titanium Studio
+### Importing the "Harness" to Titanium Studio
 
 You can use these apps through Titanium Studio too. The easiest way to do that would be to import the **test/project/Harness** into Titanium Studio. After that, everytime you run `jake`, your project in Studio will be updated. Once in Studio, you can run for any platform, Titanium SDK version, or change any settings you want. This will give you a lot more options and power than running solely from the command line.
 
