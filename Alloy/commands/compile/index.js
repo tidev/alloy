@@ -369,7 +369,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			});
 		}
 
-		// process any model/colletion nodes
+		// process any model/collection nodes
 		_.each(rootChildren, function(node, i) {
 			var fullname = CU.getNodeFullname(node);
 			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
