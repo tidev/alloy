@@ -1,0 +1,9 @@
+<Alloy>
+	<Window layout="vertical">
+		<Label id="name" platform="android"/>
+		<Label id="height"/>
+		<Label id="weight"/>
+		<Label id="age"/>
+		<Label id="record"/>
+	</Window>
+</Alloy>

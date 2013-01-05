@@ -1,0 +1,9 @@
+<Alloy>
+	<Window title="Boxers">
+		<TableView id="table" onClick="openDetail">
+			<HeaderView platform="android">
+				<Label id="header">Boxers</Label>
+			</HeaderView>
+		</TableView>
+	</Window>
+</Alloy>
