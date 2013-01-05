@@ -1,9 +1,0 @@
-<Alloy>
-	<!-- Use a split window on ipad -->
-	<SplitWindow platform="ios" formFactor="tablet">
-		<Require src="master"/>
-		<Require src="detail"/>
-	</SplitWindow>
-
-	<!-- 
-</Alloy>
