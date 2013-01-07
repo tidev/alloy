@@ -865,7 +865,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, param1, param2) { return '__ALLOY_EXPR__--L(' + param1 + param2.join('') + ')'; })(pos0, result0[2], result0[3]);
+          result0 = (function(offset, param1, param2) { return '__ALLOY_EXPR__--L(' + param1 + (param2 ? param2.join('') : '') + ')'; })(pos0, result0[2], result0[3]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -880,13 +880,13 @@ module.exports = (function(){
         pos0 = pos;
         result0 = parse_TiNS();
         if (result0 !== null) {
-          if (input.substr(pos, 16) === "Locale.getString") {
-            result1 = "Locale.getString";
-            pos += 16;
+          if (input.substr(pos, 17) === ".Locale.getString") {
+            result1 = ".Locale.getString";
+            pos += 17;
           } else {
             result1 = null;
             if (reportFailures === 0) {
-              matchFailed("\"Locale.getString\"");
+              matchFailed("\".Locale.getString\"");
             }
           }
           if (result1 !== null) {
@@ -914,45 +914,78 @@ module.exports = (function(){
       }
       
       function parse_TiConstant() {
-        var result0, result1, result2;
-        var pos0, pos1;
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2, pos3;
         
         pos0 = pos;
         pos1 = pos;
+        pos2 = pos;
         result0 = parse_TiNS();
         if (result0 !== null) {
-          result2 = parse_bareString();
-          if (result2 === null) {
-            if (input.charCodeAt(pos) === 46) {
-              result2 = ".";
-              pos++;
+          pos3 = pos;
+          if (input.charCodeAt(pos) === 46) {
+            result2 = ".";
+            pos++;
+          } else {
+            result2 = null;
+            if (reportFailures === 0) {
+              matchFailed("\".\"");
+            }
+          }
+          if (result2 !== null) {
+            result3 = parse_bareString();
+            if (result3 !== null) {
+              result2 = [result2, result3];
             } else {
               result2 = null;
-              if (reportFailures === 0) {
-                matchFailed("\".\"");
-              }
+              pos = pos3;
             }
+          } else {
+            result2 = null;
+            pos = pos3;
           }
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_bareString();
-              if (result2 === null) {
-                if (input.charCodeAt(pos) === 46) {
-                  result2 = ".";
-                  pos++;
+              pos3 = pos;
+              if (input.charCodeAt(pos) === 46) {
+                result2 = ".";
+                pos++;
+              } else {
+                result2 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\".\"");
+                }
+              }
+              if (result2 !== null) {
+                result3 = parse_bareString();
+                if (result3 !== null) {
+                  result2 = [result2, result3];
                 } else {
                   result2 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\".\"");
-                  }
+                  pos = pos3;
                 }
+              } else {
+                result2 = null;
+                pos = pos3;
               }
             }
           } else {
             result1 = null;
           }
+          if (result1 !== null) {
+            result0 = [result0, result1];
+          } else {
+            result0 = null;
+            pos = pos2;
+          }
+        } else {
+          result0 = null;
+          pos = pos2;
+        }
+        if (result0 !== null) {
+          result1 = parse__();
           if (result1 !== null) {
             result0 = [result0, result1];
           } else {
@@ -964,7 +997,14 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, parts) { return '__ALLOY_EXPR__--' + parts[0] + parts[1].join(''); })(pos0, result0);
+          result0 = (function(offset, parts) {
+            var tc = '__ALLOY_EXPR__--' + parts[0];
+            var len = parts[1] ? parts[1].length : 0;
+            for (var i = 0; i < len; i++) {
+              tc += parts[1][i].join('');
+            }
+            return tc;
+          })(pos0, result0[0]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -975,33 +1015,33 @@ module.exports = (function(){
       function parse_TiNS() {
         var result0;
         
-        if (input.substr(pos, 3) === "Ti.") {
-          result0 = "Ti.";
-          pos += 3;
+        if (input.substr(pos, 2) === "Ti") {
+          result0 = "Ti";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("\"Ti.\"");
+            matchFailed("\"Ti\"");
           }
         }
         if (result0 === null) {
-          if (input.substr(pos, 9) === "Titanium.") {
-            result0 = "Titanium.";
-            pos += 9;
+          if (input.substr(pos, 8) === "Titanium") {
+            result0 = "Titanium";
+            pos += 8;
           } else {
             result0 = null;
             if (reportFailures === 0) {
-              matchFailed("\"Titanium.\"");
+              matchFailed("\"Titanium\"");
             }
           }
           if (result0 === null) {
-            if (input.substr(pos, 6) === "Alloy.") {
-              result0 = "Alloy.";
-              pos += 6;
+            if (input.substr(pos, 5) === "Alloy") {
+              result0 = "Alloy";
+              pos += 5;
             } else {
               result0 = null;
               if (reportFailures === 0) {
-                matchFailed("\"Alloy.\"");
+                matchFailed("\"Alloy\"");
               }
             }
           }
