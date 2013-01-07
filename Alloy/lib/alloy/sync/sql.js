@@ -105,29 +105,39 @@ function SQLiteMigrateDB() {
 }
 
 function Sync(model, method, opts) {
-	var table =  model.config.adapter.collection_name;
-	var columns = model.config.columns;
-	var resp = null;
+	var table =  model.config.adapter.collection_name,
+		columns = model.config.columns,
+		resp = null;
 	
 	switch (method) {
-
 		case 'create':
-			var names = [];
-			var values = [];
-			var q = [];
-			for (var k in columns) {
-				names.push(k);
-				values.push(model.get(k));
-				q.push('?');
-			}
-			var id = guid();
-			var sql = 'INSERT INTO '+table+' ('+names.join(',')+',id) VALUES ('+q.join(',')+',?)';
-			values.push(id);
-			db.execute(sql, values);
-			model.id = id;
-			resp = model.toJSON();
-			break;
+			resp = (function(){
+				// Use idAttribute to account for something other then "id"
+				// being used for the model's id.
+				if (!model.id) {
+	                model.id = guid();
+	                model.set(model.idAttribute, model.id);
+	            }
+				
+	            // Create arrays for insert query 
+				var names = [], values = [], q = [];
+				for (var k in columns) {
+					names.push(k);
+					values.push(model.get(k));
+					q.push('?');
+				}
 
+				// Assemble create query
+				var sql = "INSERT INTO " + table + " (" + names.join(",") + ",id) VALUES (" + q.join(",") + ",?)";
+	            
+				// add id as the last value to the query
+	            values.push(model.id);
+
+	            // execute the query and return the response
+	            db.execute(sql, values);
+	            return model.toJSON();
+			})();
+			break;
 		case 'read':
 			var sql = 'SELECT * FROM '+table;
 			var rs = db.execute(sql);
