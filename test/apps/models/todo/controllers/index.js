@@ -6,8 +6,28 @@ var INDEXES = {
 };
 var whereIndex = INDEXES['All'];
 
-if (OS_MOBILEWEB) {
-	alert('SQLite adapter not supported on mobileweb');
+// make sure the current platform supports the current sync adapter
+var adapter = require('alloy/models/Todo').definition.config.adapter.type,
+	err;
+switch(adapter) {
+	case 'localStorage': 
+		// only supported on Mobileweb
+		!OS_MOBILEWEB && (err = 'localStorage adapter only supported on Mobileweb'); 
+		break;
+	case 'properties':
+		// supported on all platforms
+		break;
+	case 'sql':
+		// supported on android and ios
+		!OS_ANDROID && !OS_IOS && (err = 'sql adapter only supported on Android and iOS');
+		break;
+	default:
+		err = 'Unknown adapter type "' + adapter + '"';
+		break;
+}
+
+if (err) {
+	alert(err);
 } else {
 	$.todoWin.open();
 	todos.fetch();
