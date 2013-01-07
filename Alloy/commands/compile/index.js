@@ -608,7 +608,7 @@ function optimizeCompiledCode() {
 
 			// process all AST operations
 			_.each(mods, function(mod) {
-				logger.debug('- Processing "' + mod + '" module...');
+				//logger.debug('- Processing "' + mod + '" module...');
 				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
 			});
 			fs.writeFileSync(fullpath, CU.generateCode(ast));
