@@ -770,7 +770,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(value)) {
 				var matches = value.match(regex);
 				if (matches !== null) {
-					code += prefix + matches[1] + ','; // matched a constant or expr()
+					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
 					code += prefix + '"' + value + '",'; // just a string
 				}
@@ -902,11 +902,12 @@ exports.formatAST = function(ast,config,fn)
 function processTssFile(f, manifest) {
 	var widgetId = manifest && manifest.id ? manifest.id : null;
 
-	// Handle "call" ASTs, where we look for expr() syntax
+	// Handle "call" ASTs
     function do_call() {
     	var name = this[1][1];
     	var code;
     	if (name === 'expr') { 
+    		logger.warn('expr() in TSS files is deprecated and will be removed in Alloy 0.4.0.');
     		code = pro.gen_code(this[2][0]);
     	} else if (name === 'L') {
     		code = pro.gen_code(this);
