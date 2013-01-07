@@ -439,7 +439,6 @@ exports.Collections = {};
  */
 exports.CFG = require('alloy/CFG');
 
-
 if (OS_ANDROID) {
 	exports.Android = {};
 	exports.Android.menuItemCreateArgs = ['itemId','groupId','title','order'];
