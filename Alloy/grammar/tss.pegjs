@@ -58,19 +58,28 @@ CloseParen
   = ')' _ { return ')'; }
 
 LocaleCall
-  = Locale OpenParen param1:paramString param2:(paramComma paramString)? CloseParen { return '__ALLOY_EXPR__--L(' + param1 + param2.join('') + ')'; }
+  = Locale OpenParen param1:paramString param2:(paramComma paramString)? CloseParen { 
+    return '__ALLOY_EXPR__--L(' + param1 + (param2 ? param2.join('') : '') + ')'; 
+  }
 
 Locale
-  = TiNS 'Locale.getString'
+  = TiNS '.Locale.getString'
   / 'L'
 
 TiConstant
-  = parts:(TiNS (bareString / '.')+) { return '__ALLOY_EXPR__--' + parts[0] + parts[1].join(''); }
+  = parts:(TiNS ('.' bareString)+) _  {
+    var tc = '__ALLOY_EXPR__--' + parts[0];
+    var len = parts[1] ? parts[1].length : 0;
+    for (var i = 0; i < len; i++) {
+      tc += parts[1][i].join('');
+    }
+    return tc;
+  }
 
 TiNS
-  = 'Ti.'
-  / 'Titanium.'
-  / 'Alloy.'
+  = 'Ti'
+  / 'Titanium'
+  / 'Alloy'
 
 paramComma
   = _ ',' _ { return ','; }
