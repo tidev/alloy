@@ -517,7 +517,6 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			} 
 		});
 
-		//o = j.global || {};
 		if (alloyConfig) {
 			o = _.extend(o, j['global']);
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
