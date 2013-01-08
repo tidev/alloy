@@ -54,6 +54,7 @@ elements
 value
   = LocaleCall
   / TiConstant
+  / WPATH
   / string
   / number
   / object
@@ -70,6 +71,11 @@ OpenParen
 
 CloseParen
   = ')' _ { return ')'; }
+
+WPATH
+  = 'WPATH' OpenParen param1:paramString (paramComma paramString)* CloseParen {
+    return '__ALLOY_EXPR__--WPATH(' + param1 + ')';
+  }
 
 LocaleCall
   = Locale OpenParen param1:paramString param2:(paramComma paramString)? CloseParen { 

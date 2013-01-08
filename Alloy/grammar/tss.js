@@ -48,6 +48,7 @@ module.exports = (function(){
         "value": parse_value,
         "OpenParen": parse_OpenParen,
         "CloseParen": parse_CloseParen,
+        "WPATH": parse_WPATH,
         "LocaleCall": parse_LocaleCall,
         "Locale": parse_Locale,
         "TiConstant": parse_TiConstant,
@@ -848,53 +849,25 @@ module.exports = (function(){
         if (result0 === null) {
           result0 = parse_TiConstant();
           if (result0 === null) {
-            result0 = parse_string();
+            result0 = parse_WPATH();
             if (result0 === null) {
-              result0 = parse_number();
+              result0 = parse_string();
               if (result0 === null) {
-                result0 = parse_object();
+                result0 = parse_number();
                 if (result0 === null) {
-                  result0 = parse_array();
+                  result0 = parse_object();
                   if (result0 === null) {
-                    pos0 = pos;
-                    pos1 = pos;
-                    if (input.substr(pos, 4) === "true") {
-                      result0 = "true";
-                      pos += 4;
-                    } else {
-                      result0 = null;
-                      if (reportFailures === 0) {
-                        matchFailed("\"true\"");
-                      }
-                    }
-                    if (result0 !== null) {
-                      result1 = parse__();
-                      if (result1 !== null) {
-                        result0 = [result0, result1];
-                      } else {
-                        result0 = null;
-                        pos = pos1;
-                      }
-                    } else {
-                      result0 = null;
-                      pos = pos1;
-                    }
-                    if (result0 !== null) {
-                      result0 = (function(offset) { return true;   })(pos0);
-                    }
-                    if (result0 === null) {
-                      pos = pos0;
-                    }
+                    result0 = parse_array();
                     if (result0 === null) {
                       pos0 = pos;
                       pos1 = pos;
-                      if (input.substr(pos, 5) === "false") {
-                        result0 = "false";
-                        pos += 5;
+                      if (input.substr(pos, 4) === "true") {
+                        result0 = "true";
+                        pos += 4;
                       } else {
                         result0 = null;
                         if (reportFailures === 0) {
-                          matchFailed("\"false\"");
+                          matchFailed("\"true\"");
                         }
                       }
                       if (result0 !== null) {
@@ -910,7 +883,7 @@ module.exports = (function(){
                         pos = pos1;
                       }
                       if (result0 !== null) {
-                        result0 = (function(offset) { return false;  })(pos0);
+                        result0 = (function(offset) { return true;   })(pos0);
                       }
                       if (result0 === null) {
                         pos = pos0;
@@ -918,13 +891,13 @@ module.exports = (function(){
                       if (result0 === null) {
                         pos0 = pos;
                         pos1 = pos;
-                        if (input.substr(pos, 4) === "null") {
-                          result0 = "null";
-                          pos += 4;
+                        if (input.substr(pos, 5) === "false") {
+                          result0 = "false";
+                          pos += 5;
                         } else {
                           result0 = null;
                           if (reportFailures === 0) {
-                            matchFailed("\"null\"");
+                            matchFailed("\"false\"");
                           }
                         }
                         if (result0 !== null) {
@@ -940,10 +913,41 @@ module.exports = (function(){
                           pos = pos1;
                         }
                         if (result0 !== null) {
-                          result0 = (function(offset) { return "null"; })(pos0);
+                          result0 = (function(offset) { return false;  })(pos0);
                         }
                         if (result0 === null) {
                           pos = pos0;
+                        }
+                        if (result0 === null) {
+                          pos0 = pos;
+                          pos1 = pos;
+                          if (input.substr(pos, 4) === "null") {
+                            result0 = "null";
+                            pos += 4;
+                          } else {
+                            result0 = null;
+                            if (reportFailures === 0) {
+                              matchFailed("\"null\"");
+                            }
+                          }
+                          if (result0 !== null) {
+                            result1 = parse__();
+                            if (result1 !== null) {
+                              result0 = [result0, result1];
+                            } else {
+                              result0 = null;
+                              pos = pos1;
+                            }
+                          } else {
+                            result0 = null;
+                            pos = pos1;
+                          }
+                          if (result0 !== null) {
+                            result0 = (function(offset) { return "null"; })(pos0);
+                          }
+                          if (result0 === null) {
+                            pos = pos0;
+                          }
                         }
                       }
                     }
@@ -1021,6 +1025,93 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset) { return ')'; })(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_WPATH() {
+        var result0, result1, result2, result3, result4, result5;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 5) === "WPATH") {
+          result0 = "WPATH";
+          pos += 5;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"WPATH\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_OpenParen();
+          if (result1 !== null) {
+            result2 = parse_paramString();
+            if (result2 !== null) {
+              result3 = [];
+              pos2 = pos;
+              result4 = parse_paramComma();
+              if (result4 !== null) {
+                result5 = parse_paramString();
+                if (result5 !== null) {
+                  result4 = [result4, result5];
+                } else {
+                  result4 = null;
+                  pos = pos2;
+                }
+              } else {
+                result4 = null;
+                pos = pos2;
+              }
+              while (result4 !== null) {
+                result3.push(result4);
+                pos2 = pos;
+                result4 = parse_paramComma();
+                if (result4 !== null) {
+                  result5 = parse_paramString();
+                  if (result5 !== null) {
+                    result4 = [result4, result5];
+                  } else {
+                    result4 = null;
+                    pos = pos2;
+                  }
+                } else {
+                  result4 = null;
+                  pos = pos2;
+                }
+              }
+              if (result3 !== null) {
+                result4 = parse_CloseParen();
+                if (result4 !== null) {
+                  result0 = [result0, result1, result2, result3, result4];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, param1) {
+            return '__ALLOY_EXPR__--WPATH(' + param1 + ')';
+          })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
