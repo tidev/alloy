@@ -604,7 +604,7 @@ exports.loadStyle = function(tssFile, manifest) {
 		}
 
 		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{' + contents + '}';
+		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
 			
 		// Process tss file then convert to JSON
 		try {
@@ -612,8 +612,6 @@ exports.loadStyle = function(tssFile, manifest) {
 			// var json = jsonlint.parse(code);
 
 			var json = require('../../grammar/tss').parse(contents);
-			//console.log(require('util').inspect(json,false,null));
-
 			optimizer.optimizeStyle(json);
 		} catch (e) {
 			U.die([
