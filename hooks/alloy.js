@@ -30,10 +30,10 @@ exports.init = function (logger, config, cli, appc) {
 		
 		var compilerCommand = afs.resolvePath(__dirname, '..', 'Alloy', 'commands', 'compile', 'index.js'),
 			config = {
-				platform: cli.argv.platform,
+				platform: /(?:iphone|ipad)/.test(cli.argv.platform) ? 'ios' : cli.argv.platform,
 				version: '0',
 				simtype: 'none',
-				devicefamily: /iphone|ios/.test(cli.argv.platform) ? build.deviceFamily : 'none',
+				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? build.deviceFamily : 'none',
 				deploytype: build.deployType || cli.argv['deploy-type'] || 'development'
 			};
 		
