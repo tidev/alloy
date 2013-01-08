@@ -1,0 +1,3 @@
+<Alloy>
+	<Button id="helloButton" onClick="sayHello"/>
+</Alloy>

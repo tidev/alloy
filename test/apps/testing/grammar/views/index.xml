@@ -1,5 +1,6 @@
 <Alloy>
 	<Window>
 		<Label id="label"/>
+		<Widget src="com.test.hellobutton"/>
 	</Window>
 </Alloy>
