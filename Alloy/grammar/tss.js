@@ -71,6 +71,9 @@ module.exports = (function(){
         "digit": parse_digit,
         "digit19": parse_digit19,
         "hexDigit": parse_hexDigit,
+        "lineComment": parse_lineComment,
+        "lineTerminator": parse_lineTerminator,
+        "__": parse___,
         "_": parse__,
         "whitespace": parse_whitespace
       };
@@ -157,7 +160,7 @@ module.exports = (function(){
       }
       
       function parse_topobject() {
-        var result0, result1, result2, result3, result4;
+        var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
         pos0 = pos;
@@ -226,19 +229,25 @@ module.exports = (function(){
             if (result1 !== null) {
               result2 = parse_topmembers();
               if (result2 !== null) {
-                if (input.charCodeAt(pos) === 125) {
-                  result3 = "}";
-                  pos++;
-                } else {
-                  result3 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\"}\"");
-                  }
-                }
+                result3 = parse__();
                 if (result3 !== null) {
-                  result4 = parse__();
+                  if (input.charCodeAt(pos) === 125) {
+                    result4 = "}";
+                    pos++;
+                  } else {
+                    result4 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"}\"");
+                    }
+                  }
                   if (result4 !== null) {
-                    result0 = [result0, result1, result2, result3, result4];
+                    result5 = parse__();
+                    if (result5 !== null) {
+                      result0 = [result0, result1, result2, result3, result4, result5];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -270,7 +279,7 @@ module.exports = (function(){
       }
       
       function parse_object() {
-        var result0, result1, result2, result3, result4;
+        var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
         pos0 = pos;
@@ -339,19 +348,25 @@ module.exports = (function(){
             if (result1 !== null) {
               result2 = parse_members();
               if (result2 !== null) {
-                if (input.charCodeAt(pos) === 125) {
-                  result3 = "}";
-                  pos++;
-                } else {
-                  result3 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\"}\"");
-                  }
-                }
+                result3 = parse__();
                 if (result3 !== null) {
-                  result4 = parse__();
+                  if (input.charCodeAt(pos) === 125) {
+                    result4 = "}";
+                    pos++;
+                  } else {
+                    result4 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"}\"");
+                    }
+                  }
                   if (result4 !== null) {
-                    result0 = [result0, result1, result2, result3, result4];
+                    result5 = parse__();
+                    if (result5 !== null) {
+                      result0 = [result0, result1, result2, result3, result4, result5];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -2705,6 +2720,161 @@ module.exports = (function(){
           result0 = null;
           if (reportFailures === 0) {
             matchFailed("[0-9a-fA-F]");
+          }
+        }
+        return result0;
+      }
+      
+      function parse_lineComment() {
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        if (input.substr(pos, 2) === "//") {
+          result0 = "//";
+          pos += 2;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"//\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          pos1 = pos;
+          pos2 = pos;
+          reportFailures++;
+          result2 = parse_lineTerminator();
+          reportFailures--;
+          if (result2 === null) {
+            result2 = "";
+          } else {
+            result2 = null;
+            pos = pos2;
+          }
+          if (result2 !== null) {
+            if (input.length > pos) {
+              result3 = input.charAt(pos);
+              pos++;
+            } else {
+              result3 = null;
+              if (reportFailures === 0) {
+                matchFailed("any character");
+              }
+            }
+            if (result3 !== null) {
+              result2 = [result2, result3];
+            } else {
+              result2 = null;
+              pos = pos1;
+            }
+          } else {
+            result2 = null;
+            pos = pos1;
+          }
+          while (result2 !== null) {
+            result1.push(result2);
+            pos1 = pos;
+            pos2 = pos;
+            reportFailures++;
+            result2 = parse_lineTerminator();
+            reportFailures--;
+            if (result2 === null) {
+              result2 = "";
+            } else {
+              result2 = null;
+              pos = pos2;
+            }
+            if (result2 !== null) {
+              if (input.length > pos) {
+                result3 = input.charAt(pos);
+                pos++;
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("any character");
+                }
+              }
+              if (result3 !== null) {
+                result2 = [result2, result3];
+              } else {
+                result2 = null;
+                pos = pos1;
+              }
+            } else {
+              result2 = null;
+              pos = pos1;
+            }
+          }
+          if (result1 !== null) {
+            result0 = [result0, result1];
+          } else {
+            result0 = null;
+            pos = pos0;
+          }
+        } else {
+          result0 = null;
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_lineTerminator() {
+        var result0;
+        
+        if (input.substr(pos, 2) === "\r\n") {
+          result0 = "\r\n";
+          pos += 2;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"\\r\\n\"");
+          }
+        }
+        if (result0 === null) {
+          if (input.charCodeAt(pos) === 13) {
+            result0 = "\r";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\r\"");
+            }
+          }
+          if (result0 === null) {
+            if (input.charCodeAt(pos) === 10) {
+              result0 = "\n";
+              pos++;
+            } else {
+              result0 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"\\n\"");
+              }
+            }
+          }
+        }
+        return result0;
+      }
+      
+      function parse___() {
+        var result0, result1;
+        
+        result0 = [];
+        result1 = parse_whitespace();
+        if (result1 === null) {
+          result1 = parse_lineTerminator();
+          if (result1 === null) {
+            result1 = parse_lineComment();
+          }
+        }
+        while (result1 !== null) {
+          result0.push(result1);
+          result1 = parse_whitespace();
+          if (result1 === null) {
+            result1 = parse_lineTerminator();
+            if (result1 === null) {
+              result1 = parse_lineComment();
+            }
           }
         }
         return result0;

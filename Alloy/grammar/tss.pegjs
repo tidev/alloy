@@ -9,11 +9,11 @@ start
 
 topobject
   = "{" _ "}" _                 { return {};      }
-  / "{" _ topmembers:topmembers "}" _ { return topmembers; } 
+  / "{" _ topmembers:topmembers _ "}" _ { return topmembers; } 
 
 object
   = "{" _ "}" _                 { return {};      }
-  / "{" _ members:members "}" _ { return members; }
+  / "{" _ members:members _ "}" _ { return members; }
 
 topmembers
   = head:pair tail:(","? _ pair)* {
@@ -198,7 +198,18 @@ digit19
 hexDigit
   = [0-9a-fA-F]
 
+lineComment
+  = '//' (!lineTerminator .)*
+
+lineTerminator
+  = '\r\n'
+  / '\r'
+  / '\n'
+
 /* ===== Whitespace ===== */
+
+__
+  = (whitespace / lineTerminator / lineComment)*
 
 _ "whitespace"
   = whitespace*
