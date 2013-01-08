@@ -5,13 +5,17 @@
 /* ===== Syntactical Elements ===== */
 
 start
-  = _ object:object { return object; }
+  = _ topobject:topobject { return topobject; }
+
+topobject
+  = "{" _ "}" _                 { return {};      }
+  / "{" _ topmembers:topmembers "}" _ { return topmembers; } 
 
 object
   = "{" _ "}" _                 { return {};      }
   / "{" _ members:members "}" _ { return members; }
 
-members
+topmembers
   = head:pair tail:(","? _ pair)* {
       var result = {};
       result[head[0]] = head[1];
@@ -21,8 +25,18 @@ members
       return result;
     }
 
+members
+  = head:pair tail:("," _ pair)* {
+      var result = {};
+      result[head[0]] = head[1];
+      for (var i = 0; i < tail.length; i++) {
+        result[tail[i][2][0]] = tail[i][2][1];
+      }
+      return result;
+    }
+
 pair
-  = _ name:(string / bareString) ":" _ value:value { return [name, value]; }
+  = _ name:(string / bareString) _ ":" _ value:value { return [name, value]; }
 
 array
   = "[" _ "]" _                   { return [];       }
@@ -77,8 +91,8 @@ TiConstant
   }
 
 TiNS
-  = 'Ti'
-  / 'Titanium'
+  = 'Titanium'
+  / 'Ti'
   / 'Alloy'
 
 paramComma
