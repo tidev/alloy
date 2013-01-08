@@ -609,11 +609,21 @@ exports.loadStyle = function(tssFile, manifest) {
 			
 		// Process tss file then convert to JSON
 		try {
-			var code = processTssFile(contents, manifest);
-			var json = jsonlint.parse(code);
+			// var code = processTssFile(contents, manifest);
+			// var json = jsonlint.parse(code);
+
+			var json = require('../../grammar/tss').parse(contents);
+			//console.log(require('util').inspect(json,false,null));
+
 			optimizer.optimizeStyle(json);
 		} catch (e) {
-			U.die('Error processing style "' + tssFile + '"', e);
+			U.die([
+				'Error processing style "' + tssFile + '"',
+				'- message: ' + e.message,
+				'- line:    ' + e.line,
+				'- column:  ' + e.column,
+				'- offset:  ' + e.offset 
+			]);
 		}
 
 		return json;
