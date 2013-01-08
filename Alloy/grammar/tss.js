@@ -1168,9 +1168,15 @@ module.exports = (function(){
                   pos2 = pos;
                   result5 = parse_paramComma();
                   if (result5 !== null) {
-                    result6 = parse_paramString();
+                    result6 = parse___();
                     if (result6 !== null) {
-                      result5 = [result5, result6];
+                      result7 = parse_paramString();
+                      if (result7 !== null) {
+                        result5 = [result5, result6, result7];
+                      } else {
+                        result5 = null;
+                        pos = pos2;
+                      }
                     } else {
                       result5 = null;
                       pos = pos2;
