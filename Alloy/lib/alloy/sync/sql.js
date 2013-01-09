@@ -1,7 +1,7 @@
 var _ = require('alloy/underscore')._, 
 	db;
 
-var ALLOY_DB = '_alloy_';
+var ALLOY_DB_DEFAULT = '_alloy_';
 
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -17,7 +17,20 @@ function InitAdapter(config) {
 			throw 'No support for Titanium.Database in MobileWeb environment.';
 		}
 		else {
-			db = Ti.Database.open('_alloy_');
+			var dbfile = config.adapter.db;
+			if (dbfile) {
+				var rx = /^(\/{0,1})(.+)\.(.+)$/;
+				var match = dbfile.match(rx);
+				if (match !== null) {
+					var file = (match[1] || '/') + match[2] + '.' + match[3];
+					var name = match[2];
+					db = Ti.Database.install(file, name);
+				} else {
+					// invalid db file name
+				}
+			} else {
+				db = Ti.Database.open(ALLOY_DB_DEFAULT);
+			}
 		}
 		module.exports.db = db;
 		
