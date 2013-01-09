@@ -1,3 +1,8 @@
 <Alloy>
-    <Window/>
+    <Window>
+        <Label id="title">Fighters</Label>
+        <TableView id="table" dataCollection="fighters">
+            <Require src="row"/>
+        </TableView>
+    </Window>
 </Alloy>
