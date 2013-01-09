@@ -144,7 +144,9 @@ exports.getParserArgs = function(node, state, opts) {
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
 		} else {
-			createArgs[attrName] = node.getAttribute(attrName);
+			var theValue = node.getAttribute(attrName);
+			/^(?:Ti|Titanium)\./.test(theValue) && (theValue = STYLE_EXPR_PREFIX + theValue);
+			createArgs[attrName] = theValue;
 		}
 	});
 	
