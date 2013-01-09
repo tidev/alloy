@@ -616,7 +616,8 @@ exports.loadStyle = function(tssFile, manifest) {
 		} catch (e) {
 			U.die([
 				'Error processing style "' + tssFile + '"',
-				'- message: ' + e.message,
+				e.message,
+				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
 				'- line:    ' + e.line,
 				'- column:  ' + e.column,
 				'- offset:  ' + e.offset 
