@@ -26,7 +26,8 @@ function InitAdapter(config) {
 					var name = match[2];
 					db = Ti.Database.install(file, name);
 				} else {
-					// invalid db file name
+					throw 'Invalid sql adapter database name "' + dbfile + '"';
+					return;
 				}
 			} else {
 				db = Ti.Database.open(ALLOY_DB_DEFAULT);
