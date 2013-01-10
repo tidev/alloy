@@ -8,8 +8,8 @@
         <target device="blackberry">false</target>
     </deployment-targets>
     <sdk-version>3.0.0.GA</sdk-version>
-    <id>com.appcelerator.HarnessTemplate</id>
-    <name>HarnessTemplate</name>
+    <id>com.appcelerator.Harness</id>
+    <name>Harness</name>
     <version>1.0</version>
     <publisher>tlukasavage</publisher>
     <url>http://</url>
