@@ -28,6 +28,7 @@ function InitAdapter(config) {
 					var name = match[2];
 					db = Ti.Database.install(file, name);
 					isPreloaded = true;
+					Ti.API.info('Preloading sql database "' + dbfile + '"');
 				} else {
 					throw 'Invalid sql adapter database name "' + dbfile + '"';
 					return;
@@ -255,10 +256,10 @@ function Migrate(migrations, config) {
 			if (!mid || mctx.id > mid) {
 				Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
 				if (prev && _.isFunction(prev.down)) {
-					prev.down(sqlMigration);
+					//prev.down(sqlMigration);
 				}
 				if (_.isFunction(mctx.up)) {
-					mctx.down(sqlMigration);
+					//mctx.down(sqlMigration);
 					mctx.up(sqlMigration);
 				}
 				prev = mctx;
