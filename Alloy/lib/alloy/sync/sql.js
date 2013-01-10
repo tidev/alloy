@@ -19,7 +19,7 @@ function InitAdapter(config) {
 			throw 'No support for Titanium.Database in MobileWeb environment.';
 		}
 		else {
-			var dbfile = config.adapter.db;
+			var dbfile = config.adapter.db_file;
 			if (dbfile) {
 				var rx = /^(\/{0,1})(.+)\.(.+)$/;
 				var match = dbfile.match(rx);
@@ -33,7 +33,7 @@ function InitAdapter(config) {
 					return;
 				}
 			} else {
-				db = Ti.Database.open(ALLOY_DB_DEFAULT);
+				db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
 			}
 		}
 		module.exports.db = db;
@@ -247,7 +247,7 @@ function Migrate(migrations, config) {
 			if (index === 0 && isPreloaded) {
 				return;
 			}
-			
+
 			var mctx = {};
 			migration(mctx);
 			var mid = GetMigrationForCached(mctx.name,migrationIds);
