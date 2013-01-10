@@ -1,4 +1,5 @@
 var _ = require('alloy/underscore')._, 
+	isPreloaded = false,
 	db;
 
 var ALLOY_DB_DEFAULT = '_alloy_';
@@ -12,6 +13,7 @@ function guid() {
 };	
 
 function InitAdapter(config) {
+	isPreloaded = false;
 	if (!db) {
 		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
 			throw 'No support for Titanium.Database in MobileWeb environment.';
@@ -25,6 +27,7 @@ function InitAdapter(config) {
 					var file = (match[1] || '/') + match[2] + '.' + match[3];
 					var name = match[2];
 					db = Ti.Database.install(file, name);
+					isPreloaded = true;
 				} else {
 					throw 'Invalid sql adapter database name "' + dbfile + '"';
 					return;
@@ -239,7 +242,12 @@ function Migrate(migrations, config) {
 		// iterate through all our migrations and call up/down and the last migration should
 		// have the up called but never the down -- the migrations come in pre sorted from
 		// oldest to newest based on timestamp
-		_.each(migrations,function(migration) {
+		_.each(migrations,function(migration, index) {
+			// skip the first migration if we preloaded the database
+			if (index === 0 && isPreloaded) {
+				return;
+			}
+			
 			var mctx = {};
 			migration(mctx);
 			var mid = GetMigrationForCached(mctx.name,migrationIds);
