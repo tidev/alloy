@@ -368,13 +368,10 @@ exports.Globals = {};
  */
 exports.Models = {};
 
-/**
- * @method instance
+/*
  * Creates a singleton instance of a Model based on the given model, or
  * returns an existing instance if one has already been created.
- * @param {String} the name of the base model for the Model
- * @return An Alloy Model object singleton 
- *
+ * Documented in docs/apidoc/model.js for docs site.
  */
  exports.Models.instance = function(name) {
  	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
@@ -396,13 +393,10 @@ exports.Models = {};
  */
 exports.Collections = {};
 
-/**
- * @method instance
+/*
  * Creates a singleton instance of a Collection based on the given model, or
  * returns an existing instance if one has already been created.
- * @param {String} the name of the base model for the collection
- * @return An Alloy Collection object singleton 
- *
+ * Documented in docs/apidoc/collection.js for docs site.
  */
  exports.Collections.instance = function(name) {
  	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
@@ -411,7 +405,7 @@ exports.Collections = {};
 /**
  * @property {Object} CFG
  * An object that stores Alloy configuration values as defined in your app's
- * app/config.json file. Here's a what a typical config.json file might look 
+ * app/config.json file. Here's what a typical config.json file might look
  * like in an Alloy app.
  *
  *     {
