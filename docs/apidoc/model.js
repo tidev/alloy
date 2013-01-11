@@ -23,6 +23,5 @@
  * Creates a singleton instance of a Model based on the given model, or
  * returns an existing instance if one has already been created.
  * @param {String} name the name of the base model for the model
- * @return An Alloy Model object singleton 
- *
+ * @return {Backbone.Model} An Alloy Model object singleton
  */

@@ -23,6 +23,5 @@
  * Creates a singleton instance of a Collection based on the given model, or
  * returns an existing instance if one has already been created.
  * @param {String} name the name of the base model for the collection
- * @return An Alloy Collection object singleton 
- *
+ * @return {Backbone.Collection} An Alloy Collection object singleton
  */
