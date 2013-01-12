@@ -114,7 +114,6 @@ function SQLiteMigrateDB() {
 	};
 	
 	this.dropTable = function(name) {
-		Ti.API.info('drop table migration called for '+name);
 		db.execute('DROP TABLE IF EXISTS '+name);
 	};
 }
@@ -143,7 +142,7 @@ function Sync(model, method, opts) {
 				}
 
 				// Assemble create query
-				var sql = "INSERT INTO " + table + " (" + names.join(",") + ",id) VALUES (" + q.join(",") + ",?)";
+				var sql = "INSERT INTO " + table + " (" + names.join(",") + "," + model.idAttribute + ") VALUES (" + q.join(",") + ",?)";
 	            
 				// add id as the last value to the query
 	            values.push(model.id);
@@ -190,7 +189,7 @@ function Sync(model, method, opts) {
 				values.push(model.get(k));
 				q.push('?');
 			}
-			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE id=?';
+			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE ' + model.idAttribute + '=?';
 			
 		    var e = sql +','+values.join(',')+','+model.id;
 		    values.push(model.id);
@@ -199,7 +198,7 @@ function Sync(model, method, opts) {
 			break;
 
 		case 'delete':
-			var sql = 'DELETE FROM '+table+' WHERE id=?';
+			var sql = 'DELETE FROM '+table+' WHERE ' + model.idAttribute + '=?';
 			db.execute(sql, model.id);
 			model.id = null;
 			resp = model.toJSON();
