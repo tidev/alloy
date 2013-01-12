@@ -1,16 +1,9 @@
 var _ = require('alloy/underscore')._, 
+	util = require('alloy/sync/util'),
 	isPreloaded = false,
 	db;
 
 var ALLOY_DB_DEFAULT = '_alloy_';
-
-function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-};
-
-function guid() {
-   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
-};	
 
 function InitAdapter(config) {
 	isPreloaded = false;
@@ -135,7 +128,7 @@ function Sync(model, method, opts) {
 				// Use idAttribute to account for something other then "id"
 				// being used for the model's id.
 				if (!model.id) {
-	                model.id = guid();
+	                model.id = util.guid();
 	                model.set(model.idAttribute, model.id);
 	            }
 				
