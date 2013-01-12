@@ -41,15 +41,16 @@ function InitAdapter(config) {
 	return {};
 }
 
+// Gets the latest migration
 function GetMigrationFor(table) {
 	var mid;
-	// get the latest migratino
 	var rs = db.execute('SELECT latest FROM migrations where model = ?', table);
 	if (rs.isValidRow()) {
-		mid = rs.field(0);
+		var mid = rs.field(0);
+		rs.close();
+		return mid;
 	}
-	rs.close();
-	return mid;
+	return null;
 }
 
 function SQLiteMigrateDB() {
