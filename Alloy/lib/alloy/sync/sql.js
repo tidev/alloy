@@ -55,48 +55,47 @@ function GetMigrationFor(table) {
 
 function SQLiteMigrateDB() {
 	//TODO: normalize columns at compile time - https://jira.appcelerator.org/browse/ALOY-222
-	this.column = function(name)
-	{
-		switch(name)
-		{
+	this.column = function(name) {
+		// split into parts to keep additional column characteristics like
+		// autoincrement, primary key, etc...
+		var parts = name.split(/\s+/);
+		var type = parts[0]
+		switch(type.toLowerCase()) {
 			case 'string':
 			case 'varchar':
+			case 'date':
+			case 'datetime':
+				Ti.API.warning('"' + type + '" is not a valid sqlite field, using TEXT instead');
 			case 'text':
 			{
-				return 'TEXT';
-			}
+				type = 'TEXT';
+				break;
 			case 'int':
 			case 'tinyint':
 			case 'smallint':
 			case 'bigint':
+			case 'boolean':
+				Ti.API.warning('"' + type + '" is not a valid sqlite field, using INTEGER instead');
 			case 'integer':
-			{
-				return 'INTEGER';
-			}
+				type = 'INTEGER';
+				break;
 			case 'double':
 			case 'float':
-			case 'real':
-			{
-				return 'REAL';
-			}
-			case 'blob':
-			{
-				return 'BLOB';
-			}
 			case 'decimal':
 			case 'number':
-			case 'date':
-			case 'datetime':
-			case 'boolean':
-			{
-				return 'NUMERIC';
-			}
-			case 'null':
-			{
-				return 'NULL';
-			}
+				Ti.API.warning('"' + name + '" is not a valid sqlite field, using REAL instead');
+			case 'real':
+				type = 'REAL';
+				break;
+			case 'blob':
+				type = 'BLOB';
+				break;
+			default:
+				type = 'TEXT';
+				break;
 		}
-		return 'TEXT';
+		parts[0] = type;
+		return parts.join(' ');
 	};
 	
 	this.createTable = function(config) {
