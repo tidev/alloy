@@ -3,34 +3,37 @@ var _ = require('alloy/underscore')._,
 	isPreloaded = false,
 	db;
 
+// The database name used when none is specified in the 
+// model configuration.
 var ALLOY_DB_DEFAULT = '_alloy_';
 
 function InitAdapter(config) {
 	isPreloaded = false;
 	if (!db) {
+		// throw exception on unsupported platforms
 		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
 			throw 'No support for Titanium.Database in MobileWeb environment.';
-		}
-		else {
-			var dbfile = config.adapter.db_file;
-			if (dbfile) {
-				var rx = /^(\/{0,1})(.+)\.(.+)$/;
-				var match = dbfile.match(rx);
-				if (match !== null) {
-					var file = (match[1] || '/') + match[2] + '.' + match[3];
-					var name = match[2];
-					db = Ti.Database.install(file, name);
-					isPreloaded = true;
-					Ti.API.info('Preloading sql database "' + dbfile + '"');
-				} else {
-					throw 'Invalid sql adapter database name "' + dbfile + '"';
-					return;
-				}
+		} 
+
+		// determine if we are trying to pre-load a sqlite db
+		var dbfile = config.adapter.db_file;
+		if (dbfile) {
+			var rx = /^(\/{0,1})(.+)\.(.+)$/;
+			var match = dbfile.match(rx);
+			if (match !== null) {
+				var file = (match[1] || '/') + match[2] + '.' + match[3];
+				var name = match[2];
+
+				// preload and return the open database handle
+				db = Ti.Database.install(file, name);
+				isPreloaded = true;
 			} else {
-				db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
+				throw 'Invalid sql adapter database name "' + dbfile + '"';
+				return;
 			}
+		} else {
+			db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
 		}
-		module.exports.db = db;
 		
 		// create the migration table in case it doesn't exist
 		db.execute('CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)');
