@@ -14,14 +14,6 @@ function ucfirst(text) {
     return text[0].toUpperCase() + text.substr(1);
 };
 
-// Ti.Analytics.featureEvent('alloy.start', {
-// 	guid: Ti.Platform.id,
-// 	tiversion: Ti.version,
-// 	osname: Ti.Platform.osname,
-// 	osversion: Ti.Platform.version,
-// 	locale: Ti.Platform.locale
-// });
-
 exports.M = function(name, modelDesc, migrations) {
 	var config = modelDesc.config;
     var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
