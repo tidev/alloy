@@ -67,7 +67,6 @@ function SQLiteMigrateDB() {
 			case 'datetime':
 				Ti.API.warning('"' + type + '" is not a valid sqlite field, using TEXT instead');
 			case 'text':
-			{
 				type = 'TEXT';
 				break;
 			case 'int':
