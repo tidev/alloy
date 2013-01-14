@@ -226,7 +226,7 @@ module.exports = function(args, program) {
 		code = njs;
 	}
 	fs.writeFileSync(appJS,code);
-	logger.info("compiling alloy to " + appJS.yellow);
+	logger.info("Compiling alloy to " + appJS.yellow);
 //	BENCHMARK('generate app.js');
 
 	// optimize code
