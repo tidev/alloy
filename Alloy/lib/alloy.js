@@ -40,14 +40,21 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
+    
+	// Run the post model creation code, if any
     if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
+	
+    // Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass); 
 	Model.prototype.config = config;
-	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
-	
+
+	// Extend the Model with extendModel(), if defined
 	if (_.isFunction(modelDesc.extendModel)) {
 		Model = modelDesc.extendModel(Model) || Model;
 	}
+
+	// Run the post model creation code, if any
+	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
 	
 	return Model;
 };
