@@ -109,7 +109,7 @@ function Sync(model, method, opts) {
 	            values.push(model.id);
 
 	            // execute the query and return the response
-	            db.open(dbName);
+	            db = Ti.Database.open(dbName);
 	            db.execute(sql, values);
 	            db.close();
 
@@ -121,7 +121,7 @@ function Sync(model, method, opts) {
 			var sql = 'SELECT * FROM '+table;
 
 			// execute the select query
-			db.open(dbName);
+			db = Ti.Database.open(dbName);
 			var rs = db.execute(sql);
 
 			var len = 0;
@@ -177,7 +177,7 @@ function Sync(model, method, opts) {
 		    values.push(model.id);
 
 		    // execute the update
-		    db.open(dbName);
+		    db = Ti.Database.open(dbName);
 			db.execute(sql,values);
 			db.close();
 
@@ -188,7 +188,7 @@ function Sync(model, method, opts) {
 			var sql = 'DELETE FROM '+table+' WHERE ' + model.idAttribute + '=?';
 
 			// execute the delete
-			db.open(dbName);
+			db = Ti.Database.open(dbName);
 			db.execute(sql, model.id);
 			db.close();
 
