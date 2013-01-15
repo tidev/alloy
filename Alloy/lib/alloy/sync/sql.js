@@ -89,6 +89,9 @@ function SQLiteMigrateDB() {
 			case 'blob':
 				type = 'BLOB';
 				break;
+			case 'null':
+				type = 'NULL';
+				break;
 			default:
 				type = 'TEXT';
 				break;
