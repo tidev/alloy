@@ -7,7 +7,10 @@ var ALLOY_DB_DEFAULT = '_alloy_';
 
 // The sql-specific migration object, which is the main parameter
 // to the up() and down() migration functions
-function SQLiteMigrateDB() {
+function SQLiteMigrateDB(dbname, table) {
+	this.dbname = dbname;
+	this.table = table;
+
 	//TODO: normalize columns at compile time - https://jira.appcelerator.org/browse/ALOY-222
 	this.column = function(name) {
 		// split into parts to keep additional column characteristics like
@@ -55,23 +58,22 @@ function SQLiteMigrateDB() {
 	};
 	
 	this.createTable = function(config) {
-		var table = config.adapter.collection_name;	
 		var columns = [];
 		for (var k in config.columns) {
 			columns.push(k+" "+this.column(config.columns[k]));
 		}
 		var fields = columns.join(',');
-		var sql = 'CREATE TABLE IF NOT EXISTS ' + table + ' ( ' + fields + ',id)';
+		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + fields + ',id)';
 
 		// execute the create
-		var db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
+		var db = Ti.Database.open(this.dbname);
 		db.execute(sql);
 		db.close();
 	};
 	
 	this.dropTable = function(config) {
-		var db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
-		db.execute('DROP TABLE IF EXISTS ' + config.adapter.collection_name);
+		var db = Ti.Database.open(this.dbname);
+		db.execute('DROP TABLE IF EXISTS ' + this.table);
 		db.close();
 	};
 
