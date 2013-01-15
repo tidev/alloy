@@ -149,7 +149,7 @@ function Sync(model, method, opts) {
 			break;
 		case 'read':
 			// TODO: Allow custom queries. https://jira.appcelerator.org/browse/ALOY-458
-			var sql = 'SELECT * FROM '+table;
+			var sql = opts.query || 'SELECT * FROM ' + table;
 
 			// execute the select query
 			db = Ti.Database.open(dbName);
