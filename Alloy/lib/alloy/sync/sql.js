@@ -232,9 +232,8 @@ function Migrate(Model) {
 	var lastMigration = {};
 	migrations.length && migrations[migrations.length-1](lastMigration);
 	
-	// Get config reference and a sql-specific migration processing object
+	// Get config reference 
 	var config = Model.prototype.config;
-	var sqliteMigrationDb = new SQLiteMigrateDB();
 
 	// Get the migration number from the config, or use the number of 
 	// the last migration if it's not present. If we still don't have a 
@@ -246,8 +245,9 @@ function Migrate(Model) {
 		return;
 	}
 
-	// Get the db name for this model
+	// Get the db name for this model and set up the sql migration obejct
 	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
+	var sqliteMigrationDb = new SQLiteMigrateDB(config.adapter.db_name, config.adapter.collection_name);
 	
 	// Create the migration tracking table if it doesn't already exist.
 	// Get the current saved migration number.
