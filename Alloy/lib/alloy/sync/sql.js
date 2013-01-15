@@ -220,7 +220,7 @@ function GetMigrationFor(dbname, table) {
 		var mid = rs.field(0);
 		rs.close();
 		db.close()
-		return mid;
+		return mid + '';
 	}
 	db.close()
 	return null;
@@ -246,6 +246,7 @@ function Migrate(Model) {
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
 		return;
 	}
+	targetNumber = targetNumber + ''; // ensure that it's a string
 
 	// Get the db name for this model and set up the sql migration obejct
 	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
@@ -260,7 +261,7 @@ function Migrate(Model) {
 	var direction;
 	if (currentNumber === targetNumber) {
 		return;
-	} else if (currentNumber > targetNumber) {
+	} else if (currentNumber && currentNumber > targetNumber) {
 		direction = 0; // rollback
 		migrations.reverse();
 	} else {
