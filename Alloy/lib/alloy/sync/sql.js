@@ -19,7 +19,7 @@ function SQLiteMigrateDB() {
 			case 'varchar':
 			case 'date':
 			case 'datetime':
-				Ti.API.warning('"' + type + '" is not a valid sqlite field, using TEXT instead');
+				Ti.API.warn('"' + type + '" is not a valid sqlite field, using TEXT instead');
 			case 'text':
 				type = 'TEXT';
 				break;
@@ -28,7 +28,7 @@ function SQLiteMigrateDB() {
 			case 'smallint':
 			case 'bigint':
 			case 'boolean':
-				Ti.API.warning('"' + type + '" is not a valid sqlite field, using INTEGER instead');
+				Ti.API.warn('"' + type + '" is not a valid sqlite field, using INTEGER instead');
 			case 'integer':
 				type = 'INTEGER';
 				break;
@@ -36,7 +36,7 @@ function SQLiteMigrateDB() {
 			case 'float':
 			case 'decimal':
 			case 'number':
-				Ti.API.warning('"' + name + '" is not a valid sqlite field, using REAL instead');
+				Ti.API.warn('"' + name + '" is not a valid sqlite field, using REAL instead');
 			case 'real':
 				type = 'REAL';
 				break;
@@ -55,7 +55,6 @@ function SQLiteMigrateDB() {
 	};
 	
 	this.createTable = function(config) {
-		var db = Ti.Database.open(config.adapter.db_name);
 		var table = config.adapter.collection_name;	
 		var columns = [];
 		for (var k in config.columns) {
@@ -63,12 +62,15 @@ function SQLiteMigrateDB() {
 		}
 		var fields = columns.join(',');
 		var sql = 'CREATE TABLE IF NOT EXISTS ' + table + ' ( ' + fields + ',id)';
+
+		// execute the create
+		var db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
 		db.execute(sql);
 		db.close();
 	};
 	
 	this.dropTable = function(config) {
-		var db = Ti.Database.open(config.adapter.db_name);
+		var db = Ti.Database.open(config.adapter.db_name || ALLOY_DB_DEFAULT);
 		db.execute('DROP TABLE IF EXISTS ' + config.adapter.collection_name);
 		db.close();
 	};
@@ -239,7 +241,7 @@ function Migrate(Model) {
 	// migration number after that, that means there are none. There's
 	// no migrations to perform.
 	var targetNumber = typeof config.adapter.migration === 'undefined' || 
-		config.adapter.migration === null ? lastMigration.number : config.adapter.migration;
+		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
 		return;
 	}
@@ -278,8 +280,8 @@ function Migrate(Model) {
 
 			// if upgrading, skip migrations higher than the target
 			// if rolling back, skip migrations lower than the target
-			if (direction && context.number > targetNumber) { break; }
-			if (!direction && context.number <= targetNumber) { break; }
+			if (direction && context.id > targetNumber) { break; }
+			if (!direction && context.id <= targetNumber) { break; }
 
 			// execute the appropriate migration function
 			var funcName = direction ? 'up' : 'down';
