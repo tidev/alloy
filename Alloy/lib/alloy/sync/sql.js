@@ -294,8 +294,8 @@ function Migrate(Model) {
 	}
 
 	// update the saved migration in the db
-	db.execute('INSERT OR REPLACE INTO migrations (latest,model) ' +
-		       'VALUES ("' + targetNumber + '", "' + config.adapter.collection_name + '");');
+	db.execute('DELETE FROM migrations where model = ?', config.adapter.collection_name);
+	db.execute('INSERT INTO migrations VALUES (?,?)', targetNumber, config.adapter.collection_name);
 
 	// end the migration transaction
 	db.execute('COMMIT;');
