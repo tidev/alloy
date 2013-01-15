@@ -81,6 +81,33 @@ function SQLiteMigrateDB(dbname, table) {
 		var db = Ti.Database.install(dbFile);
 		db.close();
 	}
+
+	this.insert = function(columnValues) {;
+		var columns = [];
+		var values = [];
+		var qs = [];
+
+		// get arrays of column names, values, and value placeholders
+		var found = false;
+		for (var key in columnValues) {
+			key === 'id' && (found = true);
+			columns.push(key);
+			values.push(columnValues[key]);
+			qs.push('?');
+		}
+
+		// add the id field if it wasn't specified
+		if (!found) {
+			columns.push('id');
+			values.push(util.guid());
+			qs.push('?');
+		}
+
+		// construct and execute the query
+		var db = Ti.Database.open(this.dbname);
+		db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
+		db.close();
+	}
 }
 
 function Sync(model, method, opts) {
