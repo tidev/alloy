@@ -1,11 +1,13 @@
 exports.definition = {
 	config: {
-		"columns": {
-			"name":"text",
-			"nickname":"text"
-		},
+		// No need to define columns object, loading the db_file
+		// below will do that for us.
+
 		"adapter": {
 			"type": "sql",
+
+			// The table name inside the sqlite database to use for
+			// models and collections based on this definition.
 			"collection_name": "fighters",
 
 			// db_file tells model to use myapp.sqlite file to install 
