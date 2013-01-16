@@ -1,15 +1,6 @@
 migration.up = function(db) {
-	db.createTable({
-		"columns": {
-			"name":"text",
-			"nickname":"text"
-		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "fighters",
-            "db": "fighters.sqlite"
-		}
-	});
+	// nothing needed, all handled by the "db_file" property 
+	// in models/fighters.js
 };
 
 migration.down = function(db) {
