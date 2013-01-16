@@ -367,15 +367,15 @@ function installDatabase(config) {
 	// make sure we have a unique id field
 	if (config.adapter.idAttribute) {
 		if (!_.contains(_.keys(config.columns), config.adapter.idAttribute)) {
-			throw 'config.idAttribute "' + config.idAttribute + '" not found in list of columns for table "' + table + '"\n' +
+			throw 'config.adapter.idAttribute "' + config.adapter.idAttribute + '" not found in list of columns for table "' + table + '"\n' +
 			      'columns: [' + _.keys(config.columns).join(',') + ']';
 		}
 	} else {
-		Ti.API.debug('No config.idAttribute specified for table "' + table + '"');
-		Ti.API.debug('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
+		Ti.API.info('No config.adapter.idAttribute specified for table "' + table + '"');
+		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
 		db.execute('ALTER TABLE ' + table + ' ADD ' + ALLOY_ID_DEFAULT + ' TEXT;');
 		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
-		config.idAttribute = ALLOY_ID_DEFAULT;
+		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
 
 	// close the db handle
@@ -391,6 +391,8 @@ module.exports.beforeModelCreate = function(config) {
 	// install database file, if specified
 	config.adapter.db_file && installDatabase(config);
 	if (!config.adapter.idAttribute) {
+		Ti.API.info('No config.adapter.idAttribute specified for table "' + config.adapter.collection_name + '"');
+		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
 		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
 		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
