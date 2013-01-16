@@ -2,7 +2,7 @@
 	backgroundColor: '#fff',
 	navBarHidden: true,
 	exitOnClose: true
-}
+},
 
 "#title": {
 	top: 0,
@@ -15,7 +15,7 @@
 		fontWeight: 'bold'
 	},
 	textAlign: 'center'
-}
+},
 
 "#table": {
 	top: '50dp',
