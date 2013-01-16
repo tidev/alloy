@@ -9,7 +9,7 @@ exports.definition = {
 		},
 
 		"adapter": {
-			"type": "sql",
+			"type": "sql_new",
 
 			// The table name inside the sqlite database to use for
 			// models and collections based on this definition.
