@@ -1,0 +1,27 @@
+"#row": {
+	height: '60dp',
+	backgroundColor: '#fff'
+}
+
+"Label": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+"#name": {
+	top: '7dp',
+	left: '7dp',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
+
+"#nickname": {
+	bottom: '7dp',
+	left: '14dp',
+	font: {
+		fontSize: '16dp',
+		fonWeight: 'normal'
+	}
+}
