@@ -359,6 +359,7 @@ function installDatabase(config) {
 		var cName = rs.fieldByName('name');
 		var cType = rs.fieldByName('type');
 		columns[cName] = cType;
+		rs.next();
 	}
 	config.columns = columns;
 	rs.close();
