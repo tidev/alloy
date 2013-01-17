@@ -11,5 +11,7 @@ migration.up = function(migrationObj) {
 };
 
 migration.down = function(migrationObj) {
-
+	for (var i = 0; i < fighters.length; i++) {
+		migrationObj.deleteRow(fighters[i]);
+	}
 };

@@ -8,5 +8,10 @@ migration.up = function(db) {
 };
 
 migration.down = function(db) {
-	db.dropTable("fighters");
+	for (var i = 0; i < 5; i++) {
+		db.deleteRow({
+			name: 'Migration ' + (i+1),
+			nickname: 'nickname'
+		});
+	}
 };
