@@ -132,7 +132,7 @@ function SQLiteMigrateDB(config) {
 
 		var db = Ti.Database.open(this.dbname);
 		db.execute(sql, values);
-		var db.close();
+		db.close();
 	};
 }
 
