@@ -1,15 +1,12 @@
-migration.up = function(migrationObj) {
-	var fighters = [
-		['Wanderlei Silva','The Axe Murderer'],
-		['Manny Pacquiao','Pac-Man'],
-		['Muhammad Ali','The Greatest']
-	];
+var fighters = [
+	{ name: 'Wanderlei Silva', nickname: 'The Axe Murderer'},
+	{ name: 'Manny Pacquiao', nickname: 'Pac-Man'},
+	{ name: 'Muhammad Ali', nickname: 'The Greatest'}
+];
 
+migration.up = function(migrationObj) {
 	for (var i = 0; i < fighters.length; i++) {
-		migrationObj.insert({
-			name: fighters[i][0],
-			nickname: fighters[i][1]
-		});
+		migrationObj.insertRow(fighters[i]);
 	}
 };
 

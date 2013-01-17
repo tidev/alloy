@@ -87,7 +87,7 @@ function SQLiteMigrateDB(config) {
 		db.close();
 	};
 
-	this.insert = function(columnValues) {
+	this.insertRow = function(columnValues) {
 		var columns = [];
 		var values = [];
 		var qs = [];
@@ -112,6 +112,10 @@ function SQLiteMigrateDB(config) {
 		var db = Ti.Database.open(this.dbname);
 		db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
 		db.close();
+	};
+
+	this.deleteRow = function(columnValues) {
+
 	};
 }
 

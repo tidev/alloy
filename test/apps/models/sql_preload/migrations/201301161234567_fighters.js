@@ -1,6 +1,6 @@
 migration.up = function(db) {
 	for (var i = 0; i < 5; i++) {
-		db.insert({
+		db.insertRow({
 			name: 'Migration ' + (i+1),
 			nickname: 'nickname'
 		});
