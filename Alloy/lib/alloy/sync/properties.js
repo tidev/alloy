@@ -29,7 +29,7 @@ function Sync(model, method, opts) {
 			resp = list;
 		} else {
 			// is model
-			var obj = TAP.getObject(prefix + '-' + model.get('id'));
+			var obj = TAP.getObject(prefix + '-' + model.id);
 			model.set(obj);
 			resp = model.toJSON();
 		}	
@@ -42,7 +42,7 @@ function Sync(model, method, opts) {
 		TAP.setObject(prefix + '-' + model.id, model.toJSON() || {});
 		resp = model.toJSON();
 	} else if (method === 'delete') {
-		TAP.removeProperty(prefix + '-' + model.get('id'));
+		TAP.removeProperty(prefix + '-' + model.id);
 		model.clear();
 		resp = model.toJSON();
 	}

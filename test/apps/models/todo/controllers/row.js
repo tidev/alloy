@@ -7,7 +7,7 @@ var id;
 // will be null if there is no binding in place. 
 
 if ($model) {
-	id = $model.get('id');
+	id = $model.id;
 	if ($model.get('done')) {
 		$.row.backgroundColor = '#eee';
 		$.check.backgroundColor = '#eee';
