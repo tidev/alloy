@@ -86,16 +86,15 @@ function getBindingCode(args) {
 	var handlerVar = CU.generateUniqueId();
 
 	code += "var " + handlerVar + "=function(e) {";
+	code += "   var i;";
 	code += "	var models = " + whereCode + ";";
-	code += "	var len = models.length;";
-	code += "	while(<%= parentSymbol %>.children.length > 0) {";
-	code += "		var child = <%= parentSymbol %>.children[0];";
-	code += "		if (child) {";
-	code += "			<%= parentSymbol %>.remove(child);";
-	code += "			child = null;";
-	code += "		}";
+	code += "	var len = <%= parentSymbol %>.children.length;";
+	code += "	for (i = 0; i < len; i++) {";
+	code += "		var child = <%= parentSymbol %>.children[((len-1)-i)];";
+	code += "		child && <%= parentSymbol %>.remove(child);";
 	code += "	}";
-	code += "	for (var i = 0; i < len; i++) {";
+	code += "	len = models.length;";
+	code += "	for (i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
 	code += "		<%= localModel %>.__transform = " + transformCode + ";";
 	code += "		<%= itemCode %>";
