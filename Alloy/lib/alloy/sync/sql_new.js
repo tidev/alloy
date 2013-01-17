@@ -121,15 +121,15 @@ function SQLiteMigrateDB(config) {
 		var conditions = [];
 		var values = [];
 
+		// construct the where clause, if necessary
 		len && (sql += ' WHERE ');
 		for (var i = 0; i < len; i++) {
 			conditions.push(keys[i] + ' = ?');
 			values.push(columns[keys[i]]);
 		}
+		sql += conditions.join(' AND ');
 
-		Ti.API.info(sql);
-		Ti.API.info(values);
-
+		// execute the delete
 		var db = Ti.Database.open(this.dbname);
 		db.execute(sql, values);
 		db.close();
