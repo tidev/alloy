@@ -62,9 +62,17 @@ function SQLiteMigrateDB(config) {
 	this.createTable = function(config) {
 		// compose the create query
 		var columns = [];
+		var found = false;
 		for (var k in config.columns) {
+			k === this.idAttribute && (found = true);
 			columns.push(k + " " + this.column(config.columns[k]));
 		}
+
+		// add the id field if it wasn't specified
+		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
+			columns.push(ALLOY_ID_DEFAULT + ' TEXT');
+		}
+
 		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
 
 		// execute the create
