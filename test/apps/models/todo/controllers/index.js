@@ -18,6 +18,7 @@ switch(adapter) {
 		// supported on all platforms
 		break;
 	case 'sql':
+	case 'sql_new':
 		// supported on android and ios
 		!OS_ANDROID && !OS_IOS && (err = 'sql adapter only supported on Android and iOS');
 		break;
