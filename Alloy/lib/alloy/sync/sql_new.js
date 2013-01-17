@@ -114,8 +114,25 @@ function SQLiteMigrateDB(config) {
 		db.close();
 	};
 
-	this.deleteRow = function(columnValues) {
+	this.deleteRow = function(columns) {
+		var sql = 'DELETE FROM ' + this.table;
+		var keys = _.keys(columns);
+		var len = keys.length;
+		var conditions = [];
+		var values = [];
 
+		len && (sql += ' WHERE ');
+		for (var i = 0; i < len; i++) {
+			conditions.push(keys[i] + ' = ?');
+			values.push(columns[keys[i]]);
+		}
+
+		Ti.API.info(sql);
+		Ti.API.info(values);
+
+		var db = Ti.Database.open(this.dbname);
+		db.execute(sql, values);
+		var db.close();
 	};
 }
 
