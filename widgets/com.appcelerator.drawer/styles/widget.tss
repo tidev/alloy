@@ -29,5 +29,5 @@
         height: 48,
 		backgroundColor: "black",
         layout: "horizontal"        
-    },
+    }
 }

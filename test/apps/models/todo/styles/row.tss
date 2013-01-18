@@ -1,8 +1,10 @@
 "#row": {
 	height: '50dp',
 	backgroundColor: '#fff',
-	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	focusable: false
+},
+"#row[platform=ios]": {
+    selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 },
 "#check": {
 	image: '/tick_gray_64.png',

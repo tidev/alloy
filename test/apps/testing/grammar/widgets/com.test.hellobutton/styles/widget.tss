@@ -1,0 +1,5 @@
+"#helloButton": {
+	backgroundImage: WPATH(/* before */'hello.png' /* after */ ) /* after after*/, // after after after
+	height: 135,
+	width: 233
+}

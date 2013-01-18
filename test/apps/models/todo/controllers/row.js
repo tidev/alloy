@@ -1,13 +1,14 @@
 var moment = require('moment');
-var todos = Alloy.Globals.todos;
-var args = arguments[0] || {};
+var todos = Alloy.Collections.todo;
 var id;
 
-if (args.todo) {
-	$.task.text = args.todo.get('item');
-	id = args.todo.get('id');
+// $model represents the current model accessible to this 
+// controller from the markup's model-view binding. $model
+// will be null if there is no binding in place. 
 
-	if (args.todo.get('done')) {
+if ($model) {
+	id = $model.id;
+	if ($model.get('done')) {
 		$.row.backgroundColor = '#eee';
 		$.check.backgroundColor = '#eee';
 		$.task.color = '#ccc';
@@ -20,25 +21,27 @@ if (args.todo) {
 	}
 }
 
+// toggle the "done" status of the IDed todo
 function toggleStatus(e) {
+	// find the todo task by id
 	var todo = todos.get(id);
-	
-	// toggle the "done" status of the IDed todo
-	todo.set({
-    "done": todo.get('done') ? 0 : 1,
-    "date_completed": moment().unix()
-  }).save();
 
-  // update views from sql storage
-  todos.fetch({ add : false });
+	// set the current "done" and "date_completed" fields for the model,
+	// then save to presistence, and model-view binding will automatically
+	// reflect this in the tableview
+	todo.set({
+		"done": todo.get('done') ? 0 : 1,
+		"date_completed": moment().unix()
+  	}).save(); 
 }
 
+// delete the IDed todo from the collection
 function deleteTask(e) {
-	// delete the IDed todo from the collection
+	// find the todo task by id
 	var todo = todos.get(id);
-	todos.remove(todo);
-	todo.destroy();
 
-  // update views from sql storage
-  todos.fetch({ add : false });
+	// destroy the model from persistence, which will in turn remove
+	// it from the collection, and model-view binding will automatically
+	// reflect this in the tableview
+	todo.destroy();
 }

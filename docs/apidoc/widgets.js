@@ -37,4 +37,6 @@
  *
  * A widget can also be added to other widgets.  Follow the same procedure as above except the widget
  * configuration file is called widget.json instead of config.json.
+ *
+ * For more information on widgets, see [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
  */

@@ -488,40 +488,41 @@ exports.dieWithNode = function(node, msg) {
 	exports.die(msg);
 }
 
-exports.installPlugin = function(alloyPath, projectPath, doExistingCheck) {
-	var file = 'plugin.py'
-	var hookFile = 'alloy.js';
+exports.installPlugin = function(alloyPath, projectPath) {
 	var id = 'ti.alloy';
-	var source = path.join(alloyPath,'Alloy','plugin',file);
-	var dest = path.join(projectPath,'plugins',id);
-	var hookDest = path.join(dest,'hooks');
+	var plugins = {
+		plugin: {
+			file: CONST.PLUGIN_FILE,
+			src: path.join(alloyPath,'Alloy','plugin'),
+			dest: path.join(projectPath,'plugins',id)
+		},
+		hook: {
+			file: CONST.HOOK_FILE,
+			src: path.join(alloyPath,'hooks'),
+			dest: path.join(projectPath,'plugins',id,'hooks')
+		}
+	};
 
-	// Check to see if the appropriate structure is already in place
-	if (doExistingCheck &&
-		path.existsSync(path.join(dest,file)) &&
-		path.existsSync(path.join(hookDest,hookFile))) 
-	{
-		logger.debug('Plugin and hook already installed');
-		return;
-	}
+	_.each(plugins, function(o, type) {
+		var srcFile = path.join(o.src,o.file);
+		var destFile = path.join(o.dest,o.file);
 
-	// create plugin path and add to project
-	exports.ensureDir(dest);
-	dest = path.join(dest,file);
-	exports.copyFileSync(source, dest);
+		// skip if the src and dest are the same file
+		if (path.existsSync(destFile) &&
+			fs.readFileSync(srcFile,'utf8') === fs.readFileSync(destFile,'utf8')) {
+			return;
+		}
+		exports.ensureDir(o.dest);
+		exports.copyFileSync(srcFile, destFile);
 
-	// add the plugin to tiapp.xml
+		logger.info('Deployed ti.alloy ' + type + ' to ' + destFile);
+	});
+
+	// add the plugin to tiapp.xml, if necessary
 	exports.tiapp.installPlugin(projectPath, {
 		id: 'ti.alloy',
 		version: '1.0'
 	});
-
-	// copy the new cli hook
-	exports.ensureDir(hookDest);
-	exports.copyFileSync(path.join(alloyPath,'hooks',hookFile), path.join(hookDest,hookFile));
-
-	logger.info('Deployed ti.alloy compiler plugin to ' + dest);
-	logger.info('Deployed ti.alloy hooks to ' + hookDest);
 }
 
 

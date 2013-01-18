@@ -20,9 +20,8 @@ function parse(node, state, args) {
 		var theNode = CU.validateNodeName(child, 'Ti.UI.Window');
 		var childArgs = CU.getParserArgs(child);
 		if (theNode) {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					subParents.push(state.parent.symbol);
 				}

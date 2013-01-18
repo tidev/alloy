@@ -47,18 +47,16 @@ function parse(node, state, args) {
 
 		// generate code for proxy property assigments
 		if (isProxyProperty) {
-			proxyPropertyCode += CU.generateNode(child, {
+			proxyPropertyCode += CU.generateNodeExtended(child, state, {
 				parent: { 
 					node: node, 
 					symbol: '<%= proxyPropertyParent %>' 
-				},
-				styles: state.styles
+				}
 			});
 		// generate code for search bar
 		} else if (isSearchBar) {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					searchBarName = state.parent.symbol;
 				}
@@ -66,20 +64,18 @@ function parse(node, state, args) {
 		// generate code for template row for model-view binding
 		} else if (isDataBound) {
 			localModel || (localModel = CU.generateUniqueId());
-			itemCode += CU.generateNode(child, {
+			itemCode += CU.generateNodeExtended(child, state, {
 				parent: {},
 				local: true,
 				model: localModel,
-				styles: state.styles,
 				post: function(node, state, args) {
 					return 'rows.push(' + state.parent.symbol + ');\n';
 				}
 			});
 		// generate code for the static row/section/searchbar
 		} else {
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					var postCode = '';
 					if (!arrayName) {
@@ -148,7 +144,9 @@ function getBindingCode(args) {
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + col + ")" : col + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	code += col + ".on('fetch destroy change add remove', function(e) { ";
+	var handlerVar = CU.generateUniqueId();
+
+	code += "var " + handlerVar + "=function(e) {";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "	var rows = [];";
@@ -158,7 +156,10 @@ function getBindingCode(args) {
 	code += "<%= itemCode %>";
 	code += "	}";
 	code += "<%= parentSymbol %>.setData(rows);";
-	code += "});";
+	code += "};";
+	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+
+	CU.destroyCode += col + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
 
 	return code;
 }

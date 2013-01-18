@@ -1,0 +1,15 @@
+<Alloy>
+  	<Window title="Add User">
+        <Label class="header" platform="android">Add User</Label>
+
+    	<TextField id="name" hintText="name" onReturn="closeKeyboard"/>
+        <View id="colorContainer">
+            <View id="blue" class="color" onClick="setColor"/> 
+            <View id="red" class="color" onClick="setColor"/> 
+            <View id="orange" class="color" onClick="setColor"/> 
+        </View>
+
+    	<Button class="button" onClick="addUser">Add</Button>
+    	<Button class="button" onClick="closeWindow">Cancel</Button>
+  	</Window>
+</Alloy>

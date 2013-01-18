@@ -1,4 +1,4 @@
 "#imageview": {
-   bottom: "100%",         // Offscreen.
-   opacity: 0               // Hidden.
+   bottom: "100%" ,      
+   opacity: 0              
 }

@@ -1,0 +1,29 @@
+"View": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL
+},
+".logout": {
+	title: 'logout'
+},
+"#themes[platform=ios]": {
+	style: Ti.UI.iPhone.TableViewStyle.GROUPED
+},
+"#themes[platform=android]": {
+	type: Ti.UI.PICKER_TYPE_PLAIN,
+	left: '50dp',
+	right: '5dp'
+},
+"#email": {
+	hintText: 'email', 
+	height: '40dp', 
+	textAlign: 'left',
+	clearButtonMode: Ti.UI.INPUT_BUTTONMODE_ONFOCUS
+},
+"#email[platform=ios]": {
+	left: 10,
+	right: 10
+},
+"#email[platform=android]": {
+	left: '50dp',
+	right: '5dp'
+}

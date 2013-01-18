@@ -5,34 +5,48 @@
 /* ===== Syntactical Elements ===== */
 
 start
-  = _ object:object { return object; }
+  = __ topobject:topobject __ { return topobject; }
+
+topobject
+  = "{" __ "}"           { return {};      }
+  / "{" __ topmembers:topmembers __ "}" { return topmembers; } 
 
 object
-  = "{" _ "}" _                 { return {};      }
-  / "{" _ members:members "}" _ { return members; }
+  = "{" __ "}"                { return {};      }
+  / "{" __ members:members __ "}" { return members; }
 
-members
-  = head:pair tail:(","? _ pair)* {
+topmembers
+  = head:pair tail:(__ ","? __ pair)* {
       var result = {};
       result[head[0]] = head[1];
       for (var i = 0; i < tail.length; i++) {
-        result[tail[i][2][0]] = tail[i][2][1];
+        result[tail[i][3][0]] = tail[i][3][1];
+      }
+      return result;
+    }
+
+members
+  = head:pair tail:(__ "," __ pair)* {
+      var result = {};
+      result[head[0]] = head[1];
+      for (var i = 0; i < tail.length; i++) {
+        result[tail[i][3][0]] = tail[i][3][1];
       }
       return result;
     }
 
 pair
-  = _ name:(string / bareString) ":" _ value:value { return [name, value]; }
+  = name:(string / bareString) __ ":" __ value:value { return [name, value]; }
 
 array
-  = "[" _ "]" _                   { return [];       }
-  / "[" _ elements:elements "]" _ { return elements; }
+  = "[" __ "]"                    { return [];       }
+  / "[" __ elements:elements __ "]"  { return elements; }
 
 elements
-  = head:value tail:("," _ value)* {
+  = head:value tail:(__ "," __ value)* {
       var result = [head];
       for (var i = 0; i < tail.length; i++) {
-        result.push(tail[i][2]);
+        result.push(tail[i][3]);
       }
       return result;
     }
@@ -40,54 +54,69 @@ elements
 value
   = LocaleCall
   / TiConstant
+  / WPATH
   / string
   / number
   / object
   / array
-  / "true" _  { return true;   }
-  / "false" _ { return false;  }
-  // FIXME: We can't return null here because that would mean parse failure.
-  / "null" _  { return "null"; }
+  / "true" __  { return true;   }
+  / "false" __ { return false;  }
+  / "null" __  { return "__ALLOY_EXPR__--null"; }
 
 /* ===== Lexical Elements ===== */
 
 OpenParen
-  = '(' _ { return '('; }
+  = '(' { return '('; }
 
 CloseParen
-  = ')' _ { return ')'; }
+  = ')' { return ')'; }
+
+WPATH
+  = 'WPATH' OpenParen __ param1:paramString __ (paramComma __ paramString)* __ CloseParen {
+    return '__ALLOY_EXPR__--WPATH(' + param1 + ')';
+  }
 
 LocaleCall
-  = Locale OpenParen param1:paramString param2:(paramComma paramString)? CloseParen { return '__ALLOY_EXPR__--L(' + param1 + param2.join('') + ')'; }
+  = Locale OpenParen __ param1:paramString __ param2:(paramComma __ paramString)? __ CloseParen { 
+    return '__ALLOY_EXPR__--L(' + param1 + (param2 ? param2.join('') : '') + ')'; 
+  }
 
 Locale
-  = TiNS 'Locale.getString'
+  = TiNS '.Locale.getString'
   / 'L'
 
 TiConstant
-  = parts:(TiNS (bareString / '.')+) { return '__ALLOY_EXPR__--' + parts[0] + parts[1].join(''); }
+  = parts:(TiNS ('.' bareString)+) {
+    var tc = '__ALLOY_EXPR__--' + parts[0];
+    var len = parts[1] ? parts[1].length : 0;
+    for (var i = 0; i < len; i++) {
+      tc += parts[1][i].join('');
+    }
+    return tc;
+  }
 
 TiNS
-  = 'Ti.'
-  / 'Titanium.'
-  / 'Alloy.'
+  = 'Titanium'
+  / 'Ti'
+  / 'Alloy'
 
 paramComma
-  = _ ',' _ { return ','; }
+  = __ ',' __ { return ','; }
 
 paramString
-  = '"' '"' _             { return '""';    }
-  / "'" "'" _             { return "''";    }
-  / '"' chars:chars '"' _ { return '"' + chars + '"'; }
-  / "'" schars:schars "'" _ { return "'" + schars + "'"; }
+  = '"' '"' __             { return '""';    }
+  / "'" "'" __             { return "''";    }
+  / '"' chars:chars '"' __ { return '"' + chars + '"'; }
+  / "'" schars:schars "'" __ { return "'" + schars + "'"; }
+  / c:TiConstant { return c.replace('__ALLOY_EXPR__--', ''); }
 
 string "string"
-  = '"' '"' _             { return "";    }
-  / "'" "'" _             { return "";    }
-  / '"' chars:chars '"' _ { return chars; }
-  / "'" schars:schars "'" _ { return schars; }
+  = '"' '"' __             { return "";    }
+  / "'" "'" __             { return "";    }
+  / '"' chars:chars '"' __ { return chars; }
+  / "'" schars:schars "'" __ { return schars; }
 
-bareString
+bareString "bare word"
   = chars:bareChar+ { return chars.join(''); }
 
 bareChar 
@@ -130,10 +159,10 @@ char
     }
 
 number "number"
-  = int_:int frac:frac exp:exp _ { return parseFloat(int_ + frac + exp); }
-  / int_:int frac:frac _         { return parseFloat(int_ + frac);       }
-  / int_:int exp:exp _           { return parseFloat(int_ + exp);        }
-  / int_:int _                   { return parseFloat(int_);              }
+  = int_:int frac:frac exp:exp __ { return parseFloat(int_ + frac + exp); }
+  / int_:int frac:frac __         { return parseFloat(int_ + frac);       }
+  / int_:int exp:exp __           { return parseFloat(int_ + exp);        }
+  / int_:int __                   { return parseFloat(int_);              }
 
 int
   = digit19:digit19 digits:digits     { return digit19 + digits;       }
@@ -169,12 +198,38 @@ digit19
 hexDigit
   = [0-9a-fA-F]
 
-/* ===== Whitespace ===== */
+/* Whitespace and comments */
+_
+  = (WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
 
-_ "whitespace"
-  = whitespace*
+__
+  = (WhiteSpace / LineTerminatorSequence / Comment)*
 
-// Whitespace is undefined in the original JSON grammar, so I assume a simple
-// conventional definition consistent with ECMA-262, 5th ed.
-whitespace
-  = [ \t\n\r]
+LineTerminator
+  = [\n\r\u2028\u2029]
+
+LineTerminatorSequence "end of line"
+  = "\n"
+  / "\r\n"
+  / "\r"
+  / "\u2028" // line separator
+  / "\u2029" // paragraph separator
+
+SourceCharacter
+  = .
+
+WhiteSpace "whitespace"
+  = [\t\v\f \u00A0\uFEFF]
+
+Comment "comment"
+  = MultiLineComment
+  / SingleLineComment
+
+MultiLineComment
+  = "/*" (!"*/" SourceCharacter)* "*/"
+
+SingleLineComment
+  = "//" (!LineTerminator SourceCharacter)*
+
+MultiLineCommentNoLineTerminator
+  = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"

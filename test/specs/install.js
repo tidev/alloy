@@ -7,7 +7,6 @@ var TIMEOUT_DEFAULT = 1000;
 
 var alloyRoot = path.join(__dirname,'..','..');
 var	harnessRoot = path.join(alloyRoot,'test','projects','Harness');
-var TiAppRoot = path.join(alloyRoot,'test','projects','TiApp');
 var harness = {
 	root: harnessRoot,
 	hook: path.join(harnessRoot,'plugins',CONST.PLUGIN_NAME,'hooks','alloy.js'),
@@ -50,14 +49,14 @@ describe('alloy install', function() {
 			});
 		});
 
-		it('fails when given a non-alloy project path', function() {
-			TU.asyncExecTest('alloy install plugin "' + TiAppRoot + '"', {
-				timeout: TIMEOUT_DEFAULT, 
-				test: function() {
-					expect(this.output.error).toBeTruthy();
-				}
-			});
-		});
+		// it('fails when given a non-alloy project path', function() {
+		// 	TU.asyncExecTest('alloy install plugin "' + PATH_TO_NON_ALLOY_PROJECT + '"', {
+		// 		timeout: TIMEOUT_DEFAULT, 
+		// 		test: function() {
+		// 			expect(this.output.error).toBeTruthy();
+		// 		}
+		// 	});
+		// });
 
 		it('fails when an invalid type is used', function() {
 			TU.asyncExecTest('alloy install invalidType "' + harness.root + '"', {

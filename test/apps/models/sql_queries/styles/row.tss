@@ -1,0 +1,20 @@
+"Label": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+"#row": {
+	height: '50dp',
+	backgroundColor: '#fff',
+	hasDetail: true
+}
+
+"#name": {
+	top: '9dp',
+	left: '9dp',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	touchEnabled: false
+}

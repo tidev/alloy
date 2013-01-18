@@ -1,0 +1,54 @@
+"Label": {
+	color: '#000'
+}
+
+"#infoContainer": {
+	top: '0dp',
+	left: '10dp',
+	right: '10dp',
+	bottom: '60dp',
+	layout: 'vertical'
+}
+
+"#infoContainer[platform=android]": {
+	top: '60dp'
+}
+
+"#learnmore": {
+	height: '40dp',
+	width: '80%',
+	bottom: '10dp',
+	color: '#fff',
+	backgroundColor: '#222',
+	borderColor: '#000',
+	borderRadius: 8,
+	borderWidth: 2,
+	textAlign: 'center'
+}
+
+"#theColor": {
+	top: '15dp',
+	height: '80dp',
+	width: '80%'
+}
+
+".info": {
+	textAlign: 'center',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	}
+}
+
+"#name": {
+	top: '30dp'
+}
+
+"#hexCode": {
+	top: '15dp'
+}
+
+"#wavelength": {
+	top: '15dp'
+}
+

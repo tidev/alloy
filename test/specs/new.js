@@ -10,16 +10,16 @@ var TIMEOUT_DEFAULT = 2000;
 var PLATFORMS = ['android','ios','mobileweb'];
 
 var alloyRoot = path.join(__dirname,'..','..');
-var TiAppRoot = path.join(alloyRoot,'test','projects','TiApp');
-var TiAppCopy = TiAppRoot + 'Copy';
+var Harness = path.join(alloyRoot,'test','projects','Harness');
+var HarnessTemplate = Harness + 'Template';
 
 var RUNS = [
 	{ 
-		cmd: 'alloy new "' + TiAppCopy + '"', 
+		cmd: 'alloy new "' + Harness + '"', 
 		success: true 
 	},
 	{ 
-		cmd: 'alloy new "' + TiAppCopy + '" two_tabbed',
+		cmd: 'alloy new "' + Harness + '" two_tabbed',
 		success: true,
 		TO_BE_CREATED: [
 			path.join('app','assets','KS_nav_ui.png'),
@@ -31,11 +31,11 @@ var RUNS = [
 		success: false
 	},
 	{
-		cmd: 'alloy new "' + TiAppCopy + '" invalidTemplate',
+		cmd: 'alloy new "' + Harness + '" invalidTemplate',
 		success: false
 	},
 	{
-		cmd: 'cd "' + TiAppCopy + '" && alloy new',
+		cmd: 'cd "' + Harness + '" && alloy new',
 		success: true
 	}
 ];
@@ -69,10 +69,10 @@ _.each(RUNS, function(run) {
 	// The alloy new command test suite
 	describe('alloy new', function() {
 		it('executes `' + run.cmd + '` with ' + (run.success ? 'success' : 'error'), function() {
-			// Create a copy of TiApp to work with
-			wrench.rmdirSyncRecursive(TiAppCopy, true);
-			wrench.mkdirSyncRecursive(TiAppCopy, 0777);
-			wrench.copyDirSyncRecursive(TiAppRoot, TiAppCopy);
+			// Create a copy of Harness to work with
+			wrench.rmdirSyncRecursive(Harness, true);
+			wrench.mkdirSyncRecursive(Harness, 0777);
+			wrench.copyDirSyncRecursive(HarnessTemplate, Harness);
 
 			TU.asyncExecTest(run.cmd, {
 				timeout: TIMEOUT_DEFAULT, 
@@ -87,13 +87,13 @@ _.each(RUNS, function(run) {
 
 		_.each(_.union(TO_BE_CREATED,run.TO_BE_CREATED || []), function(file) {
 			it('created "' + file + '"', function() {
-				expect(path.existsSync(path.join(TiAppCopy,file))).toBeTruthy();
+				expect(path.existsSync(path.join(Harness,file))).toBeTruthy();
 			});
 		});
 
 		var doc;
 		it('generates a tiapp.xml in valid XML format', function() {
-			var tiapp = fs.readFileSync(path.join(TiAppCopy,'tiapp.xml'),'utf8');
+			var tiapp = fs.readFileSync(path.join(Harness,'tiapp.xml'),'utf8');
 			doc = new DOMParser().parseFromString(tiapp);
 			expect(doc).toBeTruthy();
 		});

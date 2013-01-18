@@ -27,7 +27,7 @@
 	top: 228, 
 	left: -145,
 	width: 350,
-	transform: expr(Titanium.UI.create2DMatrix().rotate(-90))
+	transform: Alloy.CFG.sliderTransform
 },
 "#mainView": {
 	backgroundImage: '/bg_tan.png',

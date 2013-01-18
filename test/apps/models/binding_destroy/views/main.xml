@@ -1,0 +1,6 @@
+<Alloy>
+	<View layout="vertical">
+		<Button onClick="showInfo" top="50dp">show info</Button>
+		<Button onClick="showMovies" top="20dp">show movies</Button>
+	</View>
+</Alloy>

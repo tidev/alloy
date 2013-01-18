@@ -1,0 +1,13 @@
+<Alloy>
+	<Window>
+		<ScrollView>
+			<View class="container">
+				<ImageView id="logo"/>
+				<TextField id="username" onReturn="focusPassword"/>
+				<TextField id="password" onReturn="login"/>
+				<Button id="loginButton" onClick="login">Login</Button>
+				<Label id="motto">"There's always money in the banana stand."</Label>
+			</View>
+		</ScrollView>
+	</Window>
+</Alloy>

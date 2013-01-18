@@ -10,9 +10,8 @@ var fs = require('fs'),
 
 var alloyRoot = path.join(__dirname,'..','..');
 var templatePath = path.join(alloyRoot,'Alloy','template');
-var TiAppRoot = path.join(alloyRoot,'test','projects','TiApp');
-var TiAppCopy = TiAppRoot + 'Copy';
-var appPath = path.join(TiAppCopy,'app');
+var Harness = path.join(alloyRoot,'test','projects','Harness'); 
+var appPath = path.join(Harness,'app');
 
 function testView(viewName, opts) {
 	opts || (opts = {});
@@ -140,7 +139,7 @@ describe('alloy generate', function() {
 		var viewName = 'testView';
 
 		it('ends in error when no name is given', function() {
-			var badCmd = 'alloy generate view --project-dir "' + TiAppCopy + '"';
+			var badCmd = 'alloy generate view --project-dir "' + Harness + '"';
 			TU.asyncExecTest(badCmd, {
 				test: function() {
 					expect(this.output.error).toBeTruthy();
@@ -157,7 +156,7 @@ describe('alloy generate', function() {
 			});
 		});
 
-		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + TiAppCopy + '"'; 
+		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + Harness + '"'; 
 		it('executes `' + cmd + '` without error', function() {
 			TU.asyncExecTest(cmd, {reset:true});
 		});
@@ -170,7 +169,7 @@ describe('alloy generate', function() {
 		var viewName = 'testView';
 
 		it('ends in error when no name is given', function() {
-			var badCmd = 'alloy generate controller --project-dir "' + TiAppCopy + '"';
+			var badCmd = 'alloy generate controller --project-dir "' + Harness + '"';
 			TU.asyncExecTest(badCmd, {
 				test: function() {
 					expect(this.output.error).toBeTruthy();
@@ -187,7 +186,7 @@ describe('alloy generate', function() {
 			});
 		});
 
-		var cmd = 'alloy generate controller ' + viewName + ' --project-dir "' + TiAppCopy + '"'; 
+		var cmd = 'alloy generate controller ' + viewName + ' --project-dir "' + Harness + '"'; 
 		it('executes `' + cmd + '` without error', function() {
 			TU.asyncExecTest(cmd, {reset:true});
 		});
@@ -199,7 +198,7 @@ describe('alloy generate', function() {
 
 	describe('widget', function() {
 		var widgetId = 'com.test.widget';
-		var cmd = 'alloy generate widget ' + widgetId + ' --project-dir "' + TiAppCopy + '"';
+		var cmd = 'alloy generate widget ' + widgetId + ' --project-dir "' + Harness + '"';
 
 		it('executes `' + cmd + '` without error', function() {
 			TU.asyncExecTest(cmd, {reset:true});
@@ -227,9 +226,9 @@ describe('alloy generate', function() {
 		];
 
 		_.each(goodCmds, function(cmd) {
-			var filepath = path.join(TiAppCopy,'app','models',modelName+'.js');
+			var filepath = path.join(Harness,'app','models',modelName+'.js');
 
-			cmd += ' --project-dir "' + TiAppCopy + '"';
+			cmd += ' --project-dir "' + Harness + '"';
 			it('executes `' + cmd + '` without error', function() {
 				TU.asyncExecTest(cmd, {reset:true});
 			});
@@ -244,7 +243,7 @@ describe('alloy generate', function() {
 		});
 
 		_.each(badCmds, function(cmd) {
-			cmd += ' --project-dir "' + TiAppCopy + '"';
+			cmd += ' --project-dir "' + Harness + '"';
 			it('executes `' + cmd + '` without error', function() {
 				TU.asyncExecTest(cmd, {
 					test: function() {
@@ -258,11 +257,11 @@ describe('alloy generate', function() {
 
 	describe('migration', function() {
 		var migrationName = 'testMigration';
-		var migrationsDir = path.join(TiAppCopy,'app','migrations');
+		var migrationsDir = path.join(Harness,'app','migrations');
 		var migrationFile;
 
 		it('executes without error', function() {
-			TU.asyncExecTest('alloy generate migration ' + migrationName + ' --project-dir "' + TiAppCopy + '"', {reset:true});
+			TU.asyncExecTest('alloy generate migration ' + migrationName + ' --project-dir "' + Harness + '"', {reset:true});
 		});
 
 		it('file exists', function() {
@@ -282,20 +281,20 @@ describe('alloy generate', function() {
 	});
 
 	describe('jmk', function() {
-		var projectJmk = path.join(TiAppCopy,'app','alloy.jmk');
+		var projectJmk = path.join(Harness,'app','alloy.jmk');
 		var alloyJmk = path.join(templatePath,'alloy.jmk');
 		var jmkContent;
 
 		it('executes without error from project directory', function() {
-			TU.asyncExecTest('cd "' + TiAppCopy + '" && alloy generate jmk', {reset:true});
+			TU.asyncExecTest('cd "' + Harness + '" && alloy generate jmk', {reset:true});
 		});		
 
 		it('executes without error from app directory', function() {
-			TU.asyncExecTest('cd "' + path.join(TiAppCopy,'app') + '" && alloy generate jmk', {reset:true});
+			TU.asyncExecTest('cd "' + path.join(Harness,'app') + '" && alloy generate jmk', {reset:true});
 		});		
 
 		it('executes without error with --projectDir', function() {
-			TU.asyncExecTest('alloy generate jmk --project-dir "' + TiAppCopy + '"', {reset:true});
+			TU.asyncExecTest('alloy generate jmk --project-dir "' + Harness + '"', {reset:true});
 		});
 
 		it('file exists', function() {

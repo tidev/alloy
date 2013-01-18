@@ -1,0 +1,51 @@
+// I've got something to say....
+
+/*
+Not really, I just need to test
+out comments in grammar
+      */
+
+/* comment */"Window" /* comment */: /* comment */{/* comment */
+	backgroundColor: '#fff' // bg
+/* comment */}/* comment */,/* comment */
+"#label": {
+	text: L(Alloy.CFG.someText, Alloy.CFG.someText) /* blah */,
+	/* comment */height/* comment */:    
+	/* comment */ Ti.UI.SIZE/* comment */,/* comment */
+	font: {/* comment */
+		fontSize: 24,/* comment */
+		/* comment */fontWeight: 'bold'
+	},
+	width: Ti.UI.FILL, // width
+
+/* before the key */ color /* after the key */ : /* before the value*/ 'red', /* DOUBLE COMMENTS!!! */ // after the value
+
+	top: 10,
+	// random comment for no reason
+	
+	textAlign
+	:
+	'center'
+
+	/* random
+	   multiline
+	   comment
+	   for
+	   no
+	   reason
+	*/
+}
+
+/* device query */"Window[platform=ios]": {
+	backgroundColor: '#ff0'
+}
+
+, // i can separate with commas too if i want, cuz i is flexibile
+
+"Label": { backgroundColor    	: 'black' /* to the middle */  } //yep
+
+// Some final pointless remarks
+
+/*
+and a few more pointless comments
+*/

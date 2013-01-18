@@ -1,0 +1,12 @@
+<Alloy>
+	<Window title="Color Info">
+		<Label class="header" platform="android">Color Info</Label>
+		<View id="infoContainer" layout="vertical">
+			<View id="theColor"/>
+			<Label class="info" id="name"/>
+			<Label class="info" id="hexCode"/>
+			<Label class="info" id="wavelength"/>
+		</View>
+		<Label id="learnmore" onClick="openLink">Want to learn more?</Label>
+	</Window>
+</Alloy>

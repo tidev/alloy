@@ -24,12 +24,12 @@ You define a style in the JSON like this:
 		"height": "100"
 	},
 	"#b" : {
-		"width":Ti.UI.FIT,
-		"height":Ti.UI.FIT
+		"width":Ti.UI.SIZE,
+		"height":Ti.UI.SIZE
 	},
 	"#t" : {
 		"width":Ti.UI.FILL,
-		"height":Ti.UI.FIT,
+		"height":Ti.UI.SIZE,
 		"color":"black"
 	}
 
@@ -60,8 +60,8 @@ You can use the following CSS attributes in your style name: Classes (prefix by 
 For example:
 
 	"Button": {
-		"width":Ti.UI.FIT,
-		"height":Ti.UI.FIT,
+		"width":Ti.UI.SIZE,
+		"height":Ti.UI.SIZE,
 		"borderColor":"red"
 	},
 	
@@ -90,7 +90,7 @@ Should result in the following code properties when merged:
 
 	{
 		"width": Ti.UI.FILL,
-		"height":Ti.UI.FIT,
+		"height":Ti.UI.SIZE,
 		"b":false
 	}
 	

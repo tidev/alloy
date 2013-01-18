@@ -51,9 +51,8 @@ function parse(node, state, args) {
 		}
 
 		// generate the code for each column/row and add it to the array
-		code += CU.generateNode(child, {
+		code += CU.generateNodeExtended(child, state, {
 			parent: {},
-			styles: state.styles,
 			post: function(node, state, a) {
 				if (foundRow) {
 					return arrayName + '.push(' + state.parent.symbol + ');\n';

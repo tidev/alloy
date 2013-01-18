@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label id="label" width="Ti.UI.SIZE" textAlign="Titanium.UI.TEXT_ALIGNMENT_LEFT"/>
+		<Widget src="com.test.hellobutton"/>
+	</Window>
+</Alloy>

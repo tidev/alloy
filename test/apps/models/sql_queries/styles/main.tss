@@ -1,0 +1,7 @@
+"Window": {	
+	exitOnClose: true
+}
+
+"#table[platform=android]": {
+	top: '50dp'
+}

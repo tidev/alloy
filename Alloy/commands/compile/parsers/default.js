@@ -37,14 +37,13 @@ function parse(node, state, args) {
 		var itemCode = '';
 
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-			itemCode += CU.generateNode(child, {
+			itemCode += CU.generateNodeExtended(child, state, {
 				parent: {
 					node: node,
 					symbol: args.symbol
 				},
 				local: true,
-				model: localModel,
-				styles: state.styles
+				model: localModel
 			});
 		});
 
@@ -63,6 +62,7 @@ function parse(node, state, args) {
 		},
 		local: state.local || false,
 		model: state.model || undefined,
+		condition: state.condition || undefined,
 		styles: state.styles,
 		code: code
 	}
@@ -83,22 +83,26 @@ function getBindingCode(args) {
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + col + ")" : col + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	code += col + ".on('fetch destroy change add remove', function(e) { ";
+	var handlerVar = CU.generateUniqueId();
+
+	code += "var " + handlerVar + "=function(e) {";
+	code += "   var i;";
 	code += "	var models = " + whereCode + ";";
-	code += "	var len = models.length;";
-	code += "	while(<%= parentSymbol %>.children.length > 0) {";
-	code += "		var child = <%= parentSymbol %>.children[0];";
-	code += "		if (child) {";
-	code += "			<%= parentSymbol %>.remove(child);";
-	code += "			child = null;";
-	code += "		}";
+	code += "	var len = <%= parentSymbol %>.children.length;";
+	code += "	for (i = 0; i < len; i++) {";
+	code += "		var child = <%= parentSymbol %>.children[((len-1)-i)];";
+	code += "		child && <%= parentSymbol %>.remove(child);";
 	code += "	}";
-	code += "	for (var i = 0; i < len; i++) {";
+	code += "	len = models.length;";
+	code += "	for (i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
 	code += "		<%= localModel %>.__transform = " + transformCode + ";";
 	code += "		<%= itemCode %>";
 	code += "	}";
-	code += "});";
+	code += "};";
+	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+
+	CU.destroyCode += col + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
 
 	return code;
 }

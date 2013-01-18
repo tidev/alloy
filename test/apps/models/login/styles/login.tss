@@ -1,0 +1,48 @@
+"#login": {
+	fullscreen: false,
+	exitOnClose: true
+},
+".container": {
+	height: '301dp',
+	width: '200dp'
+},
+"#logo": {
+	image: '/bluth.png',
+	top: 0,
+	left: -3,
+	height: '121dp',
+	width: '193dp'
+},
+"TextField": {
+	width: '200dp',
+	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE,
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
+},
+"#username": {
+	top: '130dp',
+	hintText: 'username',
+	returnKeyType: Ti.UI.RETURNKEY_NEXT
+},
+"#password": {
+	top: '170dp',
+	hintText: 'password',
+	passwordMask: true,
+	returnKeyType: Ti.UI.RETURNKEY_DONE
+},
+"#loginButton": {
+	top: '210dp',
+	height: '40dp',
+	width: '100dp',
+	color: '#fff',
+	backgroundImage: '/button_normal.png',
+	backgroundSelectedImage: '/button_selected.png'
+},
+"#motto": {
+	bottom: 0,
+	color: '#963',
+	font: {
+		fontSize: '14dp',
+		fontStyle: 'italic'
+	},
+	textAlign: 'center'
+}

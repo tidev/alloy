@@ -19,9 +19,8 @@ function parse(node, state, args) {
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child, index) {
 		if (CU.validateNodeName(child, VALID)) {
 			// generate code for the DashboardItem
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					return arrayName + '.push(' + state.parent.symbol + ');\n';
 				}

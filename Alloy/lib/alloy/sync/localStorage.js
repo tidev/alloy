@@ -13,13 +13,14 @@ function guid() {
 
 function InitAdapter(config) {
 	if (!OS_MOBILEWEB) {
-		throw 'No support for localStorage persistence in non MobileWeb environments.';
+		throw 'localStorage persistence supported only with MobileWeb.';
 	}
 }
 
 function Sync(model, method, opts) {
-	var name =  model.config.adapter.collection_name;
-	var data =  model.config.data;
+	var name = model.config.adapter.collection_name,
+		data = model.config.data,
+		resp = null;
 
 	function storeModel(data) {
 		localStorage.setItem(name, JSON.stringify(data));
@@ -28,9 +29,13 @@ function Sync(model, method, opts) {
 	switch (method) {
 
 		case 'create':
-			if (!model.id) model.id = model.attributes.id = guid();
+			if (!model.id) {
+				model.id = guid();
+		        model.set(model.idAttribute, model.id);
+			}
 			data[model.id] = model;
 	    	storeModel(data);
+	    	resp = model.toJSON();
 	    	break;   	
 
 		case 'read':
@@ -45,19 +50,29 @@ function Sync(model, method, opts) {
             }
 
             model.length = len;
-            model.trigger('fetch');
+            len === 1 ? resp = model.models[0] : resp = model.models;
 			break;
 
 		case 'update':
 			data[model.id] = model;
 			storeModel(data); 
+			resp = model.toJSON();
 			break;
 		
 		case 'delete':
 			delete data[model.id];
 			storeModel(data); 
+			resp = model.toJSON();
 			break;
 	}
+
+	// process success/error handlers, if present
+	if (resp) {
+        _.isFunction(opts.success) && opts.success(resp);
+        method === "read" && model.trigger("fetch");
+    } else {
+    	_.isFunction(opts.error) && opts.error("Record not found");
+    }
 }
 
 module.exports.sync = Sync;

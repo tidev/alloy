@@ -69,7 +69,7 @@ module.exports = function(args, program) {
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
-	U.installPlugin(path.join(alloyRoot,'..'), paths.project, true);
+	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 //	BENCHMARK('install Alloy plugins/hooks');
 
 	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
@@ -226,7 +226,7 @@ module.exports = function(args, program) {
 		code = njs;
 	}
 	fs.writeFileSync(appJS,code);
-	logger.info("compiling alloy to " + appJS.yellow);
+	logger.info("Compiling alloy to " + appJS.yellow);
 //	BENCHMARK('generate app.js');
 
 	// optimize code
@@ -261,11 +261,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			controllerCode: '',
 			modelVariable: CONST.BIND_MODEL_VAR,
 			preCode: '',
+			postCode: '',
 			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
 		state = { parent: {} },
 		files = {};
+
+	// reset the bindings map
+	CU.bindingsMap = {};
+	CU.destroyCode = '';
+	CU.postCode = '';
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
@@ -363,7 +369,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			});
 		}
 
-		// process any model/colletion nodes
+		// process any model/collection nodes
 		_.each(rootChildren, function(node, i) {
 			var fullname = CU.getNodeFullname(node);
 			var isModelElement = _.contains(CONST.MODEL_ELEMENTS,fullname);
@@ -391,7 +397,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				assignedDefaultId = true;
 				defaultId = viewName;
 			} 
-			template.viewCode += CU.generateNode(node, state, defaultId, true);
+			template.viewCode += CU.generateNode(node, createNewState(state.styles), defaultId, true);
 		});
 	}
 
@@ -403,6 +409,50 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
 	template.controllerCode += cCode.controller;
 	template.preCode += cCode.pre;
+
+	// process the bindingsMap, if it contains any data bindings
+	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
+	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');";
+
+	// for each model variable in the bindings map... 
+	_.each(CU.bindingsMap, function(mapping,modelVar) {
+
+		// open the model binding handler
+		// template.viewCode += modelVar + ".on('fetch change', function() {";
+		var handlerVar = CU.generateUniqueId();
+		template.viewCode += 'var ' + handlerVar + '=function() {';
+		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
+
+		// for each specific conditional within the bindings map....
+		_.each(_.groupBy(mapping, function(b) { return b.condition; }), function(bindings,condition) {
+			var bCode = '';
+
+			// for each binding belonging to this model/conditional pair...
+			_.each(bindings, function(binding) {
+				bCode += _.template(bTemplate, {
+					id: binding.id,
+					prop: binding.prop,
+					model: modelVar,
+					attr: binding.attr
+				});
+			});
+			
+			// if this is a legit conditional, wrap the binding code in it
+			if (typeof condition !== 'undefined' && condition !== 'undefined') {
+				bCode = 'if(' + condition + '){' + bCode + '}';
+			}
+			template.viewCode += bCode;
+			
+		});
+		template.viewCode += "};";
+		template.viewCode += modelVar + ".on('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
+	});
+
+	// add destroy() function to view for cleaning up bindings
+	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
+
+	// add any postCode after the controller code
+	template.postCode += CU.postCode;
 
 	// create generated controller module code for this view/controller or widget
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
@@ -419,6 +469,13 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	} else {
 		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
 		fs.writeFileSync(files.COMPONENT, code);
+	}
+}
+
+function createNewState(styles) {
+	return {
+		parent: {},
+		styles: styles
 	}
 }
 
@@ -523,10 +580,7 @@ function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
 			'mangle',
-
-			// TODO: http://jira.appcelerator.org/browse/ALOY-393
 			'optimizer',
-			
 			'squeeze'
 		],
 		modLocation = './ast/';
@@ -554,7 +608,7 @@ function optimizeCompiledCode() {
 
 			// process all AST operations
 			_.each(mods, function(mod) {
-				logger.debug('- Processing "' + mod + '" module...')
+				//logger.debug('- Processing "' + mod + '" module...');
 				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
 			});
 			fs.writeFileSync(fullpath, CU.generateCode(ast));

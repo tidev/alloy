@@ -29,18 +29,20 @@ function Sync(model, method, opts) {
 			resp = list;
 		} else {
 			// is model
-			var obj = TAP.getObject(prefix + '-' + model.get('id'));
+			var obj = TAP.getObject(prefix + '-' + model.id);
 			model.set(obj);
 			resp = model.toJSON();
 		}	
 	} 
 	else if (method === 'create' || method === 'update') { 
-		var newId = model.get('id') || guid();
-		model.set({id: newId}, {silent:true});
-		TAP.setObject(prefix + '-' + newId, model.toJSON() || {});
+		if (!model.id) {
+			model.id = guid();
+	        model.set(model.idAttribute, model.id);
+		}
+		TAP.setObject(prefix + '-' + model.id, model.toJSON() || {});
 		resp = model.toJSON();
 	} else if (method === 'delete') {
-		TAP.removeProperty(prefix + '-' + model.get('id'));
+		TAP.removeProperty(prefix + '-' + model.id);
 		model.clear();
 		resp = model.toJSON();
 	}

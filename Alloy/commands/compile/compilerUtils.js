@@ -50,6 +50,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
+exports.bindingsMap = {};
+exports.destroyCode = '';
+exports.postCode = '';
+
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
@@ -140,7 +144,9 @@ exports.getParserArgs = function(node, state, opts) {
 		if (matches !== null) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
 		} else {
-			createArgs[attrName] = node.getAttribute(attrName);
+			var theValue = node.getAttribute(attrName);
+			/^(?:Ti|Titanium)\./.test(theValue) && (theValue = STYLE_EXPR_PREFIX + theValue);
+			createArgs[attrName] = theValue;
 		}
 	});
 	
@@ -174,6 +180,10 @@ exports.generateCode = function(ast) {
 	return pro.gen_code(ast, opts);
 }
 
+exports.generateNodeExtended = function(node, state, newState) {
+	return exports.generateNode(node, _.extend(_.clone(state), newState));
+}
+
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
@@ -201,6 +211,15 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
 	}
 
+	// pass relevant conditional information in state
+	if (code.condition) {
+		if (state.condition) {
+			state.condition += '&&' + code.condition;
+		} else {
+			state.condition = code.condition;
+		}
+	}
+
 	// Determine which parser to use for this node
 	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
 	var parserRequire = 'default';
@@ -223,7 +242,21 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	// handle any events from markup
 	if (args.events && args.events.length > 0) {
 		_.each(args.events, function(ev) {
-			code.content += args.symbol + ".on('" + ev.name + "',function(){" + ev.value + ".apply(this,Array.prototype.slice.apply(arguments))});";
+			var eventObj = {
+				obj: args.symbol,
+				ev: ev.name,
+				cb: ev.value
+			};
+
+			// create templates for immediate and deferred event handler creation
+			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= cb %>']", eventObj);
+			var theEvent = _.template("<%= obj %>.on('<%= ev %>',<%= cb %>)", eventObj);
+			var immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
+			var deferTemplate = theDefer + " && " + theEvent + ";";
+
+			// add the generated code to the view code and post-controller code respectively
+			code.content += _.template(immediateTemplate, eventObj);
+			exports.postCode += _.template(deferTemplate, eventObj);
 		});	
 	}
 
@@ -486,7 +519,6 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			} 
 		});
 
-		//o = j.global || {};
 		if (alloyConfig) {
 			o = _.extend(o, j['global']);
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
@@ -574,15 +606,24 @@ exports.loadStyle = function(tssFile, manifest) {
 		}
 
 		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{' + contents + '}';
+		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
 			
 		// Process tss file then convert to JSON
 		try {
-			var code = processTssFile(contents, manifest);
-			var json = jsonlint.parse(code);
+			// var code = processTssFile(contents, manifest);
+			// var json = jsonlint.parse(code);
+
+			var json = require('../../grammar/tss').parse(contents);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
-			U.die('Error processing style "' + tssFile + '"', e);
+			U.die([
+				'Error processing style "' + tssFile + '"',
+				e.message,
+				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
+				'- line:    ' + e.line,
+				'- column:  ' + e.column,
+				'- offset:  ' + e.offset 
+			]);
 		}
 
 		return json;
@@ -682,11 +723,48 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-					var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-					var standard = modelVar + ".get('" + match[1] + "')";
-					var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
-					style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+					var parts = match[1].split('.');
+
+					// model binding
+					if (parts.length > 1) {
+						// are we bound to a global or controller-specific model?
+						var modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
+						var attr = parts[0] === '$' ? parts[2] : parts[1];
+
+						// ensure that the bindings for this model have been initialized
+						if (!_.isArray(exports.bindingsMap[modelVar])) {
+							exports.bindingsMap[modelVar] = [];
+						}
+
+						// create the binding object
+						var bindingObj = {
+							id: id,
+							prop: k,
+							attr: attr
+						};
+
+						// make sure bindings are wrapped in any conditionals
+						// relevant to the curent style
+						if (theState.condition) {
+							bindingObj.condition = theState.condition;
+						}
+
+						// add this property to the global bindings map for the 
+						// current controller component
+						exports.bindingsMap[modelVar].push(bindingObj);
+
+						// since this property is data bound, don't include it in 
+						// the style statically
+						delete style.style[k];
+					} 
+					// collection binding
+					else {
+						var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+						var standard = modelVar + ".get('" + match[1] + "')";
+						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
+						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+					}
 				}
 			}
 		});
@@ -702,7 +780,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(value)) {
 				var matches = value.match(regex);
 				if (matches !== null) {
-					code += prefix + matches[1] + ','; // matched a constant or expr()
+					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
 					code += prefix + '"' + value + '",'; // just a string
 				}
@@ -834,11 +912,12 @@ exports.formatAST = function(ast,config,fn)
 function processTssFile(f, manifest) {
 	var widgetId = manifest && manifest.id ? manifest.id : null;
 
-	// Handle "call" ASTs, where we look for expr() syntax
+	// Handle "call" ASTs
     function do_call() {
     	var name = this[1][1];
     	var code;
     	if (name === 'expr') { 
+    		logger.warn('expr() in TSS files is deprecated and will be removed in Alloy 0.4.0.');
     		code = pro.gen_code(this[2][0]);
     	} else if (name === 'L') {
     		code = pro.gen_code(this);

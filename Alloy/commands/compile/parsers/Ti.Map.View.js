@@ -29,9 +29,8 @@ function parse(node, state, args) {
 			}
 
 			// generate code for the Annotation
-			code += CU.generateNode(child, {
+			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				styles: state.styles,
 				post: function(node, state, args) {
 					return arrayName + '.push(' + state.parent.symbol + ');\n';
 				}

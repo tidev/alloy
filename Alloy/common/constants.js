@@ -10,6 +10,8 @@ exports.NAMESPACE_DEFAULT = 'Ti.UI';
 exports.REQUIRE_TYPE_DEFAULT = 'view';
 exports.PLUGIN_NAME = 'ti.alloy';
 exports.EXPR_PREFIX = '#';
+exports.PLUGIN_FILE = 'plugin.py';
+exports.HOOK_FILE = 'alloy.js';
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform'];
@@ -19,6 +21,8 @@ exports.BIND_TRANSFORM = 'dataTransform';
 exports.BIND_TRANSFORM_VAR = '__transform';
 exports.BIND_MODEL_VAR = '$model';
 exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
+exports.MODEL_BINDING_EVENTS = 'fetch change destroy';
+exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
 
 // Listings for supported platforms and commands
 exports.PLATFORMS = ['android','ios','mobileweb'];

@@ -14,14 +14,6 @@ function ucfirst(text) {
     return text[0].toUpperCase() + text.substr(1);
 };
 
-// Ti.Analytics.featureEvent('alloy.start', {
-// 	guid: Ti.Platform.id,
-// 	tiversion: Ti.version,
-// 	osname: Ti.Platform.osname,
-// 	osversion: Ti.Platform.version,
-// 	locale: Ti.Platform.locale
-// });
-
 exports.M = function(name, modelDesc, migrations) {
 	var config = modelDesc.config;
     var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
@@ -48,13 +40,24 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
-    if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
+    
+	// Run the pre model creation code, if any
+    if (_.isFunction(adapter.beforeModelCreate)) { 
+    	config = adapter.beforeModelCreate(config, name) || config; 
+    }
+	
+    // Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass); 
 	Model.prototype.config = config;
-	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
-	
+
+	// Extend the Model with extendModel(), if defined
 	if (_.isFunction(modelDesc.extendModel)) {
 		Model = modelDesc.extendModel(Model) || Model;
+	}
+
+	// Run the post model creation code, if any
+	if (_.isFunction(adapter.afterModelCreate)) { 
+		adapter.afterModelCreate(Model, name); 
 	}
 	
 	return Model;
@@ -81,7 +84,7 @@ exports.C = function(name, modelDesc, model) {
 	var adapter = require('alloy/sync/'+type);
 	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
 
-	if (_.isFunction(modelDesc.extendModel)) {
+	if (_.isFunction(modelDesc.extendCollection)) {
 		Collection = modelDesc.extendCollection(Collection) || Collection;
 	}
 	
@@ -186,7 +189,6 @@ exports.getWidget = function(id, name, args) {
 exports.createWidget = function(id, name, args) {
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
 }
-
 
 /**
  * @method getController
@@ -302,8 +304,7 @@ function isTabletFallback() {
 exports.isTablet = (function() {
 	if (OS_IOS) {
 		return Ti.Platform.osname === 'ipad';
-	}
-	if (OS_ANDROID) {
+	} else if (OS_ANDROID) {
 		try {
 			var psc = require('ti.physicalSizeCategory');
 			return psc.physicalSizeCategory === 'large' ||
@@ -312,16 +313,14 @@ exports.isTablet = (function() {
 			Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
 			return isTabletFallback();
 		}
-	} 
-	if (OS_MOBILEWEB) {
+	} else if (OS_MOBILEWEB) {
 		return !(Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
 		) < 400);
-	} 
-
-	// Last resort. Don't worry, uglifyjs cleans up this dead code if necessary.
-	return isTabletFallback();
+	} else {
+		return isTabletFallback();
+	}
 })();
 
 /**
@@ -372,13 +371,10 @@ exports.Globals = {};
  */
 exports.Models = {};
 
-/**
- * @method instance
+/*
  * Creates a singleton instance of a Model based on the given model, or
  * returns an existing instance if one has already been created.
- * @param {String} the name of the base model for the Model
- * @return An Alloy Model object singleton 
- *
+ * Documented in docs/apidoc/model.js for docs site.
  */
  exports.Models.instance = function(name) {
  	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
@@ -400,13 +396,10 @@ exports.Models = {};
  */
 exports.Collections = {};
 
-/**
- * @method instance
+/*
  * Creates a singleton instance of a Collection based on the given model, or
  * returns an existing instance if one has already been created.
- * @param {String} the name of the base model for the collection
- * @return An Alloy Collection object singleton 
- *
+ * Documented in docs/apidoc/collection.js for docs site.
  */
  exports.Collections.instance = function(name) {
  	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
@@ -415,7 +408,7 @@ exports.Collections = {};
 /**
  * @property {Object} CFG
  * An object that stores Alloy configuration values as defined in your app's
- * app/config.json file. Here's a what a typical config.json file might look 
+ * app/config.json file. Here's what a typical config.json file might look
  * like in an Alloy app.
  *
  *     {
@@ -442,7 +435,6 @@ exports.Collections = {};
  *
  */
 exports.CFG = require('alloy/CFG');
-
 
 if (OS_ANDROID) {
 	exports.Android = {};

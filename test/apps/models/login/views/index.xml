@@ -1,0 +1,4 @@
+<Alloy>
+	<!-- create global instance of the user model -->
+	<Model src="user"/>
+</Alloy>

@@ -1,6 +1,7 @@
 "#todoWin": {
 	fullscreen: false,
-	navBarHidden: true
+	navBarHidden: true,
+	exitOnClose: true
 },
 "#todoTable": {
 	top: '50dp',

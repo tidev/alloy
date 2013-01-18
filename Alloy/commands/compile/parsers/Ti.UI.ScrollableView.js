@@ -16,9 +16,8 @@ function parse(node, state, args) {
 		var child = children[i];
 
 		// generate the code for the subview
-		code += CU.generateNode(child, {
+		code += CU.generateNodeExtended(child, state, {
 			parent: {},
-			styles: state.styles,
 			post: function(node, state, args) {
 				return arrayName + '.push(' + state.parent.symbol + ');\n';
 			}

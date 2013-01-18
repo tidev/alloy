@@ -12,9 +12,9 @@ var alloyRoot = path.join(__dirname,'..','..');
 exports.TIMEOUT_DEFAULT = 2000;
 exports.paths = {
 	templates: path.join(alloyRoot,'Alloy','template'),
-	harnessTemplate: path.join(alloyRoot,'test','projects','TiApp')
+	harnessTemplate: path.join(alloyRoot,'test','projects','HarnessTemplate'),
+	harness: path.join(alloyRoot,'test','projects','Harness')
 }
-exports.paths.harness = exports.paths.harnessTemplate + 'Copy';
 
 // Recreate the test app harness
 //

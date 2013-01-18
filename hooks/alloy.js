@@ -30,10 +30,10 @@ exports.init = function (logger, config, cli, appc) {
 		
 		var compilerCommand = afs.resolvePath(__dirname, '..', 'Alloy', 'commands', 'compile', 'index.js'),
 			config = {
-				platform: cli.argv.platform,
+				platform: /(?:iphone|ipad)/.test(cli.argv.platform) ? 'ios' : cli.argv.platform,
 				version: '0',
 				simtype: 'none',
-				devicefamily: /iphone|ios/.test(cli.argv.platform) ? build.deviceFamily : 'none',
+				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? build.deviceFamily : 'none',
 				deploytype: build.deployType || cli.argv['deploy-type'] || 'development'
 			};
 		
@@ -57,6 +57,7 @@ exports.init = function (logger, config, cli, appc) {
 				e.toString().split('\n').forEach(function (line) {
 					line && logger.error(line);
 				});
+				process.exit(1);
 			}
 			Error.stackTraceLimit = origLimit;
 			finished();
@@ -124,6 +125,7 @@ exports.init = function (logger, config, cli, appc) {
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
+						process.exit(1);
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
 					}
