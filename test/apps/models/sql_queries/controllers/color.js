@@ -1,7 +1,9 @@
 var model = arguments[0];
 
 function openLink(e) {
-	var win = Ti.UI.createWindow();
+	var win = Ti.UI.createWindow({
+		fullscreen: false
+	});
 	win.add(Ti.UI.createWebView({
 		url: model.get('link')
 	}));
