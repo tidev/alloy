@@ -388,6 +388,12 @@ function installDatabase(config) {
 		var cName = rs.fieldByName('name');
 		var cType = rs.fieldByName('type');
 		columns[cName] = cType;
+
+		// see if it already has the ALLOY_ID_DEFAULT
+		if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
+			config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+		}
+		
 		rs.next();
 	}
 	config.columns = columns;
