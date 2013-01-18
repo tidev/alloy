@@ -41,7 +41,7 @@ exports.M = function(name, modelDesc, migrations) {
 	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
     
-	// Run the post model creation code, if any
+	// Run the pre model creation code, if any
     if (_.isFunction(adapter.beforeModelCreate)) { 
     	config = adapter.beforeModelCreate(config, name) || config; 
     }
