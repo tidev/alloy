@@ -517,6 +517,7 @@ module.exports = (function(){
               result4 = parse___();
               if (result4 !== null) {
                 result5 = parse_pair();
+                result5 = result5 !== null ? result5 : "";
                 if (result5 !== null) {
                   result2 = [result2, result3, result4, result5];
                 } else {
@@ -553,6 +554,7 @@ module.exports = (function(){
                 result4 = parse___();
                 if (result4 !== null) {
                   result5 = parse_pair();
+                  result5 = result5 !== null ? result5 : "";
                   if (result5 !== null) {
                     result2 = [result2, result3, result4, result5];
                   } else {

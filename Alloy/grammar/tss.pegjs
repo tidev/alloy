@@ -26,7 +26,7 @@ topmembers
     }
 
 members
-  = head:pair tail:(__ "," __ pair)* {
+  = head:pair tail:(__ "," __ pair?)* {
       var result = {};
       result[head[0]] = head[1];
       for (var i = 0; i < tail.length; i++) {
