@@ -1,5 +1,5 @@
-$.btn.on('click', function() {
+function fireEvent(e) {
 	$.trigger('someEvent', {
 		message:$.text.value
 	});
-});
+}

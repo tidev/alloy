@@ -1,5 +1,5 @@
 function showAlert(e) {
 	alert('$.' + e.source.id + ' says hello! Just this once though.');
-	$.b.off("click",showAlert);
+	$.b.removeEventListener("click",showAlert);
 }
 $.index.open();

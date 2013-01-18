@@ -1,6 +1,6 @@
 <Alloy>
 	<Window layout="vertical" backgroundColor="white">
-		<Require id="customView" src="CustomView"/>
-		<Button id="remove" top="10">Remove Listener</Button>
+		<Require id="requiredController" src="CustomView"/>
+		<Button id="remove" top="10" onClick="removeListener">Remove Listener</Button>
 	</Window>
 </Alloy>

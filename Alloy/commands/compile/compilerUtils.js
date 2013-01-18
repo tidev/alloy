@@ -241,16 +241,22 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// handle any events from markup
 	if (args.events && args.events.length > 0) {
+		// determine which function name to use for event handling:
+		// * addEventListener() for Titanium proxies
+		// * on() for everything else (controllers, models, collections)
+		var eventFunc = /^(?:Ti|Titanium)\./.test(args.fullname) ? 'addEventListener' : 'on';
+
 		_.each(args.events, function(ev) {
 			var eventObj = {
 				obj: args.symbol,
 				ev: ev.name,
-				cb: ev.value
+				cb: ev.value,
+				func: eventFunc
 			};
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= cb %>']", eventObj);
-			var theEvent = _.template("<%= obj %>.on('<%= ev %>',<%= cb %>)", eventObj);
+			var theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
 			var immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
 			var deferTemplate = theDefer + " && " + theEvent + ";";
 

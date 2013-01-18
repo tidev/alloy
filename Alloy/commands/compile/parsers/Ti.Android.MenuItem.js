@@ -19,7 +19,7 @@ function parse(node, state, args) {
 	var postStyle = '_.omit(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
 
 	code += 'var ' + styleObjectSymbol + '=' + styleObjectCode + ';';
-	code += args.symbol + '=A$(' + state.parent.symbol + ".add(" + initStyle + "), '" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");";
+	code += args.symbol + '=' + state.parent.symbol + ".add(" + initStyle + ");";
 	
 	// TODO: http://jira.appcelerator.org/browse/ALOY-313
 	code += '_.each(' + postStyle + ',function(v,k) { ' + args.symbol + '[k] = v; });';

@@ -18,7 +18,7 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = A$(" + args.ns + "." + createFunc + "(\n";
+	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
 	code += CU.generateStyleParams(
 		state.styles, 
 		args.classes, 
@@ -27,7 +27,7 @@ function parse(node, state, args) {
 		_.defaults(state.extraStyle || {}, args.createArgs || {}),
 		state 
 	) + '\n';
-	code += "),'" + node.nodeName + "', " + (args.parent.symbol || 'null') + ");\n";
+	code += ");\n";
 	if (args.parent.symbol) {
 		code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 	} 

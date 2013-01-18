@@ -1,7 +1,6 @@
 var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._,
-	A$ = Alloy.A,
 	<%= modelVariable %>;
 
 <%= WPATH %>
