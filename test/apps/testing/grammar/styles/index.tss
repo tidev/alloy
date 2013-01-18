@@ -5,6 +5,10 @@ Not really, I just need to test
 out comments in grammar
       */
 
+"TextField": {
+	hintText: 'sdfdsf',
+}
+
 /* comment */"Window" /* comment */: /* comment */{/* comment */
 	backgroundColor: '#fff' // bg
 /* comment */}/* comment */,/* comment */
@@ -16,11 +20,11 @@ out comments in grammar
 		fontSize: 24,/* comment */
 		/* comment */fontWeight: 'bold'
 	},
-	width: Ti.UI.FILL, // width
+	width: Ti.UI.FILL,,, // width
 
 /* before the key */ color /* after the key */ : /* before the value*/ 'red', /* DOUBLE COMMENTS!!! */ // after the value
 
-	top: 10,
+	top: 10,,,
 	// random comment for no reason
 	
 	textAlign
