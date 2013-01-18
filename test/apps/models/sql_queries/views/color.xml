@@ -1,7 +1,7 @@
 <Alloy>
 	<Window title="Color Info">
 		<Label class="header" platform="android">Color Info</Label>
-		<View class="infoContainer" layout="vertical">
+		<View id="infoContainer" layout="vertical">
 			<View id="theColor"/>
 			<Label class="info" id="name"/>
 			<Label class="info" id="hexCode"/>
