@@ -42,7 +42,9 @@ exports.M = function(name, modelDesc, migrations) {
 	if (migrations) { extendClass.migrations = migrations; }
     
 	// Run the post model creation code, if any
-    if (_.isFunction(adapter.beforeModelCreate)) { config = adapter.beforeModelCreate(config) || config; }
+    if (_.isFunction(adapter.beforeModelCreate)) { 
+    	config = adapter.beforeModelCreate(config, name) || config; 
+    }
 	
     // Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass); 
@@ -54,7 +56,9 @@ exports.M = function(name, modelDesc, migrations) {
 	}
 
 	// Run the post model creation code, if any
-	if (_.isFunction(adapter.afterModelCreate)) { adapter.afterModelCreate(Model); }
+	if (_.isFunction(adapter.afterModelCreate)) { 
+		adapter.afterModelCreate(Model, name); 
+	}
 	
 	return Model;
 };
