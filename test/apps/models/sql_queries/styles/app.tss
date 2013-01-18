@@ -1,0 +1,37 @@
+"Window": {
+	backgroundColor: '#fff',
+	navBarHidden: false
+}
+
+"Window[platform=android]": {
+	navBarHidden: true
+}
+
+"Label": {
+	color: '#000'
+}
+
+".header": {
+	height: '50dp',
+	width: Ti.UI.FILL,
+	color: '#fff',
+	backgroundGradient: {
+		type: 'linear',
+		startPoint: { x: 0, y: '0%' },
+		endPoint: { x: 0, y: '100%' },
+		colors: [
+			{ color: '#000', offset: 0.0 },
+			{ color: '#000', offset: 0.02 },
+			{ color: '#333', offset: 0.5 },
+			{ color: '#000', offset: 0.98 },
+			{ color: '#000', offset: 1.0 }
+		]
+	},
+	top: 0,
+	left: 0,
+	textAlign: 'center',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}

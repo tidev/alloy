@@ -1,0 +1,6 @@
+<Alloy>
+	<Label class="header" platform="android">Users</Label>
+	<TableView id="table" dataCollection="user" onClick="showColorInfo">
+		<Require src="row"/>
+	</TableView>
+</Alloy>

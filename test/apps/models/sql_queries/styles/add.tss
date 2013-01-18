@@ -1,0 +1,54 @@
+"#add": {
+	modal: true,
+	layout: 'vertical'
+}
+
+"#name": {
+	top: '20dp',
+	width: '80%',
+	hintText: 'name',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	returnKeyType: Ti.UI.RETURNKEY_DONE
+}
+
+"#name[formFactor=tablet]": {
+	width: '50%'
+}
+
+"#colorContainer": {
+	height: Ti.UI.SIZE,
+	width: '80%',
+	top: '25dp',
+	layout: 'horizontal'
+}
+
+".color": {
+	height: '80dp',
+	width: '25%',
+	left: '6.33%',
+	borderColor: '#000',
+	borderRadius: 8,
+	borderWidth: 0
+}
+
+"#blue": {
+	backgroundColor: 'blue',
+	borderWidth: 4
+}
+
+"#red": {
+	backgroundColor: 'red'
+}
+
+"#orange": {
+	backgroundColor: 'orange'
+}
+
+".button": {
+	width: '50%',
+	top: '20dp'
+}
+
+".button[formFactor=tablet]": {
+	width: '30%'
+}

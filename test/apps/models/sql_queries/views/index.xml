@@ -1,0 +1,21 @@
+<Alloy>
+    <Window>
+
+    	<!-- on iOS -->
+    	<NavigationGroup id="navgroup" platform="ios">
+    		<Window title="Users">
+    			<RightNavButton>
+    				<Button onClick="openAddUser">add user</Button>
+    			</RightNavButton>
+    			<Require src="main"/>
+    		</Window>
+    	</NavigationGroup>
+
+    	<!-- on Android -->
+    	<Require src="main" platform="android"/>
+    	<Menu platform="android">
+    		<MenuItem title="add user" icon="ic_menu_add.png" onClick="openAddUser"/>
+    	</Menu>
+
+    </Window>
+</Alloy>
