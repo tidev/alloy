@@ -418,7 +418,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	_.each(CU.bindingsMap, function(mapping,modelVar) {
 
 		// open the model binding handler
-		// template.viewCode += modelVar + ".on('fetch change', function() {";
 		var handlerVar = CU.generateUniqueId();
 		template.viewCode += 'var ' + handlerVar + '=function() {';
 		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
