@@ -5,12 +5,42 @@
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
 ## Coming Features
-The following are planned features for the next release:
-* [ALOY-95](http://jira.appcelerator.org/browse/ALOY-95). Integrated ACS sync adapter.
-* [ALOY-133](https://jira.appcelerator.org/browse/ALOY-133). [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Models and themes for widgets.
-* [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). Alloy support for Android fastdev server.
-* [ALOY-419](https://jira.appcelerator.org/browse/ALOY-419). `alloy generate adapter` command for easier creation of sync adapters.
+The following are planned features for the next release (1.0.0):
+
+* [ALOY-323](https://jira.appcelerator.org/browse/ALOY-323). Alloy 1.0.0+ will support only Titanium 3.0+, allowing it to be leaner and meaner.
+* [ALOY-462](https://jira.appcelerator.org/browse/ALOY-462). Upgrade Backbone to 0.9.9.
+* [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). [ALOY-454](https://jira.appcelerator.org/browse/ALOY-454). [ALOY-455](https://jira.appcelerator.org/browse/ALOY-455). Compile, build, and run time performance enhancements
 * [ALOY-389](https://jira.appcelerator.org/browse/ALOY-389). Support for code assist of TSS files in Titanium Studio.
+
+## 0.3.5 (18 January 2013)
+
+### New features
+
+* Tons of sql sync adapter features and fixes
+	* **IMPORTANT**: Due to the massive amount of changes in the sql adapter, it is being introduced as ["sql_new"](https://github.com/appcelerator/alloy/blob/master/Alloy/lib/alloy/sync/sql_new.js). This is the "type" you would use in your model definitions, as seen in this [model from the models/sql_queries](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/models/user.js) test app. The unchanged "sql" adapter still exists temporarily for compatibility. 
+
+	All freshly built apps will work with the "sql_new" adapter, including all the sql ones in the [test/apps/models folder](https://github.com/appcelerator/alloy/tree/master/test/apps/models) in the repo. There _may_ be conflicts, though, if you attempt to just drop the "sql_new" adapter on an app that has been previously using the old "sql" adapter. This is because "sql_new" uses a different, smarter, less invasive means of identifying the unique id of your sql records, adding an "alloy_id" column only if absolutely necessary. If you can delete your existing sql storage and just rebuild it, then all you need to do is delete and then you can start using the "sql_new" adapter. If not, we'll have a migration guide soon.
+
+	**One final important note** is that the old "sql" adapter will be replaced with "sql_new" when Alloy 1.0.0 is released, tentatively scheduled for mid-February. This'll give you a month to try it out and migrate data if necessary. Now on to the good stuff...
+	* [ALOY-458](https://jira.appcelerator.org/browse/ALOY-458). The sql adapter now allows you to execute custom queries on fetch(). The [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app uses this, specifically in this [controller file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/controllers/main.js). 
+	* [ALOY-447](https://jira.appcelerator.org/browse/ALOY-447). Alloy Model column definitions now support SQLite keywords, like PRIMARY KEY and AUTOINCREMENT. The [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) test app shows how to use it.
+	* [ALOY-467](https://jira.appcelerator.org/browse/ALOY-467). idAttribute is now assignable from the model.js file's definition object. The [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) test app, specifically this [model file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_keywords/models/fighters.js) shows how to use it to identify which column in your table is the unique identifier for syncing between SQLite and Backbone.
+	* [ALOY-453](https://jira.appcelerator.org/browse/ALOY-453). Full support for up() and down() migrations in sql adapter. [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) is also a multiple migration test app.
+	* [ALOY-345](https://jira.appcelerator.org/browse/ALOY-345). sql adapter databases can now be preloaded from a database file. The [models/sql_preload](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_preload) test app shows how.
+	* [ALOY-456](https://jira.appcelerator.org/browse/ALOY-456). sql adapter now supports multiple SQLite databases. The [model/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app makes use of multiple SQLite databases. 
+	* [ALOY-468](https://jira.appcelerator.org/browse/ALOY-468). Added insertRow() and deleteRow() functions to migration object. You can see these in use for prepopulating and deleting rows in this [migration file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/migrations/201301161234567_user.js) of the [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app. 
+* TSS parsing and features
+	* [ALOY-272](https://jira.appcelerator.org/browse/ALOY-272). TSS parsing is now grammar based. Makes [code assist in TiStudio](https://jira.appcelerator.org/browse/ALOY-389) possible.
+	* [ALOY-252](https://jira.appcelerator.org/browse/ALOY-252). Commas are now optional between top-level style objects in TSS files. Check this [style file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/styles/app.tss) for an example.
+	* [ALOY-452](https://jira.appcelerator.org/browse/ALOY-452). expr() syntax has been removed from TSS files. Here is the [cleaner and more powerful alternative](https://github.com/appcelerator/alloy/commit/e9fdc93c9760a1590c0abd0136662c11dc678066#commitcomment-2401085) for using runtime values in TSS files.
+* [ALOY-284](https://jira.appcelerator.org/browse/ALOY-284). Titanium constants can now be used as XML attributes in markup. Check this [view xml file](https://github.com/appcelerator/alloy/blob/master/test/apps/testing/grammar/views/index.xml) for an example. 
+
+### Bug fixes and improvements
+
+* [ALOY-191](https://jira.appcelerator.org/browse/ALOY-191). The [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo) test app now works with all supported sync adapters \(sql, properties, localStorage\).
+* [ALOY-336](https://jira.appcelerator.org/browse/ALOY-336). Mobileweb logs not showing up in console \(related to [TISTUD-2525](https://jira.appcelerator.org/browse/TISTUD-2525)\).
+* [ALOY-449](https://jira.appcelerator.org/browse/ALOY-449). Parsing state not cleaned properly when processing multiple top-level UI elements.
+* [ALOY-446](https://jira.appcelerator.org/browse/ALOY-446). sql adapter should open/close between all operations (best practices).
 
 ## 0.3.4 (20 December 2012)
 
