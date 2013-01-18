@@ -867,8 +867,6 @@ exports.formatAST = function(ast,config,fn)
 		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
 	}
 
-	var isDev = config.deploytype === 'development';
-
 	var opts = {
 		mangle: {
 			mangle: false,                    // Mangle any names?
