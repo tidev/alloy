@@ -6,6 +6,11 @@ var _ = require('alloy/underscore')._,
 var ALLOY_DB_DEFAULT = '_alloy_';
 var ALLOY_ID_DEFAULT = 'alloy_id';
 
+var cache = {
+	config: {},
+	Model: {}
+};
+
 // The sql-specific migration object, which is the main parameter
 // to the up() and down() migration functions
 function SQLiteMigrateDB(config) {
@@ -417,7 +422,12 @@ function installDatabase(config) {
 	db.close();
 }
 
-module.exports.beforeModelCreate = function(config) {
+module.exports.beforeModelCreate = function(config, name) {
+	// use cached config if it exists
+	if (cache.config[name]) {
+		return cache.config[name];
+	}
+
 	// check platform compatibility
 	if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
 		throw 'No support for Titanium.Database in MobileWeb environment.';
@@ -432,14 +442,25 @@ module.exports.beforeModelCreate = function(config) {
 		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
 
+	// add this config to the cache
+	cache.config[name] = config;
+
 	return config;
 };
 
-module.exports.afterModelCreate = function(Model) {
-	Model || (Model = {});
+module.exports.afterModelCreate = function(Model, name) {
+	// use cached Model class if it exists
+	if (cache.Model[name]) {
+		return cache.Model[name];
+	}
 
+	// create and migrate the Model class
+	Model || (Model = {});
 	Model.prototype.idAttribute = Model.prototype.config.adapter.idAttribute;
 	Migrate(Model);
+
+	// Add the Model class to the cache
+	cache.Model[name] = Model;
 
 	return Model;
 };
