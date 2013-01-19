@@ -7,7 +7,12 @@ out comments in grammar
 
 "TextField": {
 	hintText: 'sdfdsf',
-}
+
+	,,
+	,,
+	,,
+	vale: 123
+},,,
 
 /* comment */"Window" /* comment */: /* comment */{/* comment */
 	backgroundColor: '#fff' // bg
@@ -29,7 +34,15 @@ out comments in grammar
 	
 	textAlign
 	:
-	'center'
+	'center',,
+	,
+
+	,
+
+	,
+
+
+	,
 
 	/* random
 	   multiline
@@ -46,10 +59,13 @@ out comments in grammar
 
 , // i can separate with commas too if i want, cuz i is flexibile
 
-"Label": { backgroundColor    	: 'black' /* to the middle */  } //yep
+"Label": { backgroundColor    	: 'black' /* to the middle */  },, //yep
 
 // Some final pointless remarks
 
 /*
 and a few more pointless comments
 */
+,,
+,
+,
