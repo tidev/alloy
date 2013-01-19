@@ -16,11 +16,12 @@ object
   / "{" __ members:members __ "}" { return members; }
 
 topmembers
-  = head:pair tail:(__ ","? __ pair)* {
+  /* = head:pair tail:(__ ","? __ pair)* { */
+  = head:pair tail:(___ pair?)* {
       var result = {};
       result[head[0]] = head[1];
       for (var i = 0; i < tail.length; i++) {
-        result[tail[i][3][0]] = tail[i][3][1];
+        result[tail[i][1][0]] = tail[i][1][1];
       }
       return result;
     }
@@ -204,6 +205,12 @@ _
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment)*
+
+___
+  = (WhiteSpace / LineTerminatorSequence / Comment / Comma)+
+
+Comma
+  = ","
 
 LineTerminator
   = [\n\r\u2028\u2029]

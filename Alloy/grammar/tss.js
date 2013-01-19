@@ -73,6 +73,8 @@ module.exports = (function(){
         "hexDigit": parse_hexDigit,
         "_": parse__,
         "__": parse___,
+        "___": parse____,
+        "Comma": parse_Comma,
         "LineTerminator": parse_LineTerminator,
         "LineTerminatorSequence": parse_LineTerminatorSequence,
         "SourceCharacter": parse_SourceCharacter,
@@ -385,7 +387,7 @@ module.exports = (function(){
       }
       
       function parse_topmembers() {
-        var result0, result1, result2, result3, result4, result5;
+        var result0, result1, result2, result3;
         var pos0, pos1, pos2;
         
         pos0 = pos;
@@ -394,32 +396,12 @@ module.exports = (function(){
         if (result0 !== null) {
           result1 = [];
           pos2 = pos;
-          result2 = parse___();
+          result2 = parse____();
           if (result2 !== null) {
-            if (input.charCodeAt(pos) === 44) {
-              result3 = ",";
-              pos++;
-            } else {
-              result3 = null;
-              if (reportFailures === 0) {
-                matchFailed("\",\"");
-              }
-            }
+            result3 = parse_pair();
             result3 = result3 !== null ? result3 : "";
             if (result3 !== null) {
-              result4 = parse___();
-              if (result4 !== null) {
-                result5 = parse_pair();
-                if (result5 !== null) {
-                  result2 = [result2, result3, result4, result5];
-                } else {
-                  result2 = null;
-                  pos = pos2;
-                }
-              } else {
-                result2 = null;
-                pos = pos2;
-              }
+              result2 = [result2, result3];
             } else {
               result2 = null;
               pos = pos2;
@@ -431,32 +413,12 @@ module.exports = (function(){
           while (result2 !== null) {
             result1.push(result2);
             pos2 = pos;
-            result2 = parse___();
+            result2 = parse____();
             if (result2 !== null) {
-              if (input.charCodeAt(pos) === 44) {
-                result3 = ",";
-                pos++;
-              } else {
-                result3 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\",\"");
-                }
-              }
+              result3 = parse_pair();
               result3 = result3 !== null ? result3 : "";
               if (result3 !== null) {
-                result4 = parse___();
-                if (result4 !== null) {
-                  result5 = parse_pair();
-                  if (result5 !== null) {
-                    result2 = [result2, result3, result4, result5];
-                  } else {
-                    result2 = null;
-                    pos = pos2;
-                  }
-                } else {
-                  result2 = null;
-                  pos = pos2;
-                }
+                result2 = [result2, result3];
               } else {
                 result2 = null;
                 pos = pos2;
@@ -481,7 +443,7 @@ module.exports = (function(){
               var result = {};
               result[head[0]] = head[1];
               for (var i = 0; i < tail.length; i++) {
-                result[tail[i][3][0]] = tail[i][3][1];
+                result[tail[i][1][0]] = tail[i][1][1];
               }
               return result;
             })(pos0, result0[0], result0[1]);
@@ -2811,6 +2773,55 @@ module.exports = (function(){
             if (result1 === null) {
               result1 = parse_Comment();
             }
+          }
+        }
+        return result0;
+      }
+      
+      function parse____() {
+        var result0, result1;
+        
+        result1 = parse_WhiteSpace();
+        if (result1 === null) {
+          result1 = parse_LineTerminatorSequence();
+          if (result1 === null) {
+            result1 = parse_Comment();
+            if (result1 === null) {
+              result1 = parse_Comma();
+            }
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_WhiteSpace();
+            if (result1 === null) {
+              result1 = parse_LineTerminatorSequence();
+              if (result1 === null) {
+                result1 = parse_Comment();
+                if (result1 === null) {
+                  result1 = parse_Comma();
+                }
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        return result0;
+      }
+      
+      function parse_Comma() {
+        var result0;
+        
+        if (input.charCodeAt(pos) === 44) {
+          result0 = ",";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\",\"");
           }
         }
         return result0;
