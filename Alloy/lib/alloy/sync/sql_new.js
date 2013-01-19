@@ -302,6 +302,10 @@ function Migrate(Model) {
 	// Get config reference 
 	var config = Model.prototype.config;
 
+	// Get the db name for this model and set up the sql migration obejct
+	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
+	var sqliteMigrationDb = new SQLiteMigrateDB(config);
+
 	// Get the migration number from the config, or use the number of 
 	// the last migration if it's not present. If we still don't have a 
 	// migration number after that, that means there are none. There's
@@ -309,14 +313,11 @@ function Migrate(Model) {
 	var targetNumber = typeof config.adapter.migration === 'undefined' || 
 		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
+		sqliteMigrationDb.createTable(config);
 		return;
 	}
 	targetNumber = targetNumber + ''; // ensure that it's a string
 
-	// Get the db name for this model and set up the sql migration obejct
-	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
-	var sqliteMigrationDb = new SQLiteMigrateDB(config);
-	
 	// Create the migration tracking table if it doesn't already exist.
 	// Get the current saved migration number.
 	var currentNumber = GetMigrationFor(config.adapter.db_name, config.adapter.collection_name);
