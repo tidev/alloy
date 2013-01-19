@@ -104,12 +104,12 @@ function py(pyScript, args, version /*optional*/, sdkDir /*optional*/) {
 		}
 		logger.debug(line);
 	}
-	
+
 	//invoke .py - use the provided SDK dir if present
 	var sdkRoot = sdkDir || path.join(SDK, version);
 	var script = path.join(sdkRoot,pyScript);
 	var runcmd = spawn('python', [script].concat(args||[]), process.env);
-	
+
 	//run stdout/stderr back through console.log
 	runcmd.stdout.on('data', function (data) {
 		filterLog(data);
@@ -118,10 +118,32 @@ function py(pyScript, args, version /*optional*/, sdkDir /*optional*/) {
 	runcmd.stderr.on('data', function (data) {
 		filterLog(data);
 	});
-	
+
 	return runcmd;
 }
 exports.py = py;
+
+function cli(script, args, version /*optional*/, sdkDir /*optional*/) {
+	var runcmd = spawn(script, [].concat(args||[]), process.env);
+
+	function filterLog(line) {
+		line =U.trim(line);
+		if (!line) return;
+
+		console.log(line);
+	}
+
+	//run stdout/stderr back through console.log
+	runcmd.stdout.on('data', function (data) {
+		filterLog(data);
+	});
+
+	runcmd.stderr.on('data', function (data) {
+		filterLog(data);
+	});
+
+	return runcmd;
+}
 
 //run a titanium project with titanium.py - return the spawned titanium.py process
 exports.run = function(projectDir, platform /*optional*/, version /*optional*/, sdkDir /*optional*/) {
@@ -136,12 +158,15 @@ exports.run = function(projectDir, platform /*optional*/, version /*optional*/, 
 
 	//run the project using titanium.py
 	var runArgs = [
-		'run',
-		'--dir=' + path.resolve(projectDir),
+		'build',
+		'--project-dir=' + path.resolve(projectDir),
 		'--platform=' + platform
 	];
-	
-	return py('titanium.py', runArgs, version, sdkDir);
+	if (platform == 'iphone' || platform == 'ipad') {
+		runArgs.push('--sim-type=' + platform);
+	}
+
+	return cli('titanium', runArgs, version, sdkDir);
 };
 
 //create a titanium project - create('FooProject', 'com.appc.foo', ['mobileweb','iphone', 'android'], '/etc/android')
@@ -151,6 +176,6 @@ exports.create = function(name,id,topLevelDir,platformsArray,androidDir, version
 	runArgs.concat(platformsArray);
 	//look for Android SDK environment variable
 	runArgs.push(androidDir||process.env.ANDROID_SDK);
-	
+
 	return py('project.py', runArgs, version, sdkDir);
 };

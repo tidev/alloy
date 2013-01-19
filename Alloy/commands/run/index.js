@@ -15,32 +15,33 @@ module.exports = function(args, program) {
 	if (!path.existsSync(inputPath)) {
 		U.die('inputPath "' + inputPath + '" does not exist');
 	}
-	
+
 	// Validate that this is a Titanium alloy-powered project
 	if (U.isTiProject(inputPath)) {
 		if (!path.existsSync(path.join(inputPath,'app'))) {
 			U.die("This project doesn't seem to contain an Alloy app directory");
 		}
-	} 
+	}
 
 	// Check for platform
 	var platform = args[1] || 'iphone';
+	var resourceDir = (platform === 'ipad') ? 'iphone' : platform;
 
 	// TODO: http://jira.appcelerator.org/browse/ALOY-299
 	if (platform === 'mobileweb') {
-		U.die('`alloy run` not supported by mobileweb');	
+		U.die('`alloy run` not supported by mobileweb');
 	}
-	var checkPath = path.join(inputPath,'Resources',platform);
+	var checkPath = path.join(inputPath,'Resources',resourceDir);
 
 	// assert that the platform directory exists
 	if (!path.existsSync(checkPath)) {
 		logger.warn('"Resources/' + platform + '" does not exist. Creating...');
 		wrench.mkdirSyncRecursive(checkPath,0777);
 	}
-	
+
 	//run the project
 	var p = titanium.run(
-		inputPath, 
+		inputPath,
 		args[1], //optional platform
 		program.tiversion, //optional version
 		program.tiSDK //optional SDK direct path
