@@ -692,9 +692,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				}
 
 				// handle formFactor device query
-				if (q.size === 'tablet' || q.formFactor === 'tablet') {
+				if (q.formFactor === 'tablet') {
 					conditionals.formFactor = 'Alloy.isTablet';
-				} else if (q.size === 'handheld' || q.formFactor === 'handheld') {
+				} else if (q.formFactor === 'handheld') {
 					conditionals.formFactor = 'Alloy.isHandheld';
 				}
 
@@ -1057,13 +1057,7 @@ function sortStyles(componentStyle) {
 					if (q === 'platform') {
 						priority += VALUES.PLATFORM + VALUES.SUM;
 						v = v.split(',');
-					} else if (q === 'formFactor' || q === 'size') {
-						// TODO: https://jira.appcelerator.org/browse/ALOY-402
-						if (q === 'size') {
-							logger.warn('"size" has been deprecated and will be removed in Alloy 0.4.0, use "formFactor" for device queries instead');
-							q = 'formFactor';
-						}
-
+					} else if (q === 'formFactor') {
 						priority += VALUES.FORMFACTOR + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
