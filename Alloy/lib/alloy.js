@@ -92,23 +92,6 @@ exports.C = function(name, modelDesc, model) {
 };
 
 /**
- * @method getWidget
- * Factory method for instantiating a widget controller. Creates and returns an instance of the 
- * named widget.
- * @param {String} id Id of widget to instantiate.
- * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
- * @param {*...} [args] Arguments to pass to the widget.
- * @return {Alloy.Controller} Alloy widget controller object.
- *
- * @deprecated 0.3 Use {Alloy#createWidget} instead
- */
-exports.getWidget = function(id, name, args) {
-	Ti.API.warn('Alloy.getWidget() is deprecated, use Alloy.createWidget() instead.');
-	Ti.API.warn('Alloy.getWidget() will be removed in Alloy 0.4.0');
-	return exports.createWidget(id, name, args);
-}
-
-/**
  * @method createWidget
  * Factory method for instantiating a widget controller. Creates and returns an instance of the 
  * named widget.
@@ -119,22 +102,6 @@ exports.getWidget = function(id, name, args) {
  */
 exports.createWidget = function(id, name, args) {
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
-}
-
-/**
- * @method getController
- * Factory method for instantiating a controller. Creates and returns an instance of the 
- * named controller.
- * @param {String} name Name of controller to instantiate.
- * @param {*...} [args] Arguments to pass to the controller.
- * @return {Alloy.Controller} Alloy controller object.
- *
- * @deprecated 0.3 Use {Alloy#createController} instead
- */
-exports.getController = function(name, args) {
-	Ti.API.warn('Alloy.getController() is deprecated, use Alloy.createController() instead.');
-	Ti.API.warn('Alloy.getController() will be removed in Alloy 0.4.0');
-	return exports.createController(name, args);
 }
 
 /**
@@ -150,25 +117,6 @@ exports.createController = function(name, args) {
 }
 
 /**
- * @method getModel
- * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the 
- * named model.
- *
- * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
- * information on the methods and properties provided by the Model object.
- * @param {String} name Name of model to instantiate.
- * @param {*...} [args] Arguments to pass to the model.
- * @return {Backbone.Model} Backbone model object.
- *
- * @deprecated 0.3 Use {Alloy#createModel} instead
- */
-exports.getModel = function(name, args) {
-	Ti.API.warn('Alloy.getModel() is deprecated, use Alloy.createModel() instead.');
-	Ti.API.warn('Alloy.getModel() will be removed in Alloy 0.4.0');
-	return exports.createModel(name, args);
-}
-
-/**
  * @method createModel
  * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the 
  * named model.
@@ -181,27 +129,6 @@ exports.getModel = function(name, args) {
  */
 exports.createModel = function(name, args) {
 	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
-}
-
-
-/**
- * @method getCollection
- * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
- * collection for holding the named type of model objects.
- *
- * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
- * documentation for  information on the methods and  properties provided by the
- * Collection object.
- * @param {String} name Name of model to hold in this collection.
- * @param {*...} [args] Arguments to pass to the collection.
- * @return {Backbone.Collection} Backbone collection object.
- *
- * @deprecated 0.3 Use {Alloy#createCollection} instead
- */
-exports.getCollection = function(name, args) {
-	Ti.API.warn('Alloy.getCollection() is deprecated, use Alloy.createCollection() instead.');
-	Ti.API.warn('Alloy.getCollection() will be removed in Alloy 0.4.0');
-	return exports.createCollection(name, args);
 }
 
 /**
@@ -260,15 +187,6 @@ exports.isTablet = (function() {
  *
  */
 exports.isHandheld = !exports.isTablet;
-
-/**
- * @property {Object} globals
- * An object for storing globally accessible variables and functions. Items
- * added to Alloy.globals will be accessible in any controller in your app.
- *
- * @deprecated 0.3.3 Use {Alloy#Globals} instead
- */
-exports.globals = {};
 
 /**
  * @property {Object} Globals
