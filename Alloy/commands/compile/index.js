@@ -141,19 +141,8 @@ module.exports = function(args, program) {
 	}
 //	BENCHMARK('process Alloy jmk file');
 
-	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
-	if (!path.existsSync(path.join(paths.project,'ti.physicalSizeCategory-android-1.0.zip')) && 
-		!path.existsSync(path.join(paths.project,'modules','android','ti.physicalsizecategory','1.0','timodule.xml'))) {
-		wrench.copyDirSyncRecursive(path.join(alloyRoot,'modules'), paths.project, {preserve:true})
-	}
-
+	// TODO: https://jira.appcelerator.org/browse/ALOY-477
 	if (buildPlatform === 'android') {
-		U.tiapp.installModule(paths.project, {
-			id: 'ti.physicalSizeCategory',
-			platform: 'android',
-			version: '1.0'
-		});
-
 		U.tiapp.upStackSizeForRhino(paths.project);
 	}
 //	BENCHMARK('install android modules and tiapp fixes');

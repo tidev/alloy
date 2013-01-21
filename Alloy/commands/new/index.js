@@ -48,15 +48,6 @@ module.exports = function(args, program) {
 	wrench.copyDirSyncRecursive(path.join(paths.projectTemplate,'app'), paths.app, {preserve:true});
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
-	// TODO: ti.physicalSizeCategory - https://jira.appcelerator.org/browse/ALOY-209
-	// handle any necessary alloy native modules
-	wrench.copyDirSyncRecursive(paths.modules, paths.project, {preserve:true});
-	U.tiapp.installModule(paths.project, {
-		id: 'ti.physicalSizeCategory',
-		platform: 'android',
-		version: '1.0'
-	});
-
 	// install ti.alloy compiler plugin
 	U.installPlugin(path.join(paths.alloy,'..'), paths.project);
 
@@ -90,7 +81,6 @@ function getPaths(project, templateName) {
 	var paths = {
 		// alloy paths
 		alloy: alloy,
-		modules: path.join(alloy,'modules'),
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
 		projectTemplate: path.join(projectTemplates,templateName),
