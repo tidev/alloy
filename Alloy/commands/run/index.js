@@ -1,48 +1,62 @@
-var path = require('path'),
-	wrench = require('wrench'),
-	_ = require("../../lib/alloy/underscore")._,
+var _ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils'),
 	logger = require('../../common/logger'),
-	titanium = require('../../common/titanium');
+	spawn = require('child_process').spawn;
 
+// `alloy run` will just route through the new cli's
+// `titanium build` command. All arguments and options
+// will just be passed along.
 module.exports = function(args, program) {
-	if (!titanium.home) {
-		U.die('run command not supported on platform "' + process.platform + '"');
-	}
-
-	// Validate the input path
-	var inputPath = path.resolve(args[0] || path.join(U.resolveAppHome(),'..'));
-	if (!path.existsSync(inputPath)) {
-		U.die('inputPath "' + inputPath + '" does not exist');
-	}
+	var newArgs = ['build'].concat(program.rawArgs.slice(3));
+	var runcmd = spawn('titanium', newArgs);
 	
-	// Validate that this is a Titanium alloy-powered project
-	if (U.isTiProject(inputPath)) {
-		if (!path.existsSync(path.join(inputPath,'app'))) {
-			U.die("This project doesn't seem to contain an Alloy app directory");
+	//run stdout/stderr back through console.log
+	runcmd.stdout.on('data', function (data) {
+		filterLog(data);
+	});
+
+	runcmd.stderr.on('data', function (data) {
+		filterLog(data);
+	});
+}
+
+//trim extra whitespace output
+function filterLog(line) {
+	line = U.trim(line);
+	if (!line) return;
+
+	var lines = line.split('\n');
+	if (lines.length > 1) {
+		_.each(lines,function(l) {
+			filterLog(l);
+		});
+		return;
+	}
+	var idx = line.indexOf(' -- [');
+	if (idx > 0) {
+		var idx2 = line.indexOf(']', idx+7);
+		line = line.substring(idx2+1);
+	}
+	if (line.charAt(0)=='[') {
+		var i = line.indexOf(']');
+		var label = line.substring(1,i);
+		var rest = U.trim(line.substring(i+1));
+		if (!rest) return;
+		switch(label) {
+			case 'INFO':
+				logger.info(rest);
+				return;
+			case 'TRACE':
+			case 'DEBUG':
+				logger.debug(rest);
+				return;
+			case 'WARN':
+				logger.warn(rest);
+				return;
+			case 'ERROR':
+				logger.error(rest);
+				return;
 		}
-	} 
-
-	// Check for platform
-	var platform = args[1] || 'iphone';
-
-	// TODO: http://jira.appcelerator.org/browse/ALOY-299
-	if (platform === 'mobileweb') {
-		U.die('`alloy run` not supported by mobileweb');	
 	}
-	var checkPath = path.join(inputPath,'Resources',platform);
-
-	// assert that the platform directory exists
-	if (!path.existsSync(checkPath)) {
-		logger.warn('"Resources/' + platform + '" does not exist. Creating...');
-		wrench.mkdirSyncRecursive(checkPath,0777);
-	}
-	
-	//run the project
-	var p = titanium.run(
-		inputPath, 
-		args[1], //optional platform
-		program.tiversion, //optional version
-		program.tiSDK //optional SDK direct path
-	);
+	logger.debug(line);
 }
