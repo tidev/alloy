@@ -60,9 +60,6 @@ var TO_BE_CREATED = [
 	path.join('plugins','ti.alloy','hooks'),
 	path.join('plugins','ti.alloy','hooks','alloy.js'),
 	path.join('tiapp.xml'),
-
-	// TODO: http://jira.appcelerator.org/browse/ALOY-209
-	path.join('ti.physicalSizeCategory-android-1.0.zip')
 ];
 
 _.each(RUNS, function(run) {
@@ -96,27 +93,6 @@ _.each(RUNS, function(run) {
 			var tiapp = fs.readFileSync(path.join(Harness,'tiapp.xml'),'utf8');
 			doc = new DOMParser().parseFromString(tiapp);
 			expect(doc).toBeTruthy();
-		});
-
-		// TODO: http://jira.appcelerator.org/browse/ALOY-209
-		it('adds ti.physicalSizeCategory to tiapp.xml modules list', function() {
-			var modules = doc.getElementsByTagName('module');
-			var found = false;
-
-			for (var i = 0; i < modules.length; i++) {
-				var module = modules.item(i);
-				if (module.nodeType === 1 &&
-					module.getAttribute('platform') === 'android' &&
-					module.getAttribute('version') === '1.0' &&
-					module.childNodes[0] &&
-					/ti\.physicalSizeCategory/i.test(module.childNodes[0].nodeValue)) 
-				{
-					found = true;
-					break;
-				}
-			}
-
-			expect(found).toBe(true);
 		});
 
 		// TODO: ensure plugin got added to tiapp.xml
