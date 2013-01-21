@@ -11,13 +11,8 @@
 			<Annotation id="annotation2" platform="android"/>
 			<Annotation id="annotation3" platform="ios"/>
 
-			<!-- 
-			    TODO: https://jira.appcelerator.org/browse/ALOY-225
-			    The above ticket needs to be resolved before Annotations can be 
-			    added in markup via <Require> on Android.
-			-->
 			<!-- annotation via <Require> tag -->
-			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03" platform="ios,mobileweb"/>
+			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
 
 			<!-- 
 				Lets add a UI component to show Annotations being declared
