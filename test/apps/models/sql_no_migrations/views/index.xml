@@ -1,0 +1,8 @@
+<Alloy>
+    <Window>
+        <Label id="title" onClick="addThing">List Anything</Label>
+        <TableView id="table" dataCollection="things" onClick="showId">
+        	<TableViewRow title="{name}"/>
+        </TableView>
+    </Window>
+</Alloy>
