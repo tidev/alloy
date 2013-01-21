@@ -203,8 +203,6 @@ function Sync(model, method, opts) {
 				var o = {};
                 var fc = 0;
 
-                // Pre-3.0.0, Android supported fieldCount as a property, iOS
-                // supported it as a function. Post-3.0.0, both are a property.
                 // TODO: https://jira.appcelerator.org/browse/ALOY-459
 				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
 
