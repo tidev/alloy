@@ -163,14 +163,17 @@ exports.isTablet = (function() {
 	if (OS_IOS) {
 		return Ti.Platform.osname === 'ipad';
 	} else if (OS_ANDROID) {
-		try {
-			var psc = require('ti.physicalSizeCategory');
-			return psc.physicalSizeCategory === 'large' ||
-				   psc.physicalSizeCategory === 'xlarge';
-		} catch(e) {
-			Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
-			return isTabletFallback();
-		}
+		var psc = Ti.Platform.Android.physicalSizeCategory;
+		return psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE ||
+		       psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
+		// try {
+		// 	var psc = require('ti.physicalSizeCategory');
+		// 	return psc.physicalSizeCategory === 'large' ||
+		// 		   psc.physicalSizeCategory === 'xlarge';
+		// } catch(e) {
+		// 	Ti.API.warn('Could not find ti.physicalSizeCategory module, using fallback for Alloy.isTablet');
+		// 	return isTabletFallback();
+		// }
 	} else if (OS_MOBILEWEB) {
 		return !(Math.min(
 			Ti.Platform.displayCaps.platformHeight,
