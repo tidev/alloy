@@ -1,11 +1,11 @@
 /**
  * @class Alloy
  * Top-level module for Alloy functions.
- * 
+ *
  */
 var 	   _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone');
-	
+
 exports._ = _;
 exports.Backbone = Backbone;
 
@@ -40,14 +40,14 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
-    
+
 	// Run the pre model creation code, if any
-    if (_.isFunction(adapter.beforeModelCreate)) { 
-    	config = adapter.beforeModelCreate(config, name) || config; 
+    if (_.isFunction(adapter.beforeModelCreate)) {
+    	config = adapter.beforeModelCreate(config, name) || config;
     }
-	
+
     // Create the Model object
-	var Model = Backbone.Model.extend(extendObj, extendClass); 
+	var Model = Backbone.Model.extend(extendObj, extendClass);
 	Model.prototype.config = config;
 
 	// Extend the Model with extendModel(), if defined
@@ -56,10 +56,10 @@ exports.M = function(name, modelDesc, migrations) {
 	}
 
 	// Run the post model creation code, if any
-	if (_.isFunction(adapter.afterModelCreate)) { 
-		adapter.afterModelCreate(Model, name); 
+	if (_.isFunction(adapter.afterModelCreate)) {
+		adapter.afterModelCreate(Model, name);
 	}
-	
+
 	return Model;
 };
 
@@ -73,11 +73,11 @@ exports.C = function(name, modelDesc, model) {
 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
 		    }
 
-			require('alloy/sync/'+type).sync(model,method,opts);
+			require('alloy/sync/'+type).sync(method,model,opts);
 		}
 	};
 
-	var Collection = Backbone.Collection.extend(extendObj); 
+	var Collection = Backbone.Collection.extend(extendObj);
 	var config = Collection.prototype.config = model.prototype.config;
 
 	var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
@@ -87,13 +87,13 @@ exports.C = function(name, modelDesc, model) {
 	if (_.isFunction(modelDesc.extendCollection)) {
 		Collection = modelDesc.extendCollection(Collection) || Collection;
 	}
-	
+
 	return Collection;
 };
 
 /**
  * @method createWidget
- * Factory method for instantiating a widget controller. Creates and returns an instance of the 
+ * Factory method for instantiating a widget controller. Creates and returns an instance of the
  * named widget.
  * @param {String} id Id of widget to instantiate.
  * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
@@ -106,7 +106,7 @@ exports.createWidget = function(id, name, args) {
 
 /**
  * @method createController
- * Factory method for instantiating a controller. Creates and returns an instance of the 
+ * Factory method for instantiating a controller. Creates and returns an instance of the
  * named controller.
  * @param {String} name Name of controller to instantiate.
  * @param {*...} [args] Arguments to pass to the controller.
@@ -118,10 +118,10 @@ exports.createController = function(name, args) {
 
 /**
  * @method createModel
- * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the 
+ * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the
  * named model.
  *
- * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for 
+ * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
  * @param {*...} [args] Arguments to pass to the model.
@@ -185,13 +185,13 @@ exports.isHandheld = !exports.isTablet;
 
 /**
  * @property {Object} Globals
- * An object for storing globally accessible variables and functions. 
+ * An object for storing globally accessible variables and functions.
  * Alloy.CFG is accessible in any controller in your app:
  *
  *     Alloy.Globals.someGlobalObject = { key: 'value' };
  *     Alloy.Globals.someGlobalFunction = function(){};
  *
- * Alloy.Globals can be accessed in other non-controller Javascript files 
+ * Alloy.Globals can be accessed in other non-controller Javascript files
  * like this:
  *
  *     var theObject = require('alloy').Globals.someGlobalObject;
@@ -201,7 +201,7 @@ exports.Globals = {};
 
 /**
  * @property {Object} Models
- * An object for storing globally accessible Alloy models. Singleton models 
+ * An object for storing globally accessible Alloy models. Singleton models
  * created via markup will be stored on this object.
  *
  *     <Model src="myModel"/>
@@ -226,7 +226,7 @@ exports.Models = {};
 
 /**
  * @property {Object} Collections
- * An object for storing globally accessible Alloy collections. Singleton collections 
+ * An object for storing globally accessible Alloy collections. Singleton collections
  * created via markup will be stored on this object.
  *
  *     <Collection src="myModel"/>
@@ -256,12 +256,12 @@ exports.Collections = {};
  * like in an Alloy app.
  *
  *     {
- *         "global": { "key": "defaultValue", "anotherKey": 12345 }, 
- *         "env:development": {}, 
- *         "env:test": {}, 
- *         "env:production": {}, 
- *         "os:ios": { "key": "iosValue" }, 
- *         "os:android": { "key": "androidValue" }, 
+ *         "global": { "key": "defaultValue", "anotherKey": 12345 },
+ *         "env:development": {},
+ *         "env:test": {},
+ *         "env:production": {},
+ *         "os:ios": { "key": "iosValue" },
+ *         "os:android": { "key": "androidValue" },
  *         "dependencies": {}
  *     }
  *

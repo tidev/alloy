@@ -8,7 +8,7 @@ function S4() {
 
 function guid() {
    return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
-};	
+};
 
 function Sync(method, model, opts) {
 	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
@@ -32,9 +32,9 @@ function Sync(method, model, opts) {
 			var obj = TAP.getObject(prefix + '-' + model.id);
 			model.set(obj);
 			resp = model.toJSON();
-		}	
-	} 
-	else if (method === 'create' || method === 'update') { 
+		}
+	}
+	else if (method === 'create' || method === 'update') {
 		if (!model.id) {
 			model.id = guid();
 	        model.set(model.idAttribute, model.id);

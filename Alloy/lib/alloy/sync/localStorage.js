@@ -1,5 +1,5 @@
 /*
- * HTML5 localStorage sync adapter 
+ * HTML5 localStorage sync adapter
  */
 var _ = require('alloy/underscore')._;
 
@@ -36,12 +36,12 @@ function Sync(method, model, opts) {
 			data[model.id] = model;
 	    	storeModel(data);
 	    	resp = model.toJSON();
-	    	break;   	
+	    	break;
 
 		case 'read':
 			var store = localStorage.getItem(name);
 			var store_data = (store && JSON.parse(store)) || {};
-            
+
             var len = 0;
             for (var key in store_data) {
             	var m = new model.config.Model(store_data[key]);
@@ -55,13 +55,13 @@ function Sync(method, model, opts) {
 
 		case 'update':
 			data[model.id] = model;
-			storeModel(data); 
+			storeModel(data);
 			resp = model.toJSON();
 			break;
-		
+
 		case 'delete':
 			delete data[model.id];
-			storeModel(data); 
+			storeModel(data);
 			resp = model.toJSON();
 			break;
 	}
@@ -79,7 +79,7 @@ module.exports.sync = Sync;
 
 module.exports.beforeModelCreate = function(config) {
 	config = config || {};
-	
+
 	config.data = {}; // for localStorage or case where entire collection is needed to maintain store
 
 	InitAdapter(config);
@@ -89,7 +89,7 @@ module.exports.beforeModelCreate = function(config) {
 
 module.exports.afterModelCreate = function(Model) {
 	Model = Model || {};
-	
+
 	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
 
 	return Model;
