@@ -10,7 +10,7 @@ function guid() {
    return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
 };	
 
-function Sync(model, method, opts) {
+function Sync(method, model, opts) {
 	var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : 'default';
 	var regex = new RegExp("^(" + prefix + ")\\-(.+)$");
 	var resp = null;

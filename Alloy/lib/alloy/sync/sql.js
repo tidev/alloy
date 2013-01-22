@@ -142,7 +142,7 @@ function Migrator(config, transactionDb) {
 	};
 }
 
-function Sync(model, method, opts) {
+function Sync(method, model, opts) {
 	var table =  model.config.adapter.collection_name,
 		columns = model.config.columns,
 		dbName = model.config.adapter.db_name || ALLOY_DB_DEFAULT,
