@@ -1,125 +1,173 @@
-var _ = require('alloy/underscore')._, 
-	db;
+var _ = require('alloy/underscore')._,
+	util = require('alloy/sync/util');
 
-function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+// The database name used when none is specified in the
+// model configuration.
+var ALLOY_DB_DEFAULT = '_alloy_';
+var ALLOY_ID_DEFAULT = 'alloy_id';
+
+var cache = {
+	config: {},
+	Model: {}
 };
 
-function guid() {
-   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
-};	
+// The sql-specific migration object, which is the main parameter
+// to the up() and down() migration functions.
+//
+// db            The database handle for migration processing. Do not open
+//               or close this as it is a running transaction that ensures
+//               data integrity during the migration process.
+// dbname        The name of the SQLite database for this model.
+// table         The name of the SQLite table for this model.
+// idAttribute   The unique ID column for this model, which is
+//               mapped back to Backbone.js for its update and
+//               delete operations.
+function Migrator(config, transactionDb) {
+	this.db = transactionDb;
+	this.dbname = config.adapter.db_name;
+	this.table = config.adapter.collection_name;
+	this.idAttribute = config.adapter.idAttribute;
 
-function InitAdapter(config) {
-	if (!db) {
-		if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
-			throw 'No support for Titanium.Database in MobileWeb environment.';
-		}
-		else {
-			db = Ti.Database.open('_alloy_');
-		}
-		module.exports.db = db;
-		
-		// create the migration table in case it doesn't exist
-		db.execute('CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)');
-	}
-	return {};
-}
-
-function GetMigrationFor(table) {
-	var mid;
-	// get the latest migratino
-	var rs = db.execute('SELECT latest FROM migrations where model = ?', table);
-	if (rs.isValidRow()) {
-		mid = rs.field(0);
-	}
-	rs.close();
-	return mid;
-}
-
-function SQLiteMigrateDB() {
 	//TODO: normalize columns at compile time - https://jira.appcelerator.org/browse/ALOY-222
-	this.column = function(name)
-	{
-		switch(name)
-		{
+	this.column = function(name) {
+		// split into parts to keep additional column characteristics like
+		// autoincrement, primary key, etc...
+		var parts = name.split(/\s+/);
+		var type = parts[0]
+		switch(type.toLowerCase()) {
 			case 'string':
 			case 'varchar':
+			case 'date':
+			case 'datetime':
+				Ti.API.warn('"' + type + '" is not a valid sqlite field, using TEXT instead');
 			case 'text':
-			{
-				return 'TEXT';
-			}
+				type = 'TEXT';
+				break;
 			case 'int':
 			case 'tinyint':
 			case 'smallint':
 			case 'bigint':
+			case 'boolean':
+				Ti.API.warn('"' + type + '" is not a valid sqlite field, using INTEGER instead');
 			case 'integer':
-			{
-				return 'INTEGER';
-			}
+				type = 'INTEGER';
+				break;
 			case 'double':
 			case 'float':
-			case 'real':
-			{
-				return 'REAL';
-			}
-			case 'blob':
-			{
-				return 'BLOB';
-			}
 			case 'decimal':
 			case 'number':
-			case 'date':
-			case 'datetime':
-			case 'boolean':
-			{
-				return 'NUMERIC';
-			}
+				Ti.API.warn('"' + name + '" is not a valid sqlite field, using REAL instead');
+			case 'real':
+				type = 'REAL';
+				break;
+			case 'blob':
+				type = 'BLOB';
+				break;
 			case 'null':
-			{
-				return 'NULL';
-			}
+				type = 'NULL';
+				break;
+			default:
+				type = 'TEXT';
+				break;
 		}
-		return 'TEXT';
+		parts[0] = type;
+		return parts.join(' ');
 	};
-	
+
 	this.createTable = function(config) {
-		Ti.API.info('create table migration called for '+config.adapter.collection_name);
-		
-		var self = this,
-			columns = [];
-			
+		// compose the create query
+		var columns = [];
+		var found = false;
 		for (var k in config.columns) {
-			columns.push(k+" "+self.column(config.columns[k]));
+			k === this.idAttribute && (found = true);
+			columns.push(k + " " + this.column(config.columns[k]));
 		}
-			
-		var sql = 'CREATE TABLE IF NOT EXISTS '+config.adapter.collection_name+' ( '+columns.join(',')+',id' + ' )';
-		Ti.API.info(sql);
-		
-		db.execute(sql);
+
+		// add the id field if it wasn't specified
+		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
+			columns.push(ALLOY_ID_DEFAULT + ' TEXT');
+		}
+		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
+
+		// execute the create
+		this.db.execute(sql);
 	};
-	
-	this.dropTable = function(name) {
-		Ti.API.info('drop table migration called for '+name);
-		db.execute('DROP TABLE IF EXISTS '+name);
+
+	this.dropTable = function(config) {
+		this.db.execute('DROP TABLE IF EXISTS ' + this.table);
+	};
+
+	this.insertRow = function(columnValues) {
+		var columns = [];
+		var values = [];
+		var qs = [];
+
+		// get arrays of column names, values, and value placeholders
+		var found = false;
+		for (var key in columnValues) {
+			key === this.idAttribute && (found = true);
+			columns.push(key);
+			values.push(columnValues[key]);
+			qs.push('?');
+		}
+
+		// add the id field if it wasn't specified
+		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
+			columns.push(this.idAttribute);
+			values.push(util.guid());
+			qs.push('?');
+		}
+
+		// construct and execute the query
+		this.db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
+	};
+
+	this.deleteRow = function(columns) {
+		var sql = 'DELETE FROM ' + this.table;
+		var keys = _.keys(columns);
+		var len = keys.length;
+		var conditions = [];
+		var values = [];
+
+		// construct the where clause, if necessary
+		len && (sql += ' WHERE ');
+		for (var i = 0; i < len; i++) {
+			conditions.push(keys[i] + ' = ?');
+			values.push(columns[keys[i]]);
+		}
+		sql += conditions.join(' AND ');
+
+		// execute the delete
+		this.db.execute(sql, values);
 	};
 }
 
 function Sync(model, method, opts) {
 	var table =  model.config.adapter.collection_name,
 		columns = model.config.columns,
-		resp = null;
-	
+		dbName = model.config.adapter.db_name || ALLOY_DB_DEFAULT,
+		resp = null,
+		db;
+
 	switch (method) {
 		case 'create':
 			resp = (function(){
 				// Use idAttribute to account for something other then "id"
 				// being used for the model's id.
 				if (!model.id) {
-	                model.id = guid();
+					if (model.idAttribute === ALLOY_ID_DEFAULT) {
+						// alloy-created GUID field
+						model.id = util.guid();
+					} else {
+						// idAttribute not assigned by alloy. Leave it empty and
+						// allow sqlite to process as null, which is the
+						// expected value for an AUTOINCREMENT field.
+						model.id = null;
+					}
 	                model.set(model.idAttribute, model.id);
 	            }
-				
-	            // Create arrays for insert query 
+
+	            // Create arrays for insert query
 				var names = [], values = [], q = [];
 				for (var k in columns) {
 					names.push(k);
@@ -128,69 +176,95 @@ function Sync(model, method, opts) {
 				}
 
 				// Assemble create query
-				var sql = "INSERT INTO " + table + " (" + names.join(",") + ",id) VALUES (" + q.join(",") + ",?)";
-	            
-				// add id as the last value to the query
-	            values.push(model.id);
+				var sql = "INSERT INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
+	            //values.push(model.id);
 
 	            // execute the query and return the response
+	            db = Ti.Database.open(dbName);
 	            db.execute(sql, values);
+	            db.close();
+
 	            return model.toJSON();
 			})();
 			break;
 		case 'read':
-			var sql = 'SELECT * FROM '+table;
+			// TODO: Allow custom queries. https://jira.appcelerator.org/browse/ALOY-458
+			var sql = opts.query || 'SELECT * FROM ' + table;
+
+			// execute the select query
+			db = Ti.Database.open(dbName);
 			var rs = db.execute(sql);
+
 			var len = 0;
 			var values = [];
+
+			// iterate through all queried rows
 			while(rs.isValidRow())
 			{
 				var o = {};
                 var fc = 0;
 
-                // Pre-3.0.0, Android supported fieldCount as a property, iOS
-                // supported it as a function. Post-3.0.0, both are a property.
+                // TODO: https://jira.appcelerator.org/browse/ALOY-459
 				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
 
+				// create list of rows returned from query
 				_.times(fc,function(c){
 					var fn = rs.fieldName(c);
 					o[fn] = rs.fieldByName(fn);
 				});
 				values.push(o);
+
 				len++;
 				rs.next();
 			}
+
+			// close off db after read query
 			rs.close();
+			db.close();
+
+			// shape response based on whether it's a model or collection
 			model.length = len;
 			len === 1 ? resp = values[0] : resp = values;
 			break;
-	
+
 		case 'update':
 			var names = [];
 			var values = [];
 			var q = [];
+
+			// create the list of columns
 			for (var k in columns)
 			{
 				names.push(k+'=?');
 				values.push(model.get(k));
 				q.push('?');
 			}
-			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE id=?';
-			
-		    var e = sql +','+values.join(',')+','+model.id;
+
+			// compose the update query
+			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE ' + model.idAttribute + '=?';
 		    values.push(model.id);
+
+		    // execute the update
+		    db = Ti.Database.open(dbName);
 			db.execute(sql,values);
+			db.close();
+
 			resp = model.toJSON();
 			break;
 
 		case 'delete':
-			var sql = 'DELETE FROM '+table+' WHERE id=?';
+			var sql = 'DELETE FROM '+table+' WHERE ' + model.idAttribute + '=?';
+
+			// execute the delete
+			db = Ti.Database.open(dbName);
 			db.execute(sql, model.id);
+			db.close();
+
 			model.id = null;
 			resp = model.toJSON();
 			break;
 	}
-    
+
     // process success/error handlers, if present
 	if (resp) {
         _.isFunction(opts.success) && opts.success(resp);
@@ -198,83 +272,204 @@ function Sync(model, method, opts) {
     } else {
     	_.isFunction(opts.error) && opts.error("Record not found");
     }
-	
+
 }
 
-function GetMigrationForCached(t,m) {
-	if (m[t]) {
-		return m[t];
+// Gets the current saved migration
+function GetMigrationFor(dbname, table) {
+	var db = Ti.Database.open(dbname);
+	db.execute('CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT)');
+	var rs = db.execute('SELECT latest FROM migrations where model = ?', table);
+	if (rs.isValidRow()) {
+		var mid = rs.field(0);
+		rs.close();
+		db.close()
+		return mid + '';
 	}
-	var v = GetMigrationFor(t);
-	if (v) {
-		m[t] = v;
-	}
-	return v;
+	db.close()
+	return null;
 }
 
-function Migrate(migrations, config) {
-	var prev;
-	var sqlMigration = new SQLiteMigrateDB;
-	var migrationIds = {}; // cache for latest mid by model name
-	
+function Migrate(Model) {
+	// get list of migrations for this model
+	var migrations = Model.migrations || [];
+
+	// get a reference to the last migration
+	var lastMigration = {};
+	migrations.length && migrations[migrations.length-1](lastMigration);
+
+	// Get config reference
+	var config = Model.prototype.config;
+
+	// Get the db name for this model and set up the sql migration obejct
+	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
+	var migrator = new Migrator(config);
+
+	// Get the migration number from the config, or use the number of
+	// the last migration if it's not present. If we still don't have a
+	// migration number after that, that means there are none. There's
+	// no migrations to perform.
+	var targetNumber = typeof config.adapter.migration === 'undefined' ||
+		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
+	if (typeof targetNumber === 'undefined' || targetNumber === null) {
+		migrator.createTable(config);
+		return;
+	}
+	targetNumber = targetNumber + ''; // ensure that it's a string
+
+	// Create the migration tracking table if it doesn't already exist.
+	// Get the current saved migration number.
+	var currentNumber = GetMigrationFor(config.adapter.db_name, config.adapter.collection_name);
+
+	// If the current and requested migrations match, the data structures
+	// match and there is no need to run the migrations.
+	var direction;
+	if (currentNumber === targetNumber) {
+		return;
+	} else if (currentNumber && currentNumber > targetNumber) {
+		direction = 0; // rollback
+		migrations.reverse();
+	} else {
+		direction = 1;  // upgrade
+	}
+
+	// open db for our migration transaction
+	db = Ti.Database.open(config.adapter.db_name);
+	migrator.db = db;
 	db.execute('BEGIN;');
-	
+
+	// iterate through all migrations based on the current and requested state,
+	// applying all appropriate migrations, in order, to the database.
 	if (migrations.length) {
-		// iterate through all our migrations and call up/down and the last migration should
-		// have the up called but never the down -- the migrations come in pre sorted from
-		// oldest to newest based on timestamp
-		_.each(migrations,function(migration) {
-			var mctx = {};
-			migration(mctx);
-			var mid = GetMigrationForCached(mctx.name,migrationIds);
-			Ti.API.info('mid = '+mid+', name = '+mctx.name);
-			if (!mid || mctx.id > mid) {
-				Ti.API.info('Migration starting to '+mctx.id+' for '+mctx.name);
-				if (prev && _.isFunction(prev.down)) {
-					prev.down(sqlMigration);
-				}
-				if (_.isFunction(mctx.up)) {
-					mctx.down(sqlMigration);
-					mctx.up(sqlMigration);
-				}
-				prev = mctx;
+		for (var i = 0; i < migrations.length; i++) {
+			// create the migration context
+			var migration = migrations[i];
+			var context = {};
+			migration(context);
+
+			// if upgrading, skip migrations higher than the target
+			// if rolling back, skip migrations lower than the target
+			if (direction) {
+				if (context.id > targetNumber) { break; }
+				if (context.id <= currentNumber) { continue; }
+			} else {
+				if (context.id <= targetNumber) { break; }
+				if (context.id > currentNumber) { continue; }
 			}
-			else {
-				Ti.API.info('skipping migration '+mctx.id+', already performed');
-				prev = null;
+
+			// execute the appropriate migration function
+			var funcName = direction ? 'up' : 'down';
+			if (_.isFunction(context[funcName])) {
+				context[funcName](migrator);
 			}
-		});
-		
-		if (prev && prev.id) {
-			db.execute('DELETE FROM migrations where model = ?', prev.name);
-			db.execute('INSERT INTO migrations VALUES (?,?)', prev.id,prev.name);
 		}
 	} else {
-		sqlMigration.createTable(config);
+		migrator.createTable(config);
 	}
-	
+
+	// update the saved migration in the db
+	db.execute('DELETE FROM migrations where model = ?', config.adapter.collection_name);
+	db.execute('INSERT INTO migrations VALUES (?,?)', targetNumber, config.adapter.collection_name);
+
+	// end the migration transaction
 	db.execute('COMMIT;');
+	db.close();
+	migrator.db = null;
 }
 
-module.exports.sync = Sync;
+function installDatabase(config) {
+	// get the database name from the db file path
+	var dbFile = config.adapter.db_file;
+	var table = config.adapter.collection_name;
+	var rx = /^([\/]{0,1})([^\/]+)\.[^\/]+$/;
+	var match = dbFile.match(rx);
+	if (match === null) {
+		throw 'Invalid sql database filename "' + dbFile + '"';
+	}
+	//var isAbsolute = match[1] ? true : false;
+	var dbName = config.adapter.db_name = match[2];
 
-module.exports.beforeModelCreate = function(config) {
-	config = config || {};
+	// install and open the preloaded db
+	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
+	var db = Ti.Database.install(dbFile, dbName);
 
-    InitAdapter(config);
+	// compose config.columns from table definition in database
+	var rs = db.execute('pragma table_info("' + table + '");');
+	var columns = {};
+	while (rs.isValidRow()) {
+		var cName = rs.fieldByName('name');
+		var cType = rs.fieldByName('type');
+		columns[cName] = cType;
+
+		// see if it already has the ALLOY_ID_DEFAULT
+		if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
+			config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+		}
+
+		rs.next();
+	}
+	config.columns = columns;
+	rs.close();
+
+	// make sure we have a unique id field
+	if (config.adapter.idAttribute) {
+		if (!_.contains(_.keys(config.columns), config.adapter.idAttribute)) {
+			throw 'config.adapter.idAttribute "' + config.adapter.idAttribute + '" not found in list of columns for table "' + table + '"\n' +
+			      'columns: [' + _.keys(config.columns).join(',') + ']';
+		}
+	} else {
+		Ti.API.info('No config.adapter.idAttribute specified for table "' + table + '"');
+		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
+		db.execute('ALTER TABLE ' + table + ' ADD ' + ALLOY_ID_DEFAULT + ' TEXT;');
+		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
+		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+	}
+
+	// close the db handle
+	db.close();
+}
+
+module.exports.beforeModelCreate = function(config, name) {
+	// use cached config if it exists
+	if (cache.config[name]) {
+		return cache.config[name];
+	}
+
+	// check platform compatibility
+	if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
+		throw 'No support for Titanium.Database in MobileWeb environment.';
+	}
+
+	// install database file, if specified
+	config.adapter.db_file && installDatabase(config);
+	if (!config.adapter.idAttribute) {
+		Ti.API.info('No config.adapter.idAttribute specified for table "' + config.adapter.collection_name + '"');
+		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
+		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
+		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+	}
+
+	// add this config to the cache
+	cache.config[name] = config;
 
 	return config;
 };
 
-module.exports.afterModelCreate = function(Model) {
-	Model = Model || {};
+module.exports.afterModelCreate = function(Model, name) {
+	// use cached Model class if it exists
+	if (cache.Model[name]) {
+		return cache.Model[name];
+	}
 
-	
-	Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
+	// create and migrate the Model class
+	Model || (Model = {});
+	Model.prototype.idAttribute = Model.prototype.config.adapter.idAttribute;
+	Migrate(Model);
 
-	Migrate(Model.migrations, Model.prototype.config);
+	// Add the Model class to the cache
+	cache.Model[name] = Model;
 
 	return Model;
 };
 
-
+module.exports.sync = Sync;
