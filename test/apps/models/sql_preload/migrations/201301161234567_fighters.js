@@ -1,15 +1,15 @@
-migration.up = function(db) {
+migration.up = function(migrator) {
 	for (var i = 0; i < 5; i++) {
-		db.insertRow({
+		migrator.insertRow({
 			name: 'Migration ' + (i+1),
 			nickname: 'nickname'
 		});
 	}
 };
 
-migration.down = function(db) {
+migration.down = function(migrator) {
 	for (var i = 0; i < 5; i++) {
-		db.deleteRow({
+		migrator.deleteRow({
 			name: 'Migration ' + (i+1),
 			nickname: 'nickname'
 		});

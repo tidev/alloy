@@ -1,5 +1,5 @@
-migration.up = function(db) {
-	db.createTable({
+migration.up = function(migrator) {
+	migrator.createTable({
 		"columns": {
 			"title":"string",
 			"image":"string",
@@ -12,6 +12,6 @@ migration.up = function(db) {
 	});
 };
 
-migration.down = function(db) {
-	db.dropTable("myModel");
+migration.down = function(migrator) {
+	migrator.dropTable("myModel");
 };

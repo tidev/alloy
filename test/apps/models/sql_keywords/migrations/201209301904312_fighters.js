@@ -1,5 +1,5 @@
-migration.up = function(migrationObj) {
-	migrationObj.createTable({
+migration.up = function(migrator) {
+	migrator.createTable({
 		columns: {
 			name: 'TEXT',
 			nickname: 'TEXT',
@@ -8,6 +8,6 @@ migration.up = function(migrationObj) {
 	});
 };
 
-migration.down = function(migrationObj) {
-	migrationObj.dropTable("fighters");
+migration.down = function(migrator) {
+	migrator.dropTable("fighters");
 };

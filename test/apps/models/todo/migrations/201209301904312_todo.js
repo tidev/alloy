@@ -1,5 +1,5 @@
-migration.up = function(db) {
-	db.createTable({
+migration.up = function(migrator) {
+	migrator.createTable({
 		"columns": {
 			"item":"text",
 			"done":"integer",
@@ -12,6 +12,6 @@ migration.up = function(db) {
 	});
 };
 
-migration.down = function(db) {
-	db.dropTable("todo");
+migration.down = function(migrator) {
+	migrator.dropTable("todo");
 };

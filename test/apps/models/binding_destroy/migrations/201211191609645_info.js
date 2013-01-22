@@ -1,5 +1,5 @@
-migration.up = function(db) {
-	db.createTable({
+migration.up = function(migrator) {
+	migrator.createTable({
 		"columns": {
 			"name":"string",
 			"email":"string",
@@ -8,7 +8,7 @@ migration.up = function(db) {
 		"defaults": {
 			"name":"Tony Lukasavage",
 			"email":"tlukasavage@appcelerator.com",
-			"twitter":"@tonylukasavage"	
+			"twitter":"@tonylukasavage"
 		},
 		"adapter": {
 			"type": "sql",
@@ -17,6 +17,6 @@ migration.up = function(db) {
 	});
 };
 
-migration.down = function(db) {
-	db.dropTable("info");
+migration.down = function(migrator) {
+	migrator.dropTable("info");
 };

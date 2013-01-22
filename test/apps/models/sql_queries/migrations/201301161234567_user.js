@@ -6,14 +6,14 @@ var users = [
 	{ name: 'Ingo', color: 'orange' }
 ];
 
-migration.up = function(migrationObj) {
+migration.up = function(migrator) {
 	for (var i = 0; i < users.length; i++) {
-		migrationObj.insertRow(users[i]);
+		migrator.insertRow(users[i]);
 	}
 };
 
-migration.down = function(migrationObj) {
+migration.down = function(migrator) {
 	for (var i = 0; i < users.length; i++) {
-		migrationObj.deleteRow(users[i]);
+		migrator.deleteRow(users[i]);
 	}
 };

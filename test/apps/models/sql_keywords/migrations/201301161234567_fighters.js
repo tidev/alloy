@@ -4,14 +4,14 @@ var fighters = [
 	{ name: 'Muhammad Ali', nickname: 'The Greatest'}
 ];
 
-migration.up = function(migrationObj) {
+migration.up = function(migrator) {
 	for (var i = 0; i < fighters.length; i++) {
-		migrationObj.insertRow(fighters[i]);
+		migrator.insertRow(fighters[i]);
 	}
 };
 
-migration.down = function(migrationObj) {
+migration.down = function(migrator) {
 	for (var i = 0; i < fighters.length; i++) {
-		migrationObj.deleteRow(fighters[i]);
+		migrator.deleteRow(fighters[i]);
 	}
 };

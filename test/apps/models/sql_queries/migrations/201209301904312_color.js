@@ -4,14 +4,14 @@ var colors = [
 	{ color: 'orange', link: 'http://en.wikipedia.org/wiki/Orange_(colour)', hexCode: '#ff7f00', wavelength: '590 to 620 nm' }
 ];
 
-migration.up = function(migrationObj) {
+migration.up = function(migrator) {
 	// table already created by db_file
 
 	for (var i = 0; i < colors.length; i++) {
-		migrationObj.insertRow(colors[i]);
+		migrator.insertRow(colors[i]);
 	}
 };
 
-migration.down = function(migrationObj) {
-	migrationObj.dropTable("colors");
+migration.down = function(migrator) {
+	migrator.dropTable("colors");
 };
