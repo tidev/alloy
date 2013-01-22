@@ -1,4 +1,4 @@
-var moment = require('moment');
+var moment = require('alloy/moment');
 
 function doTransform(model) {
 	var transform = model.toJSON();

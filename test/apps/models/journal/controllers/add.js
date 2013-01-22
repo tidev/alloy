@@ -1,4 +1,5 @@
-var moment = require('moment');
+var moment = require('alloy/moment');
+var journal = Alloy.Collections.journal;
 
 function focusText() {
     $.text.focus();
