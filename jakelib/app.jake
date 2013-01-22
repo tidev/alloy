@@ -1,12 +1,14 @@
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	U = require('../Alloy/utils'),
+	_ = require('../Alloy/lib/alloy/underscore')._,
+	logger = require('../Alloy/common/logger');
 
 // Fix node warning 
 path.existsSync = fs.existsSync || path.existsSync;
 
 var	wrench = require('wrench'),
 	spawn = require('child_process').spawn,
-	titanium = require('../Alloy/common/titanium'),
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
@@ -16,6 +18,47 @@ function log(message) {
 	if (!process.env.quiet) {
 		console.log(message);
 	}
+}
+
+//trim extra whitespace output
+function filterLog(line) {
+	line = U.trim(line);
+	if (!line) return;
+
+	var lines = line.split('\n');
+	if (lines.length > 1) {
+		_.each(lines,function(l) {
+			filterLog(l);
+		});
+		return;
+	}
+	var idx = line.indexOf(' -- [');
+	if (idx > 0) {
+		var idx2 = line.indexOf(']', idx+7);
+		line = line.substring(idx2+1);
+	}
+	if (line.charAt(0)=='[') {
+		var i = line.indexOf(']');
+		var label = line.substring(1,i);
+		var rest = U.trim(line.substring(i+1));
+		if (!rest) return;
+		switch(label) {
+			case 'INFO':
+				logger.info(rest);
+				return;
+			case 'TRACE':
+			case 'DEBUG':
+				logger.debug(rest);
+				return;
+			case 'WARN':
+				logger.warn(rest);
+				return;
+			case 'ERROR':
+				logger.error(rest);
+				return;
+		}
+	}
+	logger.debug(line);
 }
 
 namespace('app', function() {
@@ -49,6 +92,23 @@ namespace('app', function() {
 	desc('run an example, all but dir are optional: e.g. "jake app:run dir=masterdetail platform=android tiversion=2.0.2.GA tisdk=<path to sdk>"');
 	task('run', ['app:setup'], function() {		
 		log('Running sample app "'+process.env.dir+'"...');
-		var p = titanium.run(harnessAppPath, process.env.platform, process.env.tiversion, process.env.tisdk);
+
+		// create array for `titanium build` args
+		var e = process.env;
+		var newArgs = ['build',
+			'--project-dir', harnessAppPath,
+			'--platform', e.platform || 'ios'
+		];
+		e.tiversion && (newArgs = newArgs.concat(['--sdk',e.tiversion]));
+
+		//run stdout/stderr back through console.log
+		var runcmd = spawn('titanium', newArgs);
+		runcmd.stdout.on('data', function (data) {
+			filterLog(data);
+		});
+
+		runcmd.stderr.on('data', function (data) {
+			filterLog(data);
+		});
 	});
 });
