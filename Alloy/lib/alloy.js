@@ -282,5 +282,5 @@ exports.CFG = require('alloy/CFG');
 
 if (OS_ANDROID) {
 	exports.Android = {};
-	exports.Android.menuItemCreateArgs = ['itemId','groupId','title','order'];
+	exports.Android.menuItemCreateArgs = ['itemId', 'groupId', 'title', 'order', 'actionView', 'checkable', 'checked', 'enabled', 'icon', 'showAsAction', 'titleCondensed', 'visible'];
 }
