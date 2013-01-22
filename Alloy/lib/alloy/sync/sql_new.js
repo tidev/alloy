@@ -347,8 +347,13 @@ function Migrate(Model) {
 
 			// if upgrading, skip migrations higher than the target
 			// if rolling back, skip migrations lower than the target
-			if (direction && context.id > targetNumber) { break; }
-			if (!direction && context.id <= targetNumber) { break; }
+			if (direction) {
+				if (context.id > targetNumber) { break; }
+				if (context.id <= currentNumber) { continue; }
+			} else {
+				if (context.id <= targetNumber) { break; }
+				if (context.id > currentNumber) { continue; }
+			}
 
 			// execute the appropriate migration function
 			var funcName = direction ? 'up' : 'down';
