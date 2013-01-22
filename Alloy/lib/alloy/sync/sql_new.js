@@ -1,7 +1,7 @@
-var _ = require('alloy/underscore')._, 
+var _ = require('alloy/underscore')._,
 	util = require('alloy/sync/util');
 
-// The database name used when none is specified in the 
+// The database name used when none is specified in the
 // model configuration.
 var ALLOY_DB_DEFAULT = '_alloy_';
 var ALLOY_ID_DEFAULT = 'alloy_id';
@@ -63,7 +63,7 @@ function SQLiteMigrateDB(config) {
 		parts[0] = type;
 		return parts.join(' ');
 	};
-	
+
 	this.createTable = function(config) {
 		// compose the create query
 		var columns = [];
@@ -85,7 +85,7 @@ function SQLiteMigrateDB(config) {
 		db.execute(sql);
 		db.close();
 	};
-	
+
 	this.dropTable = function(config) {
 		var db = Ti.Database.open(this.dbname);
 		db.execute('DROP TABLE IF EXISTS ' + this.table);
@@ -147,7 +147,7 @@ function Sync(model, method, opts) {
 		dbName = model.config.adapter.db_name || ALLOY_DB_DEFAULT,
 		resp = null,
 		db;
-	
+
 	switch (method) {
 		case 'create':
 			resp = (function(){
@@ -156,17 +156,17 @@ function Sync(model, method, opts) {
 				if (!model.id) {
 					if (model.idAttribute === ALLOY_ID_DEFAULT) {
 						// alloy-created GUID field
-						model.id = util.guid(); 
+						model.id = util.guid();
 					} else {
 						// idAttribute not assigned by alloy. Leave it empty and
-						// allow sqlite to process as null, which is the 
-						// expected value for an AUTOINCREMENT field. 
+						// allow sqlite to process as null, which is the
+						// expected value for an AUTOINCREMENT field.
 						model.id = null;
 					}
 	                model.set(model.idAttribute, model.id);
 	            }
-				
-	            // Create arrays for insert query 
+
+	            // Create arrays for insert query
 				var names = [], values = [], q = [];
 				for (var k in columns) {
 					names.push(k);
@@ -225,7 +225,7 @@ function Sync(model, method, opts) {
 			model.length = len;
 			len === 1 ? resp = values[0] : resp = values;
 			break;
-	
+
 		case 'update':
 			var names = [];
 			var values = [];
@@ -263,7 +263,7 @@ function Sync(model, method, opts) {
 			resp = model.toJSON();
 			break;
 	}
-    
+
     // process success/error handlers, if present
 	if (resp) {
         _.isFunction(opts.success) && opts.success(resp);
@@ -271,7 +271,7 @@ function Sync(model, method, opts) {
     } else {
     	_.isFunction(opts.error) && opts.error("Record not found");
     }
-	
+
 }
 
 // Gets the current saved migration
@@ -296,19 +296,19 @@ function Migrate(Model) {
 	// get a reference to the last migration
 	var lastMigration = {};
 	migrations.length && migrations[migrations.length-1](lastMigration);
-	
-	// Get config reference 
+
+	// Get config reference
 	var config = Model.prototype.config;
 
 	// Get the db name for this model and set up the sql migration obejct
 	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
 	var sqliteMigrationDb = new SQLiteMigrateDB(config);
 
-	// Get the migration number from the config, or use the number of 
-	// the last migration if it's not present. If we still don't have a 
+	// Get the migration number from the config, or use the number of
+	// the last migration if it's not present. If we still don't have a
 	// migration number after that, that means there are none. There's
 	// no migrations to perform.
-	var targetNumber = typeof config.adapter.migration === 'undefined' || 
+	var targetNumber = typeof config.adapter.migration === 'undefined' ||
 		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
 		sqliteMigrationDb.createTable(config);
@@ -336,7 +336,7 @@ function Migrate(Model) {
 	db = Ti.Database.open(config.adapter.db_name);
 	db.execute('BEGIN;');
 
-	// iterate through all migrations based on the current and requested state, 
+	// iterate through all migrations based on the current and requested state,
 	// applying all appropriate migrations, in order, to the database.
 	if (migrations.length) {
 		for (var i = 0; i < migrations.length; i++) {
@@ -359,7 +359,7 @@ function Migrate(Model) {
 			var funcName = direction ? 'up' : 'down';
 			if (_.isFunction(context[funcName])) {
 				context[funcName](sqliteMigrationDb, db);
-			}		
+			}
 		}
 	} else {
 		sqliteMigrationDb.createTable(config);
@@ -389,7 +389,7 @@ function installDatabase(config) {
 	// install and open the preloaded db
 	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
 	var db = Ti.Database.install(dbFile, dbName);
-	
+
 	// compose config.columns from table definition in database
 	var rs = db.execute('pragma table_info("' + table + '");');
 	var columns = {};
@@ -402,7 +402,7 @@ function installDatabase(config) {
 		if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
 			config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 		}
-		
+
 		rs.next();
 	}
 	config.columns = columns;
@@ -435,7 +435,7 @@ module.exports.beforeModelCreate = function(config, name) {
 	// check platform compatibility
 	if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
 		throw 'No support for Titanium.Database in MobileWeb environment.';
-	} 
+	}
 
 	// install database file, if specified
 	config.adapter.db_file && installDatabase(config);
