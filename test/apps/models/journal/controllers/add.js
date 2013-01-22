@@ -33,12 +33,13 @@ function addEntry() {
         mood: getMood($.mood),
         dateCreated: moment().format('YYYYMMDDHHmmss')
     });
-    
-    // add new model to the global collection reference
-    Alloy.Collections.journal.add(entry);
 
-    // save the model to sql storage
+    // add new model to the global collection reference
+    journal.add(entry);
+
+    // save the model to sql storage and refresh
     entry.save();
+    journal.fetch();
 
     closeWindow();
 }
