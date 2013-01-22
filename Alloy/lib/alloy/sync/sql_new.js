@@ -12,8 +12,18 @@ var cache = {
 };
 
 // The sql-specific migration object, which is the main parameter
-// to the up() and down() migration functions
-function SQLiteMigrateDB(config) {
+// to the up() and down() migration functions.
+//
+// db            The database handle for migration processing. Do not open
+//               or close this as it is a running transaction that ensures
+//               data integrity during the migration process.
+// dbname        The name of the SQLite database for this model.
+// table         The name of the SQLite table for this model.
+// idAttribute   The unique ID column for this model, which is
+//               mapped back to Backbone.js for its update and
+//               delete operations.
+function Migrator(config, transactionDb) {
+	this.db = transactionDb;
 	this.dbname = config.adapter.db_name;
 	this.table = config.adapter.collection_name;
 	this.idAttribute = config.adapter.idAttribute;
@@ -77,19 +87,14 @@ function SQLiteMigrateDB(config) {
 		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
 			columns.push(ALLOY_ID_DEFAULT + ' TEXT');
 		}
-
 		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
 
 		// execute the create
-		var db = Ti.Database.open(this.dbname);
-		db.execute(sql);
-		db.close();
+		this.db.execute(sql);
 	};
 
 	this.dropTable = function(config) {
-		var db = Ti.Database.open(this.dbname);
-		db.execute('DROP TABLE IF EXISTS ' + this.table);
-		db.close();
+		this.db.execute('DROP TABLE IF EXISTS ' + this.table);
 	};
 
 	this.insertRow = function(columnValues) {
@@ -114,9 +119,7 @@ function SQLiteMigrateDB(config) {
 		}
 
 		// construct and execute the query
-		var db = Ti.Database.open(this.dbname);
-		db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
-		db.close();
+		this.db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
 	};
 
 	this.deleteRow = function(columns) {
@@ -135,9 +138,7 @@ function SQLiteMigrateDB(config) {
 		sql += conditions.join(' AND ');
 
 		// execute the delete
-		var db = Ti.Database.open(this.dbname);
-		db.execute(sql, values);
-		db.close();
+		this.db.execute(sql, values);
 	};
 }
 
@@ -302,7 +303,7 @@ function Migrate(Model) {
 
 	// Get the db name for this model and set up the sql migration obejct
 	config.adapter.db_name || (config.adapter.db_name = ALLOY_DB_DEFAULT);
-	var sqliteMigrationDb = new SQLiteMigrateDB(config);
+	var migrator = new Migrator(config);
 
 	// Get the migration number from the config, or use the number of
 	// the last migration if it's not present. If we still don't have a
@@ -311,7 +312,7 @@ function Migrate(Model) {
 	var targetNumber = typeof config.adapter.migration === 'undefined' ||
 		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
-		sqliteMigrationDb.createTable(config);
+		migrator.createTable(config);
 		return;
 	}
 	targetNumber = targetNumber + ''; // ensure that it's a string
@@ -334,6 +335,7 @@ function Migrate(Model) {
 
 	// open db for our migration transaction
 	db = Ti.Database.open(config.adapter.db_name);
+	migrator.db = db;
 	db.execute('BEGIN;');
 
 	// iterate through all migrations based on the current and requested state,
@@ -358,11 +360,11 @@ function Migrate(Model) {
 			// execute the appropriate migration function
 			var funcName = direction ? 'up' : 'down';
 			if (_.isFunction(context[funcName])) {
-				context[funcName](sqliteMigrationDb, db);
+				context[funcName](migrator);
 			}
 		}
 	} else {
-		sqliteMigrationDb.createTable(config);
+		migrator.createTable(config);
 	}
 
 	// update the saved migration in the db
@@ -372,6 +374,7 @@ function Migrate(Model) {
 	// end the migration transaction
 	db.execute('COMMIT;');
 	db.close();
+	migrator.db = null;
 }
 
 function installDatabase(config) {
