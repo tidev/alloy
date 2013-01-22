@@ -100,6 +100,7 @@ namespace('app', function() {
 			'--platform', e.platform || 'ios'
 		];
 		e.tiversion && (newArgs = newArgs.concat(['--sdk',e.tiversion]));
+		e.simtype && (newArgs = newArgs.concat(['--sim-type',e.simtype]));
 
 		//run stdout/stderr back through console.log
 		var runcmd = spawn('titanium', newArgs);
