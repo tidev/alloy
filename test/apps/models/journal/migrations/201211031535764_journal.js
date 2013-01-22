@@ -1,14 +1,10 @@
 migration.up = function(migrator) {
 	migrator.createTable({
 		"columns": {
-			"title":"string",
-			"text":"string",
-			"mood":"string",
-			"dateCreated":"string"
-		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "journal"
+			"title":"TEXT",
+			"text":"TEXT",
+			"mood":"TEXT",
+			"dateCreated":"TEXT"
 		}
 	});
 };

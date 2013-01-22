@@ -1,10 +1,10 @@
 exports.definition = {
 	config: {
 		"columns": {
-			"title":"string",
-			"text":"string",
-			"mood":"string",
-			"dateCreated":"string"
+			"title":"TEXT",
+			"text":"TEXT",
+			"mood":"TEXT",
+			"dateCreated":"TEXT"
 		},
 		"adapter": {
 			"type": "sql",
