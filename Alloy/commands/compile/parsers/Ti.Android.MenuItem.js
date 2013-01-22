@@ -20,9 +20,7 @@ function parse(node, state, args) {
 
 	code += 'var ' + styleObjectSymbol + '=' + styleObjectCode + ';';
 	code += args.symbol + '=' + state.parent.symbol + ".add(" + initStyle + ");";
-	
-	// TODO: http://jira.appcelerator.org/browse/ALOY-313
-	code += '_.each(' + postStyle + ',function(v,k) { ' + args.symbol + '[k] = v; });';
+	code += args.symbol + '.applyProperties(' + postStyle + ');';
 
 	return {
 		parent: {},
