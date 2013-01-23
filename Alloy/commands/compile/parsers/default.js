@@ -14,23 +14,23 @@ function parse(node, state, args) {
 
 	// make symbol a local variable if necessary
 	if (state.local) {
-		args.symbol = CU.generateUniqueId(); 
+		args.symbol = CU.generateUniqueId();
 	}
 
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
 	code += CU.generateStyleParams(
-		state.styles, 
-		args.classes, 
-		args.id, 
-		node.nodeName, 
+		state.styles,
+		args.classes,
+		args.id,
+		node.nodeName,
 		_.defaults(state.extraStyle || {}, args.createArgs || {}),
-		state 
+		state
 	) + '\n';
 	code += ");\n";
 	if (args.parent.symbol) {
 		code += args.parent.symbol + ".add(" + args.symbol + ");\n";
-	} 
+	}
 
 	if (isCollectionBound) {
 		var localModel = CU.generateUniqueId();
@@ -50,7 +50,7 @@ function parse(node, state, args) {
 		code += _.template(getBindingCode(args), {
 			localModel: localModel,
 			itemCode: itemCode,
-			parentSymbol: args.symbol 
+			parentSymbol: args.symbol
 		});
 	}
 
@@ -77,7 +77,7 @@ function getBindingCode(args) {
 		col = args[CONST.BIND_COLLECTION];
 	} else {
 		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-	} 
+	}
 
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
