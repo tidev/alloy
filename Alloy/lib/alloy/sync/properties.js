@@ -49,10 +49,10 @@ function Sync(method, model, opts) {
 
 	// process success/error handlers, if present
 	if (resp) {
-        _.isFunction(opts.success) && opts.success(model, resp, opts);
+        _.isFunction(opts.success) && opts.success(resp);
         method === "read" && model.trigger("fetch");
     } else {
-    	_.isFunction(opts.error) && opts.error(model, resp, opts);
+    	_.isFunction(opts.error) && opts.error(resp);
     }
 }
 
