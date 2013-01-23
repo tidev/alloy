@@ -3,11 +3,7 @@ migration.up = function(migrator) {
 		"columns": {
 			"item":"text",
 			"done":"integer",
-			"date_completed":"date"
-		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "todo"
+			"date_completed":"text"
 		}
 	});
 };

@@ -5,13 +5,13 @@ exports.definition = {
 		"columns": {
 			"item":"text",
 			"done":"integer",
-			"date_completed":"date"
+			"date_completed":"text"
 		},
 		"adapter": {
 			"type": "sql",
 			"collection_name": "todo"
 		}
-	},		
+	},
 
 	extendModel : function(Model) {
         _.extend(Model.prototype, {
