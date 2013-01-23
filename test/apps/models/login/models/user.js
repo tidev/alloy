@@ -15,30 +15,23 @@ exports.definition = {
             "authKey":"text",
             "theme":"integer"
 		},
-        "defaults": {
-            "realname":"Tobias Funke",
-            "email":"tfunke@bluth.com",
-            "theme":0
-        },
 		"adapter": {
 			"type": "sql",
-			"collection_name": "user"
+			"collection_name": "user",
+            "idAttribute": "username"
 		}
-	},		
+	},
 
 	extendModel : function(Model) {
         _.extend(Model.prototype, {
             login: function(username, password) {
-                // Dummy authentication. In a real world scenario, this is 
+                // Dummy authentication. In a real world scenario, this is
                 // where you'd make a request to your authentication server or
                 // other form of authentication. It would also likely return
                 // the server time for loggedInSince, rather than using client-side
                 // time like we are here.
                 if (username === USERNAME && password === PASSWORD) {
                     this.set({
-                        username: username,
-                        realname: 'Tobias Funke',
-                        email: 'tfunke@bluth.com',
                         loggedIn: 1,
                         loggedInSince: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
                         authKey: AUTHKEY
@@ -51,7 +44,9 @@ exports.definition = {
             },
             logout: function() {
                 this.set({
-                    loggedIn: 0
+                    loggedIn: 0,
+                    loggedInSince: '',
+                    authKey: ''
                 });
                 this.save();
             },
@@ -61,10 +56,6 @@ exports.definition = {
                 if (this.get('loggedIn') === 1 && this.get('authKey') === AUTHKEY) {
                     return true;
                 } else {
-                    this.set({
-                        loggedIn: 0
-                    });
-                    this.save();
                     return false;
                 }
             },

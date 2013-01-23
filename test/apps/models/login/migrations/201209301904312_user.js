@@ -1,23 +1,23 @@
 migration.up = function(migrator) {
 	migrator.createTable({
 		"columns": {
-			"username":"text",
+			"username":"text primary key",
 			"realname":"text",
             "email":"text",
 			"loggedIn":"integer",
             "loggedInSince":"text",
             "authKey":"text",
             "theme":"integer"
-		},
-		"defaults": {
-			"realname":"Tobias Funke",
-            "email":"tfunke@bluth.com",
-			"theme":0
-		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "user"
 		}
+	});
+	migrator.insertRow({
+		"username":"user",
+		"realname":"Tobias Funke",
+        "email":"tfunke@bluth.com",
+		"loggedIn":0,
+        "loggedInSince":"",
+        "authKey":"",
+        "theme":0
 	});
 };
 
