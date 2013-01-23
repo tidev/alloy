@@ -6,10 +6,10 @@ exports.definition = {
 			color: 'TEXT'
 		},
 		adapter: {
-			type: 'sql_new',
+			type: 'sql',
 			db_name: 'users',
 			collection_name: 'users',
-			idAttribute: 'id' 
+			idAttribute: 'id'
 		}
 	}
 }
