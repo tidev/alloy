@@ -310,7 +310,10 @@ function Migrate(Model) {
 	var targetNumber = typeof config.adapter.migration === 'undefined' ||
 		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
+		var tmpDb = Ti.Database.open(config.adapter.db_name);
+		migrator.db = tmpDb;
 		migrator.createTable(config);
+		tmpDb.close();
 		return;
 	}
 	targetNumber = targetNumber + ''; // ensure that it's a string
