@@ -1,13 +1,9 @@
 migration.up = function(migrator) {
 	migrator.createTable({
 		"columns": {
-			"title":"string",
-			"image":"string",
-			"timestamp":"string"
-		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "myModel"
+			"title":"text",
+			"image":"text",
+			"timestamp":"text"
 		}
 	});
 };

@@ -1,9 +1,9 @@
 exports.definition = {
 	config: {
 		"columns": {
-			"title":"string",
-			"image":"string",
-			"timestamp":"string"
+			"title":"text",
+			"image":"text",
+			"timestamp":"text"
 		},
 		"adapter": {
 			"type": "sql",
