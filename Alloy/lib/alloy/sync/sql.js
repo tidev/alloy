@@ -188,7 +188,6 @@ function Sync(method, model, opts) {
 			})();
 			break;
 		case 'read':
-			// TODO: Allow custom queries. https://jira.appcelerator.org/browse/ALOY-458
 			var sql = opts.query || 'SELECT * FROM ' + table;
 
 			// execute the select query
@@ -267,10 +266,10 @@ function Sync(method, model, opts) {
 
     // process success/error handlers, if present
 	if (resp) {
-        _.isFunction(opts.success) && opts.success(model, resp, opts);
+        _.isFunction(opts.success) && opts.success(resp);
         method === "read" && model.trigger("fetch");
     } else {
-    	_.isFunction(opts.error) && opts.error(model, resp, opts);
+    	_.isFunction(opts.error) && opts.error(resp);
     }
 
 }
