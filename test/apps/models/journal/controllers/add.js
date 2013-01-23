@@ -34,12 +34,14 @@ function addEntry() {
         dateCreated: moment().format('YYYYMMDDHHmmss')
     });
 
-    // add new model to the global collection reference
-    journal.add(entry);
+    // Add new model to the collection, use silent=true
+    // so that a "change" event is not fired and the
+    // UI is re-rendered.
+    journal.add(entry, {silent:true});
 
-    // save the model to sql storage and refresh
+    // Save the entry to persistence, which will re-render
+    // the UI based on the binding.
     entry.save();
-    journal.fetch();
 
     closeWindow();
 }
