@@ -1,35 +1,35 @@
 exports.definition = {
-	
+
 	config: {
 		"columns": {
-			"title":"string"
+			"title":"text"
 		},
 		"adapter": {
 			"type": "sql",
 			"collection_name": "movies"
 		}
-	},		
+	},
 
-	extendModel: function(Model) {		
+	extendModel: function(Model) {
 		_.extend(Model.prototype, {
-						
+
 			// extended functions go here
 
 		}); // end extend
-		
+
 		return Model;
 	},
-	
-	
-	extendCollection: function(Collection) {		
+
+
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
-			
-			// extended functions go here			
-			
+
+			// extended functions go here
+
 		}); // end extend
-		
+
 		return Collection;
 	}
-		
+
 }
 

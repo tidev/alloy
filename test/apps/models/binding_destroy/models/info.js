@@ -1,42 +1,42 @@
 exports.definition = {
-	
+
 	config: {
 		"columns": {
-			"name":"string",
-			"email":"string",
-			"twitter":"string"
+			"name":"text",
+			"email":"text",
+			"twitter":"text"
 		},
 		"defaults": {
 			"name":"Tony Lukasavage",
 			"email":"tlukasavage@appcelerator.com",
-			"twitter":"@tonylukasavage"	
+			"twitter":"@tonylukasavage"
 		},
 		"adapter": {
 			"type": "sql",
 			"collection_name": "info"
 		}
-	},		
+	},
 
-	extendModel: function(Model) {		
+	extendModel: function(Model) {
 		_.extend(Model.prototype, {
-						
+
 			// extended functions go here
 
 		}); // end extend
-		
+
 		return Model;
 	},
-	
-	
-	extendCollection: function(Collection) {		
+
+
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
-			
-			// extended functions go here			
-			
+
+			// extended functions go here
+
 		}); // end extend
-		
+
 		return Collection;
 	}
-		
+
 }
 
