@@ -17,9 +17,7 @@
 		<Tab title="Settings">
 			<Window title="Settings" barColor="{user.themeBGColor}">
 				<RightNavButton><Button class="logout" onClick="logout"/></RightNavButton>
-				
-				<!-- show the settings as grouped tables on ios -->
-				<TableView id="themes" platform="ios" onClick="setTheme">
+				<TableView id="themes" onClick="setTheme">
 					<TableViewSection headerTitle="Email">
 						<TableViewRow>
 							<TextField id="email" value="{user.email}" onBlur="setEmail" />
@@ -31,22 +29,6 @@
 						<TableViewRow title="Never-Nude Blue Man" id="theme2"/>
 					</TableViewSection>
 				</TableView>
-
-				<!-- use pickers for settings on android -->
-				<View platform="android" layout="vertical" top="10dp">
-					<View>
-						<Label left="5dp">Email</Label>
-						<TextField id="email" value="{user.email}" onBlur="setEmail"/>
-					</View>
-					<View>
-						<Label left="5dp">Theme</Label>
-						<Picker id="themes" onChange="setTheme">
-							<Row title="Default"/>
-							<Row title="Banana Stand"/>
-							<Row title="Never-Nude Blue Man"/>
-						</Picker>
-					</View>
-				</View>
 			</Window>
 		</Tab>
 	</TabGroup>

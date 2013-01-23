@@ -1,4 +1,3 @@
 <Alloy>
-	<!-- create global instance of the user model -->
-	<Model src="user"/>
+	<!-- UI deferred to login or home, check index.js -->
 </Alloy>

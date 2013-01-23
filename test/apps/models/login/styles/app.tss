@@ -1,9 +1,11 @@
 "Window": {
 	backgroundColor: '#fff'
-},
+}
+
 "Label": {
 	color: '#000'
-},
+}
+
 "TextField": {
 	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
 }

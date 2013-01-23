@@ -9,7 +9,7 @@ function login(e) {
 	if (e && e.source && _.isFunction(e.source.blur)) {
 		e.source.blur();
 	}
-	
+
 	if (user.login($.username.value, $.password.value)) {
 		Alloy.createController('home').getView().open();
 		$.login.close();
