@@ -48,9 +48,9 @@ function parse(node, state, args) {
 		// generate code for proxy property assigments
 		if (isProxyProperty) {
 			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: { 
-					node: node, 
-					symbol: '<%= proxyPropertyParent %>' 
+				parent: {
+					node: node,
+					symbol: '<%= proxyPropertyParent %>'
 				}
 			});
 		// generate code for search bar
@@ -82,7 +82,7 @@ function parse(node, state, args) {
 						arrayName = CU.generateUniqueId();
 						postCode += 'var ' + arrayName + '=[];';
 					}
-					postCode += arrayName + '.push(' + state.parent.symbol + ');'; 
+					postCode += arrayName + '.push(' + state.parent.symbol + ');';
 					return postCode;
 				}
 			});
@@ -116,7 +116,7 @@ function parse(node, state, args) {
 		code += _.template(getBindingCode(args), {
 			localModel: localModel,
 			itemCode: itemCode,
-			parentSymbol: tableState.parent.symbol 
+			parentSymbol: tableState.parent.symbol
 		});
 	}
 
@@ -137,8 +137,8 @@ function getBindingCode(args) {
 		col = args[CONST.BIND_COLLECTION];
 	} else {
 		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-	} 
-	
+	}
+
 	// create fetch/change handler
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];

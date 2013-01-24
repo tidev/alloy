@@ -43,7 +43,7 @@ function parse(node, state, args) {
 	}
 
 	// make sure the required file exists at compile time, rather than
-	// waiting til runtime. 
+	// waiting til runtime.
 	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(requirePath)) {
 		requirePath += '.' + CONST.FILE_EXT.VIEW;
 	}
@@ -61,7 +61,7 @@ function parse(node, state, args) {
 
 	// make symbol a local variable if necessary, used for binding
 	if (state.local) {
-		args.symbol = CU.generateUniqueId(); 
+		args.symbol = CU.generateUniqueId();
 	}
 
 	// add model to createArgs if binding
@@ -82,7 +82,7 @@ function parse(node, state, args) {
 	) + ");\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
-	} 
+	}
 
 	return {
 		parent: {
