@@ -73,11 +73,12 @@ function parse(node, state, args) {
 
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
-		state.styles, 
-		args.classes, 
-		args.id, 
-		node.nodeName, 
-		args.createArgs
+		state.styles,
+		args.classes,
+		args.id,
+		node.nodeName,
+		args.createArgs,
+		state
 	) + ");\n";
 	if (args.parent.symbol) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
