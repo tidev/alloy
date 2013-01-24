@@ -7,6 +7,12 @@ var _ = require("../../lib/alloy/underscore")._,
 // `titanium build` command. All arguments and options
 // will just be passed along.
 module.exports = function(args, program) {
+	logger.warn([
+		'`alloy run` is deprecated and is being removed in Alloy 1.1.0.',
+		'Please use `titanium build` instead, which what this command uses anyway.'
+	]);
+
+
 	var newArgs = ['build'].concat(program.rawArgs.slice(3));
 	var runcmd = spawn('titanium', newArgs);
 	
