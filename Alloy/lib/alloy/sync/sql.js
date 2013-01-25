@@ -205,7 +205,7 @@ function Sync(method, model, opts) {
 	            	}
 	        	}
 
-	            db.execute('END;');
+	            db.execute('COMMIT;');
 	            db.close();
 
 	            return model.toJSON();
