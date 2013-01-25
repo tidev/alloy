@@ -261,6 +261,40 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 }
 
+exports.updateFiles = function(srcDir, dstDir) {
+	if (!fs.existsSync(srcDir)) {
+		return;
+	}
+	if (!fs.existsSync(dstDir)) {
+		wrench.mkdirSyncRecursive(dstDir, 0777);
+	}
+
+	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
+		var src = path.join(srcDir,file);
+		var dst = path.join(dstDir,file);
+		var srcStat = fs.statSync(src);
+
+		if (fs.existsSync(dst)) {
+			var dstStat = fs.statSync(dst);
+
+			if (!dstStat.isDirectory()) {
+				if (srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
+					logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
+					exports.copyFileSync(src,dst);
+				}
+			}
+		} else {
+			if (srcStat.isDirectory()) {
+				logger.debug('Creating directory ' + dst.yellow);
+				wrench.mkdirSyncRecursive(dst,0777);
+			} else {
+				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
+				exports.copyFileSync(src,dst);
+			}
+		}	
+	});
+}
+
 exports.copyAlloyDir = function(appDir, sources, destDir) {
 	var sources = _.isArray(sources) ? sources : [sources];
 	_.each(sources, function(source) {
