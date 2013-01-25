@@ -152,19 +152,25 @@ function Sync(method, model, opts) {
 	switch (method) {
 		case 'create':
 			resp = (function(){
+				var attrObj = {};
+
 				// Use idAttribute to account for something other then "id"
 				// being used for the model's id.
 				if (!model.id) {
 					if (model.idAttribute === ALLOY_ID_DEFAULT) {
 						// alloy-created GUID field
 						model.id = util.guid();
+						attrObj[model.idAttribute] = model.id;
+
+						// make it silent so it doesn't fire an unnecessary
+						// Backbone change event
+						model.set(attrObj, {silent:true});
 					} else {
 						// idAttribute not assigned by alloy. Leave it empty and
 						// allow sqlite to process as null, which is the
 						// expected value for an AUTOINCREMENT field.
 						model.id = null;
 					}
-	                model.set(model.idAttribute, model.id);
 	            }
 
 	            // Create arrays for insert query
@@ -176,12 +182,30 @@ function Sync(method, model, opts) {
 				}
 
 				// Assemble create query
-				var sql = "INSERT INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
-	            //values.push(model.id);
+				var sqlInsert = "INSERT INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
+				var sqlId = "SELECT last_insert_rowid();";
 
 	            // execute the query and return the response
 	            db = Ti.Database.open(dbName);
-	            db.execute(sql, values);
+	            db.execute('BEGIN;');
+	            db.execute(sqlInsert, values);
+
+	            // get the last inserted id
+	            if (model.id === null) {
+	            	var rs = db.execute(sqlId);
+	            	if (rs.isValidRow()) {
+	            		model.id = rs.field(0);
+	            		attrObj[model.idAttribute] = model.id;
+
+						// make it silent so it doesn't fire an unnecessary
+						// Backbone change event
+						model.set(attrObj, {silent:true});
+	            	} else {
+	            		Ti.API.warn('Unable to get ID from database for model: ' + model.toJSON());
+	            	}
+	        	}
+
+	            db.execute('END;');
 	            db.close();
 
 	            return model.toJSON();
