@@ -12,8 +12,8 @@ module.exports = function(args, program) {
 		'Please use `titanium build` instead, which what this command uses anyway.'
 	]);
 
-
 	var newArgs = ['build'].concat(program.rawArgs.slice(3));
+	!program.platform && (newArgs = newArgs.concat(['--platform','ios']));
 	var runcmd = spawn('titanium', newArgs);
 	
 	//run stdout/stderr back through console.log
