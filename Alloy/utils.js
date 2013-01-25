@@ -261,6 +261,46 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 }
 
+exports.deleteOrphanFiles = function(targetDir, srcDirs) {
+	var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
+
+	// skip if target or source is not defined
+	if (!fs.existsSync(targetDir) || !fs.existsSync(srcDirs)) {
+		return;
+	}
+	!_.isArray(srcDirs) && (srcDirs = [srcDirs]);
+
+	// check all target files
+	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
+		// skip the app.js and node acs files
+		if (file === 'app.js' || nodeAcsRegex.test(file)) { return; }
+
+		// see if this target exists in any of the src dirs
+		var found = false;
+		for (var i = 0; i < srcDirs.length; i++) {
+			var srcDir = srcDirs[i];
+			var src = path.join(srcDir,file);
+			if (fs.existsSync(src)) {
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			var target = path.join(targetDir,file);
+			var targetStat = fs.statSync(target);
+
+			if (target.isDirectory()) {
+				logger.debug('Deleting orphan directory ' + target.yellow);
+				wrench.rmdirSyncRecursive(target,true);
+			} else {
+				logger.debug('Deleting orphan file ' + target.yellow);
+				fs.unlinkSync(target);
+			}
+		}
+	});
+}
+
 exports.updateFiles = function(srcDir, dstDir) {
 	if (!fs.existsSync(srcDir)) {
 		return;
