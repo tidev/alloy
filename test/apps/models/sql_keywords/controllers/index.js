@@ -18,11 +18,6 @@ function addTestFighter(e) {
 	// add model to the collection and save it to sqlite
 	fighters.add(model);
 	model.save();
-
-	// let's refresh so we can see the ids coming from the 
-	// autoincrement field in the sqlite database in the 
-	// row click alerts
-	fighters.fetch();
 }
 
 fighters.fetch();
