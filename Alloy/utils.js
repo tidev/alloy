@@ -261,11 +261,11 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 }
 
-exports.deleteOrphanFiles = function(targetDir, srcDirs) {
+exports.deleteOrphanFiles = function(targetDir, srcDirs, exceptions) {
 	var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
 
 	// skip if target or source is not defined
-	if (!fs.existsSync(targetDir) || !fs.existsSync(srcDirs)) {
+	if (!fs.existsSync(targetDir) || !srcDirs) {
 		return;
 	}
 	!_.isArray(srcDirs) && (srcDirs = [srcDirs]);
@@ -274,6 +274,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs) {
 	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
 		// skip the app.js and node acs files
 		if (file === 'app.js' || nodeAcsRegex.test(file)) { return; }
+		if (_.contains(exceptions, file)) { return; }
 
 		// see if this target exists in any of the src dirs
 		var found = false;
@@ -288,9 +289,13 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs) {
 
 		if (!found) {
 			var target = path.join(targetDir,file);
-			var targetStat = fs.statSync(target);
 
-			if (target.isDirectory()) {
+			// already deleted, perhaps a file in a deleted directory
+			if (!fs.existsSync(target)) { return; }
+
+			// delete the file/directory
+			var targetStat = fs.statSync(target);
+			if (targetStat.isDirectory()) {
 				logger.debug('Deleting orphan directory ' + target.yellow);
 				wrench.rmdirSyncRecursive(target,true);
 			} else {

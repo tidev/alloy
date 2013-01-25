@@ -37,51 +37,47 @@ module.exports = function(args, program) {
 	var alloyConfig = {},
 		compilerMakeFile;
 
-	// remove the project's Resources directory, as it will all 
-	// be replaced by Alloy. Only do it if the "assets" path is 
-	// properly prepared with the platform-specific folders.
-	var cleanResources = true;
-	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
-		if (path.existsSync(path.join(paths.resources,platform)) && 
-			!path.existsSync(path.join(paths.assets,platform))) {
-			logger.warn('"' + platform + '" folder found in "Resources", but not "app/assets". Not cleaning "Resources" folder...');
-			cleanResources = false;
-		}
-	});
-	if (cleanResources) {
-		logger.debug('Cleaning "Resources" folder...');
+	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
+	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
 
-		if (!path.existsSync(paths.resources)) {
-			wrench.mkdirSyncRecursive(paths.resources,0777);
-		} else {
-			// delete everything out of each platform-specific folder
-			_.each(CONST.PLATFORM_FOLDERS, function(p) {
-				U.rmdirContents(path.join(paths.resources,p));
-			});
+	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.MODEL + '" folder...');
+	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.MODEL));
 
-			// delete everything else out of Resources, except Node ACS files
-			var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
-			U.rmdirContents(paths.resources, _.union(CONST.PLATFORM_FOLDERS,[nodeAcsRegex]));
-		}
-	}
-	logger.debug('');
-//	BENCHMARK('clean Resources');
+	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.WIDGET + '" folder...');
+	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.WIDGET));
+	logger.debug(' ');
+
+	// GET RID OF ORPHAN FILES
+	U.deleteOrphanFiles(
+		paths.resources, 
+		[
+			path.join(alloyRoot,'lib'),
+			path.join(paths.app,CONST.DIR.ASSETS),
+			path.join(paths.app,CONST.DIR.LIB),
+			path.join(paths.app,'vendor'),
+		],
+		[
+			path.join('alloy','CFG.js'),
+			path.join('alloy','widgets'),
+			path.join('alloy','models')
+		]
+	);
+	logger.debug(' ');
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 //	BENCHMARK('install Alloy plugins/hooks');
 
-	U.copyAlloyDir(alloyRoot, 'lib', paths.resources); 
+	// Copy in all assets, libs, and Alloy runtime files
+	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
 	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	U.copyAlloyDir(paths.app, [CONST.DIR.ASSETS,CONST.DIR.LIB,'vendor'], paths.resources);
+	U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
+	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
+	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
 	logger.debug('');
 //	BENCHMARK('Copy Alloy libs and assets into project');
-
-	// update alloy.js with current Alloy version (Alloy.version)
-	var aFile = path.join(paths.resources,'alloy.js');
-	fs.writeFileSync(aFile, fs.readFileSync(aFile,'utf8') + '\nexports.version = "' + program._version + '";\n');
 
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
@@ -166,19 +162,20 @@ module.exports = function(args, program) {
 	// Process all views, including all those belonging to widgets
 	var viewCollection = U.getWidgetDirectories(paths.project, paths.app);
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+
+	var tracker = {};
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
 			if (viewRegex.test(view) && filterRegex.test(view)) {
-				// Make sure this view isn't already generated
-				if (CU.componentExists(view, collection.manifest)) {
-					// logger.debug('- Skipping "' + view + '", already processed...');
-					return;
-				}
+				// make sure this controller is only generated once
+				var fp = path.join(collection.dir,view.substring(0,view.lastIndexOf('.')));
+				if (tracker[fp]) { return; }
 
 				// generate runtime controller
 				logger.debug('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 				parseAlloyComponent(view, collection.dir, collection.manifest);
+				tracker[fp] = true;
 			}
 		});
 
@@ -186,14 +183,14 @@ module.exports = function(args, program) {
 		// corresponding view markup
 		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.CONTROLLER)), function(controller) {
 			if (controllerRegex.test(controller) && filterRegex.test(controller)) {
-				// Make sure this controller isn't already generated
-				if (CU.componentExists(controller, collection.manifest)) {
-					// logger.debug('- Skipping "' + view + '", already processed...');
-					return;
-				}
+				// make sure this controller is only generated once
+				var fp = path.join(collection.dir,controller.substring(0,controller.lastIndexOf('.')));
+				if (tracker[fp]) { return; }
 
+				// generate runtime controller
 				logger.debug('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
+				tracker[fp] = true;
 			}
 		});
 	});
