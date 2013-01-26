@@ -296,10 +296,10 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, exceptions) {
 			// delete the file/directory
 			var targetStat = fs.statSync(target);
 			if (targetStat.isDirectory()) {
-				logger.debug('Deleting orphan directory ' + target.yellow);
+				logger.trace('Deleting orphan directory ' + target.yellow);
 				wrench.rmdirSyncRecursive(target,true);
 			} else {
-				logger.debug('Deleting orphan file ' + target.yellow);
+				logger.trace('Deleting orphan file ' + target.yellow);
 				fs.unlinkSync(target);
 			}
 		}

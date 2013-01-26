@@ -62,7 +62,7 @@ module.exports = function(args, program) {
 			path.join('alloy','models')
 		]
 	);
-	logger.debug(' ');
+	logger.trace(' ');
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
