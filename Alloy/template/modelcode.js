@@ -1,9 +1,9 @@
 exports.definition = {
 	config: {
 <%= schema %>
-		"adapter": {
-			"type": "<%= adapter %>",
-			"collection_name": "<%= name %>"
+		adapter: {
+			type: "<%= adapter %>",
+			collection_name: "<%= name %>"
 		}
 	},		
 	extendModel: function(Model) {		
