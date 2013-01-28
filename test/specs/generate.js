@@ -213,9 +213,9 @@ describe('alloy generate', function() {
 		var modelName = 'testModel';
 
 		var goodCmds = [
-			'alloy generate model ' + modelName + ' col1:string col2:int',
+			'alloy generate model ' + modelName + ' properties col1:string col2:int',
 			'alloy generate model ' + modelName + ' sql another:bool blah:float hustle:number',	
-			'alloy generate model ' + modelName + ' col1:int'		
+			'alloy generate model ' + modelName + ' sql col1:int'		
 		];
 
 		var badCmds = [
