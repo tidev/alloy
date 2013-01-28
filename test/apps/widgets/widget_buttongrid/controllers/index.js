@@ -28,4 +28,6 @@ $.buttongrid.init({
     duration: 1000
 });
 
+$.buttongrid.getButton('Drizzle').backgroundColor = "gray": 
+
 $.index.open();
