@@ -27,12 +27,31 @@ var times = {
 	msgs: []
 };
 
+function tiSdkVersionNumber(tiVersion) {
+	var parts = tiVersion.split && tiVersion.split('.');
+	return parts[0]*100 + parts[1]*10 + parts[2]*1; // *1 is to cast it to an integer
+}
+
 //////////////////////////////////////
 ////////// command function //////////
 //////////////////////////////////////
 module.exports = function(args, program) {
 //	BENCHMARK();
 	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
+
+	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
+	var tiVersion = U.tiapp.getTitaniumSdkVersion(U.tiapp.parse(paths.project));
+	if (tiVersion === null) {
+		logger.warn('Unable to determine Titanium SDK version from tiapp.xml.');
+		logger.warn('Your app may have unexpected behavior. Make sure your tiapp.xml is valid.');
+	} else if (tiSdkVersionNumber(tiVersion) < tiSdkVersionNumber(CONST.MINIMUM_TI_SDK)) {
+		logger.error('Alloy 1.0.0+ requires Titanium SDK ' + CONST.MINIMUM_TI_SDK + ' or higher.');
+		logger.error('Version "' + tiVersion + '" was found in the "sdk-version" field of your tiapp.xml.');
+		logger.error('If you are building with the old titanium.py script and are specifying an SDK version ');
+		logger.error('as a CLI argument that is different than the one in your tiapp.xml, please change the');
+		logger.error('version in your tiapp.xml file. ');
+	}
+
 //	BENCHMARK('getAndValidateProjectPaths');
 	var alloyConfig = {},
 		compilerMakeFile;
