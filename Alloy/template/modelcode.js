@@ -1,5 +1,4 @@
 exports.definition = {
-	
 	config: {
 <%= schema %>
 		"adapter": {
@@ -7,7 +6,6 @@ exports.definition = {
 			"collection_name": "<%= name %>"
 		}
 	},		
-
 	extendModel: function(Model) {		
 		_.extend(Model.prototype, {
 			// extended functions and properties go here
@@ -15,8 +13,6 @@ exports.definition = {
 		
 		return Model;
 	},
-	
-	
 	extendCollection: function(Collection) {		
 		_.extend(Collection.prototype, {
 			// extended functions and properties go here
@@ -24,6 +20,5 @@ exports.definition = {
 		
 		return Collection;
 	}
-		
 }
 
