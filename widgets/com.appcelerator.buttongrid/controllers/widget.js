@@ -231,3 +231,12 @@ exports.relayout = function ButtonGridRelayout(e) {
         }
     });
 };
+
+exports.getButton = function (id) {
+    for (var i in $._buttons) {
+        if ($._buttons[i].id == id)
+            return $._buttons[i].b;
+    }
+    
+    return false;
+}

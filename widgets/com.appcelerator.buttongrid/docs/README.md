@@ -39,7 +39,7 @@ You can add a ButtonGrid to a view by *requiring* the ButtonGrid widget.
 
 Assign it an ID that you can use in your controller. E.g. `id="buttongrid"` You can now access the ButtonGrid via `$.buttongrid` in your controller. 
 
-## Initializing the ButtonGrid in the Controller
+## [Initializing the ButtonGrid in the Controller](id:init)
 
 The buttongrid doesn't have any buttons in it until you initialize it in your controller. Before you open your window, you will want to call the buttongrid with the *init* method. For example:
 
@@ -111,6 +111,16 @@ $.buttongrid.relayout();
 ```
 
 The grid will calculate a new gutter between the buttons and animate the buttons into place one at a time.
+
+## Accessing a Button
+If you ever have a need to directly access one of the buttons in the ButtonGrid as a TiUIButton, you can do that through the *getButton* method. If you specify an invalid ID, getButton will return *false*;
+
+```
+$.buttongrid.getButton('Cloudy');
+```
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| id | *string* | Unique id for the button to access as used in the [init](#init) call to set up the ButtonGrid. |
 
 ## Future Work
 
