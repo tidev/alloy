@@ -98,6 +98,10 @@ exports.tiapp = {
 		}
 		return exports.XML.parseFromFile(tiappPath);
 	},
+	getTitaniumSdkVersion: function(doc) {
+		var elems = doc.documentElement.getElementsByTagName('sdk-version');
+		return elems && elems.length > 0 ? exports.XML.getNodeText(elems.item(elems.length-1)) : null;
+	},
 	getProperty: function(doc, name) {
 		var props = doc.documentElement.getElementsByTagName('property');
 		for (var i = 0; i < props.length; i++) {
