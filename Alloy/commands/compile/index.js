@@ -50,6 +50,7 @@ module.exports = function(args, program) {
 		logger.error('If you are building with the old titanium.py script and are specifying an SDK version ');
 		logger.error('as a CLI argument that is different than the one in your tiapp.xml, please change the');
 		logger.error('version in your tiapp.xml file. ');
+		process.exit(1);
 	}
 
 //	BENCHMARK('getAndValidateProjectPaths');
