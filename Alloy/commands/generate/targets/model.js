@@ -25,8 +25,6 @@ module.exports = function(name, args, program) {
  	var adapter;
 	if (args.length === 0) {
 		U.die(['`alloy generate model` requires a type and list of columns', USAGE]);
-	} else if (args.length === 1) {
-		U.die(['`alloy generate model` requires a list of columns', USAGE]);
 	} else {
 		adapter = args[0];
 		if (!_.contains(VALID_ADAPTERS, adapter)) {
@@ -52,7 +50,7 @@ module.exports = function(name, args, program) {
 	var code = _.template(fs.readFileSync(MODEL_TEMPLATE, 'utf8'), {
 		adapter: adapter,
 		name: name,
-		schema: prepareColumnsForWriting(columns)
+		schema: _.isEmpty(columns) ? '' : prepareColumnsForWriting(columns)
 	});	
 
 	// write out the model file
