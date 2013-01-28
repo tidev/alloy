@@ -8,11 +8,14 @@ var path = require('path'),
 
 var ALLOY_ROOT = path.join(__dirname,'..','..','..'),
 	MODEL_TEMPLATE = path.join(ALLOY_ROOT, 'template', 'modelcode.js'),
-	USAGE = 'Usage:\n' +
-            '    alloy generate model NAME TYPE COLUMN1:TYPE COLUMN2:TYPE ...\n' +
-            'Examples:\n' +
-            '    alloy generate model people sql name:text age:integer\n' +
-            '    alloy generate model appState properties loggedIn:Bool items:List\n';
+	VALID_ADAPTERS = ['sql','properties','localStorage'],
+	USAGE = [
+		'Usage:',
+        '    alloy generate model NAME TYPE COLUMN1:TYPE COLUMN2:TYPE ...',
+        'Examples:',
+        '    alloy generate model people sql name:text age:integer',
+        '    alloy generate model appState properties loggedIn:Bool items:List'
+    ];
 
 module.exports = function(name, args, program) {
 	// validate project
@@ -26,6 +29,13 @@ module.exports = function(name, args, program) {
 		U.die(['`alloy generate model` requires a list of columns', USAGE]);
 	} else {
 		adapter = args[0];
+		if (!_.contains(VALID_ADAPTERS, adapter)) {
+			U.die([
+				'Invalid adapter type "' + adapter + '".',
+				'Must be one of the following: [' + VALID_ADAPTERS.join(',') + ']',
+				USAGE
+			]);
+		}
 	}
 
 	// create array of columns
