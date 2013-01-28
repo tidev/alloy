@@ -10,10 +10,8 @@ exports.definition = {
 
 	extendModel: function(Model) {		
 		_.extend(Model.prototype, {
-						
-			// extended functions go here
-
-		}); // end extend
+			// extended functions and properties go here
+		});
 		
 		return Model;
 	},
@@ -21,10 +19,8 @@ exports.definition = {
 	
 	extendCollection: function(Collection) {		
 		_.extend(Collection.prototype, {
-			
-			// extended functions go here			
-			
-		}); // end extend
+			// extended functions and properties go here
+		});
 		
 		return Collection;
 	}
