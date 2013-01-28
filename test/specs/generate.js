@@ -222,7 +222,7 @@ describe('alloy generate', function() {
 			'alloy generate model',
 			'alloy generate model col1:string',
 			'alloy generate model ' + modelName,
-			'alloy generate model sql sql'
+			'alloy generate model sql'
 		];
 
 		_.each(goodCmds, function(cmd) {
