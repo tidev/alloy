@@ -1,0 +1,6 @@
+"#counter": {
+	font: {
+		fontSize: '160dp',
+		fontWeight: 'bold'
+	}
+}

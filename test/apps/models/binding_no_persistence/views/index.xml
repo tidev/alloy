@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label class="header" backgroundColor="{appState.color}">Header</Label>
+		<Label id="counter" text="{appState.counter}" color="{appState.color}" onClick="updateState"/>
+	</Window>
+</Alloy>
