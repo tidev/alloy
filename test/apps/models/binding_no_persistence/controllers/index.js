@@ -1,4 +1,5 @@
 var appState = Alloy.Models.appState;
+var heroes = Alloy.Collections.heroes;
 
 function generateRandomColor() {
 	var c =(Math.floor(Math.random()*255))*256*256 + 
@@ -9,6 +10,13 @@ function generateRandomColor() {
 		c = '0' + c;
 	}
 	return '#' + c;
+}
+
+// Contrived update function to modify the model 
+// associated with the clicked row
+function modifyHero(e) {
+	var model = heroes.at(e.index);	
+	model.set('name', model.get('name') + '+');
 }
 
 // Update the model's counter and color, which in turn
@@ -24,6 +32,6 @@ function updateState() {
 // Remember, don't use fetch() when using a model with
 // no persistence, it will generate an error.
 appState.trigger('change');
+heroes.trigger('change');
 
 $.index.open();
-
