@@ -12,5 +12,27 @@
 		<FooterView>
 			<View id="footerView"/>
 		</FooterView>
+
+		<TableViewSection headerTitle="section 1">
+			<TableViewRow title="row 1"/>
+			<TableViewRow title="row 2"/>
+			<TableViewRow title="row 3"/>
+			<TableViewRow title="row 4"/>
+			<TableViewRow title="row 5"/>
+		</TableViewSection>
+		<TableViewSection>
+			<HeaderView>
+				<Label height="30dp" backgroundColor="#ff0">section 2</Label>
+			</HeaderView>
+			<FooterView>
+				<Label height="30dp" backgroundColor="#0ff">the footer</Label>
+			</FooterView>
+
+			<TableViewRow title="row 1"/>
+			<TableViewRow title="row 2"/>
+			<TableViewRow title="row 3"/>
+			<TableViewRow title="row 4"/>
+			<TableViewRow title="row 5"/>
+		</TableViewSection>
 	</TableView>
 </Alloy>
