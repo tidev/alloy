@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Button id="button" onClick="openPopover">popover</Button>
+	</Window>
+</Alloy>

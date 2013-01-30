@@ -1,0 +1,12 @@
+<Alloy>
+	<Popover title="popover" height="300" width="250">
+		<LeftNavButton>
+			<Button onClick="showAlert">left</Button>
+		</LeftNavButton>
+		<RightNavButton>
+			<Button onClick="showAlert">right</Button>
+		</RightNavButton>
+		
+		<Label>I'm a popover</Label>
+	</Popover>
+</Alloy>
