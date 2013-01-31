@@ -101,7 +101,7 @@ var defaults = {
     closeOpacity: 0.75,     // Opacity of the drawer when it is closed in the view.
     animationDuration: 500, // Duration, in milliseconds, to close/open the drawer. 
     gutter: 0,              // Offset used to space buttons from each other.
-    overrideMenu: false,     // Override the use of the menu in Android and use a drawer like in iOS/MobileWeb.
+    overrideMenu: !OS_ANDROID,     // Override the use of the menu in Android and use a drawer like in iOS/MobileWeb.
     annoy: 0
 };
 
@@ -134,7 +134,7 @@ function pullTabClick(e) {
  * Android activity menu is being used.
  */
 exports.jiggle = function DrawerJiggle() {
-    if ($._isOpen || (OS_ANDROID && !$._params.overrideMenu))
+    if ($._isOpen || !$._params.overrideMenu)
         return;
         
     var animation = require('alloy/animation');
@@ -158,7 +158,7 @@ exports.jiggle = function DrawerJiggle() {
  * `checkEnabled` method in order to get those callbacks to fire.
  */
 exports.checkEnabled = function DrawerCheckEnabled() {
-    if (OS_IOS || OS_MOBILEWEB || $._params.overrideMenu) {
+    if ($._params.overrideMenu) {
         Object.keys($._buttons).forEach(
             function (key) {
                 var i = parseInt(key, 10);
@@ -205,7 +205,7 @@ exports.init = function DrawerInit(args) {
     $._buttons = args.buttons;
     $._params = _.defaults(args, defaults);
      
-    if (OS_IOS || OS_MOBILEWEB || $._params.overrideMenu) {
+    if ($._params.overrideMenu) {
         // Resize the drawer based on the icon size
         $.buttonbar.height = $._params.iconSize + $._params.gutter * 2;   
         $.drawer.height = DRAWER_PULLTAB_HEIGHT + $.buttonbar.height;
@@ -245,7 +245,7 @@ exports.init = function DrawerInit(args) {
                 $.jiggle();
             }, 2000);
         } 
-    } else if (OS_ANDROID && !$._params.overrideMenu) {
+    } else {
         // On Android, the drawer takes the form of the standard Android menu.
         $.drawer.visible = false;   // Hide the drawer, not needed.
         
