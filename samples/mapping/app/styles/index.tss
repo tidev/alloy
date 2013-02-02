@@ -1,0 +1,41 @@
+".container": {
+    backgroundColor:'#fff',
+    fullscreen: false,
+    exitOnClose: true
+},
+".topBar": {
+    backgroundColor: '#800',
+    height: '50dp',
+    top: 0
+},
+"TextField": {
+    height: '40dp',
+    top: '5dp',
+    left: '5dp',
+    right: '50dp',
+    style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+    backgroundColor: '#fff',
+    paddingLeft: '5dp'
+},
+"Button": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '5dp'
+},
+"#map": {
+    top: '50dp',
+    animate: true,
+    regionFit: true,
+    userLocation: false,
+    region: {
+        latitude: Alloy.Globals.LATITUDE_BASE,
+        longitude: Alloy.Globals.LONGITUDE_BASE,
+        latitudeDelta: 0.1, 
+        longitudeDelta: 0.1
+    }
+}

@@ -1,0 +1,11 @@
+<Alloy>
+	<Window class="container">
+        <View class="topBar">
+            <TextField id="textField" hintText="Enter an address" />
+            <Button id="button" title="+" />
+        </View>
+        <View ns="Ti.Map" id="map" mapType="Ti.Map.STANDARD_TYPE">
+            <Require src="annotation" title="Appcelerator" />
+        </View>
+	</Window>
+</Alloy>
