@@ -1,4 +1,4 @@
-var moment = require('moment');
+var moment = require('alloy/moment');
 var todos = Alloy.Collections.todo;
 var id;
 

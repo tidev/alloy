@@ -1,7 +1,4 @@
 <Alloy>
-    <!-- Todo collection for binding (singleton) -->
-    <Collection src="todo"/>	
-	
     <!-- Main Window -->
     <Window id="todoWin" title="Todo">
   	
