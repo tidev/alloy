@@ -64,7 +64,7 @@ exports.A = function(t, type, parent) {
             };
             if (!cbs[e]) {
                 cbs[e] = {};
-                al(e, wcb);
+                al.call(t, e, wcb);
             }
             cbs[e][cb] = wcb;
             _.bind(oo, ctx, e, cb, context)();
@@ -76,7 +76,7 @@ exports.A = function(t, type, parent) {
                 delete cbs[e][cb];
                 if (cbs[e].length === 0) {
                     delete cbs[e];
-                    rl(e, f);
+                    rl.call(t, e, f);
                 }
                 f = null;
             }
@@ -126,7 +126,7 @@ exports.createCollection = function(name, args) {
 };
 
 exports.isTablet = function() {
-    return Ti.Platform.osname === "ipad";
+    return isTabletFallback();
 }();
 
 exports.isHandheld = !exports.isTablet;

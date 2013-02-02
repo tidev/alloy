@@ -1,27 +1,5 @@
-var geo = require('geo');
-
-$.map.addEventListener('click', function(e) {
-    if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
-        $.map.removeAnnotation(e.annotation);
-    }
-});
-
-$.button.addEventListener('click', function(e) {
-    $.textField.blur();
-    geo.forwardGeocode($.textField.value, function(geodata) {
-        var annotation = Alloy.createController('annotation', {
-            title: geodata.title,
-            latitude: geodata.coords.latitude,
-            longitude: geodata.coords.longitude,
-        });
-        $.map.addAnnotation(annotation.getView()); 
-        $.map.setLocation({
-            latitude: geodata.coords.latitude, 
-            longitude: geodata.coords.longitude,
-            latitudeDelta: 1, 
-            longitudeDelta: 1
-        });
-    });
+$.addAddress.on('addAnnotation', function(e) {
+    $.map.addAnnotation(e.geodata);
 });
 
 $.index.open();
