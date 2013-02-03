@@ -1012,3 +1012,36 @@ exports.validateNodeName = function(node, names) {
 
 	return null;
 }
+};
+
+exports.generateCollectionBindingTemplate = function(args) {
+	var code = '';
+
+	// Determine the collection variable to use
+	var obj = { name: args[CONST.BIND_COLLECTION] };
+	var col = _.template("Alloy.Collections['<%= name %>'] || <%= name %>", obj);
+	var colVar = CU.generateUniqueId();
+
+	// Create the code for the filter and transform functions
+	var where = args[CONST.BIND_WHERE];
+	var transform = args[CONST.BIND_TRANSFORM];
+	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
+	var handlerFunc = args[CONST.BIND_FUNCTION] || CU.generateUniqueId();
+
+	// construct code template
+	code += "var " + colVar + "=" + col + ";";
+	code += "function " + handlerFunc + "(e) {";
+	code += "	var models = " + whereCode + ";";
+	code += "};";
+	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+
+	CU.destroyCode += colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+
+	return {
+		template: code,
+		filter: whereCode,
+		transform: transformCode,
+		destroy: colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");"
+	};
+};
