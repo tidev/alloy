@@ -19,6 +19,7 @@ exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform'];
 exports.BIND_COLLECTION = 'dataCollection';
 exports.BIND_WHERE = 'dataFilter';
 exports.BIND_TRANSFORM = 'dataTransform';
+exports.BIND_FUNCTION = 'dataFunction';
 exports.BIND_TRANSFORM_VAR = '__transform';
 exports.BIND_MODEL_VAR = '$model';
 exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
