@@ -76,7 +76,7 @@ function parse(node, state, args) {
 		state.styles,
 		args.classes,
 		args.id,
-		CU.getNodeFullname(node.nodeName),
+		CU.getNodeFullname(node),
 		args.createArgs,
 		state
 	) + ");\n";

@@ -11,7 +11,7 @@ function parse(node, state, args) {
 		state.styles, 
 		args.classes, 
 		args.id, 
-		CU.getNodeFullname(node.nodeName), 
+		CU.getNodeFullname(node), 
 		_.defaults(state.extraStyle || {}, args.createArgs || {}) 
 	);
 	var styleObjectSymbol = CU.generateUniqueId(); 

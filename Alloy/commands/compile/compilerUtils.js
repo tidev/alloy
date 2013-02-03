@@ -658,15 +658,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
 		bindingRegex = /^\{(.+)\}$/,
 		styleCollection = [],
-		lastObj = {},
-		styleApi = style.key;
-
-	if (style.isApi && styleApi.indexOf('.') === -1) {
-		var ns = (CONST.IMPLICIT_NAMESPACES[styleApi] || CONST.NAMESPACE_DEFAULT);
-		styleApi = ns + '.' + styleApi;
-	}
+		lastObj = {};
 
 	_.each(styles, function(style) {
+		var styleApi = style.key;
+		if (style.isApi && styleApi.indexOf('.') === -1) {
+			var ns = (CONST.IMPLICIT_NAMESPACES[styleApi] || CONST.NAMESPACE_DEFAULT);
+			styleApi = ns + '.' + styleApi;
+		}
+
 		if ((style.isId && style.key === id) ||
 			(style.isClass && _.contains(classes, style.key)) ||
 			(style.isApi && styleApi === apiName)) {
