@@ -47,10 +47,16 @@ function parse(node, state, args) {
 			});
 		});
 
-		code += _.template(getBindingCode(args), {
+		var pre =  "var children = " + args.symbol + ".children;" +
+				   "for (var d = children.length-1; d >= 0; d--) {" + 
+				   "	" + args.symbol + ".remove(children[d]);" +
+				   "}";
+
+		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			itemCode: itemCode,
-			parentSymbol: args.symbol
+			pre: pre,
+			items: itemCode,
+			post: ''
 		});
 	}
 
@@ -67,40 +73,3 @@ function parse(node, state, args) {
 		code: code
 	}
 };
-
-function getBindingCode(args) {
-	var code = '';
-
-	// Do we use an instance or singleton collection reference?
-	var col;
-	if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
-		col = args[CONST.BIND_COLLECTION];
-	} else {
-		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-	}
-
-	var where = args[CONST.BIND_WHERE];
-	var transform = args[CONST.BIND_TRANSFORM];
-	var whereCode = where ? where + "(" + col + ")" : col + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	var handlerVar = CU.generateUniqueId();
-
-	code += "var " + handlerVar + "=function(e) {";
-	code += "	var models = " + whereCode + ";";
-	code += "	var children = <%= parentSymbol %>.children;";
-	code += "	for (var d = children.length-1; d >= 0; d--) {";
-	code += "		<%= parentSymbol %>.remove(children[d]);";
-	code += "	}";
-	code += "	len = models.length;";
-	code += "	for (var i = 0; i < len; i++) {";
-	code += "		var <%= localModel %> = models[i];";
-	code += "		<%= localModel %>.__transform = " + transformCode + ";";
-	code += "		<%= itemCode %>";
-	code += "	}";
-	code += "};";
-	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
-
-	CU.destroyCode += col + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
-
-	return code;
-}
