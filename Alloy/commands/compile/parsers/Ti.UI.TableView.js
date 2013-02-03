@@ -113,10 +113,11 @@ function parse(node, state, args) {
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
 		localModel || (localModel = CU.generateUniqueId());
-		code += _.template(getBindingCode(args), {
+		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			itemCode: itemCode,
-			parentSymbol: tableState.parent.symbol
+			pre: "var rows = [];",
+			items: itemCode,
+			post: tableState.parent.symbol + ".setData(rows);"
 		});
 	}
 
@@ -127,40 +128,3 @@ function parse(node, state, args) {
 		code: code
 	}
 }
-
-function getBindingCode(args) {
-	var code = '';
-
-	// Do we use an instance or singleton collection reference?
-	var col;
-	if (args[CONST.BIND_COLLECTION].indexOf('$.') === 0) {
-		col = args[CONST.BIND_COLLECTION];
-	} else {
-		col = 'Alloy.Collections[\'' + args[CONST.BIND_COLLECTION] + '\']';
-	}
-
-	// create fetch/change handler
-	var where = args[CONST.BIND_WHERE];
-	var transform = args[CONST.BIND_TRANSFORM];
-	var whereCode = where ? where + "(" + col + ")" : col + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	var handlerVar = CU.generateUniqueId();
-
-	code += "var " + handlerVar + "=function(e) {";
-	code += "	var models = " + whereCode + ";";
-	code += "	var len = models.length;";
-	code += "	var rows = [];";
-	code += "	for (var i = 0; i < len; i++) {";
-	code += "		var <%= localModel %> = models[i];";
-	code += "		<%= localModel %>.__transform = " + transformCode + ";";
-	code += "<%= itemCode %>";
-	code += "	}";
-	code += "<%= parentSymbol %>.setData(rows);";
-	code += "};";
-	code += col + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
-
-	CU.destroyCode += col + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
-
-	return code;
-}
-

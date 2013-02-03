@@ -1025,28 +1025,31 @@ exports.generateCollectionBindingTemplate = function(args) {
 	// Determine the collection variable to use
 	var obj = { name: args[CONST.BIND_COLLECTION] };
 	var col = _.template("Alloy.Collections['<%= name %>'] || <%= name %>", obj);
-	var colVar = CU.generateUniqueId();
+	var colVar = exports.generateUniqueId();
 
 	// Create the code for the filter and transform functions
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
-	var handlerFunc = args[CONST.BIND_FUNCTION] || CU.generateUniqueId();
+	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
 
 	// construct code template
 	code += "var " + colVar + "=" + col + ";";
 	code += "function " + handlerFunc + "(e) {";
 	code += "	var models = " + whereCode + ";";
+	code += "	var len = models.length;";
+	code += "<%= pre %>";
+	code += "	for (var i = 0; i < len; i++) {";
+	code += "		var <%= localModel %> = models[i];";
+	code += "		<%= localModel %>.__transform = " + transformCode + ";";
+	code += "<%= items %>";
+	code += "	}";
+	code += "<%= post %>";
 	code += "};";
-	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
-	CU.destroyCode += colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");";
+	exports.destroyCode += colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
-	return {
-		template: code,
-		filter: whereCode,
-		transform: transformCode,
-		destroy: colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerVar + ");"
-	};
+	return code;
 };
