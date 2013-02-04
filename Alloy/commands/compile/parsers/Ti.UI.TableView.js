@@ -115,7 +115,7 @@ function parse(node, state, args) {
 		localModel || (localModel = CU.generateUniqueId());
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: "var rows = [];",
+			pre: "var rows=[];",
 			items: itemCode,
 			post: tableState.parent.symbol + ".setData(rows);"
 		});
