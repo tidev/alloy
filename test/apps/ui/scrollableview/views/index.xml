@@ -1,0 +1,15 @@
+<Alloy>
+	<Window>
+		<ScrollableView>
+			<View backgroundColor="#a00">
+				<Label>View 1</Label>
+			</View>
+			<View backgroundColor="#0a0">
+				<Label>View 2</Label>
+			</View>
+			<View backgroundColor="#00a">
+				<Label>View 3</Label>
+			</View>
+		</ScrollableView>
+	</Window>
+</Alloy>
