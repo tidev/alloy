@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<ScrollableView dataCollection="articles">
+			<Require src="article"/>
+		</ScrollableView>
+	</Window>
+</Alloy>

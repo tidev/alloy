@@ -1,0 +1,35 @@
+"Label": {
+	color: '#fff'
+}
+
+".image": {
+	top: '5dp',
+	width: '95%'
+}
+
+".title": {
+	height: Ti.UI.SIZE,
+	top: '5dp',
+	left: '10dp',
+	right: '10dp',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'center'
+}
+
+".content": {
+	top: '10dp',
+	left: '25dp',
+	right: '25dp',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'normal'
+	}	
+}
+
+"#article": {
+	backgroundColor: '#000',
+	layout: 'vertical'
+}

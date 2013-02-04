@@ -1,0 +1,7 @@
+<Alloy>
+	<ScrollView>
+		<ImageView class="image" image="{image}"/>
+		<Label class="title" text="{title}"/>
+		<Label class="content" text="{content}"/>
+	</ScrollView>
+</Alloy>
