@@ -1,8 +1,8 @@
 <Alloy>
 	<Window>
-		<ScrollableView>
+		<ScrollableView id="scroller">
 			<View backgroundColor="#a00">
-				<Label>View 1</Label>
+				<Label onClick="addView">View 1</Label>
 			</View>
 			<View backgroundColor="#0a0">
 				<Label>View 2</Label>
