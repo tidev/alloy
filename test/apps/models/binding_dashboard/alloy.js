@@ -1,0 +1,1 @@
+Alloy.Collections.icons = Alloy.createCollection('icon');

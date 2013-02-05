@@ -1,0 +1,13 @@
+"Window": {
+	backgroundColor: '#fff'
+},
+"Label": {
+	color: '#000'
+},
+"#dash": {
+	top: 100,
+	wobble: true
+},
+"#editButton": {
+	style: Ti.UI.iPhone.SystemButtonStyle.DONE
+}
