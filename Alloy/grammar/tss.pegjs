@@ -33,6 +33,9 @@ members
       for (var i = 0; i < tail.length; i++) {
         result[tail[i][3][0]] = tail[i][3][1];
       }
+      if (typeof result['undefined'] === 'undefined') {
+        delete result['undefined'];
+      }
       return result;
     }
 
