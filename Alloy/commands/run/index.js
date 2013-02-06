@@ -13,7 +13,9 @@ module.exports = function(args, program) {
 	]);
 
 	var newArgs = ['build'].concat(program.rawArgs.slice(3));
-	!program.platform && (newArgs = newArgs.concat(['--platform','ios']));
+	if (!_.find(newArgs, function(a) { return a === '-p' || a === '--platform' })) {
+		newArgs = newArgs.concat(['--platform','ios']);
+	}
 	var runcmd = spawn('titanium', newArgs);
 	
 	//run stdout/stderr back through console.log
