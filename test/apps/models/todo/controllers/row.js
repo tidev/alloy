@@ -37,6 +37,9 @@ function toggleStatus(e) {
 
 // delete the IDed todo from the collection
 function deleteTask(e) {
+	// prevent bubbling up to the row
+	e.cancelBubble = true;
+
 	// find the todo task by id
 	var todo = todos.get(id);
 
