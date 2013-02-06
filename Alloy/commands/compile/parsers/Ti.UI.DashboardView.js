@@ -54,7 +54,8 @@ function parse(node, state, args) {
 		var localArray = 'data';
 
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-			itemCode += CU.generateNodeExtended(child, state, {
+			// generate the repeated element
+			itemCode += CU.generateNode(child, {
 				parent: {},
 				local: true,
 				model: localModel,
@@ -62,6 +63,8 @@ function parse(node, state, args) {
 					return localArray + '.push(' + state.parent.symbol + ');\n';
 				}
 			});
+
+			// remove it from the XML
 			node.removeChild(child);
 		});
 
