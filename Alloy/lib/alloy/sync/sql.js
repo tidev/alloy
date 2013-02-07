@@ -166,10 +166,12 @@ function Sync(method, model, opts) {
 						// Backbone change events
 						model.set(attrObj, {silent:true});
 					} else {
-						// idAttribute not assigned by alloy. Leave it empty and
-						// allow sqlite to process as null, which is the
-						// expected value for an AUTOINCREMENT field.
-						model.id = null;
+						// idAttribute not assigned by alloy. Use the idAttribute
+						// field, or leave it empty and allow sqlite to process 
+						// as null, which is the expected value for an 
+						// AUTOINCREMENT field.
+						var tmpM = model.get(model.idAttribute);
+						model.id = tmpM !== null && typeof tmpM !== 'undefined' ? tmpM : null;
 					}
 	            }
 
