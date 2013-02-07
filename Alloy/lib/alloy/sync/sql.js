@@ -154,7 +154,7 @@ function Sync(method, model, opts) {
 			resp = (function(){
 				var attrObj = {};
 
-				// Use idAttribute to account for something other then "id"
+				// Use idAttribute to account for something other than "id"
 				// being used for the model's id.
 				if (!model.id) {
 					if (model.idAttribute === ALLOY_ID_DEFAULT) {
@@ -163,7 +163,7 @@ function Sync(method, model, opts) {
 						attrObj[model.idAttribute] = model.id;
 
 						// make it silent so it doesn't fire an unnecessary
-						// Backbone change event
+						// Backbone change events
 						model.set(attrObj, {silent:true});
 					} else {
 						// idAttribute not assigned by alloy. Leave it empty and
