@@ -12,6 +12,7 @@
 		</Tab>
 
 		<!-- Tab included via <Require> tag -->
+		<!-- Note that tabView.xml will use tabView.tss for styling! and not index.tss -->
 		<Require src="tabView"/>
 	</TabGroup>
 </Alloy>
