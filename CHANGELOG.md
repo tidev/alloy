@@ -5,12 +5,192 @@
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
 ## Coming Features
-The following are planned features for the next release (1.0.0):
+The following are planned features for the next release:
 
-* [ALOY-323](https://jira.appcelerator.org/browse/ALOY-323). Alloy 1.0.0+ will support only Titanium 3.0+, allowing it to be leaner and meaner.
-* [ALOY-462](https://jira.appcelerator.org/browse/ALOY-462). Upgrade Backbone to 0.9.9.
-* [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). [ALOY-454](https://jira.appcelerator.org/browse/ALOY-454). [ALOY-455](https://jira.appcelerator.org/browse/ALOY-455). Compile, build, and run time performance enhancements
-* [ALOY-389](https://jira.appcelerator.org/browse/ALOY-389). Support for code assist of TSS files in Titanium Studio.
+* [ALOY-362](https://jira.appcelerator.org/browse/ALOY-362). Allow controller-less views with some controller logic.
+* [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Support themes in widgets.
+* [ALOY-472](https://jira.appcelerator.org/browse/ALOY-472). Enable Collection binding for CoverFlowView.
+
+
+## 1.0.0.CR (8 February 2013)
+
+### Breaking Changes
+
+The following changes alter the behavior of the Alloy Framework from previous versions and may
+require code changes to your applications.
+
+#### Titanium SDK Support
+
+Alloy 1.0 only supports Titanium SDK 3.0 and later.  Previous versions of Alloy supported Titanium
+SDK 2.1.x and later.
+
+
+#### Backbone Events API Removed from View Proxies and Controllers
+
+For Alloy View proxies and Controllers, that is, objects either referenced with `$.myid` or
+created with `createController` and `getView` methods, you cannot use the Backbone Events 
+API `on`, `off` and `trigger` methods to bind and unbind event callbacks, or fire events.
+Use the Titanium SDK API `addEventListener`, `removeEventListener` and `fireEvent` methods instead.
+
+Previously, Alloy View proxies and Controllers could use the Backbone Events API.
+
+For Alloy Collection and Model objects, use the Backbone Events API not the Titanium SDK event
+listener API. This has not changed from previous versions of Alloy.
+
+
+#### Alloy Model-View Binding
+
+Model-view binding with the Ti.UI.View proxy should be considered experimental.  On the iOS
+platform, the view items are not being repopulated correctly. To follow this issue, see
+[ALOY-485](https://jira.appcelerator.org/browse/ALOY-485).
+
+Model-view binding with TableViews works fine and does not suffer from any known issues.
+
+For more information, see the [Alloy Data Binding guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding).
+
+
+#### Custom Sync Adapter
+
+If you created a custom sync adapter, the order of the passed parameters of the
+`module.exports.sync` method
+has changed to match the `Backbone.sync` method.
+
+Prior to 1.0.0, the order was:
+
+    module.exports.sync(model, method, options)
+
+For 1.0.0 and later, the order is now:
+
+    module.exports.sync(method, model, options)
+
+To update your custom sync adapter, just switch the order of the `method` and `model` arguments.
+
+Additionally, both the `module.exports.beforeModelCreate` and `module.exports.afterModelCreate`
+methods accept an additional passed parameter--the name of the model file.
+
+Prior to 1.0.0, the methods were:
+
+    module.exports.beforeModelCreate(config)
+    module.exports.afterModelCreate(Model)
+
+For 1.0.0 and later, the methods are:
+
+    module.exports.beforeModelCreate(config, name)
+    module.exports.afterModelCreate(Model, name)
+
+#### SQLite Sync Adapter and Migrations
+
+The previous `sql` sync adapter has been replaced with the `sql_new` sync adapter as mentioned in
+release 0.3.5.
+
+If you have a model that uses the `sql` sync adapter from Alloy 0.3.6 and before, you need to
+migrate
+your data to the new table schema of the Alloy 1.0.0 SQLite sync adapter.
+
+First, manually remove the following files from your Alloy project:
+
+* Resources/alloy.js
+* Resources/alloy/sync/sql.js 
+
+Next, create a one-time migration file to transfer your model data to the new database schema.
+Adapt the following code for your table schema.  Replace `title`, `author` and `isbn`
+with your own specific table schema but leave `id` and `alloy_id` alone.  The order of fields does matter.
+This migration file creates a temporary table, copies your current data to a temporary table,
+deletes the old table from the database, creates a new table, then copies your data to the new table.
+
+    migration.up = function(migrator) {
+        var db = migrator.db;
+        var table = migrator.table;
+        db.execute('CREATE TEMPORARY TABLE book_backup(title,author,isbn,alloy_id);')
+        db.execute('INSERT INTO book_backup SELECT title,author,isbn,id FROM ' + table + ';');
+        migrator.dropTable();
+        migrator.createTable({
+            columns: {
+                title:"TEXT",
+                author:"TEXT",
+                isbn:"INTEGER"
+            },
+        });
+        db.execute('INSERT INTO ' + table + ' SELECT title,author,isbn,alloy_id FROM book_backup;');
+        db.execute('DROP TABLE book_backup;');
+    };
+    
+    migration.down = function(migrator) {
+    
+    }
+    
+Run your application once to migrate your data, then remove the migration file.
+
+Note the `migrator.db` object in the previous example.  This object is a handle to a `Ti.Database` instance
+to execute SQLite commands. DO NOT CLOSE THIS HANDLE OR OPEN A SECOND INSTANCE OF THE DATABASE.
+This will cause fatal application errors.
+
+See the [Alloy Sync Adapters and Migrations
+guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Sync_Adapters_and_Migrations) for
+information about the new SQLite sync adapter and the new migration features.
+
+#### Removed ti.physicalSizeCategory Module
+
+The `ti.physicalSizeCategory` module has been replaced by a background module part of Titanium SDK 3.0.x.
+No action is needed to migrate to the new module.  However, your `tiapp.xml` file still references this module,
+but does not affect the compilation or execution of the application.  You may safely remove this reference from your 
+`tiapp.xml` file.
+
+Previously, this module was copied to an Alloy project as part of the `alloy new` command 
+and used to determine the size of an Android device.
+
+
+#### Removed APIs
+
+The following deprecated APIs have been removed in this release:
+
+| API | Type | Notes |
+|-----|------|-------|
+| `Alloy.getCollection` | method | Creates a local instance of a collection. Use[Alloy.createCollection](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createCollection) instead. |
+| `Alloy.getController` | method | Creates a local instance of a controller. Use [Alloy.createController](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createController) instead. |
+| `Alloy.getModel` | method | Creates a local instance of a model. Use [Alloy.createModel](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createModel) instead. |
+| `Alloy.getWidget` | method | Creates a local instance of a widget. Use [Alloy.createWidget](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createWidget) instead. |
+| `Alloy.globals` | property | Global namespace. Use [Alloy.Globals](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-property-Globals) instead. | 
+| `datatime.js` | builtin | Collection of functions for datetime formatting. Use [moment.js](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.builtins.moment) instead. |
+| `size` | XML/TSS attribute | Defines size-specific view components or styles. Use the `formFactor` attribute instead. |
+
+### New features
+
+* [ALOY-343](https://jira.appcelerator.org/browse/ALOY-343). Facilitate Alloy code completion in Studio.
+* [ALOY-437](https://jira.appcelerator.org/browse/ALOY-437). Support Android fastdev.
+* [ALOY-475](https://jira.appcelerator.org/browse/ALOY-475). Create test app for testing sql adapter apps with no migrations.
+
+
+### Bug fixes and improvements
+
+* [ALOY-209](https://jira.appcelerator.org/browse/ALOY-209). Remove ti.physicalSizeCategory module for Alloy 1.0.0 (TiSDK 3.0+). Fixes [ALOY-188](https://jira.appcelerator.org/browse/ALOY-188) and [ALOY-134](https://jira.appcelerator.org/browse/ALOY-134).
+* [ALOY-313](https://jira.appcelerator.org/browse/ALOY-313). Use applyProperties to assign properties to Ti.Android.MenuItem in parser.
+* [ALOY-323](https://jira.appcelerator.org/browse/ALOY-323). Make Alloy support only TiSDK 3.0+.
+* [ALOY-407](https://jira.appcelerator.org/browse/ALOY-407). Make `alloy generate model` calls uniform in format, regardless of adapter. Fixes [ALOY-375](https://jira.appcelerator.org/browse/ALOY-375) where models were not being generated correctly in Titanium Studio.
+* [ALOY-429](https://jira.appcelerator.org/browse/ALOY-429). Convert jake app runner to use new CLI.
+* [ALOY-454](https://jira.appcelerator.org/browse/ALOY-454). iOS is rebuilding apps every time with new CLI.
+* [ALOY-455](https://jira.appcelerator.org/browse/ALOY-455). Remove Backbone eventing from Titanium proxies. Fixes [ALOY-460](https://jira.appcelerator.org/browse/ALOY-460) where ScrollableViews displayed noticeable lagging.
+* [ALOY-457](https://jira.appcelerator.org/browse/ALOY-457). Make Alloy sync adapter sync() function signature match that of Backbone.
+* [ALOY-473](https://jira.appcelerator.org/browse/ALOY-473). Abort compile process with message if trying to compile Alloy 1.0+ for anything less than Titanium 3.0.
+* [ALOY-476](https://jira.appcelerator.org/browse/ALOY-476). Widgets within model-bound view get bound to unexisting `$model`.
+* [ALOY-479](https://jira.appcelerator.org/browse/ALOY-479). Fix migration processing bug.
+* [ALOY-480](https://jira.appcelerator.org/browse/ALOY-480). Replace `sql` adapter with `sql_new`.
+* [ALOY-482](https://jira.appcelerator.org/browse/ALOY-482). View-based collection binding not properly clearing children before repopulating.
+* [ALOY-486](https://jira.appcelerator.org/browse/ALOY-486). `sql` adapter does not update ID in client-side model when using AUTOINCREMENT.
+
+
+### Deprecations
+
+* [ALOY-330](https://jira.appcelerator.org/browse/ALOY-330). Make `alloy run` execute `titanium build`. The `alloy run` command will be removed in version 1.1.0 in favor of only using the `titanium build` command of the Titanium CLI.
+
+
+
+## 0.3.6 (18 January 2013)
+
+### Bug fixes and improvements
+
+* [ALOY-474](https://jira.appcelerator.org/browse/ALOY-474). Allow extra commans in TSS files.
+
 
 ## 0.3.5 (18 January 2013)
 
