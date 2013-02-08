@@ -189,7 +189,7 @@ The following deprecated APIs have been removed in this release:
 
 ### Bug fixes and improvements
 
-* [ALOY-474](https://jira.appcelerator.org/browse/ALOY-474). Allow extra commans in TSS files.
+* [ALOY-474](https://jira.appcelerator.org/browse/ALOY-474). Allow extra commas in TSS files.
 
 
 ## 0.3.5 (18 January 2013)
