@@ -9,8 +9,7 @@
  * To use the social builtin library, require it with the `alloy` root 
  * directory in your `require` call. For example:
  * 
- *     var social = require('alloy/social');
- *     social.create({
+ *     var social = require('alloy/social').create({
  *         consumerSecret: 'consumer-secret',
  *         consumerKey: 'consumer-key'
  *     });
@@ -585,6 +584,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
  * @param {String} [settings.site="twitter"] Site to access. Only 'twitter' is working.
  * @param {String} settings.consumerSecret Shared secret used to authenticate the key.
  * @param {String} settings.consumerKey Key used to identify the client to the service provider.
+ * @return {Object} Instance of social to make subsequent API calls.
  */  
 
 exports.create = function(settings) {
