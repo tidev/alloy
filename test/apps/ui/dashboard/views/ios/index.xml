@@ -1,0 +1,24 @@
+<Alloy>
+	<Window>
+		<Toolbar top="0dp">
+			<Items>
+				<Button id="editButton" onClick="toggleEditMode">Edit</Button>
+			</Items>
+		</Toolbar>
+		<!-- 
+			Obviously this would be achieved easier programmatically, but this is to show how
+			how the DashboardView can be used in markup with DashboardItems 
+		-->
+		<DashboardView id="dash" onClick="resetBadge" onEdit="handleEdit" onCommit="handleCommit">
+			<DashboardItem image="account_off.png" selectedImage="account_on.png" badge="10" label="account"/>
+			<DashboardItem image="calls_off.png" selectedImage="calls_on.png" badge="110" label="calls"/>
+			<DashboardItem image="cases_off.png" selectedImage="cases_on.png" label="cases"/>
+			<DashboardItem image="contacts_off.png" selectedImage="contacts_on.png" badge="23" label="contacts"/>
+			<DashboardItem image="emps_off.png" selectedImage="emps_on.png" label="employees"/>
+			<DashboardItem image="leads_off.png" selectedImage="leads_on.png" badge="1" label="leads"/>
+			<DashboardItem image="meetings_off.png" selectedImage="meetings_on.png" badge="5" label="meetings"/>
+			<DashboardItem image="opps_off.png" selectedImage="opps_on.png" label="opps"/>
+			<DashboardItem image="tasks_off.png" selectedImage="tasks_on.png" label="tasks"/>
+		</DashboardView>
+	</Window>
+</Alloy>
