@@ -18,18 +18,24 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
-	code += CU.generateStyleParams(
+	code += "__styleParams = " + CU.generateStyleParams(
 		state.styles,
 		args.classes,
 		args.id,
 		CU.getNodeFullname(node),
 		_.defaults(state.extraStyle || {}, args.createArgs || {}),
 		state
-	) + '\n';
+	) + ';\n';
+	if (!state.local) {
+		code += "if (refresh) {\n" + args.symbol + ".applyProperties(__styleParams);\n} else {\n";
+	}		
+	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(__styleParams\n";	
 	code += ");\n";
 	if (args.parent.symbol) {
 		code += args.parent.symbol + ".add(" + args.symbol + ");\n";
+	}
+	if (!state.local) {
+		code += "}\n";
 	}
 
 	if (isCollectionBound) {

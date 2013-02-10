@@ -44,10 +44,16 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		},
 		tablet: {
 			runtime: "Alloy.isTablet"
+		},
+		portrait: {
+			runtime: "Ti.Gesture.isPortrait()"
+		},		
+		landscape: {
+			runtime: "Ti.Gesture.isLandscape()"
 		}
 	},
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', 'orientation', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', 'orientation', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 exports.bindingsMap = {};
@@ -96,6 +102,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
+		orientation = node.getAttribute('orientation'),
 		platformObj;
 
 	// handle binding arguments
@@ -156,6 +163,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id: id, 
 		fullname: fullname,
 		formFactor: node.getAttribute('formFactor'),
+		orientation: node.getAttribute('orientation'),
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],	
 		parent: state.parent || {},
@@ -210,6 +218,12 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		var check = CONDITION_MAP[args.formFactor].runtime;
 		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
 	}
+	
+	//Add orientation condition, if application orientation specific runtime check
+	if (args.orientation && CONDITION_MAP[args.orientation]) {
+		var check = CONDITION_MAP[args.orientation].runtime;
+		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
+	}
 
 	// pass relevant conditional information in state
 	if (code.condition) {
@@ -231,7 +245,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
 	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
-	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
+	if (isTopLevel) { code.content += 'if (!refresh) {$.addTopLevelView(' + args.symbol + ');}'; }
 
 	// handle any model/collection code
 	if (state.modelCode) {
@@ -257,7 +271,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= cb %>']", eventObj);
 			var theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
-			var immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
+			var immediateTemplate = "if (!refresh) {<%= cb %>?" + theEvent + ":" + theDefer + "=true;}";
 			var deferTemplate = theDefer + " && " + theEvent + ";";
 
 			// add the generated code to the view code and post-controller code respectively
@@ -280,7 +294,9 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 	
 	if (!isModelOrCollection) {
-		return code.condition ? _.template(codeTemplate, code) : code.content;
+		return (isTopLevel ? 'this.__init = function(defers, refresh) {\nvar $ = this, __defers = defers, __styleParams = {};\n' : '') 
+			+ (code.condition ? _.template(codeTemplate, code) : code.content) 
+			+ (isTopLevel ? '\n}\n$.__init(__defers);\n' : '');
 	} else {
 		return {
 			content: code.condition ? _.template(codeTemplate, code) : code.content,
@@ -674,7 +690,8 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			// manage potential runtime conditions for the style
 			var conditionals = {
 				platform: [],
-				formFactor: ''
+				formFactor: '',
+				orientation: ''
 			};
 
 			if (style.queries) {
@@ -700,11 +717,20 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				} else if (q.formFactor === 'handheld') {
 					conditionals.formFactor = 'Alloy.isHandheld';
 				}
+				
+				// handle orientation device query
+				if (q.orientation === 'landscape') {
+					conditionals.orientation = 'Ti.Gesture.isLandscape()';
+				} else if (q.orientation === 'portrait') {
+					conditionals.orientation = 'Ti.Gesture.isPortrait()';
+				}
 
 				// assemble runtime query
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
 				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
-				var conditional = pcond + joinString + conditionals.formFactor;
+				pcond = pcond + joinString + conditionals.formFactor;
+				joinString = pcond && conditionals.orientation ? ' && ' : '';
+				var conditional = pcond + joinString + conditionals.orientation;
 
 				// push styles if we need to insert a conditional
 				if (conditional) {
@@ -928,6 +954,7 @@ function sortStyles(componentStyle) {
 			API:      1000,
 			PLATFORM:  100,
 			FORMFACTOR: 10,
+			ORIENTATION: 5,
 			SUM:         1,
 			ORDER:       0.001
 		};
@@ -979,6 +1006,8 @@ function sortStyles(componentStyle) {
 						v = v.split(',');
 					} else if (q === 'formFactor') {
 						priority += VALUES.FORMFACTOR + VALUES.SUM;
+					} else if (q === 'orientation') {
+						priority += VALUES.ORIENTATION + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
 					}
