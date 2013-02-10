@@ -4,17 +4,10 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## Coming Features
-The following are planned features for the next release:
 
-* [ALOY-362](https://jira.appcelerator.org/browse/ALOY-362). Allow controller-less views with some controller logic.
-* [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Support themes in widgets.
-* [ALOY-472](https://jira.appcelerator.org/browse/ALOY-472). Enable Collection binding for CoverFlowView.
+## 1.0.0-cr (8 February 2013)
 
-
-## 1.0.0.CR (8 February 2013)
-
-### Breaking Changes
+### ** Breaking Changes **
 
 The following changes alter the behavior of the Alloy Framework from previous versions and may
 require code changes to your applications.
