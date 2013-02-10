@@ -1,6 +1,5 @@
 "#login": {
 	fullscreen: false,
-	modeal: true,
 	exitOnClose: true
 }
 
