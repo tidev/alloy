@@ -1,8 +1,3 @@
-".addAddress": {
-    backgroundColor: '#800',
-    height: '50dp',
-    top: 0
-},
 "TextField": {
     height: '40dp',
     top: '5dp',
@@ -11,7 +6,8 @@
     style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
     backgroundColor: '#fff',
     paddingLeft: '5dp'
-},
+}
+
 "Button": {
     font: {
         fontSize: '20dp',
@@ -22,3 +18,9 @@
     width: '40dp',
     right: '5dp'
 }
+
+".addAddress": {
+    backgroundColor: '#800',
+    height: '50dp',
+    top: 0
+} 

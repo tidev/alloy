@@ -1,4 +1,4 @@
-".container": {
+"#index": {
     backgroundColor:'#fff',
     fullscreen: false,
     exitOnClose: true
