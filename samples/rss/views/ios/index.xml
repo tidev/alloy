@@ -1,0 +1,14 @@
+<Alloy>
+	<!-- iPad -->
+	<SplitWindow id="index" formFactor="tablet">
+		<Require src="master" id="master"/>
+		<Require src="detail" id="detail"/>
+	</SplitWindow>
+	
+	<!-- iPhone -->
+	<Window id="index" formFactor="handheld">
+	    <NavigationGroup id="navgroup">
+	        <Require src="master" id="master"/>
+	    </NavigationGroup>
+   	</Window>
+</Alloy>

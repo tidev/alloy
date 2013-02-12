@@ -1,0 +1,20 @@
+<Alloy>
+	<Window title="RSS Reader">
+		<!-- android menu -->
+		<Menu platform="android">
+			<MenuItem title="Refresh" icon="/refresh_icon.png" onClick="refreshRss"/>
+		</Menu>
+
+		<!-- rightNavButton for platforms that support them -->
+		<RightNavButton platform="ios,mobileweb">
+			<Button id="refreshButton" onClick="refreshRss"/>
+		</RightNavButton>
+
+		<!-- tableview representing all master rows -->
+		<TableView id="table" onClick="openDetail">
+			<HeaderView platform="android">
+				<Label id="header">RSS Reader</Label>
+			</HeaderView>
+		</TableView>
+	</Window>
+</Alloy>

@@ -1,0 +1,7 @@
+<Alloy>
+	<TableViewRow>
+		<ImageView id="image"/>
+		<Label id="date"/>
+		<Label id="title"/>
+	</TableViewRow>
+</Alloy>

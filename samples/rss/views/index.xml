@@ -1,0 +1,11 @@
+<Alloy>
+	<!-- Mobileweb -->
+   	<Window id="index" platform="mobileweb">
+	    <NavigationGroup id="navgroup">
+	        <Require src="master" id="master"/>
+	    </NavigationGroup>
+   	</Window>
+  
+  	<!-- Android -->
+    <Require id="master" src="master" platform="android"/>
+</Alloy>
