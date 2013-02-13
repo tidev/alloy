@@ -15,7 +15,7 @@ exports.HOOK_FILE = 'alloy.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
 
 // Constants related to model-view binding
-exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform'];
+exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
 exports.BIND_COLLECTION = 'dataCollection';
 exports.BIND_WHERE = 'dataFilter';
 exports.BIND_TRANSFORM = 'dataTransform';

@@ -103,6 +103,7 @@ exports.getParserArgs = function(node, state, opts) {
 	bindObj[CONST.BIND_COLLECTION] = node.getAttribute(CONST.BIND_COLLECTION);
 	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE); 
 	bindObj[CONST.BIND_TRANSFORM] = node.getAttribute(CONST.BIND_TRANSFORM); 
+	bindObj[CONST.BIND_FUNCTION] = node.getAttribute(CONST.BIND_FUNCTION); 
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
