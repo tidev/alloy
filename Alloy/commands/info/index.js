@@ -24,6 +24,30 @@ var info = {
 		};
 		console.log(JSON.stringify(desc));
 	},
+	samples: function() {
+		var desc = [
+			{
+				name: "mapping", 
+				label: "Geocoder (Alloy)", 
+				Description: "A sample app that uses native maps to plot locations. With it you can forward geocode addresses and add them as annotations to the map.", 
+				icon: "app.png"
+			},
+  			{
+  				name: "rss", 
+  				label: "RSS Reader (Alloy)", 
+  				Description: "A sample Master/Detail app that creates a RSS reader. With it you can pull live RSS feeds from the internet, list them along with thumbnails, then drill down to the article itself.", 
+  				icon: "app.png"
+  			},
+  			{
+  				name: "todo", 
+  				label: "Todo List (Alloy)", 
+  				Description: "A sample application that creates a basic todo list. With this app you can maintain a listing of tasks to be completed, add to that list, and mark tasks as done, all powered by Alloy models and collections.", 
+  				icon: "app.png"
+  			}
+		];
+		console.log(JSON.stringify(desc));
+		//console.log(U.prettyPrintJson(desc));
+	},
 	templates: function() {
 		var desc = [
 			{
@@ -40,7 +64,6 @@ var info = {
   			}
 		];
 		console.log(JSON.stringify(desc));
-		//console.log(U.prettyPrintJson(desc));
 	},
 	namespaces: function() {
 		console.log(JSON.stringify(CONST.IMPLICIT_NAMESPACES));
@@ -48,13 +71,8 @@ var info = {
 };
 
 module.exports = function(args, program) {
-	var target = args[0]; // || 'ALL';
+	var target = args[0]; 
 
-	// if (target === 'ALL') {
-	// 	_.each(_.keys(info), function(a) {
-	// 		info[a]();
-	// 	});
-	// } else 
 	if (!info[target]) {
 		U.die('Invalid target for `alloy info`: ' + target);
 	} else {
