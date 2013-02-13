@@ -1,0 +1,6 @@
+<Alloy>
+	<TableViewRow backgroundColor="{color}">
+		<ImageView id="direction" image="{imageUrl}"/>
+		<Label id="name" text="{upperCaseName}"/>
+	</TableViewRow>
+</Alloy>

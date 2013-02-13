@@ -1,0 +1,69 @@
+"Button": {
+	height: '40dp',
+	width: '120dp'
+}
+
+"Label": {
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
+
+".divider": {
+	backgroundColor: '#fff',
+	height: '46dp',
+	width: '1dp',
+	left: '50%'
+}
+
+".toolbar": {
+	height: '50dp',
+	width: Ti.UI.FILL,
+	backgroundGradient: {
+        type: 'linear',
+        startPoint: { x:'0%', y:'0%' },
+        endPoint: { x:'0%', y:'100%' },
+        colors: [
+            { color: '#333', offset: 0.0 },
+            { color: '#000', offset: 0.5 },
+            { color: '#333', offset: 0.99 },
+            { color: '#fff', offset: 1.0 }
+        ]
+    }
+}
+
+"#index": {
+	backgroundColor: '#fff',
+	navBarHidden: true,
+	exitOnClose: true
+}
+
+"#table": {
+	top: '50dp',
+	bottom: '50dp'
+}
+
+"#header": {
+	top: '0dp',
+    textAlign: 'center'
+}
+
+"#footer": {
+	bottom: '0dp'
+}
+
+"#leftButton": {
+	height: '50dp',
+	width: '50%',
+	left: '0dp',
+	textAlign: 'center'
+}
+
+"#rightButton": {
+	height: '50dp',
+	width: '50%',
+	right: '0dp',
+	textAlign: 'center'
+}

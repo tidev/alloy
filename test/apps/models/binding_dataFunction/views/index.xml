@@ -1,0 +1,18 @@
+<Alloy>
+	<Window>
+		<Label id="header" class="toolbar">Locations</Label>
+		<TableView id="table" dataCollection="locations" dataFunction="updateUi" dataTransform="transformData">
+			<Require src="row"/>
+		</TableView>
+		<View id="footer" class="toolbar">
+			<Label id="leftButton" onClick="doChanges">change</Label>
+			<View class="divider"/>
+			<Label id="rightButton" onClick="saveChanges">save</Label>
+
+			<!--
+			<Button id="leftButton" onClick="doChanges">make changes</Button>
+			<Button id="rightButton" onClick="saveChanges">save changes</Button>
+			-->
+		</View>
+	</Window>
+</Alloy>

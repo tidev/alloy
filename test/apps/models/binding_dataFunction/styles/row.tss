@@ -1,0 +1,13 @@
+"#row": {
+	height: '60dp'
+}
+
+"#direction": {
+	left: '0dp',
+	height: '36dp'
+}
+
+"#name": {
+	color: '#fff',
+	right: '10dp'
+}
