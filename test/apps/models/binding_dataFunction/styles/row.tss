@@ -4,7 +4,8 @@
 
 "#direction": {
 	left: '0dp',
-	height: '36dp'
+	height: '36dp',
+	touchEnabled: false
 }
 
 "#direction[platform=android,mobileweb]": {
@@ -17,5 +18,6 @@
 	font: {
 		fontSize: '16dp',
 		fontWeight: 'normal'
-	}
+	},
+	touchEnabled: false
 }
