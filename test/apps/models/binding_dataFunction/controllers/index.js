@@ -1,6 +1,6 @@
 function transformData(model) {
 	var attrs = model.toJSON();
-	attrs.imageUrl = attrs.direction + '.png';
+	attrs.imageUrl = '/' + attrs.direction + '.png';
 	attrs.upperCaseName = attrs.name.toUpperCase();
 	return attrs;
 }
