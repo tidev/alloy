@@ -7,7 +7,15 @@
 	height: '36dp'
 }
 
+"#direction[platform=android,mobileweb]": {
+	left: '10dp'
+}
+
 "#name": {
 	color: '#fff',
-	right: '10dp'
+	right: '10dp',
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'normal'
+	}
 }
