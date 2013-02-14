@@ -26,7 +26,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- /**
+ /*
   * @class Alloy.builtins.oauth
   */
 /*
@@ -190,7 +190,7 @@ OAuth.setProperties(OAuth, // utility functions
             }
             return decodeURIComponent(s);
         },
-        /** Convert the given parameters to an Array of name-value pairs. */
+        /* Convert the given parameters to an Array of name-value pairs. */
         getParameterList: function getParameterList(parameters) {
             if (parameters == null) {
                 return [];
@@ -207,7 +207,7 @@ OAuth.setProperties(OAuth, // utility functions
             }
             return list;
         },
-        /** Convert the given parameters to a map from name to value. */
+        /* Convert the given parameters to a map from name to value. */
         getParameterMap: function getParameterMap(parameters) {
             if (parameters == null) {
                 return {};
@@ -300,7 +300,7 @@ OAuth.setProperties(OAuth, // utility functions
                 OAuth.setParameter(message, list[i][0], list[i][1]);
             }
         },
-        /** Fill in parameters to help construct a request message.
+        /* Fill in parameters to help construct a request message.
          This function doesn't fill in every parameter.
          The accessor object should be like:
          {consumerKey:'foo', consumerSecret:'bar', accessorSecret:'nurn', token:'krelm', tokenSecret:'blah'}
@@ -345,7 +345,7 @@ OAuth.setProperties(OAuth, // utility functions
             }
             return newURL;
         },
-        /** Construct the value of the Authorization header for an HTTP request. */
+        /* Construct the value of the Authorization header for an HTTP request. */
         getAuthorizationHeader: function getAuthorizationHeader(realm, parameters) {
             var header = 'OAuth realm="' + OAuth.percentEncode(realm) + '"';
             var list = OAuth.getParameterList(parameters);
@@ -358,7 +358,7 @@ OAuth.setProperties(OAuth, // utility functions
             }
             return header;
         },
-        /** Correct the time using a parameter from the URL from which the last script was loaded. */
+        /* Correct the time using a parameter from the URL from which the last script was loaded. */
         correctTimestampFromSrc: function correctTimestampFromSrc(parameterName) {
             parameterName = parameterName || "oauth_timestamp";
             var scripts = document.getElementsByTagName('script');
@@ -372,11 +372,11 @@ OAuth.setProperties(OAuth, // utility functions
             if (t == null) return;
             OAuth.correctTimestamp(t);
         },
-        /** Generate timestamps starting with the given value. */
+        /* Generate timestamps starting with the given value. */
         correctTimestamp: function correctTimestamp(timestamp) {
             OAuth.timeCorrectionMsec = (timestamp * 1000) - (new Date()).getTime();
         },
-        /** The difference between the correct time and my clock. */
+        /* The difference between the correct time and my clock. */
         timeCorrectionMsec: 0,
         timestamp: function timestamp() {
             var t = (new Date()).getTime() + OAuth.timeCorrectionMsec;
@@ -395,7 +395,7 @@ OAuth.setProperties(OAuth, // utility functions
 
 OAuth.nonce.CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
 
-/** Define a constructor function,
+/* Define a constructor function,
  without causing trouble to anyone who was using it as a namespace.
  That is, if parent[name] already existed and had properties,
  copy those properties into the new constructor.
@@ -413,19 +413,19 @@ OAuth.declareClass = function declareClass(parent, name, newConstructor) {
     return newConstructor;
 }
 
-/** An abstract algorithm for signing messages. */
+/* An abstract algorithm for signing messages. */
 OAuth.declareClass(OAuth, "SignatureMethod", function OAuthSignatureMethod() {
 });
 
 OAuth.setProperties(OAuth.SignatureMethod.prototype, // instance members
-    { /** Add a signature to the message. */
+    { /* Add a signature to the message. */
     sign: function sign(message) {
         var baseString = OAuth.SignatureMethod.getBaseString(message);
         var signature = this.getSignature(baseString);
         OAuth.setParameter(message, "oauth_signature", signature);
         return signature; // just in case someone's interested
     },
-        /** Set the key string for signing. */
+        /* Set the key string for signing. */
         initialize: function initialize(name, accessor) {
             var consumerSecret;
             if (accessor.accessorSecret != null && name.length > 9 && name.substring(name.length - 9) == "-Accessor") {
@@ -452,7 +452,7 @@ OAuth.setProperties(OAuth.SignatureMethod, // class members
             }
             OAuth.SignatureMethod.newMethod(name, accessor).sign(message);
         },
-        /** Instantiate a SignatureMethod for the given method name. */
+        /* Instantiate a SignatureMethod for the given method name. */
         newMethod: function newMethod(name, accessor) {
             var impl = OAuth.SignatureMethod.REGISTERED[name];
             if (impl != null) {
