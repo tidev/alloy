@@ -1,13 +1,24 @@
 <Alloy>
 	<Window>
 		<Label id="header" class="toolbar">Locations</Label>
+
+		<!-- 
+			"dataFunction" let's us give an explicit name to the
+			data binding function that will be auto-generated
+			for use in the controller. This function will be called 
+			automatically when Backbone events are handled by the
+			"dataCollection", but we can now also trigger the 
+			function ourselves by calling "updateUi()" in the 
+			controller.
+		 -->
 		<TableView id="table" dataCollection="locations" dataFunction="updateUi" dataTransform="transformData">
 			<Require src="row"/>
 		</TableView>
+
 		<View id="footer" class="toolbar">
 			<Label id="leftButton" onClick="doChanges">change</Label>
 			<View class="divider"/>
-			<Label id="rightButton" onClick="saveChanges">save</Label>
+			<Label id="rightButton" onClick="updateUi">update</Label>
 		</View>
 	</Window>
 </Alloy>
