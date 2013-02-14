@@ -1,3 +1,6 @@
 <Alloy>
 	<!-- UI deferred to login or home, check index.js -->
+	<Window platform="!ios">
+		<Label>This test app is only supported on iOS</Label>
+	</Window>
 </Alloy>
