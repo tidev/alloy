@@ -2,6 +2,7 @@ var fs = require('fs'),
 	path = require('path'),
 	U = require('../Alloy/utils'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
+	CONST = require('../Alloy/common/constants'),
 	logger = require('../Alloy/common/logger');
 
 // Fix node warning 
@@ -61,6 +62,29 @@ function filterLog(line) {
 	logger.debug(line);
 }
 
+function runApp() {
+	log('Running sample app "'+process.env.dir+'"...');
+
+	// create array for `titanium build` args
+	var e = process.env;
+	var newArgs = ['build',
+		'--project-dir', harnessAppPath,
+		'--platform', e.platform || 'ios'
+	];
+	e.tiversion && (newArgs = newArgs.concat(['--sdk',e.tiversion]));
+	e.simtype && (newArgs = newArgs.concat(['--sim-type',e.simtype]));
+
+	//run stdout/stderr back through console.log
+	var runcmd = spawn('titanium', newArgs);
+	runcmd.stdout.on('data', function (data) {
+		filterLog(data);
+	});
+
+	runcmd.stderr.on('data', function (data) {
+		filterLog(data);
+	});
+}
+
 namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
@@ -91,25 +115,14 @@ namespace('app', function() {
 	
 	desc('run an example, all but dir are optional: e.g. "jake app:run dir=masterdetail platform=android tiversion=2.0.2.GA tisdk=<path to sdk>"');
 	task('run', ['app:setup'], function() {		
-		log('Running sample app "'+process.env.dir+'"...');
+		runApp();
+	});
 
-		// create array for `titanium build` args
-		var e = process.env;
-		var newArgs = ['build',
-			'--project-dir', harnessAppPath,
-			'--platform', e.platform || 'ios'
-		];
-		e.tiversion && (newArgs = newArgs.concat(['--sdk',e.tiversion]));
-		e.simtype && (newArgs = newArgs.concat(['--sim-type',e.simtype]));
-
-		//run stdout/stderr back through console.log
-		var runcmd = spawn('titanium', newArgs);
-		runcmd.stdout.on('data', function (data) {
-			filterLog(data);
-		});
-
-		runcmd.stderr.on('data', function (data) {
-			filterLog(data);
-		});
+	desc('copy a sample app\'s "app" folder into the Harness');
+	task('quickrun', function() {
+		log('Quick-running sample app "' + process.env.dir + '"...');
+		log('Staging sample app "' + process.env.dir + '" for launch...');
+		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
+		runApp();
 	});
 });
