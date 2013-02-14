@@ -1,0 +1,21 @@
+"#index": {
+	backgroundColor: '#000',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#coverflow": {
+	backgroundColor: '#000'
+}
+
+"#apilabel": {
+	color: '#fff',
+	font: {
+		fontSize: 20,
+		fontWeight: 'bold'
+	},
+	textAlign: 'center',
+	bottom: 10,
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL
+}

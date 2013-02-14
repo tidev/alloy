@@ -1,0 +1,17 @@
+<Alloy>
+	<Window>
+		<!-- Coverflow for iOS -->
+		<CoverFlowView id="coverflow" platform="ios">
+			<!-- data-bound collection of images -->
+			<Images dataCollection="images" dataTransform="transformData">
+				<Image image="{image}" height="{height}" width="{width}"/>
+			</Images>
+
+			<!-- additional views for the CoverFlowView -->
+			<Label id="apilabel">Ti.UI.iOS.CoverFlowView</Label>
+		</CoverFlowView>
+
+		<!-- non-iOS label -->
+		<Label platform="!ios">Ti.UI.iOS.CoverFlowView only supported on iOS</Label>
+	</Window>
+</Alloy>
