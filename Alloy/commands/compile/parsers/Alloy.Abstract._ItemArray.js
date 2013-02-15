@@ -83,7 +83,6 @@ function parse(node, state, args) {
 			pre: 'var images=[];',
 			items: itemCode,
 			post: "<%= itemContainer %>.images=images;"
-			//post: scrollState.parent.symbol + ".images=images;"
 		});
 
 		return {
