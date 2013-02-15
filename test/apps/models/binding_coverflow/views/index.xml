@@ -3,8 +3,8 @@
 		<!-- Coverflow for iOS -->
 		<CoverFlowView id="coverflow" platform="ios">
 			<!-- data-bound collection of images -->
-			<Images dataCollection="images" dataTransform="transformData">
-				<Image image="{image}" height="{height}" width="{width}"/>
+			<Images dataCollection="images">
+				<Image image="{url}" height="{height}" width="{width}"/>
 			</Images>
 
 			<!-- additional views for the CoverFlowView -->
