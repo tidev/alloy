@@ -1,6 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
-	CU = require('../compilerUtils'); 
+	CU = require('../compilerUtils'),
+	CONST = require('../../../common/constants'); 
 
 function fixDefinition(def) {
 	def || (def = {});
@@ -26,6 +27,7 @@ function parse(node, state, args) {
 	}
 
 	var children = U.XML.getElementsFromNodes(node.childNodes);
+	var isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false;
 	var code = children.length ? 'var ' + state.itemsArray + ' = [];' : '';
 
 	// Run the translations and/or validations
@@ -44,21 +46,51 @@ function parse(node, state, args) {
 			} 
 		});
 
-		// This ItemArray processes all types, so we need to process 
-		// them manually
+		// This ItemArray processes all types
 		if (def.children[0] === 'ALL') {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, s, args) {
-					return state.itemsArray + '.push(' + s.parent.symbol + ');';
-				}
-			});
+			if (!isCollectionBound) {
+				code += CU.generateNodeExtended(child, state, {
+					parent: {},
+					post: function(node, s, args) {
+						return state.itemsArray + '.push(' + s.parent.symbol + ');';
+					}
+				});
+			}
 
 		// Make sure the children match the parent
 		} else if (!_.contains(def.children, childArgs.fullname)) {
 			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
 		} 
 	});
+
+	if (isCollectionBound) {
+		var localModel = CU.generateUniqueId();
+		var itemCode = '';
+
+		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+			itemCode += CU.generateNodeExtended(child, state, {
+				parent: {},
+				local: true,
+				model: localModel,
+				post: function(node, state, args) {
+					return 'images.push(' + state.parent.symbol + ');\n';
+				}
+			});
+		});
+
+		code += _.template(CU.generateCollectionBindingTemplate(args), {
+			localModel: localModel,
+			pre: 'var images=[];',
+			items: itemCode,
+			post: "<%= itemContainer %>.images=images;"
+			//post: scrollState.parent.symbol + ".images=images;"
+		});
+
+		return {
+			parent: {},
+			code: code
+		}
+	} 
 
 	// return an empty state if we already processed
 	if (def.children[0] === 'ALL') {
