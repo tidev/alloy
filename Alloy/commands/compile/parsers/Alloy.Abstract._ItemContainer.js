@@ -84,6 +84,9 @@ function parse(node, state, args) {
 	}
 
 	var outState = require('./default').parse(node, state);
+	code = _.template(code, {
+		itemContainer: outState.parent.symbol
+	});
 	code += outState.code;
 
 	// Update the parsing state
