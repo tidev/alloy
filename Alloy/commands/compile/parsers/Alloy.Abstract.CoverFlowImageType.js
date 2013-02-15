@@ -23,13 +23,16 @@ function parse(node, state, args) {
 	if (_.isEmpty(obj)) {
 		// warn if there was no properties assigned
 		logger.warn('Child element of <CoverFlowView> at index ' + index + ' has no properties');
-	} else if (obj.image && obj.length === 1) {
-		obj = obj.image;
-	}
+	} 
+	
+	state.local = true;
+	state.extraStyle = obj;  //CU.createVariableStyle(extras); 
+	var itemState = require('./default_abstract').parse(node, state);
+	var code = itemState.code;
+	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
 
 	return {
 		parent: {},
-		styles: state.styles,
-		code: state.itemsArray + '.push(' + JSON.stringify(obj) + ');'
+		code: code
 	};
 }
