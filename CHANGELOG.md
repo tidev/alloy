@@ -174,6 +174,7 @@ The following deprecated APIs have been removed in this release:
 * [ALOY-499](https://jira.appcelerator.org/browse/ALOY-499). Generated code contains undefined objects when a comma not needed is present on tss files
 * [ALOY-513](https://jira.appcelerator.org/browse/ALOY-513). iOS only sample 'ui/dashboard' runs on Android with error
 * [ALOY-514](https://jira.appcelerator.org/browse/ALOY-514). Fix typo in models/login test app's login.tss file
+* [ALOY-487](https://jira.appcelerator.org/browse/ALOY-487). SQL adapter does not accept ID when using PRIMARY KEY
 
 
 ### Deprecations
