@@ -1,11 +1,11 @@
 ## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
-* Install Alloy by version: `[sudo] npm install -g alloy@0.3.0`
+* Install Alloy by version: `[sudo] npm install -g alloy@1.0.0`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
 
-## 1.0.0-cr (8 February 2013)
+## 1.0.0 (19 February 2013)
 
 ### ** Breaking Changes **
 
@@ -170,6 +170,10 @@ The following deprecated APIs have been removed in this release:
 * [ALOY-480](https://jira.appcelerator.org/browse/ALOY-480). Replace `sql` adapter with `sql_new`.
 * [ALOY-482](https://jira.appcelerator.org/browse/ALOY-482). View-based collection binding not properly clearing children before repopulating.
 * [ALOY-486](https://jira.appcelerator.org/browse/ALOY-486). `sql` adapter does not update ID in client-side model when using AUTOINCREMENT.
+* [ALOY-501](https://jira.appcelerator.org/browse/ALOY-501). Make run command handle parameters properly
+* [ALOY-499](https://jira.appcelerator.org/browse/ALOY-499). Generated code contains undefined objects when a comma not needed is present on tss files
+* [ALOY-513](https://jira.appcelerator.org/browse/ALOY-513). iOS only sample 'ui/dashboard' runs on Android with error
+* [ALOY-514](https://jira.appcelerator.org/browse/ALOY-514). Fix typo in models/login test app's login.tss file
 
 
 ### Deprecations
