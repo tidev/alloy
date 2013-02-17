@@ -101,7 +101,6 @@ exports.init = function (logger, config, cli, appc) {
 				process.platform == 'win32' && cmd.shift();
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 				
-				logger.error('here');
 				var child = spawn(cmd.shift(), cmd);
 					// this regex is used to strip [INFO] and friends from alloy's output and re-log it using our logger
 				var re = new RegExp('(\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(\u001b\\[\\d+m)?(.*)', 'i'),
