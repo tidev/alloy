@@ -18,9 +18,9 @@ function parse(node, state, args) {
 
 	// validate src
 	if (!src) {
-		U.die('<Require> elements must have a "src" attribute.');
+		U.dieWithNode(node, '<Require> elements must have a "src" attribute.');
 	} else if (U.XML.getElementsFromNodes(node.childNodes).length !== 0) {
-		U.die('<Require> elements may not have child elements.');
+		U.dieWithNode(node, '<Require> elements may not have child elements.');
 	}
 
 	// determine which Alloy method to use
@@ -39,7 +39,7 @@ function parse(node, state, args) {
 			alloyRequirePath = path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
 			break;
 		default:
-			U.die('Invalid <Require> type "' + type + '"');
+			U.dieWithNode(node, 'Invalid <Require> type "' + type + '"');
 	}
 
 	// make sure the required file exists at compile time, rather than
@@ -52,7 +52,7 @@ function parse(node, state, args) {
 	}
 
 	if (!(path.existsSync(requirePath) || (type === 'widget' && path.existsSync(alloyRequirePath)))) {
-		U.die(type + ' "' + src + '" at path "' + requirePath + '"' + (type === 'widget' ? ' or "' + alloyRequirePath + '"' : '')  + ' does not exist.');
+		U.dieWithNode(node, type + ' "' + src + '" at path "' + requirePath + '"' + (type === 'widget' ? ' or "' + alloyRequirePath + '"' : '')  + ' does not exist.');
 	}
 
 	// Remove <Require>-specific attributes from createArgs

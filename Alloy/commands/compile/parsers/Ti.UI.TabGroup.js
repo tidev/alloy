@@ -23,7 +23,7 @@ function parse(node, state, args) {
 				}
 			});
 		} else {
-			U.die([
+			U.dieWithNode(node, [
 				'Invalid <TabGroup> child type: ' + CU.getNodeFullname(child),
 				'All <TabGroup> children must be <Tab>'
 			]);

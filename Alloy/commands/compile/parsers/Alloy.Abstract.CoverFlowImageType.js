@@ -8,7 +8,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	if (!state.itemsArray) {
-		U.die('A CoverFlowImageType element must the child of a CoverFlowImageTypes element');
+		U.dieWithNode(node, 'A CoverFlowImageType element must the child of a CoverFlowImageTypes element');
 	}
 
 	var obj = {};

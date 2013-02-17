@@ -119,7 +119,7 @@ module.exports = function(args, program) {
 	logger.debug('app path = ' + paths.app);
 
 	// create compile config from paths and various alloy config files
-	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	compileConfig = CU.compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	buildPlatform = compileConfig.alloyConfig.platform;
 	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
@@ -192,6 +192,8 @@ module.exports = function(args, program) {
 				var fp = path.join(collection.dir,view.substring(0,view.lastIndexOf('.')));
 				if (tracker[fp]) { return; }
 
+				U.currentFile = path.join(collection.dir,CONST.DIR.VIEW,view);
+
 				// generate runtime controller
 				logger.debug('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 				parseAlloyComponent(view, collection.dir, collection.manifest);
@@ -207,6 +209,8 @@ module.exports = function(args, program) {
 				var fp = path.join(collection.dir,controller.substring(0,controller.lastIndexOf('.')));
 				if (tracker[fp]) { return; }
 
+				U.currentFile = path.join(collection.dir,CONST.DIR.CONTROLLER,controller);
+
 				// generate runtime controller
 				logger.debug('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
@@ -214,6 +218,9 @@ module.exports = function(args, program) {
 			}
 		});
 	});
+	
+	U.currentFile = null;
+
 	logger.debug('');
 //	BENCHMARK('process all controllers');
 

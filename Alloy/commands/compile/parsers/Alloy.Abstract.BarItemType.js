@@ -8,7 +8,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	if (!state.itemsArray) {
-		U.die('Invalid use of <Label>. Must be the child of <Labels>.');
+		U.dieWithNode(node, 'Invalid use of <Label>. Must be the child of <Labels>.');
 	}
 
 	// grab BarItemType attributes from node

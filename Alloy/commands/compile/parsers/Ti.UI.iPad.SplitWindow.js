@@ -13,7 +13,7 @@ function parse(node, state, args) {
 
 	// SplitWindow must have 2 windows as children
 	if (children.length !== 2) {
-		U.die('SplitWindow must have exactly 2 children that are Windows, a master and detail respectively');
+		U.dieWithNode(node, 'SplitWindow must have exactly 2 children that are Windows, a master and detail respectively');
 	}
 
 	_.each(children, function(child) {
@@ -27,7 +27,7 @@ function parse(node, state, args) {
 				}
 			});
 		} else {
-			U.die([
+			U.dieWithNode(node, [
 				'Invalid <SplitWindow> child type: ' + childArgs.fullname,
 				'<SplitWindow> must have 2 Windows as children'
 			]);

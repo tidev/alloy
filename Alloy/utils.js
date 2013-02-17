@@ -14,6 +14,8 @@ var path = require('path'),
 	CONST = require('./common/constants')
 ;
 
+exports.currentFile = null;
+
 exports.XML = {
 	getNodeText: function(node) {
 		if (!node) { return ''; }
@@ -90,13 +92,21 @@ exports.XML = {
 };
 
 exports.tiapp = {
+	_xml:null,
+	getDocument: function() {
+		if (this._xml) return this._xml;
+		// shouldn't ever get here
+		U.die('programming error. called getDocument before parse has been called at least once');
+	},
 	parse: function(dir) {
+		if (this._xml) return this._xml;
 		dir || (dir = './');
 		var tiappPath = path.join(dir,'tiapp.xml');
 		if (!path.existsSync(tiappPath)) {
 			U.die('tiapp.xml file does not exist at "' + tiappPath + '"');
 		}
-		return exports.XML.parseFromFile(tiappPath);
+		this._xml = exports.XML.parseFromFile(tiappPath);
+		return this._xml;
 	},
 	getTitaniumSdkVersion: function(doc) {
 		var elems = doc.documentElement.getElementsByTagName('sdk-version');
@@ -110,7 +120,59 @@ exports.tiapp = {
 			}
 		}
 		return null;
-	},	
+	},
+	isModuleDeclared: function (name, platform) {
+		var module = this.getModule(this._xml, name);
+		// if we've specified a platform, make sure we're running on that platform
+		if (module)
+		{
+			if (module.platform)
+			{
+				if (module.platform === platform)
+				{
+					return true;	
+				}
+				else if (module.platform === 'ios' && 
+					(platform === 'ios' || platform === 'iphone' || platform === 'ipad'))
+				{
+					return true;
+				}
+				else if (module.platform === 'iphone' && 
+					(platform === 'ios' || platform === 'iphone'))
+				{
+					return true;
+				}
+				else if (module.platform === 'ipad' && 
+					(platform === 'ios' || platform === 'ipad'))
+				{
+					return true;
+				}
+				return false;
+			}
+			// otherwise if not specified, it's cross platform
+			return true;
+		}
+		// we couldn't find the module in tiapp.xml
+		return false;
+	},
+	getModule: function(doc, name) {
+		var modules = doc.documentElement.getElementsByTagName('modules');
+		if (modules.length > 0)
+		{
+			modules = modules.item(0).getElementsByTagName('module');
+			for (var i = 0; i < modules.length; i++) {
+				var node = modules.item(i);
+				var moduleId = exports.XML.getNodeText(node);
+				if (moduleId === name) {
+					return {
+						version: node.getAttribute('version'),
+						platform: node.getAttribute('platform')
+					}
+				}
+			}
+		}
+		return null;
+	},
 	upStackSizeForRhino: function(dir) {
 		var doc = exports.tiapp.parse(dir);
 		var runtime = exports.XML.getNodeText(exports.tiapp.getProperty(doc, 'ti.android.runtime'));
@@ -133,6 +195,7 @@ exports.tiapp = {
 
 			// serialize the xml and write to tiapp.xml
 			var serializer = new XMLSerializer();
+			this._xml = doc;
 			var newxml = serializer.serializeToString(doc);
 			fs.writeFileSync(path.join(dir,'tiapp.xml'),newxml,'utf8');
 		}
@@ -198,6 +261,7 @@ exports.tiapp = {
 			
 			// serialize the xml and write to tiapp.xml
 			var serializer = new XMLSerializer();
+			this._xml = doc;
 			var newxml = serializer.serializeToString(doc);
 			fs.writeFileSync(tiappPath,newxml,'utf8');
 
@@ -570,7 +634,7 @@ exports.die = function(msg, e) {
 
 exports.dieWithNode = function(node, msg) {
 	msg = _.isArray(msg) ? msg : [msg];
-	msg.unshift('Error with <' + node.nodeName + '> at line ' + node.lineNumber);
+	msg.unshift('Error with <' + node.nodeName + '> at line ' + node.lineNumber + (exports.currentFile ? ' in '+exports.currentFile : ''));
 	exports.die(msg);
 }
 

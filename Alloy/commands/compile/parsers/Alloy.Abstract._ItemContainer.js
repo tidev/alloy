@@ -71,7 +71,7 @@ function parse(node, state, args) {
 					logger.warn('Additional views in ' + theNode + ' only supported on Android');
 				}
 			} else {
-				U.die(theNode + ' can only have one androidView');
+				U.dieWithNode(theNode, theNode + ' can only have one androidView');
 			}
 		}
 	});

@@ -17,6 +17,23 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
+	var module = node.getAttribute('module');
+
+	// check to see if this tag's view is coming from a user module instead of builtin Ti API
+	// and if so, we need to load the module and use it by prefixing it to the API
+	if (module)
+	{
+		if (!U.tiapp.isModuleDeclared(module,CU.compileConfig.alloyConfig.platform))
+		{
+			U.dieWithNode(node,'Required module ' + module.yellow + ' is not declared in tiapp.xml or is not available for ' + CU.compileConfig.alloyConfig.platform.blue);
+		}
+		var p = module.split('.'),
+			m = p[p.length-1],
+			createFunc = node.getAttribute('method') || 'create' + m[0].toUpperCase() + m.substring(1) + 'View';
+		args.ns = 'require("'+module+'")';
+		delete args.createArgs['module'] && delete args.createArgs['method'];
+	}
+
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
 	code += CU.generateStyleParams(

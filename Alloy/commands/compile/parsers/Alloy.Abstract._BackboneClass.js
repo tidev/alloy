@@ -59,7 +59,7 @@ function parse(node, state, args) {
 	if (isSingleton) {
 		if (id) {
 			logger.warn([
-				'Warning with <' + nodeName + '> at line ' + node.lineNumber,
+				'Warning with <' + nodeName + '> at line ' + node.lineNumber + ' in ' + U.currentFile,
 				'id="' + id + '" will be ignored, as only ' + nodeName + ' instances can have ids, not singletons',
 				'To create an instance of the ' + nodeName + ', add instance="true"',
 				'This instance will be accessible in your controller as $.' + id,

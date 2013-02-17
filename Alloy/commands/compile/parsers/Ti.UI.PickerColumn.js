@@ -26,7 +26,7 @@ function parse(node, state, args) {
 			(childArgs.name === 'Row' && !child.getAttribute('ns'))) {
 			child.nodeName = 'PickerRow';
 		} else {
-			U.die(err);
+			U.dieWithNode(node, err);
 		}
 
 		// generate the code for each row and add it to the array

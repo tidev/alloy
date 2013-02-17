@@ -8,7 +8,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	if (!state.itemsArray) {
-		U.die('Invalid use of <Option>. Must be the child of <Options>.');
+		U.dieWithNode(node, 'Invalid use of <Option>. Must be the child of <Options>.');
 	}
 	var string = U.trim(U.XML.getNodeText(node) || '').replace(/"/g,'\\"');
 
