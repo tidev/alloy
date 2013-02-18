@@ -40,7 +40,7 @@ exports.XML = {
 		}
 		return elems;
 	},
-	parseFromString: function(string) {
+	parseFromString: function(string,filename) {
 		// TODO: https://jira.appcelerator.org/browse/ALOY-267
 		// var warn = console.warn;
 		// console.warn = function(msg) {
@@ -51,14 +51,14 @@ exports.XML = {
 		try {
 			var errorHandler = {};
 			errorHandler.error = errorHandler.fatalError = function(m) { 
-				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/))); 
+				exports.die(['Error parsing XML file '+filename].concat((m || '').split(/[\r\n]/))); 
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
 				logger.warn((m || '').split(/[\r\n]/));
 			};
 			var doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
 		} catch (e) {
-			exports.die('Error parsing XML file.', e);
+			exports.die('Error parsing XML file '+filename, e);
 		}
 		//console.warn = warn;
 
@@ -66,7 +66,7 @@ exports.XML = {
 	},
 	parseFromFile: function(filename) {
 		var xml = fs.readFileSync(filename,'utf8');
-		return exports.XML.parseFromString(xml);
+		return exports.XML.parseFromString(xml,filename);
 	},
 	createEmptyNode: function(name, ns) {
 		var str = '<' + name + (ns ? ' ns="' + ns + '"' : '') + '></' + name + '>';

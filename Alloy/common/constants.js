@@ -90,6 +90,7 @@ exports.IMPLICIT_NAMESPACES = {
 	Model: NS_ALLOY,
 	Require: NS_ALLOY,
 	Widget: NS_ALLOY,
+	If: NS_ALLOY,
 
 	// Alloy.Abstract
 	ButtonNames: NS_ALLOY_ABSTRACT,
