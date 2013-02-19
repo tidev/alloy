@@ -8,7 +8,8 @@ exports.parse = function(node, state) {
 			],
 			children: [
 				'ALL'
-			]
+			],
+			property: 'items'
 		}
 	});
 	return require('./Alloy.Abstract._ItemArray').parse(node, state);

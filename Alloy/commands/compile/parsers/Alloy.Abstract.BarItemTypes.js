@@ -12,7 +12,8 @@ exports.parse = function(node, state) {
 			],
 			translations: [
 				{ from: 'Ti.UI.Label', to: 'Alloy.Abstract.BarItemType' }
-			]
+			],
+			property: 'labels'
 		}
 	});
 	return require('./Alloy.Abstract._ItemArray').parse(node, state);

@@ -11,7 +11,8 @@ exports.parse = function(node, state) {
 			],
 			translations: [
 				{ from: 'Ti.UI.Image', to: 'Alloy.Abstract.CoverFlowImageType' }
-			]
+			],
+			property: 'images'
 		}
 	});
 	return require('./Alloy.Abstract._ItemArray').parse(node, state);
