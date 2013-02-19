@@ -1,0 +1,5 @@
+<Alloy>
+	<TableView id="table" dataCollection="songs" onClick="handleTableClick">
+		<TableViewRow title="{info}"/>
+	</TableView>
+</Alloy>

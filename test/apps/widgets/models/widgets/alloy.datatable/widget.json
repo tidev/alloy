@@ -1,0 +1,14 @@
+{
+	"id": "alloy.datatable",
+	"name": "Data Table",
+	"description" : "Just a widget that shows a bunch of table rows based on a collection",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 by Tony Lukasavage",
+	"license":"Public Domain",
+	"min-alloy-version": "1.0",
+	"min-titanium-version":"3.0",
+	"tags":"",
+	"platforms":"android,ios,mobileweb",
+	"dependencies": {}
+}
