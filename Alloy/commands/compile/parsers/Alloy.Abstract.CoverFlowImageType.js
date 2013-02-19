@@ -26,7 +26,7 @@ function parse(node, state, args) {
 	} 
 	
 	state.local = true;
-	state.extraStyle = obj;  //CU.createVariableStyle(extras); 
+	state.extraStyle = obj;
 	var itemState = require('./default_abstract').parse(node, state);
 	var code = itemState.code;
 	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
