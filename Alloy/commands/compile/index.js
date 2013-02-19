@@ -171,7 +171,9 @@ module.exports = function(args, program) {
 	
 	// Process all models
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
-	var models = processModels(widgetDirs);
+	var viewCollection = widgetDirs;
+	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+	var models = processModels(viewCollection);
 //	BENCHMARK('process models');
 
 	// create a regex for determining which platform-specific
@@ -181,8 +183,8 @@ module.exports = function(args, program) {
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
 	// Process all views, including all those belonging to widgets
-	var viewCollection = widgetDirs;
-	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+	// var viewCollection = widgetDirs;
+	// viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 
 	var tracker = {};
 	_.each(viewCollection, function(collection) {
@@ -521,7 +523,7 @@ function findModelMigrations(name) {
 	}
 }
 
-function processModels(widgetDirs) {
+function processModels(dirs) {
 	var models = [];
 	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
 	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
