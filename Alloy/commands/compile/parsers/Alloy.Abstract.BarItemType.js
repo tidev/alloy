@@ -28,13 +28,19 @@ function parse(node, state, args) {
 	if (_.isEmpty(obj)) {
 		// warn if there was no properties assigned
 		logger.warn('<BarItemType> at index ' + index + ' has no properties');
-	} else if (obj.title && obj.length === 1) {
-		obj = obj.title;
-	}
+	} 
+
+	state.local = true;
+	state.extraStyle = obj;
+	var itemState = require('./default_abstract').parse(node, state);
+	delete state.local;
+	delete state.extraStyle;
+
+	var code = itemState.code;
+	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
 
 	return {
 		parent: {},
-		styles: state.styles,
-		code: state.itemsArray + '.push(' + JSON.stringify(obj) + ');'
+		code: code
 	};
 }

@@ -28,6 +28,9 @@ function parse(node, state, args) {
 	state.local = true;
 	state.extraStyle = obj;
 	var itemState = require('./default_abstract').parse(node, state);
+	delete state.local;
+	delete state.extraStyle;
+
 	var code = itemState.code;
 	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
 
