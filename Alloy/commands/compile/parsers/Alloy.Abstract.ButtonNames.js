@@ -9,7 +9,8 @@ exports.parse = function(node, state) {
 			],
 			children: [
 				'Alloy.Abstract.ButtonName'
-			]
+			],
+			property: 'buttonNames'
 		}
 	});
 	return require('./Alloy.Abstract._ItemArray').parse(node, state);
