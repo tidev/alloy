@@ -8,6 +8,7 @@ function fixDefinition(def) {
 	def.parents || (def.parents = []);
 	def.children || (def.children = []);
 	def.translations || (def.translations = []);
+	def.property || (def.property = 'items');
 	return def;
 }
 
@@ -66,6 +67,7 @@ function parse(node, state, args) {
 	if (isCollectionBound) {
 		var localModel = CU.generateUniqueId();
 		var itemCode = '';
+		var itemsVar = CU.generateUniqueId();
 
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 			itemCode += CU.generateNodeExtended(child, state, {
@@ -73,16 +75,16 @@ function parse(node, state, args) {
 				local: true,
 				model: localModel,
 				post: function(node, state, args) {
-					return 'images.push(' + state.parent.symbol + ');\n';
+					return itemsVar + '.push(' + state.parent.symbol + ');\n';
 				}
 			});
 		});
 
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: 'var images=[];',
+			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,
-			post: "<%= itemContainer %>.images=images;"
+			post: '<%= itemContainer %>.' + def.property + '=' + itemsVar + ';'
 		});
 
 		return {
