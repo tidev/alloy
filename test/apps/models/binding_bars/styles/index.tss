@@ -1,0 +1,27 @@
+"#index": {
+	backgroundColor: '#fff'
+}
+
+"Label": {
+	width: '90%',
+	top: '170',
+	color: '#000',
+	font: {
+		fontSize: 16
+	},
+	textAlign: 'center'
+}
+
+"ButtonBar": {
+	top: 30,
+	width: '95%'
+}
+
+"TabbedBar": {
+	top: 100,
+	width: '95%'
+}
+
+"Toolbar": {
+	bottom: 0
+}
