@@ -170,7 +170,8 @@ module.exports = function(args, program) {
 //	BENCHMARK('load global styles');
 	
 	// Process all models
-	var models = processModels();
+	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
+	var models = processModels(widgetDirs);
 //	BENCHMARK('process models');
 
 	// create a regex for determining which platform-specific
@@ -180,7 +181,7 @@ module.exports = function(args, program) {
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
 	// Process all views, including all those belonging to widgets
-	var viewCollection = U.getWidgetDirectories(paths.project, paths.app);
+	var viewCollection = widgetDirs;
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 
 	var tracker = {};
@@ -520,13 +521,13 @@ function findModelMigrations(name) {
 	}
 }
 
-function processModels() {
+function processModels(widgetDirs) {
 	var models = [];
 	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
 	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
 	U.ensureDir(compileConfig.dir.models);
 
-	// Make sure we havea runtime models directory
+	// Make sure we have a runtime models directory
 	var modelFiles = fs.readdirSync(compileConfig.dir.models);
 	if (modelFiles.length > 0) {
 		U.ensureDir(modelRuntimeDir);
