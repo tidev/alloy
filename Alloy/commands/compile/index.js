@@ -163,7 +163,7 @@ module.exports = function(args, program) {
 	}
 //	BENCHMARK('install android modules and tiapp fixes');
 
-	logger.debug('----- MVC GENERATION -----');
+	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
 	loadGlobalStyles(paths.app, theme);
@@ -194,7 +194,7 @@ module.exports = function(args, program) {
 				if (tracker[fp]) { return; }
 
 				// generate runtime controller
-				logger.debug('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
+				logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 				parseAlloyComponent(view, collection.dir, collection.manifest);
 				tracker[fp] = true;
 			}
@@ -209,13 +209,13 @@ module.exports = function(args, program) {
 				if (tracker[fp]) { return; }
 
 				// generate runtime controller
-				logger.debug('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
+				logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
 				tracker[fp] = true;
 			}
 		});
 	});
-	logger.debug('');
+	logger.info('');
 //	BENCHMARK('process all controllers');
 
 	// generate app.js
@@ -313,7 +313,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// Load the style and update the state
 		if (path.existsSync(files.STYLE)) {
-			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
+			logger.info('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
 		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
 
@@ -324,17 +324,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);	
 
 			if (path.existsSync(psThemeStylesFile)) {
-				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
+				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
 				_.extend(state.styles, CU.loadAndSortStyle(psThemeStylesFile,manifest));
 			} else if (path.existsSync(themeStylesFile)) {
-				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
+				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
 				_.extend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
 			}
 		}
 
 		// Load view from file into an XML document root node
 		try {
-			logger.debug('  view:       "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
+			logger.info('  view:       "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
 			var docRoot = U.XML.getAlloyFromFile(files.VIEW);
 		} catch (e) {
 			U.die([
@@ -410,7 +410,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// process the controller code
 	if (path.existsSync(files.CONTROLLER)) {
-		logger.debug('  controller: "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
+		logger.info('  controller: "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
@@ -539,7 +539,7 @@ function processModels(widgetDirs) {
 			logger.warn('Non-model file "' + modelFile + '" in models directory');
 			return;
 		}
-		logger.debug('[' + modelFile + '] model processing...');
+		logger.info('[' + modelFile + '] model processing...');
 
 		var fullpath = path.join(compileConfig.dir.models,modelFile);
 		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
@@ -573,11 +573,11 @@ function loadGlobalStyles(appPath, theme) {
 
 	compileConfig.globalStyle = {};
 	if (path.existsSync(appGlobal)) {
-		logger.debug('[app.tss] global style processing...');
+		logger.info('[app.tss] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
 	} 
 	if (theme && path.existsSync(themeGlobal)) {
-		logger.debug('[app.tss (theme:' + theme + ')] global style processing...');
+		logger.info('[app.tss (theme:' + theme + ')] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
 	} 	
 }
@@ -605,7 +605,7 @@ function optimizeCompiledCode() {
 		_.each(files, function(file) {
 			// generate AST from file
 			var fullpath = path.join(compileConfig.dir.resources,file);
-			logger.debug('Parsing AST for "' + file + '"...');
+			logger.info('Parsing AST for "' + file + '"...');
 			try {
 				var ast = jsp.parse(fs.readFileSync(fullpath,'utf8'));
 			} catch (e) {
