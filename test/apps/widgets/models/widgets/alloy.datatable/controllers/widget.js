@@ -2,8 +2,8 @@ function handleTableClick(e) {
 	$.trigger('rowClick', e);
 }
 
-var items = Alloy.createCollection('songs');
-items.reset([
+var songs = Alloy.createCollection('songs');
+songs.reset([
 	{ info: 'Beastie Boys - Super Disco Breakin\''},
 	{ info: 'Pixies - Debaser'},
 	{ info: 'N.E.R.D. - Thrasher'},
