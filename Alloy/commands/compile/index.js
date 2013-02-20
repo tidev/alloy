@@ -487,9 +487,9 @@ function createNewState(styles) {
 	}
 }
 
-function findModelMigrations(name) {
+function findModelMigrations(name, inDir) {
 	try {
-		var migrationsDir = compileConfig.dir.migrations;
+		var migrationsDir = inDir || compileConfig.dir.migrations;
 		var files = fs.readdirSync(migrationsDir);
 		var part = '_'+name+'.'+CONST.FILE_EXT.MIGRATION;
 
