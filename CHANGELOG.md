@@ -5,7 +5,7 @@
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
 
-## 1.0.0-cr (8 February 2013)
+## 1.0.0 (19 February 2013)
 
 ### ** Breaking Changes **
 
