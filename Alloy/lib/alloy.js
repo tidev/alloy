@@ -99,8 +99,8 @@ exports.C = function(name, modelDesc, model) {
  * Factory method for instantiating a widget controller. Creates and returns an instance of the
  * named widget.
  * @param {String} id Id of widget to instantiate.
- * @param {String} name Name of the view within the widget to instantiate ('widget' by default)
- * @param {*...} [args] Arguments to pass to the widget.
+ * @param {String} [name="widget"] Name of the view within the widget to instantiate ('widget' by default)
+ * @param {Object} [args] Arguments to pass to the widget.
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
