@@ -116,7 +116,7 @@ exports.createWidget = function(id, name, args) {
  * Factory method for instantiating a controller. Creates and returns an instance of the
  * named controller.
  * @param {String} name Name of controller to instantiate.
- * @param {*...} [args] Arguments to pass to the controller.
+ * @param {Object} [args] Arguments to pass to the controller.
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
@@ -131,7 +131,7 @@ exports.createController = function(name, args) {
  * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
- * @param {*...} [args] Arguments to pass to the model.
+ * @param {Object} [args] Arguments to pass to the model.
  * @return {Backbone.Model} Backbone model object.
  */
 exports.createModel = function(name, args) {
@@ -147,7 +147,7 @@ exports.createModel = function(name, args) {
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
- * @param {*...} [args] Arguments to pass to the collection.
+ * @param {Object} [args] Arguments to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.createCollection = function(name, args) {
