@@ -6,6 +6,8 @@
 var 	   _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone');
 
+var DEFAULT_WIDGET = 'widget';
+
 exports.version = '1.1.0';
 exports._ = _;
 exports.Backbone = Backbone;
@@ -102,7 +104,11 @@ exports.C = function(name, modelDesc, model) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
-	return new (require('alloy/widgets/' + id + '/controllers/' + (name || 'widget')))(args);
+	if (typeof name !== 'undefined' && name !== null && _.isObject(name)) {
+		args = name;
+		name = DEFAULT_WIDGET;
+	}
+	return new (require('alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
 }
 
 /**
