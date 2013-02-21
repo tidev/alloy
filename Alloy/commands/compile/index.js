@@ -523,6 +523,66 @@ function findModelMigrations(name, inDir) {
 	}
 }
 
+function processModels2(dirs) {
+	var models = [];
+	//var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
+	//U.ensureDir(compileConfig.dir.models);
+
+	//console.log(dirs);
+
+	// Make sure we have a runtime models directory
+	// var modelFiles = fs.readdirSync(compileConfig.dir.models);
+	// if (modelFiles.length > 0) {
+	// 	U.ensureDir(modelRuntimeDir);
+	// }
+
+	_.each(dirs, function(dirObj) {
+		var modelDir = path.join(dirObj.dir,CONST.DIR.MODEL);
+		var migrationDir = path.join(dirObj.dir,CONST.DIR.MIGRATION);
+		var manifest = dirObj.manifest;
+		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
+		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/': '';
+		_.each(fs.readdirSync(modelDir), function(file) {
+			if (!modelRegex.test(file)) {
+				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
+				return;
+			}
+			logger.info('[' + pathPrefix + 'models/' + file + '] model processing...');
+
+			var fullpath = path.join(modelDir,file);
+			var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
+			//var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
+			// var modelJs = 'function(Model){}';
+
+			// grab any additional model code from corresponding JS file, if it exists
+			// if (path.existsSync(fullpath)) {
+			// 	modelJs = fs.readFileSync(fullpath,'utf8');
+			// }
+
+			// generate model code based on model.js template and migrations
+			var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
+				basename: basename,
+				modelJs: fs.readFileSync(fullpath,'utf8'),
+				migrations: findModelMigrations(basename, migrationDir)
+			});	
+
+			// write the model to the runtime file
+			var casedBasename = U.properCase(basename);
+			var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+			if (isWidget) {
+				modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'widgets',manifest.id,'models');
+			}
+			wrench.mkdirSyncRecursive(modelRuntimeDir, 0777);
+			fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
+			models.push(casedBasename);
+		});
+	});
+
+	return models;
+};
+
+
 function processModels(dirs) {
 	var models = [];
 	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
