@@ -539,6 +539,10 @@ function processModels2(dirs) {
 
 	_.each(dirs, function(dirObj) {
 		var modelDir = path.join(dirObj.dir,CONST.DIR.MODEL);
+		if (!fs.existsSync(modelDir)) {
+			return;
+		}
+
 		var migrationDir = path.join(dirObj.dir,CONST.DIR.MIGRATION);
 		var manifest = dirObj.manifest;
 		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
