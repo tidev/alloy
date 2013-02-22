@@ -2,7 +2,7 @@ function handleTableClick(e) {
 	$.trigger('rowClick', e);
 }
 
-var songs = Alloy.createCollection('songs');
+var songs = Widget.createCollection('songs');
 songs.reset([
 	{ info: 'Beastie Boys - Super Disco Breakin\''},
 	{ info: 'Pixies - Debaser'},
