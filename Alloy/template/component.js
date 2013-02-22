@@ -6,6 +6,7 @@ var Alloy = require('alloy'),
 <%= WPATH %>
 
 function Controller() {
+	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	
 	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;

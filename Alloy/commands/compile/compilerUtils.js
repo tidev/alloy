@@ -1026,7 +1026,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 
 	// Determine the collection variable to use
 	var obj = { name: args[CONST.BIND_COLLECTION] };
-	var col = _.template("Alloy.Collections['<%= name %>'] || <%= name %>", obj);
+	var col = _.template((exports.currentManifest ? CONST.WIDGET_OBJECT : 'Alloy') + ".Collections['<%= name %>'] || <%= name %>", obj);
 	var colVar = exports.generateUniqueId();
 
 	// Create the code for the filter and transform functions

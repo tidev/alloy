@@ -271,6 +271,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			modelVariable: CONST.BIND_MODEL_VAR,
 			preCode: '',
 			postCode: '',
+			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",
 			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
