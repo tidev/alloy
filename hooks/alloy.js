@@ -103,25 +103,31 @@ exports.init = function (logger, config, cli, appc) {
 				
 				var child = spawn(cmd.shift(), cmd);
 					// this regex is used to strip [INFO] and friends from alloy's output and re-log it using our logger
-					re = new RegExp('(\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(\u001b\\[\\d+m)?(.*)', 'i');
+				var re = new RegExp('(\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(\u001b\\[\\d+m)?(.*)', 'i'),
+					// and this one test for output without colors
+					re2 = new RegExp('\\[?('+logger.getLevels().join('|')+')\\]?\s*','i');
 				
-				child.stdout.on('data', function (data) {
+				function filterLog(data, def)
+				{
 					data.toString().split('\n').forEach(function (line) {
 						if (line) {
-							var m = line.match(re);
+							var m = line.match(re) || line.match(re2);
 							if (m) {
 								logger[m[2].toLowerCase()](m[4].trim());
 							} else {
-								logger.debug(line);
+								def(line);
 							}
 						}
 					});
+				}
+
+				child.stdout.on('data', function (data) {
+					filterLog(data,logger.debug);
 				});
 				child.stderr.on('data', function (data) {
-					data.toString().split('\n').forEach(function (line) {
-						line && logger.error(line);
-					});
+					filterLog(data,logger.error);
 				});
+
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));

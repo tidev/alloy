@@ -30,7 +30,7 @@ function parse(node, state, args) {
 			(childArgs.name === 'Column' && !child.getAttribute('ns'))) {
 			foundColumn = true;
 			if (foundRow) {
-				U.die([
+				U.dieWithNode(node, [
 					err,
 					'You can\'t mix columns an rows as children of <Picker>'
 				]);
@@ -40,7 +40,7 @@ function parse(node, state, args) {
 			(childArgs.name === 'Row' && !child.getAttribute('ns'))) {
 			foundRow = true;
 			if (foundColumn) {
-				U.die([
+				U.dieWithNode(node, [
 					err,
 					'You can\'t mix columns an rows as children of <Picker>'
 				]);

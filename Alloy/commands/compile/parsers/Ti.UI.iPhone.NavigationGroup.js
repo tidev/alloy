@@ -13,7 +13,7 @@ function parse(node, state, args) {
 
 	// NavigationGroup must have 1 window as a child
 	if (children.length !== 1) {
-		U.die(err);
+		U.dieWithNode(node, err);
 	} 
 
 	var child = children[0],
@@ -31,7 +31,7 @@ function parse(node, state, args) {
 		});
 	} else {
 		err.unshift('Invalid NavigationGroup child "' + childArgs.fullname + '"');
-		U.die(err);
+		U.dieWithNode(node, err);
 	}
 
 	// create navgroup with window 

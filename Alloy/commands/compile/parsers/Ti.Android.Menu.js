@@ -31,7 +31,7 @@ function parse(node, state, args) {
 	// assert that the parent is a Ti.UI.Window
 	var parentNode = CU.validateNodeName(state.parent.node, 'Ti.UI.Window');
 	if (!parentNode) {
-		U.die([
+		U.dieWithNode(node, [
 			'Invalid parent type for <Menu>: ' + state.parent.node.nodeName,
 			'<Menu> must have a Ti.UI.Window as a parent'
 		]);
@@ -46,7 +46,7 @@ function parse(node, state, args) {
 		
 		// Make sure we are dealing with MenuItems
 		if (!theNode) {
-			U.die([
+			U.dieWithNode(node, [
 				'Invalid child type under <Menu>: ' + childArgs.fullname,
 				'<Menu> must have only <MenuItem> elements as children'
 			]);

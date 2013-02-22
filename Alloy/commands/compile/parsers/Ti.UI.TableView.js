@@ -38,7 +38,7 @@ function parse(node, state, args) {
 		// the table data, a searchbar, or a proxy property assigment
 		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be on of the following: [' + ALL_VALID.join(',') + ']');
+			U.dieWithNode(node, 'Child element must be on of the following: [' + ALL_VALID.join(',') + ']');
 		} else if (theNode === 'Ti.UI.SearchBar') {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {

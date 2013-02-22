@@ -21,7 +21,8 @@ function parse(node, state, args) {
 
 	// Ensure that this _ItemArray has an appropriate parent 
 	if (!state.itemsArray) {
-		U.die([
+		U.dieWithNode(node, 
+		[
 			'Invalid use of <' + node.nodeName + '> at line ' + node.lineNumber, 
 			'Must be the child one of the following: [' + def.parents.join(',') + ']'
 		]);
@@ -60,7 +61,7 @@ function parse(node, state, args) {
 
 		// Make sure the children match the parent
 		} else if (!_.contains(def.children, childArgs.fullname)) {
-			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
+			U.dieWithNode(node, 'Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
 		} 
 	});
 
