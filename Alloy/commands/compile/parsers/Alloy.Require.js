@@ -14,6 +14,7 @@ function parse(node, state, args) {
 	var code = '',
 		type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
 		src = node.getAttribute('src'),
+		name = node.getAttribute('name') || CONST.NAME_WIDGET_DEFAULT,
 		method;
 
 	// validate src
@@ -34,9 +35,9 @@ function parse(node, state, args) {
 			break;
 		case 'widget':
 			method = 'createWidget';
-			extraArgs = "'widget',";
-			requirePath = path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
-			alloyRequirePath = path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,CONST.NAME_WIDGET_DEFAULT);
+			extraArgs = "'" + name + "',";
+			requirePath = path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,name);
+			alloyRequirePath = path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,name);
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
@@ -58,6 +59,7 @@ function parse(node, state, args) {
 	// Remove <Require>-specific attributes from createArgs
 	delete args.createArgs.type;
 	delete args.createArgs.src;
+	delete args.createArgs.name;
 
 	// make symbol a local variable if necessary, used for binding
 	if (state.local) {
