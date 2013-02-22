@@ -2,8 +2,7 @@ function handleTableClick(e) {
 	$.trigger('rowClick', e);
 }
 
-var songs = Widget.createCollection('songs');
-songs.reset([
+Widget.Collections.songs.reset([
 	{ info: 'Beastie Boys - Super Disco Breakin\''},
 	{ info: 'Pixies - Debaser'},
 	{ info: 'N.E.R.D. - Thrasher'},
