@@ -53,6 +53,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.currentManifest = false;
 
 //////////////////////////////////////
 ////////// public interface //////////

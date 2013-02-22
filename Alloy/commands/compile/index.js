@@ -281,6 +281,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
+	CU.currentManifest = manifest;
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
