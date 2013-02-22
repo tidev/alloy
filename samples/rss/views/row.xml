@@ -1,5 +1,5 @@
 <Alloy>
-	<TableViewRow>
+	<TableViewRow id="row">
 		<ImageView id="image"/>
 		<Label id="date"/>
 		<Label id="title"/>
