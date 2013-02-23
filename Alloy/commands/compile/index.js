@@ -525,19 +525,9 @@ function findModelMigrations(name, inDir) {
 	}
 }
 
-function processModels2(dirs) {
+function processModels(dirs) {
 	var models = [];
-	//var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
 	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
-	//U.ensureDir(compileConfig.dir.models);
-
-	//console.log(dirs);
-
-	// Make sure we have a runtime models directory
-	// var modelFiles = fs.readdirSync(compileConfig.dir.models);
-	// if (modelFiles.length > 0) {
-	// 	U.ensureDir(modelRuntimeDir);
-	// }
 
 	_.each(dirs, function(dirObj) {
 		var modelDir = path.join(dirObj.dir,CONST.DIR.MODEL);
@@ -558,13 +548,6 @@ function processModels2(dirs) {
 
 			var fullpath = path.join(modelDir,file);
 			var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
-			//var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
-			// var modelJs = 'function(Model){}';
-
-			// grab any additional model code from corresponding JS file, if it exists
-			// if (path.existsSync(fullpath)) {
-			// 	modelJs = fs.readFileSync(fullpath,'utf8');
-			// }
 
 			// generate model code based on model.js template and migrations
 			var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
@@ -583,53 +566,6 @@ function processModels2(dirs) {
 			fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
 			models.push(casedBasename);
 		});
-	});
-
-	return models;
-};
-
-
-function processModels(dirs) {
-	var models = [];
-	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
-	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
-	U.ensureDir(compileConfig.dir.models);
-
-	// Make sure we have a runtime models directory
-	var modelFiles = fs.readdirSync(compileConfig.dir.models);
-	if (modelFiles.length > 0) {
-		U.ensureDir(modelRuntimeDir);
-	}
-
-	// process each model
-	_.each(modelFiles, function(modelFile) {
-		if (!modelRegex.test(modelFile)) {
-			logger.warn('Non-model file "' + modelFile + '" in models directory');
-			return;
-		}
-		logger.info('[' + modelFile + '] model processing...');
-
-		var fullpath = path.join(compileConfig.dir.models,modelFile);
-		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
-		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
-		var modelJs = 'function(Model){}';
-
-		// grab any additional model code from corresponding JS file, if it exists
-		if (path.existsSync(modelJsFile)) {
-			modelJs = fs.readFileSync(modelJsFile,'utf8');
-		}
-
-		// generate model code based on model.js template and migrations
-		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
-			basename: basename,
-			modelJs: modelJs,
-			migrations: findModelMigrations(basename)
-		});	
-
-		// write the model to the runtime file
-		var casedBasename = U.properCase(basename);
-		fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
-		models.push(casedBasename);
 	});
 
 	return models;
