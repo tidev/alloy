@@ -218,7 +218,14 @@ function Sync(method, model, opts) {
 
 			// execute the select query
 			db = Ti.Database.open(dbName);
-			var rs = db.execute(sql);
+			var rs;
+
+			// is it a string or a prepared statement?
+			if (_.isString(sql)) { 
+				rs = db.execute(sql);
+			} else {
+				rs = db.execute(sql.statement, sql.params);
+			}
 
 			var len = 0;
 			var values = [];
