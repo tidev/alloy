@@ -104,7 +104,8 @@ exports.C = function(name, modelDesc, model) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
-	if (typeof name !== 'undefined' && name !== null && _.isObject(name)) {
+	if (typeof name !== 'undefined' && name !== null && 
+		_.isObject(name) && !_.isString(name)) {
 		args = name;
 		name = DEFAULT_WIDGET;
 	}
