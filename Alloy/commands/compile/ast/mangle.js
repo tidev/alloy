@@ -1,7 +1,6 @@
-var pro = require("../../../uglify-js/uglify-js").uglify,
-	_ = require('../../../lib/alloy/underscore')._;
+var uglifyjs = require('uglify-js');
 
-exports.process = function(ast, config, report) {
+exports.process = function(ast, config, report, file) {
 	config = config ? config.alloyConfig : {};
 	config.deploytype = config.deploytype || 'development';
 
@@ -16,17 +15,27 @@ exports.process = function(ast, config, report) {
 		ENV_PROD:        config.deploytype === 'production',
 		ENV_PRODUCTION:  config.deploytype === 'production'
 	};
-	_.each(defines, function(v,k) {
-		defines[k] = [ 'num', v ? 1 : 0 ];
-	});	
 
-	var opts = {
-		mangle: false,                    // Mangle any names?
-		no_functions: true,               // Don't mangle functions?
-		toplevel: false,                  // Mangle toplevel names?
-		defines: defines,                 // A list of definitions to process
-		except: ['Ti','Titanium','Alloy'] // A list of names to leave untouched
-	};
-
-	return pro.ast_mangle(ast, opts);
+	var compressor = uglifyjs.Compressor({
+		sequences     : false,  // join consecutive statemets with the “comma operator”
+		properties    : false,   // optimize property access: a["foo"] → a.foo
+		dead_code     : true,   // discard unreachable code
+		drop_debugger : false,   // discard “debugger” statements
+		unsafe        : false,   // some unsafe optimizations (see below)
+		conditionals  : true,   // optimize if-s and conditional expressions
+		comparisons   : true,   // optimize comparisons
+		evaluate      : true,   // evaluate constant expressions
+		booleans      : true,   // optimize boolean expressions
+		loops         : false,   // optimize loops
+		unused        : true,   // drop unused variables/functions
+		hoist_funs    : true,   // hoist function declarations
+		hoist_vars    : false,  // hoist variable declarations
+		if_return     : false,   // optimize if-s followed by return/continue
+		join_vars     : false,   // join var declarations
+		cascade       : false,   // try to cascade `right` into `left` in sequences
+		side_effects  : false,   // drop side-effect-free statements
+		warnings      : false,   // warn about potentially dangerous optimizations/code
+		global_defs   : defines      // global definitions
+	});
+	return ast.transform(compressor);
 }
