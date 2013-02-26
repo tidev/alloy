@@ -589,7 +589,7 @@ function loadGlobalStyles(appPath, theme) {
 function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
-			'mangle',
+			'compress',
 			//'optimizer',
 			//'squeeze'
 		],
