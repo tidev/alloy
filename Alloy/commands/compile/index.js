@@ -591,7 +591,6 @@ function optimizeCompiledCode() {
 			'builtins',
 			'compress',
 			//'optimizer',
-			//'squeeze'
 		],
 		modLocation = './ast/';
 		report = {};
