@@ -1,10 +1,6 @@
 var path = require('path'),
 	_ = require('../../../lib/alloy/underscore')._,
-
-	jsp = require('../../../uglify-js/uglify-js').parser,
-	pro = require('../../../uglify-js/uglify-js').uglify,
 	uglifyjs = require('uglify-js'),
-
 	logger = require('../../../common/logger'),
 	U = require('../../../utils');
 
