@@ -22,7 +22,7 @@ var info = {
 				platforms: ['mobileweb']
 			}
 		};
-		console.log(JSON.stringify(desc));
+		console.log(JSON.stringify(desc, null, 4));
 	},
 	samples: function() {
 		var desc = [
@@ -45,8 +45,7 @@ var info = {
   				icon: "app.png"
   			}
 		];
-		console.log(JSON.stringify(desc));
-		//console.log(U.prettyPrintJson(desc));
+		console.log(JSON.stringify(desc, null, 4));
 	},
 	templates: function() {
 		var desc = [
@@ -63,10 +62,10 @@ var info = {
   				icon: "app.png"
   			}
 		];
-		console.log(JSON.stringify(desc));
+		console.log(JSON.stringify(desc, null, 4));
 	},
 	namespaces: function() {
-		console.log(JSON.stringify(CONST.IMPLICIT_NAMESPACES));
+		console.log(JSON.stringify(CONST.IMPLICIT_NAMESPACES, null, 4));
 	}
 };
 
