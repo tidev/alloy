@@ -93,7 +93,7 @@ function Migrator(config, transactionDb) {
 		this.db.execute(sql);
 	};
 
-	this.dropTable = function(config) {
+	this.dropTable = function() {
 		this.db.execute('DROP TABLE IF EXISTS ' + this.table);
 	};
 

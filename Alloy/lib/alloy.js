@@ -29,7 +29,6 @@ exports.M = function(name, modelDesc, migrations) {
 		defaults: config.defaults,
         sync: function(method, model, opts) {
 			var config = model.config || {};
-			var adapterObj = config.adapter || {};
 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
 			if (type === 'localDefault') {
 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
