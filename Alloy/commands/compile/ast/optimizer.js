@@ -1,4 +1,3 @@
-var pro = require("../../../uglify-js/uglify-js").uglify;
 var optimizer = require('../optimizer');
 
 exports.process = function(ast, config, report) {
