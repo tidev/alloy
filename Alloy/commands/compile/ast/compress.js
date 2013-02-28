@@ -1,6 +1,6 @@
 var uglifyjs = require('uglify-js');
 
-exports.process = function(ast, config, report, file) {
+exports.process = function(ast, config, report) {
 	config = config ? config.alloyConfig : {};
 	config.deploytype = config.deploytype || 'development';
 
