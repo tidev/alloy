@@ -433,15 +433,6 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 	});
 }
 
-// "Empty" states are generally used when you want to create a 
-// Titanium component with no parent
-exports.createEmptyState = function(styles) {
-	return {
-		parent: {},
-		styles: styles
-	};
-};
-
 function updateImplicitNamspaces(platform) {
 	switch(platform) {
 		case 'android':
