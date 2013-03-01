@@ -167,21 +167,6 @@ exports.getParserArgs = function(node, state, opts) {
 	}, bindObj);
 };
 
-exports.generateCode = function(ast) {
-	var opts = {
-        indent_start : 0,     // Base indentation for lines
-        indent_level : 4,     // Indentation increment for nested lines
-        quote_keys   : false, // Quote keys in objects?
-        space_colon  : false, // Put a space between keys and colons?
-        beautify     : true,  // Beautify the generated code?
-        ascii_only   : false, // Process only ascii characters
-        inline_script: false, // Compress <script> tags?
-        double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
-        ignore_numbers: true  // Don't try to compress numbers
-    };
-	return pro.gen_code(ast, opts);
-}
-
 exports.generateNodeExtended = function(node, state, newState) {
 	return exports.generateNode(node, _.extend(_.clone(state), newState));
 }
@@ -851,69 +836,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 	return code;
 }
-
-exports.formatAST = function(ast,config,fn)
-{
-	// use the general defaults from the uglify command line
-	var defines = {},
-		DEFINES, 
-		config;
-
-	config = config || {};
-	config.deploytype = config.deploytype || 'development';
-	config.beautify = config.beautify || true;
-
-	DEFINES = {
-		OS_IOS : config.platform == 'ios',
-		OS_ANDROID: config.platform == 'android',
-		OS_MOBILEWEB: config.platform == 'mobileweb',
-		ENV_DEV: config.deploytype == 'development',
-		ENV_DEVELOPMENT: config.deploytype == 'development',
-		ENV_TEST: config.deploytype == 'test',
-		ENV_PROD: config.deploytype == 'production',
-		ENV_PRODUCTION: config.deploytype == 'production'
-	};
-
-	for (var k in DEFINES) {
-		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-	}
-
-	var opts = {
-		mangle: {
-			mangle: false,                    // Mangle any names?
-			no_functions: true,               // Don't mangle functions?
-			toplevel: false,                  // Mangle toplevel names?
-			defines: defines,                 // A list of definitions to process
-			except: ['Ti','Titanium','Alloy'] // A list of names to leave untouched
-		},
-		squeeze: {
-            make_seqs   : false,  // Make sequences out of multiple statements?
-            dead_code   : true,   // Remove dead code?
-            no_warnings : true,   // Don't print squeeze warning?
-            keep_comps  : true,   // Don't try to optimize comparison operators? (unsafe)
-            unsafe      : false   // Alloy potentially unsafe optimizations?
-        },
-        gen_code: {
-            indent_start : 0,     // Base indentation for lines
-            indent_level : 4,     // Indentation increment for nested lines
-            quote_keys   : false, // Quote keys in objects?
-            space_colon  : false, // Put a space between keys and colons?
-            beautify     : true,  // Beautify the generated code?
-            ascii_only   : false, // Process only ascii characters
-            inline_script: false, // Compress <script> tags?
-            double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
-            ignore_numbers: true  // Don't try to compress numbers
-        }
-	}
-
-	ast = pro.ast_mangle(ast, opts.mangle);
-
-	// TODO: re-enable when complete -> https://jira.appcelerator.org/browse/ALOY-273
-	// ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
-
-	ast = pro.ast_squeeze(ast, opts.squeeze);
-	return pro.gen_code(ast, opts.gen_code);
-};
 
 ///////////////////////////////////////
 ////////// private functions //////////
