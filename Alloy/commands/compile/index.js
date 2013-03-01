@@ -589,8 +589,8 @@ function loadGlobalStyles(appPath, theme) {
 function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
-			'compress',
-			//'optimizer',
+			'optimizer',
+			'compress'			
 		],
 		modLocation = './ast/';
 		report = {};
