@@ -5,8 +5,8 @@ var U = require('../../utils'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../common/logger'),
-	jsp = require("../../uglify-js/uglify-js").parser,
-	pro = require("../../uglify-js/uglify-js").uglify,
+	uglifyjs = require('uglify-js'),
+	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	optimizer = require('./optimizer'),
 	CONST = require('../../common/constants');
@@ -539,38 +539,9 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
-    function checkAssigment() {
-    	var target = this[2];
-    	var value = this[3];
-    	var match = pro.gen_code(target).match(/^exports\.(.+)/);
-
-    	if (match !== null) {
-            if (match[1] === 'baseController') {
-    			code.parentControllerName = pro.gen_code(value);
-    		} 		
-    	}
-    }
-
-    function do_stat() {
-    	if (this[1][0] === 'assign') {
-    		return checkAssigment.call(this[1]);
-    	}
-    }
-
-    // Manipulate the controller AST, finding the baseController 
-    // assignment if present.
-    try {
-	    var ast = jsp.parse(contents);
-		var walker = pro.ast_walker();
-		var new_ast = walker.with_walkers({
-			"stat": do_stat
-		}, function(){
-	        return walker.walk(ast);
-	    });
-	    code.controller = pro.gen_code(new_ast);
-	} catch (e) {
-		U.die('Error while processing the controller "' + file + '".', e);
-	}
+	// get the base controller for this controller
+	code.controller = contents;
+	code.parentControllerName = astController.getBaseController(contents);
 
 	return code;
 };
