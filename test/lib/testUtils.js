@@ -3,7 +3,7 @@ var exec = require('child_process').exec,
 	wrench = require('wrench'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	jsp = require("../../Alloy/uglify-js/uglify-js").parser,
+	uglifyjs = require('uglify-js'),
 	U = require('../../Alloy/utils'),
 	CU = require('../../Alloy/commands/compile/compilerUtils');
 
@@ -123,7 +123,7 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return jsp.parse(this.actual);
+		return uglifyjs.parse(this.actual);
 	} catch (e) {
 		return false;
 	}
