@@ -226,7 +226,7 @@ module.exports = function(args, program) {
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
 	var code = _.template(
 		fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
-		{alloyJs:alloyJs}
+		{'__MAPMARKER_ALLOY_JS__':alloyJs}
 	);
 
 	// trigger our custom compiler makefile
