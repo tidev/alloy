@@ -281,8 +281,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",
+			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id}),
 			__MAPMARKER_CONTROLLER_CODE__: '',
-			__MAPMARKER_WPATH__: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
 		state = { parent: {} },

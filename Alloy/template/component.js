@@ -3,7 +3,7 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	<%= modelVariable %>;
 
-<%= __MAPMARKER_WPATH__ %>
+<%= WPATH %>
 
 function Controller() {
 	<%= Widget %>
