@@ -418,7 +418,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				assignedDefaultId = true;
 				defaultId = viewName;
 			} 
-			template.viewCode += CU.generateNode(node, createNewState(state.styles), defaultId, true);
+			template.viewCode += CU.generateNode(node, {parent:{},styles:state.styles}, defaultId, true);
 		});
 	}
 
@@ -516,13 +516,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	// 	wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
 	// 	fs.writeFileSync(files.COMPONENT, code);
 	// }
-}
-
-function createNewState(styles) {
-	return {
-		parent: {},
-		styles: styles
-	}
 }
 
 function findModelMigrations(name, inDir) {
