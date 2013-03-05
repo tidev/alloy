@@ -229,13 +229,6 @@ module.exports = function(args, program) {
 		{'__MAPMARKER_ALLOY_JS__':alloyJs}
 	);
 
-	// trigger our custom compiler makefile
-	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
-	if (njs) {
-		code = njs;
-	}
-	fs.writeFileSync(appJS,code);
-	logger.info("Compiling alloy to " + appJS.yellow);
 //	BENCHMARK('generate app.js');
 
 	// optimize code
