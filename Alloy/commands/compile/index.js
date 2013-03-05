@@ -267,7 +267,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		viewName = basename,
 		template = {
 			viewCode: '',
-			controllerCode: '',
+			__MAPMARKER_CONTROLLER_CODE__: '',
 			modelVariable: CONST.BIND_MODEL_VAR,
 			preCode: '',
 			postCode: '',
@@ -418,7 +418,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
-	template.controllerCode += cCode.controller;
+	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
