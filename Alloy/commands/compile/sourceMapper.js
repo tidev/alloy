@@ -1,5 +1,7 @@
 var SM = require('source-map'),
 	fs = require('fs'),
+	path = require('path'),
+	wrench = require('wrench'),
 	U = require('../../utils'),
 	uglifyjs = require('uglify-js'),
 	logger = require('../../common/logger'),
@@ -44,37 +46,48 @@ function mapLine(mapper, theMap, genMap, line) {
 	genMap.code += line + '\n';
 }
 
+function getTextFromGenerator(content, template) {
+	if (typeof content !== 'undefined' && content !== null) {
+		return content;
+	} else {
+		if (template && fs.existsSync(template)) {
+			return fs.readFileSync(template,'utf8');
+		} else {
+			return '';
+		}
+	}
+}
+
 exports.generateCodeAndSourceMap = function(generator, compileConfig) {
-	var markers = _.map(generator.data, function(v,k) { return k }); 
-	var mapper = new SM.SourceMapGenerator({ file: generator.target.filename });
+	var target = generator.target;
+	var data = generator.data;
+	var markers = _.map(data, function(v,k) { return k }); 
+	var mapper = new SM.SourceMapGenerator({ file: target.filename });
 	var genMap = {
-		file: generator.target.filename,
+		file: target.filename,
 		count: 1,
 		code: ''
 	}
 
 	// initialize the rest of the generator properties
-	var template = generator.target.template;
-	var targetText = fs.existsSync(template) ? fs.readFileSync(template,'utf8') : '';
-	generator.target.count = 1;
-	generator.target.lines = targetText.split(lineSplitter);
-	_.each(markers, function(marker) {
-		var filepath = generator.data[marker].filepath;
-		var dataText = fs.existsSync(filepath) ? fs.readFileSync(filepath,'utf8') : '';
-		generator.data[marker].count = 1;
-		generator.data[marker].lines = dataText.split(lineSplitter);
+	target.count = 1;
+	target.lines = getTextFromGenerator(target.templateContent,target.template).split(lineSplitter);
+	_.each(markers, function(m) {
+		var marker = data[m];
+		marker.count = 1;
+		marker.lines = getTextFromGenerator(marker.fileContent,marker.filepath).split(lineSplitter);
 	});
 
 	// generate the source map and composite code
-	_.each(generator.target.lines, function(line) {
-		var trimmed = U.trim(line).replace(/^\<\%\=\s+/,'').replace(/\s+\%\>$/,'');
+	_.each(target.lines, function(line) {
+		var trimmed = U.trim(line);
 		console.log(trimmed);
 		if (_.contains(markers, trimmed)) {
-			_.each(generator.data[trimmed].lines, function(line) {
-				mapLine(mapper, generator.data[trimmed], genMap, line);
+			_.each(data[trimmed].lines, function(line) {
+				mapLine(mapper, data[trimmed], genMap, line);
 			});
 		} else {
-			mapLine(mapper, generator.target, genMap, line);
+			mapLine(mapper, target, genMap, line);
 		}
 	});
 
@@ -90,7 +103,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// create uglify-js source map and stream it out
 	var sourceMap = uglifyjs.SourceMap({
-		file: generator.target.filename,
+		file: target.filename,
 		orig: mapper.toString()
 	});
 	var stream = uglifyjs.OutputStream(_.extend(_.clone(OPTIONS_OUTPUT), { 
@@ -99,9 +112,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	ast.print(stream);
 
 	// create the generated code and source map files
-	fs.writeFileSync(generator.target.filepath, stream.toString());
-	logger.info('Created "' + generator.target.filepath + '"');
+	var outfile = target.filepath;
+	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
+	fs.writeFileSync(outfile, stream.toString());
+	logger.info('Created "' + outfile + '"');
 
-	fs.writeFileSync(generator.target.filepath + '.map', sourceMap.toString());
-	logger.debug('Created source map "' + generator.target.filepath + '.map"');
+	outfile = outfile + '.map';
+	fs.writeFileSync(outfile, sourceMap.toString());
+	logger.debug('Created source map "' + outfile + '"');
 };

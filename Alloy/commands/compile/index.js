@@ -221,14 +221,31 @@ module.exports = function(args, program) {
 //	BENCHMARK('process all controllers');
 
 	// generate app.js
-	var alloyJsPath = path.join(paths.app,'alloy.js');
-	var alloyJs = path.existsSync(alloyJsPath) ? fs.readFileSync(alloyJsPath,'utf8') : '';
-	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(
-		fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
-		{'__MAPMARKER_ALLOY_JS__':alloyJs}
-	);
+	// var alloyJsPath = path.join(paths.app,'alloy.js');
+	// var alloyJs = path.existsSync(alloyJsPath) ? fs.readFileSync(alloyJsPath,'utf8') : '';
+	// var appJS = path.join(compileConfig.dir.resources,"app.js");
+	// var code = _.template(
+	// 	fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
+	// 	{'__MAPMARKER_ALLOY_JS__':alloyJs}
+	// );
 
+	var appJS = path.join(compileConfig.dir.resources,"app.js");
+	require('./sourceMapper').generateCodeAndSourceMap({
+		target: {
+			filename: 'Resources/app.js',
+			filepath: appJS,
+			template: path.join(alloyRoot,'template','app.js')
+		},
+		data: {
+			'__MAPMARKER_ALLOY_JS__': {
+				filename: 'app/alloy.js',
+				filepath: path.join(paths.app,'alloy.js')
+			}
+		}
+	}, compileConfig);
+
+	//fs.writeFileSync(appJS,code);
+	
 //	BENCHMARK('generate app.js');
 
 	// optimize code
@@ -260,11 +277,11 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		viewName = basename,
 		template = {
 			viewCode: '',
-			__MAPMARKER_CONTROLLER_CODE__: '',
 			modelVariable: CONST.BIND_MODEL_VAR,
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",
+			__MAPMARKER_CONTROLLER_CODE__: '',
 			__MAPMARKER_WPATH__: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
@@ -458,9 +475,11 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	template.postCode += CU.postCode;
 
 	// create generated controller module code for this view/controller or widget
+	var controllerCode = template.__MAPMARKER_CONTROLLER_CODE__;
+	delete template.__MAPMARKER_CONTROLLER_CODE__;
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 
-	// Write the view or widget to its runtime file
+	var targetFilepath = files.COMPONENT;
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
 		CU.copyWidgetResources(
@@ -468,11 +487,35 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			compileConfig.dir.resources, 
 			manifest.id
 		);
-		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
-	} else {
-		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
-		fs.writeFileSync(files.COMPONENT, code);
+		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
 	}
+	require('./sourceMapper').generateCodeAndSourceMap({
+		target: {
+			filename: path.relative(compileConfig.dir.project,files.COMPONENT),
+			filepath: targetFilepath,
+			templateContent: code
+		},
+		data: {
+			__MAPMARKER_CONTROLLER_CODE__: {
+				filename: path.relative(compileConfig.dir.project,files.CONTROLLER),
+				fileContent: controllerCode
+			}
+		}
+	}, compileConfig);
+
+	// Write the view or widget to its runtime file
+	// if (manifest) {
+	// 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
+	// 	CU.copyWidgetResources(
+	// 		[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
+	// 		compileConfig.dir.resources, 
+	// 		manifest.id
+	// 	);
+	// 	fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
+	// } else {
+	// 	wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
+	// 	fs.writeFileSync(files.COMPONENT, code);
+	// }
 }
 
 function createNewState(styles) {
@@ -585,7 +628,10 @@ function optimizeCompiledCode() {
 			'optimizer',
 			'compress'			
 		],
-		modLocation = './ast/';
+		modLocation = './ast/',
+		exceptions = [
+			'app.js'
+		];
 
 	function getJsFiles() {
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {

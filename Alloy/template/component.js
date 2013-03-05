@@ -28,7 +28,7 @@ function Controller() {
 	_.extend($, $.__views);
 
 	// Controller code directly from the developer's controller file
-	<%= __MAPMARKER_CONTROLLER_CODE__ %>
+	__MAPMARKER_CONTROLLER_CODE__
 
 	// Generated code that must be executed after all UI and
 	// controller code. One example deferred event handlers whose

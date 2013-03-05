@@ -7,5 +7,5 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	Backbone = Alloy.Backbone;
 
-<%= __MAPMARKER_ALLOY_JS__ %>
+__MAPMARKER_ALLOY_JS__
 Alloy.createController('index');
