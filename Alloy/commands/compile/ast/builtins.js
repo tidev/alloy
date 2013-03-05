@@ -6,6 +6,7 @@ var path = require('path'),
 
 var EXCLUDE = ['backbone','CFG','underscore'];
 var BUILTINS_PATH = path.join(__dirname,'..','..','..','builtins');
+var loaded = [];
 
 function appendExtension(file, extension) {
 	extension = '.' + extension;
@@ -19,10 +20,9 @@ function appendExtension(file, extension) {
 	}
 }
 
-exports.process = function(ast, config, report) {
+exports.process = function(ast, config) {
 	var rx = /^alloy\/(.+)$/;
 	var match;
-	report.builtins = report.builtins || [];
 
 	ast.walk(new uglifyjs.TreeWalker(function(node) {
 		if (node instanceof uglifyjs.AST_Call) {
@@ -30,7 +30,7 @@ exports.process = function(ast, config, report) {
 				node.args[0] && _.isString(node.args[0].value) &&   // Is the 1st param a literal string?
 				(match = node.args[0].value.match(rx)) !== null &&  // Is it an alloy module?
 				!_.contains(EXCLUDE, match[1]) &&                   // Make sure it's not excluded.
-				!_.contains(report.builtins, match[1])              // Make sure we didn't find it already
+				!_.contains(loaded, match[1])                       // Make sure we didn't find it already              
 			) {
 				var name = appendExtension(match[1], 'js');
 				var source = path.join(BUILTINS_PATH,name);
@@ -42,7 +42,7 @@ exports.process = function(ast, config, report) {
 				logger.debug('  - [' + name + '] --> "' + dest + '"');
 				U.copyFileSync(source, dest);
 
-				report.builtins = _.union(report.builtins, [name]);
+				loaded = _.union(loaded, [name]);
 			}
 		}
 	}));
