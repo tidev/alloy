@@ -593,7 +593,6 @@ function optimizeCompiledCode() {
 			'compress'			
 		],
 		modLocation = './ast/';
-		report = {};
 
 	function getJsFiles() {
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
@@ -637,7 +636,7 @@ function optimizeCompiledCode() {
 			_.each(mods, function(mod) {
 				logger.trace('- Processing "' + mod + '" module...');
 				ast.figure_out_scope();
-				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
+				ast = require(modLocation+mod).process(ast, compileConfig) || ast;
 			});
 			var stream = uglifyjs.OutputStream(options);
 			ast.print(stream);
