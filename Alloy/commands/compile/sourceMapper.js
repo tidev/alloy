@@ -67,8 +67,6 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// generate the source map and composite code
 	_.each(generator.target.lines, function(line) {
-		console.log(line);
-
 		var trimmed = U.trim(line).replace(/^\<\%\=\s+/,'').replace(/\s+\%\>$/,'');
 		console.log(trimmed);
 		if (_.contains(markers, trimmed)) {
@@ -102,5 +100,8 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// create the generated code and source map files
 	fs.writeFileSync(generator.target.filepath, stream.toString());
+	logger.info('Created "' + generator.target.filepath + '"');
+
 	fs.writeFileSync(generator.target.filepath + '.map', sourceMap.toString());
+	logger.debug('Created source map "' + generator.target.filepath + '.map"');
 };
