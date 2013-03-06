@@ -229,6 +229,7 @@ module.exports = function(args, program) {
 	// 	{'__MAPMARKER_ALLOY_JS__':alloyJs}
 	// );
 
+	logger.info('[app.js] Titanium entry point processing...');
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
 	require('./sourceMapper').generateCodeAndSourceMap({
 		target: {
@@ -243,12 +244,14 @@ module.exports = function(args, program) {
 			}
 		}
 	}, compileConfig);
+	logger.info('');
 
 	//fs.writeFileSync(appJS,code);
 	
 //	BENCHMARK('generate app.js');
 
 	// optimize code
+	logger.info('----- OPTIMIZATIONS -----');
 	optimizeCompiledCode(alloyConfig, paths);
 //	BENCHMARK('optimize runtime code')
 
@@ -623,7 +626,8 @@ function optimizeCompiledCode() {
 		],
 		modLocation = './ast/',
 		exceptions = [
-			'app.js'
+			'app.js',
+			'alloy/controllers/'
 		];
 
 	function getJsFiles() {
@@ -653,9 +657,14 @@ function optimizeCompiledCode() {
 
 	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
 		_.each(files, function(file) {
+			if (_.find(exceptions, function(e) { return file.indexOf(e) === 0; })) {
+				logger.trace('skipped: ' + file);
+				return;
+			}
+
 			// generate AST from file
 			var fullpath = path.join(compileConfig.dir.resources,file);
-			logger.info('Parsing AST for "' + file + '"...');
+			logger.info('Optimizing AST for "' + file + '"...');
 			try {
 				var ast = uglifyjs.parse(fs.readFileSync(fullpath,'utf8'), {
 					filename: file
