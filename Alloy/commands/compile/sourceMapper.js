@@ -81,7 +81,6 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// generate the source map and composite code
 	_.each(target.lines, function(line) {
 		var trimmed = U.trim(line);
-		console.log(trimmed);
 		if (_.contains(markers, trimmed)) {
 			_.each(data[trimmed].lines, function(line) {
 				mapLine(mapper, data[trimmed], genMap, line);
@@ -115,9 +114,9 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var outfile = target.filepath;
 	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
 	fs.writeFileSync(outfile, stream.toString());
-	logger.info('Created "' + outfile + '"');
+	logger.info('  created:    "' + path.relative(compileConfig.dir.project,outfile) + '"');
 
 	outfile = outfile + '.map';
 	fs.writeFileSync(outfile, sourceMap.toString());
-	logger.debug('Created source map "' + outfile + '"');
+	logger.debug('  map:        "' + outfile + '"');
 };
