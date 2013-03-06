@@ -59,6 +59,7 @@ program.parse(process.argv);
 //if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
 Error.stackTraceLimit = Infinity;
 logger.stripColors = program['colors'] === false;
+logger.logLevel = program['logLevel'] || logger.TRACE;
 
 if (!program.noBanner && program.args[0] !== 'info') {
 	banner();
