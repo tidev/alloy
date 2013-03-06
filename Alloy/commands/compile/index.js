@@ -6,6 +6,7 @@ var path = require('path'),
 	vm = require('vm'),
 	jsonlint = require('jsonlint'),
 	uglifyjs = require('uglify-js'),
+	sourceMapper = require('./sourceMapper'),
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
@@ -231,7 +232,7 @@ module.exports = function(args, program) {
 
 	logger.info('[app.js] Titanium entry point processing...');
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	require('./sourceMapper').generateCodeAndSourceMap({
+	sourceMapper.generateCodeAndSourceMap({
 		target: {
 			filename: 'Resources/app.js',
 			filepath: appJS,
@@ -492,7 +493,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		);
 		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
 	}
-	require('./sourceMapper').generateCodeAndSourceMap({
+	sourceMapper.generateCodeAndSourceMap({
 		target: {
 			filename: path.relative(compileConfig.dir.project,files.COMPONENT),
 			filepath: targetFilepath,

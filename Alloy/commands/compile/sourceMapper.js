@@ -15,7 +15,7 @@ var lineSplitter = /(?:\r\n|\r|\n)/,
 	],
 	modLocation = './ast/';
 
-var OPTIONS_OUTPUT = { 
+exports.OPTIONS_OUTPUT = { 
 	indent_start  : 0,     // start indentation on every line (only when `beautify`)
 	indent_level  : 4,     // indentation level (only when `beautify`)
 	quote_keys    : false, // quote all keys in object literals?
@@ -105,7 +105,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		file: target.filename,
 		orig: mapper.toString()
 	});
-	var stream = uglifyjs.OutputStream(_.extend(_.clone(OPTIONS_OUTPUT), { 
+	var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), { 
 		source_map: sourceMap
 	}));
 	ast.print(stream);
