@@ -36,7 +36,7 @@ function tiSdkVersionNumber(tiVersion) {
 ////////// command function //////////
 //////////////////////////////////////
 module.exports = function(args, program) {
-//	BENCHMARK();
+	BENCHMARK();
 	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
 
 	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
@@ -258,7 +258,7 @@ module.exports = function(args, program) {
 	}
 //	BENCHMARK('post:compile');
 //
-//	BENCHMARK('TOTAL', true);
+	BENCHMARK('TOTAL', true);
 };
 
 
@@ -696,11 +696,14 @@ function BENCHMARK(desc, isFinished) {
 	var total = process.hrtime(times.first);
 	var current = hrtimeInSeconds(total) - (times.last ? hrtimeInSeconds(times.last) : 0);
 	times.last = total;
-	times.msgs.push('[' + Math.round((isFinished ? hrtimeInSeconds(total) : current)*places)/places + 's] ' + desc);
+	var thisTime = Math.round((isFinished ? hrtimeInSeconds(total) : current)*places)/places;
+	times.msgs.push('[' + thisTime + 's] ' + desc);
 	if (isFinished) { 
 		logger.trace(' ');
 		logger.trace('Benchmarking');
 		logger.trace('------------');
 		logger.trace(times.msgs); 
+		logger.info('');
+		logger.info('Alloy compiled in ' + thisTime + 's');
 	}
 }
