@@ -1,7 +1,7 @@
 var uglifyjs = require('uglify-js');
 
 exports.getBaseController = function(code) {
-	var baseController = '"baseController"';
+	var baseController = '"BaseController"';
 	var ast = uglifyjs.parse(code);
 	ast.walk(new uglifyjs.TreeWalker(function(node) {
 		if (node instanceof uglifyjs.AST_Assign) {
