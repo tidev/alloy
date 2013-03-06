@@ -252,7 +252,7 @@ module.exports = function(args, program) {
 //	BENCHMARK('generate app.js');
 
 	// optimize code
-	logger.info('----- OPTIMIZATIONS -----');
+	logger.info('----- OPTIMIZING -----');
 	optimizeCompiledCode(alloyConfig, paths);
 //	BENCHMARK('optimize runtime code')
 
@@ -626,48 +626,31 @@ function optimizeCompiledCode() {
 			'compress'			
 		],
 		modLocation = './ast/',
-		exceptions = [
+		lastFiles = [],
+		files;
+		
+	// Get the list of JS files from the Resources directory
+	// and exclude files that don't need to be optimized, or
+	// have already been optimized.
+	function getJsFiles() {
+		var exceptions = [
 			'app.js',
 			'alloy/controllers/',
 			'alloy/backbone.js',
 			'alloy/underscore.js'
 		];
-
-	function getJsFiles() {
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return /\.js\s*$/.test(f);
+			return /\.js\s*$/.test(f) && !_.find(exceptions, function(e) { 
+				return f.indexOf(e) === 0; 
+			});
 		});
 	}
 
-	var lastFiles = [], 
-		options = { 
-			indent_start  : 0,     // start indentation on every line (only when `beautify`)
-			indent_level  : 4,     // indentation level (only when `beautify`)
-			quote_keys    : false, // quote all keys in object literals?
-			space_colon   : true,  // add a space after colon signs?
-			ascii_only    : false, // output ASCII-safe? (encodes Unicode characters as ASCII)
-			inline_script : false, // escape "</script"?
-			width         : 80,    // informative maximum line width (for beautified output)
-			max_line_len  : 32000, // maximum line length (for non-beautified output)
-			ie_proof      : false,  // output IE-safe code?
-			beautify      : true, // beautify output?
-			source_map    : null,  // output a source map
-			bracketize    : false, // use brackets every time?
-			comments      : false, // output comments?
-			semicolons    : true  // use semicolons to separate statements? 
-		},
-		files;
-
 	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
 		_.each(files, function(file) {
-			if (_.find(exceptions, function(e) { return file.indexOf(e) === 0; })) {
-				logger.trace('skipped: ' + file);
-				return;
-			}
-
 			// generate AST from file
 			var fullpath = path.join(compileConfig.dir.resources,file);
-			logger.info('Optimizing AST for "' + file + '"...');
+			logger.info('- ' + file);
 			try {
 				var ast = uglifyjs.parse(fs.readFileSync(fullpath,'utf8'), {
 					filename: file
@@ -678,11 +661,13 @@ function optimizeCompiledCode() {
 
 			// process all AST operations
 			_.each(mods, function(mod) {
-				logger.trace('- Processing "' + mod + '" module...');
+				logger.trace('  processing "' + mod + '" module...');
 				ast.figure_out_scope();
 				ast = require(modLocation+mod).process(ast, compileConfig) || ast;
 			});
-			var stream = uglifyjs.OutputStream(options);
+
+			// Write out the optimized file
+			var stream = uglifyjs.OutputStream(sourceMapper.OPTIONS_OUTPUT);
 			ast.print(stream);
 			fs.writeFileSync(fullpath, stream.toString());
 		});
