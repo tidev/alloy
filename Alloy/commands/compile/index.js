@@ -170,23 +170,23 @@ module.exports = function(args, program) {
 	loadGlobalStyles(paths.app, theme);
 //	BENCHMARK('load global styles');
 	
-	// Process all models
+	// Create collection of all widget and app paths 
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
 	var viewCollection = widgetDirs;
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+
+	// Process all models
 	var models = processModels(viewCollection);
 //	BENCHMARK('process models');
 
-	// create a regex for determining which platform-specific
+	// Create a regex for determining which platform-specific
 	// folders should be used in the compile process
 	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) { return p === buildPlatform; });
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
-
-	// Process all views, including all those belonging to widgets
-	// var viewCollection = widgetDirs;
-	// viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
-
+	
+	// Process all views/controllers and generate their runtime 
+	// commonjs modules and source maps.
 	var tracker = {};
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
@@ -222,14 +222,6 @@ module.exports = function(args, program) {
 //	BENCHMARK('process all controllers');
 
 	// generate app.js
-	// var alloyJsPath = path.join(paths.app,'alloy.js');
-	// var alloyJs = path.existsSync(alloyJsPath) ? fs.readFileSync(alloyJsPath,'utf8') : '';
-	// var appJS = path.join(compileConfig.dir.resources,"app.js");
-	// var code = _.template(
-	// 	fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
-	// 	{'__MAPMARKER_ALLOY_JS__':alloyJs}
-	// );
-
 	logger.info('[app.js] Titanium entry point processing...');
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
 	sourceMapper.generateCodeAndSourceMap({
@@ -246,8 +238,6 @@ module.exports = function(args, program) {
 		}
 	}, compileConfig);
 	logger.info('');
-
-	//fs.writeFileSync(appJS,code);
 	
 //	BENCHMARK('generate app.js');
 
@@ -506,20 +496,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			}
 		}
 	}, compileConfig);
-
-	// Write the view or widget to its runtime file
-	// if (manifest) {
-	// 	wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
-	// 	CU.copyWidgetResources(
-	// 		[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
-	// 		compileConfig.dir.resources, 
-	// 		manifest.id
-	// 	);
-	// 	fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
-	// } else {
-	// 	wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
-	// 	fs.writeFileSync(files.COMPONENT, code);
-	// }
 }
 
 function findModelMigrations(name, inDir) {
