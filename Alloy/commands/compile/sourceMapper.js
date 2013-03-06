@@ -3,6 +3,7 @@ var SM = require('source-map'),
 	path = require('path'),
 	wrench = require('wrench'),
 	U = require('../../utils'),
+	CONST = require('../../common/constants'),
 	uglifyjs = require('uglify-js'),
 	logger = require('../../common/logger'),
 	_ = require('../../lib/alloy/underscore')._;
@@ -110,13 +111,18 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	}));
 	ast.print(stream);
 
-	// create the generated code and source map files
+	// create the generated code
 	var outfile = target.filepath;
+	var relativeOutfile = path.relative(compileConfig.dir.project,outfile);
 	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
 	fs.writeFileSync(outfile, stream.toString());
-	logger.info('  created:    "' + path.relative(compileConfig.dir.project,outfile) + '"');
+	logger.info('  created:    "' + relativeOutfile + '"');
 
-	outfile = outfile + '.map';
+	// create source map for the generated file
+	var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
+	outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
+	relativeOutfile = path.relative(compileConfig.dir.project,outfile);
+	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
 	fs.writeFileSync(outfile, sourceMap.toString());
-	logger.debug('  map:        "' + outfile + '"');
+	logger.debug('  map:        "' + relativeOutfile + '"');
 };
