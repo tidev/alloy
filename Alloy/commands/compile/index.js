@@ -473,6 +473,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	delete template.__MAPMARKER_CONTROLLER_CODE__;
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 
+	// prep the controller paths based on whether it's an app
+	// controller or widget controller
 	var targetFilepath = files.COMPONENT;
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
@@ -483,6 +485,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		);
 		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
 	}
+
+	// generate the code and source map for the current controller
 	sourceMapper.generateCodeAndSourceMap({
 		target: {
 			filename: path.relative(compileConfig.dir.project,files.COMPONENT),
