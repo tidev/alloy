@@ -627,7 +627,9 @@ function optimizeCompiledCode() {
 		modLocation = './ast/',
 		exceptions = [
 			'app.js',
-			'alloy/controllers/'
+			'alloy/controllers/',
+			'alloy/backbone.js',
+			'alloy/underscore.js'
 		];
 
 	function getJsFiles() {
