@@ -38,7 +38,10 @@ program
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
 	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
 	.option('-s, --tiSDK <tiSDK>', 'Full path to Titanium SDK to use with run command')
-	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command');
+	.option('-t, --tiversion <tiversion>', 'Titanium SDK version used for run command')
+	.option('-x, --column <column>', 'Column for source map query', 1)
+	.option('-y, --line <line>', 'Line for source map query', 1)
+	.option('-z, --source <source>', 'Source original file for source map query');
 
 program.command('new'.blue+' <dir>'.white)
 		.description('    create a new alloy project'.grey);
