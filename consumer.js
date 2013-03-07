@@ -27,13 +27,17 @@ program.command('generated')
 program.command('original')
 	.description('    Returns the original source, line, and column information for the generated source\'s line and column positions provided');
 
-// program.on('--help', function(){
-//   console.log('  Examples:');
-//   console.log('');
-//   console.log('    $ custom-help --help');
-//   console.log('    $ custom-help -h');
-//   console.log('');
-// });
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log('');
+  console.log('    # Get original position for line 5 from "Resources/app.js".');
+  console.log('    $ node consumer.js original .map/Resources/app.js.map -l 5');
+  console.log('');
+  console.log('    # Get the generated position for line 123, column 5 of the');
+  console.log('    # original file "app/controllers/index.js".');
+  console.log('    $ node consumer.js generated "Resources/alloy/controllers/index.js" -l 123 -c 5 -s "app/controllers/index.js"');
+  console.log('');
+});
 
 // TODO: add examples in help
 
