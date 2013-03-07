@@ -1,7 +1,6 @@
 var SM = require('source-map'),
 	program = require('commander'),
-	fs = require('fs'),
-	path = require('path');
+	fs = require('fs');
 
 var FUNCTIONS = {
 	generated: 'generatedPositionFor',
