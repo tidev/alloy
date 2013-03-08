@@ -1,4 +1,5 @@
 var fs = require('fs'),
+	path = require('path'),
 	U = require('../../utils'),
 	SM = require('source-map'); 
 
@@ -39,5 +40,18 @@ module.exports = function(args, program) {
 
 	// execute the source map query and output the info
 	var ret = consumer[func](obj);
+
+	// If the returned source is the same as the source map,
+	// just send back the same line number. The returned source
+	// in this case actually refers to the Alloy template file
+	// used as the base of the composite controller, and this
+	// has no meaning to deveopers since it is not included in
+	// the application itself, only in the Alloy module.
+	var absolute = path.resolve(sourceMapFile);
+	if (command === 'original' && 
+		(new RegExp(ret.source + '\\.map$')).test(absolute)) {
+		ret.line = program.line;
+	}
+
 	console.log(ret);
 }
