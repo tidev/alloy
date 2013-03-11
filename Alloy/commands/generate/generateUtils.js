@@ -18,7 +18,7 @@ function pad(x) {
 exports.generateMigrationFileName = function(t) {
 	var d = new Date;
 	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
-	return s + '_' + t + '.' + CONST.FILE_EXT.MIGRATION;
+	return s + '_' + t;
 }
 
 exports.generate = function(name, type, program, args) {
