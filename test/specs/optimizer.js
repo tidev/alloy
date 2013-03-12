@@ -44,7 +44,7 @@ var tests = [
 	['var a = -1.02;', 'var a=-1.02'],
 	['var a = !1', 'var a=!1'],
 	['var a = true ? 1 : 0;', 'var a=1'],
-	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num=isNaN(amount)||amount===""||amount===null?0:amount'],
+	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num=isNaN(amount)||""===amount||null===amount?0:amount'],
 
 	// make sure we didn't break normal if conditions
 	['if (true) { var a = 1; } else { var a = 2; }', "var a=1"],
@@ -70,15 +70,15 @@ var tests = [
 	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"false\"", notPlatform('ios')],
 	["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", ['android']],
 	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=0", notPlatform('ios')],
-	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=Ti.Platform.osname==\"iphone\"?1:0", ['ios']],
+	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=\"iphone\"==Ti.Platform.osname?1:0", ['ios']],
 
 	// check identities
 	["var a = Ti.Platform.name === Titanium.Platform.name","var a=!0"],
 
 	// shouldn't attempt to process anything other than strings
-	["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"===couldBeAnything())var a=1;else var a=2"],
-	["if (Ti.Platform.name === some.Other.Value) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"===some.Other.Value)var a=1;else var a=2"],
-	["if (Ti.Platform.name !== aVariable) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"!==aVariable)var a=1;else var a=2"],
+	["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"===couldBeAnything())var a=1\nelse var a=2"],
+	["if (Ti.Platform.name === some.Other.Value) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"===some.Other.Value)var a=1\nelse var a=2"],
+	["if (Ti.Platform.name !== aVariable) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"!==aVariable)var a=1\nelse var a=2"],
 
 	// properly handles conditionals without curly braces
 	["if (Ti.Platform.name === '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=1"],
