@@ -27,13 +27,13 @@ exports.optimize = function(ast, defines, fn) {
 	// determine platform name from defines
 	if (defines.OS_IOS) { 
 		platform.name = 'iPhone OS'; 
-		platform.osName = undefined;
+		platform.osname = undefined;
 	} else if (defines.OS_ANDROID) { 
-		platform.osName = platform.name = 'android'; 
+		platform.osname = platform.name = 'android'; 
 	} else if (defines.OS_MOBILEWEB) { 
-		platform.osName = platform.name = 'mobileweb'; 
+		platform.osname = platform.name = 'mobileweb'; 
 	} else {
-		platform.osName = platform.name = undefined;
+		platform.osname = platform.name = undefined;
 	}
 
 	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
