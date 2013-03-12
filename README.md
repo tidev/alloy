@@ -40,9 +40,11 @@ cd alloy
 This is primarily done by Alloy devs just for testing purposes, but you may find it useful.
 
 1. install jake: `[sudo] npm install -g jake`
+	* If you are running nodejs 0.10.0, you **MUST** install jake 0.5.9 or higher.
 2. Get into the root directory of the cloned alloy repository.
 3. Find a test app in **test/apps** folder you want to run. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
 4. Run jake: `jake app:run dir=basics/simple`
+	* You might get exceptions about uninstalled modules. If you do, simply install them by name: `[sudo] npm install -g MODULE_NAME`
 5. Lather, rinse, repeat
 
 ### Importing the "Harness" to Titanium Studio
