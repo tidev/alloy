@@ -37,7 +37,9 @@
     "xmldom":          "0.1.13",
     "jake":            ">=0.3",
     "stripcolorcodes": "0.1.0",
-    "jsonlint":        "1.5.1"
+    "jsonlint":        "1.5.1",
+    "uglify-js":       "2.2.5",
+    "source-map":      "0.1.9"
   },
   "license":"Apache Public License v2",
   "bin": {

@@ -4,8 +4,7 @@ var fs = require('fs'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	jsp = require("../../Alloy/uglify-js/uglify-js").parser,
-	pro = require("../../Alloy/uglify-js/uglify-js").uglify,
+	uglifyjs = require('uglify-js'),
 	optimizer = require('../../Alloy/commands/compile/optimizer');
 
 var tests = [
@@ -136,13 +135,14 @@ describe('optimizer.js', function() {
 
 					it(prefix + 'parses AST with uglifyjs', function() {
 						var parseFunction = function() {
-							ast = jsp.parse(testContent);
+							ast = uglifyjs.parse(testContent);
 						};
 						expect(parseFunction).not.toThrow();
 					});
 					
 					it(prefix + 'optimizes AST via optimizer.js', function() {
 						var optimizeFunction = function() {
+							ast.figure_out_scope();
 							ast = optimizer.optimize(ast, defines);
 						};
 						expect(optimizeFunction).not.toThrow();
@@ -153,20 +153,43 @@ describe('optimizer.js', function() {
 						// as the last step of JS file processing. The unit testing here
 						// uses the same settings as the Alloy compile process.
 						var squeezeFunction = function() {
-							ast = pro.ast_squeeze(ast, {
-								make_seqs   : false,  
-						        dead_code   : true,   
-						        no_warnings : true,   
-						        keep_comps  : true,   
-						        unsafe      : false 
-							});
+							var options = {
+								sequences     : true,  // join consecutive statemets with the “comma operator”
+								properties    : false,   // optimize property access: a["foo"] → a.foo
+								dead_code     : true,   // discard unreachable code
+								drop_debugger : false,   // discard “debugger” statements
+								unsafe        : false,   // some unsafe optimizations (see below)
+								conditionals  : true,   // optimize if-s and conditional expressions
+								comparisons   : true,   // optimize comparisons
+								evaluate      : true,   // evaluate constant expressions
+								booleans      : true,   // optimize boolean expressions
+								loops         : false,   // optimize loops
+								unused        : true,   // drop unused variables/functions
+								hoist_funs    : true,   // hoist function declarations
+								hoist_vars    : false,  // hoist variable declarations
+								if_return     : true,   // optimize if-s followed by return/continue
+								join_vars     : true,   // join var declarations
+								cascade       : true,   // try to cascade `right` into `left` in sequences
+								side_effects  : true,   // drop side-effect-free statements
+								warnings      : false,   // warn about potentially dangerous optimizations/code
+								global_defs   : defines      // global definitions
+							};
+
+							ast.figure_out_scope();
+							ast = ast.transform(uglifyjs.Compressor(options));
 						};
 						expect(squeezeFunction).not.toThrow();
 					});
 
 					it(prefix + 'generates code from optimized AST via uglifyjs', function() {
 						var generateFunction = function() {
-							code = pro.gen_code(ast, {beautify:false}); 
+							var stream = uglifyjs.OutputStream({
+								beautify: false,
+								semicolons: false,
+								bracketize: false
+							});
+							ast.print(stream);
+							code = stream.toString().replace(/\s*$/,'');
 						};
 						expect(generateFunction).not.toThrow();
 					});

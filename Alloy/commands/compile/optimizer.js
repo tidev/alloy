@@ -2,49 +2,74 @@
  * Code in this file will attempt to optimize generated code so it's more compact
  * and executes faster, better, etc.
  */
-var jsp = require("../../uglify-js/uglify-js").parser,
-	pro = require("../../uglify-js/uglify-js").uglify,
+var uglifyjs = require('uglify-js'),
 	_ = require('../../lib/alloy/underscore')._,
-	util = require('util'),
-	colors = require('colors'),
-	logger = require('../../common/logger.js'),
-	U = require('../../utils'),
-	platformDefines,
-	platformName, 
-	platformOsName;
+	logger = require('../../common/logger.js');
 
 var JSON_NULL = JSON.parse('null');
 
-function getVariableStringValue(a)
-{
-	var e = a;
-	var p = '';
-	while(e[0]==='dot' || e[0]==='name' || e[0]==='string' || e[0]==='sub')
-	{
-		if (e[0]==='sub') // sub is like foo['bar'] which we turn to foo.bar
-		{
-			p = e[2][1] + '.' + p;
-		}
-		else
-		{
-			p = (e[0] == 'dot' ? e[2] : e[1]) + '.' + p;
-		}
-		e = e[1];
-	}
-	return p.substring(0,p.length-1);
+function dotCheck(node, name) {
+	return node instanceof uglifyjs.AST_Dot && node.property === name;
 }
 
-// Replace the Ti.Platform variables with strings, when possible. We don't need to do 
-// anything else. uglifyjs will take care of optimization for us by eliminating dead
-// code based on string to string comparisons in the ast_squeeze() step.
-function processObject() {
-	var translate = getVariableStringValue(this);
-	if (_.contains(['Ti.Platform.name','Titanium.Platform.name'], translate) && platformName) {
-		return ['string',platformName];
-	} else if (_.contains(['Ti.Platform.osname','Titanium.Platform.osname'], translate) && platformOsName) {
-		return ['string',platformOsName];
+function subCheck(node, name) {
+	return node instanceof uglifyjs.AST_Sub && node.property.value === name;
+}
+
+function dotSubCheck(node, name) {
+	return dotCheck(node, name) || subCheck(node, name);
+}
+
+// Optimize Titanium namespaces with static strings where possible
+exports.optimize = function(ast, defines, fn) {
+	var platform = {};
+
+	// determine platform name from defines
+	if (defines.OS_IOS) { 
+		platform.name = 'iPhone OS'; 
+		platform.osName = undefined;
+	} else if (defines.OS_ANDROID) { 
+		platform.osName = platform.name = 'android'; 
+	} else if (defines.OS_MOBILEWEB) { 
+		platform.osName = platform.name = 'mobileweb'; 
+	} else {
+		platform.osName = platform.name = undefined;
 	}
-	return null;
+
+	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
+	// into static strings where possible. This will allow the following
+	// compression step to reduce the code further.
+	var transformer = new uglifyjs.TreeTransformer(function(node, descend){
+		var convert = false;
+		if (dotSubCheck(node, 'name') || dotSubCheck(node, 'osname')) {
+			descend(node, new uglifyjs.TreeTransformer(function(node, descend) {
+				if (dotSubCheck(node, 'Platform')) {
+					descend(node, new uglifyjs.TreeTransformer(function(node) {
+						if (node instanceof uglifyjs.AST_SymbolRef && 
+							(node.name === 'Titanium' || node.name === 'Ti')) {
+							convert = true;
+						} 
+						return node;
+					}));
+				} 
+				return node;
+			}));
+			if (convert) {
+				var value = node instanceof uglifyjs.AST_Dot ? node.property : node.property.value;
+				if (platform[value]) {
+					return new uglifyjs.AST_String({
+						start: node.start,
+						end: node.end,
+						value: platform[value]
+					});
+				} else {
+					return node;
+				}
+			}
+			return node;
+		}
+	});
+	return ast.transform(transformer);
 }
 
 // strips null and undefined values out of Alloy styles
@@ -58,37 +83,3 @@ exports.optimizeStyle = function(styleList) {
 		}
 	}
 }
-
-// main function for optimizing runtime Titanium Javascript code
-function optimize(ast, defines, fn) {
-	try {
-		platformDefines = defines;
-
-		// determine platform name from defines
-		if (platformDefines.OS_IOS) { 
-			platformName = 'iPhone OS'; 
-			platformOsName = null;
-		} else if (platformDefines.OS_ANDROID) { 
-			platformOsName = platformName = 'android'; 
-		} else if (platformDefines.OS_MOBILEWEB) { 
-			platformOsName = platformName = 'mobileweb'; 
-		} else {
-			platformName = platformOsName = null;
-		}
-
-		// walk the AST looking for ifs and vars
-		var w = pro.ast_walker();
-		return w.with_walkers({
-				"dot": processObject,
-				"sub": processObject
-		}, function() {
-			return w.walk(ast);
-		});
-	} catch (e) {
-		logger.error('Error compiling source (' + fn + '). ' + e + '\n' + e.stack);
-		return ast;
-	}
-}
-
-exports.optimize = optimize;
-

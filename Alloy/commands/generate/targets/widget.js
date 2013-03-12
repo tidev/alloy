@@ -50,7 +50,7 @@ module.exports = function(name, args, program) {
 		var json = jsonlint.parse(content);
 		json.dependencies || (json.dependencies = {});
 		json.dependencies[widgetId] = VERSION_DEFAULT;
-		fs.writeFileSync(paths.config, U.prettyPrintJson(json));
+		fs.writeFileSync(paths.config, JSON.stringify(json, null, 4));
 	} catch (e) {
 		U.die('Error while adding widget dependency to config.json in "' + configReadPath + '"', e);
 	}

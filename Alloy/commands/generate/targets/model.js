@@ -63,7 +63,7 @@ module.exports = function(name, args, program) {
 }
 
 function prepareColumnsForWriting(columns) {
-	var pretty = 'columns: ' + U.prettyPrintJson(columns) + ',\n';
+	var pretty = 'columns: ' + JSON.stringify(columns, null, 4) + ',\n';
 	var output = [];
 	_.each(pretty.split('\n'), function(line) {
 		if (line === '' || /^\s+$/.test(line)) {

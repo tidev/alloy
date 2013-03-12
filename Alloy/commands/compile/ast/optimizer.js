@@ -1,7 +1,6 @@
-var pro = require("../../../uglify-js/uglify-js").uglify;
 var optimizer = require('../optimizer');
 
-exports.process = function(ast, config, report) {
+exports.process = function(ast, config) {
 	config = config ? config.alloyConfig : {};
 	config.deploytype = config.deploytype || 'development';
 

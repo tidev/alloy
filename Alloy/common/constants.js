@@ -45,7 +45,8 @@ exports.FILE_EXT = {
 	CONTROLLER: 'js',
 	COMPONENT: 'js',
 	CONFIG: 'json',
-	JMK: 'jmk'
+	JMK: 'jmk',
+	MAP: 'map'
 };
 exports.DIR = {
 	VIEW: 'views',
@@ -58,7 +59,8 @@ exports.DIR = {
 	ASSETS: 'assets',
 	WIDGET: 'widgets',
 	LIB: 'lib',
-	COMPONENT: 'controllers'
+	COMPONENT: 'controllers',
+	MAP: '.map'
 };
 
 // constants identifying JS reserved words
