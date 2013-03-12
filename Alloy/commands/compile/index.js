@@ -586,16 +586,19 @@ function processModels(dirs) {
 
 function loadGlobalStyles(appPath, theme) {
 	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	
 
 	compileConfig.globalStyle = {};
 	if (path.existsSync(appGlobal)) {
 		logger.info('[app.tss] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
 	} 
-	if (theme && path.existsSync(themeGlobal)) {
-		logger.info('[app.tss (theme:' + theme + ')] global style processing...');
-		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+	if (theme) {
+		var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	 	if (path.existsSync(themeGlobal)) {
+			logger.info('[app.tss (theme:' + theme + ')] global style processing...');
+			compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+		}
 	} 	
 }
 
