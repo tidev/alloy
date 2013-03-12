@@ -60,7 +60,7 @@ exports.DIR = {
 	WIDGET: 'widgets',
 	LIB: 'lib',
 	COMPONENT: 'controllers',
-	MAP: '.map'
+	MAP: 'build/map'
 };
 
 // constants identifying JS reserved words
