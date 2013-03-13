@@ -28,7 +28,7 @@ program
 	.version(module.exports.version, '-v, --version')
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
-	.option('-a, --allStackTrace', 'No limit to the size of stack traces')
+	.option('-a, --app <app>', 'Test app folder for running "alloy test"')
 	.option('-b, --noBanner', 'Disable the banner')
 	.option('-c, --config <config>','Pass in compiler configuration')
 	.option('-f, --force','Force the command to execute')
@@ -37,6 +37,7 @@ program
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
 	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
+	.option('-s, --spec <spec>', 'test spec to use with "alloy test"')
 	.option('-x, --column <column>', 'Column for source map query', 1)
 	.option('-y, --line <line>', 'Line for source map query', 1)
 	.option('-z, --source <source>', 'Source original file for source map query');
@@ -54,7 +55,6 @@ program.parse(process.argv);
 	
 
 // Setup up logging output
-//if (program.allStackTrace) { Error.stackTraceLimit = Infinity; }
 Error.stackTraceLimit = Infinity;
 logger.stripColors = program['colors'] === false;
 logger.logLevel = program['logLevel'] || logger.TRACE;
