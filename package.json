@@ -45,6 +45,9 @@
   "bin": {
     "alloy": "./bin/alloy"
   },
+  "scripts": {
+    "test": "jake test:all"
+  },
   "main": "./Alloy/alloy",
   "engines": {
     "node": ">= 0.6.0"
