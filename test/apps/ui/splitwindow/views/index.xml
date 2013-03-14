@@ -10,7 +10,7 @@
 	  be a Ti.UI.Window.
 -->
 <Alloy>
-	<SplitWindow>
+	<SplitWindow platform="ios" formFactor="tablet">
 		<!-- The 'masterView' window, added via <Require> tag -->
 		<Require src="master"/>
 		
