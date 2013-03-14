@@ -15,10 +15,49 @@ function pad(x) {
 	return x;
 }
 
+function mkdirP (p, mode, f, made) {
+    if (typeof mode === 'function' || mode === undefined) {
+        f = mode;
+        mode = 0777 & (~process.umask());
+    }
+    if (!made) made = null;
+
+    var cb = f || function () {};
+    if (typeof mode === 'string') mode = parseInt(mode, 8);
+    p = path.resolve(p);
+
+    fs.mkdir(p, mode, function (er) {
+        if (!er) {
+            made = made || p;
+            return cb(null, made);
+        }
+        switch (er.code) {
+            case 'ENOENT':
+                mkdirP(path.dirname(p), mode, function (er, made) {
+                    if (er) cb(er, made);
+                    else mkdirP(p, mode, cb, made);
+                });
+                break;
+
+            // In the case of any other error, just see if there's a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                fs.stat(p, function (er2, stat) {
+                    // if the stat fails, then that's super weird.
+                    // let the original error be the failure reason.
+                    if (er2 || !stat.isDirectory()) cb(er, made)
+                    else cb(null, made);
+                });
+                break;
+        }
+    });
+}
+
 exports.generateMigrationFileName = function(t) {
 	var d = new Date;
 	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
-	return s + '_' + t;
+	return s + '_' + t + '.' + CONST.FILE_EXT.MIGRATION;
 }
 
 exports.generate = function(name, type, program, args) {
@@ -26,9 +65,8 @@ exports.generate = function(name, type, program, args) {
 	var ext = '.'+CONST.FILE_EXT[type];
 	var paths = U.getAndValidateProjectPaths(program.outputPath);
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
+	
 	var dir = path.join(paths.app,CONST.DIR[type]);
-
-	// add the platform-specific folder to the path, if necessary
 	if (program.platform) {
 		if (_.contains(['VIEW','CONTROLLER','STYLE'],type)) {
 			dir = path.join(dir,program.platform);
@@ -37,21 +75,19 @@ exports.generate = function(name, type, program, args) {
 		}
 	}
 
-	// get the final file name 
-	var file = path.join(dir,name + ext);
+ 	if (path.dirname(name).length > 1) {
+    		mkdirP(path.join(dir, path.dirname(name)));
+  	} 
 
-	// see if the file already exists
+	var file = path.join(dir,name+ext);
+
 	if (path.existsSync(file) && !program.force) {
 		U.die(" file already exists: " + file);
 	}
-
-	// make sure the target folder exists
-	var fullDir = path.dirname(file);
-	if (!path.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+	if (!path.existsSync(dir)) {
+		wrench.mkdirSyncRecursive(dir);
 	}
 
-	// write the file out based on the given template
 	var templateContents = fs.readFileSync(templatePath,'utf8');
 	if (args.templateFunc) { templateContents = args.templateFunc(templateContents); }
 	var code = _.template(templateContents, args.template || {});
@@ -59,7 +95,7 @@ exports.generate = function(name, type, program, args) {
 
 	return {
 		file: file,
-		dir: fullDir,
+		dir: dir,
 		code: code
 	};
 }
