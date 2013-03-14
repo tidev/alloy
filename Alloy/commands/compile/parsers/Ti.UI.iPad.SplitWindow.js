@@ -17,15 +17,22 @@ function parse(node, state, args) {
 	}
 
 	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, 'Ti.UI.Window');
+		var theNode = CU.validateNodeName(child, ['Ti.UI.Window','Ti.UI.TabGroup']);
 		var childArgs = CU.getParserArgs(child);
 		if (theNode) {
+			var subParentSymbol;
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					subParents.push(state.parent.symbol);
+					subParentSymbol = state.parent.symbol;
+					subParents.push(subParentSymbol);
 				}
 			});
+
+			// TODO: workaround for TIMOB-13068
+			if (theNode === 'Ti.UI.TabGroup') {
+				code += subParentSymbol + '.open();';
+			}
 		} else {
 			U.die([
 				'Invalid <SplitWindow> child type: ' + childArgs.fullname,
