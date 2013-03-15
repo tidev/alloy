@@ -3,7 +3,7 @@ migration.up = function(migrator) {
 		columns: {
 			name: 'TEXT',
 			nickname: 'TEXT',
-			fighterId: 'TEXT'
+			fighterId: 'TEXT PRIMARY KEY'
 		}
 	});
 };

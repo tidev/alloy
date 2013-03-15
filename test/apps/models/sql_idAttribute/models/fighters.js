@@ -3,7 +3,7 @@ exports.definition = {
 		"columns": {
 			name: 'TEXT',
 			nickname: 'TEXT',
-			fighterId: 'TEXT'
+			fighterId: 'TEXT PRIMARY KEY'
 		},
 
 		"adapter": {
