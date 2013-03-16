@@ -5,8 +5,8 @@ var U = require('../../utils'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../common/logger'),
-	jsp = require("../../uglify-js/uglify-js").parser,
-	pro = require("../../uglify-js/uglify-js").uglify,
+	uglifyjs = require('uglify-js'),
+	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	optimizer = require('./optimizer'),
 	CONST = require('../../common/constants');
@@ -53,6 +53,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.currentManifest;
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -165,21 +166,6 @@ exports.getParserArgs = function(node, state, opts) {
 		events: events
 	}, bindObj);
 };
-
-exports.generateCode = function(ast) {
-	var opts = {
-        indent_start : 0,     // Base indentation for lines
-        indent_level : 4,     // Indentation increment for nested lines
-        quote_keys   : false, // Quote keys in objects?
-        space_colon  : false, // Put a space between keys and colons?
-        beautify     : true,  // Beautify the generated code?
-        ascii_only   : false, // Process only ascii characters
-        inline_script: false, // Compress <script> tags?
-        double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
-        ignore_numbers: true  // Don't try to compress numbers
-    };
-	return pro.gen_code(ast, opts);
-}
 
 exports.generateNodeExtended = function(node, state, newState) {
 	return exports.generateNode(node, _.extend(_.clone(state), newState));
@@ -447,15 +433,6 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 	});
 }
 
-// "Empty" states are generally used when you want to create a 
-// Titanium component with no parent
-exports.createEmptyState = function(styles) {
-	return {
-		parent: {},
-		styles: styles
-	};
-};
-
 function updateImplicitNamspaces(platform) {
 	switch(platform) {
 		case 'android':
@@ -562,38 +539,9 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
-    function checkAssigment() {
-    	var target = this[2];
-    	var value = this[3];
-    	var match = pro.gen_code(target).match(/^exports\.(.+)/);
-
-    	if (match !== null) {
-            if (match[1] === 'baseController') {
-    			code.parentControllerName = pro.gen_code(value);
-    		} 		
-    	}
-    }
-
-    function do_stat() {
-    	if (this[1][0] === 'assign') {
-    		return checkAssigment.call(this[1]);
-    	}
-    }
-
-    // Manipulate the controller AST, finding the baseController 
-    // assignment if present.
-    try {
-	    var ast = jsp.parse(contents);
-		var walker = pro.ast_walker();
-		var new_ast = walker.with_walkers({
-			"stat": do_stat
-		}, function(){
-	        return walker.walk(ast);
-	    });
-	    code.controller = pro.gen_code(new_ast);
-	} catch (e) {
-		U.die('Error while processing the controller "' + file + '".', e);
-	}
+	// get the base controller for this controller
+	code.controller = contents;
+	code.parentControllerName = astController.getBaseController(contents);
 
 	return code;
 };
@@ -851,69 +799,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	return code;
 }
 
-exports.formatAST = function(ast,config,fn)
-{
-	// use the general defaults from the uglify command line
-	var defines = {},
-		DEFINES, 
-		config;
-
-	config = config || {};
-	config.deploytype = config.deploytype || 'development';
-	config.beautify = config.beautify || true;
-
-	DEFINES = {
-		OS_IOS : config.platform == 'ios',
-		OS_ANDROID: config.platform == 'android',
-		OS_MOBILEWEB: config.platform == 'mobileweb',
-		ENV_DEV: config.deploytype == 'development',
-		ENV_DEVELOPMENT: config.deploytype == 'development',
-		ENV_TEST: config.deploytype == 'test',
-		ENV_PROD: config.deploytype == 'production',
-		ENV_PRODUCTION: config.deploytype == 'production'
-	};
-
-	for (var k in DEFINES) {
-		defines[k] = [ "num", DEFINES[k] ? 1 : 0 ];
-	}
-
-	var opts = {
-		mangle: {
-			mangle: false,                    // Mangle any names?
-			no_functions: true,               // Don't mangle functions?
-			toplevel: false,                  // Mangle toplevel names?
-			defines: defines,                 // A list of definitions to process
-			except: ['Ti','Titanium','Alloy'] // A list of names to leave untouched
-		},
-		squeeze: {
-            make_seqs   : false,  // Make sequences out of multiple statements?
-            dead_code   : true,   // Remove dead code?
-            no_warnings : true,   // Don't print squeeze warning?
-            keep_comps  : true,   // Don't try to optimize comparison operators? (unsafe)
-            unsafe      : false   // Alloy potentially unsafe optimizations?
-        },
-        gen_code: {
-            indent_start : 0,     // Base indentation for lines
-            indent_level : 4,     // Indentation increment for nested lines
-            quote_keys   : false, // Quote keys in objects?
-            space_colon  : false, // Put a space between keys and colons?
-            beautify     : true,  // Beautify the generated code?
-            ascii_only   : false, // Process only ascii characters
-            inline_script: false, // Compress <script> tags?
-            double_quotes: true,  // Always use double quotes to contain strings (necessary for JSON processing)
-            ignore_numbers: true  // Don't try to compress numbers
-        }
-	}
-
-	ast = pro.ast_mangle(ast, opts.mangle);
-
-	// TODO: re-enable when complete -> https://jira.appcelerator.org/browse/ALOY-273
-	// ast = optimizer.optimize(ast, DEFINES, fn); // optimize our titanium based code
-
-	ast = pro.ast_squeeze(ast, opts.squeeze);
-	return pro.gen_code(ast, opts.gen_code);
-};
-
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
@@ -1025,7 +910,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 
 	// Determine the collection variable to use
 	var obj = { name: args[CONST.BIND_COLLECTION] };
-	var col = _.template("Alloy.Collections['<%= name %>'] || <%= name %>", obj);
+	var col = _.template((exports.currentManifest ? CONST.WIDGET_OBJECT : 'Alloy') + ".Collections['<%= name %>'] || <%= name %>", obj);
 	var colVar = exports.generateUniqueId();
 
 	// Create the code for the filter and transform functions

@@ -5,7 +5,8 @@ var path = require('path'),
 	util = require('util'),
 	vm = require('vm'),
 	jsonlint = require('jsonlint'),
-	jsp = require("../../uglify-js/uglify-js").parser,
+	uglifyjs = require('uglify-js'),
+	sourceMapper = require('./sourceMapper'),
 	_ = require("../../lib/alloy/underscore")._,
 	logger = require('../../common/logger'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
@@ -36,7 +37,7 @@ function tiSdkVersionNumber(tiVersion) {
 ////////// command function //////////
 //////////////////////////////////////
 module.exports = function(args, program) {
-//	BENCHMARK();
+	BENCHMARK();
 	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
 
 	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
@@ -163,26 +164,29 @@ module.exports = function(args, program) {
 	}
 //	BENCHMARK('install android modules and tiapp fixes');
 
-	logger.debug('----- MVC GENERATION -----');
+	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
 	loadGlobalStyles(paths.app, theme);
 //	BENCHMARK('load global styles');
 	
+	// Create collection of all widget and app paths 
+	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
+	var viewCollection = widgetDirs;
+	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+
 	// Process all models
-	var models = processModels();
+	var models = processModels(viewCollection);
 //	BENCHMARK('process models');
 
-	// create a regex for determining which platform-specific
+	// Create a regex for determining which platform-specific
 	// folders should be used in the compile process
 	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) { return p === buildPlatform; });
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
-
-	// Process all views, including all those belonging to widgets
-	var viewCollection = U.getWidgetDirectories(paths.project, paths.app);
-	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
-
+	
+	// Process all views/controllers and generate their runtime 
+	// commonjs modules and source maps.
 	var tracker = {};
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
@@ -193,7 +197,7 @@ module.exports = function(args, program) {
 				if (tracker[fp]) { return; }
 
 				// generate runtime controller
-				logger.debug('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
+				logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 				parseAlloyComponent(view, collection.dir, collection.manifest);
 				tracker[fp] = true;
 			}
@@ -208,34 +212,37 @@ module.exports = function(args, program) {
 				if (tracker[fp]) { return; }
 
 				// generate runtime controller
-				logger.debug('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
+				logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
 				tracker[fp] = true;
 			}
 		});
 	});
-	logger.debug('');
+	logger.info('');
 //	BENCHMARK('process all controllers');
 
 	// generate app.js
-	var alloyJsPath = path.join(paths.app,'alloy.js');
-	var alloyJs = path.existsSync(alloyJsPath) ? fs.readFileSync(alloyJsPath,'utf8') : '';
+	logger.info('[app.js] Titanium entry point processing...');
 	var appJS = path.join(compileConfig.dir.resources,"app.js");
-	var code = _.template(
-		fs.readFileSync(path.join(alloyRoot,'template','app.js'),'utf8'),
-		{alloyJs:alloyJs}
-	);
-
-	// trigger our custom compiler makefile
-	var njs = compilerMakeFile.trigger("compile:app.js",_.extend(_.clone(compileConfig), {"code":code, "appJSFile" : path.resolve(appJS)}));
-	if (njs) {
-		code = njs;
-	}
-	fs.writeFileSync(appJS,code);
-	logger.info("Compiling alloy to " + appJS.yellow);
+	sourceMapper.generateCodeAndSourceMap({
+		target: {
+			filename: 'Resources/app.js',
+			filepath: appJS,
+			template: path.join(alloyRoot,'template','app.js')
+		},
+		data: {
+			'__MAPMARKER_ALLOY_JS__': {
+				filename: 'app/alloy.js',
+				filepath: path.join(paths.app,'alloy.js')
+			}
+		}
+	}, compileConfig);
+	logger.info('');
+	
 //	BENCHMARK('generate app.js');
 
 	// optimize code
+	logger.info('----- OPTIMIZING -----');
 	optimizeCompiledCode(alloyConfig, paths);
 //	BENCHMARK('optimize runtime code')
 
@@ -245,7 +252,7 @@ module.exports = function(args, program) {
 	}
 //	BENCHMARK('post:compile');
 //
-//	BENCHMARK('TOTAL', true);
+	BENCHMARK('TOTAL', true);
 };
 
 
@@ -264,11 +271,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		viewName = basename,
 		template = {
 			viewCode: '',
-			controllerCode: '',
 			modelVariable: CONST.BIND_MODEL_VAR,
 			preCode: '',
 			postCode: '',
-			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id})
+			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",
+			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id}),
+			__MAPMARKER_CONTROLLER_CODE__: '',
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
 		state = { parent: {} },
@@ -278,6 +286,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
+	CU.currentManifest = manifest;
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
@@ -312,7 +321,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 		// Load the style and update the state
 		if (path.existsSync(files.STYLE)) {
-			logger.debug('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
+			logger.info('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
 		}
 		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
 
@@ -323,17 +332,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);	
 
 			if (path.existsSync(psThemeStylesFile)) {
-				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
+				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
 				_.extend(state.styles, CU.loadAndSortStyle(psThemeStylesFile,manifest));
 			} else if (path.existsSync(themeStylesFile)) {
-				logger.debug('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
+				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
 				_.extend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
 			}
 		}
 
 		// Load view from file into an XML document root node
 		try {
-			logger.debug('  view:       "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
+			logger.info('  view:       "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
 			var docRoot = U.XML.getAlloyFromFile(files.VIEW);
 		} catch (e) {
 			U.die([
@@ -403,17 +412,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				assignedDefaultId = true;
 				defaultId = viewName;
 			} 
-			template.viewCode += CU.generateNode(node, createNewState(state.styles), defaultId, true);
+			template.viewCode += CU.generateNode(node, {parent:{},styles:state.styles}, defaultId, true);
 		});
 	}
 
 	// process the controller code
 	if (path.existsSync(files.CONTROLLER)) {
-		logger.debug('  controller: "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
+		logger.info('  controller: "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName != '') ? cCode.parentControllerName : "'BaseController'";
-	template.controllerCode += cCode.controller;
+	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
@@ -460,9 +469,13 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	template.postCode += CU.postCode;
 
 	// create generated controller module code for this view/controller or widget
+	var controllerCode = template.__MAPMARKER_CONTROLLER_CODE__;
+	delete template.__MAPMARKER_CONTROLLER_CODE__;
 	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 
-	// Write the view or widget to its runtime file
+	// prep the controller paths based on whether it's an app
+	// controller or widget controller
+	var targetFilepath = files.COMPONENT;
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
 		CU.copyWidgetResources(
@@ -470,23 +483,28 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			compileConfig.dir.resources, 
 			manifest.id
 		);
-		fs.writeFileSync(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js'), code);
-	} else {
-		wrench.mkdirSyncRecursive(path.dirname(files.COMPONENT), 0777);
-		fs.writeFileSync(files.COMPONENT, code);
+		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
 	}
+
+	// generate the code and source map for the current controller
+	sourceMapper.generateCodeAndSourceMap({
+		target: {
+			filename: path.relative(compileConfig.dir.project,files.COMPONENT),
+			filepath: targetFilepath,
+			templateContent: code
+		},
+		data: {
+			__MAPMARKER_CONTROLLER_CODE__: {
+				filename: path.relative(compileConfig.dir.project,files.CONTROLLER),
+				fileContent: controllerCode
+			}
+		}
+	}, compileConfig);
 }
 
-function createNewState(styles) {
-	return {
-		parent: {},
-		styles: styles
-	}
-}
-
-function findModelMigrations(name) {
+function findModelMigrations(name, inDir) {
 	try {
-		var migrationsDir = compileConfig.dir.migrations;
+		var migrationsDir = inDir || compileConfig.dir.migrations;
 		var files = fs.readdirSync(migrationsDir);
 		var part = '_'+name+'.'+CONST.FILE_EXT.MIGRATION;
 
@@ -520,47 +538,47 @@ function findModelMigrations(name) {
 	}
 }
 
-function processModels() {
+function processModels(dirs) {
 	var models = [];
-	var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
 	var modelTemplateFile = path.join(alloyRoot,'template','model.js');
-	U.ensureDir(compileConfig.dir.models);
 
-	// Make sure we havea runtime models directory
-	var modelFiles = fs.readdirSync(compileConfig.dir.models);
-	if (modelFiles.length > 0) {
-		U.ensureDir(modelRuntimeDir);
-	}
-
-	// process each model
-	_.each(modelFiles, function(modelFile) {
-		if (!modelRegex.test(modelFile)) {
-			logger.warn('Non-model file "' + modelFile + '" in models directory');
+	_.each(dirs, function(dirObj) {
+		var modelDir = path.join(dirObj.dir,CONST.DIR.MODEL);
+		if (!fs.existsSync(modelDir)) {
 			return;
 		}
-		logger.debug('[' + modelFile + '] model processing...');
 
-		var fullpath = path.join(compileConfig.dir.models,modelFile);
-		var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
-		var modelJsFile = path.join(compileConfig.dir.models,basename+'.js');
-		var modelJs = 'function(Model){}';
+		var migrationDir = path.join(dirObj.dir,CONST.DIR.MIGRATION);
+		var manifest = dirObj.manifest;
+		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
+		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/': '';
+		_.each(fs.readdirSync(modelDir), function(file) {
+			if (!modelRegex.test(file)) {
+				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
+				return;
+			}
+			logger.info('[' + pathPrefix + 'models/' + file + '] model processing...');
 
-		// grab any additional model code from corresponding JS file, if it exists
-		if (path.existsSync(modelJsFile)) {
-			modelJs = fs.readFileSync(modelJsFile,'utf8');
-		}
+			var fullpath = path.join(modelDir,file);
+			var basename = path.basename(fullpath, '.'+CONST.FILE_EXT.MODEL);
 
-		// generate model code based on model.js template and migrations
-		var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
-			basename: basename,
-			modelJs: modelJs,
-			migrations: findModelMigrations(basename)
-		});	
+			// generate model code based on model.js template and migrations
+			var code = _.template(fs.readFileSync(modelTemplateFile,'utf8'), {
+				basename: basename,
+				modelJs: fs.readFileSync(fullpath,'utf8'),
+				migrations: findModelMigrations(basename, migrationDir)
+			});	
 
-		// write the model to the runtime file
-		var casedBasename = U.properCase(basename);
-		fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
-		models.push(casedBasename);
+			// write the model to the runtime file
+			var casedBasename = U.properCase(basename);
+			var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+			if (isWidget) {
+				modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'widgets',manifest.id,'models');
+			}
+			wrench.mkdirSyncRecursive(modelRuntimeDir, 0777);
+			fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
+			models.push(casedBasename);
+		});
 	});
 
 	return models;
@@ -568,55 +586,73 @@ function processModels() {
 
 function loadGlobalStyles(appPath, theme) {
 	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	
 
 	compileConfig.globalStyle = {};
 	if (path.existsSync(appGlobal)) {
-		logger.debug('[app.tss] global style processing...');
+		logger.info('[app.tss] global style processing...');
 		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
 	} 
-	if (theme && path.existsSync(themeGlobal)) {
-		logger.debug('[app.tss (theme:' + theme + ')] global style processing...');
-		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+	if (theme) {
+		var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
+	 	if (path.existsSync(themeGlobal)) {
+			logger.info('[app.tss (theme:' + theme + ')] global style processing...');
+			compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+		}
 	} 	
 }
 
 function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
-			'mangle',
 			'optimizer',
-			'squeeze'
+			'compress'			
 		],
-		modLocation = './ast/';
-		report = {};
-
+		modLocation = './ast/',
+		lastFiles = [],
+		files;
+		
+	// Get the list of JS files from the Resources directory
+	// and exclude files that don't need to be optimized, or
+	// have already been optimized.
 	function getJsFiles() {
+		var exceptions = [
+			'app.js',
+			'alloy/controllers/',
+			'alloy/backbone.js',
+			'alloy/underscore.js'
+		];
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return /\.js\s*$/.test(f);
+			return /\.js\s*$/.test(f) && !_.find(exceptions, function(e) { 
+				return f.indexOf(e) === 0; 
+			});
 		});
 	}
-
-	var lastFiles = [], 
-		files;
 
 	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
 		_.each(files, function(file) {
 			// generate AST from file
 			var fullpath = path.join(compileConfig.dir.resources,file);
-			logger.debug('Parsing AST for "' + file + '"...');
+			logger.info('- ' + file);
 			try {
-				var ast = jsp.parse(fs.readFileSync(fullpath,'utf8'));
+				var ast = uglifyjs.parse(fs.readFileSync(fullpath,'utf8'), {
+					filename: file
+				});
 			} catch (e) {
 				U.die('Error generating AST for "' + fullpath + '"', e);
 			}
 
 			// process all AST operations
 			_.each(mods, function(mod) {
-				//logger.debug('- Processing "' + mod + '" module...');
-				ast = require(modLocation+mod).process(ast, compileConfig, report) || ast;
+				logger.trace('  processing "' + mod + '" module...');
+				ast.figure_out_scope();
+				ast = require(modLocation+mod).process(ast, compileConfig) || ast;
 			});
-			fs.writeFileSync(fullpath, CU.generateCode(ast));
+
+			// Write out the optimized file
+			var stream = uglifyjs.OutputStream(sourceMapper.OPTIONS_OUTPUT);
+			ast.print(stream);
+			fs.writeFileSync(fullpath, stream.toString());
 		});
 
 		// Combine lastFiles and files, so on the next iteration we can make sure that the 
@@ -640,11 +676,14 @@ function BENCHMARK(desc, isFinished) {
 	var total = process.hrtime(times.first);
 	var current = hrtimeInSeconds(total) - (times.last ? hrtimeInSeconds(times.last) : 0);
 	times.last = total;
-	times.msgs.push('[' + Math.round((isFinished ? hrtimeInSeconds(total) : current)*places)/places + 's] ' + desc);
+	var thisTime = Math.round((isFinished ? hrtimeInSeconds(total) : current)*places)/places;
+	times.msgs.push('[' + thisTime + 's] ' + desc);
 	if (isFinished) { 
 		logger.trace(' ');
 		logger.trace('Benchmarking');
 		logger.trace('------------');
 		logger.trace(times.msgs); 
+		logger.info('');
+		logger.info('Alloy compiled in ' + thisTime + 's');
 	}
 }

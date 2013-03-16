@@ -57,7 +57,7 @@ module.exports = function(args, program) {
 		path.join(paths.project,'.gitignore')
 	);
 	_.each(['android','iphone','mobileweb'], function(dir) {
-		var rDir = path.join(paths.Resources,dir);
+		var rDir = path.join(paths.resources,dir);
 		if (!path.existsSync(rDir)) {
 			return;
 		}

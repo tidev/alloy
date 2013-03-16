@@ -8,8 +8,6 @@ var path = require('path'),
 	logger = require('./common/logger'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	DOMParser = require("xmldom").DOMParser,
-	jsp = require("./uglify-js/uglify-js").parser,
-	pro = require("./uglify-js/uglify-js").uglify,
 	_ = require("./lib/alloy/underscore")._,
 	CONST = require('./common/constants')
 ;
@@ -491,8 +489,7 @@ exports.resolveAppHome = function() {
 	exports.die(errs);
 }
 
-exports.copyFileSync = function(srcFile, destFile) 
-{
+exports.copyFileSync = function(srcFile, destFile) {
 	var BUF_LENGTH = 64 * 1024, 
 		buff, 
 		bytesRead, 
@@ -520,8 +517,7 @@ exports.ensureDir = function(p) {
 	}
 }
 
-exports.copyFilesAndDirs = function(f,d)
-{
+exports.copyFilesAndDirs = function(f,d) {
 	var files = fs.readdirSync(f);
 	for (var c=0;c<files.length;c++)
 	{
@@ -547,16 +543,8 @@ exports.copyFilesAndDirs = function(f,d)
 	}
 }
 
-exports.isTiProject = function(dir) 
-{
+exports.isTiProject = function(dir) {
 	return (path.existsSync(path.join(dir,'tiapp.xml')));
-}
-
-exports.prettyPrintJson = function(j) {
-	var ast = jsp.parse("("+JSON.stringify(j)+")");
-	ast = pro.ast_mangle(ast);
-	var final_code = pro.gen_code(ast,{beautify:true,quote_keys:true}); 
-	return final_code = final_code.substring(1,final_code.length-2);
 }
 
 exports.die = function(msg, e) {

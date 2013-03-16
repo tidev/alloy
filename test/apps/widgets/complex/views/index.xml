@@ -1,6 +1,6 @@
 <Alloy>
 	<Window id="win">
-		<Require type="widget" src="com.testing.searchForBooks" id="sfb"/>
+		<Widget src="com.testing.searchForBooks" id="sfb"/>
 		<TableView id="table"/>
 	</Window>
 </Alloy>

@@ -13,7 +13,7 @@
     "html5",
     "mobileweb"
   ],
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
   	{"name":"Tony Lukasavage","email":"tlukasavage@appcelerator.com"}
@@ -35,13 +35,18 @@
     "commander":       "0.6.1",
     "wrench":          "1.3.9",
     "xmldom":          "0.1.13",
-    "jake":            ">=0.3",
     "stripcolorcodes": "0.1.0",
-    "jsonlint":        "1.5.1"
+    "jsonlint":        "1.5.1",
+    "uglify-js":       "2.2.5",
+    "source-map":      "0.1.9",
+    "jake":            "0.5.9"
   },
   "license":"Apache Public License v2",
   "bin": {
     "alloy": "./bin/alloy"
+  },
+  "scripts": {
+    "test": "jake test:all"
   },
   "main": "./Alloy/alloy",
   "engines": {

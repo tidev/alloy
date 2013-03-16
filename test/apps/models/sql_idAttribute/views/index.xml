@@ -1,0 +1,8 @@
+<Alloy>
+    <Window>
+        <Label id="title" onClick="addTestFighter">Fighters</Label>
+        <TableView id="table" dataCollection="fighters" onClick="showId">
+            <Require src="row"/>
+        </TableView>
+    </Window>
+</Alloy>

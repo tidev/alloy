@@ -85,7 +85,7 @@ function Migrator(config, transactionDb) {
 
 		// add the id field if it wasn't specified
 		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
-			columns.push(ALLOY_ID_DEFAULT + ' TEXT');
+			columns.push(ALLOY_ID_DEFAULT + ' TEXT UNIQUE');
 		}
 		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
 
@@ -93,7 +93,7 @@ function Migrator(config, transactionDb) {
 		this.db.execute(sql);
 	};
 
-	this.dropTable = function(config) {
+	this.dropTable = function() {
 		this.db.execute('DROP TABLE IF EXISTS ' + this.table);
 	};
 
@@ -151,74 +151,64 @@ function Sync(method, model, opts) {
 
 	switch (method) {
 		case 'create':
-			resp = (function(){
+		case 'update':
+			resp = (function() {
 				var attrObj = {};
-
-				// Use idAttribute to account for something other than "id"
-				// being used for the model's id.
-				if (!model.id) {
-					if (model.idAttribute === ALLOY_ID_DEFAULT) {
-						// alloy-created GUID field
-						model.id = util.guid();
-						attrObj[model.idAttribute] = model.id;
-
-						// make it silent so it doesn't fire an unnecessary
-						// Backbone change events
-						model.set(attrObj, {silent:true});
-					} else {
-						// idAttribute not assigned by alloy. Use the idAttribute
-						// field, or leave it empty and allow sqlite to process 
-						// as null, which is the expected value for an 
-						// AUTOINCREMENT field.
-						var tmpM = model.get(model.idAttribute);
-						model.id = tmpM !== null && typeof tmpM !== 'undefined' ? tmpM : null;
-					}
+	            if (!model.id) {
+	                model.id = model.idAttribute === ALLOY_ID_DEFAULT ? util.guid() : null;
+	                attrObj[model.idAttribute] = model.id;
+	                model.set(attrObj,{silent:true});
 	            }
 
-	            // Create arrays for insert query
-				var names = [], values = [], q = [];
-				for (var k in columns) {
-					names.push(k);
-					values.push(model.get(k));
-					q.push('?');
-				}
+	            // assemble columns and values
+	            var names = [], values = [], q = [];
+	            for (var k in columns) {
+	                names.push(k);
+	                values.push(model.get(k));
+	                q.push("?");
+	            }
 
-				// Assemble create query
-				var sqlInsert = "INSERT INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
-				var sqlId = "SELECT last_insert_rowid();";
-
-	            // execute the query and return the response
+	            // execute the query
+	            var sql = "REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
 	            db = Ti.Database.open(dbName);
 	            db.execute('BEGIN;');
-	            db.execute(sqlInsert, values);
+	            db.execute(sql, values);
 
-	            // get the last inserted id
+	            // if model.id is still null, grab the last inserted id
 	            if (model.id === null) {
+	            	var sqlId = "SELECT last_insert_rowid();";
 	            	var rs = db.execute(sqlId);
-	            	if (rs.isValidRow()) {
+	            	if (rs && rs.isValidRow()) {
 	            		model.id = rs.field(0);
 	            		attrObj[model.idAttribute] = model.id;
-
-						// make it silent so it doesn't fire an unnecessary
-						// Backbone change event
 						model.set(attrObj, {silent:true});
 	            	} else {
 	            		Ti.API.warn('Unable to get ID from database for model: ' + model.toJSON());
 	            	}
+	            	rs && rs.close();
 	        	}
 
+	            // cleanup
 	            db.execute('COMMIT;');
 	            db.close();
 
 	            return model.toJSON();
-			})();
+	        })();
 			break;
+			
 		case 'read':
 			var sql = opts.query || 'SELECT * FROM ' + table;
 
 			// execute the select query
 			db = Ti.Database.open(dbName);
-			var rs = db.execute(sql);
+			var rs;
+
+			// is it a string or a prepared statement?
+			if (_.isString(sql)) { 
+				rs = db.execute(sql);
+			} else {
+				rs = db.execute(sql.statement, sql.params);
+			}
 
 			var len = 0;
 			var values = [];
@@ -250,31 +240,6 @@ function Sync(method, model, opts) {
 			// shape response based on whether it's a model or collection
 			model.length = len;
 			len === 1 ? resp = values[0] : resp = values;
-			break;
-
-		case 'update':
-			var names = [];
-			var values = [];
-			var q = [];
-
-			// create the list of columns
-			for (var k in columns)
-			{
-				names.push(k+'=?');
-				values.push(model.get(k));
-				q.push('?');
-			}
-
-			// compose the update query
-			var sql = 'UPDATE '+table+' SET '+names.join(',')+' WHERE ' + model.idAttribute + '=?';
-		    values.push(model.id);
-
-		    // execute the update
-		    db = Ti.Database.open(dbName);
-			db.execute(sql,values);
-			db.close();
-
-			resp = model.toJSON();
 			break;
 
 		case 'delete':
@@ -447,8 +412,19 @@ function installDatabase(config) {
 	} else {
 		Ti.API.info('No config.adapter.idAttribute specified for table "' + table + '"');
 		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
-		db.execute('ALTER TABLE ' + table + ' ADD ' + ALLOY_ID_DEFAULT + ' TEXT;');
-		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
+		
+		var fullStrings = [],
+			colStrings = [];
+		_.each(config.columns, function(type, name) {
+			colStrings.push(name);
+			fullStrings.push(name + ' ' + type);
+		});
+		var colsString = colStrings.join(',');
+		db.execute('ALTER TABLE ' + table + ' RENAME TO ' + table + '_temp;');
+		db.execute('CREATE TABLE ' + table + '(' + fullStrings.join(',') + ',' + ALLOY_ID_DEFAULT + ' TEXT UNIQUE);');
+		db.execute('INSERT INTO ' + table + '(' + colsString + ',' + ALLOY_ID_DEFAULT + ') SELECT ' + colsString + ',CAST(_ROWID_ AS TEXT) FROM ' + table + '_temp;');
+		db.execute('DROP TABLE ' + table + '_temp;');
+		config.columns[ALLOY_ID_DEFAULT] = 'TEXT UNIQUE';
 		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
 
@@ -472,7 +448,7 @@ module.exports.beforeModelCreate = function(config, name) {
 	if (!config.adapter.idAttribute) {
 		Ti.API.info('No config.adapter.idAttribute specified for table "' + config.adapter.collection_name + '"');
 		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
-		config.columns[ALLOY_ID_DEFAULT] = 'TEXT';
+		config.columns[ALLOY_ID_DEFAULT] = 'TEXT UNIQUE';
 		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
 

@@ -6,6 +6,7 @@ var Alloy = require('alloy'),
 <%= WPATH %>
 
 function Controller() {
+	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	
 	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
@@ -27,7 +28,7 @@ function Controller() {
 	_.extend($, $.__views);
 
 	// Controller code directly from the developer's controller file
-	<%= controllerCode %>
+	__MAPMARKER_CONTROLLER_CODE__
 
 	// Generated code that must be executed after all UI and
 	// controller code. One example deferred event handlers whose

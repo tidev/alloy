@@ -11,7 +11,7 @@ function guid() {
    return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
 };
 
-function InitAdapter(config) {
+function InitAdapter() {
 	if (!OS_MOBILEWEB) {
 		throw 'localStorage persistence supported only with MobileWeb.';
 	}
@@ -82,7 +82,7 @@ module.exports.beforeModelCreate = function(config) {
 
 	config.data = {}; // for localStorage or case where entire collection is needed to maintain store
 
-	InitAdapter(config);
+	InitAdapter();
 
 	return config;
 };

@@ -1,0 +1,23 @@
+"Window": {
+	backgroundColor: '#fff',
+	navBarHidden: true,
+	exitOnClose: true
+}
+
+"#title": {
+	top: 0,
+	height: '50dp',
+	width: Ti.UI.FILL,
+	color: '#fff',
+	backgroundColor: '#a00',
+	font: {
+		fontSize: '36dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'center'
+}
+
+"#table": {
+	top: '50dp',
+	bottom: 0
+}

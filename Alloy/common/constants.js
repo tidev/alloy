@@ -14,6 +14,8 @@ exports.PLUGIN_FILE = 'plugin.py';
 exports.HOOK_FILE = 'alloy.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
 
+exports.WIDGET_OBJECT = 'Widget';
+
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
 exports.BIND_COLLECTION = 'dataCollection';
@@ -43,7 +45,8 @@ exports.FILE_EXT = {
 	CONTROLLER: 'js',
 	COMPONENT: 'js',
 	CONFIG: 'json',
-	JMK: 'jmk'
+	JMK: 'jmk',
+	MAP: 'map'
 };
 exports.DIR = {
 	VIEW: 'views',
@@ -56,7 +59,8 @@ exports.DIR = {
 	ASSETS: 'assets',
 	WIDGET: 'widgets',
 	LIB: 'lib',
-	COMPONENT: 'controllers'
+	COMPONENT: 'controllers',
+	MAP: 'build/map'
 };
 
 // constants identifying JS reserved words

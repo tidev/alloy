@@ -7,7 +7,7 @@ var USERNAME = 'user',
 exports.definition = {
 	config: {
 		"columns": {
-			"username":"text",
+			"username":"text primary key",
             "realname":"text",
             "email":"text",
 			"loggedIn":"integer",
