@@ -609,7 +609,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		styleCollection = [],
 		lastObj = {};
 
-	if (theState.local) {
+	if (theState && theState.local) {
 		delete extraStyle.id;
 	}
 
