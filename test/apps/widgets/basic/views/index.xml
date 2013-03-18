@@ -1,5 +1,6 @@
 <Alloy>
 	<Window>
+		<Widget src="com.foo.widget" name="image"/>
 		<Widget src="com.foo.widget" id="w"/> 
 	</Window>
 </Alloy>

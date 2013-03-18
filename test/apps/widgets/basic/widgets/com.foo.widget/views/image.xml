@@ -1,0 +1,3 @@
+<Alloy>
+	<ImageView image="/com.foo.widget/back.jpg" height="Ti.UI.FILL" width="Ti.UI.FILL"/>
+</Alloy>
