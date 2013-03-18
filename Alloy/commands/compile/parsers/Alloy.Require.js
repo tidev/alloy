@@ -78,7 +78,7 @@ function parse(node, state, args) {
 		state.styles,
 		args.classes,
 		args.id,
-		CU.getNodeFullname(node),
+		type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
 		args.createArgs,
 		state
 	) + ");\n";
