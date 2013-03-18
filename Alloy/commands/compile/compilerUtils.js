@@ -609,6 +609,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		styleCollection = [],
 		lastObj = {};
 
+	if (theState.local) {
+		delete extraStyle.id;
+	}
+
 	_.each(styles, function(style) {
 		var styleApi = style.key;
 		if (style.isApi && styleApi.indexOf('.') === -1) {
