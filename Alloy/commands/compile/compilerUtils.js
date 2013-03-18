@@ -215,9 +215,18 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	} 
 
 	// Execute the appropriate tag parser and append code
+	var isLocal = state.local;
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
-	args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
+
+	// Use local variable if given
+	isLocal && state.parent && (args.symbol = state.parent.symbol || args.symbol); 
+
+	// Use manually given args.symbol if present
+	state.args && (args.symbol = state.args.symbol || args.symbol);
+	//args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
+	
+	// add to list of top level views, if its top level
 	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
 
 	// handle any model/collection code
