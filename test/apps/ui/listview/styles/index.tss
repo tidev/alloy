@@ -1,0 +1,7 @@
+"Window": {
+    backgroundColor:"white"
+}
+ 
+"#list": {
+    backgroundColor: '#fff'
+}
