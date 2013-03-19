@@ -118,3 +118,18 @@ exports.urlToJson = function (url){
 	ret.query = list;
 	return ret;		
 };
+
+
+/**
+ * @method repeatStr
+ * Repeats a string a specified number of times.
+ * @param {String} String to repeat.
+ * @param Number Count of repetitions.
+ * @return {String} repeated String.
+ */
+exports.repeatStr = function(string, count){
+	if(typeof(string)!=='string' || typeof(count)!=='number')
+		return '';
+	else
+		return new Array(count+1).join(string);
+};
