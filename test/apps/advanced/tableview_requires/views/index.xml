@@ -1,0 +1,13 @@
+<Alloy>
+	<Window>
+		<TableView>
+			<TableViewRow title="1"/>
+		    <TableViewRow title="2"/>
+		    <Widget src="com.foo.widget" name="section" />
+		    <Widget src="com.foo.widget" name="row" />
+		    <Widget src="com.foo.widget" name="row" />
+		    <Widget src="com.foo.widget" name="row" />
+		    <TableViewRow title="3"/>
+		</TableView>
+	</Window>
+</Alloy>

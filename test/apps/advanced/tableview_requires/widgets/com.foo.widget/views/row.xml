@@ -1,0 +1,7 @@
+<Alloy>
+	<TableViewRow layout="horizontal">
+		<Label width="80">hi</Label>
+		<Label width="80">there</Label>
+		<Label width="80">row</Label>
+	</TableViewRow>
+</Alloy>
