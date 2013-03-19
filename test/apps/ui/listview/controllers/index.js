@@ -1,55 +1,164 @@
-function myOnDisplayItem(e) {}
- 
-var myTemplate = {
-  properties: {
-    onDisplayItem: myOnDisplayItem,
-    selectedBackgroundColor: 'blue',
-    height: 120,
-  },
-  childTemplates: [
-  {
-    type: 'Ti.UI.Label',
-    id:'cellLabel',
-    properties: {
-      color: '#576996',
-      font: { fontFamily:'Arial', fontSize: 13, fontWeight:'bold'},
-      left: 10, top: 6,
-      width: 200, height: 30,
-      text: 'Label'
+function getDataContactsTemplate(){
+    var data = [];
+    var titleStr = '';
+  var subtitleStr = '';
+    for(i=0;i<10;i++) {
+        var mod = i%4;
+        titleStr += 'Clip .. ';
+        var acType = Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+        if(mod == 1) {
+          subtitleStr = 'I have checkmark accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK;
+        } else if(mod == 2) {
+          subtitleStr = 'I have detail accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DETAIL;
+        } else if (mod == 3) {
+          subtitleStr = 'I have disclosure accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE;
+        } else {
+          subtitleStr = 'I have no accessory ';
+        }
+        var item = {
+            template:Ti.UI.LIST_ITEM_TEMPLATE_CONTACTS,
+            properties: {title:i+' '+titleStr, subtitle:subtitleStr, accessoryType:acType, itemId:'Item '+i+' '+acType}
+        }
+        data.push(item)
     }
-  },
-  {
-    type: 'Ti.UI.ImageView',
-    id: 'cellImage',
-    properties: {
-      image: '/images/tony.jpg',
-      left: 70, top: 6,
-      width: 200, height: 100,
+    return data;
+}
+
+function getDataSubtitleTemplate(){
+    var data = [];
+    var titleStr = '';
+  var subtitleStr = '';
+    for(i=0;i<10;i++) {
+        var mod = i%4;
+        titleStr += 'Look at me grow .. ';
+        var acType = Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+        if(mod == 1) {
+          subtitleStr = 'I have checkmark accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK;
+        } else if(mod == 2) {
+          subtitleStr = 'I have detail accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DETAIL;
+        } else if (mod == 3) {
+          subtitleStr = 'I have disclosure accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE;
+        } else {
+          subtitleStr = 'I have no accessory ';
+        }
+        var item = {
+            template:Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE,
+            properties: {title:i+' '+titleStr, subtitle:subtitleStr+' '+titleStr, accessoryType:acType, itemId:'Item '+i+' '+acType}
+        }
+        data.push(item)
     }
-  }]
-};
- 
-var section = Ti.UI.createListSection({
-  headerTitle: 'Section Title'
-});
- 
-$.list.templates = { myCell: myTemplate };
-$.list.sections = [section];
-$.index.open();
-   
-section.setItems([
-  {
-    template: 'myCell',
-    properties: { accessoryType: Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK }
-  },
-  { template: 'myCell' },
-  { template: 'myCell' },
-  {
-    template: Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE,
-    properties: {
-      title: 'Cell Title',
-      subtitle: 'Cell Subtitle',
-      image: '/images/appc.png'
+    return data;
+}
+
+function getDataSettingsTemplate(){
+    var data = [];
+    var titleStr = '';
+  var subtitleStr = '';
+    for(i=0;i<10;i++) {
+        var mod = i%4;
+        titleStr += 'Push subtitle .. ';
+        var acType = Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+        if(mod == 1) {
+          subtitleStr = 'I have checkmark accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK;
+        } else if(mod == 2) {
+          subtitleStr = 'I have detail accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DETAIL;
+        } else if (mod == 3) {
+          subtitleStr = 'I have disclosure accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE;
+        } else {
+          subtitleStr = 'I have no accessory ';
+        }
+        var item = {
+            template:Ti.UI.LIST_ITEM_TEMPLATE_SETTINGS,
+            properties: {title:i+' '+titleStr, subtitle:subtitleStr, accessoryType:acType, itemId:'Item '+i+' '+acType}
+        }
+        data.push(item)
     }
+    return data;
+}
+
+function getDataDefaultTemplate(){
+    var data = [];
+    var titleStr = '';
+  var subtitleStr = '';
+
+    for(i=0;i<10;i++) {
+        var mod = i%4;
+        titleStr += 'Clip... ';
+        var acType = Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+        if(mod == 1) {
+          subtitleStr = 'I have checkmark accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK;
+        } else if(mod == 2) {
+          subtitleStr = 'I have detail accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DETAIL;
+        } else if (mod == 3) {
+          subtitleStr = 'I have disclosure accessory ';
+            acType = Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE;
+        } else {
+          subtitleStr = 'I have no accessory ';
+        }
+        var item = {
+            template:Ti.UI.LIST_ITEM_TEMPLATE_DEFAULT,
+            properties: {title:i+' '+subtitleStr +' '+titleStr, accessoryType:acType, itemId:'Item '+i+' '+acType}
+        }
+        data.push(item)
+    }
+    return data;
+}
+
+//function list_basic(_args) {
+  
+  var platformName = Titanium.Platform.osname;
+  var isIOS = (platformName == 'iphone' || platformName == 'ipad');
+  
+  var listView = $.list;
+  if (isIOS) {
+    listView.style=Ti.UI.iPhone.ListViewStyle.GROUPED
   }
-]);
+  
+  var sections = [];
+  
+  var listSection1 = Ti.UI.createListSection({
+        headerTitle:'TEMPLATE_DEFAULT'
+    })
+    listSection1.setItems(getDataDefaultTemplate());
+    sections.push(listSection1);
+  
+  if (isIOS) {
+    var listSection2 = Ti.UI.createListSection({
+          headerTitle:'TEMPLATE_SETTINGS'
+      })
+      listSection2.setItems(getDataSettingsTemplate());
+      sections.push(listSection2);
+  
+    var listSection3 = Ti.UI.createListSection({
+          headerTitle:'TEMPLATE_SUBTITLE'
+      })
+      listSection3.setItems(getDataSubtitleTemplate());
+      sections.push(listSection3);
+  
+    var listSection4 = Ti.UI.createListSection({
+          headerTitle:'TEMPLATE_CONTACTS'
+      })
+      listSection4.setItems(getDataContactsTemplate());
+      sections.push(listSection4);
+  }
+  listView.setSections(sections);
+  
+  $.index.open();
+  //win.add(listView);
+  
+  //return win;
+//};
+
+
+//module.exports = list_basic;

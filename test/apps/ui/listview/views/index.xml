@@ -1,5 +1,5 @@
 <Alloy>
-    <Window>
+    <Window title="Built in Templates">
     	<!-- 
     		Alloy does not yet have full markup integration of the
     		new ListView component, but you can still set it up
