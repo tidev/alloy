@@ -12,7 +12,9 @@ var PROXY_PROPERTIES = [
 var VALID = [
 	'Ti.UI.TableViewRow',
 	'Ti.UI.TableViewSection',
-	'Ti.UI.SearchBar'
+	'Ti.UI.SearchBar',
+	'Alloy.Require',
+	'Alloy.Widget'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
 
