@@ -318,25 +318,46 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
 
 	function getViewRequirePath(node) {
-		var src = node.getAttribute('src'),
-			type = node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
-			fullname = exports.getNodeFullname(node);
+		var regex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
+			src = node.getAttribute('src'),
+			fullname = exports.getNodeFullname(node),
+			name = node.getAttribute('name') || CONST.NAME_WIDGET_DEFAULT,
+			type = fullname === 'Alloy.Widget' ? 'widget' : node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
+			fullpaths = [];
 
 		// Must be a view, with a valid src, in a <Require> element
-		if (fullname !== 'Alloy.Require' || !src || type !== 'view') {
+		if (!src) {
+			return null;
+		} else if (fullname === 'Alloy.Require' && type === 'view') {
+			fullpaths.push(path.join(compilerConfig.dir.views,src));
+		} else if (fullname === 'Alloy.Widget' || 
+			       fullname === 'Alloy.Require' && type === 'widget') {
+			fullpaths.push(
+				path.join(compilerConfig.dir.widgets,src,'views',name),
+				path.join(alloyRoot,'..','widgets',src,'views',name)
+			);
+		} else {
 			return null;
 		}
 
-		// Create view path and see if its already got the proper extension
-		var fullpath = path.join(compilerConfig.dir.views,src);
-		var regex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$');
-		if (!regex.test(fullpath)) {
-			fullpath += '.' + CONST.FILE_EXT.VIEW;
+		// check the extensions on the paths to check
+		var found = false;
+		for (var i = 0; i < fullpaths.length; i++) {
+			var fullpath = fullpaths[i];
+			fullpath += regex.test(fullpath) ? '' :  '.' + CONST.FILE_EXT.VIEW;
+			if (fs.existsSync(fullpath)) {
+				found = true;
+				break;
+			}
 		}
 
-		// Make sure fullpath exists, skip if it doesn't
-		if (!path.existsSync(fullpath)) {
-			U.die('view "' + src + '" at path "' + fullpath + '" does not exist.');
+		// abort if there's no view to be found
+		if (!found) {
+			U.die([
+				type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') + 
+					'does not exist.',
+				'The following paths were inspected:'
+			].concat(fullpaths));
 		}
 
 		return fullpath;
@@ -351,7 +372,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		if(parent.lastchild == targetElement) {
 			//add the newElement after the target element.
 			parent.appendChild(newElement);
-			} else {
+		} else {
 			// else the target has siblings, insert the new element between the target and it's next sibling.
 			parent.insertBefore(newElement, targetElement.nextSibling);
 		}
@@ -382,6 +403,18 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		processRequire(cloneNode, true);
 		while (doRecursive) {
 			var reqs = cloneNode.getElementsByTagName('Require');
+			var widgets = cloneNode.getElementsByTagName('Widget');
+			var all = [];
+
+			// condense node lists into a single array
+			_.each(reqs, function(req) {
+				all.push(req);
+			});
+			_.each(widgets, function(widget) {
+				all.push(widget);
+			});
+
+			// find all the valid widgets/requires
 			var viewRequires = _.filter(reqs, function(req) {
 				return getViewRequirePath(req) !== null;
 			});
@@ -907,7 +940,7 @@ exports.validateNodeName = function(node, names) {
 	if (ret) { return ret; }
 
 	// Is it an Alloy.Require?
-	if (fullname === 'Alloy.Require') {
+	if (fullname === 'Alloy.Require' || fullname === 'Alloy.Widget') {
 		var inspect = exports.inspectRequireNode(node);
 		ret = _.find(names, function(name) { return inspect.names[0] === name });
 		if (inspect.length === 1 && ret) { 
