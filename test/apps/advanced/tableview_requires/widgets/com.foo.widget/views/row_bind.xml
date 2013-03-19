@@ -1,5 +1,5 @@
 <Alloy>
 	<TableViewRow>
-		<Label text="Hey, I'm a default row!"/>
+		<Label text="{title}"/>
 	</TableViewRow>
 </Alloy>
