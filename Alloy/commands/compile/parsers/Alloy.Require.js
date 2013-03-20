@@ -82,7 +82,7 @@ function parse(node, state, args) {
 		args.createArgs,
 		state
 	) + ");\n";
-	if (args.parent.symbol) {
+	if (args.parent.symbol && !state.isProxy) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	}
 
