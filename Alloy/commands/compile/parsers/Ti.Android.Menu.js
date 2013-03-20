@@ -1,6 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
+	CONST = require('../../../common/constants'),
 	logger = require('../../../common/logger');
 
 exports.parse = function(node, state) {
@@ -10,7 +11,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		activitySymbol = state.parent.symbol + '.activity',
+		activitySymbol = (state.parent.symbol || CONST.PARENT_SYMBOL_VAR) + '.activity',
 		eventObject = 'e';
 
 	// if this isn't android, generate no code, but show a warning
@@ -28,13 +29,15 @@ function parse(node, state, args) {
 		};
 	}
 
-	// assert that the parent is a Ti.UI.Window
-	var parentNode = CU.validateNodeName(state.parent.node, 'Ti.UI.Window');
-	if (!parentNode) {
-		U.die([
-			'Invalid parent type for <Menu>: ' + state.parent.node.nodeName,
-			'<Menu> must have a Ti.UI.Window as a parent'
-		]);
+	// assert that the parent is a Ti.UI.Window if possible
+	if (state.parent && state.parent.node) {
+		var parentNode = CU.validateNodeName(state.parent.node, 'Ti.UI.Window');
+		if (!parentNode) {
+			U.die([
+				'Invalid parent type for <Menu>: ' + state.parent.node.nodeName,
+				'<Menu> must have a Ti.UI.Window as a parent'
+			]);
+		}
 	}
 
 	// Start the onCreateOptionsMenu() call
