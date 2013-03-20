@@ -272,6 +272,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		template = {
 			viewCode: '',
 			modelVariable: CONST.BIND_MODEL_VAR,
+			parentVariable: CONST.PARENT_SYMBOL_VAR,
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",

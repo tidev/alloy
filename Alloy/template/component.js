@@ -1,7 +1,6 @@
 var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
-	_ = Alloy._,
-	<%= modelVariable %>;
+	_ = Alloy._;
 
 <%= WPATH %>
 
@@ -9,7 +8,8 @@ function Controller() {
 	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	
-	<%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
+	var <%= parentVariable %> = arguments[0] ? arguments[0]['<%= parentVariable %>'] : null;
+	var <%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
 	var $ = this;
 	var exports = {};
 	var __defers = {};

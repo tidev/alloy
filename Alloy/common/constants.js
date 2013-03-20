@@ -13,6 +13,7 @@ exports.EXPR_PREFIX = '#';
 exports.PLUGIN_FILE = 'plugin.py';
 exports.HOOK_FILE = 'alloy.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
+exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 
 exports.WIDGET_OBJECT = 'Widget';
 
