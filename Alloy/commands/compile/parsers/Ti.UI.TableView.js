@@ -51,8 +51,7 @@ function parse(node, state, args) {
 				parent: {
 					node: node,
 					symbol: '<%= proxyPropertyParent %>'
-				},
-				isProxy: true
+				}
 			});
 		// generate code for search bar
 		} else if (isSearchBar) {
