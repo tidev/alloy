@@ -1,0 +1,8 @@
+<Alloy>
+	<LeftNavButton>
+		<Button title="left"/>
+	</LeftNavButton>
+	<RightNavButton>
+		<Button title="right"/>
+	</RightNavButton>
+</Alloy>

@@ -31,5 +31,11 @@
 				</TableView>
 			</Window>
 		</Tab>
+		<Tab title="window">
+			<Window title="window">
+				<Require src="window"/>
+				<Label>This is a window</Label>
+			</Window>
+		</Tab>
 	</TabGroup>
 </Alloy>
