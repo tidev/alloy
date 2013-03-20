@@ -47,7 +47,7 @@ function parse(node, state, args) {
 			isProxyProperty = true;
 		}
 
-		// generate code for proxy property assigments
+		// generate code for proxy property assignments
 		if (isProxyProperty) {
 			proxyPropertyCode += CU.generateNodeExtended(child, state, {
 				parent: {
