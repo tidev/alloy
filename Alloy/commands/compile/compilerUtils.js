@@ -943,7 +943,7 @@ exports.validateNodeName = function(node, names) {
 	if (fullname === 'Alloy.Require' || fullname === 'Alloy.Widget') {
 		var inspect = exports.inspectRequireNode(node);
 		ret = _.find(names, function(name) { return inspect.names[0] === name });
-		if (inspect.length === 1 && ret) { 
+		if (/*inspect.length === 1 && */ ret) { 
 			return ret;
 		}
 	}

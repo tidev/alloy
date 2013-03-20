@@ -1,0 +1,17 @@
+<Alloy>
+	<HeaderPullView platform="ios">
+		<View height="60dp" backgroundColor="#aaa">
+			<Label height="Ti.UI.SIZE" width="Ti.UI.SIZE" bottom="10">Something about refreshing would be here</Label>
+		</View>
+	</HeaderPullView>
+	<HeaderView>
+		<View height="60dp" backgroundColor="#0f0">
+			<Label>I'm an ugly headerView</Label>
+		</View>
+	</HeaderView>
+	<FooterView>
+		<View height="60dp" backgroundColor="#0f0">
+			<Label>I'm an equally ugly footerView</Label>
+		</View>
+	</FooterView>
+</Alloy>
