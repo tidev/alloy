@@ -20,5 +20,16 @@
 				</TableView>
 			</Window>
 		</Tab>
+		<Tab title="proxies">
+			<Window title="proxy properties">
+				<TableView>
+					<Require src="proxy"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+				</TableView>
+			</Window>
+		</Tab>
 	</TabGroup>
 </Alloy>
