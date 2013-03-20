@@ -1,4 +1,5 @@
 var path = require('path'),
+	fs = require('fs'),
 	_ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
@@ -26,34 +27,52 @@ function parse(node, state, args) {
 
 	// determine which Alloy method to use
 	var extraArgs = '';
-	var appPath = CU.getCompilerConfig().dir.home;
-	var requirePath, alloyRequirePath;
+	var config = CU.getCompilerConfig();
+	var appPath = config.dir.home;
+	var paths = [];
+
+	var platform;
+	if (config && config.alloyConfig && config.alloyConfig.platform) {
+		platform = config.alloyConfig.platform;
+	}
+
 	switch(type) {
 		case 'view':
 			method = 'createController';
-			requirePath = path.join(appPath,CONST.DIR.VIEW,src);
+			platform && paths.push(path.join(appPath,CONST.DIR.VIEW,platform,src));
+			paths.push(path.join(appPath,CONST.DIR.VIEW,src));
 			break;
 		case 'widget':
 			method = 'createWidget';
 			extraArgs = "'" + name + "',";
-			requirePath = path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,name);
-			alloyRequirePath = path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,name);
+			platform && paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,platform,name));
+			paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,name));
+			platform && paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,platform,name));
+			paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,name));
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
 	}
 
-	// make sure the required file exists at compile time, rather than
-	// waiting til runtime.
-	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(requirePath)) {
-		requirePath += '.' + CONST.FILE_EXT.VIEW;
-	}
-	if (!(new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$')).test(alloyRequirePath)) {
-		alloyRequirePath += '.' + CONST.FILE_EXT.VIEW;
+	// check the extensions on the paths to check
+	var regex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$');
+	var found = false;
+	for (var i = 0; i < paths.length; i++) {
+		var fullpath = paths[i];
+		fullpath += regex.test(fullpath) ? '' :  '.' + CONST.FILE_EXT.VIEW;
+		if (fs.existsSync(fullpath)) {
+			found = true;
+			break;
+		}
 	}
 
-	if (!(path.existsSync(requirePath) || (type === 'widget' && path.existsSync(alloyRequirePath)))) {
-		U.die(type + ' "' + src + '" at path "' + requirePath + '"' + (type === 'widget' ? ' or "' + alloyRequirePath + '"' : '')  + ' does not exist.');
+	// abort if there's no view to be found
+	if (!found) {
+		U.die([
+			type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') + 
+				'does not exist.',
+			'The following paths were inspected:'
+		].concat(paths));
 	}
 
 	// Remove <Require>-specific attributes from createArgs

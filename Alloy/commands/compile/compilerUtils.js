@@ -325,17 +325,23 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			type = fullname === 'Alloy.Widget' ? 'widget' : node.getAttribute('type') || CONST.REQUIRE_TYPE_DEFAULT,
 			fullpaths = [];
 
+		var platform;
+		if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
+			platform = compilerConfig.alloyConfig.platform;
+		}
+
 		// Must be a view, with a valid src, in a <Require> element
 		if (!src) {
 			return null;
 		} else if (fullname === 'Alloy.Require' && type === 'view') {
+			platform && fullpaths.push(path.join(compilerConfig.dir.views,platform,src));
 			fullpaths.push(path.join(compilerConfig.dir.views,src));
 		} else if (fullname === 'Alloy.Widget' || 
 			       fullname === 'Alloy.Require' && type === 'widget') {
-			fullpaths.push(
-				path.join(compilerConfig.dir.widgets,src,'views',name),
-				path.join(alloyRoot,'..','widgets',src,'views',name)
-			);
+			platform && fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',platform,name));
+			fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',name));
+			platform && fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',platform,name));
+			fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',name));
 		} else {
 			return null;
 		}
