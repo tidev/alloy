@@ -1,6 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
-	CU = require('../compilerUtils');
+	CU = require('../compilerUtils'),
+	CONST = require('../../../common/constants');
 
 function fixDefinition(def) {
 	def || (def = {});
@@ -19,7 +20,7 @@ function parse(node, state, args) {
 		proxy;
 
 	// validate parent
-	if (def.parents.length > 0) {
+	if (def.parents.length > 0 && state.parent && state.parent.node) {
 		if (!CU.validateNodeName(state.parent.node, def.parents)) {
 			U.dieWithNode(node, 'Parent element must one of the following: [' + def.parents.join(',') + ']');
 		}
@@ -46,7 +47,8 @@ function parse(node, state, args) {
 	});
 
 	// assign proxy property to parent
-	code += state.parent.symbol + '.' + U.lcfirst(node.nodeName) + '=' + proxy + ';';
+	code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) + 
+		'.' + U.lcfirst(node.nodeName) + '=' + proxy + ';';
 
 	return {
 		parent: {},

@@ -73,6 +73,12 @@ function parse(node, state, args) {
 		args.createArgs = _.extend(args.createArgs || {}, modelObj);
 	}
 
+	if (state.parent && state.parent.symbol) {
+		var parentObj = {};
+		parentObj[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--'+state.parent.symbol;
+		args.createArgs = _.extend(args.createArgs || {}, parentObj);
+	}	
+
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
 		state.styles,
