@@ -227,7 +227,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	//args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
 	
 	// add to list of top level views, if its top level
-	if (isTopLevel) { code.content += '$.addTopLevelView(' + args.symbol + ');'; }
+	if (isTopLevel) { code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');'; }
 
 	// handle any model/collection code
 	if (state.modelCode) {
