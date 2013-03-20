@@ -3,10 +3,11 @@
 		<!-- This will add an Android menu -->
 		<Menu>
 			<MenuItem title="option 1" icon="/ic_menu_help.png" onClick="doClick"/>
-			<MenuItem title="option 2" icon="/ic_menu_home.png" onClick="doClick"/>
+			<MenuItem title="option 2" icon="/ic_menu_home.png" onClick="openWin2"/>
 		</Menu>
 		
 		<!-- Build the rest of your UI as usual -->
-		<Label>Press the menu button</Label>
+		<Label>Window 1</Label>
+		<Label bottom="20dp">Press the menu button</Label>
 	</Window>
 </Alloy>

@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<!-- You can also require andorid menus -->
+		<Require src="menu"/>
+
+		<!-- Build the rest of your UI as usual -->
+		<Label>Window 2</Label>
+		<Label bottom="20dp">Press the menu button</Label>
+	</Window>
+</Alloy>
