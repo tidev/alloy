@@ -20,13 +20,17 @@ var Controller = function() {
 	_.extend(this, Backbone.Events, {
 		__views: {},
 		setParent: function(parent) {
+			var len = roots.length;
+
+			if (!len) { return; }
+
 			if (parent.__iamalloy) {
 				this.parent = parent.parent;
 			} else {
 				this.parent = parent;
 			}
 
-			for (var i = 0, l = roots.length; i < l; i++) {
+			for (var i = 0; i < len; i++) {
 				if (roots[i].__iamalloy) {
 					roots[i].setParent(this.parent);
 				} else {
