@@ -631,8 +631,8 @@ exports.loadStyle = function(tssFile, manifest) {
 	return {};
 };
 
-exports.loadAndSortStyle = function(tssFile, manifest) {
-	return sortStyles(exports.loadStyle(tssFile, manifest));
+exports.loadAndSortStyle = function(tssFile, manifest, opts) {
+	return sortStyles(exports.loadStyle(tssFile, manifest), opts);
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
@@ -854,7 +854,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function sortStyles(componentStyle) {
+function sortStyles(componentStyle, opts) {
 	var mergedStyle = {},
 		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
 		extraStyle = extraStyle || {},
@@ -867,8 +867,11 @@ function sortStyles(componentStyle) {
 			PLATFORM:  100,
 			FORMFACTOR: 10,
 			SUM:         1,
+			THEME:       0.9,
 			ORDER:       0.001
 		};
+
+	opts || (opts = {});
 
 	// add global style to processing, if present
 	var styleList = [];
@@ -925,7 +928,7 @@ function sortStyles(componentStyle) {
 			} 
 
 			_.extend(obj, {
-				priority: priority,
+				priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
 				key: newKey, 
 				style: style[key]
 			});
@@ -933,7 +936,8 @@ function sortStyles(componentStyle) {
 		}
 	});
 
-	return _.sortBy(sortedStyles, 'priority');
+	var theArray = opts.existingStyle ? opts.existingStyle.concat(sortedStyles) : sortedStyles;
+	return _.sortBy(theArray, 'priority');
 }
 
 exports.validateNodeName = function(node, names) {

@@ -1,0 +1,12 @@
+"#mainView": {
+	backgroundImage: '/bg_blue.png',
+	borderColor: '#383838'
+}
+
+"#progressBack": {
+	backgroundColor: '#ddd'
+}
+
+"#progressFront": {
+	backgroundImage: '/title_gray.png'
+}

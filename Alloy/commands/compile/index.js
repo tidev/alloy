@@ -280,7 +280,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			__MAPMARKER_CONTROLLER_CODE__: '',
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
-		state = { parent: {} },
+		state = { parent: {}, styles: [] },
 		files = {};
 
 	// reset the bindings map
@@ -302,7 +302,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		if (buildPlatform) {
 			var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
 			if (path.existsSync(platformSpecificFile)) {
-				files[fileType] = platformSpecificFile;
+				if (fileType === 'STYLE') {
+					files[fileType] = [
+						{ file:baseFile },
+						{ file:platformSpecificFile, platform:true }
+					];
+				} else {
+					files[fileType] = platformSpecificFile;
+				}
 				return;
 			}
 		}
@@ -321,10 +328,19 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// Load the style and update the state
-		if (path.existsSync(files.STYLE)) {
-			logger.info('  style:      "' + path.relative(path.join(dir,CONST.DIR.STYLE),files.STYLE) + '"');
+		if (files.STYLE) {
+			var theStyles = _.isArray(files.STYLE) ? files.STYLE : [{file:files.STYLE}];
+			_.each(theStyles, function(style) {
+				if (fs.existsSync(style.file)) {
+					logger.info('  style:      "' + 
+						path.relative(path.join(dir,CONST.DIR.STYLE),style.file) + '"');
+					state.styles = CU.loadAndSortStyle(style.file, manifest, {
+						existingStyle: state.styles,
+						platform: style.platform
+					});
+				}
+			});
 		}
-		state.styles = CU.loadAndSortStyle(files.STYLE,manifest);
 
 		if (theme && !manifest) {
 			var themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
@@ -332,12 +348,21 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			var themeStylesFile = path.join(themeStylesDir,theStyle);
 			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);	
 
+			if (path.existsSync(themeStylesFile)) {
+				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
+				// state.styles = U.deepExtend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
+				state.styles = CU.loadAndSortStyle(themeStylesFile, manifest, {
+					existingStyle: state.styles,
+					theme: true
+				});
+			}
 			if (path.existsSync(psThemeStylesFile)) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
-				_.extend(state.styles, CU.loadAndSortStyle(psThemeStylesFile,manifest));
-			} else if (path.existsSync(themeStylesFile)) {
-				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
-				_.extend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
+				state.styles = CU.loadAndSortStyle(psThemeStylesFile, manifest, {
+					existingStyle: state.styles,
+					platform: style.platform,
+					theme: true
+				});
 			}
 		}
 

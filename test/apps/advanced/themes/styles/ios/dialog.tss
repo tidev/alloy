@@ -1,0 +1,12 @@
+"#cover": {
+	backgroundColor: "#050", 
+	opacity: 0.65
+}
+
+"#progressBack": {
+	borderRadius: 16
+}
+
+"#progressFront": {
+	borderRadius: 16
+}
