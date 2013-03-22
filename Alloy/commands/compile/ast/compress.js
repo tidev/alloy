@@ -25,7 +25,7 @@ exports.process = function(ast, config) {
 		conditionals  : true,   // optimize if-s and conditional expressions
 		comparisons   : true,   // optimize comparisons
 		evaluate      : true,   // evaluate constant expressions
-		booleans      : true,   // optimize boolean expressions
+		booleans      : false,   // optimize boolean expressions
 		loops         : false,   // optimize loops
 		unused        : true,   // drop unused variables/functions
 		hoist_funs    : true,   // hoist function declarations
