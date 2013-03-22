@@ -46,15 +46,17 @@ var tests = [
 	['var a = true ? 1 : 0;', 'var a=1'],
 	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num=isNaN(amount)||""===amount||null===amount?0:amount'],
 
+	// TODO: Revisit all "var a,a=2;" expecteds once ALOY-540 is resolved
+
 	// make sure we didn't break normal if conditions
-	['if (true) { var a = 1; } else { var a = 2; }', "var a=1"],
+	['if (true) { var a = 1; } else { var a = 2; }', "var a,a=1"],
 
 	// check platform conditionals (if/else)
-	["if (Titanium.Platform.name === '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=1"],
-	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
-	["if (Titanium.Platform['name'] == '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=1"],
-	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
-	["if (Titanium.Platform['name'] !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a=2"],
+	["if (Titanium.Platform.name === '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a,a=1"],
+	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a,a=2"],
+	["if (Titanium.Platform['name'] == '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a,a=1"],
+	["if (Titanium.Platform.name !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a,a=2"],
+	["if (Titanium.Platform['name'] !== '<%= Titanium_Platform_name %>'){ var a = 1; } else { var a = 2; }","var a,a=2"],
 
 	// check platform conditional assignments
 	["var platform = Ti.Platform['name'] === '<%= Ti_Platform_name %>'", "var platform=true"],
@@ -81,10 +83,10 @@ var tests = [
 	["if (Ti.Platform.name !== aVariable) { var a = 1; } else { var a = 2; }","if(\"<%= Ti_Platform_name %>\"!==aVariable)var a=1\nelse var a=2"],
 
 	// properly handles conditionals without curly braces
-	["if (Ti.Platform.name === '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=1"],
-	["if (Ti.Platform.name !== '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a=2"],
-	["if ('<%= Ti_Platform_name %>' === Ti.Platform.name) var a = 1; else var a = 2;","var a=1"],
-	["if ('<%= Ti_Platform_name %>' !== Ti.Platform.name) var a = 1; else var a = 2;","var a=2"],
+	["if (Ti.Platform.name === '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a,a=1"],
+	["if (Ti.Platform.name !== '<%= Ti_Platform_name %>') var a = 1; else var a = 2;","var a,a=2"],
+	["if ('<%= Ti_Platform_name %>' === Ti.Platform.name) var a = 1; else var a = 2;","var a,a=1"],
+	["if ('<%= Ti_Platform_name %>' !== Ti.Platform.name) var a = 1; else var a = 2;","var a,a=2"],
 
 	// works if Ti.Platform.* is on the left or right hand side 
 	["if ('<%= Ti_Platform_name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }","var a=1"],
