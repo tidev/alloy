@@ -1,4 +1,6 @@
-var uglifyjs = require('uglify-js');
+var uglifyjs = require('uglify-js'),
+	CONST = require('../../../common/constants'),
+	_ = require('../../../lib/alloy/underscore')._;
 
 exports.process = function(ast, config) {
 	config = config ? config.alloyConfig : {};
@@ -6,15 +8,20 @@ exports.process = function(ast, config) {
 
 	// create list of platform and deploy type defines
 	var defines = {
-		OS_IOS:          config.platform === 'ios',
-		OS_ANDROID:      config.platform === 'android',
-		OS_MOBILEWEB:    config.platform === 'mobileweb',
+		// OS_IOS:          config.platform === 'ios',
+		// OS_ANDROID:      config.platform === 'android',
+		// OS_MOBILEWEB:    config.platform === 'mobileweb',
+		// OS_BLACKBERRY: 	 config.platform === 'blackberry',
 		ENV_DEV:         config.deploytype === 'development',
 		ENV_DEVELOPMENT: config.deploytype === 'development',
 		ENV_TEST:        config.deploytype === 'test',
 		ENV_PROD:        config.deploytype === 'production',
 		ENV_PRODUCTION:  config.deploytype === 'production'
 	};
+	_.each(CONST.PLATFORMS, function(p) {
+		defines['OS_' + p.toUpperCase()] = config.platform === p;
+	});
+
 
 	var compressor = uglifyjs.Compressor({
 		sequences     : false,  // join consecutive statemets with the “comma operator”

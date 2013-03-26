@@ -25,7 +25,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ///////////////////////////////
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
-	PLATFORMS = ['ios', 'android', 'mobileweb'],
 	CONDITION_MAP = {
 		android: {
 			compile: 'OS_ANDROID',
@@ -38,6 +37,10 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 		mobileweb: {
 			compile: 'OS_MOBILEWEB',
 			runtime: "Ti.Platform.osname === 'mobileweb'"
+		},
+		blackberry: {
+			compile: 'OS_BLACKBERRY',
+			runtime: "Ti.Platform.osname === 'blackberry'"
 		},
 		handheld: {
 			runtime: "!Alloy.isTablet"
@@ -121,9 +124,9 @@ exports.getParserArgs = function(node, state, opts) {
 			if (matches !== null) {
 				var negate = matches[1];
 				var name = matches[2];
-				if (_.contains(PLATFORMS, name)) {
+				if (_.contains(CONST.PLATFORMS, name)) {
 					if (negate === '!') {
-						_.each(_.without(PLATFORMS, name), function(n) {
+						_.each(_.without(CONST.PLATFORMS, name), function(n) {
 							platformObj[n] = true;
 						});
 					} else {

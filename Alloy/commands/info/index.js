@@ -15,7 +15,7 @@ var info = {
 			},
 			sql: {
 				description: 'Local persistence adapter that uses SQLite storage',
-				platforms: ['android','ios']
+				platforms: ['android','ios','blackberry']
 			},
 			localStorage: {
 				description: 'Local persistence adapter that uses HTML5 localStorage API',

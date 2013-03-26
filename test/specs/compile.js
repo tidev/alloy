@@ -2,9 +2,13 @@ var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
 	TU = require('../lib/testUtils'),
+	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 	
-var PLATFORMS = process.platform === 'darwin' ? ['android','ios','mobileweb'] : ['android','mobileweb'],
+var PLATFORMS = process.platform === 'darwin' ? 
+		CONST.PLATFORMS :
+		_.reject(CONST.PLATFORMS, function(p) { return p === 'ios'; }), 
+		//['android','ios','mobileweb'] : ['android','mobileweb'],
 	TIMEOUT_COMPILE = 10000,
 	TIMEOUT_DEFAULT = 750;
 

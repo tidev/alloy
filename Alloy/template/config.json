@@ -5,5 +5,7 @@
 	"env:production": {}, 
 	"os:ios": {}, 
 	"os:android": {}, 
+	"os:mobileweb": {},
+	"os:blackberry": {},
 	"dependencies": {}
 }

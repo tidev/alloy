@@ -30,9 +30,9 @@ exports.MODEL_BINDING_EVENTS = 'fetch change destroy';
 exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
 
 // Listings for supported platforms and commands
-exports.PLATFORMS = ['android','ios','mobileweb'];
-exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb'];
-exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb'];
+exports.PLATFORMS = ['android','ios','mobileweb','blackberry'];
+exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb','blackberry'];
+exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb','blackberry'];
 exports.INSTALL_TYPES = ['plugin'];
 exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 

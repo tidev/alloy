@@ -266,8 +266,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	if (!view) { U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()'); }
 	if (!dir) { U.die('Failed to parse ' + parseType + ' "' + view + '", no directory given'); }
 
+	var dirRegex = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
 	var basename = path.basename(view, '.' + CONST.FILE_EXT[parseType.toUpperCase()]);
-		dirname = path.dirname(view).replace(/^(?:android|ios|mobileweb)[\\\/]*/,''),
+		dirname = path.dirname(view).replace(dirRegex,''), // /^(?:android|ios|mobileweb)[\\\/]*/,''),
 		viewName = basename,
 		template = {
 			viewCode: '',
