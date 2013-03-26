@@ -7,7 +7,7 @@ var fs = require('fs'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 
 var TIMEOUT_DEFAULT = 2000;
-var PLATFORMS = ['android','ios','mobileweb'];
+var PLATFORMS = CONST.PLATFORMS;
 
 var alloyRoot = path.join(__dirname,'..','..');
 var Harness = path.join(alloyRoot,'test','projects','Harness');

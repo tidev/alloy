@@ -35,6 +35,7 @@ var tests = [
 	['var a = Ti.Platform.name', 'var a="<%= Ti_Platform_name %>"'],
 	['var a = Ti.Platform.osname', 'var a="android"', ['android']],
 	['var a = Ti.Platform.osname', 'var a="mobileweb"', ['mobileweb']],
+	['var a = Ti.Platform.osname', 'var a="blackberry"', ['blackberry']],
 	['var a, b = 1, c = 2;', 'var a,b=1,c=2'],
 	['var a = 1;', 'var a=1'],
 	['var a =+1;', 'var a=1'],
@@ -108,6 +109,10 @@ var platforms = {
 	mobileweb: {
 		'Ti_Platform_name': 'mobileweb',
 		'Ti_Platform_osname': 'mobileweb'
+	},
+	blackberry: {
+		'Ti_Platform_name': 'blackberry',
+		'Ti_Platform_osname': 'blackberry'
 	}
 };
 _.each(platforms, function(obj,p) {
@@ -125,11 +130,16 @@ describe('optimizer.js', function() {
 					var ast, code, 
 						testContent = _.template(test[0], platforms[platform]),
 						prefix = pad(platform),
-						defines = {
-							OS_ANDROID: platform === 'android',
-							OS_IOS: platform === 'ios',
-							OS_MOBILEWEB: platform === 'mobileweb'
-						};
+						// defines = {
+						// 	OS_ANDROID: platform === 'android',
+						// 	OS_IOS: platform === 'ios',
+						// 	OS_MOBILEWEB: platform === 'mobileweb'
+						// };
+						defines = {};
+
+					_.each(CONST.PLATFORMS, function(p) {
+						defines['OS_' + p.toUpperCase()] = platform === p;
+					});
 
 					it(prefix + testContent.blue, function() {
 						expect(true).toBe(true);

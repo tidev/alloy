@@ -51,12 +51,12 @@ module.exports = function(args, program) {
 	// install ti.alloy compiler plugin
 	U.installPlugin(path.join(paths.alloy,'..'), paths.project);
 
-	// copy Resources android, iphone, and mobileweb directories to assets
+	// copy Resources platform-specific directories to assets
 	U.copyFileSync(
 		path.join(paths.template,'gitignore.txt'), 
 		path.join(paths.project,'.gitignore')
 	);
-	_.each(['android','iphone','mobileweb'], function(dir) {
+	_.each(CONST.PLATFORM_FOLDERS, function(dir) {
 		var rDir = path.join(paths.resources,dir);
 		if (!path.existsSync(rDir)) {
 			return;

@@ -5,9 +5,9 @@
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
-        <target device="blackberry">false</target>
+        <target device="blackberry">true</target>
     </deployment-targets>
-    <sdk-version>3.0.0.GA</sdk-version>
+    <sdk-version>3.1.0</sdk-version>
     <id>com.appcelerator.Harness</id>
     <name>Harness</name>
     <version>1.0</version>

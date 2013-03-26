@@ -32,6 +32,8 @@ exports.optimize = function(ast, defines, fn) {
 		platform.osname = platform.name = 'android'; 
 	} else if (defines.OS_MOBILEWEB) { 
 		platform.osname = platform.name = 'mobileweb'; 
+	} else if (defines.OS_BLACKBERRY) {
+		platform.osname = platform.name = 'blackberry'; 
 	} else {
 		platform.osname = platform.name = undefined;
 	}
