@@ -3,6 +3,8 @@
  * and executes faster, better, etc.
  */
 var uglifyjs = require('uglify-js'),
+	path = require('path'),
+	fs = require('fs'),
 	_ = require('../../lib/alloy/underscore')._,
 	logger = require('../../common/logger.js');
 
@@ -22,21 +24,25 @@ function dotSubCheck(node, name) {
 
 // Optimize Titanium namespaces with static strings where possible
 exports.optimize = function(ast, defines, fn) {
-	var platform = {};
+	//var platform = {};
+	var theKey;
+	_.find(defines, function(value, key) {
+		var ret = key.indexOf('OS_') === 0 && value;
+		if (ret) { theKey = key; }
+		return ret;
+	});
+	if (!theKey) { return ast; }
 
-	// determine platform name from defines
-	if (defines.OS_IOS) { 
-		platform.name = 'iPhone OS'; 
-		platform.osname = undefined;
-	} else if (defines.OS_ANDROID) { 
-		platform.osname = platform.name = 'android'; 
-	} else if (defines.OS_MOBILEWEB) { 
-		platform.osname = platform.name = 'mobileweb'; 
-	} else if (defines.OS_BLACKBERRY) {
-		platform.osname = platform.name = 'blackberry'; 
-	} else {
-		platform.osname = platform.name = undefined;
-	}
+	// make sure the platform require includes
+	var platformString = theKey.substring(3).toLowerCase();
+	var platformPath = path.join(__dirname,'..','..','..','platforms',platformString,'index');
+	if (!fs.existsSync(platformPath + '.js')) { return ast; }
+
+	// create, transform, and validate the platform object
+	var platform = require(platformPath);
+	if (!_.isString(platform.name)) { platform.name = undefined; }
+	if (!_.isString(platform.osname)) { platform.osname = undefined; } 
+	if (!platform.osname && !platform.name) { return ast; }
 
 	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
 	// into static strings where possible. This will allow the following

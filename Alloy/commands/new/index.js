@@ -7,6 +7,7 @@ var path = require('path'),
 	logger = require('../../common/logger');
 
 var BASE_ERR = 'Project creation failed. ';
+var platformsDir = path.join(__dirname,'..','..','..','platforms');
 
 module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
@@ -34,7 +35,14 @@ module.exports = function(args, program) {
 	});
 
 	// copy in any Alloy-specific Resources files
-	wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+	_.each(CONST.PLATFORMS, function(p) {
+		wrench.copyDirSyncRecursive(
+			path.join(platformsDir,p,'Resources'),
+			paths.assets,
+			{preserve:true}
+		);
+	});
 
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
@@ -84,7 +92,6 @@ function getPaths(project, templateName) {
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
 		projectTemplate: path.join(projectTemplates,templateName),
-		alloyResources: path.join(alloy,'..','Resources'),
 
 		// project paths
 		project: project,

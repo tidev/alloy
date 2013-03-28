@@ -15,6 +15,7 @@ var U = require('../../utils'),
 ////////// private variables //////////
 ///////////////////////////////////////
 var alloyRoot = path.join(__dirname,'..','..'),
+	platformsDir = path.join(alloyRoot,'..','platforms'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
@@ -26,22 +27,22 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	CONDITION_MAP = {
-		android: {
-			compile: 'OS_ANDROID',
-			runtime: "Ti.Platform.osname === 'android'"
-		},
-		ios: {
-			compile: 'OS_IOS',
-			runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
-		},
-		mobileweb: {
-			compile: 'OS_MOBILEWEB',
-			runtime: "Ti.Platform.osname === 'mobileweb'"
-		},
-		blackberry: {
-			compile: 'OS_BLACKBERRY',
-			runtime: "Ti.Platform.osname === 'blackberry'"
-		},
+		// android: {
+		// 	compile: 'OS_ANDROID',
+		// 	runtime: "Ti.Platform.osname === 'android'"
+		// },
+		// ios: {
+		// 	compile: 'OS_IOS',
+		// 	runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
+		// },
+		// mobileweb: {
+		// 	compile: 'OS_MOBILEWEB',
+		// 	runtime: "Ti.Platform.osname === 'mobileweb'"
+		// },
+		// blackberry: {
+		// 	compile: 'OS_BLACKBERRY',
+		// 	runtime: "Ti.Platform.osname === 'blackberry'"
+		// },
 		handheld: {
 			runtime: "!Alloy.isTablet"
 		},
@@ -52,6 +53,11 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
+
+// load CONDITION_MAP with platforms
+_.each(CONST.PLATFORMS, function(p) {
+	CONDITION_MAP[p] = require(path.join(platformsDir,p,'index'))['condition'];
+});
 
 exports.bindingsMap = {};
 exports.destroyCode = '';

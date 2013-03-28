@@ -39,7 +39,8 @@ module.exports = function(name, args, program) {
 		_.template(fs.readFileSync(paths.widgetTemplate,'utf8'), {
 			id: escapeDoubleQuotes(widgetId),
 			name: escapeDoubleQuotes(name),
-			version: VERSION_DEFAULT
+			version: VERSION_DEFAULT,
+			platforms: CONST.PLATFORMS.join(',')
 		})
 	);
 
