@@ -178,6 +178,11 @@ exports.isTablet = (function() {
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
 		) < 400);
+	} else if (OS_BLACKBERRY) {
+		return (Ti.Platform.displayCaps.platformHeight === 600 &&
+		       Ti.Platform.displayCaps.platformWidth === 1024) ||
+			   (Ti.Platform.displayCaps.platformHeight === 1024 &&
+		       Ti.Platform.displayCaps.platformWidth === 600);
 	} else {
 		return isTabletFallback();
 	}
