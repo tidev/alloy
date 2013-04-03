@@ -1,12 +1,5 @@
 <Alloy>
-    <Window title="Built in Templates">
-    	<!-- 
-    		Alloy does not yet have full markup integration of the
-    		new ListView component, but you can still set it up
-    		in the markup. You can use this id reference and then
-    		actually implement it in your controller code, until such
-    		time as ListView is better implemented in markup.
-    	-->
-        <ListView id="list"/>
-    </Window>
+    <TabGroup>
+    	<Require src="basic"/>
+    </TabGroup>
 </Alloy>

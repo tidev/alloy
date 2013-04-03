@@ -1,7 +1,3 @@
-"Window": {
-    backgroundColor:"white"
-}
- 
-"#list": {
-    backgroundColor: '#fff'
+"#index": {
+    backgroundColor: "#fff"
 }
