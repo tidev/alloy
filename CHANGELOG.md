@@ -1,9 +1,114 @@
+
 ## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
 * Install Alloy by version: `[sudo] npm install -g alloy@0.3.0`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+
+## 1.1.0 (April 2013)
+
+  * [Full list of Issues that were addressed in Release 1.1.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15057)
+
+### Breaking Changes
+
+#### Alloy Run Command
+
+The Alloy run command is obsoleted by the Titanium CLI build command.
+
+If you are only using command-line tools to build your Alloy project, after using the
+`alloy compile` command to convert the Alloy files to Titanium files, use the `titanium build`
+command to build and run the Titanium code.
+
+
+### New Features
+
+#### Debugging in Studio
+
+As of Titanium Studio 3.1.0, breakpoints added in Alloy Controllers and the `alloy.js` file are
+recognized by the Studio Debugger.  These breakpoints map to the code in the generated Titanium
+files located in the `Resources` directory.
+
+CommonJS modules and Alloy Models will support this feature in a future release of Titanium
+Studio and Alloy.  You still need to add breakpoints for these files in the generated Titanium
+files located in the `Resources` directory.
+
+Refer to [Alloy Debugging](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Debugging_and_Troubleshooting)
+for more information.
+
+
+#### Content Assistance in Studio
+
+As of Titanium Studio 3.1.0, content assistance is supported in Alloy Views (XML markup and TSS
+files) and Alloy Controllers.
+
+For XML markup, start typing the XML element, attribute or `on` attribute (for events)
+to receive content assistance.
+
+For TSS files, type the name of the element, class (element prefixed with `.`) or ID name
+(element prefixed with `#`) to receive content assistance.
+You need to type the entire name of the element, class or ID name to receive assistance, and
+the class and ID name must exist in the associated XML markup file.
+
+For controller code, type the ID name (element prefixed by `$.`) or start typing a namespace
+(Alloy, Titanium, etc.) to receive content assistance. You need to type the entire name of the ID
+in order to receive assistance and it must exist in the associated XML markup file.
+
+Some of the Alloy-specific attributes, such as `platform`, `formFactor` and the data binding
+attributes, will be supported in a future release of Titanium Studio.
+
+Refer to the "Using Content Assistance" section in
+[Alloy Tasks](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks) for more information.
+
+
+#### Expanded Support for Collection-View Binding
+
+ScrollableView, CoverFlowView, ButtonBar, ToolBar and TabbedBar objects support collection-view
+binding.
+
+For ButtonBar, ToolBar and TabbedBar, refer to the
+[binding_bars example](https://github.com/appcelerator/alloy/tree/1_1_X/test/apps/models/binding_bars).
+
+For CoverFlowView, refer to the
+[binding_coverflow example](https://github.com/appcelerator/alloy/tree/1_1_X/test/apps/models/binding_coverflow).
+
+For ScrollableView, refer to the
+[binding_scrollableview example](https://github.com/appcelerator/alloy/tree/1_1_X/test/apps/models/binding_scrollableview).
+
+Refer to [Alloy Data Binding](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding)
+for more information.
+
+
+#### Widget Enhancements
+
+Various enhancements to widgets:
+
+  * Widgets have their own create methods.  Use `Widget.createController()`,
+   `Widget.createWidget()`, `Widget.createModel()` and `Widget.createCollection()`
+    instead of the `Alloy.create*` methods to create components relative to the
+    widget context rather than the Alloy project. The method parameters
+    are the same as the `Alloy.create*` methods.
+
+  * Widgets support their own models. Use models the same as with an Alloy project.
+
+Refer to [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets) for
+more information.
+
+#### XML Markup Enhancements
+
+Various enhancements to XML markup:
+
+  * Support `<LeftNavButton>` and `<RightNavButton>` as children tags of the `<Popover>` object to
+    specify the `leftNavButton` and `rightNavButton` properties of `Titanium.UI.iPad.Popover`.
+
+  * Support `<HeaderView>` as a child tag of the `<TableViewSection>` object to specify the
+    `headerView` property of `Titanium.UI.TableViewSection`.
+
+  * Support the `name` attribute with the `<Widget>` and `<Require>` tags to specify a widget
+    view-controller to use besides `widget.xml`/`widget.js`.
+
+Refer to [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup)
+for more information.
 
 ## 1.0.0 (19 February 2013)
 
