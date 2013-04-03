@@ -89,7 +89,10 @@ Various enhancements to widgets:
     widget context rather than the Alloy project. The method parameters
     are the same as the `Alloy.create*` methods.
 
-  * Widgets support their own models. Use models the same as with an Alloy project.
+  * Widgets support their own models and collections. Use models and collections the same
+    as with an Alloy project except use the new Widget create methods, that is, use `Widget.createModel`
+    and `Widget.createCollection` instead of `Alloy.createModel` and `Alloy.createCollection`,
+    respectively to create models and collections inside a widget.
 
 Refer to [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets) for
 more information.
