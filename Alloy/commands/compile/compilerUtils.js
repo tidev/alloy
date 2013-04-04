@@ -27,22 +27,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	CONDITION_MAP = {
-		// android: {
-		// 	compile: 'OS_ANDROID',
-		// 	runtime: "Ti.Platform.osname === 'android'"
-		// },
-		// ios: {
-		// 	compile: 'OS_IOS',
-		// 	runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
-		// },
-		// mobileweb: {
-		// 	compile: 'OS_MOBILEWEB',
-		// 	runtime: "Ti.Platform.osname === 'mobileweb'"
-		// },
-		// blackberry: {
-		// 	compile: 'OS_BLACKBERRY',
-		// 	runtime: "Ti.Platform.osname === 'blackberry'"
-		// },
 		handheld: {
 			runtime: "!Alloy.isTablet"
 		},
