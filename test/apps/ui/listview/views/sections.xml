@@ -1,0 +1,28 @@
+<Alloy>
+	<Tab title="sections">
+		<Window title="sections">
+			<ListView id="list" onItemclick="onItemClick">
+				<ListSection headerTitle="title 1">
+					<ListItem title="row 1"/>
+					<ListItem title="row 2"/>
+					<ListItem title="row 3"/>
+				</ListSection>
+				<ListSection headerTitle="title 2">
+					<ListItem title="row 1"/>
+					<ListItem title="row 2"/>
+					<ListItem title="row 3"/>
+				</ListSection>
+				<ListSection headerTitle="title 3">
+					<ListItem title="row 1"/>
+					<ListItem title="row 2"/>
+					<ListItem title="row 3"/>
+				</ListSection>
+				<ListSection headerTitle="title 4">
+					<ListItem title="row 1"/>
+					<ListItem title="row 2"/>
+					<ListItem title="row 3"/>
+				</ListSection>
+			</ListView>
+		</Window>
+	</Tab>
+</Alloy>

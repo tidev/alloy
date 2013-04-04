@@ -1,0 +1,20 @@
+<Alloy>
+	<Tab title="templates">
+		<Window title="templates">
+			<ListView id="list">
+				<ListSection>
+					<ListItem title="row 1"/>
+					<ListItem title="row 2"/>
+					<ListItem title="row 3"/>
+					<ListItem title="row 4"/>
+					<ListItem title="row 5"/>
+					<ListItem title="row 6"/>
+					<ListItem title="row 7"/>
+					<ListItem title="row 8"/>
+					<ListItem title="row 9"/>
+					<ListItem title="row 10"/>
+				</ListSection>
+			</ListView>
+		</Window>
+	</Tab>
+</Alloy>

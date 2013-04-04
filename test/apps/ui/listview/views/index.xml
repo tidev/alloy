@@ -1,5 +1,7 @@
 <Alloy>
     <TabGroup>
     	<Require src="basic"/>
+    	<Require src="sections"/>
+    	<Require src="templates"/>
     </TabGroup>
 </Alloy>
