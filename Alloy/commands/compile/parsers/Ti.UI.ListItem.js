@@ -16,8 +16,8 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = { properties:";
-	code += CU.generateStyleParams(
+	code += (state.local ? 'var ' : '') + args.symbol + " = {"
+	code += "properties:" + CU.generateStyleParams(
 		state.styles,
 		args.classes,
 		args.id,
