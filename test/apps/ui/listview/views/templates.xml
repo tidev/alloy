@@ -1,18 +1,21 @@
 <Alloy>
 	<Tab title="templates">
 		<Window title="templates">
-			<ListView id="list">
+			<ListView id="list" defaultItemTemplate="template1">
+				<Templates>
+					<ItemTemplate name="template1" height="100">
+						<ImageView bindId="image" left="15" top="6" bottom="6"/>
+						<Label bindId="label" left="100" right="10"/>
+					</ItemTemplate>
+					<ItemTemplate name="template2" height="100">
+						<Label bindId="label"/>
+					</ItemTemplate>
+				</Templates>
+
 				<ListSection>
-					<ListItem title="row 1"/>
-					<ListItem title="row 2"/>
-					<ListItem title="row 3"/>
-					<ListItem title="row 4"/>
-					<ListItem title="row 5"/>
-					<ListItem title="row 6"/>
-					<ListItem title="row 7"/>
-					<ListItem title="row 8"/>
-					<ListItem title="row 9"/>
-					<ListItem title="row 10"/>
+					<!-- <ListItem image:image="appc.png" label:text="this is some text"/>
+					<ListItem image:image="appc.png" label:text="here we go again"/>
+					<ListItem template="template2" label:text="here is template2" label:textAlign="center"/> -->
 				</ListSection>
 			</ListView>
 		</Window>
