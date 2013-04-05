@@ -31,7 +31,7 @@ exports.HOOK_FILE = 'alloy.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
 exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 exports.WIDGET_OBJECT = 'Widget';
-exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem'];
+exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
@@ -123,9 +123,11 @@ exports.IMPLICIT_NAMESPACES = {
 	Images: NS_ALLOY_ABSTRACT,
 	Item: NS_ALLOY_ABSTRACT,
 	Items: NS_ALLOY_ABSTRACT,
+	ItemTemplate: NS_ALLOY_ABSTRACT,
 	Labels: NS_ALLOY_ABSTRACT,
 	Option: NS_ALLOY_ABSTRACT,
 	Options: NS_ALLOY_ABSTRACT,
+	Templates: NS_ALLOY_ABSTRACT,
 
 	// Ti.Android
 	Menu: NS_TI_ANDROID,
