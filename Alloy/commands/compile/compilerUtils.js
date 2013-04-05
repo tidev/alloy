@@ -229,7 +229,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// handle any events from markup
 	if (args.events && args.events.length > 0 && 
-		!_.contains(CONST.SKIP_EVENT_HANDLING, args.fullname)) {
+		!_.contains(CONST.SKIP_EVENT_HANDLING, args.fullname) &&
+		!state.isViewTemplate) {
 		// determine which function name to use for event handling:
 		// * addEventListener() for Titanium proxies
 		// * on() for everything else (controllers, models, collections)
