@@ -10,6 +10,15 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var createFunc = 'create' + node.nodeName,
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
+		fullname = CU.getNodeFullname(node),
+		generatedStyle = CU.generateStyleParams(
+			state.styles,
+			args.classes,
+			args.id,
+			fullname,
+			_.defaults(state.extraStyle || {}, args.createArgs || {}),
+			state
+		),
 		code = '';
 
 	// make symbol a local variable if necessary
@@ -18,58 +27,126 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
-	code += CU.generateStyleParams(
-		state.styles,
-		args.classes,
-		args.id,
-		CU.getNodeFullname(node),
-		_.defaults(state.extraStyle || {}, args.createArgs || {}),
-		state
-	) + '\n';
-	code += ");\n";
-	if (args.parent.symbol) {
-		code += args.parent.symbol + ".add(" + args.symbol + ");\n";
-	}
+	if (state.isViewTemplate) {
+		var bindId = node.getAttribute('bindId');
+		code += (state.local ? 'var ' : '') + args.symbol + '={';
+		code += "type:'" + fullname + "',"; 
+		if (bindId) {
+			code += "bindId:'" + bindId + "',";
+		}
 
-	if (isCollectionBound) {
-		var localModel = CU.generateUniqueId();
-		var itemCode = '';
+		// apply usual style properties
+		var argsObject = { properties: generatedStyle };
 
-		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-			itemCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: args.symbol
-				},
-				local: true,
-				model: localModel
+		// add in any events on the ItemTemplate
+		if (args.events && args.events.length > 0) {
+			argsObject.events = '{' + _.reduce(args.events, function(memo,o) {
+				return memo + o.name + ':' + o.value + ',';
+			}, '') + '}';
+		}
+
+		var children = U.XML.getElementsFromNodes(node.childNodes);
+		var childTemplates;
+		if (children.length > 0) {
+			childTemplates = CU.generateUniqueId();
+			code += 'var ' + childTemplates + '=[];'; 
+
+			_.each(children, function(child) {
+				code += CU.generateNodeExtended(child, state, {
+					parent: {},
+					local: true,
+					isViewTemplate: true,
+					post: function(node, state, args) {
+						return childTemplates + '.push(' + state.item.symbol + ');';
+					}
+				});
 			});
-		});
 
-		var pre =  "var children = " + args.symbol + ".children;" +
-				   "for (var d = children.length-1; d >= 0; d--) {" + 
-				   "	" + args.symbol + ".remove(children[d]);" +
-				   "}";
+			argsObject.childTemplates = childTemplates;
+		}
 
-		code += _.template(CU.generateCollectionBindingTemplate(args), {
-			localModel: localModel,
-			pre: pre,
-			items: itemCode,
-			post: ''
-		});
+		// process children and add them to childTemplates
+		// var children = U.XML.getElementsFromNodes(node);
+		// if (children.length > 0) {
+		// 	argsObject.childTemplates = '[' +
+		// 	_.reduce(children, function(memo,child) {
+		// 		return memo + CU.generateNodeExtended(child, state, {
+		// 			parent: {},
+		// 			local: true,
+		// 			isViewTemplate: true
+		// 		});
+		// 	}, '') + ']';
+		// }
+
+		// add the additional arguments to the code
+		code += _.reduce(argsObject, function(memo,v,k) {
+			return memo + k + ':' + v + ',';
+		}, '');
+
+		code += '};';
+	} else {
+		code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
+		code += CU.generateStyleParams(
+			state.styles,
+			args.classes,
+			args.id,
+			fullname,
+			_.defaults(state.extraStyle || {}, args.createArgs || {}),
+			state
+		) + '\n';
+		code += ");\n";
+		if (args.parent.symbol) {
+			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
+		}
+
+		if (isCollectionBound) {
+			var localModel = CU.generateUniqueId();
+			var itemCode = '';
+
+			_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+				itemCode += CU.generateNodeExtended(child, state, {
+					parent: {
+						node: node,
+						symbol: args.symbol
+					},
+					local: true,
+					model: localModel
+				});
+			});
+
+			var pre =  "var children = " + args.symbol + ".children;" +
+					   "for (var d = children.length-1; d >= 0; d--) {" + 
+					   "	" + args.symbol + ".remove(children[d]);" +
+					   "}";
+
+			code += _.template(CU.generateCollectionBindingTemplate(args), {
+				localModel: localModel,
+				pre: pre,
+				items: itemCode,
+				post: ''
+			});
+		}
 	}
 
 	// Update the parsing state
-	return {
-		parent: isCollectionBound ? {} : {
-			node: node,
-			symbol: args.symbol
-		},
+	var ret = {
+		isViewTemplate: state.isViewTemplate || false,
 		local: state.local || false,
 		model: state.model || undefined,
 		condition: state.condition || undefined,
 		styles: state.styles,
 		code: code
+	};
+	var nextObj = {
+		node: node,
+		symbol: args.symbol
+	};
+
+	if (state.isViewTemplate) {
+		return _.extend(ret, { item: nextObj });
+	} else {
+		return _.extend(ret, { parent: isCollectionBound ? {} : nextObj });
 	}
+
+	return ret;
 };
