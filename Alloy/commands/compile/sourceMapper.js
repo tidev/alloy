@@ -92,7 +92,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 
 	// parse composite code into an AST
-	var ast = uglifyjs.parse(genMap.code, { filename: genMap.file });
+	try {
+		var ast = uglifyjs.parse(genMap.code, { filename: genMap.file });
+	} catch (e) {
+		logger.trace(genMap.code);
+		throw e;
+	}
 
 	// process all AST operations
 	_.each(mods, function(mod) {
