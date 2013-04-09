@@ -4,11 +4,11 @@
 			<ListView id="list" defaultItemTemplate="template1">
 				<Templates>
 					<ItemTemplate name="template1" height="100">
-						<ImageView bindId="image" left="0" height="80" width="80"/>
-						<Label bindId="label" right="0" textAlign="right"/>
+						<ImageView bindId="image" id="image"/>
+						<Label bindId="label" id="label1"/>
 					</ItemTemplate>
-					<ItemTemplate name="template2" height="100">
-						<Label bindId="label"/>
+					<ItemTemplate name="template2" height="50">
+						<Label bindId="label" class="labels"/>
 					</ItemTemplate>
 				</Templates>
 

@@ -3,3 +3,22 @@
 		backgroundColor: '#ff0'
 	}
 }
+
+"#image": {
+	left: 0, 
+	height: 80, 
+	width: 80
+}
+
+"#label1": {
+	right: 10,
+	width: Ti.UI.SIZE
+}
+
+".labels": {
+	width: Ti.UI.FILL,
+	font: {
+		fontSize: 28,
+		fontWeight: 'bold'
+	}
+}
