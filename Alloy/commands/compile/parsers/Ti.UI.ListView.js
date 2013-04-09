@@ -49,8 +49,10 @@ function parse(node, state, args) {
 				if (!fullname) {
 					U.dieWithNode(template, 'Child element must be one of the following: [Alloy.Abstract.ItemTemplate]');
 				} else if (fullname === 'Alloy.Abstract.ItemTemplate') {
-					templateObject = CU.generateUniqueId();
-					code += 'var ' + templateObject + '={};';
+					if (!templateObject) {
+						templateObject = CU.generateUniqueId();
+						code += 'var ' + templateObject + '={};';
+					}
 					var name = template.getAttribute('name');
 					if (!name) {
 						U.dieWithNode(template, 'Alloy.Abstract.ItemTemplate must have a "name" attribute');
