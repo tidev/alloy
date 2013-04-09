@@ -774,11 +774,31 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		});
 	});
 
-	function processStyle(style, fromArray) {
-		style = fromArray ? {0:style} : style;
+	function processStyle(style, opts) {
+		opts || (opts = {});
+		style = opts.fromArray ? {0:style} : style;
+		var groups = {};
+
+		// need to add "properties" and bindIds for ListItems
+		if (theState.isListItem && opts.firstOrder && !opts.fromArray) {
+			for (var sn in style) {
+				var value = style[sn];
+				var prefixes = sn.split(':');
+				if (prefixes.length > 1) {
+					var bindId = prefixes[0];
+					groups[bindId] || (groups[bindId] = {});
+					groups[bindId][prefixes.slice(1).join(':')] = value;
+				} else {
+					groups.properties || (groups.properties = {});
+					groups.properties[sn] = value;
+				}
+			}
+			style = groups;
+		}
+
 		for (var sn in style) {
 			var value = style[sn],
-				prefix = fromArray ? '' : sn + ':';
+				prefix = opts.fromArray ? '' : sn + ':';
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
@@ -790,7 +810,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
 				_.each(value, function(v) {
-		 			processStyle(v, true);
+		 			processStyle(v, {fromArray:true});
 		 		});
 				code += '],';
 			} else if (_.isObject(value)) {
@@ -816,11 +836,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object
-			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style) + '} : {}';
+			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style, {firstOrder:true}) + '} : {}';
 		} else {
 			// just return the object
 			code += '{';
-			processStyle(styleCollection[0].style);
+			processStyle(styleCollection[0].style, {firstOrder:true});
 			code += '}';
 		}
 	} else if (styleCollection.length > 1) {
@@ -832,7 +852,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				code += 'if (' + styleCollection[i].condition + ') ';
 			} 
 			code += '_.extend(o, {';
-			processStyle(styleCollection[i].style);
+			processStyle(styleCollection[i].style, {firstOrder:true});
 			code += '});\n';
 		}
 		code += 'return o;\n'
