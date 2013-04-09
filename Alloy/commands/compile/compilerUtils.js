@@ -778,8 +778,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		style = fromArray ? {0:style} : style;
 		for (var sn in style) {
 			var value = style[sn],
-				prefix = fromArray ? '' : sn + ':',
-				actualValue;
+				prefix = fromArray ? '' : sn + ':';
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
