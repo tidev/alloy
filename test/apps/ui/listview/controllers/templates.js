@@ -1,8 +1,8 @@
 var moreItems = [];
 var lastPos = 'left';
-for (var i = 0; i < 255; i++) {
+for (var i = 0; i < 1023; i++) {
 	// gradual increase to red
-	var hex = i.toString(16);
+	var hex = (i%256).toString(16);
 	if (hex.length < 2) {
 		hex = '0' + hex;
 	}
