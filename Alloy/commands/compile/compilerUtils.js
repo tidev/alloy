@@ -789,8 +789,13 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					groups[bindId] || (groups[bindId] = {});
 					groups[bindId][prefixes.slice(1).join(':')] = value;
 				} else {
-					groups.properties || (groups.properties = {});
-					groups.properties[sn] = value;
+					// allow template to be specified
+					if (sn === 'template') {
+						groups.template = value;
+					} else {
+						groups.properties || (groups.properties = {});
+						groups.properties[sn] = value;
+					}
 				}
 			}
 			style = groups;
