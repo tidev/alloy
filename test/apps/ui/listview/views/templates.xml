@@ -13,7 +13,8 @@
 				</Templates>
 
 				<ListSection>
-					<!-- <ListItem image:image="appc.png" label:text="this is some text"/>
+					<ListItem id="li" image:image="/images/appc.png" label:text="this is some text"/>
+					<!--
 					<ListItem image:image="appc.png" label:text="here we go again"/>
 					<ListItem template="template2" label:text="here is template2" label:textAlign="center"/> -->
 				</ListSection>
