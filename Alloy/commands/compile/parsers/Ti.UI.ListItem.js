@@ -16,15 +16,15 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = {"
-	code += "properties:" + CU.generateStyleParams(
+	code += (state.local ? 'var ' : '') + args.symbol + " = "
+	code += CU.generateStyleParams(
 		state.styles,
 		args.classes,
 		args.id,
 		CU.getNodeFullname(node),
 		_.defaults(state.extraStyle || {}, args.createArgs || {}),
-		state
-	) + '};';
+		_.extend(state, { isListItem: true })
+	) + ';';
 
 	// Update the parsing state
 	return {
