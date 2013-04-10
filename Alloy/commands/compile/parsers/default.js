@@ -65,19 +65,6 @@ function parse(node, state, args) {
 			argsObject.childTemplates = childTemplates;
 		}
 
-		// process children and add them to childTemplates
-		// var children = U.XML.getElementsFromNodes(node);
-		// if (children.length > 0) {
-		// 	argsObject.childTemplates = '[' +
-		// 	_.reduce(children, function(memo,child) {
-		// 		return memo + CU.generateNodeExtended(child, state, {
-		// 			parent: {},
-		// 			local: true,
-		// 			isViewTemplate: true
-		// 		});
-		// 	}, '') + ']';
-		// }
-
 		// add the additional arguments to the code
 		code += _.reduce(argsObject, function(memo,v,k) {
 			return memo + k + ':' + v + ',';
