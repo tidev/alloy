@@ -1,0 +1,35 @@
+"#leftImage": {
+	left: 10,
+	width: 60,
+	height: 60
+}
+
+"#rightImage": {
+	right: 10,
+	width: 50,
+	height: 50
+}
+
+"#title": {
+	left: 80,
+	right: 70,
+	top: 5,
+	height: 30,
+	color: '#000',
+	font: {
+		fontSize: 16,
+		fontWeight: 'bold'
+	}
+}
+
+"#subtitle": {
+	left: 80,
+	right: 70,
+	top: 40,
+	height: 20,
+	color: '#222',
+	font: {
+		fontSize: 12,
+		fontWeight: 'normal'
+	}
+}
