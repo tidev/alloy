@@ -85,18 +85,13 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
-	// add model to createArgs if binding
-	if (state.model) {
-		var modelObj = {};
-		modelObj[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model;
-		args.createArgs = _.extend(args.createArgs || {}, modelObj);
-	}
+	// add extra createArgs if present
+	var xArgs = {};
 
-	if (state.parent && state.parent.symbol) {
-		var parentObj = {};
-		parentObj[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--'+state.parent.symbol;
-		args.createArgs = _.extend(args.createArgs || {}, parentObj);
-	}	
+	state.model && (xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model);
+	state.parent && state.parent.symbol && 
+		(xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--'+state.parent.symbol);
+	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
