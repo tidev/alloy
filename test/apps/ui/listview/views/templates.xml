@@ -15,6 +15,7 @@
 
 				<ListSection>
 					<ListItem image:image="/images/appc.png" label:text="this is some text"/>
+					<Require src="listItem"/>
 					<ListItem template="requiredTemplate" leftImage:image="/images/alien.png" rightImage:image="/images/up.png" title:text="Alien" subtitle:text="In space, no one can hear you scream"/>
 				</ListSection>
 			</ListView>
