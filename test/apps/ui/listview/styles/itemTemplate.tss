@@ -1,32 +1,32 @@
 "#leftImage": {
-	left: 10,
+	left: 0,
 	width: 60,
 	height: 60
 }
 
 "#rightImage": {
-	right: 10,
+	right: 5,
 	width: 50,
 	height: 50
 }
 
 "#title": {
-	left: 80,
-	right: 70,
+	left: 60,
+	right: 60,
 	top: 5,
 	height: 30,
 	color: '#000',
 	font: {
-		fontSize: 16,
+		fontSize: 18,
 		fontWeight: 'bold'
 	}
 }
 
 "#subtitle": {
-	left: 80,
-	right: 70,
-	top: 40,
-	height: 20,
+	left: 70,
+	right: 60,
+	top: 35,
+	height: Ti.UI.SIZE,
 	color: '#222',
 	font: {
 		fontSize: 12,
