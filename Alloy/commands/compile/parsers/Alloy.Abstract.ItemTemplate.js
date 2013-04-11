@@ -3,12 +3,21 @@ var CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._;
 
+var NAME_ERROR = 'Alloy.Abstract.ItemTemplate must have a "name" attribute';
+
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
 	var code = '';
+
+	// make sure we have a name
+	var name = node.getAttribute('name');
+	if (!name) {
+		U.dieWithNode(node, NAME_ERROR);
+	}
+	node.removeAttribute('name');
 
 	// make symbol a local variable if necessary
 	if (state.local) {
@@ -62,13 +71,12 @@ function parse(node, state, args) {
 	}, '');
 	code += '};';
 
+	code += (state.templateObject || CONST.ITEM_TEMPLATE_VAR); 
+	code +=	'["' + name + '"]=' + args.symbol + ';';
+
 	// Update the parsing state
 	return {
 		parent: {},
-		item: {
-			node: node,
-			symbol: args.symbol
-		}, 
 		local: state.local || false,
 		model: state.model || undefined,
 		condition: state.condition || undefined,

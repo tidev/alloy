@@ -53,17 +53,10 @@ function parse(node, state, args) {
 						templateObject = CU.generateUniqueId();
 						code += 'var ' + templateObject + '={};';
 					}
-					var name = template.getAttribute('name');
-					if (!name) {
-						U.dieWithNode(template, 'Alloy.Abstract.ItemTemplate must have a "name" attribute');
-					}
-					template.removeAttribute('name');
 					code += CU.generateNodeExtended(template, state, {
 						parent: {},
 						local: true,
-						post: function(node, state, args) {
-							return templateObject + '["' + name + '"]=' + state.item.symbol + ';';
-						}
+						templateObject: templateObject
 					});
 				}
 			});
