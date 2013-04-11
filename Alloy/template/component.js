@@ -10,6 +10,7 @@ function Controller() {
 	
 	var <%= parentVariable %> = arguments[0] ? arguments[0]['<%= parentVariable %>'] : null;
 	var <%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
+	var <%= itemTemplateVariable %> = arguments[0] ? arguments[0]['<%= itemTemplateVariable %>'] : null;
 	var $ = this;
 	var exports = {};
 	var __defers = {};
