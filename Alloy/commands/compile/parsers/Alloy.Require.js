@@ -91,6 +91,7 @@ function parse(node, state, args) {
 	state.model && (xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model);
 	state.parent && state.parent.symbol && 
 		(xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--'+state.parent.symbol);
+	state.templateObject && (xArgs[CONST.ITEM_TEMPLATE_VAR] = '__ALLOY_EXPR__--'+state.templateObject);
 	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
@@ -102,7 +103,7 @@ function parse(node, state, args) {
 		args.createArgs,
 		state
 	) + ");\n";
-	if (args.parent.symbol) {
+	if (args.parent.symbol && !state.templateObject) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	}
 
