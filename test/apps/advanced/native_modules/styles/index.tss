@@ -1,0 +1,16 @@
+"#index": {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#paint": {
+	top:0, 
+	right:0, 
+	bottom:0, 
+	left:0,
+    strokeColor:'#0f0', 
+    strokeAlpha:255, 
+    strokeWidth:10,
+    eraseMode:false
+}

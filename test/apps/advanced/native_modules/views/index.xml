@@ -1,0 +1,12 @@
+<Alloy>
+	<Window>
+		<!-- 
+			"module" your UI module's ID.
+			
+			"method" is the create method use to create an
+			instance of your UI module. "createView" will be 
+			used if none is specified
+		--> 
+		<Module id="paint" module="ti.paint" method="createPaintView"/>
+	</Window>
+</Alloy>
