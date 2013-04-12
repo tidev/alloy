@@ -102,24 +102,27 @@ exports.init = function (logger, config, cli, appc) {
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 				
 				var child = spawn(cmd.shift(), cmd);
-					// this regex is used to strip [INFO] and friends from alloy's output and re-log it using our logger
-					re = new RegExp('(\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(\u001b\\[\\d+m)?(.*)', 'i');
-				
+					
+				function checkLine(line) {
+					var re = new RegExp('(?:\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(?:\u001b\\[\\d+m)?(.*)', 'i');
+					if (line) {
+						var m = line.match(re);
+						if (m) {
+							logger[m[1].toLowerCase()](m[2].trim());
+						} else {
+							logger.debug(line);
+						}
+					}
+				}
+
 				child.stdout.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
-						if (line) {
-							var m = line.match(re);
-							if (m) {
-								logger[m[2].toLowerCase()](m[4].trim());
-							} else {
-								logger.debug(line);
-							}
-						}
+						checkLine(line);
 					});
 				});
 				child.stderr.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
-						line && logger.error(line);
+						checkLine(line);
 					});
 				});
 				child.on('exit', function (code) {
