@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 2.0.1
+apiversion: 2
+description: Provides a paint surface user interface view.
+author: Fred Spencer
+license: Appcelerator Commercial License
+copyright: Copyright (c) 2010-2011 by Appcelerator, Inc.
+
+
+# these should not be edited
+name: paint
+moduleid: ti.paint
+guid: de06ebe1-4ab9-44da-85e4-7409b24190eb
+platform: android
+minsdk: 1.6.0

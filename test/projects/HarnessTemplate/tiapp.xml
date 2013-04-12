@@ -45,5 +45,8 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <modules/>
+    <modules>
+        <module version="2.0.1" platform="android">ti.paint</module>
+        <module version="1.2" platform="iphone">ti.paint</module>
+    </modules>
 </ti:app>
