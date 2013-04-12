@@ -72,6 +72,14 @@ function parse(node, state, args) {
 
 		code += '};';
 	} else {
+		var module = node.getAttribute('module');
+		if (module) {
+			createFunc = node.getAttribute('method') || 'createView';
+			args.ns = 'require("'+module+'")';
+			delete args.createArgs['module'];
+			delete args.createArgs['method'];
+		}
+
 		code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
 		code += CU.generateStyleParams(
 			state.styles,
