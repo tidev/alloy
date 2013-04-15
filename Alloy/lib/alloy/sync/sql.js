@@ -385,6 +385,12 @@ function installDatabase(config) {
 	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
 	var db = Ti.Database.install(dbFile, dbName);
 
+	// set remoteBackup status for iOS
+	if (config.adapter.remoteBackup === 'off' && (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad')) {
+		Ti.API.debug('iCloud "do not backup" flag set for database "'+ dbFile + '"');
+		db.file.setRemoteBackup(false);
+	}
+
 	// compose config.columns from table definition in database
 	var rs = db.execute('pragma table_info("' + table + '");');
 	var columns = {};
