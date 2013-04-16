@@ -780,7 +780,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		var groups = {};
 
 		// need to add "properties" and bindIds for ListItems
-		if (theState.isListItem && opts.firstOrder && !opts.fromArray) {
+		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
 			for (var sn in style) {
 				var value = style[sn];
 				var prefixes = sn.split(':');
