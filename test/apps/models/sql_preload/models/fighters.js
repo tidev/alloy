@@ -25,9 +25,8 @@ exports.definition = {
 			// remoteBackup tells Alloy to set the value of the property
 			// Ti.Filesystem.File.remoteBackup. This setting tells iOS
 			// whether or not to allow your database to be backed up to
-			// iCloud or in iTunes backups. This setting is optional and has 
-			// one value "off" otherwise it defaults to "on".
-			"remoteBackup": "off"
+			// iCloud or in iTunes backups.
+			"remoteBackup": false
 		}
 	}
 }
