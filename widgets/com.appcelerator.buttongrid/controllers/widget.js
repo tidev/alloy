@@ -152,7 +152,17 @@ exports.init = function ButtonGridInit(args) {
         // Create and add the button to the scroll view.
         $._buttons[index].b = Ti.UI.createButton(buttonProps);
         if (button.click) {
-            $._buttons[index].b.addEventListener('click', button.click);
+            $._buttons[index].b.addEventListener('click', function (e) {
+                // Fixes a bug due to removing the title in iOS because
+                // the text field cannot handle Ti.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM
+                // We still want this accessible to the click function, though.
+                var source = _.clone(e.source);
+                var temp = e.source;
+                source.title = e.source.title || e.source._title;
+                e.source = source;
+                button.click(e);
+                e.source = temp;
+            });
         }
         $.scrollview.add($._buttons[index].b);
             
@@ -170,6 +180,10 @@ exports.init = function ButtonGridInit(args) {
                 touchEnabled: false
             });
             $._buttons[index].b.add(theLabel);  
+            // Fixes a bug due to removing the title in iOS because
+            // the text field cannot handle Ti.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM
+            // We still want this accessible to the click function, though.
+            $._buttons[index].b._title = $._buttons[index].b.title;
             $._buttons[index].b.title = ''; // Override the default title, which doesn't work well with the icon.                
         }
     });
