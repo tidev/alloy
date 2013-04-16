@@ -386,7 +386,7 @@ function installDatabase(config) {
 	var db = Ti.Database.install(dbFile, dbName);
 
 	// set remoteBackup status for iOS
-	if (config.adapter.remoteBackup === 'off' && (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad')) {
+	if (config.adapter.remoteBackup === false && OS_IOS) {
 		Ti.API.debug('iCloud "do not backup" flag set for database "'+ dbFile + '"');
 		db.file.setRemoteBackup(false);
 	}
