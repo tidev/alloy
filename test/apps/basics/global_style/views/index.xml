@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Require src="item"/>
+	</Window>
+</Alloy>

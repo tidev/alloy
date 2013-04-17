@@ -1,0 +1,12 @@
+".container": {
+	backgroundColor: "#00f"
+}
+
+"Label": {
+	color: "#f00",
+	font: {
+		fontSize: 24,
+		fontWeight: 'bold'
+	},
+	textAlign: 'center'
+}
