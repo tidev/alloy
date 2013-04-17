@@ -327,6 +327,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			return;
 		}
 
+		// load global style, if present
+		state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : {};
+
 		// Load the style and update the state
 		if (files.STYLE) {
 			var theStyles = _.isArray(files.STYLE) ? files.STYLE : [{file:files.STYLE}];
@@ -340,7 +343,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 					});
 				}
 			});
-		}
+		} 
 
 		if (theme && !manifest) {
 			var themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
@@ -614,16 +617,21 @@ function loadGlobalStyles(appPath, theme) {
 	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
 	
 
-	compileConfig.globalStyle = {};
+	compileConfig.globalStyle = [];
 	if (path.existsSync(appGlobal)) {
 		logger.info('[app.tss] global style processing...');
-		compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(appGlobal));
+		compileConfig.globalStyle = CU.loadAndSortStyle(appGlobal, undefined, {
+			existingStyle: compileConfig.globalStyle
+		});
 	} 
 	if (theme) {
 		var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
 	 	if (path.existsSync(themeGlobal)) {
 			logger.info('[app.tss (theme:' + theme + ')] global style processing...');
-			compileConfig.globalStyle = _.extend(compileConfig.globalStyle, CU.loadStyle(themeGlobal));
+			compileConfig.globalStyle = CU.loadAndSortStyle(themeGlobal, undefined, {
+				existingStyle: compileConfig.globalStyle,
+				theme: true
+			});
 		}
 	} 	
 }

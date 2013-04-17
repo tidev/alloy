@@ -1,0 +1,5 @@
+<Alloy>
+	<View class="container">
+		<Label>should be bold, red text on blue background</Label>
+	</View>
+</Alloy>

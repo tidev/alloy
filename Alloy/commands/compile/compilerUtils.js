@@ -875,9 +875,6 @@ function sortStyles(componentStyle, opts) {
 
 	// add global style to processing, if present
 	var styleList = [];
-	if (compilerConfig && _.isObject(compilerConfig.globalStyle) && !_.isEmpty(compilerConfig.globalStyle)) { 
-		styleList.push(compilerConfig.globalStyle);
-	}
 	if (_.isObject(componentStyle) && !_.isEmpty(componentStyle)) {
 		styleList.push(componentStyle);
 	}
