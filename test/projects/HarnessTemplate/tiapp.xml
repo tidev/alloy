@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">true</target>
     </deployment-targets>
-    <sdk-version>3.1.0</sdk-version>
+    <sdk-version>3.1.0.GA</sdk-version>
     <id>com.appcelerator.Harness</id>
     <name>Harness</name>
     <version>1.0</version>
