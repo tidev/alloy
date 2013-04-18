@@ -5,12 +5,7 @@ var fs = require('fs'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._;
 	
-var PLATFORMS = process.platform === 'darwin' ? 
-		CONST.PLATFORMS :
-		_.reject(CONST.PLATFORMS, function(p) { return p === 'ios'; }), 
-		//['android','ios','mobileweb'] : ['android','mobileweb'],
-	TIMEOUT_COMPILE = 10000,
-	TIMEOUT_DEFAULT = 750;
+var TIMEOUT_COMPILE = 10000;
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
@@ -24,13 +19,13 @@ describe('alloy compile', function() {
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
 		var indexXml = path.join(paths.apps,file,'views','index.xml');
 		if (path.existsSync(indexXml)) {
-			_.each(PLATFORMS, function(platform) {
+			it('preparing test app "' + file + '"', function() {
+				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1');
+			});
+
+			_.each(CONST.PLATFORMS, function(platform) {
 				it('compiles "' + file + '" test app for platform [' + platform + ']', function() {
-					var cmds = [
-						'jake app:setup dir=' + file + ' quiet=1',
-						'alloy compile ' + paths.harness + ' --config platform=' + platform
-					];
-					TU.asyncExecTest(cmds.join(' && '), {
+					TU.asyncExecTest('alloy compile ' + paths.harness + ' --config platform=' + platform, {
 						test: function() {
 							var o = this.output;
 
