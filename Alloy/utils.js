@@ -562,6 +562,12 @@ exports.dieWithNode = function(node, msg) {
 	exports.die(msg);
 }
 
+exports.changeTime = function(file) {
+	if (!fs.existsSync(file)) { return -1; }
+	var stat = fs.statSync(file);
+	return Math.max(stat.mtime.getTime(),stat.ctime.getTime());
+}
+
 exports.installPlugin = function(alloyPath, projectPath) {
 	var id = 'ti.alloy';
 	var plugins = {
