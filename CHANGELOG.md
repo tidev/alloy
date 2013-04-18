@@ -4,6 +4,13 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+## 1.1.1 (19 April 2013)
+
+Just 2 quick fixes to reduce the size of the Alloy distribution and fix one regression.
+
+* [ALOY-625](https://jira.appcelerator.org/browse/ALOY-625). app.tss not being applied to views that don't have view-specific styles. 
+* [ALOY-626](https://jira.appcelerator.org/browse/ALOY-626). Remove unneeded resources from samples/mapping.
+
 ## 1.1.0 (April 2013)
 
   * [Full list of Issues that were addressed in Release 1.1.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15057)
