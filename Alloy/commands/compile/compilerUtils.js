@@ -527,13 +527,16 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 };
 
 exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
-	var cf = path.join(configDir,'config.'+CONST.FILE_EXT.CONFIG);
 	var o = {};
-
+	var appCfg = path.join(configDir,'config.'+CONST.FILE_EXT.CONFIG);
+	var resourcesCfg = path.join(resourceAlloyDir,'CFG.js');
+	var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
+	
 	// parse config.json, if it exists
-	if (path.existsSync(cf)) {
+	if (path.existsSync(appCfg)) {
+		logger.info('Processing config.json...')
 		try {
-			var jf = fs.readFileSync(cf, 'utf8');
+			var jf = fs.readFileSync(appCfg, 'utf8');
 			var j = jsonlint.parse(jf);
 		} catch (e) {
 			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
@@ -550,15 +553,23 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
-	} else {
-		logger.warn('No "app/config.' + CONST.FILE_EXT.CONFIG + '" file found');
+
+		// app/config.json has not been modified since CFG.js was created
+		if (U.changeTime(appCfg) < U.changeTime(resourcesCfg)) {
+			return o;
+		} 
+	} else if (fs.existsSync(resourcesCfg) && 
+			   fs.readFileSync(resourcesCfg,'utf8') === defaultCfg) {
+		return o;
 	}
 
 	// write out the config runtime module
 	wrench.mkdirSyncRecursive(resourceAlloyDir, 0777);
+
+	logger.info('Writing "Resources/alloy/CFG.js"...');
 	fs.writeFileSync(
-		path.join(resourceAlloyDir,'CFG.js'),
-		"module.exports = " + JSON.stringify(o) + ";\n"
+		resourcesCfg,
+		"module.exports=" + JSON.stringify(o) + ";"
 	);
 
 	return o;
