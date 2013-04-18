@@ -124,7 +124,7 @@ module.exports = function(args, program) {
 	buildPlatform = compileConfig.alloyConfig.platform;
 	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
-	logger.debug('theme = ' + theme);
+	theme && logger.debug('theme = ' + theme);
 //	BENCHMARK('generate Alloy configurations');
 
 	// check theme for assets
