@@ -514,7 +514,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
 	
-	var config = exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
+	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 
 	// update implicit namespaces, if possible
@@ -526,18 +526,26 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	return obj;
 };
 
-exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
+exports.generateConfig = function(obj) { 
 	var o = {};
-	var appCfg = path.join(configDir,'config.'+CONST.FILE_EXT.CONFIG);
-	var resourcesCfg = path.join(resourceAlloyDir,'CFG.js');
+	var alloyConfig = obj.alloyConfig;
+	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
 	var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
+
+	// get the app and resources locations
+	var appCfg = path.join(obj.dir.home,'config.'+CONST.FILE_EXT.CONFIG);
+	var resourcesBase = (function() {
+		var base = obj.dir.resources;
+		platform && (base = path.join(base,platform));
+		return path.join(base,'alloy');
+	})();
+	var resourcesCfg = path.join(resourcesBase,'CFG.js');
 	
 	// parse config.json, if it exists
 	if (path.existsSync(appCfg)) {
 		logger.info('Processing config.json...')
 		try {
-			var jf = fs.readFileSync(appCfg, 'utf8');
-			var j = jsonlint.parse(jf);
+			var j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
 		} catch (e) {
 			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 		}
@@ -564,9 +572,9 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 	}
 
 	// write out the config runtime module
-	wrench.mkdirSyncRecursive(resourceAlloyDir, 0777);
+	wrench.mkdirSyncRecursive(resourcesBase, 0777);
 
-	logger.info('Writing "Resources/alloy/CFG.js"...');
+	logger.info('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
 		resourcesCfg,
 		"module.exports=" + JSON.stringify(o) + ";"
