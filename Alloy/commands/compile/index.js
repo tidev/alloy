@@ -654,6 +654,7 @@ function optimizeCompiledCode() {
 	function getJsFiles() {
 		var exceptions = [
 			'app.js',
+			'alloy/CFG.js',
 			'alloy/controllers/',
 			'alloy/backbone.js',
 			'alloy/underscore.js'
