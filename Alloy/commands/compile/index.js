@@ -108,7 +108,6 @@ module.exports = function(args, program) {
 		});
 	}
 	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
-	alloyConfig.beautify = alloyConfig.beautify || alloyConfig.deploytype === 'development';
 
 	logger.debug('----- CONFIGURATION -----');
 	_.each(alloyConfig, function(v,k) {
