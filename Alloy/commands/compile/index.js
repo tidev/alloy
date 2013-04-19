@@ -54,7 +54,6 @@ module.exports = function(args, program) {
 		process.exit(1);
 	}
 
-//	BENCHMARK('getAndValidateProjectPaths');
 	var alloyConfig = {},
 		compilerMakeFile;
 
@@ -90,7 +89,6 @@ module.exports = function(args, program) {
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
-//	BENCHMARK('install Alloy plugins/hooks');
 
 	// Copy in all assets, libs, and Alloy runtime files
 	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
@@ -100,7 +98,6 @@ module.exports = function(args, program) {
 	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
 	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
 	logger.debug('');
-//	BENCHMARK('Copy Alloy libs and assets into project');
 
 	// construct compiler config from command line config parameters
 	if (program.config && _.isString(program.config)) {
@@ -126,7 +123,6 @@ module.exports = function(args, program) {
 	theme = compileConfig.theme;
 	logger.debug('platform = ' + buildPlatform);
 	theme && logger.debug('theme = ' + theme);
-//	BENCHMARK('generate Alloy configurations');
 
 	// check theme for assets
 	if (theme) {
@@ -136,7 +132,6 @@ module.exports = function(args, program) {
 		}
 	}
 	logger.debug('');
-//	BENCHMARK('copy theme assets');
 
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
@@ -157,19 +152,16 @@ module.exports = function(args, program) {
 		compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
 		logger.debug('');
 	}
-//	BENCHMARK('process Alloy jmk file');
 
 	// TODO: https://jira.appcelerator.org/browse/ALOY-477
 	if (buildPlatform === 'android') {
 		U.tiapp.upStackSizeForRhino(paths.project);
 	}
-//	BENCHMARK('install android modules and tiapp fixes');
 
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
 	loadGlobalStyles(paths.app, theme);
-//	BENCHMARK('load global styles');
 	
 	// Create collection of all widget and app paths 
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
@@ -178,7 +170,6 @@ module.exports = function(args, program) {
 
 	// Process all models
 	var models = processModels(viewCollection);
-//	BENCHMARK('process models');
 
 	// Create a regex for determining which platform-specific
 	// folders should be used in the compile process
@@ -220,7 +211,6 @@ module.exports = function(args, program) {
 		});
 	});
 	logger.info('');
-//	BENCHMARK('process all controllers');
 
 	// generate app.js
 	logger.info('[app.js] Titanium entry point processing...');
@@ -240,19 +230,15 @@ module.exports = function(args, program) {
 	}, compileConfig);
 	logger.info('');
 	
-//	BENCHMARK('generate app.js');
-
 	// optimize code
 	logger.info('----- OPTIMIZING -----');
 	optimizeCompiledCode(alloyConfig, paths);
-//	BENCHMARK('optimize runtime code')
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
 	}
-//	BENCHMARK('post:compile');
-//
+
 	BENCHMARK('TOTAL', true);
 };
 
