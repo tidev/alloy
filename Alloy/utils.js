@@ -263,7 +263,10 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 }
 
-exports.deleteOrphanFiles = function(targetDir, srcDirs, exceptions) {
+exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
+	opts || (opts = {});
+	_.defaults(opts, {exceptions:[]});
+
 	var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
 
 	// skip if target or source is not defined
@@ -276,7 +279,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, exceptions) {
 	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
 		// skip the app.js and node acs files
 		if (file === 'app.js' || nodeAcsRegex.test(file)) { return; }
-		if (_.contains(exceptions, file)) { return; }
+		if (_.contains(opts.exceptions, file)) { return; }
 
 		// see if this target exists in any of the src dirs
 		var found = false;

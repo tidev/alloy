@@ -77,11 +77,13 @@ module.exports = function(args, program) {
 			path.join(paths.app,CONST.DIR.LIB),
 			path.join(paths.app,'vendor'),
 		],
-		[
-			path.join('alloy','CFG.js'),
-			path.join('alloy','widgets'),
-			path.join('alloy','models')
-		]
+		{
+			exceptions: [
+				path.join('alloy','CFG.js'),
+				path.join('alloy','widgets'),
+				path.join('alloy','models')
+			]
+		}
 	);
 	logger.trace(' ');
 
