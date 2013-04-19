@@ -87,11 +87,12 @@ module.exports = function(args, program) {
 	}
 
 	// create compile config from paths and various alloy config files
+	logger.debug('----- CONFIG.JSON -----');
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	
 	// identify current theme, if any
-	theme = compileConfig.theme;
-	theme && logger.debug('theme = ' + theme);
+	(theme = compileConfig.theme) && logger.debug('theme = ' + theme);
+	logger.debug('');
 
 	// wipe the controllers, models, and widgets
 	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');

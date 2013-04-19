@@ -543,7 +543,6 @@ exports.generateConfig = function(obj) {
 	
 	// parse config.json, if it exists
 	if (path.existsSync(appCfg)) {
-		logger.info('Processing config.json...')
 		try {
 			var j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
 		} catch (e) {
@@ -552,6 +551,7 @@ exports.generateConfig = function(obj) {
 
 		_.each(j, function(v,k) {
 			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
+				logger.debug(k + ' = ' + JSON.stringify(v));
 				o[k] = v;
 			} 
 		});
@@ -574,7 +574,7 @@ exports.generateConfig = function(obj) {
 	// write out the config runtime module
 	wrench.mkdirSyncRecursive(resourcesBase, 0777);
 
-	logger.info('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
+	logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
 		resourcesCfg,
 		"module.exports=" + JSON.stringify(o) + ";"
