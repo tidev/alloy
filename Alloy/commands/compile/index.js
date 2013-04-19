@@ -38,7 +38,11 @@ function tiSdkVersionNumber(tiVersion) {
 //////////////////////////////////////
 module.exports = function(args, program) {
 	BENCHMARK();
-	var paths = U.getAndValidateProjectPaths(program.outputPath || args[0] || process.cwd());
+	var alloyConfig = {},
+		compilerMakeFile,
+		paths = U.getAndValidateProjectPaths(
+			program.outputPath || args[0] || process.cwd()
+		);
 
 	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
 	var tiVersion = U.tiapp.getTitaniumSdkVersion(U.tiapp.parse(paths.project));
@@ -54,9 +58,42 @@ module.exports = function(args, program) {
 		process.exit(1);
 	}
 
-	var alloyConfig = {},
-		compilerMakeFile;
+	// construct compiler config from command line config parameters
+	// and print the configuration data
+	logger.debug('----- CONFIGURATION -----');
+	if (program.config && _.isString(program.config)) {
+		logger.debug('raw config = "' + program.config + '"');
+		_.each(program.config.split(','), function(v) {
+			var parts = v.split('=');
+			alloyConfig[parts[0]] = parts[1];
+			logger.debug(parts[0] + ' = ' + parts[1]);
+		});
+	}
+	if (!alloyConfig.deploytype) {
+		alloyConfig.deploytype = 'development';
+		logger.debug('deploytype = ' + alloyConfig.deploytype);
+	}
+	logger.debug('project path = ' + paths.project);
+	logger.debug('app path = ' + paths.app);
+	logger.debug('');
 
+	// make sure a platform was specified
+	buildPlatform = alloyConfig.platform;
+	if (!buildPlatform) {
+		U.die([
+			'You must define a target platform for the alloy compile command',
+			'  Ex. "alloy compile --config platform=ios"'  
+		]);
+	}
+
+	// create compile config from paths and various alloy config files
+	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	
+	// identify current theme, if any
+	theme = compileConfig.theme;
+	theme && logger.debug('theme = ' + theme);
+
+	// wipe the controllers, models, and widgets
 	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
 	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
 
@@ -98,31 +135,6 @@ module.exports = function(args, program) {
 	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
 	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
 	logger.debug('');
-
-	// construct compiler config from command line config parameters
-	if (program.config && _.isString(program.config)) {
-		_.each(program.config.split(','), function(v) {
-			var parts = v.split('=');
-			alloyConfig[parts[0]] = parts[1];
-		});
-	}
-	alloyConfig.deploytype = alloyConfig.deploytype || 'development';
-
-	logger.debug('----- CONFIGURATION -----');
-	_.each(alloyConfig, function(v,k) {
-		if (k) {
-			logger.debug(k + ' = ' + v);
-		}
-	});
-	logger.debug('project path = ' + paths.project);
-	logger.debug('app path = ' + paths.app);
-
-	// create compile config from paths and various alloy config files
-	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-	buildPlatform = compileConfig.alloyConfig.platform;
-	theme = compileConfig.theme;
-	logger.debug('platform = ' + buildPlatform);
-	theme && logger.debug('theme = ' + theme);
 
 	// check theme for assets
 	if (theme) {
