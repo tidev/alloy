@@ -12,6 +12,8 @@ var path = require('path'),
 	CONST = require('./common/constants')
 ;
 
+var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
+
 exports.XML = {
 	getNodeText: function(node) {
 		if (!node) { return ''; }
@@ -267,8 +269,6 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 	opts || (opts = {});
 	_.defaults(opts, {exceptions:[]});
 
-	var nodeAcsRegex = /^ti\.cloud\..+?\.js$/;
-
 	// skip if target or source is not defined
 	if (!fs.existsSync(targetDir) || !srcDirs) {
 		return;
@@ -278,7 +278,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 	// check all target files
 	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
 		// skip the app.js and node acs files
-		if (file === 'app.js' || nodeAcsRegex.test(file)) { return; }
+		if (file === 'app.js' || NODE_ACS_REGEX.test(file)) { return; }
 		if (_.contains(opts.exceptions, file)) { return; }
 
 		// see if this target exists in any of the src dirs
