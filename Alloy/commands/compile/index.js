@@ -86,15 +86,8 @@ module.exports = function(args, program) {
 		]);
 	}
 
-	// create compile config from paths and various alloy config files
-	logger.debug('----- CONFIG.JSON -----');
-	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-	
-	// identify current theme, if any
-	(theme = compileConfig.theme) && logger.debug('theme = ' + theme);
-	logger.debug('');
-
 	// wipe the controllers, models, and widgets
+	logger.debug('----- CLEANING RESOURCES -----');
 	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
 	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
 
@@ -122,7 +115,14 @@ module.exports = function(args, program) {
 			]
 		}
 	);
-	logger.trace(' ');
+
+	// create compile config from paths and various alloy config files
+	logger.debug('----- CONFIG.JSON -----');
+	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	
+	// identify current theme, if any
+	(theme = compileConfig.theme) && logger.debug('theme = ' + theme);
+	logger.debug('');
 
 	// create generated controllers folder in resources 
 	logger.debug('----- BASE RUNTIME FILES -----');
