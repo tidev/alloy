@@ -267,7 +267,13 @@ exports.createErrorOutput = function(msg, e) {
 
 exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 	opts || (opts = {});
-	_.defaults(opts, {exceptions:[]});
+
+	var exceptions = [];
+	opts.exceptions && _.each(opts.exceptions, function(ex) {
+		exceptions.push(ex);
+		exceptions.push(opts.platform + '/' + ex);
+	});
+	console.log(exceptions);
 
 	// skip if target or source is not defined
 	if (!fs.existsSync(targetDir) || !srcDirs) {
@@ -279,7 +285,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
 		// skip the app.js and node acs files
 		if (file === 'app.js' || NODE_ACS_REGEX.test(file)) { return; }
-		if (_.contains(opts.exceptions, file)) { return; }
+		if (_.contains(exceptions, file)) { return; }
 
 		// see if this target exists in any of the src dirs
 		var found = false;

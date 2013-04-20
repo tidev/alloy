@@ -109,10 +109,14 @@ module.exports = function(args, program) {
 		],
 		{
 			exceptions: [
+				// still need to check for builtins
+				path.join('alloy'),
 				path.join('alloy','CFG.js'),
+				path.join('alloy','controllers'),
 				path.join('alloy','widgets'),
 				path.join('alloy','models')
-			]
+			],
+			platform: require('../../../platforms/'+buildPlatform+'/index').titaniumFolder
 		}
 	);
 
