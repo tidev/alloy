@@ -1,5 +1,0 @@
-<Alloy>
-	<Window>
-		<Button id="b" class="button" onClick="showAlert">Hello, World!</Button>
-	</Window>
-</Alloy>

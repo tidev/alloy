@@ -1,0 +1,9 @@
+"Window": {
+	backgroundColor: '#fff'
+}
+
+".button" : {
+	width: '50%',
+	height: Ti.UI.SIZE,
+	randomProp: 'OK'
+}
