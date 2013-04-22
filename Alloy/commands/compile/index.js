@@ -1,10 +1,7 @@
 var path = require('path'),	
-	colors = require('colors'),
 	fs = require('fs'),
 	wrench = require('wrench'),
-	util = require('util'),
 	vm = require('vm'),
-	jsonlint = require('jsonlint'),
 	uglifyjs = require('uglify-js'),
 	sourceMapper = require('./sourceMapper'),
 	_ = require("../../lib/alloy/underscore")._,
@@ -18,8 +15,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
-	buildPlatform,
 	compileConfig = {},
+	buildPlatform,
 	theme;
 
 var times = {
@@ -163,7 +160,7 @@ module.exports = function(args, program) {
 			compilerMakeFile.isActive = true;
 		} catch(e) {
 			logger.error(e.stack);
-			U.die('Project build at "' + alloyJMK.yellow + '" generated an error during load.');
+			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
 		}
 
 		compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
@@ -566,7 +563,7 @@ function findModelMigrations(name, inDir) {
 						"})";
 			codes.push(code);
 		});
-		logger.info("Found " + codes.length + " migrations for model: "+name.yellow);
+		logger.info("Found " + codes.length + " migrations for model: " + name);
 		return codes;
 	} catch(E) {
 		return [];
