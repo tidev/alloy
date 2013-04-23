@@ -1,3 +1,5 @@
+var DATA_ERROR = 'No corresponding model found for DashboardItem';
+
 var icons = Alloy.Collections.icons;
 var isEditable = false;
 
@@ -24,7 +26,7 @@ function resetBadge(e) {
 	// 	model.set('badge', 0);
 	// 	model.save();
 	// } else {
-	// 	TI.API.error('No corresponding model found for DashboardItem in resetBadge()');
+	// 	TI.API.error(DATA_ERROR);
 	// }
 	
 	e.item.badge = 0;
