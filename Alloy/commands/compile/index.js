@@ -287,6 +287,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
+	CU.styleOrderCounter = 1;
 	CU.currentManifest = manifest;
 
 	// create a list of file paths
@@ -328,7 +329,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// load global style, if present
-		state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : {};
+		state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : [];
 
 		// Load the style and update the state
 		if (files.STYLE) {

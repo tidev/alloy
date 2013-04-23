@@ -53,6 +53,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.styleOrderCounter = 1;
 exports.currentManifest;
 
 //////////////////////////////////////
@@ -859,7 +860,6 @@ function sortStyles(componentStyle, opts) {
 		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
 		extraStyle = extraStyle || {},
 		sortedStyles = [],
-		ctr = 1,
 		VALUES = {
 			ID:     100000,
 			CLASS:   10000,
@@ -883,7 +883,7 @@ function sortStyles(componentStyle, opts) {
 	_.each(styleList, function(style) {
 		for (var key in style) {
 			var obj = {};
-			var priority = ctr++ * VALUES.ORDER;
+			var priority = exports.styleOrderCounter++ * VALUES.ORDER;
 			var match = key.match(regex);
 			if (match === null) {
 				U.die('Invalid style specifier "' + key + '"');
