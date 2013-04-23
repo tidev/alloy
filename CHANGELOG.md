@@ -5,6 +5,17 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+## 1.1.2 (not yet released)
+
+### New Features
+
+* [ALOY-424](https://jira.appcelerator.org/browse/ALOY-424). Blackberry support
+
+### Bug Fixes
+
+* [ALOY-628](https://jira.appcelerator.org/browse/ALOY-628). Error loading platform-specific theme-based styles
+* [ALOY-635](https://jira.appcelerator.org/browse/ALOY-635). Styles not being sorted properly among global, controller, platform-specific, and theme
+
 ## 1.1.1 (19 April 2013)
 
 Just 2 quick fixes to reduce the size of the Alloy distribution and fix one regression.
