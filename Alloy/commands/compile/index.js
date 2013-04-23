@@ -366,7 +366,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
 				state.styles = CU.loadAndSortStyle(psThemeStylesFile, manifest, {
 					existingStyle: state.styles,
-					platform: style.platform,
+					platform: true,
 					theme: true
 				});
 			}
