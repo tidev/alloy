@@ -15,6 +15,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
+	styleOrderBase = 1,
 	compileConfig = {},
 	buildPlatform,
 	theme;
@@ -290,7 +291,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
-	CU.styleOrderCounter = 1;
+	CU.styleOrderCounter = styleOrderBase;
 	CU.currentManifest = manifest;
 
 	// create a list of file paths
@@ -620,7 +621,6 @@ function processModels(dirs) {
 function loadGlobalStyles(appPath, theme) {
 	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
 	
-
 	compileConfig.globalStyle = [];
 	if (path.existsSync(appGlobal)) {
 		logger.info('[app.tss] global style processing...');
@@ -638,6 +638,8 @@ function loadGlobalStyles(appPath, theme) {
 			});
 		}
 	} 	
+
+	styleOrderBase = ++CU.styleOrderCounter;
 }
 
 function optimizeCompiledCode() {
