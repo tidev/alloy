@@ -4,7 +4,7 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.1.2 (April 2013)
+## 1.1.2 (24 April 2013)
 
 ### New Features
 
@@ -13,6 +13,8 @@
 ### Bug Fixes
 
 * [ALOY-628](https://jira.appcelerator.org/browse/ALOY-628). Error loading platform-specific theme-based styles
+* [ALOY-632](https://jira.appcelerator.org/browse/ALOY-632). Builtins being copied into Resources directory more than once causing runtime errors
+* [ALOY-633](https://jira.appcelerator.org/browse/ALOY-633). Compiler directives (OS_IOS) undefined when referenced inside a widget
 * [ALOY-635](https://jira.appcelerator.org/browse/ALOY-635). Styles not being sorted properly among global, controller, platform-specific, and theme
 
 ## 1.1.1 (19 April 2013)
