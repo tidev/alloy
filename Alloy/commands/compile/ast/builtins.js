@@ -1,4 +1,5 @@
 var path = require('path'),
+	fs = require('fs'),
 	_ = require('../../../lib/alloy/underscore')._,
 	uglifyjs = require('uglify-js'),
 	logger = require('../../../common/logger'),
@@ -21,18 +22,25 @@ function appendExtension(file, extension) {
 }
 
 exports.process = function(ast, config) {
-	var rx = /^alloy\/(.+)$/;
+	var rx = /^(alloy)\/(.+)$/;
 	var match;
 
 	ast.walk(new uglifyjs.TreeWalker(function(node) {
 		if (node instanceof uglifyjs.AST_Call) {
-			if (node.expression.name === 'require' &&               // Is this a require call?
-				node.args[0] && _.isString(node.args[0].value) &&   // Is the 1st param a literal string?
-				(match = node.args[0].value.match(rx)) !== null &&  // Is it an alloy module?
-				!_.contains(EXCLUDE, match[1]) &&                   // Make sure it's not excluded.
-				!_.contains(loaded, match[1])                       // Make sure we didn't find it already              
+			var theString = node.args[0];
+			if (node.expression.name === 'require' &&            // Is this a require call?
+				theString && _.isString(theString.value) &&      // Is the 1st param a literal string?
+				(match = theString.value.match(rx)) !== null &&  // Is it an alloy module?
+				!_.contains(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
+				!_.contains(loaded, match[2])                    // Make sure we didn't find it already               
 			) {
-				var name = appendExtension(match[1], 'js');
+				// Make sure it hasn't already been copied to Resources
+				var name = appendExtension(match[2], 'js');
+				if (fs.existsSync(path.join(config.dir.resources,match[1],name))) {
+					return;
+				}
+
+				// make sure the builtin exists
 				var source = path.join(BUILTINS_PATH,name);
 				if (!path.existsSync(source)) {
 					return;
