@@ -7,21 +7,13 @@ exports.process = function(ast, config) {
 	config.deploytype = config.deploytype || 'development';
 
 	// create list of platform and deploy type defines
-	var defines = {
-		// OS_IOS:          config.platform === 'ios',
-		// OS_ANDROID:      config.platform === 'android',
-		// OS_MOBILEWEB:    config.platform === 'mobileweb',
-		// OS_BLACKBERRY: 	 config.platform === 'blackberry',
-		ENV_DEV:         config.deploytype === 'development',
-		ENV_DEVELOPMENT: config.deploytype === 'development',
-		ENV_TEST:        config.deploytype === 'test',
-		ENV_PROD:        config.deploytype === 'production',
-		ENV_PRODUCTION:  config.deploytype === 'production'
-	};
+	var defines = {};
+	_.each(CONST.DEPLOY_TYPES, function(d) {
+		defines[d.key] = config.deploytype === d.value;
+	});
 	_.each(CONST.PLATFORMS, function(p) {
 		defines['OS_' + p.toUpperCase()] = config.platform === p;
 	});
-
 
 	var compressor = uglifyjs.Compressor({
 		sequences     : false,  // join consecutive statemets with the “comma operator”

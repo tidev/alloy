@@ -34,11 +34,13 @@ describe('alloy compile', function() {
 						test: function() {
 							var o = this.output;
 
-							// Make sure there were no compile errors
-							expect(o.error).toBeFalsy();
-						},
-						timeout: TIMEOUT_COMPILE
-					});
+
+								// Make sure there were no compile errors
+								expect(o.error).toBeFalsy();
+							},
+							timeout: TIMEOUT_COMPILE
+						}
+					);
 				});
 			});
 		}

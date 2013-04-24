@@ -35,6 +35,13 @@ exports.PLATFORM_FOLDERS = ['android','iphone','mobileweb','blackberry'];
 exports.PLATFORM_FOLDERS_ALLOY = ['android','ios','mobileweb','blackberry'];
 exports.INSTALL_TYPES = ['plugin'];
 exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
+exports.DEPLOY_TYPES = [
+	{ key: 'ENV_DEV', value: 'development' },
+	{ key: 'ENV_DEVELOPMENT', value: 'development' },
+	{ key: 'ENV_TEST', value: 'test' },
+	{ key: 'ENV_PROD', value: 'production' },
+	{ key: 'ENV_PRODUCTION', value: 'production' }
+];
 
 // mappings of file extensions and folders for each file type
 exports.FILE_EXT = {
