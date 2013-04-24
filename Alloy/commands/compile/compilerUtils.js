@@ -871,7 +871,7 @@ function sortStyles(componentStyle, opts) {
 			FORMFACTOR: 10,
 			SUM:         1,
 			THEME:       0.9,
-			ORDER:       0.001
+			ORDER:       0.0001
 		};
 
 	opts || (opts = {});
