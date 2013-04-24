@@ -1,0 +1,6 @@
+<Alloy>
+	<Window class="container">
+		<Widget src="optionDialog" id="opt"/>
+		<Label id="label" onClick="doClick">Hello, World</Label>
+	</Window>
+</Alloy>

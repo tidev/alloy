@@ -1,0 +1,12 @@
+{
+	"id": "optionDialog",
+	"description": "test widget",
+	"author": "",
+	"version": "0.1",
+	"copyright": "Copyright (c) 2012 by Appcelerator",
+	"license": "Public Domain",
+	"min-alloy-version": "1.0.0",
+	"min-titanium-version": "3.0",
+	"tags": "utility",
+	"platforms": "android,ios,mobileweb"
+}
