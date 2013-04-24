@@ -1,0 +1,7 @@
+"#index": {
+	backgroundColor: '#ffa'
+}
+
+".label": {
+	text: 'you should see this text'
+}
