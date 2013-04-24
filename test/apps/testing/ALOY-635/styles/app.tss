@@ -1,0 +1,22 @@
+"Window": {
+	backgroundColor: '#fff'
+}
+
+".emptyClassToThrowOffOrder1": {}
+
+".emptyClassToThrowOffOrder2": {}
+
+".emptyClassToThrowOffOrder3": {}
+
+".emptyClassToThrowOffOrder4": {}
+
+".label": {
+	color: '#000',
+	font: {
+		fontSize: 32,
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	text: 'global style merging is broken if you see this text in your app'
+}
