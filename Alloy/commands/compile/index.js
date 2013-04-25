@@ -618,26 +618,49 @@ function processModels(dirs) {
 	return models;
 };
 
+// Order of processing global styles:
+// 1. global
+// 2. global theme
+// 3. global platform-specific
+// 4. global theme platform-specific
 function loadGlobalStyles(appPath, theme) {
-	var appGlobal = path.join(appPath,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	
 	compileConfig.globalStyle = [];
-	if (path.existsSync(appGlobal)) {
-		logger.info('[app.tss] global style processing...');
-		compileConfig.globalStyle = CU.loadAndSortStyle(appGlobal, undefined, {
-			existingStyle: compileConfig.globalStyle
-		});
-	} 
+	var apptss = CONST.GLOBAL_STYLE;
+	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
 	if (theme) {
-		var themeGlobal = path.join(appPath,'themes',theme,CONST.DIR.STYLE,CONST.GLOBAL_STYLE);
-	 	if (path.existsSync(themeGlobal)) {
-			logger.info('[app.tss (theme:' + theme + ')] global style processing...');
-			compileConfig.globalStyle = CU.loadAndSortStyle(themeGlobal, undefined, {
-				existingStyle: compileConfig.globalStyle,
-				theme: true
-			});
+		var themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
+	}
+
+	var globalStyles = [];
+	globalStyles.push({ 
+		path: path.join(stylesDir,apptss),
+		msg: apptss
+	});
+	theme && globalStyles.push({ 
+		path: path.join(themesDir,apptss),
+		msg: apptss + '(theme:' + theme + ')',
+		obj: { theme: true }
+	});
+	globalStyles.push({ 
+		// TODO: get the real platforms object
+		path: path.join(stylesDir,buildPlatform,apptss),
+		msg: apptss + '(platform:' + buildPlatform + ')',
+		obj: { platform: true }
+	});
+	theme && globalStyles.push({ 
+		// TODO: get the real platforms object
+		path: path.join(themesDir,buildPlatform,apptss),
+		msg: apptss + '(theme:' + theme + ' platform:' + buildPlatform + ')',
+		obj: { platform: true, theme: true }
+	});
+
+	_.each(globalStyles, function(g) {
+		if (path.existsSync(g.path)) {
+			logger.info('[' + g.msg + '] global style processing...');
+			compileConfig.globalStyle = CU.loadAndSortStyle(g.path, undefined, 
+				_.extend({existingStyle: compileConfig.globalStyle},g.obj||{}));
 		}
-	} 	
+	});	
 
 	styleOrderBase = ++CU.styleOrderCounter;
 }
