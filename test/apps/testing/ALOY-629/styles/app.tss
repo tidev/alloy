@@ -1,0 +1,12 @@
+".tester": {
+	color: '#000',
+	font: {
+		fontSize: 24,
+		fontWeight: 'bold'
+	},
+	bottom: 15,
+	height: 120,
+	width: 300,
+	textAlign: 'center',
+	text: 'you should only see this on non-iOS builds'
+}

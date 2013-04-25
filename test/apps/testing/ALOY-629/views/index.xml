@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label id="notes">Below you should see a red box with a rounded black border and white bold text inside. On iOS, it should say "global merging is working!" with a gray drop shadow. On all other platforms, it should say "you should only see this on non-iOS builds" with no drop shadow.
+		</Label>
+		<Label class="tester"/>
+	</Window>
+</Alloy>

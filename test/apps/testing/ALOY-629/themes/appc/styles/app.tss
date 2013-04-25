@@ -1,0 +1,7 @@
+".tester": {
+	color: '#fff',
+	backgroundColor: '#a00',
+	borderWidth: 2,
+	borderRadius: 8,
+	borderColor: '#000'
+}
