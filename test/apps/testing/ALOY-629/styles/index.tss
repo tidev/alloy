@@ -1,0 +1,16 @@
+"#index": {
+	backgroundColor: '#fff'
+}
+
+"#notes": {
+	top: 10,
+	left: 15,
+	right: 15,
+	height: Ti.UI.SIZE,
+	textAlign: 'left',
+	color: '#000',
+	font: {
+		fontSize: 14,
+		fontWeight: 'normal'
+	}
+}

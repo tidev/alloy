@@ -1,0 +1,4 @@
+".tester": {
+	shadowColor: '#888',
+	shadowOffset: { x: 2, y: 2 }
+}

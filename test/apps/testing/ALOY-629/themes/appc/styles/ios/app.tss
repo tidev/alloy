@@ -1,0 +1,3 @@
+".tester": {
+	text: 'global merging is working!'
+}
