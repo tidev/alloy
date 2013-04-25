@@ -1,0 +1,26 @@
+"#index": {
+	backgroundColor: "#fff"
+}
+
+"#view1": {
+	height: 100,
+	width: 100,
+	backgroundColor: '#f00',
+	top: 15,
+	opacity: 0
+}
+
+"#view2": {
+	height: 100,
+	width: 100,
+	backgroundColor: '#00f',
+	bottom: 15,
+	opacity: 1
+}
+
+"#view3": {
+	height: 60,
+	width: 200,
+	backgroundColor: '#0f0',
+	opacity: 1
+}

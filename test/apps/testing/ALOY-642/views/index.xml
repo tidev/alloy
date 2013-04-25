@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<View id="view1"/>
+		<View id="view2"/>
+		<View id="view3"/>
+	</Window>
+</Alloy>
