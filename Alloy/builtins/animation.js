@@ -61,18 +61,20 @@ exports.fadeAndRemove = function (from, duration, container, finishCallback) {
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fadeIn completes.
  */
-exports.fadeIn = function (to, duration, finishCallback) {
-    if (to) {
-        to.animate({
-            opacity: 1,
-            duration: duration
-        }, function() {
-            if (finishCallback) {
-                finishCallback();
-            }
-        });
-    }
+exports.fadeIn = function(to, duration, finishCallback) {
+	if (finishCallback){
+	    to && to.animate({
+	        opacity: 1,
+	        duration: duration
+	    }, finishCallback);
+	}else{
+		to && to.animate({
+	        opacity: 1,
+	        duration: duration
+	    });
+	}
 };
+
 
 /**
  * @method fadeOut
@@ -82,16 +84,17 @@ exports.fadeIn = function (to, duration, finishCallback) {
  * @param {function()} [finishCallback] Callback function, invoked after the fadeOut completes.
  */
 exports.fadeOut = function (to, duration, finishCallback) {
-    if (to) {
-        to.animate({
-            opacity: 0,
-            duration: duration
-        }, function() {
-            if (finishCallback) {
-                finishCallback();
-            }
-        });
-    }
+	if (finishCallback){
+		to && to.animate({
+	        opacity: 0,
+	        duration: duration
+	    }, finishCallback);
+	}else{
+		to && to.animate({
+	        opacity: 0,
+	        duration: duration
+	    });
+	}
 };
 
 /**
