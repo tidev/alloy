@@ -1,6 +1,6 @@
 <Alloy>
 	<Window class="container">
 		<Widget src="optionDialog" id="opt"/>
-		<Label id="label" onClick="doClick">Hello, World</Label>
+		<Label>As long as you don't see a red screen of death, this is working as expected</Label>
 	</Window>
 </Alloy>

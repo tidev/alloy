@@ -1,7 +1,0 @@
-<Alloy>
-	<View id="container">
-		<Button id="cancel" />
-		<TableView id="table" />
-		<Label id="title" />
-	</View>
-</Alloy>

@@ -1,0 +1,5 @@
+"#theView": {
+	height: 200,
+	width: 200,
+	backgroundColor: '#888'
+}
