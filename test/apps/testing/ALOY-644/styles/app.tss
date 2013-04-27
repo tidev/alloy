@@ -1,0 +1,17 @@
+"Window": {
+    backgroundColor: '#fff',
+    fullscreen: false,
+    navBarHidden: true
+}
+
+".header": {
+	height: '50dp',
+	width: Ti.UI.FILL,
+	top: 0,
+	textAlign: 'center',
+	color: '#fff',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}

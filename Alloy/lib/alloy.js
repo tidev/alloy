@@ -18,37 +18,34 @@ function ucfirst(text) {
 };
 
 exports.M = function(name, modelDesc, migrations) {
-	var config = modelDesc.config;
-    var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-    if (type === 'localDefault') {
-    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-    }
-
-	var adapter = require('alloy/sync/'+type);
-    var extendObj = {
-		defaults: config.defaults,
-        sync: function(method, model, opts) {
-			var config = model.config || {};
-			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-			if (type === 'localDefault') {
-		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-		    }
-
-			require('alloy/sync/'+type).sync(method,model,opts);
-		}
-	};
-
+	var config = (modelDesc || {}).config || {};
+	var adapter = config.adapter || {};
+	var extendObj = {};
 	var extendClass = {};
+	var mod;
+
+	if (adapter.type) {
+		mod = require('alloy/sync/' + adapter.type);
+		extendObj.sync = function(method, model, opts) {
+			mod.sync(method, model, opts);
+		};
+	} else {
+		extendObj.sync = function(method, model, opts) {
+			Ti.API.warn('Execution of ' + method + '#sync() function on a model that does not support persistence');
+			Ti.API.warn('model: ' + JSON.stringify(model.toJSON()));
+		};
+	}
+	extendObj.defaults = config.defaults;
 
 	// construct the model based on the current adapter type
 	if (migrations) { extendClass.migrations = migrations; }
 
 	// Run the pre model creation code, if any
-    if (_.isFunction(adapter.beforeModelCreate)) {
-    	config = adapter.beforeModelCreate(config, name) || config;
+    if (mod && _.isFunction(mod.beforeModelCreate)) {
+    	config = mod.beforeModelCreate(config, name) || config;
     }
 
-    // Create the Model object
+	// Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass);
 	Model.prototype.config = config;
 
@@ -58,40 +55,121 @@ exports.M = function(name, modelDesc, migrations) {
 	}
 
 	// Run the post model creation code, if any
-	if (_.isFunction(adapter.afterModelCreate)) {
-		adapter.afterModelCreate(Model, name);
+	if (mod && _.isFunction(mod.afterModelCreate)) {
+		mod.afterModelCreate(Model, name);
 	}
 
 	return Model;
 };
 
-exports.C = function(name, modelDesc, model) {
-    var extendObj = {
-		model: model,
-        sync: function(method, model, opts) {
-			var config = (model.config || {});
-			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-			if (type === 'localDefault') {
-		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-		    }
+// exports.M = function(name, modelDesc, migrations) {
+// 	var config = modelDesc.config;
+//     var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
+//     if (type === 'localDefault') {
+//     	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+//     }
 
-			require('alloy/sync/'+type).sync(method,model,opts);
-		}
-	};
+// 	var adapter = require('alloy/sync/'+type);
+//     var extendObj = {
+// 		defaults: config.defaults,
+//         sync: function(method, model, opts) {
+// 			var config = model.config || {};
+// 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
+// 			if (type === 'localDefault') {
+// 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+// 		    }
+
+// 			require('alloy/sync/'+type).sync(method,model,opts);
+// 		}
+// 	};
+
+// 	var extendClass = {};
+
+// 	// construct the model based on the current adapter type
+// 	if (migrations) { extendClass.migrations = migrations; }
+
+// 	// Run the pre model creation code, if any
+//     if (_.isFunction(adapter.beforeModelCreate)) {
+//     	config = adapter.beforeModelCreate(config, name) || config;
+//     }
+
+//     // Create the Model object
+// 	var Model = Backbone.Model.extend(extendObj, extendClass);
+// 	Model.prototype.config = config;
+
+// 	// Extend the Model with extendModel(), if defined
+// 	if (_.isFunction(modelDesc.extendModel)) {
+// 		Model = modelDesc.extendModel(Model) || Model;
+// 	}
+
+// 	// Run the post model creation code, if any
+// 	if (_.isFunction(adapter.afterModelCreate)) {
+// 		adapter.afterModelCreate(Model, name);
+// 	}
+
+// 	return Model;
+// };
+
+exports.C = function(name, modelDesc, model) {
+	var extendObj = { model: model };
+	var config = (model ? model.prototype.config : {}) || {};
+	var mod;
+
+	if (config.adapter && config.adapter.type) {
+		mod = require('alloy/sync/' + config.adapter.type);
+		extendObj.sync = function(method, model, opts) {
+			mod.sync(method,model,opts);
+		};
+	} else {
+		extendObj.sync = function(method, model, opts) {
+			Ti.API.warn('Execution of ' + method + '#sync() function on a collection that does not support persistence');
+			Ti.API.warn('model: ' + JSON.stringify(model.toJSON()));
+		};
+	}
 
 	var Collection = Backbone.Collection.extend(extendObj);
-	var config = Collection.prototype.config = model.prototype.config;
+	Collection.prototype.config = config;
 
-	var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-	var adapter = require('alloy/sync/'+type);
-	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
-
+	// extend the collection object
 	if (_.isFunction(modelDesc.extendCollection)) {
 		Collection = modelDesc.extendCollection(Collection) || Collection;
 	}
 
+	// do any post collection creation code form the sync adapter
+	if (mod && _.isFunction(mod.afterCollectionCreate)) { 
+		mod.afterCollectionCreate(Collection); 
+	}
+
 	return Collection;
 };
+
+// exports.C = function(name, modelDesc, model) {
+//     var extendObj = {
+// 		model: model,
+//         sync: function(method, model, opts) {
+// 			var config = (model.config || {});
+// 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
+// 			if (type === 'localDefault') {
+// 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
+// 		    }
+
+// 			require('alloy/sync/'+type).sync(method,model,opts);
+// 		}
+// 	};
+
+// 	var Collection = Backbone.Collection.extend(extendObj);
+// 	var config = Collection.prototype.config = model.prototype.config;
+
+// 	var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
+// 	var adapter = require('alloy/sync/'+type);
+// 	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
+
+// 	if (_.isFunction(modelDesc.extendCollection)) {
+// 		Collection = modelDesc.extendCollection(Collection) || Collection;
+// 	}
+
+// 	return Collection;
+// };
 
 /**
  * @method createWidget
