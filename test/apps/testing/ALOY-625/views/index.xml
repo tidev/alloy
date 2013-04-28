@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label id="label">This should be white text with a blue background on a gray window</Label>
+	</Window>
+</Alloy>

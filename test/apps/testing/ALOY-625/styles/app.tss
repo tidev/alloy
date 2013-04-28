@@ -1,0 +1,13 @@
+"Window": {
+    backgroundColor: "#888"
+}
+
+"Label": {
+	backgroundColor: '#00f'
+}
+ 
+"#label": {
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE,
+    color: "#fff"
+} 
