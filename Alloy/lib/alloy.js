@@ -62,54 +62,6 @@ exports.M = function(name, modelDesc, migrations) {
 	return Model;
 };
 
-// exports.M = function(name, modelDesc, migrations) {
-// 	var config = modelDesc.config;
-//     var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-//     if (type === 'localDefault') {
-//     	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-//     }
-
-// 	var adapter = require('alloy/sync/'+type);
-//     var extendObj = {
-// 		defaults: config.defaults,
-//         sync: function(method, model, opts) {
-// 			var config = model.config || {};
-// 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-// 			if (type === 'localDefault') {
-// 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-// 		    }
-
-// 			require('alloy/sync/'+type).sync(method,model,opts);
-// 		}
-// 	};
-
-// 	var extendClass = {};
-
-// 	// construct the model based on the current adapter type
-// 	if (migrations) { extendClass.migrations = migrations; }
-
-// 	// Run the pre model creation code, if any
-//     if (_.isFunction(adapter.beforeModelCreate)) {
-//     	config = adapter.beforeModelCreate(config, name) || config;
-//     }
-
-//     // Create the Model object
-// 	var Model = Backbone.Model.extend(extendObj, extendClass);
-// 	Model.prototype.config = config;
-
-// 	// Extend the Model with extendModel(), if defined
-// 	if (_.isFunction(modelDesc.extendModel)) {
-// 		Model = modelDesc.extendModel(Model) || Model;
-// 	}
-
-// 	// Run the post model creation code, if any
-// 	if (_.isFunction(adapter.afterModelCreate)) {
-// 		adapter.afterModelCreate(Model, name);
-// 	}
-
-// 	return Model;
-// };
-
 exports.C = function(name, modelDesc, model) {
 	var extendObj = { model: model };
 	var config = (model ? model.prototype.config : {}) || {};
@@ -142,34 +94,6 @@ exports.C = function(name, modelDesc, model) {
 
 	return Collection;
 };
-
-// exports.C = function(name, modelDesc, model) {
-//     var extendObj = {
-// 		model: model,
-//         sync: function(method, model, opts) {
-// 			var config = (model.config || {});
-// 			var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-// 			if (type === 'localDefault') {
-// 		    	type = OS_MOBILEWEB ? 'localStorage' : 'sql';
-// 		    }
-
-// 			require('alloy/sync/'+type).sync(method,model,opts);
-// 		}
-// 	};
-
-// 	var Collection = Backbone.Collection.extend(extendObj);
-// 	var config = Collection.prototype.config = model.prototype.config;
-
-// 	var type = (config.adapter ? config.adapter.type : null) || 'localDefault';
-// 	var adapter = require('alloy/sync/'+type);
-// 	if (_.isFunction(adapter.afterCollectionCreate)) { adapter.afterCollectionCreate(Collection); }
-
-// 	if (_.isFunction(modelDesc.extendCollection)) {
-// 		Collection = modelDesc.extendCollection(Collection) || Collection;
-// 	}
-
-// 	return Collection;
-// };
 
 /**
  * @method createWidget
