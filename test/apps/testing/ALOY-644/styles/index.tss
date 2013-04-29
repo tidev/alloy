@@ -1,0 +1,10 @@
+"#counter": {
+	font: {
+		fontSize: '160dp',
+		fontWeight: 'bold'
+	}
+}
+
+"#table": {
+    top: '50dp'
+}

@@ -1,0 +1,18 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="model">
+			<Window>
+				<Label class="header" backgroundColor="{appState.color}">Model</Label>
+				<Label id="counter" text="{appState.counter}" color="{appState.color}" onClick="updateState"/>
+			</Window>
+		</Tab>
+		<Tab title="collection">
+			<Window>
+				<Label class="header" backgroundColor="{appState.color}">Collection</Label>
+				<TableView id="table" dataCollection="heroes" onClick="modifyHero">
+					<TableViewRow title="{name}"/>
+				</TableView>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
