@@ -33,9 +33,11 @@ function updateState() {
 }
 
 // Simulate a change in our model to trigger UI binding.
-// Remember, don't use fetch() when using a model with
-// no persistence, it will generate an error.
 appState.trigger('change');
 heroes.trigger('change');
+
+// this should throw a warning since it is attempting
+// to sync on a model that has no persistence.
+appState.fetch();
 
 $.index.open();
