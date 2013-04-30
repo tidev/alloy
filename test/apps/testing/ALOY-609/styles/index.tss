@@ -1,0 +1,52 @@
+"#index": {
+	backgroundColor: '#fff'
+}
+
+"#toolbar": {
+	height: '50dp',
+	width: '100%',
+	bottom: 0,
+	layout: 'horizontal'
+}
+
+"#list": {
+	top: 0,
+	bottom: '50dp'
+}
+
+".title": {
+	left: '10dp',
+	right: '10dp',
+	top: '10dp',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	},
+	height: '30dp',
+	color: '#222',
+	textAlign: 'left'
+}
+
+".subtitle": {
+	left: '10dp',
+	right: '10dp',
+	bottom: '10dp',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'normal'
+	},
+	height: '20dp',
+	color: '#444',
+	textAlign: 'left'
+}
+
+".image": {
+	left: '10dp',
+	top: '10dp',
+	height: '50dp',
+	width: '50dp'
+}
+
+".text-and-image": {
+	left: '70dp'
+}

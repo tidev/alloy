@@ -13,11 +13,10 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '',
-		itemsArray;
-
-	// create the ListView itself
-	var sectionState = require('./default').parse(node, state);
-	code += sectionState.code;
+		itemCode = '',
+		itemsVar = CU.generateUniqueId(),
+		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
+		itemsArray, localModel;
 
 	// process each child
 	var children = U.XML.getElementsFromNodes(node.childNodes);
@@ -30,128 +29,53 @@ function parse(node, state, args) {
 				itemsArray = CU.generateUniqueId();
 				code += 'var ' + itemsArray + '=[];';
 			}
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					return itemsArray + '.push(' + state.parent.symbol + ');';
-				}
-			});
+
+			if (isDataBound) {
+				localModel || (localModel = CU.generateUniqueId());
+				itemCode += CU.generateNodeExtended(child, state, {
+					parent: {},
+					local: true,
+					model: localModel,
+					post: function(node, state, args) {
+						return itemsVar + '.push(' + state.parent.symbol + ');';
+					}
+				});
+			} else {
+				code += CU.generateNodeExtended(child, state, {
+					parent: {},
+					post: function(node, state, args) {
+						return itemsArray + '.push(' + state.parent.symbol + ');';
+					}
+				});
+			}
 		} 
 	});
 
-	if (itemsArray) {
-		code += sectionState.parent.symbol + '.items=' + itemsArray + ';';
-	}
-
-	return {
-		parent: {},
-		styles: state.styles,
-		code: code
-	}
-}
-
-function parse2(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		code = '',
-		proxyPropertyCode = '',
-		itemCode = '',
-		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
-		searchBarName, localModel, arrayName;
-
-	// iterate through all children of the TableView
-	_.each(children, function(child) {
-		var childArgs = CU.getParserArgs(child),
-			isSearchBar = false,
-			isProxyProperty = false;
-
-		// validate the child element and determine if it's part of
-		// the table data, a searchbar, or a proxy property assigment
-		var theNode = CU.validateNodeName(child, ALL_VALID);
-		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
-		} else if (theNode === 'Ti.UI.SearchBar') {
-			isSearchBar = true;
-		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-			isProxyProperty = true;
-		}
-
-		// generate code for proxy property assignments
-		if (isProxyProperty) {
-			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: '<%= proxyPropertyParent %>'
-				}
-			});
-		// generate code for search bar
-		} else if (isSearchBar) {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					searchBarName = state.parent.symbol;
-				}
-			});
-		// generate code for template row for model-view binding
-		} else if (isDataBound) {
-			localModel || (localModel = CU.generateUniqueId());
-			itemCode += CU.generateNodeExtended(child, state, {
-				parent: {},
-				local: true,
-				model: localModel,
-				post: function(node, state, args) {
-					return 'rows.push(' + state.parent.symbol + ');\n';
-				}
-			});
-		// generate code for the static row/section/searchbar
-		} else {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					var postCode = '';
-					if (!arrayName) {
-						arrayName = CU.generateUniqueId();
-						postCode += 'var ' + arrayName + '=[];';
-					}
-					postCode += arrayName + '.push(' + state.parent.symbol + ');';
-					return postCode;
-				}
-			});
-		}
-	});
-
-	// Create the initial TableView code
-	var extras = [];
-	if (arrayName) { extras.push(['data', arrayName]); }
-	if (searchBarName) { extras.push(['search', searchBarName]) }
-	if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
-
-	// generate the code for the table itself
+	// create the ListView itself
 	if (isDataBound) {
 		_.each(CONST.BIND_PROPERTIES, function(p) {
 			node.removeAttribute(p);
 		});
 	}
-	var tableState = require('./default').parse(node, state);
-	code += tableState.code;
+	var sectionState = require('./default').parse(node, state);
+	code += sectionState.code;
 
-	// fill in the proxy property assignment template with the
-	// symbol used to represent the table
-	code += _.template(proxyPropertyCode, {
-		proxyPropertyParent: tableState.parent.symbol
-	});
+	// add items to the ListView
+	if (itemsArray) {
+		code += sectionState.parent.symbol + '.items=' + itemsArray + ';';
+	}
 
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
 		localModel || (localModel = CU.generateUniqueId());
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: "var rows=[];",
+			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,
-			post: tableState.parent.symbol + ".setData(rows);"
+			post: sectionState.parent.symbol + '.setItems(' + itemsVar + ');'
 		});
 	}
 
-	// Update the parsing state
 	return {
 		parent: {},
 		styles: state.styles,

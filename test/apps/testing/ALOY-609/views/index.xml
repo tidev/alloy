@@ -1,0 +1,30 @@
+<Alloy>
+	<Window>
+		<ListView id="list" defaultItemTemplate="title">
+			<Templates>
+				<ItemTemplate name="fullItem" height="70">
+					<ImageView bindId="image" class="image"/>
+					<Label bindId="title" class="title text-and-image"/>
+					<Label bindId="subtitle" class="subtitle text-and-image"/>
+				</ItemTemplate>
+				<ItemTemplate name="titleAndSub" height="70">
+					<Label bindId="title" class="title"/>
+					<Label bindId="subtitle" class="subtitle"/>
+				</ItemTemplate>
+				<ItemTemplate name="title" height="50">
+					<Label bindId="title" class="title"/>
+				</ItemTemplate>
+			</Templates>
+
+			<ListSection id="section" dataCollection="info" dataTransform="doTransform">
+				<ListItem template="{template}" title:text="{title}" subtitle:text="{subtitle}" image:image="{image}"/>
+			</ListSection>
+		</ListView>
+		<View id="toolbar">
+			<Require src="button" label="reset" onButtonClick="doButtonClick"/>
+			<Require src="button" label="template1" onButtonClick="doButtonClick"/>
+			<Require src="button" label="template2" onButtonClick="doButtonClick"/>
+			<Require src="button" label="template3" onButtonClick="doButtonClick"/>
+		</View>
+	</Window>
+</Alloy>
