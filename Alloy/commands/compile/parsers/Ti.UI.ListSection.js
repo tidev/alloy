@@ -68,11 +68,15 @@ function parse(node, state, args) {
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
 		localModel || (localModel = CU.generateUniqueId());
+		var sps = sectionState.parent.symbol;
+
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
 			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,
-			post: sectionState.parent.symbol + '.setItems(' + itemsVar + ');'
+			post: 'opts.animation ? ' + 
+				sps + '.setItems(' + itemsVar + ', opts.animation) : ' +
+				sps + '.setItems(' + itemsVar + ');'
 		});
 	}
 
