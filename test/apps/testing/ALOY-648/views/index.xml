@@ -1,0 +1,13 @@
+<Alloy>
+	<Window>
+		<ListView onItemclick="doClick">
+			<!-- 
+				Assign the "dataFunction" attribute so we can reference it
+				later in the controller, where we will add animation options.
+			-->
+			<ListSection id="section" dataCollection="info" dataFunction="loadData">
+				<ListItem title="{title}"/>
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>
