@@ -200,7 +200,7 @@ exports.isHandheld = !exports.isTablet;
 /**
  * @property {Object} Globals
  * An object for storing globally accessible variables and functions.
- * Alloy.CFG is accessible in any controller in your app:
+ * Alloy.Globals is accessible in any controller in your app:
  *
  *     Alloy.Globals.someGlobalObject = { key: 'value' };
  *     Alloy.Globals.someGlobalFunction = function(){};
