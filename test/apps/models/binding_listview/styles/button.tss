@@ -1,0 +1,18 @@
+"#button": {
+	height: '50dp',
+	width: '25%',
+	borderWidth: 1,
+	borderColor: '#000',
+	backgroundColor: '#a00'
+}
+
+"#label": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	color: '#fff',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'bold'
+	},
+	touchEnabled: false
+}
