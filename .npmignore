@@ -5,3 +5,4 @@ node_modules
 test/projects/Harness
 test/projects/TiAppCopy
 TODO
+test/apps/testing
