@@ -1013,6 +1013,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	// construct code template
 	code += "var " + colVar + "=" + col + ";";
 	code += "function " + handlerFunc + "(e) {";
+	code += "   var opts = " + handlerFunc + ".opts || {};";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "<%= pre %>";
