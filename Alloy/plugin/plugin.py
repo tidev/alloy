@@ -26,6 +26,12 @@ def compile(config):
     paths = {}
     binaries = ["alloy","node"]
 
+    dotAlloy = os.path.abspath(os.path.join(config['project_dir'], 'build', '.alloynewcli'))
+    if os.path.exists(dotAlloy):
+        print "[DEBUG] build/.alloynewcli file found, skipping plugin..."
+        os.remove(dotAlloy)
+        sys.exit(0)
+
     for binary in binaries:
         try:
             # see if the environment variable is defined
@@ -70,8 +76,6 @@ def compile(config):
             # no guesses on windows, just use the PATH
             elif sys.platform == "win32":
                 paths["alloy"] = "alloy.cmd"
-
-
             
     f = os.path.abspath(os.path.join(config['project_dir'], 'app'))
     if os.path.exists(f):
