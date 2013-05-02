@@ -273,7 +273,6 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 		exceptions.push(ex);
 		exceptions.push(opts.platform + '/' + ex);
 	});
-	console.log(exceptions);
 
 	// skip if target or source is not defined
 	if (!fs.existsSync(targetDir) || !srcDirs) {
