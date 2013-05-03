@@ -535,10 +535,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         message.parameters.push([ "oauth_token", requestToken ]), message.parameters.push([ "oauth_verifier", pin ]), OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
         var parameterMap = OAuth.getParameterMap(message.parameters), client = Ti.Network.createHTTPClient({
             onload: function() {
-		Ti.API.info("--------------------------------");
-		Ti.API.info(this.responseText);
-	      
-                var responseParams = OAuth.getParameterMap(this.responseText);
+		var responseParams = OAuth.getParameterMap(this.responseText);
 		var userid = responseParams.user_id;
 		var username = responseParams.screen_name;
                 accessToken = responseParams.oauth_token, accessTokenSecret = responseParams.oauth_token_secret, callback({
