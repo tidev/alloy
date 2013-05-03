@@ -147,6 +147,7 @@ function binb2b64(binarray) {
 
 var hexcase = 0, b64pad = "", chrsz = 8, OAuth;
 
+
 OAuth == null && (OAuth = {}), OAuth.setProperties = function(into, from) {
     if (into != null && from != null) for (var key in from) into[key] = from[key];
     return into;
@@ -382,7 +383,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         var response = e.source.evalJS('(p = document.getElementById("oauth_pin")) && p.innerHTML;');
         response ? (pin = response.split("<code>")[1].split("</code>")[0], destroyAuthorizeUI(), receivePinCallback()) : (loadingView && loadingView.hide(), loadingContainer && loadingContainer.hide(), webView && webView.show()), loading = !1, clearInterval(intervalID), estimates[estimateID] = (new Date).getTime() - startTime, Ti.App.Properties.setString("Social-LoadingEstimates", JSON.stringify(estimates));
     }
-    var consumerSecret = pConsumerSecret, consumerKey = pConsumerKey, signatureMethod = pSignatureMethod, pin = null, requestToken = null, requestTokenSecret = null, accessToken = null, accessTokenSecret = null, accessor = {
+    var  consumerSecret = pConsumerSecret, consumerKey = pConsumerKey, signatureMethod = pSignatureMethod, pin = null, requestToken = null, requestTokenSecret = null, accessToken = null, accessTokenSecret = null, accessor = {
         consumerSecret: consumerSecret,
         tokenSecret: ""
     }, window = null, view = null, webView = null, loadingView = null, loadingContainer = null, receivePinCallback = null, accessTokenStore = {};
@@ -534,9 +535,14 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         message.parameters.push([ "oauth_token", requestToken ]), message.parameters.push([ "oauth_verifier", pin ]), OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
         var parameterMap = OAuth.getParameterMap(message.parameters), client = Ti.Network.createHTTPClient({
             onload: function() {
+		Ti.API.info("--------------------------------");
+		Ti.API.info(this.responseText);
+	      
                 var responseParams = OAuth.getParameterMap(this.responseText);
+		var userid = responseParams.user_id;
+		var username = responseParams.screen_name;
                 accessToken = responseParams.oauth_token, accessTokenSecret = responseParams.oauth_token_secret, callback({
-                    success: !0
+                    success: !0, username:username, userid:userid
                 });
             },
             onerror: function() {
@@ -621,7 +627,7 @@ exports.create = function(settings) {
             if (!adapter.isAuthorized()) {
                 function receivePin() {
                     adapter.getAccessToken(urls.accessToken, function(evt) {
-                        evt.success ? (adapter.saveAccessToken(site), callback && callback()) : alert("Twitter did not give us an access token!");
+                        evt.success ? (adapter.saveAccessToken(site), callback && callback({username:evt.username,userid:evt.userid})) : alert("Twitter did not give us an access token!");
                     });
                 }
                 adapter.showLoadingUI(), adapter.getRequestToken(urls.requestToken, function(evt) {
