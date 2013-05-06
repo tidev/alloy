@@ -15,7 +15,12 @@ jasmine.getEnv().addReporter(new ConsoleReporter(console.log, function() {}, tru
 //run list of specs
 function runSpecs(names) {
 	_.each(names, function(name) {
-		require('../test/specs/'+name);
+		var fullpath = 'test/specs/' + name;
+		if (fs.statSync(fullpath).isDirectory()) {
+			fullpath = fullpath + '/index.js';
+		} 
+		console.log('Loading test spec from "' + fullpath + '"');
+		require('../' + fullpath);
 	});
 	jasmine.getEnv().execute();
 }
