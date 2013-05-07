@@ -25,6 +25,12 @@ module.exports = function(print, doneCallback, showColors) {
 	}
 
 	function started() {
+		try {
+			jasmine;
+		} catch(e) {
+			jasmine = require('jasmine').jasmine;
+		}
+
 		print('Begin Jasmine Test Suite (Jasmine v.'+jasmine.getEnv().version().major
 			+'.'+jasmine.getEnv().version().minor
 			+'.'+jasmine.getEnv().version().build
