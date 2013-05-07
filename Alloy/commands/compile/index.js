@@ -137,6 +137,12 @@ module.exports = function(args, program) {
 	U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
 	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
 	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
+
+	// copy in test specs if not in production
+	if (alloyConfig.deploytype !== 'production') {
+		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
+	}
+
 	logger.debug('');
 
 	// check theme for assets
