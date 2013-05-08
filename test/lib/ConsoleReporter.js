@@ -1,40 +1,37 @@
 var colors = require('colors');
 
 //Based on Console Reporter, taken from https://github.com/pivotal/jasmine/blob/master/src/console/ConsoleReporter.js
-module.exports = function(print, doneCallback, showColors) {
+module.exports = function(opts) {
 	//inspired by mhevery's jasmine-node reporter
 	//https://github.com/mhevery/jasmine-node
+	opts || (opts = {});
 
-	doneCallback = doneCallback || function() {};
+	var doneCallback = opts.doneCallback || function() {};
+	var print, showColors;
+	if (typeof Ti !== 'undefined') {
+		print = Ti.Platform.osname === 'android' ? 
+			function(s){Ti.API.info(s)} : 
+			Ti.API.info;
+		showColors = false;
+	} else {
+		print = console.log;
+		showColors = true;
+	}
+	print = opts.print || print;
+	showColors = opts.showColors || showColors;
 
 	var language = {
 		spec: 'spec',
 		failure: 'failure'
 	};
 
-	function greenStr(str) {
-		return str.green
-	}
-
-	function redStr(str) {
-		return str.red
-	}
-
-	function yellowStr(str) {
-		return str.yellow
-	}
+	var plainPrint = function(str) { return str; }
+	var greenStr = showColors ? function(str) { return str.green; } : plainPrint;
+	var redStr = showColors ? function(str) { return str.red; } : plainPrint;
+	var yellowStr = showColors ? function(str) { return str.yellow; } : plainPrint;
 
 	function started() {
-		try {
-			jasmine;
-		} catch(e) {
-			jasmine = require('jasmine').jasmine;
-		}
-
-		print('Begin Jasmine Test Suite (Jasmine v.'+jasmine.getEnv().version().major
-			+'.'+jasmine.getEnv().version().minor
-			+'.'+jasmine.getEnv().version().build
-			+')');
+		print('Begin Alloy Test Suite');
 	}
 
 	function greenDot() {
