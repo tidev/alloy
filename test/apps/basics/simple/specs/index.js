@@ -49,6 +49,10 @@ module.exports = function($) {
 		});
 	});
 
-	jasmine.getEnv().addReporter(new CR(console.log, function(){}, true));
+	jasmine.getEnv().addReporter(new CR({
+		doneCallback: function(runner) {
+			alert(runner.specs().length + ' specs, ' + runner.results().failedCount + ' failed');
+		}
+	}));
 	jasmine.getEnv().execute();
 };

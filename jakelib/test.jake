@@ -10,7 +10,10 @@ path.existsSync = fs.existsSync || path.existsSync;
 _.extend(global, jlib);
 
 //Set up Jasmine to print to the console with our custom printer
-jasmine.getEnv().addReporter(new ConsoleReporter(console.log, function() {}, true));
+jasmine.getEnv().addReporter(new ConsoleReporter({
+	print: console.log, 
+	showColors: true
+}));
 
 //run list of specs
 function runSpecs(names) {
