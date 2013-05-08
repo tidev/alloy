@@ -34,7 +34,7 @@ module.exports = function($) {
 
 		it('#label component has correct style', function() {
 			expect($.label.color).toEqual('#000');
-			expect($.label.font.fontSize).toEqual('18dp');
+			expect($.label.font.fontSize).toEqual(OS_MOBILEWEB ? '18px' : '18dp');
 			expect($.label.font.fontWeight).toEqual('bold');
 			expect($.label.height).toEqual(Ti.UI.SIZE);
 			expect($.label.width).toEqual(Ti.UI.SIZE);
