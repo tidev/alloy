@@ -31,7 +31,7 @@ describe('alloy compile', function() {
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
-			if (!path.existsSync(indexJs)) { return; }
+			if (!path.existsSync(indexJs) || indexJs.indexOf(GEN_FOLDER) !== -1) { return; }
 
 			it('preparing test app', function() {
 				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1');
