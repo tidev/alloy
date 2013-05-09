@@ -29,6 +29,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 describe('alloy compile', function() {
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+		if (process.env.app && file !== process.env.app) { return; } 
+
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
 			if (!path.existsSync(indexJs) || indexJs.indexOf(GEN_FOLDER) !== -1) { return; }
