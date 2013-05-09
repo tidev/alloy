@@ -40,7 +40,7 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
-				describe('for ' + platform.platform.cyan, function () {
+				describe(('[' + platform.platform + ']').cyan, function () {
 					it('compiles without critical error', 
 						function() {
 							TU.asyncExecTest(
@@ -84,11 +84,13 @@ describe('alloy compile', function() {
 					_.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
+						var newFile = path.join(hrFolder,gFile);
 						
-						it('matches known good generated code for ' + gFile.yellow, function () {
-							var newFile = path.join(hrFolder,gFile);
+						it ('generated a ' + gFile.yellow + ' file', function() {
 							expect(fs.existsSync(newFile)).toBeTruthy();
+						});
 
+						it('matches known good generated code for ' + gFile.yellow, function () {
 							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
 							var newFileContents = fs.readFileSync(newFile, 'utf8');
 							expect(goodFileContents === newFileContents).toBeTruthy();
