@@ -147,7 +147,7 @@ exports.init = function (logger, config, cli, appc) {
 	}
 
 	cli.addHook('build.pre.compile', function (build, finished) {
-		run(build.deployType, build.deviceFamily, finished);
+		run(build.deviceFamily, build.deployType, finished);
 	});
 
 	cli.addHook('codeprocessor.pre.run', function (build, finished) {
