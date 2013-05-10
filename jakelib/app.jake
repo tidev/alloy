@@ -114,6 +114,7 @@ namespace('app', function() {
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib')
 				);
+				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
 			}
 		});
 	});
