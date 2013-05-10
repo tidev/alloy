@@ -67,8 +67,12 @@ module.exports = function(opts) {
 		return newArr.join('\n');
 	}
 
-	function specFailureDetails(suiteDescription, specDescription, stackTraces) {
+	function specFailureDetails(suiteDescription, specDescription, stackTraces, messages) {
+		print(' ');
 		print(suiteDescription + ' ' + specDescription);
+		for (var i = 0; i < messages.length; i++) {
+			print(indent(messages[i], 2));
+		}
 		for (var i = 0; i < stackTraces.length; i++) {
 			print(indent(stackTraces[i], 2));
 		}
@@ -151,15 +155,19 @@ module.exports = function(opts) {
 			for (var j = 0; j < suiteResult.failedSpecResults.length; j++) {
 				var failedSpecResult = suiteResult.failedSpecResults[j];
 				var stackTraces = [];
-				for (var k = 0; k < failedSpecResult.items_.length; k++) stackTraces.push(failedSpecResult.items_[k].trace.stack);
-				callback(suiteResult.description, failedSpecResult.description, stackTraces);
+				var messages = [];
+				for (var k = 0; k < failedSpecResult.items_.length; k++) {
+					stackTraces.push(failedSpecResult.items_[k].trace.stack);
+					messages.push(failedSpecResult.items_[k].message);
+				}
+				callback(suiteResult.description, failedSpecResult.description, stackTraces, messages);
 			}
 		}
 	}
 
 	this.reportRunnerResults = function(runner) {
-		eachSpecFailure(this.suiteResults, function(suiteDescription, specDescription, stackTraces) {
-			specFailureDetails(suiteDescription, specDescription, stackTraces);
+		eachSpecFailure(this.suiteResults, function(suiteDescription, specDescription, stackTraces, messages) {
+			specFailureDetails(suiteDescription, specDescription, stackTraces, messages);
 		});
 
 		finished(this.now() - this.runnerStartTime);

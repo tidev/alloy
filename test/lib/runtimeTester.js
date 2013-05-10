@@ -54,6 +54,13 @@ function addMatchers() {
 				_.each(style, function(v,k) {
 					obj[k] = component[k];
 				});
+
+				this.message = function() {
+					return 'expected ' + this.actual.toString() + ' to have style:\n' + 
+						sortAndStringify(style) + '\nbut found this instead:\n' +
+						sortAndStringify(obj);
+				};
+
 				return sortAndStringify(obj) === sortAndStringify(style);
 			},
 			toHaveFunction: function(func) {
