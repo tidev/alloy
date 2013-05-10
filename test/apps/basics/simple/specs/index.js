@@ -1,4 +1,4 @@
-Ti.include('runtimeTester.js');
+Ti.include('/runtimeTester.js');
 
 module.exports = function($) {
 	addMatchers();
