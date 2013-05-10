@@ -35,7 +35,7 @@ module.exports = function($) {
 			style: {
 		        color: "#eee",
 		        font: {
-		            fontSize: "28dp",
+		            fontSize: OS_MOBILEWEB ? "28px" : "28dp",
 		            fontWeight: "bold"
 		        },
 		        text: "Trimmable String",
