@@ -8,7 +8,7 @@ exports.cliVersion = '>=3.X';
 
 exports.init = function (logger, config, cli, appc) {
 
-	var path = require('path')
+	var path = require('path'),
 		fs = require('fs'),
 		afs = appc.fs,
 		i18n = appc.i18n(__dirname),
@@ -18,8 +18,8 @@ exports.init = function (logger, config, cli, appc) {
 		exec = require('child_process').exec,
 		spawn = require('child_process').spawn,
 		parallel = appc.async.parallel;
-	
-	cli.addHook('build.pre.compile', function (build, finished) {
+
+	function run(deviceFamily, deployType, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
 			logger.info(__('Project not an Alloy app, continuing'));
@@ -35,20 +35,20 @@ exports.init = function (logger, config, cli, appc) {
 			fs.mkdirSync(buildDir);
 		}
 		fs.writeFileSync(path.join(buildDir, '.alloynewcli'), '');
-		
+
 		var compilerCommand = afs.resolvePath(__dirname, '..', 'Alloy', 'commands', 'compile', 'index.js'),
 			config = {
 				platform: /(?:iphone|ipad)/.test(cli.argv.platform) ? 'ios' : cli.argv.platform,
 				version: '0',
 				simtype: 'none',
-				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? build.deviceFamily : 'none',
-				deploytype: build.deployType || cli.argv['deploy-type'] || 'development'
+				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? deviceFamily : 'none',
+				deploytype: deployType || cli.argv['deploy-type'] || 'development'
 			};
 
 		config = Object.keys(config).map(function (c) {
 			return c + '=' + config[c];
 		}).join(',');
-		
+
 		if (afs.exists(compilerCommand)) {
 			// we're being invoked from the actual alloy directory!
 			// no need to subprocess, just require() and run
@@ -108,9 +108,9 @@ exports.init = function (logger, config, cli, appc) {
 				cli.argv['no-colors'] && cmd.push('--no-colors');
 				process.platform == 'win32' && cmd.shift();
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
-				
+
 				var child = spawn(cmd.shift(), cmd);
-					
+
 				function checkLine(line) {
 					var re = new RegExp('(?:\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(?:\u001b\\[\\d+m)?(.*)', 'i');
 					if (line) {
@@ -144,6 +144,13 @@ exports.init = function (logger, config, cli, appc) {
 				});
 			});
 		}
+	}
+
+	cli.addHook('build.pre.compile', function (build, finished) {
+		run(build.deployType, build.deviceFamily, finished);
 	});
-	
+
+	cli.addHook('codeprocessor.pre.run', function (build, finished) {
+		run('none', 'development', finished);
+	});
 };
