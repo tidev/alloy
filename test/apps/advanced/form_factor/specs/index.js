@@ -4,17 +4,6 @@ module.exports = function($) {
 	addMatchers();
 
 	describe('index controller', function() {
-		var bgColor = '#000';
-		if (OS_ANDROID) {
-			bgColor = '#0f0';
-		} else if (OS_IOS) {
-			bgColor = '#f00';
-		} else if (OS_MOBILEWEB) {
-			bgColor = '#00f';
-		} else if (OS_BLACKBERRY) {
-			bgColor = '#0ff';
-		}
-
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.Window',
 			style: {
