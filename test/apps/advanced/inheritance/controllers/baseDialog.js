@@ -12,3 +12,10 @@ exports.closeDialog = function() {
 	$.refWin.remove($.dialog);
 	$.refWin = $.cover = $.dialog = null;	
 }
+
+// runtime unit tests
+if (!ENV_PROD) {
+	require('specs/baseDialog')($, {
+		message: $.message.text
+	});
+}
