@@ -5,7 +5,6 @@ var U = require('../../utils'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../common/logger'),
-	uglifyjs = require('uglify-js'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	optimizer = require('./optimizer'),
@@ -15,6 +14,7 @@ var U = require('../../utils'),
 ////////// private variables //////////
 ///////////////////////////////////////
 var alloyRoot = path.join(__dirname,'..','..'),
+	platformsDir = path.join(alloyRoot,'..','platforms'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
@@ -26,22 +26,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	CONDITION_MAP = {
-		android: {
-			compile: 'OS_ANDROID',
-			runtime: "Ti.Platform.osname === 'android'"
-		},
-		ios: {
-			compile: 'OS_IOS',
-			runtime: "Ti.Platform.osname === 'ipad' || Ti.Platform.osname === 'iphone'"
-		},
-		mobileweb: {
-			compile: 'OS_MOBILEWEB',
-			runtime: "Ti.Platform.osname === 'mobileweb'"
-		},
-		blackberry: {
-			compile: 'OS_BLACKBERRY',
-			runtime: "Ti.Platform.osname === 'blackberry'"
-		},
 		handheld: {
 			runtime: "!Alloy.isTablet"
 		},
@@ -52,6 +36,11 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
 	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
+
+// load CONDITION_MAP with platforms
+_.each(CONST.PLATFORMS, function(p) {
+	CONDITION_MAP[p] = require(path.join(platformsDir,p,'index'))['condition'];
+});
 
 exports.bindingsMap = {};
 exports.destroyCode = '';
@@ -94,19 +83,14 @@ exports.getParserArgs = function(node, state, opts) {
 	opts || (opts = {});
 
 	var defaultId = opts.defaultId || undefined,
-		isTopLevel = opts.isTopLevel || false,
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name,
-		id = node.getAttribute('id') || ((isTopLevel && defaultId) ? defaultId : exports.generateUniqueId()),
+		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
-
-	if (id === defaultId && !isTopLevel) {
-		U.die('Root ID cannot be used for child: ' + id);
-	}
 
 	// handle binding arguments
 	var bindObj = {};
@@ -183,7 +167,7 @@ exports.generateNodeExtended = function(node, state, newState) {
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
-	var args = exports.getParserArgs(node, state, { defaultId: defaultId, isTopLevel: isTopLevel }),
+	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { 
 			content: '',
@@ -245,7 +229,9 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// handle any events from markup
-	if (args.events && args.events.length > 0) {
+	if (args.events && args.events.length > 0 && 
+		!_.contains(CONST.SKIP_EVENT_HANDLING, args.fullname) &&
+		!state.isViewTemplate) {
 		// determine which function name to use for event handling:
 		// * addEventListener() for Titanium proxies
 		// * on() for everything else (controllers, models, collections)
@@ -274,13 +260,12 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	// Continue parsing if necessary
 	if (state.parent) {
 		var states = _.isArray(state.parent) ? state.parent : [state.parent];
-		defaultId = (defaultId && isTopLevel && args.id === defaultId) ? defaultId : undefined;
 		_.each(states, function(p) {
 			var parent = p.node;
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
 				var newState = _.defaults({ parent: p }, state);
-				code.content += exports.generateNode(parent.childNodes.item(i), newState, defaultId, false); 
+				code.content += exports.generateNode(parent.childNodes.item(i), newState); 
 			}
 		}); 
 	}
@@ -530,7 +515,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
 	
-	var config = exports.generateConfig(obj.dir.home, alloyConfig, obj.dir.resourcesAlloy);
+	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 
 	// update implicit namespaces, if possible
@@ -542,21 +527,32 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	return obj;
 };
 
-exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
-	var cf = path.join(configDir,'config.'+CONST.FILE_EXT.CONFIG);
+exports.generateConfig = function(obj) { 
 	var o = {};
+	var alloyConfig = obj.alloyConfig;
+	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
+	var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
 
+	// get the app and resources locations
+	var appCfg = path.join(obj.dir.home,'config.'+CONST.FILE_EXT.CONFIG);
+	var resourcesBase = (function() {
+		var base = obj.dir.resources;
+		platform && (base = path.join(base,platform));
+		return path.join(base,'alloy');
+	})();
+	var resourcesCfg = path.join(resourcesBase,'CFG.js');
+	
 	// parse config.json, if it exists
-	if (path.existsSync(cf)) {
+	if (path.existsSync(appCfg)) {
 		try {
-			var jf = fs.readFileSync(cf, 'utf8');
-			var j = jsonlint.parse(jf);
+			var j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
 		} catch (e) {
 			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 		}
 
 		_.each(j, function(v,k) {
 			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
+				logger.debug(k + ' = ' + JSON.stringify(v));
 				o[k] = v;
 			} 
 		});
@@ -566,15 +562,23 @@ exports.generateConfig = function(configDir, alloyConfig, resourceAlloyDir) {
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
-	} else {
-		logger.warn('No "app/config.' + CONST.FILE_EXT.CONFIG + '" file found');
+
+		// app/config.json has not been modified since CFG.js was created
+		if (U.changeTime(appCfg) < U.changeTime(resourcesCfg)) {
+			return o;
+		} 
+	} else if (fs.existsSync(resourcesCfg) && 
+			   fs.readFileSync(resourcesCfg,'utf8') === defaultCfg) {
+		return o;
 	}
 
 	// write out the config runtime module
-	wrench.mkdirSyncRecursive(resourceAlloyDir, 0777);
+	wrench.mkdirSyncRecursive(resourcesBase, 0777);
+
+	logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
-		path.join(resourceAlloyDir,'CFG.js'),
-		"module.exports = " + JSON.stringify(o) + ";\n"
+		resourcesCfg,
+		"module.exports=" + JSON.stringify(o) + ";"
 	);
 
 	return o;
@@ -790,12 +794,36 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		});
 	});
 
-	function processStyle(style, fromArray) {
-		style = fromArray ? {0:style} : style;
+	function processStyle(style, opts) {
+		opts || (opts = {});
+		style = opts.fromArray ? {0:style} : style;
+		var groups = {};
+
+		// need to add "properties" and bindIds for ListItems
+		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
+			for (var sn in style) {
+				var value = style[sn];
+				var prefixes = sn.split(':');
+				if (prefixes.length > 1) {
+					var bindId = prefixes[0];
+					groups[bindId] || (groups[bindId] = {});
+					groups[bindId][prefixes.slice(1).join(':')] = value;
+				} else {
+					// allow template to be specified
+					if (sn === 'template') {
+						groups.template = value;
+					} else {
+						groups.properties || (groups.properties = {});
+						groups.properties[sn] = value;
+					}
+				}
+			}
+			style = groups;
+		}
+
 		for (var sn in style) {
 			var value = style[sn],
-				prefix = fromArray ? '' : sn + ':',
-				actualValue;
+				prefix = opts.fromArray ? '' : sn + ':';
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
@@ -807,7 +835,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
 				_.each(value, function(v) {
-		 			processStyle(v, true);
+		 			processStyle(v, {fromArray:true});
 		 		});
 				code += '],';
 			} else if (_.isObject(value)) {
@@ -833,11 +861,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object
-			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style) + '} : {}';
+			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style, {firstOrder:true}) + '} : {}';
 		} else {
 			// just return the object
 			code += '{';
-			processStyle(styleCollection[0].style);
+			processStyle(styleCollection[0].style, {firstOrder:true});
 			code += '}';
 		}
 	} else if (styleCollection.length > 1) {
@@ -849,7 +877,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				code += 'if (' + styleCollection[i].condition + ') ';
 			} 
 			code += '_.extend(o, {';
-			processStyle(styleCollection[i].style);
+			processStyle(styleCollection[i].style, {firstOrder:true});
 			code += '});\n';
 		}
 		code += 'return o;\n'
@@ -985,6 +1013,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	// construct code template
 	code += "var " + colVar + "=" + col + ";";
 	code += "function " + handlerFunc + "(e) {";
+	code += "   var opts = " + handlerFunc + ".opts || {};";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
 	code += "<%= pre %>";
