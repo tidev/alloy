@@ -8,7 +8,7 @@ var 	   _ = require('alloy/underscore')._,
 
 var DEFAULT_WIDGET = 'widget';
 
-exports.version = '1.1.1';
+exports.version = '1.1.3';
 exports._ = _;
 exports.Backbone = Backbone;
 
