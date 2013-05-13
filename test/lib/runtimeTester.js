@@ -46,7 +46,7 @@ function addMatchers() {
 	beforeEach(function() {
 		this.addMatchers({
 			toBeTiProxy: function() {
-				return _.isFunction(this.actual.applyProperties);
+				return _.isFunction(this.actual.addEventListener);
 			},
 			toHaveStyle: function(style) {
 				var component = this.actual;
