@@ -17,30 +17,29 @@ exports.init = function (logger, config, cli, appc) {
 		exec = require('child_process').exec,
 		spawn = require('child_process').spawn,
 		parallel = appc.async.parallel;
-	
-	cli.addHook('build.pre.compile', function (build, finished) {
+
+	function run(deviceFamily, deployType, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
 			logger.info(__('Project not an Alloy app, continuing'));
 			finished();
 			return;
 		}
-		
+
 		logger.info(__('Found Alloy app in %s', appDir.cyan));
-		
 		var compilerCommand = afs.resolvePath(__dirname, '..', 'Alloy', 'commands', 'compile', 'index.js'),
 			config = {
 				platform: /(?:iphone|ipad)/.test(cli.argv.platform) ? 'ios' : cli.argv.platform,
 				version: '0',
 				simtype: 'none',
-				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? build.deviceFamily : 'none',
-				deploytype: build.deployType || cli.argv['deploy-type'] || 'development'
+				devicefamily: /(?:iphone|ios)/.test(cli.argv.platform) ? deviceFamily : 'none',
+				deploytype: deployType || cli.argv['deploy-type'] || 'development'
 			};
-		
+
 		config = Object.keys(config).map(function (c) {
 			return c + '=' + config[c];
 		}).join(',');
-		
+
 		if (afs.exists(compilerCommand)) {
 			// we're being invoked from the actual alloy directory!
 			// no need to subprocess, just require() and run
@@ -100,11 +99,10 @@ exports.init = function (logger, config, cli, appc) {
 				cli.argv['no-colors'] && cmd.push('--no-colors');
 				process.platform == 'win32' && cmd.shift();
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
-				
-				var child = spawn(cmd.shift(), cmd);
+
+				var child = spawn(cmd.shift(), cmd),
 					// this regex is used to strip [INFO] and friends from alloy's output and re-log it using our logger
 					re = new RegExp('(\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(\u001b\\[\\d+m)?(.*)', 'i');
-				
 				child.stdout.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
 						if (line) {
@@ -133,6 +131,13 @@ exports.init = function (logger, config, cli, appc) {
 				});
 			});
 		}
+	}
+
+	cli.addHook('build.pre.compile', function (build, finished) {
+		run(build.deviceFamily, build.deployType, finished);
 	});
-	
+
+	cli.addHook('codeprocessor.pre.run', function (build, finished) {
+		run('none', 'development', finished);
+	});
 };
