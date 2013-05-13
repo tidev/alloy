@@ -8,11 +8,18 @@ var _ = require('alloy/underscore')._,
 	beforeEach = __j.beforeEach;
 
 var apiChecks = {
+	'Ti.UI.iPhone.NavigationGroup': function(o) {
+		apiChecks['Ti.UI.Window'](o.window);
+	},
+	'Ti.UI.TableView': function(o) {
+		expect(o).toHaveFunction('appendRow');
+	},
+	'Ti.UI.TableViewRow': function(o) {
+		expect(o).toHaveFunction('getClassName');
+	},
 	'Ti.UI.Window': function(o) {
 		expect(o).toHaveFunction('open');
-	},
-	//'Ti.UI.Button': function(o) {},
-	//'Ti.UI.Label': function(o) {},
+	}
 };
 
 function sortAndStringify(obj) {
@@ -47,6 +54,9 @@ function addMatchers() {
 		this.addMatchers({
 			toBeTiProxy: function() {
 				return _.isFunction(this.actual.addEventListener);
+			},
+			toBeController: function() {
+				return this.actual.__iamalloy === true;
 			},
 			toHaveStyle: function(style) {
 				var component = this.actual;
