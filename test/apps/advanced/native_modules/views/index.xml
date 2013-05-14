@@ -7,6 +7,6 @@
 			instance of your UI module. "createView" will be 
 			used if none is specified
 		--> 
-		<Module id="paint" module="ti.paint" method="createPaintView"/>
+		<Module id="paint" module="ti.paint" method="createPaintView" platform="ios,android"/>
 	</Window>
 </Alloy>
