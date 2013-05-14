@@ -8,8 +8,17 @@ var _ = require('alloy/underscore')._,
 	beforeEach = __j.beforeEach;
 
 var apiChecks = {
+	'Ti.UI.ImageView': function(o) {
+		expect(o).toHaveFunction('pause');
+	},
+	'Ti.UI.iOS.CoverFlowView': function(o) {
+		expect(o).toHaveFunction('getImages');
+	},
 	'Ti.UI.iPhone.NavigationGroup': function(o) {
 		apiChecks['Ti.UI.Window'](o.window);
+	},
+	'Ti.UI.ScrollView': function(o) {
+		expect(o).toHaveFunction('scrollTo');
 	},
 	'Ti.UI.TableView': function(o) {
 		expect(o).toHaveFunction('appendRow');
