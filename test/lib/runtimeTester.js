@@ -7,7 +7,11 @@ var _ = require('alloy/underscore')._,
 	jasmine = __j.jasmine,
 	beforeEach = __j.beforeEach;
 
+// These are in alphabetical order. It's not an accident. Keep it that way.
 var apiChecks = {
+	'Ti.UI.Button': function(o) {
+		expect(o).toHaveFunction('setTitle');
+	},
 	'Ti.UI.ImageView': function(o) {
 		expect(o).toHaveFunction('pause');
 	},
@@ -17,8 +21,17 @@ var apiChecks = {
 	'Ti.UI.iPhone.NavigationGroup': function(o) {
 		apiChecks['Ti.UI.Window'](o.window);
 	},
+	'Ti.UI.Label': function(o) {
+		expect(o).toHaveFunction('setText');
+	},
 	'Ti.UI.ScrollView': function(o) {
 		expect(o).toHaveFunction('scrollTo');
+	},
+	'Ti.UI.Tab': function(o) {
+		apiChecks['Ti.UI.Window'](o.window);
+	},
+	'Ti.UI.TabGroup': function(o) {
+		expect(o).toHaveFunction('addTab');
 	},
 	'Ti.UI.TableView': function(o) {
 		expect(o).toHaveFunction('appendRow');
@@ -65,6 +78,9 @@ function addMatchers() {
 				return _.isFunction(this.actual.addEventListener);
 			},
 			toBeController: function() {
+				return this.actual.__iamalloy === true;
+			},
+			toBeWidget: function() {
 				return this.actual.__iamalloy === true;
 			},
 			toHaveStyle: function(style) {
