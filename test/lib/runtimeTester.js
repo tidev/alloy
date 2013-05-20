@@ -27,6 +27,13 @@ var apiChecks = {
 	'Ti.UI.ScrollView': function(o) {
 		expect(o).toHaveFunction('scrollTo');
 	},
+	'Ti.UI.Slider': function(o) {
+		if (OS_IOS) {
+			expect(o).toHaveFunction('getThumbImage');
+		} else {
+			expect(o).toHaveFunction('getMinRange');
+		}
+	},
 	'Ti.UI.Tab': function(o) {
 		apiChecks['Ti.UI.Window'](o.window);
 	},
