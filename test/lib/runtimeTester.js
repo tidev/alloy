@@ -132,6 +132,9 @@ function validateUiComponent($, id, opts) {
 	}
 
 	if (opts.style) {
+		if ($.__styler && $.__styler[id] && !_.isEmpty($.__styler[id])) {
+			opts.style = _.extend(opts.style, $.__styler[id]);
+		}
 		it('#' + id + ' component has correct style', function() {
 			expect(comp).toHaveStyle(opts.style);
 		});
