@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label id="label">Hello, World!</Label>
+	</Window>
+</Alloy>

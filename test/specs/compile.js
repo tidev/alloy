@@ -1,12 +1,14 @@
 var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
+	colors = require('colors'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	platforms = require('../../platforms/index');
 	
 var TIMEOUT_COMPILE = 10000;
+var GEN_FOLDER = '_generated';
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
@@ -27,51 +29,75 @@ var alloyRoot = path.join(__dirname,'..','..'),
 describe('alloy compile', function() {
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
-		var indexXml = path.join(paths.apps,file,'views','index.xml');
-		if (path.existsSync(indexXml)) {
-			it('preparing test app "' + file + '"', function() {
+		if (process.env.app && file !== process.env.app) { return; } 
+
+		describe(file.yellow, function() {
+			var indexJs = path.join(paths.apps,file,'controllers','index.js');
+			if (!path.existsSync(indexJs) || indexJs.indexOf(GEN_FOLDER) !== -1) { return; }
+
+			it('preparing test app', function() {
 				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1');
 			});
 
 			_.each(platforms, function(platform,k) {
-				it('compiles "' + file + '" test app for platform [' + platform.platform + ']', 
-					function() {
-						TU.asyncExecTest(
-							'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
-							test: function() {
-								var o = this.output;
+				describe(('[' + platform.platform + ']').cyan, function () {
+					it('compiles without critical error', 
+						function() {
+							TU.asyncExecTest(
+								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
+								test: function() {
+									// Make sure there were no compile errors
+									expect(this.output.error).toBeFalsy();
+								},
+								timeout: TIMEOUT_COMPILE
+							}
+						);
+					});
 
-								// Make sure there were no compile errors
-								expect(o.error).toBeFalsy();
-							},
-							timeout: TIMEOUT_COMPILE
-						}
-					);
-				});
+					it('leaves no compiler directives in generated code', function() {
+						var hrDir = path.join(paths.harness,'Resources');
+						var cPaths = [
+							path.join(hrDir,'alloy'),
+							path.join(hrDir,platform.titaniumFolder,'alloy')
+						];
 
-				it('leaves no compiler directives in generated code', function() {
-					var hrDir = path.join(paths.harness,'Resources');
-					var cPaths = [
-						path.join(hrDir,'alloy'),
-						path.join(hrDir,platform.titaniumFolder,'alloy')
-					];
+						_.each(cPaths, function(cPath) {
+							if (!fs.existsSync(cPath)) { return; }
+							var files = wrench.readdirSyncRecursive(cPath);
+							_.each(files, function(file) {
+								var fullpath = path.join(cPath,file);
+								if (!fs.statSync(fullpath).isFile() ||
+									!/\.js$/.test(fullpath)) {
+									return;
+								} 
+								var content = fs.readFileSync(fullpath, 'utf8');
+								expect(cdRegex.test(content)).toBeFalsy();
+							});
+						}); 
+					});
 
-					_.each(cPaths, function(cPath) {
-						if (!fs.existsSync(cPath)) { return; }
-						var files = wrench.readdirSyncRecursive(cPath);
-						_.each(files, function(file) {
-							var fullpath = path.join(cPath,file);
-							if (!fs.statSync(fullpath).isFile() ||
-								!/\.js$/.test(fullpath)) {
-								return;
-							} 
-							var content = fs.readFileSync(fullpath, 'utf8');
-							expect(cdRegex.test(content)).toBeFalsy();
+					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
+					if (!fs.existsSync(genFolder)) { return; }
+					var hrFolder = path.join(paths.harness,'Resources');
+					var files = wrench.readdirSyncRecursive(genFolder);
+
+					_.each(files, function(gFile) {
+						var goodFile = path.join(genFolder,gFile);
+						if (!fs.statSync(goodFile).isFile()) { return; }
+						var newFile = path.join(hrFolder,gFile);
+						
+						it ('generated a ' + gFile.yellow + ' file', function() {
+							expect(fs.existsSync(newFile)).toBeTruthy();
+						});
+
+						it('matches known good generated code for ' + gFile.yellow, function () {
+							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
+							var newFileContents = fs.readFileSync(newFile, 'utf8');
+							expect(goodFileContents === newFileContents).toBeTruthy();
 						});
 					});
-					 
 				});
 			});
-		}
+		});
 	});
 });

@@ -3,7 +3,8 @@
 	opacity: 0.5,
 	height: Ti.UI.FILL,
 	width: Ti.UI.FILL
-},
+}
+
 "#dialog": {
 	height: '100dp',
 	width: '66%',
@@ -11,7 +12,8 @@
 	borderColor: '#000',
 	borderWidth: 2,
 	borderRadius: 4
-},
+}
+
 "#message": {
 	color: '#000',
 	left: 10,
@@ -22,7 +24,8 @@
 		fontSize: '16dp'
 	},
 	textAlign: 'center'
-},
+}
+
 "#closeButton": {
 	bottom: 10
 }

@@ -10,3 +10,8 @@ _.each(Alloy.Globals.data, function(stats, name) {
 	}).getView());
 });
 $.table.setData(data);
+
+// runtime unit tests
+if (!ENV_PROD) {
+	require('specs/master')($);
+}

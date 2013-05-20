@@ -9,7 +9,8 @@ var path = require('path'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	platforms = require('../../../platforms/index');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -114,7 +115,7 @@ module.exports = function(args, program) {
 				path.join('alloy','widgets'),
 				path.join('alloy','models')
 			],
-			platform: require('../../../platforms/'+buildPlatform+'/index').titaniumFolder
+			platform: platforms[buildPlatform].titaniumFolder
 		}
 	);
 
@@ -137,6 +138,12 @@ module.exports = function(args, program) {
 	U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
 	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
 	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
+
+	// copy in test specs if not in production
+	if (alloyConfig.deploytype !== 'production') {
+		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
+	}
+
 	logger.debug('');
 
 	// check theme for assets

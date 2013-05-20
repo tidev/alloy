@@ -9,4 +9,13 @@ exports.setBoxerStats = function(name) {
 	$.height.text = 'Height: ' + stats.height;
 	$.weight.text = 'Weight: ' + stats.weight;
 	$.record.text = 'Record: ' + stats.record;	
+
+
+	// runtime unit tests
+	if (!ENV_PROD) {
+		require('specs/detail')($, {
+			name: name,
+			stats: stats
+		});
+	}
 }
