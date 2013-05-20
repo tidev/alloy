@@ -9,3 +9,8 @@ function removeListener() {
 $.requiredController.on('someEvent', handler);
 
 $.index.open();
+
+// runtime unit tests
+if (!ENV_PROD) {
+	require('specs/index')($);
+}

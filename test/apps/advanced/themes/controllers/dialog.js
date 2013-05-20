@@ -30,4 +30,9 @@ exports.show = function(duration) {
 	});
 	anim.addEventListener('complete', handleAnimation);
 	$.progressFront.animate(anim);
+
+	if (!ENV_PROD) {
+		require('specs/dialog')($);
+	}
 }
+

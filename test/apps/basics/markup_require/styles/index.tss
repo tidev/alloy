@@ -1,7 +1,8 @@
 "#index": {
 	backgroundColor: "#fff",
 	layout: "vertical"
-},
+}
+
 "#top": {
 	backgroundColor:"black",
 	borderRadius:2,

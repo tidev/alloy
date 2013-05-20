@@ -1,17 +1,16 @@
 var _ = require('../lib/alloy/underscore')._,
 	wrench = require('wrench'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	platforms = require('../../platforms/index');
 
 var alloyRoot = path.join(__dirname,'../..'),
 	platformsDir = path.join(alloyRoot,'platforms');
 
 function generatePlatformArray(key) {
 	var ret = [];
-	_.each(wrench.readdirSyncRecursive(platformsDir), function(dir) {
-		var index = path.join(platformsDir,dir,'index.js');
-		if (!fs.existsSync(index)) { return; }
-		ret.push(require(index)[key]);
+	_.each(_.keys(platforms), function(p) {
+		ret.push(platforms[p][key]);
 	});
 	return ret;
 } 

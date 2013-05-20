@@ -23,3 +23,8 @@ if (OS_ANDROID) {
 } else {
 	$.index.open();
 }
+
+// runtime unit tests
+if (!ENV_PROD) {
+	require('specs/index')($);
+}

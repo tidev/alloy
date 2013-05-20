@@ -1,34 +1,37 @@
 var colors = require('colors');
 
 //Based on Console Reporter, taken from https://github.com/pivotal/jasmine/blob/master/src/console/ConsoleReporter.js
-module.exports = function(print, doneCallback, showColors) {
+module.exports = function(opts) {
 	//inspired by mhevery's jasmine-node reporter
 	//https://github.com/mhevery/jasmine-node
+	opts || (opts = {});
 
-	doneCallback = doneCallback || function() {};
+	var doneCallback = opts.doneCallback || function() {};
+	var print, showColors;
+	if (typeof Ti !== 'undefined') {
+		print = Ti.Platform.osname === 'android' ? 
+			function(s){Ti.API.info(s)} : 
+			Ti.API.info;
+		showColors = false;
+	} else {
+		print = console.log;
+		showColors = true;
+	}
+	print = opts.print || print;
+	showColors = opts.showColors || showColors;
 
 	var language = {
 		spec: 'spec',
 		failure: 'failure'
 	};
 
-	function greenStr(str) {
-		return str.green
-	}
-
-	function redStr(str) {
-		return str.red
-	}
-
-	function yellowStr(str) {
-		return str.yellow
-	}
+	var plainPrint = function(str) { return str; }
+	var greenStr = showColors ? function(str) { return str.green; } : plainPrint;
+	var redStr = showColors ? function(str) { return str.red; } : plainPrint;
+	var yellowStr = showColors ? function(str) { return str.yellow; } : plainPrint;
 
 	function started() {
-		print('Begin Jasmine Test Suite (Jasmine v.'+jasmine.getEnv().version().major
-			+'.'+jasmine.getEnv().version().minor
-			+'.'+jasmine.getEnv().version().build
-			+')');
+		print('Begin Alloy Test Suite');
 	}
 
 	function greenDot() {
@@ -64,8 +67,12 @@ module.exports = function(print, doneCallback, showColors) {
 		return newArr.join('\n');
 	}
 
-	function specFailureDetails(suiteDescription, specDescription, stackTraces) {
+	function specFailureDetails(suiteDescription, specDescription, stackTraces, messages) {
+		print(' ');
 		print(suiteDescription + ' ' + specDescription);
+		for (var i = 0; i < messages.length; i++) {
+			print(indent(messages[i], 2));
+		}
 		for (var i = 0; i < stackTraces.length; i++) {
 			print(indent(stackTraces[i], 2));
 		}
@@ -148,15 +155,19 @@ module.exports = function(print, doneCallback, showColors) {
 			for (var j = 0; j < suiteResult.failedSpecResults.length; j++) {
 				var failedSpecResult = suiteResult.failedSpecResults[j];
 				var stackTraces = [];
-				for (var k = 0; k < failedSpecResult.items_.length; k++) stackTraces.push(failedSpecResult.items_[k].trace.stack);
-				callback(suiteResult.description, failedSpecResult.description, stackTraces);
+				var messages = [];
+				for (var k = 0; k < failedSpecResult.items_.length; k++) {
+					stackTraces.push(failedSpecResult.items_[k].trace.stack);
+					messages.push(failedSpecResult.items_[k].message);
+				}
+				callback(suiteResult.description, failedSpecResult.description, stackTraces, messages);
 			}
 		}
 	}
 
 	this.reportRunnerResults = function(runner) {
-		eachSpecFailure(this.suiteResults, function(suiteDescription, specDescription, stackTraces) {
-			specFailureDetails(suiteDescription, specDescription, stackTraces);
+		eachSpecFailure(this.suiteResults, function(suiteDescription, specDescription, stackTraces, messages) {
+			specFailureDetails(suiteDescription, specDescription, stackTraces, messages);
 		});
 
 		finished(this.now() - this.runnerStartTime);

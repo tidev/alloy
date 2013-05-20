@@ -7,3 +7,7 @@ function testPatience(e) {
 }
 
 $.index.open();
+
+if (!ENV_PROD) {
+	require('specs/index')($);
+}
