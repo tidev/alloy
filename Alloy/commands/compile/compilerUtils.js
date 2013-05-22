@@ -645,10 +645,6 @@ exports.loadStyle = function(tssFile, manifest) {
 	return {};
 };
 
-exports.loadAndSortStyle = function(tssFile, manifest, opts) {
-	return styler.sortStyles(exports.loadStyle(tssFile, manifest), opts);
-}
-
 exports.createVariableStyle = function(keyValuePairs, value) {
 	var style = {};
 

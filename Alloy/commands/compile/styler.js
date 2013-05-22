@@ -88,7 +88,7 @@ exports.loadGlobalStyles = function(appPath, platform, opts) {
 	_.each(loadArray, function(g) {
 		if (path.existsSync(g.path)) {
 			logger.info('[' + g.msg + '] global style processing...');
-			exports.globalStyle = CU.loadAndSortStyle(g.path, undefined, _.extend(
+			exports.globalStyle = exports.loadAndSortStyle(g.path, undefined, _.extend(
 				{ existingStyle: exports.globalStyle }, 
 				g.obj || {}
 			));
@@ -167,4 +167,10 @@ exports.sortStyles = function(style, opts) {
 	var theArray = opts.existingStyle ? opts.existingStyle.concat(sortedStyles) : sortedStyles;
 	return _.sortBy(theArray, 'priority');
 }
+
+exports.loadAndSortStyle = function(tssFile, manifest, opts) {
+	return exports.sortStyles(CU.loadStyle(tssFile, manifest), opts);
+}
+
+
 
