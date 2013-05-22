@@ -608,43 +608,6 @@ exports.loadController = function(file) {
 	return code;
 };
 
-exports.loadStyle = function(tssFile, manifest) {
-	if (path.existsSync(tssFile)) {
-		// read the style file
-		try {
-			var contents = fs.readFileSync(tssFile, 'utf8');
-		} catch (e) {
-			U.die('Failed to read style file "' + tssFile + '"', e);
-		}
-
-		// skip if the file is empty
-		if (/^\s*$/gi.test(contents)) {
-			return {};
-		}
-
-		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
-			
-		// Process tss file then convert to JSON
-		try {
-			var json = require('../../grammar/tss').parse(contents);
-			optimizer.optimizeStyle(json);
-		} catch (e) {
-			U.die([
-				'Error processing style "' + tssFile + '"',
-				e.message,
-				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
-				'- line:    ' + e.line,
-				'- column:  ' + e.column,
-				'- offset:  ' + e.offset 
-			]);
-		}
-
-		return json;
-	}
-	return {};
-};
-
 exports.createVariableStyle = function(keyValuePairs, value) {
 	var style = {};
 

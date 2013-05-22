@@ -349,7 +349,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				if (fs.existsSync(style.file)) {
 					logger.info('  style:      "' + 
 						path.relative(path.join(dir,CONST.DIR.STYLE),style.file) + '"');
-					state.styles = styler.loadAndSortStyle(style.file, manifest, {
+					state.styles = styler.loadAndSortStyle(style.file, {
 						existingStyle: state.styles,
 						platform: style.platform
 					});
@@ -365,14 +365,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 			if (path.existsSync(themeStylesFile)) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
-				state.styles = styler.loadAndSortStyle(themeStylesFile, manifest, {
+				state.styles = styler.loadAndSortStyle(themeStylesFile, {
 					existingStyle: state.styles,
 					theme: true
 				});
 			}
 			if (path.existsSync(psThemeStylesFile)) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
-				state.styles = styler.loadAndSortStyle(psThemeStylesFile, manifest, {
+				state.styles = styler.loadAndSortStyle(psThemeStylesFile, {
 					existingStyle: state.styles,
 					platform: true,
 					theme: true

@@ -2,7 +2,8 @@ var fs = require('fs'),
 	path = require('path'),
 	_ = require('../../lib/alloy/underscore')._
 	U = require('../../utils'),
-	CU = require('./compilerUtils'),
+	optimizer = require('./optimizer'),
+	grammar = require('../../grammar/tss'),
 	logger = require('../../common/logger'),
 	CONST = require('../../common/constants');
 
@@ -88,7 +89,7 @@ exports.loadGlobalStyles = function(appPath, platform, opts) {
 	_.each(loadArray, function(g) {
 		if (path.existsSync(g.path)) {
 			logger.info('[' + g.msg + '] global style processing...');
-			exports.globalStyle = exports.loadAndSortStyle(g.path, undefined, _.extend(
+			exports.globalStyle = exports.loadAndSortStyle(g.path, _.extend(
 				{ existingStyle: exports.globalStyle }, 
 				g.obj || {}
 			));
@@ -168,8 +169,45 @@ exports.sortStyles = function(style, opts) {
 	return _.sortBy(theArray, 'priority');
 }
 
-exports.loadAndSortStyle = function(tssFile, manifest, opts) {
-	return exports.sortStyles(CU.loadStyle(tssFile, manifest), opts);
+exports.loadStyle = function(tssFile) {
+	if (path.existsSync(tssFile)) {
+		// read the style file
+		try {
+			var contents = fs.readFileSync(tssFile, 'utf8');
+		} catch (e) {
+			U.die('Failed to read style file "' + tssFile + '"', e);
+		}
+
+		// skip if the file is empty
+		if (/^\s*$/gi.test(contents)) {
+			return {};
+		}
+
+		// Add enclosing curly braces, if necessary
+		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+			
+		// Process tss file then convert to JSON
+		try {
+			var json = grammar.parse(contents);
+			optimizer.optimizeStyle(json);
+		} catch (e) {
+			U.die([
+				'Error processing style "' + tssFile + '"',
+				e.message,
+				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
+				'- line:    ' + e.line,
+				'- column:  ' + e.column,
+				'- offset:  ' + e.offset 
+			]);
+		}
+
+		return json;
+	}
+	return {};
+};
+
+exports.loadAndSortStyle = function(tssFile, opts) {
+	return exports.sortStyles(exports.loadStyle(tssFile), opts);
 }
 
 
