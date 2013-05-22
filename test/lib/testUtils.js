@@ -5,7 +5,7 @@ var exec = require('child_process').exec,
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	uglifyjs = require('uglify-js'),
 	U = require('../../Alloy/utils'),
-	CU = require('../../Alloy/commands/compile/compilerUtils');
+	styler = require('../../Alloy/commands/compile/styler');
 
 var alloyRoot = path.join(__dirname,'..','..');
 
@@ -108,7 +108,7 @@ function toBeTssFile(expected) {
 			U.die = die;
 			throw U.createErrorOutput(msg, e);
 		};
-		style = CU.loadStyle(actual);
+		style = styler.loadStyle(actual);
 		U.die = die;
 	} catch (e) {
 		U.die = die || U.die;

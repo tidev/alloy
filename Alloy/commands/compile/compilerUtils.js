@@ -7,7 +7,6 @@ var U = require('../../utils'),
 	logger = require('../../common/logger'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
-	optimizer = require('./optimizer'),
 	styler = require('./styler'),
 	CONST = require('../../common/constants');
 
