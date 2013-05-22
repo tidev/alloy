@@ -8,6 +8,7 @@ var U = require('../../utils'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	optimizer = require('./optimizer'),
+	styler = require('./styler'),
 	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
@@ -45,7 +46,7 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
-exports.styleOrderCounter = 1;
+//exports.styleOrderCounter = 1;
 exports.currentManifest;
 
 //////////////////////////////////////
@@ -920,7 +921,7 @@ function sortStyles(componentStyle, opts) {
 	_.each(styleList, function(style) {
 		for (var key in style) {
 			var obj = {};
-			var priority = exports.styleOrderCounter++ * VALUES.ORDER;
+			var priority = styler.styleOrderCounter++ * VALUES.ORDER;
 			var match = key.match(regex);
 			if (match === null) {
 				U.die('Invalid style specifier "' + key + '"');
