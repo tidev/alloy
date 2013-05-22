@@ -17,7 +17,6 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
-	//styleOrderBase = 1,
 	compileConfig = {},
 	buildPlatform,
 	theme;
@@ -184,7 +183,7 @@ module.exports = function(args, program) {
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
-	styler.loadGlobalStyles(paths.app, buildPlatform, theme);
+	styler.loadGlobalStyles(paths.app, buildPlatform, theme ? {theme:theme} : {});
 	
 	// Create collection of all widget and app paths 
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
@@ -299,7 +298,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
-	styler.styleOrderCounter = styler.styleOrderBase;
 	CU.currentManifest = manifest;
 
 	// create a list of file paths
@@ -626,53 +624,6 @@ function processModels(dirs) {
 
 	return models;
 };
-
-// Order of processing global styles:
-// 1. global
-// 2. global theme
-// 3. global platform-specific
-// 4. global theme platform-specific
-// function loadGlobalStyles(appPath, theme) {
-// 	compileConfig.globalStyle = [];
-// 	var apptss = CONST.GLOBAL_STYLE;
-// 	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
-// 	if (theme) {
-// 		var themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
-// 	}
-
-// 	var globalStyles = [];
-// 	globalStyles.push({ 
-// 		path: path.join(stylesDir,apptss),
-// 		msg: apptss
-// 	});
-// 	theme && globalStyles.push({ 
-// 		path: path.join(themesDir,apptss),
-// 		msg: apptss + '(theme:' + theme + ')',
-// 		obj: { theme: true }
-// 	});
-// 	globalStyles.push({ 
-// 		// TODO: get the real platforms object
-// 		path: path.join(stylesDir,buildPlatform,apptss),
-// 		msg: apptss + '(platform:' + buildPlatform + ')',
-// 		obj: { platform: true }
-// 	});
-// 	theme && globalStyles.push({ 
-// 		// TODO: get the real platforms object
-// 		path: path.join(themesDir,buildPlatform,apptss),
-// 		msg: apptss + '(theme:' + theme + ' platform:' + buildPlatform + ')',
-// 		obj: { platform: true, theme: true }
-// 	});
-
-// 	_.each(globalStyles, function(g) {
-// 		if (path.existsSync(g.path)) {
-// 			logger.info('[' + g.msg + '] global style processing...');
-// 			compileConfig.globalStyle = CU.loadAndSortStyle(g.path, undefined, 
-// 				_.extend({existingStyle: compileConfig.globalStyle},g.obj||{}));
-// 		}
-// 	});	
-
-// 	styleOrderBase = ++CU.styleOrderCounter;
-// }
 
 function optimizeCompiledCode() {
 	var mods = [

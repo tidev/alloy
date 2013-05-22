@@ -46,7 +46,6 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
-//exports.styleOrderCounter = 1;
 exports.currentManifest;
 
 //////////////////////////////////////
@@ -647,7 +646,7 @@ exports.loadStyle = function(tssFile, manifest) {
 };
 
 exports.loadAndSortStyle = function(tssFile, manifest, opts) {
-	return sortStyles(exports.loadStyle(tssFile, manifest), opts);
+	return styler.sortStyles(exports.loadStyle(tssFile, manifest), opts);
 }
 
 exports.createVariableStyle = function(keyValuePairs, value) {
@@ -888,91 +887,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	//console.log(code);
 
 	return code;
-}
-
-///////////////////////////////////////
-////////// private functions //////////
-///////////////////////////////////////
-function sortStyles(componentStyle, opts) {
-	var mergedStyle = {},
-		regex = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/,
-		extraStyle = extraStyle || {},
-		sortedStyles = [],
-		VALUES = {
-			ID:     100000,
-			CLASS:   10000,
-			API:      1000,
-			PLATFORM:  100,
-			FORMFACTOR: 10,
-			SUM:         1,
-			THEME:       0.9,
-			ORDER:       0.0001
-		};
-
-	opts || (opts = {});
-
-	// add global style to processing, if present
-	var styleList = [];
-	if (_.isObject(componentStyle) && !_.isEmpty(componentStyle)) {
-		styleList.push(componentStyle);
-	}
-
-	// Calculate priority:
-	_.each(styleList, function(style) {
-		for (var key in style) {
-			var obj = {};
-			var priority = styler.styleOrderCounter++ * VALUES.ORDER;
-			var match = key.match(regex);
-			if (match === null) {
-				U.die('Invalid style specifier "' + key + '"');
-			}
-			var newKey = match[2];
-			switch(match[1]) {
-				case '#':
-					obj.isId = true;
-					priority += VALUES.ID;
-					break;
-				case '.':
-					obj.isClass = true;
-					priority += VALUES.CLASS;
-					break;
-				default:
-					if (match[2]) {
-						obj.isApi = true;
-						priority += VALUES.API;
-					}
-					break;
-			}
-
-			if (match[3]) {
-				obj.queries = {};
-				_.each(match[3].split(/\s+/), function(query) {
-					var parts = query.split('=');
-					var q = U.trim(parts[0]);
-					var v = U.trim(parts[1]);
-					if (q === 'platform') {
-						priority += VALUES.PLATFORM + VALUES.SUM;
-						v = v.split(',');
-					} else if (q === 'formFactor') {
-						priority += VALUES.FORMFACTOR + VALUES.SUM;
-					} else {
-						priority += VALUES.SUM;
-					}
-					obj.queries[q] = v;
-				});
-			} 
-
-			_.extend(obj, {
-				priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
-				key: newKey, 
-				style: style[key]
-			});
-			sortedStyles.push(obj);
-		}
-	});
-
-	var theArray = opts.existingStyle ? opts.existingStyle.concat(sortedStyles) : sortedStyles;
-	return _.sortBy(theArray, 'priority');
 }
 
 exports.validateNodeName = function(node, names) {

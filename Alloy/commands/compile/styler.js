@@ -1,12 +1,34 @@
 var fs = require('fs'),
 	path = require('path'),
 	_ = require('../../lib/alloy/underscore')._
+	U = require('../../utils'),
 	CU = require('./compilerUtils'),
 	logger = require('../../common/logger'),
 	CONST = require('../../common/constants');
 
-exports.styleOrderBase = 1;
-exports.styleOrderCounter = exports.styleOrderBase;
+// constants
+var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
+var VALUES = {
+	ID:     100000,
+	CLASS:   10000,
+	API:      1000,
+	PLATFORM:  100,
+	FORMFACTOR: 10,
+	SUM:         1,
+	THEME:       0.9,
+	ORDER:       0.0001
+};
+
+// private variables
+var styleOrderCounter = 1;
+
+/**
+ * @property {Array} globalStyle
+ * The global style array, which contains an merged, ordered list of all 
+ * applicable global styles. This will serve as the base for all controller-
+ * specific styles.
+ *
+ */
 exports.globalStyle = [];
 
 /*
@@ -23,14 +45,17 @@ exports.globalStyle = [];
  * array that will be used as a base for all controller styling. This is 
  * executed before any other styling is performed during the compile phase.
  *
- * @param {appPath} Full path to the "app" folder of the target project
- * @param {theme} If defined, the name of theme in use by the project
+ * @param {String} Full path to the "app" folder of the target project
+ * @param {String} The mobile platform for which to load styles
+ * @param {Object} [opts] Additional options
  */
-exports.loadGlobalStyles = function(appPath, platform, theme) {
+exports.loadGlobalStyles = function(appPath, platform, opts) {
 	// reset the global style array
 	exports.globalStyle = [];
 
 	// validate/set arguments
+	opts || (opts = {});
+	var theme = opts.theme;
 	var apptss = CONST.GLOBAL_STYLE;
 	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
 	if (theme) {
@@ -49,13 +74,11 @@ exports.loadGlobalStyles = function(appPath, platform, theme) {
 		obj: { theme: true }
 	});
 	loadArray.push({ 
-		// TODO: get the real platforms object
 		path: path.join(stylesDir,platform,apptss),
 		msg: apptss + '(platform:' + platform + ')',
 		obj: { platform: true }
 	});
 	theme && loadArray.push({ 
-		// TODO: get the real platforms object
 		path: path.join(themesDir,platform,apptss),
 		msg: apptss + '(theme:' + theme + ' platform:' + platform + ')',
 		obj: { platform: true, theme: true }
@@ -72,5 +95,76 @@ exports.loadGlobalStyles = function(appPath, platform, theme) {
 		}
 	});	
 
-	exports.styleOrderBase = ++exports.styleOrderCounter;
+	styleOrderCounter++;
 }
+
+/*
+ * @method sortStyles
+ * Given a parsed style from loadStyle(), sort all the style entries into an 
+ * ordered array. This is the final operations to prepare a style for usage with 
+ * a Titanium UI component in Alloy.
+ *
+ * @param {Object} Parsed style object from a loadStyle() call
+ * @param {Object} [opts] Options for this function
+ */
+exports.sortStyles = function(style, opts) {
+	var sortedStyles = [];
+	opts || (opts = {});
+
+	if (_.isObject(style) && !_.isEmpty(style)) {
+		for (var key in style) {
+			var obj = {};
+			var priority = styleOrderCounter++ * VALUES.ORDER;
+			var match = key.match(STYLE_REGEX);
+			if (match === null) {
+				U.die('Invalid style specifier "' + key + '"');
+			}
+			var newKey = match[2];
+			switch(match[1]) {
+				case '#':
+					obj.isId = true;
+					priority += VALUES.ID;
+					break;
+				case '.':
+					obj.isClass = true;
+					priority += VALUES.CLASS;
+					break;
+				default:
+					if (match[2]) {
+						obj.isApi = true;
+						priority += VALUES.API;
+					}
+					break;
+			}
+
+			if (match[3]) {
+				obj.queries = {};
+				_.each(match[3].split(/\s+/), function(query) {
+					var parts = query.split('=');
+					var q = U.trim(parts[0]);
+					var v = U.trim(parts[1]);
+					if (q === 'platform') {
+						priority += VALUES.PLATFORM + VALUES.SUM;
+						v = v.split(',');
+					} else if (q === 'formFactor') {
+						priority += VALUES.FORMFACTOR + VALUES.SUM;
+					} else {
+						priority += VALUES.SUM;
+					}
+					obj.queries[q] = v;
+				});
+			} 
+
+			_.extend(obj, {
+				priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
+				key: newKey, 
+				style: style[key]
+			});
+			sortedStyles.push(obj);
+		}
+	}
+
+	var theArray = opts.existingStyle ? opts.existingStyle.concat(sortedStyles) : sortedStyles;
+	return _.sortBy(theArray, 'priority');
+}
+
