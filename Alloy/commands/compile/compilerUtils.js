@@ -23,8 +23,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ///////////////////////////////
 ////////// constants //////////
 ///////////////////////////////
-var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__',
-	STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
+var STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
 	CONDITION_MAP = {
 		handheld: {
 			runtime: "!Alloy.isTablet"
@@ -607,21 +606,6 @@ exports.loadController = function(file) {
 	return code;
 };
 
-exports.createVariableStyle = function(keyValuePairs, value) {
-	var style = {};
-
-	if (!_.isArray(keyValuePairs)) {
-		keyValuePairs = [[keyValuePairs, value]];
-	}
-	_.each(keyValuePairs, function(pair) {
-		var k = pair[0];
-		var v = pair[1];
-		style[k] = { value:v };
-		style[k][STYLE_ALLOY_TYPE] = 'var';
-	});
-	return style;
-};
-
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
 	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
 	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
@@ -797,7 +781,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		 		});
 				code += '],';
 			} else if (_.isObject(value)) {
-			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
+			 	if (value[styler.STYLE_ALLOY_TYPE] === 'var') {
 			 		code += prefix + value.value + ','; // dynamic variable value
 			 	} else {
 			 		// recursively process objects

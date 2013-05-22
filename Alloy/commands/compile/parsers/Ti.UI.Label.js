@@ -1,4 +1,5 @@
-var CU = require('../compilerUtils'),
+var styler = require('../styler'),
+	CU = require('../compilerUtils'),
 	U = require('../../../utils');
 
 exports.parse = function(node, state) {
@@ -9,7 +10,7 @@ function parse(node, state, args) {
 	// Get label text from node text, if present
 	var nodeText = U.XML.getNodeText(node);
 	if (nodeText) {
-		state.extraStyle = CU.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+		state.extraStyle = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
 	}
 
 	// Generate runtime code using default

@@ -1,6 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
+	styler = require('../styler'),
 	logger = require('../../../common/logger');
 
 function fixDefinition(def) {
@@ -77,7 +78,7 @@ function parse(node, state, args) {
 	});
 
 	if (extras.length) {	
-		state.extraStyle = CU.createVariableStyle(extras);
+		state.extraStyle = styler.createVariableStyle(extras);
 	}
 	if (!def.inViewHierarchy) {
 		state.parent = {};

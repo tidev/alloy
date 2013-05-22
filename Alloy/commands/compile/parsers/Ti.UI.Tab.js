@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
@@ -35,7 +36,7 @@ function parse(node, state, args) {
 	}
 
 	// create tab with window 
-	state.extraStyle = CU.createVariableStyle('window', windowSymbol);
+	state.extraStyle = styler.createVariableStyle('window', windowSymbol);
 	code += require('./default').parse(node, state).code;
 
 	// Update the parsing state

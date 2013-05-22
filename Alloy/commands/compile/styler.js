@@ -23,7 +23,9 @@ var VALUES = {
 // private variables
 var styleOrderCounter = 1;
 
-/**
+var STYLE_ALLOY_TYPE = exports.STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
+
+/*
  * @property {Array} globalStyle
  * The global style array, which contains an merged, ordered list of all 
  * applicable global styles. This will serve as the base for all controller-
@@ -204,6 +206,21 @@ exports.loadStyle = function(tssFile) {
 		return json;
 	}
 	return {};
+};
+
+exports.createVariableStyle = function(keyValuePairs, value) {
+	var style = {};
+
+	if (!_.isArray(keyValuePairs)) {
+		keyValuePairs = [[keyValuePairs, value]];
+	}
+	_.each(keyValuePairs, function(pair) {
+		var k = pair[0];
+		var v = pair[1];
+		style[k] = { value:v };
+		style[k][STYLE_ALLOY_TYPE] = 'var';
+	});
+	return style;
 };
 
 exports.loadAndSortStyle = function(tssFile, opts) {

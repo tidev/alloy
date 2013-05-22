@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -93,7 +94,7 @@ function parse(node, state, args) {
 	var extras = [];
 	if (arrayName) { extras.push(['data', arrayName]); }
 	if (searchBarName) { extras.push(['search', searchBarName]) }
-	if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
+	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// generate the code for the table itself
 	if (isDataBound) {
