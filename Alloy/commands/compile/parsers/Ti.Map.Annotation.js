@@ -1,4 +1,5 @@
-var CU = require('../compilerUtils');
+var styler = require('../styler'),
+	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -12,7 +13,7 @@ function parse(node, state, args) {
 	if (latitude) { extraStyle.push(['latitude', parseFloat(latitude)]); }
 	if (longitude) { extraStyle.push(['longitude', parseFloat(longitude)]); }
 	if (extraStyle.length > 0) {
-		state.extraStyle = CU.createVariableStyle(extraStyle);
+		state.extraStyle = styler.createVariableStyle(extraStyle);
 	}
 
 	var code = require('./default').parse(node, {
