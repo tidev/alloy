@@ -1,5 +1,6 @@
 var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
+	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._;
 
@@ -26,7 +27,7 @@ function parse(node, state, args) {
 
 	// apply usual style properties
 	var argsObject = {
-		properties: CU.generateStyleParams(
+		properties: styler.generateStyleParams(
 			state.styles,
 			args.classes,
 			args.id,

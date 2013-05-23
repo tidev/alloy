@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
@@ -42,7 +43,7 @@ function parse(node, state, args) {
 	});
 
 	// The first window is the master, the second window is the detail
-	state.extraStyle = CU.createVariableStyle([
+	state.extraStyle = styler.createVariableStyle([
 		['masterView', subParents[0]],
 		['detailView', subParents[1]]
 	]);

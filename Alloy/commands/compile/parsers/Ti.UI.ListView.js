@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -66,7 +67,7 @@ function parse(node, state, args) {
 	var extras = [];
 	if (sectionArray) { extras.push(['sections', sectionArray]); }
 	if (templateObject) { extras.push(['templates', templateObject]) }
-	if (extras.length) { state.extraStyle = CU.createVariableStyle(extras); }
+	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself
 	var listState = require('./default').parse(node, state);
