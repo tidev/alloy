@@ -23,8 +23,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ///////////////////////////////
 ////////// constants //////////
 ///////////////////////////////
-var STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
-	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+var RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
