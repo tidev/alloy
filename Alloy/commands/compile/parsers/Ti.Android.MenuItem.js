@@ -1,4 +1,5 @@
 var CU = require('../compilerUtils'),
+	styler = require('../styler'),
 	_ = require('../../../lib/alloy/underscore')._;
 
 exports.parse = function(node, state) {
@@ -7,7 +8,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '';
-	var styleObjectCode = CU.generateStyleParams(
+	var styleObjectCode = styler.generateStyleParams(
 		state.styles, 
 		args.classes, 
 		args.id, 

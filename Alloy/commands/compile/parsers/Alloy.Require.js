@@ -3,6 +3,7 @@ var path = require('path'),
 	_ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
+	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
 	moduleRoot = path.join(__dirname,'..','..','..','..'),
 	TYPES = ['view','widget'];
@@ -95,7 +96,7 @@ function parse(node, state, args) {
 	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + CU.generateStyleParams(
+	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + styler.generateStyleParams(
 		state.styles,
 		args.classes,
 		args.id,

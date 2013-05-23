@@ -183,7 +183,8 @@ module.exports = function(args, program) {
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
-	styler.loadGlobalStyles(paths.app, buildPlatform, theme ? {theme:theme} : {});
+	styler.setPlatform(buildPlatform);
+	styler.loadGlobalStyles(paths.app, theme ? {theme:theme} : {});
 	
 	// Create collection of all widget and app paths 
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
@@ -295,7 +296,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		files = {};
 
 	// reset the bindings map
-	CU.bindingsMap = {};
+	styler.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
 	CU.currentManifest = manifest;
@@ -470,7 +471,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');";
 
 	// for each model variable in the bindings map... 
-	_.each(CU.bindingsMap, function(mapping,modelVar) {
+	_.each(styler.bindingsMap, function(mapping,modelVar) {
 
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();

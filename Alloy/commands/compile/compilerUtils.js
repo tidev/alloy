@@ -24,21 +24,21 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ////////// constants //////////
 ///////////////////////////////
 var STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--',
-	CONDITION_MAP = {
-		handheld: {
-			runtime: "!Alloy.isTablet"
-		},
-		tablet: {
-			runtime: "Alloy.isTablet"
-		}
-	},
 	RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 // load CONDITION_MAP with platforms
+exports.CONDITION_MAP = {
+	handheld: {
+		runtime: "!Alloy.isTablet"
+	},
+	tablet: {
+		runtime: "Alloy.isTablet"
+	}
+};
 _.each(CONST.PLATFORMS, function(p) {
-	CONDITION_MAP[p] = require(path.join(platformsDir,p,'index'))['condition'];
+	exports.CONDITION_MAP[p] = require(path.join(platformsDir,p,'index'))['condition'];
 });
 
 exports.bindingsMap = {};
@@ -138,7 +138,7 @@ exports.getParserArgs = function(node, state, opts) {
 			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			/^(?:Ti|Titanium)\./.test(theValue) && (theValue = STYLE_EXPR_PREFIX + theValue);
+			/^(?:Ti|Titanium)\./.test(theValue) && (theValue = styler.STYLE_EXPR_PREFIX + theValue);
 			createArgs[attrName] = theValue;
 		}
 	});
@@ -177,15 +177,15 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	if (args.platform) {
 		var conditionArray = [];
 		_.each(args.platform, function(v,k) {
-			conditionArray.push(CONDITION_MAP[k][conditionType]);
+			conditionArray.push(exports.CONDITION_MAP[k][conditionType]);
 		});
 		
 		code.condition = '(' + conditionArray.join(' || ') + ')';
 	}
 	
 	//Add form factor condition, if application form-factor specific runtime check
-	if (args.formFactor && CONDITION_MAP[args.formFactor]) {
-		var check = CONDITION_MAP[args.formFactor].runtime;
+	if (args.formFactor && exports.CONDITION_MAP[args.formFactor]) {
+		var check = exports.CONDITION_MAP[args.formFactor].runtime;
 		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
 	}
 
@@ -605,231 +605,6 @@ exports.loadController = function(file) {
 
 	return code;
 };
-
-exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
-	var platform = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? compilerConfig.alloyConfig.platform : undefined;
-	var regex = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)'),
-		bindingRegex = /^\{(.+)\}$/,
-		styleCollection = [],
-		lastObj = {};
-
-	if (theState && theState.local) {
-		delete extraStyle.id;
-	}
-
-	_.each(styles, function(style) {
-		var styleApi = style.key;
-		if (style.isApi && styleApi.indexOf('.') === -1) {
-			var ns = (CONST.IMPLICIT_NAMESPACES[styleApi] || CONST.NAMESPACE_DEFAULT);
-			styleApi = ns + '.' + styleApi;
-		}
-
-		if ((style.isId && style.key === id) ||
-			(style.isClass && _.contains(classes, style.key)) ||
-			(style.isApi && styleApi === apiName)) {
-			
-			// manage potential runtime conditions for the style
-			var conditionals = {
-				platform: [],
-				formFactor: ''
-			};
-
-			if (style.queries) {
-				// handle platform device query
-				// - Make compile time comparison if possible
-				// - Add runtime conditional if platform is not known
-				var q = style.queries;
-				if (q.platform) {
-					if (platform) {
-						if (!_.contains(q.platform,platform)) {
-							return;
-						}
-					} else {
-						_.each(q.platform, function(p) {
-							conditionals.platform.push(CONDITION_MAP[p]['runtime']);
-						});
-					}
-				}
-
-				// handle formFactor device query
-				if (q.formFactor === 'tablet') {
-					conditionals.formFactor = 'Alloy.isTablet';
-				} else if (q.formFactor === 'handheld') {
-					conditionals.formFactor = 'Alloy.isHandheld';
-				}
-
-				// assemble runtime query
-				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
-				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
-				var conditional = pcond + joinString + conditionals.formFactor;
-
-				// push styles if we need to insert a conditional
-				if (conditional) {
-					if (lastObj) {
-						styleCollection.push({style:lastObj});
-						styleCollection.push({style:style.style, condition:conditional});
-						lastObj = {};
-					}
-				} else {
-					_.extend(lastObj,style.style);
-				}
-			} else {
-				_.extend(lastObj, style.style);
-			}
-		}
-	});
-
-	// add in any final styles
-	_.extend(lastObj, extraStyle || {});
-	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
-
-	// substitutions for binding
-	_.each(styleCollection, function(style) {
-		_.each(style.style, function(v,k) {
-			if (_.isString(v)) {
-				var match = v.match(bindingRegex);
-				if (match !== null) {
-					var parts = match[1].split('.');
-
-					// model binding
-					if (parts.length > 1) {
-						// are we bound to a global or controller-specific model?
-						var modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
-						var attr = parts[0] === '$' ? parts[2] : parts[1];
-
-						// ensure that the bindings for this model have been initialized
-						if (!_.isArray(exports.bindingsMap[modelVar])) {
-							exports.bindingsMap[modelVar] = [];
-						}
-
-						// create the binding object
-						var bindingObj = {
-							id: id,
-							prop: k,
-							attr: attr
-						};
-
-						// make sure bindings are wrapped in any conditionals
-						// relevant to the curent style
-						if (theState.condition) {
-							bindingObj.condition = theState.condition;
-						}
-
-						// add this property to the global bindings map for the 
-						// current controller component
-						exports.bindingsMap[modelVar].push(bindingObj);
-
-						// since this property is data bound, don't include it in 
-						// the style statically
-						delete style.style[k];
-					} 
-					// collection binding
-					else {
-						var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-						var standard = modelVar + ".get('" + match[1] + "')";
-						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
-						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
-					}
-				}
-			}
-		});
-	});
-
-	function processStyle(style, opts) {
-		opts || (opts = {});
-		style = opts.fromArray ? {0:style} : style;
-		var groups = {};
-
-		// need to add "properties" and bindIds for ListItems
-		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
-			for (var sn in style) {
-				var value = style[sn];
-				var prefixes = sn.split(':');
-				if (prefixes.length > 1) {
-					var bindId = prefixes[0];
-					groups[bindId] || (groups[bindId] = {});
-					groups[bindId][prefixes.slice(1).join(':')] = value;
-				} else {
-					// allow template to be specified
-					if (sn === 'template') {
-						groups.template = value;
-					} else {
-						groups.properties || (groups.properties = {});
-						groups.properties[sn] = value;
-					}
-				}
-			}
-			style = groups;
-		}
-
-		for (var sn in style) {
-			var value = style[sn],
-				prefix = opts.fromArray ? '' : sn + ':';
-
-			if (_.isString(value)) {
-				var matches = value.match(regex);
-				if (matches !== null) {
-					code += prefix + matches[1] + ','; // matched a JS expression
-				} else {
-					code += prefix + '"' + value + '",'; // just a string
-				}
-			} else if (_.isArray(value)) {
-				code += prefix + '[';
-				_.each(value, function(v) {
-		 			processStyle(v, {fromArray:true});
-		 		});
-				code += '],';
-			} else if (_.isObject(value)) {
-			 	if (value[styler.STYLE_ALLOY_TYPE] === 'var') {
-			 		code += prefix + value.value + ','; // dynamic variable value
-			 	} else {
-			 		// recursively process objects
-			 		code += prefix + '{';
-			 		processStyle(value);
-			 		code += '},';
-			 	}
-			} else {
-				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
-			}
-		}
-	}
-
-	// Let's assemble the fastest factory method object possible based on
-	// what we know about the style we just sorted and assembled
-	var code = '';
-	if (styleCollection.length === 0) {
-		code += '{}';
-	} else if (styleCollection.length === 1) {
-		if (styleCollection[0].condition) {
-			// check the condition and return the object
-			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style, {firstOrder:true}) + '} : {}';
-		} else {
-			// just return the object
-			code += '{';
-			processStyle(styleCollection[0].style, {firstOrder:true});
-			code += '}';
-		}
-	} else if (styleCollection.length > 1) {
-		// construct self-executing function to merge styles based on runtime conditionals
-		code += '(function(){\n';
-		code += 'var o = {};\n';
-		for (var i = 0, l = styleCollection.length; i < l; i++) {
-			if (styleCollection[i].condition) {
-				code += 'if (' + styleCollection[i].condition + ') ';
-			} 
-			code += '_.extend(o, {';
-			processStyle(styleCollection[i].style, {firstOrder:true});
-			code += '});\n';
-		}
-		code += 'return o;\n'
-		code += '})()'
-	}
-	
-	//console.log(code);
-
-	return code;
-}
 
 exports.validateNodeName = function(node, names) {
 	var fullname = exports.getNodeFullname(node);
