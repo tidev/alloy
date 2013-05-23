@@ -3,6 +3,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),
+	jsonlint = require('jsonlint'),
 	sourceMapper = require('./sourceMapper'),
 	styler = require('./styler'),
 	_ = require("../../lib/alloy/underscore")._,
@@ -131,13 +132,26 @@ module.exports = function(args, program) {
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
-	// Copy in all assets, libs, and Alloy runtime files
+	// copy in all lib resources from alloy module
 	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
-	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
-	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
+
+	// create runtime folder structure for alloy
+	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
+		var p = path.join(paths.resourcesAlloy, CONST.DIR[type]);
+		wrench.mkdirSyncRecursive(p, 0777);
+	});
+
+	// Copy in all developer assets, libs, and additional resources
+	_.each(['ASSETS','LIB','VENDOR'], function(type) {
+		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
+	});
+
+	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.RUNTIME_STYLE), 0777);
+	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
+	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
+	// U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
+	// U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
+	// U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
 
 	// copy in test specs if not in production
 	if (alloyConfig.deploytype !== 'production') {
@@ -292,6 +306,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			__MAPMARKER_CONTROLLER_CODE__: '',
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
+		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE,dirname) : CONST.DIR.RUNTIME_STYLE,
 		state = { parent: {}, styles: [] },
 		files = {};
 
@@ -327,9 +342,16 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 		files[fileType] = baseFile;
 	});
-	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
-	if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
-	files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
+
+	_.each(['COMPONENT','RUNTIME_STYLE'], function(fileType) {
+		files[fileType] = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR[fileType]);
+		if (dirname) { files[fileType] = path.join(files[fileType],dirname); }
+		files[fileType] = path.join(files[fileType],viewName+'.js');
+	});
+
+	// files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
+	// if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
+	// files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
 
 	// we are processing a view, not just a controller
 	if (!noView) {
@@ -517,15 +539,26 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	// prep the controller paths based on whether it's an app
 	// controller or widget controller
 	var targetFilepath = files.COMPONENT;
+	var runtimeStylePath = files.RUNTIME_STYLE;
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
+		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir), 0777);
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
 			compileConfig.dir.resources, 
 			manifest.id
 		);
 		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
+		runtimeStylePath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir, viewName + '.js');
 	}
+
+	// write the compiled style array to a runtime module
+	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
+	logger.info('  style:    "' + relativeStylePath + '"');
+	fs.writeFileSync(
+		runtimeStylePath, 
+		'module.exports = ' + JSON.stringify(state.styles)
+	);
 
 	// generate the code and source map for the current controller
 	sourceMapper.generateCodeAndSourceMap({

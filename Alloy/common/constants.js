@@ -75,6 +75,7 @@ exports.FILE_EXT = {
 exports.DIR = {
 	VIEW: 'views',
 	STYLE: 'styles',
+	RUNTIME_STYLE: 'styles',
 	CONTROLLER: 'controllers',
 	MODEL: 'models',
 	MODELCODE: 'models',
@@ -84,7 +85,8 @@ exports.DIR = {
 	WIDGET: 'widgets',
 	LIB: 'lib',
 	COMPONENT: 'controllers',
-	MAP: 'build/map'
+	MAP: 'build/map',
+	VENDOR: 'vendor'
 };
 
 // constants identifying JS reserved words
