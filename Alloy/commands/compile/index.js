@@ -146,13 +146,6 @@ module.exports = function(args, program) {
 		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
 	});
 
-	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.RUNTIME_STYLE), 0777);
-	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
-	// wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	// U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
-	// U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
-	// U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
-
 	// copy in test specs if not in production
 	if (alloyConfig.deploytype !== 'production') {
 		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
@@ -348,10 +341,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		if (dirname) { files[fileType] = path.join(files[fileType],dirname); }
 		files[fileType] = path.join(files[fileType],viewName+'.js');
 	});
-
-	// files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
-	// if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
-	// files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
 
 	// we are processing a view, not just a controller
 	if (!noView) {
@@ -552,14 +541,6 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		runtimeStylePath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir, viewName + '.js');
 	}
 
-	// write the compiled style array to a runtime module
-	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
-	logger.info('  style:    "' + relativeStylePath + '"');
-	fs.writeFileSync(
-		runtimeStylePath, 
-		'module.exports = ' + JSON.stringify(state.styles)
-	);
-
 	// generate the code and source map for the current controller
 	sourceMapper.generateCodeAndSourceMap({
 		target: {
@@ -574,6 +555,15 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			}
 		}
 	}, compileConfig);
+
+	// write the compiled style array to a runtime module
+	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
+	logger.info('  created:     "' + relativeStylePath + '"');
+	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
+	fs.writeFileSync(
+		runtimeStylePath, 
+		'module.exports = ' + JSON.stringify(state.styles)
+	);
 }
 
 function findModelMigrations(name, inDir) {
@@ -676,6 +666,7 @@ function optimizeCompiledCode() {
 			'app.js',
 			'alloy/CFG.js',
 			'alloy/controllers/',
+			'alloy/styles/',
 			'alloy/backbone.js',
 			'alloy/underscore.js'
 		];
