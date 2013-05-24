@@ -1,0 +1,41 @@
+"Button": {
+	top: '15dp'
+}
+
+"#index": {
+	layout: 'vertical'
+}
+
+"#index[platform=android]": {
+	exitOnClose: true
+}
+
+"#info": {
+	top: '15dp',
+	textAlign: 'center',
+	width: '250dp',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'normal'
+	}
+}
+
+"#button1": {
+	height: '70dp',
+	width: '250dp',
+	borderRadius: 8,
+	borderWidth: 2,
+	borderColor: '#500'
+}
+
+"#button2": {
+	width: '100dp'
+}
+
+"#button3": {
+	height: '40dp',
+	width: '200dp',
+	borderRadius: 32,
+	borderWidth: 1,
+	borderColor: '#0f0'
+}
