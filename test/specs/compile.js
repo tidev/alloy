@@ -27,6 +27,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 
 // The alloy command test suite
 describe('alloy compile', function() {
+	TU.addMatchers();
+	
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
 		if (process.env.app && file !== process.env.app) { return; } 
@@ -72,6 +74,29 @@ describe('alloy compile', function() {
 								} 
 								var content = fs.readFileSync(fullpath, 'utf8');
 								expect(cdRegex.test(content)).toBeFalsy();
+							});
+						}); 
+					});
+
+					it('has no undefined style entries', function() {
+						var hrDir = path.join(paths.harness,'Resources');
+						var cPaths = [
+							path.join(hrDir,'alloy','styles'),
+							path.join(hrDir,platform.titaniumFolder,'alloy','styles')
+						];
+
+						_.each(cPaths, function(cPath) {
+							if (!fs.existsSync(cPath)) { return; }
+							var files = wrench.readdirSyncRecursive(cPath);
+							_.each(files, function(file) {
+								var fullpath = path.join(cPath,file);
+								if (!fs.statSync(fullpath).isFile() ||
+									!/\.js$/.test(fullpath)) {
+									return;
+								} 
+
+								var json = require(fullpath);
+								expect(json).toHaveNoUndefinedStyles();
 							});
 						}); 
 					});
