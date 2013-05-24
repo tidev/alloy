@@ -116,14 +116,14 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	}));
 	ast.print(stream);
 
-	// create the generated code
+	// write the generated controller code
 	var outfile = target.filepath;
 	var relativeOutfile = path.relative(compileConfig.dir.project,outfile);
 	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
 	fs.writeFileSync(outfile, stream.toString());
 	logger.info('  created:    "' + relativeOutfile + '"');
 
-	// create source map for the generated file
+	// write source map for the generated file
 	var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
 	outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 	relativeOutfile = path.relative(compileConfig.dir.project,outfile);
