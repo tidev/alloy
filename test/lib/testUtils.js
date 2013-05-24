@@ -150,6 +150,11 @@ exports.addMatchers = function() {
 			toBeJavascript: toBeJavascript,
 			toBeJavascriptFile: toBeJavascriptFile,
 			toBeTssFile: toBeTssFile,
+			toHaveNoUndefinedStyles: function() {
+				return !_.find(this.actual, function(o) {
+					return o.key === 'undefined' && o.isApi
+				});
+			},
 			toHaveSameContentAs: function(expected) {
 				return fs.readFileSync(this.actual,'utf8') === fs.readFileSync(expected,'utf8');
 			},
