@@ -141,6 +141,11 @@ exports.sortStyles = function(style, opts) {
 				U.die('Invalid style specifier "' + key + '"');
 			}
 			var newKey = match[2];
+
+			// skip any invalid style entries
+			if (newKey === 'undefined' && !match[1]) { continue; }
+
+			// get the style key type
 			switch(match[1]) {
 				case '#':
 					obj.isId = true;
