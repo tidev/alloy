@@ -46,13 +46,16 @@ program.command('new'.blue+' <dir>'.white)
 		.description('    create a new alloy project'.grey);
 
 program.command('compile'.blue+' [dir]'.white)
-		.description('compile into titanium sourcecode'.grey);
+		.description('    compile into titanium sourcecode'.grey);
+
+program.command('extract-i18n'.blue+' <language>'.white)
+		.description('    extracts i18n strings from the sourcecode (js and tss files)'.grey);
 
 program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);
 
 program.parse(process.argv);
-	
+
 
 // Setup up logging output
 Error.stackTraceLimit = Infinity;
@@ -89,14 +92,14 @@ if (!_.contains(getCommands(), command)) {
 ////////// FUNCTIONS //////////
 ///////////////////////////////
 function banner() {
-	var str = 
+	var str =
 	"       .__  .__                \n"+
 	"_____  |  | |  |   ____ ___.__.\n"+
 	"\\__  \\ |  | |  |  /  _ <   |  |\n"+
 	" / __ \\|  |_|  |_(  <_> )___  |\n"+
 	"(____  /____/____/\\____// ____|\n"+
 	"     \\/                 \\/";
-	
+
 	if (!program.dump) {
 		console.log(logger.stripColors ? str : str.blue);
 		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
