@@ -1,5 +1,5 @@
 var GU = require('../generateUtils'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 module.exports = function(name, args, program) {
 	var types = ['VIEW','STYLE'];

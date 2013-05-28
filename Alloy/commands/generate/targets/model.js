@@ -4,7 +4,7 @@ var path = require('path'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._,
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 var ALLOY_ROOT = path.join(__dirname,'..','..','..'),
 	MODEL_TEMPLATE = path.join(ALLOY_ROOT, 'template', 'modelcode.js'),

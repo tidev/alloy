@@ -1,5 +1,5 @@
 var path = require('path'),
-	logger = require('../../common/logger'),
+	logger = require('../../logger'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	alloyRoot = path.join(__dirname,'..','..','..'); 

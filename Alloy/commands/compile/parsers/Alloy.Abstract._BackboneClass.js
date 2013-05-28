@@ -4,7 +4,7 @@ var path = require('path'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._,
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
