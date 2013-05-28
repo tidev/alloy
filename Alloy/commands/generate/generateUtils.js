@@ -6,7 +6,7 @@ var path = require('path'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	U = require(basePath + 'utils'),
 	CONST = require(basePath + 'common/constants'),
-	logger = require(basePath + 'common/logger');
+	logger = require(basePath + 'logger');
 
 function pad(x) {
 	if (x < 10) {

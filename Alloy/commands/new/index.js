@@ -4,7 +4,7 @@ var path = require('path'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	logger = require('../../common/logger');
+	logger = require('../../logger');
 
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname,'..','..','..','platforms');

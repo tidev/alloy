@@ -5,7 +5,7 @@ var SM = require('source-map'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	uglifyjs = require('uglify-js'),
-	logger = require('../../common/logger'),
+	logger = require('../../logger'),
 	_ = require('../../lib/alloy/underscore')._;
 
 var lineSplitter = /(?:\r\n|\r|\n)/,

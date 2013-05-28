@@ -1,10 +1,5 @@
-var isNode = true;
-try {
-	var colors = require('colors');
-	var strip = require('stripcolorcodes');
-} catch (e) {
-	isNode = false;
-}
+var colors = require('colors'),
+	strip = require('stripcolorcodes');
 
 exports.TRACE = 4;
 exports.DEBUG = 3;
@@ -79,8 +74,8 @@ var printMessage = function(msg, level, color) {
 			}
 		} else {
 			var tag = (exports.showTimestamp ? formattedDate() + ' -- ' : '') + '[' + level.toUpperCase() + '] ';
-			var str = (isNode ? tag.grey : tag) + (isNode ? line[color] : line);
-			if (exports.stripColors && isNode) { str = strip(str); }
+			var str = tag.grey + line[color];
+			if (exports.stripColors) { str = strip(str); }
 			logFunc(str);
 		}
 	}
