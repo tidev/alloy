@@ -5,7 +5,7 @@ var fs = require('fs'),
 	CU = require('./compilerUtils'),
 	optimizer = require('./optimizer'),
 	grammar = require('../../grammar/tss'),
-	logger = require('../../common/logger'),
+	logger = require('../../logger'),
 	CONST = require('../../common/constants');
 
 // constants

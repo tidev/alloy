@@ -3,7 +3,7 @@ var fs = require('fs'),
 	U = require('../Alloy/utils'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
 	CONST = require('../Alloy/common/constants'),
-	logger = require('../Alloy/common/logger');
+	logger = require('../Alloy/logger');
 
 // Fix node warning 
 path.existsSync = fs.existsSync || path.existsSync;

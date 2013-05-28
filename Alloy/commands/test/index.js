@@ -3,7 +3,7 @@ var fs = require('fs'),
 	spawn = require('child_process').spawn,
 	_ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils'),
-	logger = require('../../common/logger');
+	logger = require('../../logger');
 
 var ALLOY_ROOT = path.join(__dirname,'../../..');
 var JAKE = path.join(ALLOY_ROOT,'node_modules','.bin','jake');

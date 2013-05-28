@@ -2,7 +2,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);

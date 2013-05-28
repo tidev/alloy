@@ -4,7 +4,7 @@
  * See LICENSE for more information on licensing.
  */
  var program = require('commander'),
-	logger = require("./common/logger"),
+	logger = require("./logger"),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,

@@ -1,6 +1,6 @@
 var _ = require("../../../lib/alloy/underscore")._,
 	GU = require('../generateUtils'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 module.exports = function(name, args, program) {
 	var type = 'CONTROLLER';

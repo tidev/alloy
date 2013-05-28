@@ -2,7 +2,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	styler = require('../styler'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 function fixDefinition(def) {
 	def || (def = {});
