@@ -1,19 +1,26 @@
-var _ = require('../lib/alloy/underscore')._,
-	wrench = require('wrench'),
-	path = require('path'),
-	fs = require('fs'),
-	platforms = require('../../platforms/index');
+var isTitanium = typeof Titanium !== 'undefined';
+var _;
 
-var alloyRoot = path.join(__dirname,'../..'),
-	platformsDir = path.join(alloyRoot,'platforms');
+if (isTitanium) {
+	_ = require('alloy/underscore')._;
+} else {
+	var platforms = require('../../platforms/index');
+	_ = require('../lib/alloy/underscore')._;
+	
+	// iterate through supported platforms to create specific constants
+	function generatePlatformArray(key) {
+		var ret = [];
+		_.each(_.keys(platforms), function(p) {
+			ret.push(platforms[p][key]);
+		});
+		return ret;
+	} 
 
-function generatePlatformArray(key) {
-	var ret = [];
-	_.each(_.keys(platforms), function(p) {
-		ret.push(platforms[p][key]);
-	});
-	return ret;
-} 
+	// generate compile time constants based on supported platforms
+	exports.PLATFORMS = generatePlatformArray('platform');
+	exports.PLATFORM_FOLDERS_ALLOY = generatePlatformArray('alloyFolder');
+	exports.PLATFORM_FOLDERS = generatePlatformArray('titaniumFolder');
+}
 
 // General default values
 exports.ALLOY_DIR = 'app';
@@ -46,9 +53,6 @@ exports.MODEL_BINDING_EVENTS = 'fetch change destroy';
 exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
 
 // Listings for supported platforms and commands
-exports.PLATFORMS = generatePlatformArray('platform');
-exports.PLATFORM_FOLDERS_ALLOY = generatePlatformArray('alloyFolder');
-exports.PLATFORM_FOLDERS = generatePlatformArray('titaniumFolder');
 exports.INSTALL_TYPES = ['plugin'];
 exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
 exports.DEPLOY_TYPES = [
@@ -161,7 +165,8 @@ exports.IMPLICIT_NAMESPACES = {
 	SplitWindow: NS_TI_UI_IPAD,
 
 	// Ti.UI.iPhone
-	NavigationGroup: NS_TI_UI_IPHONE, 
+	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ? 
+		NS_TI_UI_MOBILEWEB: NS_TI_UI_IPHONE, 
 	StatusBar: NS_TI_UI_IPHONE,
 
 	// Ti.UI.Window
