@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<ScrollView>
+			<Label id="constantsLabel"/>
+		</ScrollView>
+	</Window>
+</Alloy>

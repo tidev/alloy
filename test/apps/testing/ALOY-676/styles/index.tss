@@ -1,0 +1,16 @@
+"#index": {
+	backgroundColor: '#eee',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#constantsLabel": {
+	color: '#222',
+	font: {
+		fontSize: '14dp',
+		fontWeight: 'normal'
+	},
+	top: '15dp',
+	height: Ti.UI.SIZE,
+	width: '90%'
+}

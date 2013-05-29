@@ -103,6 +103,7 @@ module.exports = function(args, program) {
 		paths.resources, 
 		[
 			path.join(alloyRoot,'lib'),
+			path.join(alloyRoot,'common'),
 			path.join(paths.app,CONST.DIR.ASSETS),
 			path.join(paths.app,CONST.DIR.LIB),
 			path.join(paths.app,'vendor'),
@@ -112,6 +113,7 @@ module.exports = function(args, program) {
 				// still need to check for builtins
 				path.join('alloy'),
 				path.join('alloy','CFG.js'),
+				path.join('alloy','constants.js'),
 				path.join('alloy','controllers'),
 				path.join('alloy','widgets'),
 				path.join('alloy','models')
@@ -134,6 +136,7 @@ module.exports = function(args, program) {
 
 	// copy in all lib resources from alloy module
 	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
+	U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
 
 	// create runtime folder structure for alloy
 	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
@@ -668,6 +671,7 @@ function optimizeCompiledCode() {
 			'alloy/controllers/',
 			'alloy/styles/',
 			'alloy/backbone.js',
+			'alloy/constants.js',
 			'alloy/underscore.js'
 		];
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
