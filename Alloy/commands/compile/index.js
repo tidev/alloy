@@ -565,7 +565,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
 	fs.writeFileSync(
 		runtimeStylePath, 
-		'module.exports = ' + JSON.stringify(state.styles)
+		'module.exports = ' + JSON.stringify(state.styles, null, '\t')
 	);
 }
 
