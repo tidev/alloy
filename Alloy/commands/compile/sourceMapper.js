@@ -112,10 +112,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 			file: target.filename,
 			orig: mapper.toString()
 		});
+		var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), { 
+			source_map: sourceMap
+		}));
+	} else {
+		var stream = uglifyjs.OutputStream(exports.OPTIONS_OUTPUT);
 	}
-	var stream = uglifyjs.OutputStream(sourceMap ? _.extend(_.clone(exports.OPTIONS_OUTPUT), { 
-		source_map: sourceMap
-	}) || exports.OPTIONS_OUTPUT);
 	ast.print(stream);
 
 	// write the generated controller code
