@@ -1,8 +1,8 @@
 <Alloy>
 	<LeftNavButton>
-		<Button title="left" onClick="showAlert"/>
+		<Button id="leftButton" title="left" onClick="showAlert"/>
 	</LeftNavButton>
 	<RightNavButton>
-		<Button title="right" onClick="showAlert"/>
+		<Button id="rightButton" title="right" onClick="showAlert"/>
 	</RightNavButton>
 </Alloy>

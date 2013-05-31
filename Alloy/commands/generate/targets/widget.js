@@ -5,7 +5,7 @@ var path = require('path'),
 	U = require('../../../utils'),
 	_ = require("../../../lib/alloy/underscore")._,
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 var VERSION_DEFAULT = '1.0';
 

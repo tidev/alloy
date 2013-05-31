@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<Label id="info">Click anything to see its ID style entry</Label>
+		<Button id="button1">button1</Button>
+		<Button id="button2">button2</Button>
+		<Button id="button3">button3</Button>
+	</Window>
+</Alloy>

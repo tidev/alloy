@@ -3,19 +3,21 @@ var path = require('path'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),
+	jsonlint = require('jsonlint'),
 	sourceMapper = require('./sourceMapper'),
+	styler = require('./styler'),
 	_ = require("../../lib/alloy/underscore")._,
-	logger = require('../../common/logger'),
+	logger = require('../../logger'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	platforms = require('../../../platforms/index');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
-	styleOrderBase = 1,
 	compileConfig = {},
 	buildPlatform,
 	theme;
@@ -101,6 +103,7 @@ module.exports = function(args, program) {
 		paths.resources, 
 		[
 			path.join(alloyRoot,'lib'),
+			path.join(alloyRoot,'common'),
 			path.join(paths.app,CONST.DIR.ASSETS),
 			path.join(paths.app,CONST.DIR.LIB),
 			path.join(paths.app,'vendor'),
@@ -110,11 +113,12 @@ module.exports = function(args, program) {
 				// still need to check for builtins
 				path.join('alloy'),
 				path.join('alloy','CFG.js'),
+				path.join('alloy','constants.js'),
 				path.join('alloy','controllers'),
 				path.join('alloy','widgets'),
 				path.join('alloy','models')
 			],
-			platform: require('../../../platforms/'+buildPlatform+'/index').titaniumFolder
+			platform: platforms[buildPlatform].titaniumFolder
 		}
 	);
 
@@ -130,13 +134,26 @@ module.exports = function(args, program) {
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
-	// Copy in all assets, libs, and Alloy runtime files
+	// copy in all lib resources from alloy module
 	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.COMPONENT), 0777);
-	wrench.mkdirSyncRecursive(path.join(paths.resourcesAlloy, CONST.DIR.WIDGET), 0777);
-	U.updateFiles(path.join(paths.app,CONST.DIR.ASSETS), paths.resources);
-	U.updateFiles(path.join(paths.app,CONST.DIR.LIB), paths.resources);
-	U.updateFiles(path.join(paths.app,'vendor'), paths.resources);
+	U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
+
+	// create runtime folder structure for alloy
+	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
+		var p = path.join(paths.resourcesAlloy, CONST.DIR[type]);
+		wrench.mkdirSyncRecursive(p, 0777);
+	});
+
+	// Copy in all developer assets, libs, and additional resources
+	_.each(['ASSETS','LIB','VENDOR'], function(type) {
+		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
+	});
+
+	// copy in test specs if not in production
+	if (alloyConfig.deploytype !== 'production') {
+		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
+	}
+
 	logger.debug('');
 
 	// check theme for assets
@@ -176,7 +193,8 @@ module.exports = function(args, program) {
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
-	loadGlobalStyles(paths.app, theme);
+	styler.setPlatform(buildPlatform);
+	styler.loadGlobalStyles(paths.app, theme ? {theme:theme} : {});
 	
 	// Create collection of all widget and app paths 
 	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
@@ -284,14 +302,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			__MAPMARKER_CONTROLLER_CODE__: '',
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
+		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE,dirname) : CONST.DIR.RUNTIME_STYLE,
 		state = { parent: {}, styles: [] },
 		files = {};
 
 	// reset the bindings map
-	CU.bindingsMap = {};
+	styler.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
-	CU.styleOrderCounter = styleOrderBase;
 	CU.currentManifest = manifest;
 
 	// create a list of file paths
@@ -320,9 +338,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 		files[fileType] = baseFile;
 	});
-	files.COMPONENT = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR.COMPONENT);
-	if (dirname) { files.COMPONENT = path.join(files.COMPONENT,dirname); }
-	files.COMPONENT = path.join(files.COMPONENT,viewName+'.js');
+
+	_.each(['COMPONENT','RUNTIME_STYLE'], function(fileType) {
+		files[fileType] = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR[fileType]);
+		if (dirname) { files[fileType] = path.join(files[fileType],dirname); }
+		files[fileType] = path.join(files[fileType],viewName+'.js');
+	});
 
 	// we are processing a view, not just a controller
 	if (!noView) {
@@ -333,7 +354,8 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 
 		// load global style, if present
-		state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : [];
+		//state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : [];
+		state.styles = styler.globalStyle || [];
 
 		// Load the style and update the state
 		if (files.STYLE) {
@@ -342,7 +364,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				if (fs.existsSync(style.file)) {
 					logger.info('  style:      "' + 
 						path.relative(path.join(dir,CONST.DIR.STYLE),style.file) + '"');
-					state.styles = CU.loadAndSortStyle(style.file, manifest, {
+					state.styles = styler.loadAndSortStyle(style.file, {
 						existingStyle: state.styles,
 						platform: style.platform
 					});
@@ -358,15 +380,14 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 			if (path.existsSync(themeStylesFile)) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
-				// state.styles = U.deepExtend(state.styles, CU.loadAndSortStyle(themeStylesFile,manifest));
-				state.styles = CU.loadAndSortStyle(themeStylesFile, manifest, {
+				state.styles = styler.loadAndSortStyle(themeStylesFile, {
 					existingStyle: state.styles,
 					theme: true
 				});
 			}
 			if (path.existsSync(psThemeStylesFile)) {
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
-				state.styles = CU.loadAndSortStyle(psThemeStylesFile, manifest, {
+				state.styles = styler.loadAndSortStyle(psThemeStylesFile, {
 					existingStyle: state.styles,
 					platform: true,
 					theme: true
@@ -464,7 +485,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');";
 
 	// for each model variable in the bindings map... 
-	_.each(CU.bindingsMap, function(mapping,modelVar) {
+	_.each(styler.bindingsMap, function(mapping,modelVar) {
 
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
@@ -510,14 +531,17 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	// prep the controller paths based on whether it's an app
 	// controller or widget controller
 	var targetFilepath = files.COMPONENT;
+	var runtimeStylePath = files.RUNTIME_STYLE;
 	if (manifest) {
 		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
+		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir), 0777);
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)], 
 			compileConfig.dir.resources, 
 			manifest.id
 		);
 		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
+		runtimeStylePath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir, viewName + '.js');
 	}
 
 	// generate the code and source map for the current controller
@@ -534,6 +558,15 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			}
 		}
 	}, compileConfig);
+
+	// write the compiled style array to a runtime module
+	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
+	logger.info('  created:     "' + relativeStylePath + '"');
+	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
+	fs.writeFileSync(
+		runtimeStylePath, 
+		'module.exports = ' + JSON.stringify(state.styles)
+	);
 }
 
 function findModelMigrations(name, inDir) {
@@ -618,53 +651,6 @@ function processModels(dirs) {
 	return models;
 };
 
-// Order of processing global styles:
-// 1. global
-// 2. global theme
-// 3. global platform-specific
-// 4. global theme platform-specific
-function loadGlobalStyles(appPath, theme) {
-	compileConfig.globalStyle = [];
-	var apptss = CONST.GLOBAL_STYLE;
-	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
-	if (theme) {
-		var themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
-	}
-
-	var globalStyles = [];
-	globalStyles.push({ 
-		path: path.join(stylesDir,apptss),
-		msg: apptss
-	});
-	theme && globalStyles.push({ 
-		path: path.join(themesDir,apptss),
-		msg: apptss + '(theme:' + theme + ')',
-		obj: { theme: true }
-	});
-	globalStyles.push({ 
-		// TODO: get the real platforms object
-		path: path.join(stylesDir,buildPlatform,apptss),
-		msg: apptss + '(platform:' + buildPlatform + ')',
-		obj: { platform: true }
-	});
-	theme && globalStyles.push({ 
-		// TODO: get the real platforms object
-		path: path.join(themesDir,buildPlatform,apptss),
-		msg: apptss + '(theme:' + theme + ' platform:' + buildPlatform + ')',
-		obj: { platform: true, theme: true }
-	});
-
-	_.each(globalStyles, function(g) {
-		if (path.existsSync(g.path)) {
-			logger.info('[' + g.msg + '] global style processing...');
-			compileConfig.globalStyle = CU.loadAndSortStyle(g.path, undefined, 
-				_.extend({existingStyle: compileConfig.globalStyle},g.obj||{}));
-		}
-	});	
-
-	styleOrderBase = ++CU.styleOrderCounter;
-}
-
 function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
@@ -683,7 +669,9 @@ function optimizeCompiledCode() {
 			'app.js',
 			'alloy/CFG.js',
 			'alloy/controllers/',
+			'alloy/styles/',
 			'alloy/backbone.js',
+			'alloy/constants.js',
 			'alloy/underscore.js'
 		];
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {

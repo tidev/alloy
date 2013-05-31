@@ -1,48 +1,68 @@
 "#win": {
 	backgroundColor: "#000"
-},
+}
+
 "#win[platform=ios]": {
 	backgroundColor: "#f00"
-},
+}
+
 "#win[platform=android]": {
 	backgroundColor: "#0f0"
-},
+}
+
 "#win[platform=mobileweb]": {
 	backgroundColor: "#00f"
-},
+}
+
+"#win[platform=blackberry]": {
+	backgroundColor: "#0ff"
+}
+
 "Label": {
 	color: "#fff",
 	font: {
 		fontSize: 48,
 		fontWeight: "bold"
 	}
-},
+}
+
 "Label[formFactor=tablet]": {
 	font: {
 		fontSize: 96,
 		fontWeight: "bold"
 	}
-},
+}
+
 "#osLabel": {
 	text: "Generic"
-},
+}
+
 "#osLabel[platform=ios]": {
 	text: "iOS device\n(size unknown)"
-},
+}
+
 "#osLabel[platform=ios formFactor=tablet]": {
 	text: "iPad"
-},
+}
+
 "#osLabel[platform=ios formFactor=handheld]": {
 	text: "iPhone"
-},
+}
+
 "#osLabel[platform=android]": {
 	text: "Android",
 	color: "#000"
-},
+}
+
 "#osLabel[platform=android formFactor=tablet]": {
 	text: "Android\nTablet",
 	color: "#000"
-},
+}
+
 "#osLabel[platform=mobileweb]": {
 	text: "Mobileweb"
+}
+
+"#osLabel[platform=blackberry]": {
+	text: "Blackberry"
 }

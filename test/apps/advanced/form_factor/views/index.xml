@@ -1,18 +1,22 @@
 <Alloy>
-	<Window class="container">
-		<View formFactor="handheld">
-			<Label>I'm a handheld!</Label>
+	<Window>
+		<View id="main" formFactor="handheld">
+			<Label id="label">I'm a handheld!</Label>
 		</View>
 		
-		<View formFactor="tablet">
-			<Label>I'm a tablet!</Label>
+		<View id="main" formFactor="tablet">
+			<Label id="label">I'm a tablet!</Label>
 		</View>
 		
-		<View height="50" width="200" bottom="10" backgroundColor="#cdcdcd">
-			<Label class="platformLabel" platform="android" formFactor="tablet">android tablet</Label>
-			<Label class="platformLabel" platform="android" formFactor="handheld">android handheld</Label>
-			<Label class="platformLabel" platform="ios" formFactor="tablet">ios tablet</Label>
-			<Label class="platformLabel" platform="ios" formFactor="handheld">ios handheld</Label>
+		<View id="container" height="50" width="200" bottom="10" backgroundColor="#cdcdcd">
+			<Label id="platformLabel" platform="android" formFactor="tablet">android tablet</Label>
+			<Label id="platformLabel" platform="android" formFactor="handheld">android handheld</Label>
+			<Label id="platformLabel" platform="ios" formFactor="tablet">ipad</Label>
+			<Label id="platformLabel" platform="ios" formFactor="handheld">iphone</Label>
+			<Label id="platformLabel" platform="blackberry" formFactor="tablet">blackberry tablet</Label>
+			<Label id="platformLabel" platform="blackberry" formFactor="handheld">blackberry handheld</Label>
+			<Label id="platformLabel" platform="mobileweb" formFactor="tablet">mobileweb tablet</Label>
+			<Label id="platformLabel" platform="mobileweb" formFactor="handheld">mobileweb handheld</Label>
 		</View>
 	</Window>
 </Alloy>

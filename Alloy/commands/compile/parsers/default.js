@@ -1,5 +1,6 @@
 var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
+	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._;
 
@@ -11,7 +12,7 @@ function parse(node, state, args) {
 	var createFunc = 'create' + node.nodeName,
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
 		fullname = CU.getNodeFullname(node),
-		generatedStyle = CU.generateStyleParams(
+		generatedStyle = styler.generateStyleParams(
 			state.styles,
 			args.classes,
 			args.id,
@@ -81,7 +82,7 @@ function parse(node, state, args) {
 		}
 
 		code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
-		code += CU.generateStyleParams(
+		code += styler.generateStyleParams(
 			state.styles,
 			args.classes,
 			args.id,

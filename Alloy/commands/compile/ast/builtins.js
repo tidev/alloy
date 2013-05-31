@@ -2,7 +2,7 @@ var path = require('path'),
 	fs = require('fs'),
 	_ = require('../../../lib/alloy/underscore')._,
 	uglifyjs = require('uglify-js'),
-	logger = require('../../../common/logger'),
+	logger = require('../../../logger'),
 	U = require('../../../utils');
 
 var EXCLUDE = ['backbone','CFG','underscore'];

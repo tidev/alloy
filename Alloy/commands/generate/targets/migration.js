@@ -1,7 +1,7 @@
 var path = require('path'),
 	GU = require('../generateUtils'),
 	CONST = require('../../../common/constants'),
-	logger = require('../../../common/logger');
+	logger = require('../../../logger');
 
 module.exports = function(name, args, program, template) {
 	var type = 'MIGRATION';

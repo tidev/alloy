@@ -1,5 +1,4 @@
 var path = require('path'),
-	logger = require('../../common/logger'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),

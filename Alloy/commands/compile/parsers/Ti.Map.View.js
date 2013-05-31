@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
@@ -45,7 +46,7 @@ function parse(node, state, args) {
 	}
 
 	// Create the initial Map code
-	state.extraStyle = CU.createVariableStyle('annotations', arrayName);
+	state.extraStyle = styler.createVariableStyle('annotations', arrayName);
 	var mapState = require('./default').parse(node, state);
 	code += mapState.code;
 

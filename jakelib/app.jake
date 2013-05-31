@@ -3,7 +3,7 @@ var fs = require('fs'),
 	U = require('../Alloy/utils'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
 	CONST = require('../Alloy/common/constants'),
-	logger = require('../Alloy/common/logger');
+	logger = require('../Alloy/logger');
 
 // Fix node warning 
 path.existsSync = fs.existsSync || path.existsSync;
@@ -109,6 +109,12 @@ namespace('app', function() {
 			} else {
 				log('Staging sample app "'+process.env.dir+'" for launch...');
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
+				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
+				wrench.copyDirSyncRecursive(
+					path.join('test','lib'),
+					path.join(targetAppPath,'lib')
+				);
+				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
 			}
 		});
 	});

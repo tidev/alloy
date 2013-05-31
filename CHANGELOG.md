@@ -5,6 +5,12 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+## 1.1.3 (alpha)
+
+### New Features
+
+* [ALOY-661](https://jira.appcelerator.org/browse/ALOY-661). Code Processor: Get Alloy to recompile before an analysis
+
 ## 1.1.2 (2 May 2013)
 
 ### New Features

@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -34,7 +35,7 @@ function parse(node, state, args) {
 			node.removeAttribute(p);
 		});
 	}
-	state.extraStyle = CU.createVariableStyle('views', arrayName);
+	state.extraStyle = styler.createVariableStyle('views', arrayName);
 	var scrollState = require('./default').parse(node, state);
 	code += scrollState.code;
 
