@@ -80,14 +80,19 @@ exports.getParserArgs = function(node, state, opts) {
 	opts || (opts = {});
 
 	var defaultId = opts.defaultId || undefined,
+		isTopLevel = opts.isTopLevel || false,
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name,
-		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
+		id = node.getAttribute('id') || ((isTopLevel && defaultId) ? defaultId : exports.generateUniqueId()),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
+
+	if (id === defaultId && !isTopLevel) {
+		U.die('Root ID cannot be used for child: ' + id);
+	}
 
 	// handle binding arguments
 	var bindObj = {};
@@ -164,7 +169,7 @@ exports.generateNodeExtended = function(node, state, newState) {
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
-	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
+	var args = exports.getParserArgs(node, state, { defaultId: defaultId, isTopLevel: isTopLevel }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
 		code = { 
 			content: '',
@@ -257,12 +262,13 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	// Continue parsing if necessary
 	if (state.parent) {
 		var states = _.isArray(state.parent) ? state.parent : [state.parent];
+		defaultId = (defaultId && isTopLevel && args.id === defaultId) ? defaultId : undefined;
 		_.each(states, function(p) {
 			var parent = p.node;
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
 				var newState = _.defaults({ parent: p }, state);
-				code.content += exports.generateNode(parent.childNodes.item(i), newState); 
+				code.content += exports.generateNode(parent.childNodes.item(i), newState, defaultId, false); 
 			}
 		}); 
 	}
