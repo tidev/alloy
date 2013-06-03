@@ -95,8 +95,13 @@ describe('alloy compile', function() {
 									return;
 								} 
 
-								var json = require(fullpath);
-								expect(json).toHaveNoUndefinedStyles();
+								// TODO: Can no longer require() the styles since they
+								//       are preprocessed for runtime now. Find a better
+								//       way than this lazy text check to verify that
+								//       there's no undefined keys in the styles.
+								expect(fs.readFileSync(fullpath,'utf8').indexOf('undefined')).toEqual(-1);
+								// var json = require(fullpath);
+								// expect(json).toHaveNoUndefinedStyles();
 							});
 						}); 
 					});

@@ -559,13 +559,34 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		}
 	}, compileConfig);
 
-	// write the compiled style array to a runtime module
+	// initiate runtime style module creation
 	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
 	logger.info('  created:     "' + relativeStylePath + '"');
+
+	// pre-process runtime controllers to save runtime performance
+	var STYLE_PLACEHOLDER = '__STYLE_PLACEHOLDER__';
+	var STYLE_REGEX = new RegExp('[\'"]' + STYLE_PLACEHOLDER + '[\'"]');
+	var processedStyles = [];
+	_.each(state.styles, function(s) {
+		var o = {};
+
+		// get the runtime processed version of the JSON-safe style
+		var processed = '{' + styler.processStyle(s.style, state) + '}';
+		
+		// create a temporary style object, sans style key
+		_.each(s, function(v,k) { k !== 'style' && (o[k] = v) });
+
+		// Create a full processed style string by inserting the processed style
+		// into the JSON stringifed temporary style object
+		o.style = STYLE_PLACEHOLDER;
+		processedStyles.push(JSON.stringify(o).replace(STYLE_REGEX, processed));
+	})
+
+	// write out the pre-processed styles to runtime module files
 	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
 	fs.writeFileSync(
 		runtimeStylePath, 
-		'module.exports = ' + JSON.stringify(state.styles, null, '\t')
+		'module.exports = [' + processedStyles.join(',') + '];'
 	);
 }
 
