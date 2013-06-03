@@ -29,7 +29,8 @@
 }
 
 "#button2": {
-	width: '100dp'
+	width: '100dp',
+	height: Ti.UI.SIZE
 }
 
 "#button3": {

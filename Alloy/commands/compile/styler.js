@@ -250,9 +250,76 @@ exports.createVariableStyle = function(keyValuePairs, value) {
 	return style;
 };
 
+exports.processStyle = function(_style, _state) {
+	var theState = _state || {};
+	var regex = EXPR_REGEX;
+	var code = '';
+
+	function processStyle(style, opts) {
+		opts || (opts = {});
+		style = opts.fromArray ? {0:style} : style;
+		var groups = {};
+
+		// need to add "properties" and bindIds for ListItems
+		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
+			for (var sn in style) {
+				var value = style[sn];
+				var prefixes = sn.split(':');
+				if (prefixes.length > 1) {
+					var bindId = prefixes[0];
+					groups[bindId] || (groups[bindId] = {});
+					groups[bindId][prefixes.slice(1).join(':')] = value;
+				} else {
+					// allow template to be specified
+					if (sn === 'template') {
+						groups.template = value;
+					} else {
+						groups.properties || (groups.properties = {});
+						groups.properties[sn] = value;
+					}
+				}
+			}
+			style = groups;
+		}
+
+		for (var sn in style) {
+			var value = style[sn],
+				prefix = opts.fromArray ? '' : sn + ':';
+
+			if (_.isString(value)) {
+				var matches = value.match(regex);
+				if (matches !== null) {
+					code += prefix + matches[1] + ','; // matched a JS expression
+				} else {
+					code += prefix + '"' + value + '",'; // just a string
+				}
+			} else if (_.isArray(value)) {
+				code += prefix + '[';
+				_.each(value, function(v) {
+		 			processStyle(v, {fromArray:true});
+		 		});
+				code += '],';
+			} else if (_.isObject(value)) {
+			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
+			 		code += prefix + value.value + ','; // dynamic variable value
+			 	} else {
+			 		// recursively process objects
+			 		code += prefix + '{';
+			 		processStyle(value);
+			 		code += '},';
+			 	}
+			} else {
+				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
+			}
+		}
+	}
+	processStyle(_style, {firstOrder:true});
+
+	return code;
+};
+
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
-	var regex = EXPR_REGEX,
-		bindingRegex = BINDING_REGEX,
+	var bindingRegex = BINDING_REGEX,
 		styleCollection = [],
 		lastObj = {};
 
@@ -381,65 +448,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		});
 	});
 
-	function processStyle(style, opts) {
-		opts || (opts = {});
-		style = opts.fromArray ? {0:style} : style;
-		var groups = {};
-
-		// need to add "properties" and bindIds for ListItems
-		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
-			for (var sn in style) {
-				var value = style[sn];
-				var prefixes = sn.split(':');
-				if (prefixes.length > 1) {
-					var bindId = prefixes[0];
-					groups[bindId] || (groups[bindId] = {});
-					groups[bindId][prefixes.slice(1).join(':')] = value;
-				} else {
-					// allow template to be specified
-					if (sn === 'template') {
-						groups.template = value;
-					} else {
-						groups.properties || (groups.properties = {});
-						groups.properties[sn] = value;
-					}
-				}
-			}
-			style = groups;
-		}
-
-		for (var sn in style) {
-			var value = style[sn],
-				prefix = opts.fromArray ? '' : sn + ':';
-
-			if (_.isString(value)) {
-				var matches = value.match(regex);
-				if (matches !== null) {
-					code += prefix + matches[1] + ','; // matched a JS expression
-				} else {
-					code += prefix + '"' + value + '",'; // just a string
-				}
-			} else if (_.isArray(value)) {
-				code += prefix + '[';
-				_.each(value, function(v) {
-		 			processStyle(v, {fromArray:true});
-		 		});
-				code += '],';
-			} else if (_.isObject(value)) {
-			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
-			 		code += prefix + value.value + ','; // dynamic variable value
-			 	} else {
-			 		// recursively process objects
-			 		code += prefix + '{';
-			 		processStyle(value);
-			 		code += '},';
-			 	}
-			} else {
-				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
-			}
-		}
-	}
-
 	// Let's assemble the fastest factory method object possible based on
 	// what we know about the style we just sorted and assembled
 	var code = '';
@@ -448,11 +456,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	} else if (styleCollection.length === 1) {
 		if (styleCollection[0].condition) {
 			// check the condition and return the object
-			code += styleCollection[0].condition + ' ? {' + processStyle(styleCollection[0].style, {firstOrder:true}) + '} : {}';
+			code += styleCollection[0].condition + ' ? {' + exports.processStyle(styleCollection[0].style, theState) + '} : {}';
 		} else {
 			// just return the object
 			code += '{';
-			processStyle(styleCollection[0].style, {firstOrder:true});
+			code += exports.processStyle(styleCollection[0].style, theState);
 			code += '}';
 		}
 	} else if (styleCollection.length > 1) {
@@ -464,15 +472,13 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				code += 'if (' + styleCollection[i].condition + ') ';
 			} 
 			code += '_.extend(o, {';
-			processStyle(styleCollection[i].style, {firstOrder:true});
+			code += exports.processStyle(styleCollection[i].style, theState);
 			code += '});\n';
 		}
 		code += 'return o;\n'
 		code += '})()'
 	}
 	
-	//console.log(code);
-
 	return code;
 }
 
