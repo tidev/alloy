@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label id="label">Check the console output and make sure that only styles relevant to the current build platform are listed in the printed array. Note also that the "platform" key has been removed entirely from the "queries" object in conditional styles.</Label>
+	</Window>
+</Alloy>
