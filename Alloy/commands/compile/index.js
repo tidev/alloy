@@ -570,11 +570,39 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	_.each(state.styles, function(s) {
 		var o = {};
 
+		// make sure this style entry applies to the current platform
+		if (s && s.queries && s.queries.platform && 
+			!_.contains(s.queries.platform, buildPlatform)) {
+			return;
+		}
+
 		// get the runtime processed version of the JSON-safe style
 		var processed = '{' + styler.processStyle(s.style, state) + '}';
 		
 		// create a temporary style object, sans style key
-		_.each(s, function(v,k) { k !== 'style' && (o[k] = v) });
+		_.each(s, function(v,k) {
+			if (k === 'queries') {
+				var queriesObj = {};
+
+				// optimize style conditionals for runtime
+				_.each(s[k], function(query, queryKey) {
+					if (queryKey === 'platform') {
+						// do nothing, we don't need the platform key anymore
+					} else if (queryKey === 'formFactor') {
+						queriesObj[queryKey] = 'is' + U.ucfirst(query);
+					} else {
+						logger.warn('Unknown device query "' + queryKey + '"');
+					}
+				});
+
+				// add the queries object, if not empty
+				if (!_.isEmpty(queriesObj)) {
+					o[k] = queriesObj;
+				}
+			} else if (k !== 'style') { 
+				o[k] = v; 
+			}
+		});
 
 		// Create a full processed style string by inserting the processed style
 		// into the JSON stringifed temporary style object
