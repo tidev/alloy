@@ -1,0 +1,42 @@
+"#index": {
+	backgroundColor: '#fff',
+	fullscreen: false
+}
+
+"#index[platform=android]": {
+	exitOnClose: true
+}
+
+"#label": {
+	height: Ti.UI.SIZE,
+	width: '90%',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'normal'
+	},
+	textAlign: 'center'
+}
+
+"#label[platform=android]": {
+	color: '#f00'
+}
+
+"#label[platform=ios]": {
+	color: '#0f0'
+}
+
+"#label[platform=ios formFactor=handheld]": {
+	color: '#0ff'
+}
+
+"#label[platform=ios formFactor=tablet]": {
+	color: '#963'
+}
+
+"#label[platform=blackberry]": {
+	color: '#00f'
+}
+
+"#label[platform=mobileweb]": {
+	color: '#ff0'
+}
