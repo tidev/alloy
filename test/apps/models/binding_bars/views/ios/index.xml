@@ -1,0 +1,20 @@
+<Alloy>
+	<Window>
+		<ButtonBar>
+			<Labels dataCollection="items">
+				<Label title="{title}" enabled="{enabled}"/>
+			</Labels>
+		</ButtonBar>
+		<TabbedBar>
+			<Labels dataCollection="items">
+				<Label title="{title}" enabled="{enabled}"/>
+			</Labels>
+		</TabbedBar>
+		<Label>It's not exactly practical, but you can in fact use collection data binding to populate the list of buttons in a ButtonBar or TabbedBar, as well as the items in a Toolbar.</Label>
+		<Toolbar>
+			<Items dataCollection="items" dataFilter="filterItems">
+				<Button title="{title}"/>
+			</Items>
+		</Toolbar>
+	</Window>
+</Alloy>
