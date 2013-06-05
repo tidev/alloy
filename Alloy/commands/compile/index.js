@@ -86,41 +86,45 @@ module.exports = function(args, program) {
 		]);
 	}
 
-	// wipe the controllers, models, and widgets
-	logger.debug('----- CLEANING RESOURCES -----');
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
+	// Cleanup?
+	if (alloyConfig.cleanup !== 'false') {
 
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.MODEL + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.MODEL));
+		// wipe the controllers, models, and widgets
+		logger.debug('----- CLEANING RESOURCES -----');
+		logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
+		U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
 
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.WIDGET + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.WIDGET));
-	logger.debug(' ');
+		logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.MODEL + '" folder...');
+		U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.MODEL));
 
-	// GET RID OF ORPHAN FILES
-	U.deleteOrphanFiles(
-		paths.resources, 
-		[
-			path.join(alloyRoot,'lib'),
-			path.join(alloyRoot,'common'),
-			path.join(paths.app,CONST.DIR.ASSETS),
-			path.join(paths.app,CONST.DIR.LIB),
-			path.join(paths.app,'vendor'),
-		],
-		{
-			exceptions: [
-				// still need to check for builtins
-				path.join('alloy'),
-				path.join('alloy','CFG.js'),
-				path.join('alloy','constants.js'),
-				path.join('alloy','controllers'),
-				path.join('alloy','widgets'),
-				path.join('alloy','models')
+		logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.WIDGET + '" folder...');
+		U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.WIDGET));
+		logger.debug(' ');
+
+		// GET RID OF ORPHAN FILES
+		U.deleteOrphanFiles(
+			paths.resources, 
+			[
+				path.join(alloyRoot,'lib'),
+				path.join(alloyRoot,'common'),
+				path.join(paths.app,CONST.DIR.ASSETS),
+				path.join(paths.app,CONST.DIR.LIB),
+				path.join(paths.app,'vendor'),
 			],
-			platform: platforms[buildPlatform].titaniumFolder
-		}
-	);
+			{
+				exceptions: [
+					// still need to check for builtins
+					path.join('alloy'),
+					path.join('alloy','CFG.js'),
+					path.join('alloy','constants.js'),
+					path.join('alloy','controllers'),
+					path.join('alloy','widgets'),
+					path.join('alloy','models')
+				],
+				platform: platforms[buildPlatform].titaniumFolder
+			}
+		);
+	}
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
@@ -129,41 +133,45 @@ module.exports = function(args, program) {
 	// identify current theme, if any
 	(theme = compileConfig.theme) && logger.debug('theme = ' + theme);
 	logger.debug('');
+	
+	// Cleaned up?
+	if (alloyConfig.cleanup !== 'false' || path.existsSync(path.join(paths.resources,'alloy')) === false) {
 
-	// create generated controllers folder in resources 
-	logger.debug('----- BASE RUNTIME FILES -----');
-	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
+		// create generated controllers folder in resources 
+		logger.debug('----- BASE RUNTIME FILES -----');
+		U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
-	// copy in all lib resources from alloy module
-	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
-	U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
+		// copy in all lib resources from alloy module
+		U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
+		U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
 
-	// create runtime folder structure for alloy
-	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
-		var p = path.join(paths.resourcesAlloy, CONST.DIR[type]);
-		wrench.mkdirSyncRecursive(p, 0777);
-	});
+		// create runtime folder structure for alloy
+		_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
+			var p = path.join(paths.resourcesAlloy, CONST.DIR[type]);
+			wrench.mkdirSyncRecursive(p, 0777);
+		});
 
-	// Copy in all developer assets, libs, and additional resources
-	_.each(['ASSETS','LIB','VENDOR'], function(type) {
-		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
-	});
+		// Copy in all developer assets, libs, and additional resources
+		_.each(['ASSETS','LIB','VENDOR'], function(type) {
+			U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
+		});
 
-	// copy in test specs if not in production
-	if (alloyConfig.deploytype !== 'production') {
-		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
-	}
-
-	logger.debug('');
-
-	// check theme for assets
-	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
-		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+		// copy in test specs if not in production
+		if (alloyConfig.deploytype !== 'production') {
+			U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
 		}
+
+		logger.debug('');
+
+		// check theme for assets
+		if (theme) {
+			var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
+			if (path.existsSync(themeAssetsPath)) {
+				wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+			}
+		}
+		logger.debug('');
 	}
-	logger.debug('');
 
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
