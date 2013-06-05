@@ -1,7 +1,8 @@
-function filterItems(collection) {
-	return collection.where({enabled:true});
+if (OS_IOS) {
+	function filterItems(collection) {
+		return collection.where({enabled:true});
+	}
+	Alloy.Collections.items.trigger('change');
 }
-
-Alloy.Collections.items.trigger('change');
 
 $.index.open();

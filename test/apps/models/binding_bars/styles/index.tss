@@ -1,5 +1,7 @@
 "#index": {
-	backgroundColor: '#fff'
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
 }
 
 "Label": {
