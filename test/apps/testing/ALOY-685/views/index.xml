@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label id="label">static label</Label>
+	</Window>
+</Alloy>

@@ -1,0 +1,23 @@
+"Window": {
+	backgroundColor: '#eee'
+}
+
+"Label": {
+	color: '#222',
+	font: {
+		fontSize: '28dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'center',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+".blue": {
+	backgroundColor: '#00f'
+}
+
+".shadow": {
+	shadowOffset: { x:2, y:2 },
+	shadowColor: '#0f0'
+}
