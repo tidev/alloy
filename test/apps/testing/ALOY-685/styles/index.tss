@@ -1,0 +1,35 @@
+"Label": {
+	top: '15dp'
+}
+
+"#index": {
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+"#label[platform=ios formFactor=handheld]": {
+	color: '#a00'
+}
+
+"#label1": {
+	font: {
+		fontSize: 14,
+		fontWeight: 'normal'
+	}
+}
+
+"#label2": {
+	color: '#fff'
+}
+
+"#label3": {
+	backgroundColor: '#000'
+}
+
+"#label4": {
+	font: {
+		fontSize: '48dp',
+		fontWeight: 'normal'
+	}
+}
