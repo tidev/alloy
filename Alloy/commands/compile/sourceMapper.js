@@ -107,7 +107,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 
 	// create uglify-js source map and stream it out
-	if (compileConfig.alloyConfig.map !== 'false') {
+	if (compileConfig.alloyConfig.map !== false) {
 		var sourceMap = uglifyjs.SourceMap({
 			file: target.filename,
 			orig: mapper.toString()
@@ -128,7 +128,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	logger.info('  created:    "' + relativeOutfile + '"');
 
 	// write source map for the generated file
-	if (compileConfig.alloyConfig.map !== 'false') {
+	if (compileConfig.alloyConfig.map !== false) {
 		var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
 		outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 		relativeOutfile = path.relative(compileConfig.dir.project,outfile);
