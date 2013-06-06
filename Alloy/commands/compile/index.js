@@ -137,6 +137,11 @@ module.exports = function(args, program) {
 	// copy in all lib resources from alloy module
 	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
 	U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
+	
+	// copy all builtins if requested
+	if (compileConfig.alloyConfig.builtins === 'false') {
+		U.updateFiles(path.join(alloyRoot, 'builtins'), path.join(paths.resources,'alloy'));
+	}
 
 	// create runtime folder structure for alloy
 	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
@@ -728,6 +733,11 @@ function optimizeCompiledCode() {
 				return f.indexOf(e) === 0; 
 			});
 		});
+	}
+	
+	// Skip selective builtins
+	if (compileConfig.alloyConfig.builtins === 'false') {
+		mods = _.without(mods, 'builtins');
 	}
 
 	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {

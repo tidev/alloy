@@ -101,6 +101,9 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// process all AST operations
 	_.each(mods, function(mod) {
+		// Skip selective builtins
+		if (mod === 'builtins' && config.alloyConfig.builtins === 'false') return;
+		
 		logger.trace('- Processing "' + mod + '" module...');
 		ast.figure_out_scope();
 		ast = require(modLocation+mod).process(ast, compileConfig) || ast;
