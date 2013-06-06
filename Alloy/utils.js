@@ -86,6 +86,15 @@ exports.XML = {
 	},
 	toString: function(node) {
 		return (new XMLSerializer()).serializeToString(node);
+	},
+	previousSiblingElement: function(node) {
+		if (!node || !node.previousSibling || node.previousSibling === null) { 
+			return null; 
+		} else if (node.previousSibling.nodeType === 1) { 
+			return node.previousSibling; 
+		} else {
+			return exports.XML.previousSiblingElement(node.previousSibling);
+		}
 	}
 };
 
