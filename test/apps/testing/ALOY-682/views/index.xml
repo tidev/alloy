@@ -1,0 +1,11 @@
+<Alloy>
+	<Window backgroundColor="#fff">
+		<!-- 
+			as noted below, add id="index" to the Label and you should get 
+			a compile time error indicating that you can't use "index" as an
+			ID for the label because it is the view's default ID, which is
+			reserved for the first top-level element, in this case the Window
+		-->
+		<Label>change my id to "index" to cause a compile error</Label>
+	</Window>
+</Alloy>
