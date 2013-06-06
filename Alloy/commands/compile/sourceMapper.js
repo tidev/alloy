@@ -107,13 +107,17 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 
 	// create uglify-js source map and stream it out
-	var sourceMap = uglifyjs.SourceMap({
-		file: target.filename,
-		orig: mapper.toString()
-	});
-	var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), { 
-		source_map: sourceMap
-	}));
+	if (compileConfig.sourcemap !== false) {
+		var sourceMap = uglifyjs.SourceMap({
+			file: target.filename,
+			orig: mapper.toString()
+		});
+		var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), { 
+			source_map: sourceMap
+		}));
+	} else {
+		var stream = uglifyjs.OutputStream(exports.OPTIONS_OUTPUT);
+	}
 	ast.print(stream);
 
 	// write the generated controller code
@@ -124,10 +128,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	logger.info('  created:    "' + relativeOutfile + '"');
 
 	// write source map for the generated file
-	var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
-	outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
-	relativeOutfile = path.relative(compileConfig.dir.project,outfile);
-	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
-	fs.writeFileSync(outfile, sourceMap.toString());
-	logger.debug('  map:        "' + relativeOutfile + '"');
+	if (compileConfig.sourcemap !== false) {
+		var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
+		outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
+		relativeOutfile = path.relative(compileConfig.dir.project,outfile);
+		wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
+		fs.writeFileSync(outfile, sourceMap.toString());
+		logger.debug('  map:        "' + relativeOutfile + '"');
+	}
 };
