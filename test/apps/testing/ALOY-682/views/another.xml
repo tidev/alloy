@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<View>
+			<View>
+				<!-- add id="another" in the final view to cause the compile error -->
+				<View/>
+			</View>
+		</View>
+	</Window>
+</Alloy>

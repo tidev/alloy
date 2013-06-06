@@ -311,6 +311,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	CU.destroyCode = '';
 	CU.postCode = '';
 	CU.currentManifest = manifest;
+	CU.currentDefaultId = viewName;
 
 	// create a list of file paths
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
@@ -458,16 +459,13 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
 		// process the UI nodes
-		var assignedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-			var defaultId = undefined;
+			var defaultId = i === 0 ? viewName : undefined;
 			var fullname = CU.getNodeFullname(node);
-
-			if (!assignedDefaultId) {
-				assignedDefaultId = true;
-				defaultId = viewName;
-			} 
-			template.viewCode += CU.generateNode(node, {parent:{},styles:state.styles}, defaultId, true);
+			template.viewCode += CU.generateNode(node, {
+				parent:{},
+				styles:state.styles
+			}, defaultId, true);
 		});
 	}
 

@@ -74,7 +74,7 @@ var printMessage = function(msg, level, color) {
 			}
 		} else {
 			var tag = (exports.showTimestamp ? formattedDate() + ' -- ' : '') + '[' + level.toUpperCase() + '] ';
-			var str = tag.grey + line[color];
+			var str = tag.grey + (line || '')[color];
 			if (exports.stripColors) { str = strip(str); }
 			logFunc(str);
 		}

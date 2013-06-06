@@ -44,6 +44,7 @@ exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
 exports.currentManifest;
+exports.currentDefaultId;
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -88,6 +89,15 @@ exports.getParserArgs = function(node, state, opts) {
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
 		platformObj;
+
+	// make sure we're not reusing the default ID for the first top level element
+	if (id === CU.currentDefaultId && 
+		(node.parentNode && node.parentNode.nodeName !== 'Alloy')) {
+		U.dieWithNode(node, [
+			'Cannot use this view\'s default ID  "' + id + '" for current node',
+			'Only a top-level element in a view can use the default ID'
+		]);
+	}
 
 	// handle binding arguments
 	var bindObj = {};
