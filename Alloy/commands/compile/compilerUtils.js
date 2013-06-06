@@ -514,6 +514,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	
 	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
+	obj.sourcemap = config.sourcemap;
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
