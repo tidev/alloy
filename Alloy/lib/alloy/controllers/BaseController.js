@@ -15,6 +15,7 @@ var Alloy = require('alloy'),
  */
 var Controller = function() {
 	var roots = [];
+	var self = this;
 
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
@@ -104,6 +105,12 @@ var Controller = function() {
 				}
 			} else {
 				return this.getView();
+			}
+		},
+
+		UI: {
+			create: function(apiName, opts) {
+				return Alloy.UI.create(self.name, apiName, opts);
 			}
 		}
 	});
