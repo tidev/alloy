@@ -1,0 +1,5 @@
+<Alloy>
+	<Window onClick="addNewLabel">
+		<Label id="staticLabel">static text</Label>
+	</Window>
+</Alloy>

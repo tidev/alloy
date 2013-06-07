@@ -1,0 +1,8 @@
+"Label": {
+	color: '#000',
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'normal'
+	},
+	textAlign: 'center'
+}
