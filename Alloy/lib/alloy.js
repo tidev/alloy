@@ -4,7 +4,9 @@
  *
  */
 var 	   _ = require('alloy/underscore')._,
-	Backbone = require('alloy/backbone');
+	Backbone = require('alloy/backbone'),
+	CONST = require('alloy/constants'),
+	styler = require('alloy/styler');
 
 var DEFAULT_WIDGET = 'widget';
 
@@ -94,6 +96,32 @@ exports.C = function(name, modelDesc, model) {
 
 	return Collection;
 };
+
+exports.UI = {};
+exports.UI.create = function(controller, apiName, opts) {
+	opts || (opts = {});
+
+	// Make sure we have a full api name
+	var baseName, ns;
+	var parts = apiName.split('.');
+	if (parts.length === 1) {
+		baseName = apiName;
+		ns = opts.ns || CONST.IMPLICIT_NAMESPACES[baseName] || CONST.NAMESPACE_DEFAULT;
+	} else if (parts.length > 1) {
+		baseName = parts[parts.length-1];
+		ns = parts.slice(0,parts.length-1);
+	} else {
+		throw('Alloy.UI.create() failed: No API name was given in the second parameter');
+	}
+	opts.apiName = ns + '.' + baseName;
+	baseName = baseName[0].toUpperCase() + baseName.substr(1);
+
+	// generate the style object
+	var style = styler.generateStyle(controller, opts);
+
+	// create the titanium proxy object
+	return eval(ns)['create' + baseName](style);
+}
 
 /**
  * @method createWidget
