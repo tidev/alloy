@@ -10,7 +10,7 @@ for (var i = 0; i < 4; i++) {
 	var theStyle = styler.generateStyle('index', {
 		// used by generateStyle() to merge styles
 		apiName: 'Label',
-		class: ['blue','shadow'],
+		classes: ['blue','shadow'],
 		id: 'label' + (i+1),
 
 		// additional properties to be merged in a final step

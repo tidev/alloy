@@ -1,0 +1,34 @@
+"#index": {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+"#staticLabel": {
+	top: '15dp',
+	color: '#a00',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	textAlign: 'center',
+	shadowColor: '#aaa',
+	shadowOffset: {x:2, y:2}
+}
+
+".big": {
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}
+
+".blue": {
+	color: '#00f'
+}
+
+".shadow": {
+	shadowColor: '#aaa',
+	shadowOffset: { x:2, y:2 }
+}

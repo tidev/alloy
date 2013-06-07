@@ -2,18 +2,25 @@ var CONST = require('alloy/constants'),
 	_ = require('alloy/underscore')._;
 
 exports.generateStyle = function(controller, opts) {
+	var classes, apiName;
+
 	// If there's no opts, there's no reason to load the style module. Just
 	// return an empty object.
 	if (!opts) { return {}; }
 
-	// make opts.class an array if it isn't already
-	if (!_.isArray(opts.class)) {
-		opts.class = opts.class ? [opts.class] : [];
+	// make opts.classes an array if it isn't already
+	if (_.isArray(opts.classes)) {
+		classes = opts.classes.slice(0);
+	} else if (_.isString(opts.classes)) {
+		classes = opts.classes.split(/\s+/);
+	} else {
+		classes = [];
 	}
 
 	// give opts.apiName a namespace if it doesn't have one already
-	if (opts.apiName && opts.apiName.indexOf('.') === -1) {
-		opts.apiName = addNamespace(opts.apiName);
+	apiName = opts.apiName;
+	if (apiName && apiName.indexOf('.') === -1) {
+		apiName = addNamespace(apiName);
 	}
 
 	// TODO: check cached styles based on opts and controller
@@ -36,13 +43,13 @@ exports.generateStyle = function(controller, opts) {
 
 		// does this style match the given opts?
 		if ((style.isId && opts.id && style.key === opts.id) ||
-			(style.isClass && _.contains(opts.class, style.key))) {
+			(style.isClass && _.contains(classes, style.key))) {
 			// do nothing here, keep on processing
 		} else if (style.isApi) {
 			if (style.key.indexOf('.') === -1) {
 				style.key = addNamespace(style.key);
 			} 
-			if (style.key !== opts.apiName) { continue; }
+			if (style.key !== apiName) { continue; }
 		} else {
 			// no matches, skip this style
 			continue;
