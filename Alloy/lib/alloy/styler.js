@@ -8,7 +8,7 @@ exports.generateStyle = function(controller, opts) {
 
 	// make opts.class an array if it isn't already
 	if (!_.isArray(opts.class)) {
-		opts.class = opts.class ? [opts.class] : [];
+		opts.class = _.isString(opts.class) ? opts.class.split(/\s+/) : [];
 	}
 
 	// give opts.apiName a namespace if it doesn't have one already
