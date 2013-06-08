@@ -1,0 +1,21 @@
+"#bar": {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	layout: 'vertical'
+}
+
+".big": {
+	font: {
+		fontSize: '64dp',
+		fontWeight: 'bold'
+	}
+}
+
+".blue": {
+	color: '#88f'
+}
+
+".shadow": {
+	shadowColor: '#a00',
+	shadowOffset: { x:2, y:2 }
+}
