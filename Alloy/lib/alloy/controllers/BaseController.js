@@ -110,7 +110,7 @@ var Controller = function() {
 
 		UI: {
 			create: function(apiName, opts) {
-				return Alloy.UI.create(self.name, apiName, opts);
+				return Alloy.UI.create(self.__path, apiName, opts);
 			}
 		}
 	});
