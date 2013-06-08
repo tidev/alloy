@@ -1,0 +1,5 @@
+<Alloy>
+	<Window onClick="addNewLabel">
+		<Label id="staticLabel" onClick="openFooBar">click me to open another window</Label>
+	</Window>
+</Alloy>
