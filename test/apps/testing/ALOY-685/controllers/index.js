@@ -1,5 +1,3 @@
-var styler = require('alloy/styler');
-
 $.index.open();
 
 // add the dynamically created style to new labels
@@ -7,8 +5,8 @@ var labels = [];
 for (var i = 0; i < 4; i++) {
 	// generate and print the style based on the current controller, the attributes
 	// of the style, and any additional properties we want to add
-	var theStyle = styler.generateStyle('index', {
-		// used by generateStyle() to merge styles
+	var theStyle = Alloy.createStyle('index', {
+		// used by createStyle() to merge styles
 		apiName: 'Label',
 		classes: ['blue','shadow'],
 		id: 'label' + (i+1),
