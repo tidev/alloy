@@ -108,9 +108,19 @@ var Controller = function() {
 			}
 		},
 
+		createStyle: function(opts) {
+			return Alloy.createStyle(self.__widgetId ? {
+				widgetId: self.__widgetId,
+				name: self.__controllerPath
+			} : self.__controllerPath, opts);
+		},
+
 		UI: {
 			create: function(apiName, opts) {
-				return Alloy.UI.create(self.__path, apiName, opts);
+				return Alloy.UI.create(self.__widgetId ? {
+					widgetId: self.__widgetId,
+					name: self.__controllerPath
+				} : self.__controllerPath, apiName, opts);
 			}
 		}
 	});

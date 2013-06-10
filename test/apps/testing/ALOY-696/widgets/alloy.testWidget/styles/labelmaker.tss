@@ -1,0 +1,17 @@
+".container": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL,
+	layout: 'vertical'
+}
+
+"Label": {
+	top: '10dp',
+	color: '#ff0',
+	backgroundColor: '#000',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}

@@ -7,7 +7,7 @@ var Alloy = require('alloy'),
 function Controller() {
 	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
-	this.__path = '<%= controllerPath %>';
+	this.__controllerPath = '<%= controllerPath %>';
 
 	var <%= parentVariable %> = arguments[0] ? arguments[0]['<%= parentVariable %>'] : null;
 	var <%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
