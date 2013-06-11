@@ -1,0 +1,23 @@
+"#index": {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#scroller": {
+	layout: 'vertical',
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL
+}
+
+"Label": {
+	top: '10dp',
+	color: '#fff',
+	backgroundColor: '#a00',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}

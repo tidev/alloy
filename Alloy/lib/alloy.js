@@ -113,7 +113,7 @@ exports.UI.create = function(controller, apiName, opts) {
 		ns = opts.ns || CONST.IMPLICIT_NAMESPACES[baseName] || CONST.NAMESPACE_DEFAULT;
 	} else if (parts.length > 1) {
 		baseName = parts[parts.length-1];
-		ns = parts.slice(0,parts.length-1);
+		ns = parts.slice(0,parts.length-1).join('.');
 	} else {
 		throw('Alloy.UI.create() failed: No API name was given in the second parameter');
 	}
@@ -152,7 +152,13 @@ exports.createStyle = function(controller, opts) {
 	// TODO: check cached styles based on opts and controller
 
 	// Load the runtime style for the given controller
-	var styleArray = require('alloy/styles/' + controller);
+	var styleArray;
+	if (controller && _.isObject(controller)) {
+		styleArray = require('alloy/widgets/' + controller.widgetId + 
+			'/styles/' + controller.name);
+	} else {
+		styleArray = require('alloy/styles/' + controller)
+	}
 	var styleFinal = {};
 
 	// iterate through all styles

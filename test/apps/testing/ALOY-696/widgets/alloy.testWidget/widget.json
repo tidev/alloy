@@ -1,0 +1,13 @@
+{
+	"id": "alloy.testWidget",
+	"name": "test widget",
+	"description" : "",
+	"author": "",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012",
+	"license":"Public Domain",
+	"min-alloy-version": "1.2.0",
+	"min-titanium-version":"3.1.0",
+	"tags":"",
+	"platforms":"ios,android,mobileweb"
+}
