@@ -1,0 +1,32 @@
+".footer": {
+	height: '60dp',
+	width: Ti.UI.FILL,
+	bottom: 0,
+	left: 0,
+	backgroundColor: '#eee'
+}
+
+"#index": {
+	backgroundColor: '#000',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#image": {
+	image: '/images/theImage.png',
+	height: 300,
+	width: 300,
+	opacity: 0.75
+}
+
+"#info": {
+	color: '#000',
+	font: {
+		fontSize: '14dp',
+		fontWeight: 'normal'
+	},
+	height: Ti.UI.SIZE,
+	width: '90%',
+	text: 'The above text image should state the density on Android, "default" on all other platforms.',
+	textAlign: 'center'
+}

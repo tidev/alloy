@@ -1,0 +1,8 @@
+<Alloy>
+	<Window> 
+		<ImageView id="image"/>
+		<View class="footer">
+			<Label id="info"/>
+		</View>
+	</Window>
+</Alloy>
