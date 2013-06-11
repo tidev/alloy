@@ -291,7 +291,7 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					code += prefix + '"' + value + '",'; // just a string
+					code += prefix + '"' + value.replace(/"/g, '\\"') + '",'; // just a string
 				}
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
