@@ -298,7 +298,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			controllerPath: dirname ? path.join(dirname,viewName) : viewName,
 			preCode: '',
 			postCode: '',
-			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');",
+			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" + manifest.id + "';",
 			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id}),
 			__MAPMARKER_CONTROLLER_CODE__: '',
 		},
