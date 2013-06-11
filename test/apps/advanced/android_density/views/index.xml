@@ -1,0 +1,6 @@
+<Alloy>
+	<Window> 
+		<ImageView id="image"/>
+		<Label id="info"/>
+	</Window>
+</Alloy>

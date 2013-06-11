@@ -1,0 +1,30 @@
+"#index": {
+	backgroundImage: '/images/background.jpg',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#image": {
+	image: '/images/theImage.png',
+	height: 300,
+	width: 300,
+	opacity: 0.75
+}
+
+"#info": {
+	color: '#000',
+	backgroundColor: '#eee',
+	font: {
+		fontSize: '14dp',
+		fontWeight: 'normal'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	bottom: 10,
+	backgroundPaddingBottom: 10,
+	backgroundPaddingTop: 10,
+	backgroundPaddingLeft: 10,
+	backgroundPaddingRight: 10,
+	text: 'On Android, the above image will display the density. Otherwise it simply displays "default".',
+	textAlign: 'center'
+}
