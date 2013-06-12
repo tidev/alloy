@@ -50,6 +50,8 @@ function parse(node, state, args) {
 		var childTemplates;
 		if (children.length > 0) {
 			childTemplates = CU.generateUniqueId();
+			
+			code += 'childTemplates: (function() {'
 			code += 'var ' + childTemplates + '=[];'; 
 
 			_.each(children, function(child) {
@@ -63,7 +65,8 @@ function parse(node, state, args) {
 				});
 			});
 
-			argsObject.childTemplates = childTemplates;
+			code += 'return ' + childTemplates + ';';
+			code += '})(),'; 
 		}
 
 		// add the additional arguments to the code
