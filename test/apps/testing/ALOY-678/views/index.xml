@@ -1,0 +1,27 @@
+<Alloy>
+	<Window>
+		<ListView defaultItemTemplate="template1">
+			<Templates>
+				<ItemTemplate name="template1" height="70">
+					<View backgroundColor="#aa0">
+						<ImageView bindId="image" width="60" left="10"/>
+						<View backgroundColor="#a00" height="50" width="130">
+							<Label bindId="label" width="Ti.UI.SIZE"/>
+						</View>
+						<View backgroundColor="#00f" height="60" width="80" right="10">
+							<View backgroundColor="#0f0" height="50" width="60">
+								<Button bindId="button" height="40" width="50"/>
+							</View>
+						</View>
+					</View>
+				</ItemTemplate>
+			</Templates>
+
+			<ListSection id="section">
+				<ListItem image:image="/appc.png" label:text="ugly rows" button:title="Hi"/>
+				<ListItem image:image="/appc.png" label:text="nested views" button:title="there"/>
+				<ListItem image:image="/appc.png" label:text="&quot;colorful&quot;" button:title="!"/>
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>
