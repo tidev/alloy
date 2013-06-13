@@ -1,0 +1,20 @@
+"#index": {
+	backgroundColor: '#eee',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+".main": {
+	color: '#a00',
+	font: {
+		fontSize: '48dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+".shadow": {
+	shadowColor: '#999',
+	shadowOffset: { x:3, y:3 }
+}

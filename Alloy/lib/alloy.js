@@ -200,8 +200,13 @@ exports.createStyle = function(controller, opts) {
 	// TODO: cache the style based on the opts and controller
 
 	// Merge remaining extra style properties from opts, if any
-	var extraStyle = _.omit(opts, ['class','apiName']);
+	var extraStyle = _.omit(opts, [
+		CONST.CLASS_PROPERTY,
+		CONST.APINAME_PROPERTY
+	]);
 	_.extend(styleFinal, extraStyle);
+	styleFinal[CONST.CLASS_PROPERTY] = classes;
+	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
 	return styleFinal;
 };
