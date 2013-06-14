@@ -23,8 +23,22 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ///////////////////////////////
 ////////// constants //////////
 ///////////////////////////////
-var RESERVED_ATTRIBUTES = ['platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
-	RESERVED_ATTRIBUTES_REQ_INC = ['platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+var RESERVED_ATTRIBUTES = [
+		'platform', 
+		'formFactor', 
+		CONST.BIND_COLLECTION, 
+		CONST.BIND_WHERE,
+		CONST.AUTOSTYLE_PROPERTY
+	],
+	RESERVED_ATTRIBUTES_REQ_INC = [
+		'platform', 
+		'type', 
+		'src', 
+		'formFactor', 
+		CONST.BIND_COLLECTION, 
+		CONST.BIND_WHERE,
+		CONST.AUTOSTYLE_PROPERTY
+	],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 // load CONDITION_MAP with platforms
@@ -43,6 +57,7 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.autoStyle;
 exports.currentManifest;
 exports.currentDefaultId;
 
@@ -142,8 +157,23 @@ exports.getParserArgs = function(node, state, opts) {
 		RESERVED_ATTRIBUTES_REQ_INC : 
 		RESERVED_ATTRIBUTES;
 
+	// determine whether to autoStyle this component
+	// 1. autoStyle attribute
+	// 2. autoStyle from <Alloy>
+	// 3. autoStyle from config.json
+	var autoStyle = (function() {
+		var prop = CONST.AUTOSTYLE_PROPERTY;
+		if (node.hasAttribute(prop)) {
+			return node.getAttribute(prop) === 'true';
+		} else {
+			return exports[prop];
+		}
+	})();
+
 	// TODO: Add the apiName until TIMOB-12553 is resolved
-	createArgs[CONST.APINAME_PROPERTY] = fullname;
+	if (autoStyle) {
+		createArgs[CONST.APINAME_PROPERTY] = fullname;
+	}
 	
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
@@ -161,8 +191,9 @@ exports.getParserArgs = function(node, state, opts) {
 			}
 
 			if (attrName === 'class') {
-				// prepare the classes
-				createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
+				if (autoStyle) {
+					createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
+				}
 			} else {
 				createArgs[attrName] = theValue;
 			}			
@@ -542,6 +573,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 	obj.sourcemap = config.sourcemap;
+	obj[CONST.AUTOSTYLE_PROPERTY] = config[CONST.AUTOSTYLE_PROPERTY] || false;
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);

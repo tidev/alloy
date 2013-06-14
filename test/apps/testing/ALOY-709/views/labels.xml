@@ -1,0 +1,7 @@
+<Alloy>
+	<View backgroundColor="#fcc" height="Ti.UI.SIZE" layout="vertical">
+		<Label class="someClass">label 1</Label>
+		<Label class="someClass" autoStyle="true">label 2</Label>
+		<Label class="someClass">label 3</Label>
+	</View>
+</Alloy>

@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label id="label" class="main shadow">some text</Label>
+		<Require src="labels"/>
+		<Require src="buttons"/>
+	</Window>
+</Alloy>

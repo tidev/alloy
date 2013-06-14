@@ -14,7 +14,8 @@ module.exports = function($) {
 				id: 'index',
 				backgroundColor: '#eee',
 				exitOnClose: true,
-				fullscreen: false
+				fullscreen: false,
+				layout: 'vertical'
 			}
 		});
 
@@ -38,22 +39,6 @@ module.exports = function($) {
 			}
 		});
 
-		validateUiComponent($, 'newLabel', {
-			api: 'Ti.UI.Label',
-			style: {
-				color: "#a00",
-		        font: {
-		            fontSize: OS_MOBILEWEB ? "48px" : "48dp",
-		            fontWeight: "bold"
-		        },
-		        height: Ti.UI.SIZE,
-		        width: Ti.UI.SIZE,
-		        id: 'newLabel',
-				bottom: 0,
-				text: '$.UI.create() Label',
-				textAlign: 'center'
-			}
-		});	
 
 		it('has #index, which has undefined "classes" property', function() {
 			expect($.index.classes).toBeUndefined();
@@ -88,14 +73,6 @@ module.exports = function($) {
 				expect($.label.apiName).toBeUndefined();
 			});
 		}
-
-		it('has #newLabel, which has "classes" property', function() {
-			expect($.newLabel.classes).toContainSameAs(['main']);
-		});
-
-		it('has #newLabel, which has "apiName" property', function() {
-			expect($.newLabel.apiName).toEqual('Ti.UI.Label');
-		});
 	});
 
 	launchTests();
