@@ -311,6 +311,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	styler.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
+	CU[CONST.AUTOSTYLE_PROPERTY] = compileConfig[CONST.AUTOSTYLE_PROPERTY];
 	CU.currentManifest = manifest;
 	CU.currentDefaultId = viewName;
 
@@ -406,6 +407,12 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 				e.stack,
 				'Error parsing XML for view "' + view + '"'
 			]);
+		}
+
+		// see if autoStyle is enabled for the view
+		if (docRoot.hasAttribute(CONST.AUTOSTYLE_PROPERTY)) {
+			CU[CONST.AUTOSTYLE_PROPERTY] = 
+				docRoot.getAttribute(CONST.AUTOSTYLE_PROPERTY) === 'true';
 		}
 
 		// make sure we have a Window, TabGroup, or SplitWindow  

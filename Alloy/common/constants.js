@@ -39,8 +39,11 @@ exports.ITEM_TEMPLATE_VAR = '__itemTemplate';
 exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
+
+// property names
 exports.CLASS_PROPERTY = 'classes';
 exports.APINAME_PROPERTY = 'apiName';
+exports.AUTOSTYLE_PROPERTY = 'autoStyle';
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
