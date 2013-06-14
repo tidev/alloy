@@ -23,8 +23,22 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ///////////////////////////////
 ////////// constants //////////
 ///////////////////////////////
-var RESERVED_ATTRIBUTES = ['id', 'class', 'platform', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
-	RESERVED_ATTRIBUTES_REQ_INC = ['id', 'class', 'platform', 'type', 'src', 'formFactor', CONST.BIND_COLLECTION, CONST.BIND_WHERE],
+var RESERVED_ATTRIBUTES = [
+		'platform', 
+		'formFactor', 
+		CONST.BIND_COLLECTION, 
+		CONST.BIND_WHERE,
+		CONST.AUTOSTYLE_PROPERTY
+	],
+	RESERVED_ATTRIBUTES_REQ_INC = [
+		'platform', 
+		'type', 
+		'src', 
+		'formFactor', 
+		CONST.BIND_COLLECTION, 
+		CONST.BIND_WHERE,
+		CONST.AUTOSTYLE_PROPERTY
+	],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
 // load CONDITION_MAP with platforms
@@ -43,6 +57,7 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.autoStyle;
 exports.currentManifest;
 exports.currentDefaultId;
 
@@ -138,17 +153,50 @@ exports.getParserArgs = function(node, state, opts) {
 	// get create arguments and events from attributes
 	var createArgs = {}, 
 		events = [];
-	var attrs = _.contains(['Alloy.Require'], fullname) ? RESERVED_ATTRIBUTES_REQ_INC : RESERVED_ATTRIBUTES;
+	var attrs = _.contains(['Alloy.Require'], fullname) ? 
+		RESERVED_ATTRIBUTES_REQ_INC : 
+		RESERVED_ATTRIBUTES;
+
+	// determine whether to autoStyle this component
+	// 1. autoStyle attribute
+	// 2. autoStyle from <Alloy>
+	// 3. autoStyle from config.json
+	var autoStyle = (function() {
+		var prop = CONST.AUTOSTYLE_PROPERTY;
+		if (node.hasAttribute(prop)) {
+			return node.getAttribute(prop) === 'true';
+		} else {
+			return exports[prop];
+		}
+	})();
+
+	// TODO: Add the apiName until TIMOB-12553 is resolved
+	if (autoStyle) {
+		createArgs[CONST.APINAME_PROPERTY] = fullname;
+	}
+	
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
-		if (_.contains(attrs, attrName) && attrName !== 'id') { return; }
+		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null) {
-			events.push({name:U.lcfirst(matches[1]),value:node.getAttribute(attrName)});
+			events.push({
+				name: U.lcfirst(matches[1]),
+				value: node.getAttribute(attrName)
+			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			/^(?:Ti|Titanium)\./.test(theValue) && (theValue = styler.STYLE_EXPR_PREFIX + theValue);
-			createArgs[attrName] = theValue;
+			if (/^(?:Ti|Titanium)\./.test(theValue)) { 
+				theValue = styler.STYLE_EXPR_PREFIX + theValue;
+			}
+
+			if (attrName === 'class') {
+				if (autoStyle) {
+					createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
+				}
+			} else {
+				createArgs[attrName] = theValue;
+			}			
 		}
 	});
 	
@@ -525,6 +573,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 	obj.sourcemap = config.sourcemap;
+	obj[CONST.AUTOSTYLE_PROPERTY] = config[CONST.AUTOSTYLE_PROPERTY] || false;
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
