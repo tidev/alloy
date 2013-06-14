@@ -1,0 +1,5 @@
+<Alloy autoStyle="true">
+	<Button id="button1" class="bob lou">button 1</Button>
+	<Button id="button2" class="bob lou">button 2</Button>
+	<Button id="button3" class="bob lou" autoStyle="false">button 3</Button>
+</Alloy>

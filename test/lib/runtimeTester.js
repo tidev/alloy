@@ -90,6 +90,15 @@ function addMatchers() {
 			toBeWidget: function() {
 				return this.actual.__iamalloy === true;
 			},
+			toContainSameAs: function(array) {
+				var actual = this.actual;
+				this.message = function() {
+					return 'expected ' + sortAndStringify(actual) + ' to contain ' +
+						'same elements as ' + sortAndStringify(array); 
+				};
+
+				return sortAndStringify(actual) === sortAndStringify(array); 
+			},
 			toHaveStyle: function(style) {
 				var component = this.actual;
 				var obj = {};

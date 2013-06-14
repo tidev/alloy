@@ -1,0 +1,10 @@
+"Label": {
+	color: '#000',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	top: 15
+}
+
+".someClass": {
+	backgroundColor: '#ccf'
+}
