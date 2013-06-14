@@ -1,5 +1,9 @@
 Ti.include('/runtimeTester.js');
 
+var CFG = require('alloy/CFG');
+var CONST = require('alloy/constants');
+var autoStyle = CFG[CONST.AUTOSTYLE_PROPERTY];
+
 module.exports = function($) {
 	addMatchers();
 
@@ -55,17 +59,35 @@ module.exports = function($) {
 			expect($.index.classes).toBeUndefined();
 		});
 
-		it('has #index, which has "apiName" property', function() {
-			expect($.index.apiName).toEqual('Ti.UI.Window');
-		});
+		if (autoStyle) {
+			it('has #index, which has "apiName" property', function() {
+				expect($.index.apiName).toEqual('Ti.UI.Window');
+			});
+		} else {
+			it('has #index, which has undefined "apiName" property', function() {
+				expect($.index.apiName).toBeUndefined();
+			});
+		}
 
-		it('has #label, which has "classes" property', function() {
-			expect($.label.classes).toContainSameAs(['main','shadow']);
-		});
+		if (autoStyle) {
+			it('has #label, which has "classes" property', function() {
+				expect($.label.classes).toContainSameAs(['main','shadow']);
+			});
+		} else {
+			it('has #label, which has undefined "classes" property', function() {
+				expect($.label.classes).toBeUndefined();
+			});
+		}
 
-		it('has #label, which has "apiName" property', function() {
-			expect($.label.apiName).toEqual('Ti.UI.Label');
-		});
+		if (autoStyle) {
+			it('has #label, which has "apiName" property', function() {
+				expect($.label.apiName).toEqual('Ti.UI.Label');
+			});
+		} else {
+			it('has #label, which has undefined "apiName" property', function() {
+				expect($.label.apiName).toBeUndefined();
+			});
+		}
 
 		it('has #newLabel, which has "classes" property', function() {
 			expect($.newLabel.classes).toContainSameAs(['main']);
