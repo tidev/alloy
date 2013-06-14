@@ -143,7 +143,9 @@ exports.getParserArgs = function(node, state, opts) {
 		RESERVED_ATTRIBUTES;
 
 	// TODO: Add the apiName until TIMOB-12553 is resolved
-	createArgs[CONST.APINAME_PROPERTY] = fullname;
+	if (compilerConfig[CONST.AUTOSTYLE_PROPERTY]) {
+		createArgs[CONST.APINAME_PROPERTY] = fullname;
+	}
 	
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
@@ -161,8 +163,9 @@ exports.getParserArgs = function(node, state, opts) {
 			}
 
 			if (attrName === 'class') {
-				// prepare the classes
-				createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
+				if (compilerConfig[CONST.AUTOSTYLE_PROPERTY]) {
+					createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
+				}
 			} else {
 				createArgs[attrName] = theValue;
 			}			
@@ -542,6 +545,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 	obj.sourcemap = config.sourcemap;
+	obj[CONST.AUTOSTYLE_PROPERTY] = config[CONST.AUTOSTYLE_PROPERTY] || false;
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
