@@ -1,11 +1,11 @@
 
 ## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
-* Install Alloy by version: `[sudo] npm install -g alloy@0.3.0`
+* Install Alloy by version: `[sudo] npm install -g alloy@1.1.3`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.1.3 (alpha)
+## 1.1.3 (June 17 2013)
 
 ### New Features
 
