@@ -17,6 +17,13 @@ var Controller = function() {
 	var roots = [];
 	var self = this;
 
+	function getControllerParam() {
+		return self.__widgetId ? {
+			widgetId: self.__widgetId,
+			name: self.__controllerPath
+		} : self.__controllerPath;
+	}
+
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
@@ -109,19 +116,21 @@ var Controller = function() {
 		},
 
 		createStyle: function(opts) {
-			return Alloy.createStyle(self.__widgetId ? {
-				widgetId: self.__widgetId,
-				name: self.__controllerPath
-			} : self.__controllerPath, opts);
+			return Alloy.createStyle(getControllerParam(), opts);
 		},
 
 		UI: {
 			create: function(apiName, opts) {
-				return Alloy.UI.create(self.__widgetId ? {
-					widgetId: self.__widgetId,
-					name: self.__controllerPath
-				} : self.__controllerPath, apiName, opts);
+				return Alloy.UI.create(getControllerParam(), apiName, opts);
 			}
+		},
+
+		addClass: function(proxy, classes, opts) {
+			return Alloy.addClass(getControllerParam(), proxy, classes, opts);
+		},
+
+		removeClass: function(proxy, classes, opts) {
+			return Alloy.removeClass(getControllerParam(), proxy, classes, opts);
 		}
 	});
 }

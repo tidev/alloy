@@ -1,0 +1,57 @@
+"Window": {
+	backgroundColor: '#efefef'
+}
+
+"Label": {
+	color: '#111',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	right: null,
+	left: null,
+	bottom: null
+}
+
+".blueshadow": {
+	color: '#88f',
+	shadowOffset: {x:2,y:2},
+	shadowColor: '#222'
+}
+
+".red": {
+	color: '#a00'
+}
+
+".greyBg": {
+	backgroundColor: '#999'
+}
+
+".huge": {
+	font: {
+		fontSize: '48dp',
+		fontWeight: 'bold'
+	}
+}
+
+".tiny": {
+	backgroundColor: '#efefef',
+	font: {
+		fontSize: '10dp',
+		fontWeight: 'normal'
+	}
+}
+
+".right": {
+	right: 0
+}
+
+".left": {
+	left: 0
+}
+
+".bigspace": {
+	top: 100
+}
