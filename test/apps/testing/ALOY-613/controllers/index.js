@@ -1,3 +1,8 @@
+// Need to set initial apiName and classes manually on $.labelNoAutoStyle
+// because, by default, autoStyle is not enabled
+$.labelNoAutoStyle.apiName = 'Label';
+$.labelNoAutoStyle.classes = ['blueshadow'];
+
 var labels = [
 	{
 		label: $.labelNoAutoStyle,
@@ -31,20 +36,25 @@ var labels = [
 ];
 
 _.each(labels, function(o, index) {
-	o.label.addEventListener('click', function(e) {
-		e.source._wasClicked = typeof e.source._wasClicked === 'undefined' ?
-			false : !e.source._wasClicked; 
-		if (e.source._wasClicked) {
-			Ti.API.info('remove: ' + JSON.stringify(o.classes));
-			$.removeClass(e.source, o.classes);
+	var label = o.label,
+		classes = o.classes;
+
+	label.addEventListener('click', function(e) {
+		label._wasClicked = typeof label._wasClicked === 'undefined' ?
+			false : !label._wasClicked; 
+		if (label._wasClicked) {
+			Ti.API.info('remove: ' + JSON.stringify(classes) + ' from ' + 
+				JSON.stringify(label.classes));
+			$.removeClass(label, classes);
 		} else {
-			Ti.API.info('add: ' + JSON.stringify(o.classes));
-			$.addClass(e.source, o.classes);
+			Ti.API.info('add: ' + JSON.stringify(classes) + ' to ' + 
+				JSON.stringify(label.classes));
+			$.addClass(label, classes);
 		}
-		e.source.text = JSON.stringify(e.source.classes);
+		label.text = JSON.stringify(label.classes);
 	});
 	if (index > 1) {
-		$.index.add(o.label);
+		$.index.add(label);
 	}
 });
 

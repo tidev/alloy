@@ -216,14 +216,8 @@ function processStyle(controller, proxy, classes, opts) {
 	opts.classes = classes;
 	proxy.apiName && (opts.apiName = proxy.apiName);
 	proxy.id && (opts.id = proxy.id);
-
-	var s = exports.createStyle(controller, opts);
-	Ti.API.info('processStyle: ' + JSON.stringify(s));
-	proxy.applyProperties(s);
-	OS_ANDROID && proxy.classes = classes;
-
-	Ti.API.info('after apply: ' + JSON.stringify(proxy.classes));
-	Ti.API.info('after apply: ' + JSON.stringify(proxy.apiName));
+	proxy.applyProperties(exports.createStyle(controller, opts));
+	OS_ANDROID && (proxy.classes = classes);
 }
 
 exports.addClass = function(controller, proxy, classes, opts) {
@@ -242,10 +236,7 @@ exports.addClass = function(controller, proxy, classes, opts) {
 			opts && proxy.applyProperties(opts);
 			return;
 		} else {
-			Ti.API.info('proxy: ' + JSON.stringify(proxy.classes));
-			Ti.API.info('newClasses: ' + JSON.stringify(newClasses));
 			processStyle(controller, proxy, newClasses, opts);
-			Ti.API.info('proxy: ' + JSON.stringify(proxy.classes));
 		}
 	}
 }
