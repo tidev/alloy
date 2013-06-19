@@ -211,6 +211,61 @@ exports.createStyle = function(controller, opts) {
 	return styleFinal;
 };
 
+function processStyle(controller, proxy, classes, opts) {
+	opts || (opts = {});
+	opts.classes = classes;
+	proxy.apiName && (opts.apiName = proxy.apiName);
+	proxy.id && (opts.id = proxy.id);
+	proxy.applyProperties(exports.createStyle(controller, opts));
+	OS_ANDROID && (proxy.classes = classes);
+}
+
+exports.addClass = function(controller, proxy, classes, opts) {
+	// make sure we actually have classes to add
+	if (!classes) {
+		opts && proxy.applyProperties(opts);
+		return;
+	} else {
+		// create a union of the existing classes with the new one(s)
+		var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
+		var beforeLen = pClasses.length;
+		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
+		var newClasses = _.union(pClasses, classes || []);
+		
+		// make sure we actually added classes before processing styles
+		if (beforeLen === newClasses.length) {
+			opts && proxy.applyProperties(opts);
+			return;
+		} else {
+			processStyle(controller, proxy, newClasses, opts);
+		}
+	}
+}
+
+exports.removeClass = function(controller, proxy, classes, opts) {
+	classes || (classes = []);
+	var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
+	var beforeLen = pClasses.length;
+
+	// make sure there's classes to remove before processing
+	if (!beforeLen || !classes.length) {
+		opts && proxy.applyProperties(opts);
+		return;
+	} else {
+		// remove the given class(es)
+		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
+		var newClasses = _.difference(pClasses, classes);
+
+		// make sure there was actually a difference before processing
+		if (beforeLen === newClasses.length) {
+			opts && proxy.applyProperties(opts);
+			return;
+		} else {
+			processStyle(controller, proxy, newClasses, opts);
+		}
+	}
+}
+
 /**
  * @method createWidget
  * Factory method for instantiating a widget controller. Creates and returns an instance of the

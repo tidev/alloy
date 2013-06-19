@@ -1,0 +1,10 @@
+"Label": {
+	top: '15dp',
+	textAlign: 'center'
+}
+
+"#index": {
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
