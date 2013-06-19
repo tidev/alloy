@@ -8,9 +8,9 @@ var labelStyle = {
 		fontSize: OS_MOBILEWEB ? '24px' : '24dp',
 		fontWeight: 'bold'
 	},
-	right: null,
-	left: null,
-	bottom: null
+	right: OS_MOBILEWEB ? undefined : null,
+	left: OS_MOBILEWEB ? undefined : null,
+	bottom: OS_MOBILEWEB ? undefined : null
 };
 
 // TODO: Mobileweb represents null values differently. Remove mobileweb-specific 
