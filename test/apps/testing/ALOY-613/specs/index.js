@@ -13,6 +13,8 @@ var labelStyle = {
 	bottom: null
 };
 
+// TODO: Mobileweb represents null values differently. Remove mobileweb-specific 
+// code when this is resolved: https://jira.appcelerator.org/browse/TIMOB-14295
 module.exports = function($) {
 	addMatchers();
 
