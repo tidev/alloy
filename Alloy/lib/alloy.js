@@ -229,6 +229,7 @@ exports.addClass = function(controller, proxy, classes, opts) {
 		// create a union of the existing classes with the new one(s)
 		var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
 		var beforeLen = pClasses.length;
+		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 		var newClasses = _.union(pClasses, classes || []);
 		
 		// make sure we actually added classes before processing styles
@@ -252,6 +253,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 		return;
 	} else {
 		// remove the given class(es)
+		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 		var newClasses = _.difference(pClasses, classes);
 
 		// make sure there was actually a difference before processing
