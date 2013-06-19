@@ -59,3 +59,10 @@ _.each(labels, function(o, index) {
 });
 
 $.index.open();
+
+try {
+	$.tester = $.UI.create('Label');
+	require('specs/index')($);
+} catch(e) {
+	Ti.API.warn('No unit tests found for controller "index"');
+}
