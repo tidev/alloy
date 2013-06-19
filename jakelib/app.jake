@@ -13,7 +13,8 @@ var	wrench = require('wrench'),
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),
-	resourcesPath = path.join(harnessAppPath,'Resources');
+	resourcesPath = path.join(harnessAppPath,'Resources'),
+	appDir = (/^ALOY-\d+$/.test(process.env.dir) ? 'testing/' : '') + process.env.dir;
 
 function log(message) {
 	if (!process.env.quiet) {
@@ -63,7 +64,7 @@ function filterLog(line) {
 }
 
 function runApp() {
-	log('Running sample app "'+process.env.dir+'"...');
+	log('Running sample app "'+appDir+'"...');
 
 	// create array for `titanium build` args
 	var e = process.env;
@@ -107,8 +108,8 @@ namespace('app', function() {
 				console.log(error);
 				process.exit(1);
 			} else {
-				log('Staging sample app "'+process.env.dir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
+				log('Staging sample app "'+appDir+'" for launch...');
+				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
 				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
@@ -126,9 +127,9 @@ namespace('app', function() {
 
 	desc('copy a sample app\'s "app" folder into the Harness');
 	task('quickrun', function() {
-		log('Quick-running sample app "' + process.env.dir + '"...');
-		log('Staging sample app "' + process.env.dir + '" for launch...');
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', process.env.dir), targetAppPath, {preserve:true});
+		log('Quick-running sample app "' + appDir + '"...');
+		log('Staging sample app "' + appDir + '" for launch...');
+		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
 		runApp();
 	});
 });
