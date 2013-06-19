@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label id="labelNoAutoStyle" class="blueshadow">["blueshadow"]</Label>
+		<Label id="labelAutoStyle" class="red greyBg" autoStyle="true">["red","greyBg"]</Label>
+	</Window>
+</Alloy>
