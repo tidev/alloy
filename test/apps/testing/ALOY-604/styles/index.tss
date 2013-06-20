@@ -1,0 +1,23 @@
+"#index": {
+	backgroundColor: '#efefef',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+".row": {
+	backgroundColor: '#efefef',
+	height: '60dp'
+}
+
+".label": {
+	left: '100dp',
+	right: '10dp',
+	height: Ti.UI.SIZE,
+	textAlign: 'left',
+	color: '#181818',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	touchEnabled: false
+}

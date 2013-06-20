@@ -1,0 +1,11 @@
+<Alloy>
+	<Window>
+	    <TableView dataCollection='data'>
+			<TableViewRow>
+	        	<View class="row" onClick="test">
+            		<Label class="label" text="Location" />
+        		</View>
+	    	</TableViewRow>
+	    </TableView>
+	</Window>
+</Alloy>
