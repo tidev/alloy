@@ -18,5 +18,6 @@
 	font: {
 		fontSize: '32dp',
 		fontWeight: 'bold'
-	}
+	},
+	touchEnabled: false
 }
