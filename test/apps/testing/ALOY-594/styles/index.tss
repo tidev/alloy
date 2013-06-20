@@ -1,0 +1,20 @@
+"#index": {
+	backgroundColor: '#efefef',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+".row": {
+	backgroundColor: '#efefef',
+	height: '60dp'
+}
+
+".label": {
+	textAlign: 'left',
+	color: '#181818',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	},
+	touchEnabled: false
+}
