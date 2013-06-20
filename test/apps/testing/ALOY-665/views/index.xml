@@ -1,0 +1,6 @@
+<Alloy>
+	<Window onTouchstart="touch.start" onTouchend="touch['end'].func"
+		onSwipe="doSwipe">
+		<Label id="label">touch and swipe</Label>
+	</Window>
+</Alloy>

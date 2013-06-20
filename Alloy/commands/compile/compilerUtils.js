@@ -297,14 +297,20 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 				obj: args.symbol,
 				ev: ev.name,
 				cb: ev.value,
+				escapedCb: ev.value.replace(/'/g, "\\'"),
 				func: eventFunc
 			};
 
 			// create templates for immediate and deferred event handler creation
-			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= cb %>']", eventObj);
+			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
 			var theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
-			var immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
 			var deferTemplate = theDefer + " && " + theEvent + ";";
+			var immediateTemplate;
+			if (/[\.\[]/.test(eventObj.cb)) {
+				immediateTemplate = "try{" + theEvent + ";}catch(e){" + theDefer + "=true;}";
+			} else {
+				immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
+			}
 
 			// add the generated code to the view code and post-controller code respectively
 			code.content += _.template(immediateTemplate, eventObj);
