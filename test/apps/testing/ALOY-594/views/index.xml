@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+	    <TableView dataCollection='collection' dataTransform="transformCollection" 
+	    	dataFilter="filterCollection">
+			<TableViewRow class="row">
+            	<Label class="label" text="{text}"/>
+	    	</TableViewRow>
+	    </TableView>
+	</Window>
+</Alloy>
