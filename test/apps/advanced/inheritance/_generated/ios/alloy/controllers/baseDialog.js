@@ -45,7 +45,11 @@ function Controller() {
         id: "closeButton"
     });
     $.__views.dialog.add($.__views.closeButton);
-    exports.closeDialog ? $.__views.closeButton.addEventListener("click", exports.closeDialog) : __defers["$.__views.closeButton!click!exports.closeDialog"] = true;
+    try {
+        $.__views.closeButton.addEventListener("click", exports.closeDialog);
+    } catch (e) {
+        __defers["$.__views.closeButton!click!exports.closeDialog"] = true;
+    }
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
