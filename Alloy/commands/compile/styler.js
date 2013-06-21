@@ -13,7 +13,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /^\{(.+)\}$/;
+var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
