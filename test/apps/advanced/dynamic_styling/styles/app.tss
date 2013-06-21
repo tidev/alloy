@@ -1,0 +1,17 @@
+'Window': {
+	backgroundColor: '#efefef',
+	fullscreen: false
+}
+
+'Label': {
+	color: '#181818',
+	height: Ti.UI.SIZE,
+	textAlign: 'left'
+}
+
+'.container': {
+	top: '50dp',
+	bottom: 0,
+	right: '10dp',
+	left: '10dp'
+}
