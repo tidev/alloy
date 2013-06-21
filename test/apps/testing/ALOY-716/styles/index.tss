@@ -1,0 +1,42 @@
+"Label": {
+	right: '68dp',
+	textAlign: 'left',
+	height: Ti.UI.SIZE
+}
+
+".row": {
+	backgroundColor: '#efefef',
+	height: '60dp'
+}
+
+".title": {
+	top: '3dp',
+	left: '10dp',
+	color: '#181818',
+	font: {
+		fontSize: '28dp',
+		fontWeight: 'bold'
+	}
+}
+
+".subtitle": {
+	bottom: '5dp',
+	left: '15dp',
+	color: '#777',
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'normal'
+	}
+}
+
+".image": {
+	right: '10dp',
+	height: '48dp',
+	width: '48dp'
+}
+
+"#index": {
+	backgroundColor: '#efefef',
+	fullscreen: false,
+	exitOnClose: true
+}
