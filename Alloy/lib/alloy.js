@@ -266,6 +266,12 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 	}
 }
 
+exports.resetClass = function(controller, proxy, classes, opts) {
+	classes || (classes = []);
+	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
+	processStyle(controller, proxy, classes, opts);
+}
+
 /**
  * @method createWidget
  * Factory method for instantiating a widget controller. Creates and returns an instance of the
