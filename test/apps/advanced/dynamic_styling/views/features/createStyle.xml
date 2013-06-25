@@ -1,0 +1,8 @@
+<Alloy>
+	<Window id="win">
+		<Require src="header" title="createStyle()"/>
+		<View id="container" class="container">
+			<Label class="content" top="10dp">Click the label below to see its style change. You can view the new style in the console output. See source code for details.</Label>
+		</View>
+	</Window>
+</Alloy>

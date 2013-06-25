@@ -1,0 +1,22 @@
+'.container': {
+	layout: 'vertical'
+}
+
+'.blueButton': {
+	backgroundColor: '#38c0f4',
+	height: '60dp',
+	width: '150dp',
+	borderRadius: 4,
+	color: '#fff',
+	backgroundImage: 'none',
+	textAlign: 'center',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	}
+}
+
+'#theImage': {
+	image: '/ball.jpg',
+	top: '10dp'
+}

@@ -1,0 +1,11 @@
+<Alloy>
+	<Window id="win">
+		<Require src="header" title="Style Modules"/>
+		<ScrollView class="container">
+			<Label class="content">Alloy's styles are now accesible in raw format via runtime style modules. For example, to access the sorted style array that corresponds to this controller, you can execute the following:</Label>
+			<WebView id="styleModule" height="40dp"/>
+			<Label class="content">The returned style array is optimized and pre-sorted by precedence to make for the fastest possible processing at runtime. Developers will not typically make direct use of these arrays, but will instead use the associated Alloy APIs discussed in other sections of this app to create and style UI components.</Label>
+			<WebView id="styleArray" height="800dp"/>
+		</ScrollView>
+	</Window>
+</Alloy>

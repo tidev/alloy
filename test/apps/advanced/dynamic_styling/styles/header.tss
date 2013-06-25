@@ -1,0 +1,37 @@
+'#header': {
+	top: 0,
+	height: '50dp',
+	width: Ti.UI.FILL,	
+	backgroundGradient: {
+        type: 'linear',
+        startPoint: { x: '0%', y: '0%' },
+        endPoint: { x: '0%', y: '100%' },
+        colors: [ 
+        	{ color: '#a33', offset: 0.0}, 
+        	{ color: '#a00', offset: 0.98 }, 
+        	{ color: '#000', offset: 1.0 } 
+        ],
+    }
+}
+
+'#label': {
+	color: '#efefef',
+	font: {
+		fontSize: '28dp',
+		fontWeight: 'bold'
+	},
+	shadowColor: '#666',
+	shadowOffset: {x:0,y:1},
+	textAlign: 'center'
+}
+
+'#button': {
+	backgroundImage: '/back.png',
+	top: '6dp',
+	left: '5dp',
+	height: '38dp',
+	width: '38dp',
+	borderWidth: 2,
+	borderRadius: 4,
+	borderColor: '#bbb'
+}

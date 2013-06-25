@@ -1,0 +1,17 @@
+'WebView': { 
+	width: '100%', 
+	top: '10dp'
+}
+
+'.content': {
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'normal'
+	},
+	height: Ti.UI.SIZE,
+	top: '10dp'
+}
+
+'.container': {
+	layout: 'vertical'
+}
