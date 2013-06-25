@@ -131,6 +131,10 @@ var Controller = function() {
 
 		removeClass: function(proxy, classes, opts) {
 			return Alloy.removeClass(getControllerParam(), proxy, classes, opts);
+		},
+
+		resetClass: function(proxy, classes, opts) {
+			return Alloy.resetClass(getControllerParam(), proxy, classes, opts);
 		}
 	});
 }
