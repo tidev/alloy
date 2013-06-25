@@ -1,0 +1,40 @@
+'#index': {
+	exitOnClose: true
+}
+
+'#table': {
+	top: '50dp',
+	bottom: 0,
+	separatorColor: '#a00'
+}
+
+'.row': {
+	height: '80dp',
+	hasChild: true
+}
+
+'.rowContainer': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL,
+	layout: 'vertical'
+}
+
+'.title': {
+	left: '10dp',
+	right: '40dp',
+	font: {
+		fontSize: '16dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.subtitle': {
+	left: '10dp',
+	right: '40dp',
+	top: '5dp',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'normal'
+	},
+	color: '#555'
+}

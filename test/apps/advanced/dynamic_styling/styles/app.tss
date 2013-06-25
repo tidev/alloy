@@ -1,0 +1,48 @@
+'Window': {
+	backgroundColor: '#efefef',
+	fullscreen: false,
+	navBarHidden: true
+}
+
+'Label': {
+	color: '#181818',
+	height: Ti.UI.SIZE,
+	textAlign: 'left'
+}
+
+'.container': {
+	top: '50dp',
+	bottom: 0,
+	right: '10dp',
+	left: '10dp'
+}
+
+
+// random styles used throughout app for testing dynamic styling
+'.blue': {
+	color: '#00f'
+}
+
+'.shadow': {
+	shadowColor: '#88f',
+	shadowOffset: {x:1,y:3}
+}
+
+'.dark': {
+	backgroundColor: '#888',
+	color: '#003'
+}
+
+'.large': {
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.huge': {
+	font: {
+		fontSize: '64dp',
+		fontWeight: 'bold'
+	}
+}

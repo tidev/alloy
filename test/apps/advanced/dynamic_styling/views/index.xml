@@ -1,0 +1,13 @@
+<Alloy>
+	<Window>
+		<Require src="header" title="Dynamic Styling" hideButton="true"/>
+		<TableView id="table" dataCollection="views" onClick="loadView">
+			<TableViewRow class="row" modelId="{id}">
+				<View class="rowContainer">
+					<Label class="title" text="{title}"/>
+					<Label class="subtitle" text="{subtitle}"/>
+				</View>
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>

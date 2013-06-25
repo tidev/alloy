@@ -1,0 +1,77 @@
+'.container': {
+	layout: 'vertical'
+}
+
+// button styles
+'.blueButton': {
+	backgroundColor: '#38c0f4',
+	height: '60dp',
+	width: '300dp',
+	borderRadius: 4,
+	borderWidth: 2,
+	borderColor: '#888',
+	color: '#fff',
+	backgroundImage: 'none',
+	textAlign: 'center',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	},
+	top: '20dp'
+}
+
+'.blueButtonDown': {
+	backgroundColor: '#18a0d4',
+	color: '#ddd',
+	height: '55dp',
+	width: '290dp'
+}
+
+// image styles
+'#theImage': {
+	image: '/ball.jpg',
+	top: '10dp'
+}
+
+'.thumb': {
+	height: '93dp',
+	width: '150dp'
+}
+
+'.wide': {
+	height: null,
+	width: '100%'
+}
+
+'.tall': {
+	height: 1200,
+	width: '100%'
+}
+
+// classes for test labels
+'.medium': {
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	backgroundColor: null,
+	height: null,
+	width: null
+}
+
+'.shadow': {
+	shadowColor: '#888',
+	shadowOffset: {x:2,y:2}
+}
+
+'.redbg': {
+	backgroundColor: '#a00',
+	borderRadius: 8,
+	color: '#fff'
+}
+
+'.bigger': {
+	height: '60dp',
+	width: '75%',
+	textAlign: 'center'
+}

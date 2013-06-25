@@ -1,0 +1,6 @@
+<Alloy>
+	<View>
+		<Label id="label"/>
+		<View id="button" onClick="Alloy.Globals.closeWindow"/>
+	</View>
+</Alloy>

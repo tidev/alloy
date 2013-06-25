@@ -1,0 +1,17 @@
+'#currentStyle': {
+	color: '#fff',
+	font: {
+		fontSize: '14dp',
+		fontWeight: 'normal'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL,
+	textAlign: 'center'
+}
+
+'#specificLabel': {
+	height: '200dp',
+	width: '300dp',
+	textAlign: 'right',
+	backgroundColor: '#aaf'
+}

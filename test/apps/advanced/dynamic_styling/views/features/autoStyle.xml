@@ -1,0 +1,50 @@
+<!-- 
+	autoStyle is set to "false" here, but that is also the default behavior. All
+	controllers are assumed to have autoStyle set to false, unless autoStyle is 
+	set to true in the config.json. autoStyle means that when a UI component is 
+	created, the apiName, classes, and id will be used not only to create the 
+	component at compile time, but also those values will be stored on the 
+	created proxy itself for later use as properties. 
+
+	To see exactly what is meant by "stored on the created proxy", check out the
+	console log when this controller opens. It will show if the id, classes, and 
+	apiName are stored on each one of the ID'ed XML components below.
+
+	Here's the specific reasons why you should or should not use autoStyle on a 
+	per-project (config.json), per-controller (<Alloy>), or per-component level.
+
+	pros: Keeps track of apiName, classes, and id for all components. This 
+		  allows full use of the $.addClass() and $.removeClass() functions. 
+		  Without using autoStyle, all components created from XML would appear 
+		  to have no classes or apiName, despite having them listed as XML
+	      attributes.
+	cons: There is a small performance overhead with adding these properties to 
+		  every component. This is why autoStyle is not enabled for all 
+		  components by default. You should use autoStyle only on 
+		  components/controllers that will actually leverage the ability to 
+		  add/remove classes.
+
+	You can see how these properties are made use of in the "Add/Remove Classes"
+	section of this app.
+-->
+<Alloy autoStyle="false">
+	<Window id="win">
+		<Require src="header" title="autoStyle"/>
+		<ScrollView id="scroll" class="container">
+			<Label id="label1" class="dark">test label</Label>
+
+			<!--
+				Notice that "label2" has autoStyle="true". This means that 
+				unlike the other components that will be created from XML,
+				label2 will have both the classes and apiName name attached to 
+				its created proxy object. You can view this in the console log.
+			-->
+			<Label id="label2" class="blue huge shadow" 
+				autoStyle="true">test label</Label>
+
+			<Label id="theButton" class="blueButton" 
+				onTouchstart="buttonDown" onTouchend="buttonUp">dummy button</Label>
+			<ImageView id="theImage" class="thumb" onClick="changeImage"/>
+		</ScrollView>
+	</Window>
+</Alloy>
