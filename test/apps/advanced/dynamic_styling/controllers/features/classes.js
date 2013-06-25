@@ -42,17 +42,14 @@ function buttonUp(e) {
 }
 
 // Toggle the dimensions of $.theImage on clicks
-var imageIndex = 0, lastClass;
+var imageIndex = 0;
 var classes = ['thumb','wide','tall'];
 function changeImage(e) {
+	// reset the classes to change the image's dimensions
 	var theClass = classes[imageIndex++];
-
-	// add/remove the classes to change the image's dimensions
-	lastClass && $.removeClass($.theImage, lastClass);
-	$.addClass($.theImage, theClass);
+	$.resetClass($.theImage, theClass);
 
 	// reset imageIndex if necessary
-	lastClass = theClass;
 	imageIndex >= classes.length && (imageIndex = 0);
 }
 changeImage();
