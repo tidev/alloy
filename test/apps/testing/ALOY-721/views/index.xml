@@ -1,0 +1,9 @@
+<Alloy>
+	<Window>
+		<Label class="header">resetStyle()</Label>
+		<Label id="tester" onClick="resetClasses" autoStyle="true">
+			click me to reset classes</Label>
+		<Label id="currentClassesHeader">current classes</Label>
+		<Label id="currentClasses"/>
+	</Window>
+</Alloy>

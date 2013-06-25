@@ -1,0 +1,102 @@
+'Label': {
+	textAlign: 'center',
+	left: null,
+	right: null,
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	shadowOffset: {x:0,y:0}
+}
+
+'.header': {
+	backgroundColor: '#E74C3C',
+	height: '50dp',
+	width: Ti.UI.FILL,
+	color: '#ECF0F1',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	shadowColor: '#888',
+	shadowOffset: {x:0,y:1},
+	top: 0
+}
+
+'.darkblue': {
+	color: '#2C3E50'
+}
+
+'.red': {
+	color: '#E74C3C'
+}
+
+'.lightblue': {
+	color: '#2980B9'
+}
+
+'.huge': {
+	font: {
+		fontSize: '48dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.medium': {
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.small': {
+	font: {
+		fontSize: '14dp',
+		fontWeight: 'normal'
+	}
+}
+
+'.left': {
+	left: 0,
+	textAlign: 'left'
+}
+
+'.right': {
+	right: 0,
+	textAlign: 'right'
+}
+
+'.crazyshadow': {
+	shadowColor: '#3498DB',
+	shadowOffset: {x:8,y:8}
+}
+
+'#index': {
+	backgroundColor: '#ECF0F1',
+	fullscreen: false,
+	navBarHidden: true
+}
+
+'#currentClassesHeader': {
+	backgroundColor: '#E74C3C',
+	height: '34dp',
+	width: Ti.UI.FILL,
+	color: '#ECF0F1',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	shadowColor: '#888',
+	shadowOffset: {x:0,y:1},
+	bottom: '50dp'
+}
+
+'#currentClasses': {
+	backgroundColor: '#2980B9',
+	height: '50dp',
+	width: Ti.UI.FILL,
+	color: '#ECF0F1',
+	font: {
+		fontSize: '20dp',
+		fontWeight: 'bold'
+	},
+	bottom: 0
+}
