@@ -20,7 +20,7 @@ function generate(args, program) {
 	program.projectDir = program.outputPath = paths.project;
 
 	// grab the name
-	if (!name && target !== 'jmk') {
+	if (!name && target !== 'jmk' && target !== "styles") {
 		U.die('generate requires a NAME such as third argument');
 	} 
 

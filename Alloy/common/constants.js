@@ -59,7 +59,7 @@ exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
 
 // Listings for supported platforms and commands
 exports.INSTALL_TYPES = ['plugin'];
-exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
+exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget', 'styles'];
 exports.DEPLOY_TYPES = [
 	{ key: 'ENV_DEV', value: 'development' },
 	{ key: 'ENV_DEVELOPMENT', value: 'development' },

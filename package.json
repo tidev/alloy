@@ -39,7 +39,8 @@
     "jsonlint":        "1.5.1",
     "uglify-js":       "2.2.5",
     "source-map":      "0.1.9",
-    "jake":            "0.5.9"
+    "jake":            "0.5.9",
+    "xml2tss":         "0.0.2"
   },
   "license":"Apache Public License v2",
   "bin": {
