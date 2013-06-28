@@ -568,7 +568,7 @@
         }
         if (!languages[key] && hasModule) {
             try {
-                require('./lang/' + key);
+                loadLang(key, require('alloy/moment/lang/' + key));
             } catch (e) {
                 // call with no params to set to default
                 return moment.fn._lang;
@@ -1644,6 +1644,7 @@
 
     // CommonJS module is defined
     if (hasModule) {
+        moment.lang(Ti.Locale.getCurrentLanguage());
         module.exports = moment;
     }
     /*global ender:false */
