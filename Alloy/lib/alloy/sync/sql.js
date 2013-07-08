@@ -374,7 +374,7 @@ function installDatabase(config) {
 	var dbFile = config.adapter.db_file;
 	var table = config.adapter.collection_name;
 
-  var rx = /(^|.*\/)([^\/]+)\.[^\/]+$/;
+ 	var rx = /(^|.*\/)([^\/]+)\.[^\/]+$/;
 	var match = dbFile.match(rx);
 	if (match === null) {
 		throw 'Invalid sql database filename "' + dbFile + '"';
