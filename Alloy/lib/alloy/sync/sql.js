@@ -380,7 +380,8 @@ function installDatabase(config) {
 		throw 'Invalid sql database filename "' + dbFile + '"';
 	}
 	//var isAbsolute = match[1] ? true : false;
-	var dbName = config.adapter.db_name || match[2];
+	config.adapter.db_name = config.adapter.db_name || match[2];
+	var dbName = config.adapter.db_name;
 
 	// install and open the preloaded db
 	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
