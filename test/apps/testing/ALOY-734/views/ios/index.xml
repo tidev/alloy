@@ -1,0 +1,34 @@
+<Alloy>
+	<Window>
+		<CoverFlowView id="coverflow">
+			<Images>
+				<Image>appc1.png</Image>
+				<Image>appc1.png</Image>
+				<Image>appc1.png</Image>
+
+				<!-- Prior to ALOY-734, this would throw a compile error. -->
+				<Image id="someImage"/>
+			</Images>
+		</CoverFlowView>
+
+		<ButtonBar id="buttonbar">
+			<Labels>
+				<Label>button 1</Label>
+				<Label title="button 2"/>
+
+				<!-- Prior to ALOY-734, this would throw a compile error. -->
+				<Label id="someLabel"/>
+			</Labels>
+		</ButtonBar>
+
+		<TabbedBar id="tabbedbar">
+			<Labels>
+				<Label>button 1</Label>
+				<Label title="button 2"/>
+
+				<!-- Prior to ALOY-734, this would throw a compile error. -->
+				<Label id="someLabel"/>
+			</Labels>
+		</TabbedBar>
+	</Window>
+</Alloy>
