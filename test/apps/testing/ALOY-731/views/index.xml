@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<TextField class="clear" clearOnEdit="true"/>
+		<TextField class="noclear" clearOnEdit="false"/>
+
+		<!-- clearOnEdit only applies to Ti.UI.TextArea on android -->
+		<TextArea class="clear" clearOnEdit="true" platform="android"/>
+		<TextArea class="noclear" clearOnEdit="false" platform="android"/>
+	</Window>
+</Alloy>
