@@ -2,6 +2,7 @@ var basePath = '../../';
 var path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
+	xml2tss = require('xml2tss'),
 	alloyRoot = path.join(__dirname,'..','..'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	U = require(basePath + 'utils'),
@@ -41,7 +42,7 @@ exports.generate = function(name, type, program, args) {
 	var file = path.join(dir,name + ext);
 
 	// see if the file already exists
-	if (path.existsSync(file) && !program.force) {
+	if (path.existsSync(file) && !program.force && type !== "STYLE") {
 		U.die(" file already exists: " + file);
 	}
 
@@ -51,15 +52,27 @@ exports.generate = function(name, type, program, args) {
 		wrench.mkdirSyncRecursive(fullDir);
 	}
 
-	// write the file out based on the given template
-	var templateContents = fs.readFileSync(templatePath,'utf8');
-	if (args.templateFunc) { templateContents = args.templateFunc(templateContents); }
-	var code = _.template(templateContents, args.template || {});
-	fs.writeFileSync(file, code);
+	// only use xml2tss to generate style if the partener view exists
+	var view_file = path.join(paths.app, CONST.DIR['VIEW'], name + "." + CONST.FILE_EXT['VIEW']);
+	if (type === "STYLE" && path.existsSync(view_file)) {
+		xml2tss.updateFile(view_file, file, function(err,ok) {
+			if (ok) {
+				logger.info('Generated style named ' + name);
+			} else {
+				logger.warn('Style named ' + name + ' already up-to-date');
+			}
+		});
+	} else {
+		// write the file out based on the given template
+		var templateContents = fs.readFileSync(templatePath,'utf8');
+		if (args.templateFunc) { templateContents = args.templateFunc(templateContents); }
+		var code = _.template(templateContents, args.template || {});
+		fs.writeFileSync(file, code);
 
-	return {
-		file: file,
-		dir: fullDir,
-		code: code
-	};
+		return {
+			file: file,
+			dir: fullDir,
+			code: code
+		};
+	}
 }
