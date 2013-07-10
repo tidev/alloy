@@ -18,7 +18,9 @@ function pad(x) {
 
 exports.generateMigrationFileName = function(t) {
 	var d = new Date;
-	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds())
+	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + 
+		String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + 
+		String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds());
 	return s + '_' + t;
 }
 
@@ -34,7 +36,8 @@ exports.generate = function(name, type, program, args) {
 		if (_.contains(['VIEW','CONTROLLER','STYLE'],type)) {
 			dir = path.join(dir,program.platform);
 		} else {
-			logger.warn('platform "' + program.platform + '" ignored, not used with type "' + type + '"');
+			logger.warn('platform "' + program.platform + 
+				'" ignored, not used with type "' + type + '"');
 		}
 	}
 
@@ -52,10 +55,11 @@ exports.generate = function(name, type, program, args) {
 		wrench.mkdirSyncRecursive(fullDir);
 	}
 
-	// only use xml2tss to generate style if the partener view exists
-	var view_file = path.join(paths.app, CONST.DIR['VIEW'], name + "." + CONST.FILE_EXT['VIEW']);
-	if (type === "STYLE" && path.existsSync(view_file)) {
-		xml2tss.updateFile(view_file, file, function(err,ok) {
+	// only use xml2tss to generate style if the partner view exists
+	var viewFile = path.join(paths.app, CONST.DIR['VIEW'], name + "." + 
+		CONST.FILE_EXT['VIEW']);
+	if (type === "STYLE" && path.existsSync(viewFile)) {
+		xml2tss.updateFile(viewFile, file, function(err,ok) {
 			if (ok) {
 				logger.info('Generated style named ' + name);
 			} else {
@@ -65,7 +69,9 @@ exports.generate = function(name, type, program, args) {
 	} else {
 		// write the file out based on the given template
 		var templateContents = fs.readFileSync(templatePath,'utf8');
-		if (args.templateFunc) { templateContents = args.templateFunc(templateContents); }
+		if (args.templateFunc) { 
+			templateContents = args.templateFunc(templateContents); 
+		}
 		var code = _.template(templateContents, args.template || {});
 		fs.writeFileSync(file, code);
 
