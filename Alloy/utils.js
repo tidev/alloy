@@ -48,8 +48,8 @@ exports.XML = {
 		// TODO: https://jira.appcelerator.org/browse/ALOY-309
 		try {
 			var errorHandler = {};
-			errorHandler.error = errorHandler.fatalError = function(m) { 
-				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/))); 
+			errorHandler.error = errorHandler.fatalError = function(m) {
+				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
 				logger.warn((m || '').split(/[\r\n]/));
@@ -88,10 +88,10 @@ exports.XML = {
 		return (new XMLSerializer()).serializeToString(node);
 	},
 	previousSiblingElement: function(node) {
-		if (!node || !node.previousSibling || node.previousSibling === null) { 
-			return null; 
-		} else if (node.previousSibling.nodeType === 1) { 
-			return node.previousSibling; 
+		if (!node || !node.previousSibling || node.previousSibling === null) {
+			return null;
+		} else if (node.previousSibling.nodeType === 1) {
+			return node.previousSibling;
 		} else {
 			return exports.XML.previousSiblingElement(node.previousSibling);
 		}
@@ -119,7 +119,7 @@ exports.tiapp = {
 			}
 		}
 		return null;
-	},	
+	},
 	upStackSizeForRhino: function(dir) {
 		var doc = exports.tiapp.parse(dir);
 		var runtime = exports.XML.getNodeText(exports.tiapp.getProperty(doc, 'ti.android.runtime'));
@@ -184,10 +184,10 @@ exports.tiapp = {
 			// create the node to be inserted
 			var node = doc.createElement(type);
 			var text = doc.createTextNode(opts.id);
-			if (opts.platform) { 
-				node.setAttribute('platform',opts.platform); 
+			if (opts.platform) {
+				node.setAttribute('platform',opts.platform);
 			}
-			if (opts.version) { 
+			if (opts.version) {
 				node.setAttribute('version',opts.version);
 			}
 			node.appendChild(text);
@@ -204,7 +204,7 @@ exports.tiapp = {
 			}
 			pna.appendChild(node);
 			pna.appendChild(doc.createTextNode("\n"));
-			
+
 			// serialize the xml and write to tiapp.xml
 			var serializer = new XMLSerializer();
 			var newxml = serializer.serializeToString(doc);
@@ -270,7 +270,7 @@ exports.createErrorOutput = function(msg, e) {
 	} else {
 		errs.unshift(e.stack);
 	}
-	
+
 	return errs;
 }
 
@@ -342,7 +342,7 @@ exports.updateFiles = function(srcDir, dstDir) {
 			var dstStat = fs.statSync(dst);
 
 			if (!dstStat.isDirectory()) {
-				// copy file in if it is a JS file or if its mtime is 
+				// copy file in if it is a JS file or if its mtime is
 				// greater than the one in Resources
 				if (path.extname(src) === '.js' ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
@@ -358,7 +358,7 @@ exports.updateFiles = function(srcDir, dstDir) {
 				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
 				exports.copyFileSync(src,dst);
 			}
-		}	
+		}
 	});
 }
 
@@ -398,7 +398,7 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 		if (path.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
-				var wDir = path.join(widgetPath,wFiles[i]); 
+				var wDir = path.join(widgetPath,wFiles[i]);
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
 
@@ -407,30 +407,30 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 					} catch (e) {
 						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) + '"', e);
 					}
-                    
+
 					collections[manifest.id] = {
 						dir: wDir,
 						manifest: manifest
 					};
-				} 
+				}
 			}
 		}
 	});
 
-	function walkWidgetDependencies(collection) {  
+	function walkWidgetDependencies(collection) {
 		if (collection == null)
-			return;  
+			return;
 
         dirs.push(collection);
-		for (var dependency in collection.manifest.dependencies) { 
+		for (var dependency in collection.manifest.dependencies) {
 			walkWidgetDependencies(collections[dependency]);
 		}
-	}  
+	}
 
     for (var id in appWidgets) {
-    	walkWidgetDependencies(collections[id]); 
+    	walkWidgetDependencies(collections[id]);
     }
-	
+
 	return dirs;
 };
 
@@ -507,14 +507,15 @@ exports.resolveAppHome = function() {
 }
 
 exports.copyFileSync = function(srcFile, destFile) {
-	var BUF_LENGTH = 64 * 1024, 
-		buff, 
-		bytesRead, 
-		fdr, 
-		fdw, 
+	var BUF_LENGTH = 64 * 1024,
+		buff,
+		bytesRead,
+		fdr,
+		fdw,
 		pos;
 	buff = new Buffer(BUF_LENGTH);
 	fdr = fs.openSync(srcFile, 'r');
+	exports.ensureDir(path.dirname(destFile));
 	fdw = fs.openSync(destFile, 'w');
 	bytesRead = 1;
 	pos = 0;
