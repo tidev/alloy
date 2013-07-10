@@ -11,9 +11,13 @@ exports.definition = {
 			"collection_name": "fighters",
 
 			// db_file tells model to use myapp.sqlite file to install
-			// database and to use "myapp" as the database name for
-			// all further operations
+			// database
 			"db_file": "/myapp.sqlite",
+
+			// db_name tells model to use the given name as the database 
+			// name instead of using the filename. In this case we'll be
+			// using "fighters" instead of "myapp".
+			"db_name": "fighters",
 
 			// idAttribute tells Alloy/Backbone to use this column in
 			// my table as its unique identifier field. Without

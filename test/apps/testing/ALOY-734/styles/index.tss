@@ -1,0 +1,25 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#someImage': {
+	image: '/appc1.png'
+}
+
+'#someLabel': {
+	title: 'hi there'
+}
+
+'#tabbedbar': {
+	top: 10,
+	left: 15,
+	right: 15
+}
+
+'#buttonbar': {
+	bottom: 10,
+	left: 15,
+	right: 15
+}
