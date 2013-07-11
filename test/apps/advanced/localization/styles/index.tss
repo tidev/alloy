@@ -1,0 +1,31 @@
+'Label': {
+	top: '5dp',
+	color: '#222',
+	font: {
+		fontSize: '42dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center'
+}
+
+'.header': {
+	top: '30dp',
+	color: '#a00',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'normal'
+	}
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+'#viaTss': {
+	text: L('hello_world')
+}
