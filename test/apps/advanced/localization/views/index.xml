@@ -1,0 +1,15 @@
+<Alloy>
+	<Window>
+		<!-- Localization via XML attribute -->
+		<Label class="header">via XML attribute:</Label>
+		<Label text="L('hello_world')"/>
+
+		<!-- Localization via TSS -->
+		<Label class="header">via TSS:</Label>
+		<Label id="viaTss"/>
+
+		<!-- Localization via JS code in controller -->
+		<Label class="header">via controller:</Label>
+		<Label id="viaController"/>
+	</Window>
+</Alloy>
