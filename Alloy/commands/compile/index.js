@@ -215,33 +215,39 @@ module.exports = function(args, program) {
 	var tracker = {};
 	_.each(viewCollection, function(collection) {
 		// generate runtime controllers from views
-		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.VIEW)), function(view) {
-			if (viewRegex.test(view) && filterRegex.test(view)) {
-				// make sure this controller is only generated once
-				var fp = path.join(collection.dir,view.substring(0,view.lastIndexOf('.')));
-				if (tracker[fp]) { return; }
+		var theViewDir = path.join(collection.dir,CONST.DIR.VIEW);
+		if (fs.existsSync(theViewDir)) {
+			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
+				if (viewRegex.test(view) && filterRegex.test(view)) {
+					// make sure this controller is only generated once
+					var fp = path.join(collection.dir,view.substring(0,view.lastIndexOf('.')));
+					if (tracker[fp]) { return; }
 
-				// generate runtime controller
-				logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
-				parseAlloyComponent(view, collection.dir, collection.manifest);
-				tracker[fp] = true;
-			}
-		});
+					// generate runtime controller
+					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
+					parseAlloyComponent(view, collection.dir, collection.manifest);
+					tracker[fp] = true;
+				}
+			});
+		}
 
 		// generate runtime controllers from any controller code that has no 
 		// corresponding view markup
-		_.each(wrench.readdirSyncRecursive(path.join(collection.dir,CONST.DIR.CONTROLLER)), function(controller) {
-			if (controllerRegex.test(controller) && filterRegex.test(controller)) {
-				// make sure this controller is only generated once
-				var fp = path.join(collection.dir,controller.substring(0,controller.lastIndexOf('.')));
-				if (tracker[fp]) { return; }
+		var theControllerDir = path.join(collection.dir,CONST.DIR.CONTROLLER);
+		if (fs.existsSync(theControllerDir)) {
+			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
+				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
+					// make sure this controller is only generated once
+					var fp = path.join(collection.dir,controller.substring(0,controller.lastIndexOf('.')));
+					if (tracker[fp]) { return; }
 
-				// generate runtime controller
-				logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
-				parseAlloyComponent(controller, collection.dir, collection.manifest, true);
-				tracker[fp] = true;
-			}
-		});
+					// generate runtime controller
+					logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
+					parseAlloyComponent(controller, collection.dir, collection.manifest, true);
+					tracker[fp] = true;
+				}
+			});
+		}
 	});
 	logger.info('');
 
