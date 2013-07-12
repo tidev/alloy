@@ -107,11 +107,14 @@ exports.getParserArgs = function(node, state, opts) {
 
 	// make sure we're not reusing the default ID for the first top level element
 	if (id === CU.currentDefaultId && 
-		(node.parentNode && node.parentNode.nodeName !== 'Alloy')) {
-		U.dieWithNode(node, [
-			'Cannot use this view\'s default ID  "' + id + '" for current node',
-			'Only a top-level element in a view can use the default ID'
+		(node.parentNode && node.parentNode.nodeName !== 'Alloy') &&
+		!node.__idWarningHandled) {
+		logger.warn([
+			'<' + name + '> at line ' + node.lineNumber + 
+			' is using this view\'s default ID "' + id + '". ' +
+			'Only a top-level element in a view should use the default ID'
 		]);
+		node.__idWarningHandled = true;
 	}
 
 	// handle binding arguments

@@ -2,8 +2,8 @@
 	<Window>
 		<View>
 			<View>
-				<!-- add id="another" in the final view to cause the compile error -->
-				<View/>
+				<!-- id="another" will cause the compile warning message -->
+				<View id="another"/>
 			</View>
 		</View>
 	</Window>
