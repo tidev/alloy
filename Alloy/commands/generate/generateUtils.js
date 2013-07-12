@@ -43,22 +43,23 @@ exports.generate = function(name, type, program, args) {
 
 	// get the final file name 
 	var file = path.join(dir,name + ext);
+	var viewFile = path.join(paths.app, CONST.DIR['VIEW'], name + "." + 
+		CONST.FILE_EXT['VIEW']);
 
 	// see if the file already exists
-	if (path.existsSync(file) && !program.force && type !== "STYLE") {
+	if (fs.existsSync(file) && !program.force && 
+		!(type === "STYLE" && fs.existsSync(viewFile))) {
 		U.die(" file already exists: " + file);
 	}
 
 	// make sure the target folder exists
 	var fullDir = path.dirname(file);
-	if (!path.existsSync(fullDir)) {
+	if (!fs.existsSync(fullDir)) {
 		wrench.mkdirSyncRecursive(fullDir);
 	}
 
 	// only use xml2tss to generate style if the partner view exists
-	var viewFile = path.join(paths.app, CONST.DIR['VIEW'], name + "." + 
-		CONST.FILE_EXT['VIEW']);
-	if (type === "STYLE" && path.existsSync(viewFile)) {
+	if (type === "STYLE" && fs.existsSync(viewFile)) {
 		xml2tss.updateFile(viewFile, file, function(err,ok) {
 			if (ok) {
 				logger.info('Generated style named ' + name);
