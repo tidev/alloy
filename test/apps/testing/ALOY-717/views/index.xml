@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label id="tester"/>
+		<Label id="changer" onClick="changeClasses">change classes</Label>
+	</Window>
+</Alloy>

@@ -242,6 +242,28 @@ exports.addClass = function(controller, proxy, classes, opts) {
 	}
 }
 
+function resetUiProperties(proxy) {
+	proxy.applyProperties({
+		bottom: null,
+		left: null,
+		right: null,
+		top: null,
+		height: null,
+		width: null,
+
+		// Setting to "null" on android makes text transparent
+		color: OS_ANDROID ? '#000' : null,
+
+		// Setting to "null" on android works the first time. Leaves the color
+		// on subsequent calls.
+		backgroundColor: OS_ANDROID ? 'transparent' : null,
+		
+		shadowColor: null,
+		shadowOffset: null,
+		font: null
+	});
+}
+
 exports.removeClass = function(controller, proxy, classes, opts) {
 	classes || (classes = []);
 	var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
@@ -261,6 +283,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 			opts && proxy.applyProperties(opts);
 			return;
 		} else {
+			resetUiProperties(proxy);
 			processStyle(controller, proxy, newClasses, opts);
 		}
 	}
@@ -269,6 +292,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 exports.resetClass = function(controller, proxy, classes, opts) {
 	classes || (classes = []);
 	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
+	resetUiProperties(proxy);
 	processStyle(controller, proxy, classes, opts);
 }
 

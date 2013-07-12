@@ -1,0 +1,47 @@
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center'
+}
+
+'.greenBg': {
+	backgroundColor: '#cfc'
+}
+
+'.red': {
+	color: '#a00'
+}
+
+'.shadow': {
+	shadowColor: '#888',
+	shadowOffset: { x:1, y:1 }
+}
+
+'.huge': {
+	font: {
+		fontSize: '64dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.right': {
+	right: 0
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#changer': {
+	height: '50dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#006',
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	bottom: 0
+}

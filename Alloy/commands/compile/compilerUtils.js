@@ -202,6 +202,10 @@ exports.getParserArgs = function(node, state, opts) {
 			}			
 		}
 	});
+
+	if (autoStyle && !createArgs[CONST.CLASS_PROPERTY]) {
+		createArgs[CONST.CLASS_PROPERTY] = [];
+	}
 	
 	return _.extend({
 		ns: ns,
