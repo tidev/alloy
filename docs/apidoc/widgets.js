@@ -12,7 +12,7 @@
  * #### Creating a Widget
  *
  * Widgets are essentially miniature Alloy projects that contain their own models, views, controllers
- * and assets.  They are laid out the same way an Alloy project.
+ * and assets.  They are laid out the same way as an Alloy project.
  *
  * Use `Widget.createController()`, `Widget.createWidget()`,  `Widget.createModel()` and
  * `Widget.createCollection()` rather than the `Alloy.create*` methods to create
