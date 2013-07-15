@@ -9,7 +9,7 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	var createFunc = 'create' + node.nodeName,
+	var createFunc = args.createMethod || ('create' + node.nodeName),
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
 		fullname = CU.getNodeFullname(node),
 		generatedStyle = styler.generateStyleParams(
@@ -26,7 +26,7 @@ function parse(node, state, args) {
 	if (state.local) {
 		args.symbol = CU.generateUniqueId();
 	}
-
+		
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
@@ -95,7 +95,7 @@ function parse(node, state, args) {
 		) + '\n';
 		code += ");\n";
 		if (args.parent.symbol) {
-			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
+			code += args.parent.symbol + "." + (args.parent.addMethod || CONST.ADD_DEFAULT) + "(" + args.symbol + ");\n";
 		}
 
 		if (isCollectionBound) {
@@ -115,7 +115,7 @@ function parse(node, state, args) {
 
 			var pre =  "var children = " + args.symbol + ".children;" +
 					   "for (var d = children.length-1; d >= 0; d--) {" + 
-					   "	" + args.symbol + ".remove(children[d]);" +
+					   "	" + args.symbol + "." + args.removeMethod + "(children[d]);" +
 					   "}";
 
 			code += _.template(CU.generateCollectionBindingTemplate(args), {
@@ -138,7 +138,8 @@ function parse(node, state, args) {
 	};
 	var nextObj = {
 		node: node,
-		symbol: args.symbol
+		symbol: args.symbol,
+		addMethod: args.addMethod
 	};
 
 	if (state.isViewTemplate) {
