@@ -2,6 +2,26 @@
  * @class Alloy
  * Top-level module for Alloy functions.
  *
+ * Alloy is an application framework built on top of the Titanium SDK designed to help rapidly
+ * develop quality applications and reduce maintenance.
+ *
+ * Alloy uses the model-view-controller architecture to separate the application into three
+ * components:
+ *
+ *  * **Models** provide the data of the application. Alloy utilizes **Backbone Model and Collection**
+ *     objects for this functionality.
+ *
+ *  * **Views** provide the GUI components to interact with the application, written using **XML markup**
+ *    and **Titanium Stylesheets (TSS)**, which abstracts the UI components of the Titanium API.
+ *
+ *  * **Controllers** provide the glue layer between the Model and View components as well as
+ *    additional application logic using the **Alloy API** and **Titanium API**.
+ *
+ * The API documentation provided here is used with Alloy Controllers and Widget Controllers to
+ * interact with the View and Model components of the application or widget.
+ *
+ * For guides on using Alloy, see
+ * [Alloy Framework](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Framework).
  */
 var 	   _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
@@ -307,7 +327,7 @@ exports.createController = function(name, args) {
  * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the
  * named model.
  *
- * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for
+ * See [Backbone.Model](http://docs.appcelerator.com/backbone/0.9.2/#Model) in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
  * @param {Object} [args] Arguments to pass to the model.
@@ -322,7 +342,7 @@ exports.createModel = function(name, args) {
  * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
- * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
+ * See [Backbone.Collection](http://docs.appcelerator.com/backbone/0.9.2/#Collection) in the Backbone.js
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
