@@ -1,9 +1,13 @@
 var classes = [
+	'transform',
+	'opacity',
+	'bgGradient',
 	'greenBg',
 	'red',
 	'shadow',
 	'huge',
-	'right'
+	'right',
+	'zIndex'
 ];
 
 function changeClasses(e) {

@@ -4,6 +4,27 @@
 	textAlign: 'center'
 }
 
+'.transform': {
+	transform: Alloy.Globals.transform
+}
+
+'.opacity': {
+	opacity: 0.5
+}
+
+'.bgGradient': {
+	backgroundGradient: {
+		type: 'linear',
+        startPoint: { x: '0%', y: '50%' },
+        endPoint: { x: '100%', y: '50%' },
+        colors: [
+        	{ color: 'red', offset: 0.0},
+        	{ color: 'blue', offset: 0.25 },
+        	{ color: 'red', offset: 1.0 }
+        ],
+	}
+}
+
 '.greenBg': {
 	backgroundColor: '#cfc'
 }
@@ -14,12 +35,16 @@
 
 '.shadow': {
 	shadowColor: '#888',
-	shadowOffset: { x:1, y:1 }
+	shadowOffset: { x:2, y:2 }
+}
+
+'.zIndex': {
+	zIndex: 100
 }
 
 '.huge': {
 	font: {
-		fontSize: '64dp',
+		fontSize: '40dp',
 		fontWeight: 'bold'
 	}
 }
@@ -44,4 +69,11 @@
 		fontWeight: 'bold'
 	},
 	bottom: 0
+}
+
+'#behind': {
+	height: '100dp',
+	width: '100dp',
+	backgroundColor: '#0f0',
+	zIndex: 10
 }
