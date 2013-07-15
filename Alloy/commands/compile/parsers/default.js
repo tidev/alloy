@@ -95,7 +95,7 @@ function parse(node, state, args) {
 		) + '\n';
 		code += ");\n";
 		if (args.parent.symbol) {
-			code += args.parent.symbol + "." + args.parent.addMethod + "(" + args.symbol + ");\n";
+			code += args.parent.symbol + "." + (args.parent.addMethod || CONST.ADD_DEFAULT) + "(" + args.symbol + ");\n";
 		}
 
 		if (isCollectionBound) {
