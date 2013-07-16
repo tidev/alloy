@@ -7,11 +7,79 @@ var 	   _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	CONST = require('alloy/constants');
 
-var DEFAULT_WIDGET = 'widget';
-
 exports.version = '1.2.0';
 exports._ = _;
 exports.Backbone = Backbone;
+
+var DEFAULT_WIDGET = 'widget';
+var IDENTITY_TRANSFORM = OS_ANDROID ? Ti.UI.create2DMatrix() : undefined;
+var RESET = {
+	bottom: null,
+	left: null,
+	right: null,
+	top: null,
+	height: null,
+	width: null,
+	shadowColor: null,
+	shadowOffset: null,
+	backgroundImage: null,
+	backgroundRepeat: null,
+	center: null,
+	layout: null,
+	backgroundSelectedColor: null,
+	backgroundSelectedImage: null,
+
+	// creates a font slightly different (smaller) than default on iOS
+	font: null,
+
+	// non-null resets
+	opacity: 1.0,
+	touchEnabled: true,
+	enabled: true,
+	horizontalWrap: true,
+	zIndex: 0,
+	visible: true, // must be set to "true" on all but Android
+
+	//##### DISPARITIES #####//
+
+	// Setting to "null" on android makes text transparent
+	color: OS_ANDROID ? '#000' : null,
+
+	// Setting to "null" on android works the first time. Leaves the color
+	// on subsequent calls.
+	backgroundColor: OS_ANDROID ? 'transparent' : null,
+
+	// Android will leave artifact of previous transform unless the identity matrix is
+	// manually reset.
+	// Mobileweb does not respect matrix properties set in the constructor, despite the
+	// documentation at docs.appcelerator.com indicating that it should.
+	transform: OS_ANDROID ? IDENTITY_TRANSFORM : null,
+
+	// These checks prevent crashing exceptions
+	backgroundGradient: !OS_ANDROID ? {} : null,
+	borderColor: OS_ANDROID ? null : 'transparent',
+	borderRadius: OS_IOS ? 0 : null,
+	borderWidth: OS_IOS ? 0 : null
+};
+
+if (OS_IOS) {
+	RESET = _.extend(RESET, {
+		backgroundLeftCap: 0,
+		backgroundTopCap: 0
+	});
+} else if (OS_ANDROID) {
+	RESET = _.extend(RESET, {
+		backgroundDisabledColor: null,
+		backgroundDisabledImage: null,
+		backgroundFocusedColor: null,
+		backgroundFocusedImage: null,
+		focusable: false,
+		keepScreenOn: false
+	});
+}
+if (OS_ANDROID || Ti.Platform.osname === 'tizen') {
+	RESET.softKeyboardOnFocus = Ti.UI.Android.SOFT_KEYBOARD_DEFAULT_ON_FOCUS;
+}
 
 function ucfirst(text) {
     if (!text) { return text; }
@@ -19,7 +87,7 @@ function ucfirst(text) {
 };
 
 function addNamespace(apiName) {
-	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) + 
+	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) +
 		'.' + apiName;
 }
 
@@ -94,8 +162,8 @@ exports.C = function(name, modelDesc, model) {
 	}
 
 	// do any post collection creation code form the sync adapter
-	if (mod && _.isFunction(mod.afterCollectionCreate)) { 
-		mod.afterCollectionCreate(Collection); 
+	if (mod && _.isFunction(mod.afterCollectionCreate)) {
+		mod.afterCollectionCreate(Collection);
 	}
 
 	return Collection;
@@ -127,7 +195,7 @@ exports.UI.create = function(controller, apiName, opts) {
 	return eval(ns)['create' + baseName](style);
 }
 
-exports.createStyle = function(controller, opts) {
+exports.createStyle = function(controller, opts, defaults) {
 	var classes, apiName;
 
 	// If there's no opts, there's no reason to load the style module. Just
@@ -154,7 +222,7 @@ exports.createStyle = function(controller, opts) {
 	// Load the runtime style for the given controller
 	var styleArray;
 	if (controller && _.isObject(controller)) {
-		styleArray = require('alloy/widgets/' + controller.widgetId + 
+		styleArray = require('alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
 		styleArray = require('alloy/styles/' + controller)
@@ -169,7 +237,7 @@ exports.createStyle = function(controller, opts) {
 		// give the apiName a namespace if necessary
 		var styleApi = style.key;
 		if (style.isApi && styleApi.indexOf('.') === -1) {
-			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] || 
+			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] ||
 				CONST.NAMESPACE_DEFAULT) + '.' + styleApi;
 		}
 
@@ -180,7 +248,7 @@ exports.createStyle = function(controller, opts) {
 		} else if (style.isApi) {
 			if (style.key.indexOf('.') === -1) {
 				style.key = addNamespace(style.key);
-			} 
+			}
 			if (style.key !== apiName) { continue; }
 		} else {
 			// no matches, skip this style
@@ -188,7 +256,7 @@ exports.createStyle = function(controller, opts) {
 		}
 
 		// can we clear out any form factor queries?
-		if (style.queries && style.queries.formFactor && 
+		if (style.queries && style.queries.formFactor &&
 			!Alloy[style.queries.formFactor]) {
 			continue;
 		}
@@ -208,15 +276,15 @@ exports.createStyle = function(controller, opts) {
 	styleFinal[CONST.CLASS_PROPERTY] = classes;
 	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
-	return styleFinal;
+	return defaults ? _.defaults(styleFinal,defaults) : styleFinal;
 };
 
-function processStyle(controller, proxy, classes, opts) {
+function processStyle(controller, proxy, classes, opts, defaults) {
 	opts || (opts = {});
 	opts.classes = classes;
 	proxy.apiName && (opts.apiName = proxy.apiName);
 	proxy.id && (opts.id = proxy.id);
-	proxy.applyProperties(exports.createStyle(controller, opts));
+	proxy.applyProperties(exports.createStyle(controller, opts, defaults));
 	OS_ANDROID && (proxy.classes = classes);
 }
 
@@ -231,7 +299,7 @@ exports.addClass = function(controller, proxy, classes, opts) {
 		var beforeLen = pClasses.length;
 		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 		var newClasses = _.union(pClasses, classes || []);
-		
+
 		// make sure we actually added classes before processing styles
 		if (beforeLen === newClasses.length) {
 			opts && proxy.applyProperties(opts);
@@ -261,7 +329,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 			opts && proxy.applyProperties(opts);
 			return;
 		} else {
-			processStyle(controller, proxy, newClasses, opts);
+			processStyle(controller, proxy, newClasses, opts, RESET);
 		}
 	}
 }
@@ -269,7 +337,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 exports.resetClass = function(controller, proxy, classes, opts) {
 	classes || (classes = []);
 	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
-	processStyle(controller, proxy, classes, opts);
+	processStyle(controller, proxy, classes, opts, RESET);
 }
 
 /**
@@ -282,7 +350,7 @@ exports.resetClass = function(controller, proxy, classes, opts) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
-	if (typeof name !== 'undefined' && name !== null && 
+	if (typeof name !== 'undefined' && name !== null &&
 		_.isObject(name) && !_.isString(name)) {
 		args = name;
 		name = DEFAULT_WIDGET;
