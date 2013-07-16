@@ -29,36 +29,52 @@ var RESET = {
 	backgroundSelectedColor: null,
 	backgroundSelectedImage: null,
 
-	// creates a font slightly different (smaller) than default on iOS
-	font: null,
-
 	// non-null resets
 	opacity: 1.0,
 	touchEnabled: true,
 	enabled: true,
 	horizontalWrap: true,
 	zIndex: 0,
-	visible: true, // must be set to "true" on all but Android
 
 	//##### DISPARITIES #####//
-
-	// Setting to "null" on android makes text transparent
-	color: OS_ANDROID ? '#000' : null,
 
 	// Setting to "null" on android works the first time. Leaves the color
 	// on subsequent calls.
 	backgroundColor: OS_ANDROID ? 'transparent' : null,
 
+	// creates a font slightly different (smaller) than default on iOS
+	// https://jira.appcelerator.org/browse/TIMOB-14565
+	font: null,
+
+	// Throws an exception on Android if set to null. Works on other platforms.
+	// https://jira.appcelerator.org/browse/TIMOB-14566
+	visible: true,
+
+	// Setting to "null" on android makes text transparent
+	// https://jira.appcelerator.org/browse/TIMOB-14567
+	color: OS_ANDROID ? '#000' : null,
+
 	// Android will leave artifact of previous transform unless the identity matrix is
 	// manually reset.
+	// https://jira.appcelerator.org/browse/TIMOB-14568
+	//
 	// Mobileweb does not respect matrix properties set in the constructor, despite the
 	// documentation at docs.appcelerator.com indicating that it should.
+	// https://jira.appcelerator.org/browse/TIMOB-14570
 	transform: OS_ANDROID ? IDENTITY_TRANSFORM : null,
 
-	// These checks prevent crashing exceptions
+	// Crashes if set to null on anything but Android
+	// https://jira.appcelerator.org/browse/TIMOB-14571
 	backgroundGradient: !OS_ANDROID ? {} : null,
+
+	// All supported platforms have varying behavior with border properties
+	// https://jira.appcelerator.org/browse/TIMOB-14573
 	borderColor: OS_ANDROID ? null : 'transparent',
+
+	// https://jira.appcelerator.org/browse/TIMOB-14575
 	borderRadius: OS_IOS ? 0 : null,
+
+	// https://jira.appcelerator.org/browse/TIMOB-14574
 	borderWidth: OS_IOS ? 0 : null
 };
 
