@@ -22,19 +22,23 @@ var RESET = {
 	width: null,
 	shadowColor: null,
 	shadowOffset: null,
-	font: null,
 	backgroundImage: null,
 	backgroundRepeat: null,
 	center: null,
-	enabled: null,
 	layout: null,
-	opacity: null,
-	touchEnabled: null,
-	visible: true, // must be set to "true" on all but Android
-	zIndex: 0,
 	backgroundSelectedColor: null,
 	backgroundSelectedImage: null,
+
+	// creates a font slightly different (smaller) than default on iOS
+	font: null,
+
+	// non-null resets
+	opacity: 1.0,
+	touchEnabled: true,
+	enabled: true,
 	horizontalWrap: true,
+	zIndex: 0,
+	visible: true, // must be set to "true" on all but Android
 
 	//##### DISPARITIES #####//
 
