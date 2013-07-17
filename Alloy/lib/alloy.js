@@ -3,7 +3,7 @@
  * Top-level module for Alloy functions.
  *
  */
-var 	   _ = require('alloy/underscore')._,
+var _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	CONST = require('alloy/constants');
 
@@ -100,7 +100,7 @@ if (OS_ANDROID || Ti.Platform.osname === 'tizen') {
 function ucfirst(text) {
     if (!text) { return text; }
     return text[0].toUpperCase() + text.substr(1);
-};
+}
 
 function addNamespace(apiName) {
 	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) +
@@ -132,7 +132,7 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// Run the pre model creation code, if any
     if (mod && _.isFunction(mod.beforeModelCreate)) {
-    	config = mod.beforeModelCreate(config, name) || config;
+		config = mod.beforeModelCreate(config, name) || config;
     }
 
 	// Create the Model object
@@ -187,7 +187,7 @@ exports.C = function(name, modelDesc, model) {
 
 exports.UI = {};
 exports.UI.create = function(controller, apiName, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 
 	// Make sure we have a full api name
 	var baseName, ns;
@@ -209,7 +209,7 @@ exports.UI.create = function(controller, apiName, opts) {
 
 	// create the titanium proxy object
 	return eval(ns)['create' + baseName](style);
-}
+};
 
 exports.createStyle = function(controller, opts, defaults) {
 	var classes, apiName;
@@ -241,7 +241,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		styleArray = require('alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
-		styleArray = require('alloy/styles/' + controller)
+		styleArray = require('alloy/styles/' + controller);
 	}
 	var styleFinal = {};
 
@@ -296,18 +296,18 @@ exports.createStyle = function(controller, opts, defaults) {
 };
 
 function processStyle(controller, proxy, classes, opts, defaults) {
-	opts || (opts = {});
+	opts = opts || {};
 	opts.classes = classes;
-	proxy.apiName && (opts.apiName = proxy.apiName);
-	proxy.id && (opts.id = proxy.id);
+	if (proxy.apiName) { opts.apiName = proxy.apiName; }
+	if (proxy.id) { opts.id = proxy.id; }
 	proxy.applyProperties(exports.createStyle(controller, opts, defaults));
-	OS_ANDROID && (proxy.classes = classes);
+	if (OS_ANDROID) { proxy.classes = classes; }
 }
 
 exports.addClass = function(controller, proxy, classes, opts) {
 	// make sure we actually have classes to add
 	if (!classes) {
-		opts && proxy.applyProperties(opts);
+		if (opts) { proxy.applyProperties(opts); }
 		return;
 	} else {
 		// create a union of the existing classes with the new one(s)
@@ -318,22 +318,22 @@ exports.addClass = function(controller, proxy, classes, opts) {
 
 		// make sure we actually added classes before processing styles
 		if (beforeLen === newClasses.length) {
-			opts && proxy.applyProperties(opts);
+			if (opts) { proxy.applyProperties(opts); }
 			return;
 		} else {
 			processStyle(controller, proxy, newClasses, opts);
 		}
 	}
-}
+};
 
 exports.removeClass = function(controller, proxy, classes, opts) {
-	classes || (classes = []);
+	classes = classes || [];
 	var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
 	var beforeLen = pClasses.length;
 
 	// make sure there's classes to remove before processing
 	if (!beforeLen || !classes.length) {
-		opts && proxy.applyProperties(opts);
+		if (opts) { proxy.applyProperties(opts); }
 		return;
 	} else {
 		// remove the given class(es)
@@ -342,19 +342,19 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 
 		// make sure there was actually a difference before processing
 		if (beforeLen === newClasses.length) {
-			opts && proxy.applyProperties(opts);
+			if (opts) { proxy.applyProperties(opts); }
 			return;
 		} else {
 			processStyle(controller, proxy, newClasses, opts, RESET);
 		}
 	}
-}
+};
 
 exports.resetClass = function(controller, proxy, classes, opts) {
-	classes || (classes = []);
+	classes = classes || [];
 	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 	processStyle(controller, proxy, classes, opts, RESET);
-}
+};
 
 /**
  * @method createWidget
@@ -372,7 +372,7 @@ exports.createWidget = function(id, name, args) {
 		name = DEFAULT_WIDGET;
 	}
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
-}
+};
 
 /**
  * @method createController
@@ -384,7 +384,7 @@ exports.createWidget = function(id, name, args) {
  */
 exports.createController = function(name, args) {
 	return new (require('alloy/controllers/' + name))(args);
-}
+};
 
 /**
  * @method createModel
@@ -399,7 +399,7 @@ exports.createController = function(name, args) {
  */
 exports.createModel = function(name, args) {
 	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
-}
+};
 
 /**
  * @method createCollection
@@ -415,13 +415,13 @@ exports.createModel = function(name, args) {
  */
 exports.createCollection = function(name, args) {
 	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
-}
+};
 
 function isTabletFallback() {
-	return !(Math.min(
+	return Math.min(
 		Ti.Platform.displayCaps.platformHeight,
 		Ti.Platform.displayCaps.platformWidth
-	) < 700);
+	) >= 700;
 }
 
 /**
@@ -435,17 +435,17 @@ exports.isTablet = (function() {
 	} else if (OS_ANDROID) {
 		var psc = Ti.Platform.Android.physicalSizeCategory;
 		return psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE ||
-		       psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
+			psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
 	} else if (OS_MOBILEWEB) {
-		return !(Math.min(
+		return Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
-		) < 400);
+		) >= 400;
 	} else if (OS_BLACKBERRY) {
 		return (Ti.Platform.displayCaps.platformHeight === 600 &&
-		       Ti.Platform.displayCaps.platformWidth === 1024) ||
-			   (Ti.Platform.displayCaps.platformHeight === 1024 &&
-		       Ti.Platform.displayCaps.platformWidth === 600);
+			Ti.Platform.displayCaps.platformWidth === 1024) ||
+			(Ti.Platform.displayCaps.platformHeight === 1024 &&
+			Ti.Platform.displayCaps.platformWidth === 600);
 	} else {
 		return isTabletFallback();
 	}
@@ -495,9 +495,9 @@ exports.Models = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/model.js for docs site.
  */
- exports.Models.instance = function(name) {
- 	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
- };
+exports.Models.instance = function(name) {
+	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
+};
 
 /**
  * @property {Object} Collections
@@ -520,9 +520,9 @@ exports.Collections = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/collection.js for docs site.
  */
- exports.Collections.instance = function(name) {
- 	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
- };
+exports.Collections.instance = function(name) {
+	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
+};
 
 /**
  * @property {Object} CFG

@@ -8,8 +8,8 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: "#fff",
-		        title: "Boxers",
-		        id: "master"
+				title: "Boxers",
+				id: "master"
 			}
 		});
 

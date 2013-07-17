@@ -22,4 +22,4 @@ exports.definition = {
 			"idAttribute": "thingId"
 		}
 	}
-}
+};

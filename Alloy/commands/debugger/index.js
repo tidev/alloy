@@ -1,7 +1,7 @@
 var fs = require('fs'),
 	path = require('path'),
 	U = require('../../utils'),
-	SM = require('source-map'); 
+	SM = require('source-map');
 
 var FUNCTIONS = {
 	generated: 'generatedPositionFor',
@@ -14,7 +14,7 @@ module.exports = function(args, program) {
 		U.die('Missing command and source map file');
 	} else if (args.length === 1) {
 		U.die('Missing source map file');
-	} 
+	}
 
 	var command = args[0];
 	var func = FUNCTIONS[command];
@@ -36,7 +36,7 @@ module.exports = function(args, program) {
 		line: program.line,
 		column: program.column
 	};
-	program.source && (obj.source = program.source);
+	if (program.source) { obj.source = program.source; }
 
 	// execute the source map query and output the info
 	var ret = consumer[func](obj);
@@ -48,10 +48,10 @@ module.exports = function(args, program) {
 	// has no meaning to deveopers since it is not included in
 	// the application itself, only in the Alloy module.
 	var absolute = path.resolve(sourceMapFile);
-	if (command === 'original' && 
+	if (command === 'original' &&
 		(new RegExp(ret.source + '\\.map$')).test(absolute)) {
 		ret.line = program.line;
 	}
 
 	console.log(ret);
-}
+};

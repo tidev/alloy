@@ -94,10 +94,10 @@ function addMatchers() {
 				var actual = this.actual;
 				this.message = function() {
 					return 'expected ' + sortAndStringify(actual) + ' to contain ' +
-						'same elements as ' + sortAndStringify(array); 
+						'same elements as ' + sortAndStringify(array);
 				};
 
-				return sortAndStringify(actual) === sortAndStringify(array); 
+				return sortAndStringify(actual) === sortAndStringify(array);
 			},
 			toHaveStyle: function(style) {
 				var component = this.actual;
@@ -107,7 +107,7 @@ function addMatchers() {
 				});
 
 				this.message = function() {
-					return 'expected ' + this.actual.toString() + ' to have style:\n' + 
+					return 'expected ' + this.actual.toString() + ' to have style:\n' +
 						sortAndStringify(style) + '\nbut found this instead:\n' +
 						sortAndStringify(obj);
 				};
@@ -123,7 +123,7 @@ function addMatchers() {
 
 function validateUiComponent($, id, opts) {
 	if (!id) { throw('validateUiComponent exception: No id given'); }
-	
+
 	var comp = $[id];
 	it('#' + id + ' is defined', function() {
 		expect(comp).toBeDefined();
@@ -136,7 +136,7 @@ function validateUiComponent($, id, opts) {
 
 	if (opts.api && apiChecks[opts.api]) {
 		it('#' + id + ' component is a ' + opts.api, function() {
-			apiChecks[opts.api](comp); 
+			apiChecks[opts.api](comp);
 		});
 	}
 

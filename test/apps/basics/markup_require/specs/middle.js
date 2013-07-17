@@ -8,9 +8,9 @@ module.exports = function($) {
 			api: 'Ti.UI.View',
 			style: {
 				backgroundColor: "red",
-		        height: Ti.UI.SIZE,
-		        width: Ti.UI.FILL,
-		        id: "middle"
+				height: Ti.UI.SIZE,
+				width: Ti.UI.FILL,
+				id: "middle"
 			}
 		});
 	});
@@ -20,11 +20,11 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				color: "yellow",
-		        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-		        height: Ti.UI.SIZE,
-		        width: Ti.UI.SIZE,
-		        text: "Middle",
-		        id: "t"
+				textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+				height: Ti.UI.SIZE,
+				width: Ti.UI.SIZE,
+				text: "Middle",
+				id: "t"
 			}
 		});
 	});

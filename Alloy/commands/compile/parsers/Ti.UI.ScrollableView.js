@@ -6,7 +6,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
-}
+};
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
@@ -60,12 +60,12 @@ function parse(node, state, args) {
 			items: itemCode,
 			post: scrollState.parent.symbol + ".views=views;"
 		});
-	} 
+	}
 
 	// Update the parsing state
 	return {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

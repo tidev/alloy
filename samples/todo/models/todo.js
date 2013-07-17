@@ -39,12 +39,11 @@ exports.definition = {
 
     extendCollection : function(Collection) {
         _.extend(Collection.prototype, {
-        	comparator: function(todo) {
+            comparator: function(todo) {
 				return todo.get('done');
 			}
         });
 
         return Collection;
     }
-}
-
+};

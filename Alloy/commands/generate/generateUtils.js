@@ -17,12 +17,12 @@ function pad(x) {
 }
 
 exports.generateMigrationFileName = function(t) {
-	var d = new Date;
-	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) + 
-		String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) + 
+	var d = new Date();
+	var s = String(d.getUTCFullYear()) + String(pad(d.getUTCMonth())) +
+		String(pad(d.getUTCDate())) + String(pad(d.getUTCHours())) +
 		String(pad(d.getUTCMinutes())) + String(d.getUTCMilliseconds());
 	return s + '_' + t;
-}
+};
 
 exports.generate = function(name, type, program, args) {
 	args = args || {};
@@ -36,18 +36,18 @@ exports.generate = function(name, type, program, args) {
 		if (_.contains(['VIEW','CONTROLLER','STYLE'],type)) {
 			dir = path.join(dir,program.platform);
 		} else {
-			logger.warn('platform "' + program.platform + 
+			logger.warn('platform "' + program.platform +
 				'" ignored, not used with type "' + type + '"');
 		}
 	}
 
-	// get the final file name 
+	// get the final file name
 	var file = path.join(dir,name + ext);
-	var viewFile = path.join(paths.app, CONST.DIR['VIEW'], name + "." + 
+	var viewFile = path.join(paths.app, CONST.DIR['VIEW'], name + "." +
 		CONST.FILE_EXT['VIEW']);
 
 	// see if the file already exists
-	if (fs.existsSync(file) && !program.force && 
+	if (fs.existsSync(file) && !program.force &&
 		!(type === "STYLE" && fs.existsSync(viewFile))) {
 		U.die(" file already exists: " + file);
 	}
@@ -70,8 +70,8 @@ exports.generate = function(name, type, program, args) {
 	} else {
 		// write the file out based on the given template
 		var templateContents = fs.readFileSync(templatePath,'utf8');
-		if (args.templateFunc) { 
-			templateContents = args.templateFunc(templateContents); 
+		if (args.templateFunc) {
+			templateContents = args.templateFunc(templateContents);
 		}
 		var code = _.template(templateContents, args.template || {});
 		fs.writeFileSync(file, code);
@@ -82,4 +82,4 @@ exports.generate = function(name, type, program, args) {
 			code: code
 		};
 	}
-}
+};

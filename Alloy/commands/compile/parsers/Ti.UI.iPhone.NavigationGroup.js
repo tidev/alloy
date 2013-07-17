@@ -15,7 +15,7 @@ function parse(node, state, args) {
 	// NavigationGroup must have 1 window as a child
 	if (children.length !== 1) {
 		U.die(err);
-	} 
+	}
 
 	var child = children[0],
 		childArgs = CU.getParserArgs(child),
@@ -35,7 +35,7 @@ function parse(node, state, args) {
 		U.die(err);
 	}
 
-	// create navgroup with window 
+	// create navgroup with window
 	state.extraStyle = styler.createVariableStyle('window', windowSymbol);
 	code += require('./default').parse(node, state).code;
 
@@ -44,5 +44,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	} 
+	};
 }

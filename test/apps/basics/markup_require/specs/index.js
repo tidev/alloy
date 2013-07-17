@@ -8,8 +8,8 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: "#fff",
-		        layout: "vertical",
-		        id: "index"
+				layout: "vertical",
+				id: "index"
 			}
 		});
 	});
@@ -19,10 +19,10 @@ module.exports = function($) {
 			api: 'Ti.UI.View',
 			style: {
 				backgroundColor: "black",
-		        borderRadius: 2,
-		        borderColor: "blue",
-		        height: 100,
-		        id: "top"
+				borderRadius: 2,
+				borderColor: "blue",
+				height: 100,
+				id: "top"
 			}
 		});
 	});

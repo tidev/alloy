@@ -14,7 +14,7 @@ exports.definition = {
 			// database
 			"db_file": "/myapp.sqlite",
 
-			// db_name tells model to use the given name as the database 
+			// db_name tells model to use the given name as the database
 			// name instead of using the filename. In this case we'll be
 			// using "fighters" instead of "myapp".
 			"db_name": "fighters",
@@ -33,4 +33,4 @@ exports.definition = {
 			"remoteBackup": false
 		}
 	}
-}
+};

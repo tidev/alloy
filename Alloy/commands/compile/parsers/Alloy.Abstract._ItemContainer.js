@@ -5,12 +5,14 @@ var _ = require('../../../lib/alloy/underscore')._,
 	logger = require('../../../logger');
 
 function fixDefinition(def) {
-	def || (def = {});
-	def.children || (def.children = []);
-	def.translations || (def.translations = []);
-	def.doRemoveNode = def.doRemoveNode || typeof(def.doRemoveNode) === 'undefined';
-	def.processOthers = def.processOthers || function(){};
-	def.inViewHierarchy = def.inViewHierarchy || typeof(def.inViewHierarchy) === 'undefined';
+	def = def || {};
+	def = _.defaults(def, {
+		children: [],
+		translations: [],
+		doRemoveNode: def.doRemoveNode || typeof(def.doRemoveNode) === 'undefined',
+		processOthers: def.processOthers || function(){},
+		inViewHierarchy: def.inViewHierarchy || typeof(def.inViewHierarchy) === 'undefined'
+	});
 	return def;
 }
 
@@ -28,16 +30,16 @@ function parse(node, state, args) {
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var childArgs = CU.getParserArgs(child, state);
-		
+
 		// do translations
 		_.each(def.translations, function(t) {
-			if (childArgs.fullname === t.from) { 
+			if (childArgs.fullname === t.from) {
 				var match = t.to.match(/^(.+)\.(.+)$/);
 				child.nodeName = match[2];
-				child.setAttribute('ns', match[1]); 
-			} 
+				child.setAttribute('ns', match[1]);
+			}
 		});
-		
+
 		// process item arrays if present
 		var theNode = CU.validateNodeName(child, _.pluck(def.children, 'name'));
 		if (_.find(def.children, function(c){ return c.name === theNode; })) {
@@ -51,7 +53,7 @@ function parse(node, state, args) {
 			extras.push([prop, childState.itemsArray]);
 
 			// get rid of the node when we're done so we can pass the current state
-			// back to generateNode() and then process any additional views that 
+			// back to generateNode() and then process any additional views that
 			// need to be added to the view hierarchy
 			if (def.doRemoveNode) {
 				node.removeChild(child);
@@ -77,7 +79,7 @@ function parse(node, state, args) {
 		}
 	});
 
-	if (extras.length) {	
+	if (extras.length) {
 		state.extraStyle = styler.createVariableStyle(extras);
 	}
 	if (!def.inViewHierarchy) {
@@ -92,5 +94,5 @@ function parse(node, state, args) {
 
 	// Update the parsing state
 	return _.extend(outState, {code:code});
-	 
-};
+
+}

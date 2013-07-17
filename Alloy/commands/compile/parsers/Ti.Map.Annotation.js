@@ -21,7 +21,7 @@ function parse(node, state, args) {
 		styles: state.styles
 	}).code;
 
-	return { 
+	return {
 		parent: {
 			node: node,
 			symbol: args.symbol
@@ -29,4 +29,4 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
-};
+}

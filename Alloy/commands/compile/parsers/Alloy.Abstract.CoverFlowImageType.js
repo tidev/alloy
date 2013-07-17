@@ -1,4 +1,4 @@
-var U = require('../../../utils'); 
+var U = require('../../../utils');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -17,7 +17,7 @@ function parse(node, state, args) {
 	if (image) { obj.image = image; }
 	if (height) { obj.height = height; }
 	if (width) { obj.width = width; }
-	
+
 	state.local = true;
 	state.extraStyle = obj;
 	var itemState = require('./default_abstract').parse(node, state);
@@ -25,7 +25,9 @@ function parse(node, state, args) {
 	delete state.extraStyle;
 
 	var code = itemState.code;
-	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
+	if (!state.model) {
+		code += state.itemsArray + '.push(' + itemState.parent.symbol + ');';
+	}
 
 	return {
 		parent: {},

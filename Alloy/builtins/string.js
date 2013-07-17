@@ -1,12 +1,12 @@
-/** 
+/**
  * @class Alloy.builtins.string
  * A collection of utilities for manipulating strings.
- * To use the string builtin library, 
+ * To use the string builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
  *		var string = require('alloy/string');
  *		var text = '     hola, mundo   ';
- *		Ti.API.info(string.ucfirst(string.trim(text))); // --> 'Hola, mundo'		
+ *		Ti.API.info(string.ucfirst(string.trim(text))); // --> 'Hola, mundo'
  */
 
 /**
@@ -26,14 +26,14 @@ exports.trim = function(line) {
  * @return {Number} Number without trailing zeroes.
  */
 exports.trimZeros = function (num) {
-    var str = new String(num || '0');
-    if (str.indexOf('.') == -1)
+    var str = (num || '0') + '';
+    if (str.indexOf('.') === -1)
         return str;
     return str.replace(/\.?0*$/, '');
 };
 
 /**
- * @method ucfirst 
+ * @method ucfirst
  * Capitalizes the first character in the string.
  * @param {String} text String to capitalize.
  * @return {String} String with first character capitalized.
@@ -57,12 +57,12 @@ exports.lcfirst = function (text) {
 };
 
 /**
- * @method formatCurrency  
- * Returns an amount formatted as a currency value. 
+ * @method formatCurrency
+ * Returns an amount formatted as a currency value.
  * Uses the device settings to determine the currency symbol.
  * On the Mobile Web platform, the currency symbol will always be dollars ('$').
  * @param {String} amount Amount to format.
- * @return {String} Amount formatted as a currency value. 
+ * @return {String} Amount formatted as a currency value.
  */
 exports.formatCurrency = !OS_MOBILEWEB ? String.formatCurrency : function (amount) {
     var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;
@@ -101,9 +101,9 @@ exports.urlToJson = function (url){
     var queryarr = arr[1].split('&');
     for (var n = 0; n < queryarr.length; ++n) {
         var item = queryarr[n];
-        if (item == "") { continue; }
+        if (item === "") { continue; }
         var e = item.indexOf('='),
-        	name,
+            name,
 			value;
         if (e < 0) {
             name = item;
@@ -113,8 +113,8 @@ exports.urlToJson = function (url){
             value = item.substring(e + 1);
         }
         list[name] = value;
-    }			
+    }
 	ret.url = arr[0];
 	ret.query = list;
-	return ret;		
+	return ret;
 };

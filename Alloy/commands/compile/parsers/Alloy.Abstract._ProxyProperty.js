@@ -4,9 +4,11 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CONST = require('../../../common/constants');
 
 function fixDefinition(def) {
-	def || (def = {});
-	def.parents || (def.parents = []);
-	def.children || (def.children = []);
+	def = def || {};
+	def = _.defaults(def, {
+		parents: [],
+		children: []
+	});
 	return def;
 }
 
@@ -47,11 +49,11 @@ function parse(node, state, args) {
 	});
 
 	// assign proxy property to parent
-	code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) + 
+	code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) +
 		'.' + U.lcfirst(node.nodeName) + '=' + proxy + ';';
 
 	return {
 		parent: {},
 		code: code
-	}
+	};
 }

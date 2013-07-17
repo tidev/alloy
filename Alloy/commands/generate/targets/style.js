@@ -14,8 +14,8 @@ function generateStyles(targets) {
 		// generate style
 		var current = targets.pop();
 		xml2tss.updateFile(
-			current.view_path, 
-			current.style_path, 
+			current.view_path,
+			current.style_path,
 			function(err,ok) {
 				if (ok) {
 					logger.info('Style generated: ' + current.style);
@@ -47,10 +47,10 @@ module.exports = function(name, args, program) {
 				var fullDir = path.dirname(style_path);
 				if (!path.existsSync(fullDir)) {
 					wrench.mkdirSyncRecursive(fullDir);
-				} 
+				}
 				targets.push({
-					style:style, 
-					style_path: style_path, 
+					style:style,
+					style_path: style_path,
 					view_path:view_path
 				});
 			}

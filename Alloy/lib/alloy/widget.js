@@ -9,7 +9,7 @@ var widgets = {};
 function ucfirst(text) {
     if (!text) { return text; }
     return text[0].toUpperCase() + text.substr(1);
-};
+}
 
 module.exports = function(widgetId) {
 	var self = this;
@@ -37,12 +37,12 @@ module.exports = function(widgetId) {
 	};
 	this.createWidget = Alloy.createWidget; // just to be complete
 	this.Collections.instance = function(name) {
- 		return self.Collections[name] || (self.Collections[name] = self.createCollection(name));
- 	};
- 	this.Models.instance = function(name) {
- 		return self.Models[name] || (self.Models[name] = self.createModel(name));
- 	};
+		return self.Collections[name] || (self.Collections[name] = self.createCollection(name));
+	};
+	this.Models.instance = function(name) {
+		return self.Models[name] || (self.Models[name] = self.createModel(name));
+	};
 
-	// add to widget object instances 
+	// add to widget object instances
 	widgets[widgetId] = this;
-}
+};

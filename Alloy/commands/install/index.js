@@ -2,7 +2,7 @@ var path = require('path'),
 	logger = require('../../logger'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	alloyRoot = path.join(__dirname,'..','..','..'); 
+	alloyRoot = path.join(__dirname,'..','..','..');
 
 module.exports = function(args, program) {
 	var errMsg = 'Must be one of the following: [' + CONST.INSTALL_TYPES.join(',') + ']';
@@ -18,4 +18,4 @@ module.exports = function(args, program) {
 			U.die(['Invalid install type "' + type + '" for `alloy install`', errMsg]);
 			break;
 	}
-}
+};

@@ -1,14 +1,16 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
-	CONST = require('../../../common/constants'); 
+	CONST = require('../../../common/constants');
 
 function fixDefinition(def) {
-	def || (def = {});
-	def.parents || (def.parents = []);
-	def.children || (def.children = []);
-	def.translations || (def.translations = []);
-	def.property || (def.property = 'items');
+	def = def || {};
+	def = _.defaults(def, {
+		parents: [],
+		children: [],
+		translations: [],
+		property: 'items'
+	});
 	return def;
 }
 
@@ -19,10 +21,10 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var def = fixDefinition(state.itemArrayDefinition);
 
-	// Ensure that this _ItemArray has an appropriate parent 
+	// Ensure that this _ItemArray has an appropriate parent
 	if (!state.itemsArray) {
 		U.die([
-			'Invalid use of <' + node.nodeName + '> at line ' + node.lineNumber, 
+			'Invalid use of <' + node.nodeName + '> at line ' + node.lineNumber,
 			'Must be the child one of the following: [' + def.parents.join(',') + ']'
 		]);
 	}
@@ -35,16 +37,16 @@ function parse(node, state, args) {
 	_.each(children, function(child) {
 		var childArgs = CU.getParserArgs(child, state);
 		_.each(def.translations, function(t) {
-			if (childArgs.fullname === t.from) { 
+			if (childArgs.fullname === t.from) {
 				var match = t.to.match(/^(.+)\.(.+)$/);
 				child.nodeName = match[2];
-				child.setAttribute('ns', match[1]); 
+				child.setAttribute('ns', match[1]);
 				_.extend(childArgs, {
 					fullname: t.to,
 					name: match[2],
 					ns: match[1]
 				});
-			} 
+			}
 		});
 
 		// This ItemArray processes all types
@@ -61,7 +63,7 @@ function parse(node, state, args) {
 		// Make sure the children match the parent
 		} else if (!_.contains(def.children, childArgs.fullname)) {
 			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
-		} 
+		}
 	});
 
 	if (isCollectionBound) {
@@ -90,8 +92,8 @@ function parse(node, state, args) {
 		return {
 			parent: {},
 			code: code
-		}
-	} 
+		};
+	}
 
 	// return an empty state if we already processed
 	if (def.children[0] === 'ALL') {

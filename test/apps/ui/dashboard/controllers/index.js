@@ -5,19 +5,23 @@ function resetBadge(e) {
 }
 
 function toggleEditMode(e) {
-	isEditable ? $.dash.stopEditing() : $.dash.startEditing();
+	if (isEditable) {
+		$.dash.stopEditing();
+	} else {
+		$.dash.startEditing();
+	}
 }
 
 function handleEdit(e) {
 	$.editButton.title = 'Done';
-  	$.editButton.style = Ti.UI.iPhone.SystemButtonStyle.DONE;
-  	isEditable = true;
+	$.editButton.style = Ti.UI.iPhone.SystemButtonStyle.DONE;
+	isEditable = true;
 }
 
 function handleCommit(e) {
 	$.editButton.title = 'Edit';
-  	$.editButton.style = Ti.UI.iPhone.SystemButtonStyle.PLAIN;
-  	isEditable = false;
+	$.editButton.style = Ti.UI.iPhone.SystemButtonStyle.PLAIN;
+	isEditable = false;
 }
 
 $.index.open();

@@ -1,7 +1,7 @@
 Ti.include('/runtimeTester.js');
 
 module.exports = function($, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 	jasmine.currentEnv_ = null;
 
 	// all labels in this controller use the same generic style
@@ -10,18 +10,18 @@ module.exports = function($, opts) {
 			api: '',
 			style: {
 				width: Ti.UI.SIZE,
-		        height: Ti.UI.SIZE,
-		        color: "#000",
-		        left: 15,
-		        top: 10,
-		        font: {
-		            fontSize: "18dp",
-		            fontWeight: "normal"
-		        },
-		        textAlign: "left",
-		        id: id
-		    }
-		}
+				height: Ti.UI.SIZE,
+				color: "#000",
+				left: 15,
+				top: 10,
+				font: {
+					fontSize: "18dp",
+					fontWeight: "normal"
+				},
+				textAlign: "left",
+				id: id
+			}
+		};
 	};
 
 	addMatchers();
@@ -31,12 +31,12 @@ module.exports = function($, opts) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: "#fff",
-		        layout: "vertical",
-		        id: "detail"
+				layout: "vertical",
+				id: "detail"
 			}
 		});
 
-		OS_ANDROID && validateUiComponent($, 'name', labelValidator('name'));
+		if (OS_ANDROID) { validateUiComponent($, 'name', labelValidator('name')); }
 		validateUiComponent($, 'height', labelValidator('height'));
 		validateUiComponent($, 'weight', labelValidator('weight'));
 		validateUiComponent($, 'age', labelValidator('age'));
