@@ -64,7 +64,7 @@ function parse(node, state, args) {
 			});
 		// generate code for template row for model-view binding
 		} else if (isDataBound) {
-			localModel || (localModel = CU.generateUniqueId());
+			localModel = localModel || CU.generateUniqueId();
 			itemCode += CU.generateNodeExtended(child, state, {
 				parent: {},
 				local: true,
@@ -93,7 +93,7 @@ function parse(node, state, args) {
 	// Create the initial TableView code
 	var extras = [];
 	if (arrayName) { extras.push(['data', arrayName]); }
-	if (searchBarName) { extras.push(['search', searchBarName]) }
+	if (searchBarName) { extras.push(['search', searchBarName]); }
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// generate the code for the table itself
@@ -113,7 +113,7 @@ function parse(node, state, args) {
 
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
-		localModel || (localModel = CU.generateUniqueId());
+		localModel = localModel || CU.generateUniqueId();
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
 			pre: "var rows=[];",
@@ -127,5 +127,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
+	};
 }

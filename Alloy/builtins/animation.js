@@ -1,9 +1,9 @@
-/** 
+/**
  * @class Alloy.builtins.animation
  * A collection of useful animation utilities. To use the animation builtin library,
  * all you need to do is require it with the `alloy` root directory in your
  * `require` call. For example:
- * 
+ *
  *     var animation = require('alloy/animation');
  *     animation.crossFade(view1, view2, 500, finishCallback);
  */
@@ -15,7 +15,7 @@
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {Number} duration Fade duration in milliseconds.
- * @param {function()} [finishCallback] Callback function, invoked after the fade completes. 
+ * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
  */
 exports.crossFade = function (from, to, duration, finishCallback) {
     if (from)
@@ -63,15 +63,19 @@ exports.fadeAndRemove = function (from, duration, container, finishCallback) {
  */
 exports.fadeIn = function(to, duration, finishCallback) {
 	if (finishCallback){
-	    to && to.animate({
-	        opacity: 1,
-	        duration: duration
-	    }, finishCallback);
-	}else{
-		to && to.animate({
-	        opacity: 1,
-	        duration: duration
-	    });
+        if (to) {
+            to.animate({
+                opacity: 1,
+                duration: duration
+            }, finishCallback);
+        }
+	} else {
+		if (to) {
+            to.animate({
+                opacity: 1,
+                duration: duration
+            });
+        }
 	}
 };
 
@@ -85,15 +89,19 @@ exports.fadeIn = function(to, duration, finishCallback) {
  */
 exports.fadeOut = function (to, duration, finishCallback) {
 	if (finishCallback){
-		to && to.animate({
-	        opacity: 0,
-	        duration: duration
-	    }, finishCallback);
-	}else{
-		to && to.animate({
-	        opacity: 0,
-	        duration: duration
-	    });
+		if (to) {
+            to.animate({
+                opacity: 0,
+                duration: duration
+            }, finishCallback);
+        }
+	} else {
+		if (to) {
+            to.animate({
+                opacity: 0,
+                duration: duration
+            });
+        }
 	}
 };
 
@@ -105,7 +113,7 @@ exports.fadeOut = function (to, duration, finishCallback) {
  * @param {function()} [finishCallback] Callback function, invoked after the popIn completes.
  */
 exports.popIn = function (view, finishCallback) {
-	if (!OS_IOS) 
+	if (!OS_IOS)
 	{
         view.transform = Ti.UI.create2DMatrix();
         view.opacity = 1;
@@ -213,7 +221,7 @@ exports.flash = function (view, delay, finishCallback) {
  */
 exports.chainAnimate = function (view, animations, finishCallback) {
     function step() {
-        if (animations.length == 0) {
+        if (animations.length === 0) {
             view = animations = null;
             if (finishCallback)
                 finishCallback();

@@ -50,6 +50,6 @@ function changeImage(e) {
 	$.resetClass($.theImage, theClass);
 
 	// reset imageIndex if necessary
-	imageIndex >= classes.length && (imageIndex = 0);
+	if (imageIndex >= classes.length) { imageIndex = 0; }
 }
 changeImage();

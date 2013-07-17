@@ -1,4 +1,4 @@
-/** 
+/**
  * Code in this file will attempt to optimize generated code so it's more compact
  * and executes faster, better, etc.
  */
@@ -40,7 +40,7 @@ exports.optimize = function(ast, defines, fn) {
 	// create, transform, and validate the platform object
 	var platform = require(platformPath);
 	if (!_.isString(platform.name)) { platform.name = undefined; }
-	if (!_.isString(platform.osname)) { platform.osname = undefined; } 
+	if (!_.isString(platform.osname)) { platform.osname = undefined; }
 	if (!platform.osname && !platform.name) { return ast; }
 
 	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
@@ -52,13 +52,13 @@ exports.optimize = function(ast, defines, fn) {
 			descend(node, new uglifyjs.TreeTransformer(function(node, descend) {
 				if (dotSubCheck(node, 'Platform')) {
 					descend(node, new uglifyjs.TreeTransformer(function(node) {
-						if (node instanceof uglifyjs.AST_SymbolRef && 
+						if (node instanceof uglifyjs.AST_SymbolRef &&
 							(node.name === 'Titanium' || node.name === 'Ti')) {
 							convert = true;
-						} 
+						}
 						return node;
 					}));
-				} 
+				}
 				return node;
 			}));
 			if (convert) {
@@ -77,7 +77,7 @@ exports.optimize = function(ast, defines, fn) {
 		}
 	});
 	return ast.transform(transformer);
-}
+};
 
 // strips null and undefined values out of Alloy styles
 exports.optimizeStyle = function(styleList) {
@@ -86,7 +86,7 @@ exports.optimizeStyle = function(styleList) {
 			var v = styleList[style][key];
 			if (v == JSON_NULL || typeof(v) === 'undefined' || typeof(v) === 'null') {
 				delete styleList[style][key];
-			} 
+			}
 		}
 	}
-}
+};

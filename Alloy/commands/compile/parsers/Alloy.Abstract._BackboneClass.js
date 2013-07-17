@@ -24,7 +24,7 @@ function parse(node, state, args) {
 	if (!node.parentNode || node.parentNode.nodeName !== 'Alloy') {
 		U.dieWithNode(node, 'All <' + nodeName + '> elements must be a direct child of <Alloy>');
 	}
-	
+
 	// only perform compile time checks on nodes in non-widget markup
 	if (!manifest) {
 		// Make sure there's models to be used as the "src" of the Backbone class
@@ -42,12 +42,12 @@ function parse(node, state, args) {
 
 		// Make sure we have a valid model src
 		var validModelsPrint = '[' + _.map(validModels, function(s) { return s.replace(/\.js$/,''); }).join(',') + ']';
-		if (!src) { 
+		if (!src) {
 			U.dieWithNode(node, [
 				'All ' + U.lcfirst(nodeName) + 's must have a "src" attribute which identifies its base model',
 				'"src" should be the name of a model in your app/' + CONST.DIR.MODEL + ' folder',
 				'Valid models: ' + validModelsPrint
-			]); 
+			]);
 		} else {
 			var modelPath = path.join(modelsPath,src + '.' + CONST.FILE_EXT.MODEL);
 			if (!path.existsSync(modelPath)) {
@@ -71,18 +71,18 @@ function parse(node, state, args) {
 				'Example: ',
 				'  <' + nodeName + ' src="' + src + '" id="' + id + '" instance="true"/>'
 			]);
-		} 
+		}
 
 		code += root + '.' + nodeName + 's.instance(\'' + src + '\');';
 
 		// backboneVar = 'Alloy.' + nodeName + 's[\'' + src + '\']';
 		// code += backboneVar + ' || (' + backboneVar + ' = ' + createCall + ');';
 	} else {
-		id || (id = args.id);
+		id = id || args.id;
 		backboneVar = '$.' + id;
 		code += backboneVar + ' = ' + createCall + ';';
 	}
-	
+
 	return {
 		code: '',
 		modelCode: code, // modelCode will add this before the UI code
@@ -90,4 +90,4 @@ function parse(node, state, args) {
 			symbol: backboneVar
 		}
 	};
-};
+}

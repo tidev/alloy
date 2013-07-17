@@ -58,12 +58,12 @@ exports.init = function (logger, config, cli, appc) {
 				require(compilerCommand)({}, {
 					config: config,
 					outputPath: cli.argv['project-dir'],
-					_version: pkginfo.version,
+					_version: pkginfo.version
 				});
 			} catch (e) {
 				logger.error(__('Alloy compiler failed'));
 				e.toString().split('\n').forEach(function (line) {
-					line && logger.error(line);
+					if (line) { logger.error(line); }
 				});
 				process.exit(1);
 			}
@@ -76,7 +76,9 @@ exports.init = function (logger, config, cli, appc) {
 			parallel(this, ['alloy', 'node'].map(function (bin) {
 				return function (done) {
 					var envName = 'ALLOY_' + (bin == 'node' ? 'NODE_' : '') + 'PATH';
-					if (paths[bin] = process.env[envName]) {
+
+					paths[bin] = process.env[envName];
+					if (paths[bin]) {
 						done();
 					} else if (process.platform == 'win32') {
 						paths['alloy'] = 'alloy.cmd';
@@ -95,7 +97,7 @@ exports.init = function (logger, config, cli, appc) {
 									'/usr/bin/' + bin
 								].map(function (p) {
 									return function (cb) {
-										afs.exists(p) && (paths[bin] = p);
+										if (afs.exists(p)) { paths[bin] = p; }
 										cb();
 									};
 								}), done);
@@ -105,14 +107,18 @@ exports.init = function (logger, config, cli, appc) {
 				};
 			}), function () {
 				var cmd = [paths.node, paths.alloy, 'compile', appDir, '--config', config];
-				cli.argv['no-colors'] && cmd.push('--no-colors');
-				process.platform == 'win32' && cmd.shift();
+				if (cli.argv['no-colors']) { cmd.push('--no-colors'); }
+				if (process.platform === 'win32') { cmd.shift(); }
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
 				var child = spawn(cmd.shift(), cmd);
 
 				function checkLine(line) {
-					var re = new RegExp('(?:\u001b\\[\\d+m)?\\[?(' + logger.getLevels().join('|') + ')\\]?\s*(?:\u001b\\[\\d+m)?(.*)', 'i');
+					var re = new RegExp(
+						'(?:\u001b\\[\\d+m)?\\[?(' +
+						logger.getLevels().join('|') +
+						')\\]?\s*(?:\u001b\\[\\d+m)?(.*)', 'i'
+					);
 					if (line) {
 						var m = line.match(re);
 						if (m) {

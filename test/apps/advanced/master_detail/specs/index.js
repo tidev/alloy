@@ -13,14 +13,14 @@ module.exports = function($) {
 				api: 'Ti.UI.Window',
 				style: {
 					backgroundColor: '#fff',
-	        		id: "index"
+					id: "index"
 				}
 			});
 
 			validateUiComponent($, 'navgroup', {
 				api: 'Ti.UI.iPhone.NavigationGroup',
 				style: {
-	        		id: "navgroup"
+					id: "navgroup"
 				}
 			});
 		}
@@ -29,7 +29,7 @@ module.exports = function($) {
 			validateUiComponent($, 'index', {
 				api: 'Ti.UI.iPad.createSplitWindow',
 				style: {
-	        		id: "index"
+					id: "index"
 				}
 			});
 

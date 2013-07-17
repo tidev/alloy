@@ -8,7 +8,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		errBase = 'All <PickerColumn> children must be rows. '
+		errBase = 'All <PickerColumn> children must be rows. ',
 		code = '';
 
 	// Create the initial PickerColumn code
@@ -44,4 +44,4 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
-};
+}

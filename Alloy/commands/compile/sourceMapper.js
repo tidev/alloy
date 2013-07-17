@@ -12,11 +12,11 @@ var lineSplitter = /(?:\r\n|\r|\n)/,
 	mods = [
 		'builtins',
 		'optimizer',
-		'compress'			
+		'compress'
 	],
 	modLocation = './ast/';
 
-exports.OPTIONS_OUTPUT = { 
+exports.OPTIONS_OUTPUT = {
 	indent_start  : 0,     // start indentation on every line (only when `beautify`)
 	indent_level  : 4,     // indentation level (only when `beautify`)
 	quote_keys    : false, // quote all keys in object literals?
@@ -29,7 +29,7 @@ exports.OPTIONS_OUTPUT = {
 	beautify      : true, // beautify output?
 	bracketize    : false, // use brackets every time?
 	comments      : false, // output comments?
-	semicolons    : true  // use semicolons to separate statements? 
+	semicolons    : true  // use semicolons to separate statements?
 };
 
 function mapLine(mapper, theMap, genMap, line) {
@@ -62,13 +62,13 @@ function getTextFromGenerator(content, template) {
 exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var target = generator.target;
 	var data = generator.data;
-	var markers = _.map(data, function(v,k) { return k }); 
+	var markers = _.map(data, function(v,k) { return k; });
 	var mapper = new SM.SourceMapGenerator({ file: target.filename });
 	var genMap = {
 		file: target.filename,
 		count: 1,
 		code: ''
-	}
+	};
 
 	// initialize the rest of the generator properties
 	target.count = 1;
@@ -92,8 +92,9 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 
 	// parse composite code into an AST
+	var ast;
 	try {
-		var ast = uglifyjs.parse(genMap.code, { filename: genMap.file });
+		ast = uglifyjs.parse(genMap.code, { filename: genMap.file });
 	} catch (e) {
 		logger.trace(genMap.code);
 		throw e;
@@ -107,16 +108,17 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 
 	// create uglify-js source map and stream it out
+	var stream, sourceMap;
 	if (compileConfig.sourcemap !== false) {
-		var sourceMap = uglifyjs.SourceMap({
+		sourceMap = uglifyjs.SourceMap({
 			file: target.filename,
 			orig: mapper.toString()
 		});
-		var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), { 
+		stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), {
 			source_map: sourceMap
 		}));
 	} else {
-		var stream = uglifyjs.OutputStream(exports.OPTIONS_OUTPUT);
+		stream = uglifyjs.OutputStream(exports.OPTIONS_OUTPUT);
 	}
 	ast.print(stream);
 

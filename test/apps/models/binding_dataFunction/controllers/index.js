@@ -17,14 +17,14 @@ function doChanges(e) {
 		// just add a + to the end of the model's name
 		{ name: model.get('name') + '+' },
 
-		// set silent to true to prevent data binding 
+		// set silent to true to prevent data binding
 		// from firing automatically. Silent changes will
 		// not trigger data binding to update.
-		{ silent: true } 
+		{ silent: true }
 	);
 }
 
-// call the binding function name we defined in the 
+// call the binding function name we defined in the
 // dataFunction attribute
 updateUi();
 

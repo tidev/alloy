@@ -14,15 +14,15 @@ if (!fs.existsSync(TESTING_FOLDER)) {
 
 // get the name of the test app to be created
 var args = process.argv.slice(2);
-var name = args[0];
-if (!name) {
+var appName = args[0];
+if (!appName) {
 	die('You must specify a name for the test app you want to create');
 }
 
 // make sure this doesn't already exist, then create it
-var pathToTest = path.join(TESTING_FOLDER,name);
+var pathToTest = path.join(TESTING_FOLDER,appName);
 if (fs.existsSync(pathToTest)) {
-	die('Test app "' + name + '" already exists at "' + rel(pathToTest) + '"');
+	die('Test app "' + appName + '" already exists at "' + rel(pathToTest) + '"');
 }
 fs.mkdirSync(pathToTest, 0755);
 console.log('* Created folder ' + YELLOW(rel(pathToTest)));
@@ -31,7 +31,7 @@ var files = [
 	{
 		folder: path.join(pathToTest,'views'),
 		file: 'index.xml',
-		data: 
+		data:
 		'<Alloy>' + EOL +
 		'\t<Window>' + EOL +
 		'\t</Window>' + EOL +
@@ -45,7 +45,7 @@ var files = [
 	{
 		folder: path.join(pathToTest,'styles'),
 		file: 'index.tss',
-		data: 
+		data:
 		"'#index': {" + EOL +
 		"\tbackgroundColor: '#fff'," + EOL +
 		"\tfullscreen: false," + EOL +
@@ -61,7 +61,7 @@ for (var i = 0; i < files.length; i++) {
 	fs.writeFileSync(fullpath, o.data);
 	console.log('* Created file ' + YELLOW(rel(fullpath)));
 }
-console.log(GREEN('test app ' + name + ' successfully created.'));
+console.log(GREEN('test app ' + appName + ' successfully created.'));
 
 // helper functions
 function rel(p) {

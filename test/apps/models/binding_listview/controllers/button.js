@@ -27,4 +27,4 @@ function doTouchend(e) {
 	e.source.backgroundColor = '#a00';
 }
 
-args.label && ($.label.text = args.label);
+if (args.label) { $.label.text = args.label; }

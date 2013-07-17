@@ -15,4 +15,4 @@ function parse(node, state, args) {
 
 	// Generate runtime code using default
 	return require('./default').parse(node, state);
-};
+}

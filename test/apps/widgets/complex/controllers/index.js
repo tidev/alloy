@@ -13,7 +13,7 @@ $.sfb.setHandlers({
 	}
 	// You can override error handling with the 'error' property
 	// error: function(e) {
-	// 	alert('ERROR: ' + e.error);
+	//     alert('ERROR: ' + e.error);
 	// }
 });
 $.win.open();

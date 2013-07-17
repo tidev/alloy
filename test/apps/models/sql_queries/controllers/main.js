@@ -18,7 +18,11 @@ function showColorInfo(e) {
 	// open the color info window
 	if (colorModel) {
 		var win = Alloy.createController('color', colorModel).getView();
-		OS_IOS ? Alloy.Globals.navgroup.open(win) : win.open();
+		if (OS_IOS) {
+			Alloy.Globals.navgroup.open(win);
+		} else {
+			win.open();
+		}
 	} else {
 		alert('No color info found!');
 	}

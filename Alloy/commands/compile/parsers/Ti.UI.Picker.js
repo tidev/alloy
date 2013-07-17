@@ -9,7 +9,7 @@ exports.parse = function(node, state) {
 // TODO: Improve effeciency https://jira.appcelerator.org/browse/ALOY-265
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		errBase = 'All <Picker> children must be either columns or rows. '
+		errBase = 'All <Picker> children must be either columns or rows. ',
 		arrayName = CU.generateUniqueId(),
 		code = '';
 
@@ -67,7 +67,7 @@ function parse(node, state, args) {
 	if (foundRow) {
 		code = 'var ' + arrayName + ' = [];\n' + code;
 		code += args.symbol + '.add(' + arrayName + ');\n';
-	}	
+	}
 
 	// Update the parsing state
 	return {
@@ -75,4 +75,4 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
-};
+}

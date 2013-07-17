@@ -1,5 +1,5 @@
 var ID = 'instance';
-var app = Alloy.createModel('modelTab'); 
+var app = Alloy.createModel('modelTab');
 
 // Change label when 'count' changes on model
 app.on('fetch change:count', function(model) {
@@ -13,18 +13,18 @@ app.fetch();
 ////////////////////////////////////
 ////////// event handlers //////////
 ////////////////////////////////////
-function create(e) { 
-	app.save(app.defaults); 
+function create(e) {
+	app.save(app.defaults);
 }
 
-function destroy(e) { 
-	app.destroy(); 
+function destroy(e) {
+	app.destroy();
 }
 
-function increment(e) { 
+function increment(e) {
 	app.set({
 		count: app.get('count')+1,
 		id: ID
-	}); 
+	});
 	app.save();
 }

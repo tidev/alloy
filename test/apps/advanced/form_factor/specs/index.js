@@ -8,7 +8,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: '#fff',
-        		id: "index"
+				id: "index"
 			}
 		});
 
@@ -16,7 +16,7 @@ module.exports = function($) {
 			api: 'Ti.UI.View',
 			style: {
 				backgroundColor: Alloy.isTablet ? 'red' : 'blue',
-        		id: "main"
+				id: "main"
 			}
 		});
 
@@ -24,10 +24,10 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				width: Ti.UI.SIZE,
-	            height: Ti.UI.SIZE,
-	            color: "#fff",
-	            text: Alloy.isTablet ? "I'm a tablet!" : "I'm a handheld!",
-	            id: "label"
+				height: Ti.UI.SIZE,
+				color: "#fff",
+				text: Alloy.isTablet ? "I'm a tablet!" : "I'm a handheld!",
+				id: "label"
 			}
 		});
 
@@ -35,10 +35,10 @@ module.exports = function($) {
 			api: 'Ti.UI.View',
 			style: {
 				id: "container",
-	            height: "50",
-	            width: "200",
-	            bottom: "10",
-	            backgroundColor: "#cdcdcd"
+				height: "50",
+				width: "200",
+				bottom: "10",
+				backgroundColor: "#cdcdcd"
 			}
 		});
 
@@ -46,10 +46,10 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				width: Ti.UI.SIZE,
-	            height: Ti.UI.SIZE,
-	            color: "#fff",
-	            text: Ti.Platform.osname + (OS_IOS ? '' : ' ' + (Alloy.isTablet ? 'tablet' : 'handheld')),
-	            id: "platformLabel"
+				height: Ti.UI.SIZE,
+				color: "#fff",
+				text: Ti.Platform.osname + (OS_IOS ? '' : ' ' + (Alloy.isTablet ? 'tablet' : 'handheld')),
+				id: "platformLabel"
 			}
 		});
 	});

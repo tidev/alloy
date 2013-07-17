@@ -1,3 +1,3 @@
 function showAlert(e) {
-	alert(e.source.title);	
+	alert(e.source.title);
 }
