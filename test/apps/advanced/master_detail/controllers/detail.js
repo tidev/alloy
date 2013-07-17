@@ -8,7 +8,7 @@ exports.setBoxerStats = function(name) {
 	$.age.text = 'Age: ' + stats.age;
 	$.height.text = 'Height: ' + stats.height;
 	$.weight.text = 'Weight: ' + stats.weight;
-	$.record.text = 'Record: ' + stats.record;	
+	$.record.text = 'Record: ' + stats.record;
 
 
 	// runtime unit tests
@@ -18,4 +18,4 @@ exports.setBoxerStats = function(name) {
 			stats: stats
 		});
 	}
-}
+};

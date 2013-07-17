@@ -1,6 +1,4 @@
-
 <%= modelJs %>
-
 
 var Alloy = require('alloy'),
     _ = require("alloy/underscore")._,
@@ -12,7 +10,7 @@ model = Alloy.M('<%= basename %>',
 );
 
 collection = Alloy.C('<%= basename %>',
-	 exports.definition, 
+	 exports.definition,
 	 model
 );
 

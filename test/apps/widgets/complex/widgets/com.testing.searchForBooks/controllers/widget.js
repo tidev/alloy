@@ -3,7 +3,7 @@ var HANDLERS = ['success','error'];
 var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
 
 var AppModel = require('alloy/backbone').Model.extend({ loading: false });
-var model = new AppModel;
+var model = new AppModel();
 var handlers = {};
 
 // react to changes in the model state
@@ -11,7 +11,7 @@ model.on('change:loading', function(m) {
 	if (m.get('loading')) {
 		$.searchView.touchEnabled = false;
 		$.search.opacity = 0;
-		$.loading.setOpacity(1.0);	
+		$.loading.setOpacity(1.0);
 	} else {
 		$.loading.setOpacity(0);
 		$.search.opacity = 1;
@@ -28,7 +28,7 @@ exports.setHandlers = function(args) {
 			handlers[h] = args[h];
 		}
 	});
-}	
+};
 
 ///////////////////////////////////////
 ////////// private functions //////////
@@ -37,8 +37,9 @@ function processBookData(data) {
 	var books = [];
 
 	// make sure the returned data is valid
+	var items;
 	try {
-		var items = JSON.parse(data).items;
+		items = JSON.parse(data).items;
 	} catch (e) {
 		alert('Invalid response from server. Try again.');
 		return;
@@ -56,7 +57,7 @@ function processBookData(data) {
 			image: links.smallThumbnail || links.thumbnail || 'none'
 		});
 	}
-	
+
 	// fire success handler with list of books
 	handlers.success(books);
 }
@@ -73,17 +74,17 @@ function searchForBooks(e) {
 		alert('You need to enter search text');
 		return;
 	}
-	
+
 	// search Google Book API
 	model.set('loading', true);
 	var xhr = Ti.Network.createHTTPClient({
 		onload: function(e) {
 			if (handlers.success) {
-				processBookData(this.responseText);	
+				processBookData(this.responseText);
 			}
 			model.set('loading', false);
 		},
-		onerror: function(e) {	
+		onerror: function(e) {
 			if (handlers.error) {
 				handlers.error(e);
 			} else {

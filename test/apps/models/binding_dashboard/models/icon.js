@@ -11,4 +11,4 @@ exports.definition = {
 			collection_name: 'icons'
 		}
 	}
-}
+};

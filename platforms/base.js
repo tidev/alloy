@@ -2,11 +2,11 @@ var _ = require('../Alloy/lib/alloy/underscore')._,
 	U = require('../Alloy/utils');
 
 module.exports = function(def) {
-	if (!def.platform) { 
+	if (!def.platform) {
 		U.die([
 			'platform undefined',
 			new Error().stack
-		]); 
+		]);
 	}
 
 	_.extend(this, _.defaults(def, {
@@ -25,8 +25,8 @@ module.exports = function(def) {
 
 function runtimeCondition(osname, name) {
 	var output, map;
-	osname || (osname = []);
-	name || (name = []);
+	osname = osname || [];
+	name = name || [];
 
 	if (!osname && !name) {
 		return 'true';
@@ -36,13 +36,13 @@ function runtimeCondition(osname, name) {
 		return "Ti.Platform.osname === '" + osname + "'";
 	} else {
 		if (_.isArray(name)) {
-			map = _.map(name, function(n) { return "Ti.Platform.name === '" + n + "'" });
+			map = _.map(name, function(n) { return "Ti.Platform.name === '" + n + "'"; });
 		}
 		if (_.isArray(osname) && (!map || osname.length < name.length)) {
-			map = _.map(osname, function(n) { return "Ti.Platform.osname === '" + n + "'" });
+			map = _.map(osname, function(n) { return "Ti.Platform.osname === '" + n + "'"; });
 		}
 		if (!map) { return 'true'; }
-	} 
+	}
 
 	return map.join('||');
 }

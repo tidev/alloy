@@ -5,7 +5,7 @@ var fs = require('fs'),
 	CONST = require('../Alloy/common/constants'),
 	logger = require('../Alloy/logger');
 
-// Fix node warning 
+// Fix node warning
 path.existsSync = fs.existsSync || path.existsSync;
 
 var	wrench = require('wrench'),
@@ -72,8 +72,8 @@ function runApp() {
 		'--project-dir', harnessAppPath,
 		'--platform', e.platform || 'ios'
 	];
-	e.tiversion && (newArgs = newArgs.concat(['--sdk',e.tiversion]));
-	e.simtype && (newArgs = newArgs.concat(['--sim-type',e.simtype]));
+	if (e.tiversion) { newArgs = newArgs.concat(['--sdk',e.tiversion]); }
+	if (e.simtype) { newArgs = newArgs.concat(['--sim-type',e.simtype]); }
 
 	//run stdout/stderr back through console.log
 	var runcmd = spawn('titanium', newArgs);
@@ -94,7 +94,7 @@ namespace('app', function() {
 		wrench.mkdirSyncRecursive(harnessAppPath, 0777);
 		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
 	});
-	
+
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
 		log('Initializing Alloy project...');
@@ -119,9 +119,9 @@ namespace('app', function() {
 			}
 		});
 	});
-	
+
 	desc('run an example, all but dir are optional: e.g. "jake app:run dir=masterdetail platform=android tiversion=2.0.2.GA tisdk=<path to sdk>"');
-	task('run', ['app:setup'], function() {		
+	task('run', ['app:setup'], function() {
 		runApp();
 	});
 

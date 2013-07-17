@@ -89,8 +89,8 @@ var tests = [
 	["if ('<%= name %>' === Ti.Platform.name) var a = 1; else var a = 2;","var a,a=1"],
 	["if ('<%= name %>' !== Ti.Platform.name) var a = 1; else var a = 2;","var a,a=2"],
 
-	// works if Ti.Platform.* is on the left or right hand side 
-	["if ('<%= name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }","var a=1"],
+	// works if Ti.Platform.* is on the left or right hand side
+	["if ('<%= name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }","var a=1"]
 ];
 
 // Prepare each platform with values we can swap out at compile time.
@@ -107,7 +107,7 @@ describe('optimizer.js', function() {
 		describe('test #' + (index+1), function() {
 			_.each(platforms, function(platformObj, platform) {
 				describe('[' + platform + ']', function() {
-					var ast, code, 
+					var ast, code,
 						testContent = _.template(test[0], platforms[platform]),
 						prefix = pad(platform),
 						defines = {};
@@ -126,7 +126,7 @@ describe('optimizer.js', function() {
 						};
 						expect(parseFunction).not.toThrow();
 					});
-					
+
 					it(prefix + 'optimizes AST via optimizer.js', function() {
 						var optimizeFunction = function() {
 							ast.figure_out_scope();

@@ -66,7 +66,7 @@ function parse(node, state, args) {
 
 	var extras = [];
 	if (sectionArray) { extras.push(['sections', sectionArray]); }
-	if (templateObject) { extras.push(['templates', templateObject]) }
+	if (templateObject) { extras.push(['templates', templateObject]); }
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself
@@ -77,5 +77,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
+	};
 }

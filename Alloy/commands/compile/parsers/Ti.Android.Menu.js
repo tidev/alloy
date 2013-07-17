@@ -46,7 +46,7 @@ function parse(node, state, args) {
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var childArgs = CU.getParserArgs(child, state);
 		var theNode = CU.validateNodeName(child, 'Ti.Android.MenuItem');
-		
+
 		// Make sure we are dealing with MenuItems
 		if (!theNode) {
 			U.die([
@@ -57,7 +57,7 @@ function parse(node, state, args) {
 
 		// generate code for the MenuItem
 		code += CU.generateNodeExtended(child, state, {
-			parent: { 
+			parent: {
 				node: node,
 				symbol: eventObject + '.menu'
 			}
@@ -72,5 +72,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

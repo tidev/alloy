@@ -61,7 +61,7 @@ module.exports = function(args, program) {
 
 	// copy Resources platform-specific directories to assets
 	U.copyFileSync(
-		path.join(paths.template,'gitignore.txt'), 
+		path.join(paths.template,'gitignore.txt'),
 		path.join(paths.project,'.gitignore')
 	);
 	_.each(CONST.PLATFORM_FOLDERS, function(dir) {
@@ -77,9 +77,9 @@ module.exports = function(args, program) {
 
 	// delete the build folder to give us a fresh run
 	wrench.rmdirSyncRecursive(paths.build, true);
-	
+
 	logger.info('Generated new project at: ' + paths.app);
-}
+};
 
 function getPaths(project, templateName) {
 	var alloy = path.join(__dirname,'..', '..');
@@ -97,7 +97,7 @@ function getPaths(project, templateName) {
 		project: project,
 		resources: path.join(project,'Resources'),
 		build: path.join(project,'build')
-	}
+	};
 
 	// validate the existence of the paths
 	_.each(paths, function(v,k) {

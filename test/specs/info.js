@@ -42,7 +42,7 @@ describe('alloy info', function() {
 		_.each(['sql','properties','localStorage'], function(adapter) {
 			it('JSON contains "' + adapter + '" adapter', function() {
 				expect(json[adapter]).toBeTruthy();
-			}); 
+			});
 
 			it('"' + adapter + '" adapter has description', function() {
 				expect(json[adapter].description).toBeTruthy();

@@ -5,33 +5,33 @@ var getRssText = function(item, key) {
 	return OS_MOBILEWEB ?
 			item.getElementsByTagName(key).item(0).textContent : //childNodes[0].nodeValue :
 			item.getElementsByTagName(key).item(0).text;
-}
+};
 
 var parseDate = function(dateString) {
 	var dateParts = dateString.split(' ');
 	var timeParts = dateParts[4].split(':');
 	return MONTH_MAP[dateParts[2].toUpperCase()] + '/' + dateParts[1] + ' ' + timeParts[0] + ':' + timeParts[1];
-}
+};
 
 exports.loadRssFeed = function(o, tries) {
-	var xhr = Titanium.Network.createHTTPClient();	
+	var xhr = Titanium.Network.createHTTPClient();
 	tries = tries || 0;
 	xhr.open('GET', RSS_URL);
 	xhr.onload = function(e) {
 		var xml = this.responseXML;
-		
-		if (xml === null || xml.documentElement === null) { 
+
+		if (xml === null || xml.documentElement === null) {
 			if (tries < 3) {
-				tries++
+				tries++;
 				exports.loadRssFeed(o, tries);
 				return;
 			} else {
 				alert('Error reading RSS feed. Make sure you have a network connection and try refreshing.');
 				if (o.error) { o.error(); }
-				return;	
-			}	
+				return;
+			}
 		}
-		
+
 		var items = xml.documentElement.getElementsByTagName("item");
 		var data = [];
 
@@ -39,11 +39,12 @@ exports.loadRssFeed = function(o, tries) {
 			var item = items.item(i);
 			var image;
 			try {
-				image = item.getElementsByTagNameNS('http://mashable.com/', 'thumbnail').item(0).getElementsByTagName('img').item(0).getAttribute('src');
-			} catch (e) {
+				var elems = item.getElementsByTagNameNS('http://mashable.com/', 'thumbnail');
+				image = elems.item(0).getElementsByTagName('img').item(0).getAttribute('src');
+			} catch (ex) {
 				image = '';
 			}
-			
+
 			data.push({
 				title: getRssText(item, 'title'),
 				link: getRssText(item, 'link'),
@@ -58,5 +59,5 @@ exports.loadRssFeed = function(o, tries) {
 	};
 
 	if (o.start) { o.start(); }
-	xhr.send();	
+	xhr.send();
 };

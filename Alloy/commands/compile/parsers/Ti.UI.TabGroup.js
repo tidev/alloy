@@ -35,5 +35,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

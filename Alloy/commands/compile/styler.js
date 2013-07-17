@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	_ = require('../../lib/alloy/underscore')._
+	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
 	optimizer = require('./optimizer'),
@@ -35,7 +35,7 @@ exports.setPlatform = function(p) {
 
 /*
  * @property {Array} globalStyle
- * The global style array, which contains an merged, ordered list of all 
+ * The global style array, which contains an merged, ordered list of all
  * applicable global styles. This will serve as the base for all controller-
  * specific styles.
  *
@@ -44,9 +44,9 @@ exports.globalStyle = [];
 
 /*
  * @property {Object} bindingsMap
- * Holds the collection of models/collections data-bound to UI component 
+ * Holds the collection of models/collections data-bound to UI component
  * properties in the Alloy app. This map is used to create the most effecient
- * set of event listeners possible for dynamically updating the UI based on 
+ * set of event listeners possible for dynamically updating the UI based on
  * changes to the data model/collections.
  *
  */
@@ -54,16 +54,16 @@ exports.bindingsMap = {};
 
 /*
  * @method loadGlobalStyles
- * Loads all global styles (app.tss) in a project and sorts them appropriately. 
+ * Loads all global styles (app.tss) in a project and sorts them appropriately.
  * The order of sorting is as follows:
  *
  * 1. global
  * 2. global theme
  * 3. global platform-specific
  * 4. global theme platform-specific
- * 
+ *
  * This function does not return a result, but instead updates the global style
- * array that will be used as a base for all controller styling. This is 
+ * array that will be used as a base for all controller styling. This is
  * executed before any other styling is performed during the compile phase.
  *
  * @param {String} Full path to the "app" folder of the target project
@@ -75,54 +75,59 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	exports.globalStyle = [];
 
 	// validate/set arguments
-	opts || (opts = {});
+	opts = opts || {};
 	var theme = opts.theme;
 	var apptss = CONST.GLOBAL_STYLE;
 	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
+	var themesDir;
 	if (theme) {
-		var themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
+		themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
 	}
 
 	// create array of global styles to load based on arguments
 	var loadArray = [];
-	loadArray.push({ 
+	loadArray.push({
 		path: path.join(stylesDir,apptss),
 		msg: apptss
 	});
-	theme && loadArray.push({ 
-		path: path.join(themesDir,apptss),
-		msg: apptss + '(theme:' + theme + ')',
-		obj: { theme: true }
-	});
-	loadArray.push({ 
+	if (theme) {
+			loadArray.push({
+			path: path.join(themesDir,apptss),
+			msg: apptss + '(theme:' + theme + ')',
+			obj: { theme: true }
+		});
+	}
+	loadArray.push({
 		path: path.join(stylesDir,platform,apptss),
 		msg: apptss + '(platform:' + platform + ')',
 		obj: { platform: true }
 	});
-	theme && loadArray.push({ 
-		path: path.join(themesDir,platform,apptss),
-		msg: apptss + '(theme:' + theme + ' platform:' + platform + ')',
-		obj: { platform: true, theme: true }
-	});
+	if (theme) {
+		loadArray.push({
+			path: path.join(themesDir,platform,apptss),
+			msg: apptss + '(theme:' + theme + ' platform:' + platform + ')',
+			obj: { platform: true, theme: true }
+		});
+	}
 
-	// load & merge each global style file to update the global style array 
+	// load & merge each global style file to update the global style array
 	_.each(loadArray, function(g) {
 		if (path.existsSync(g.path)) {
 			logger.info('[' + g.msg + '] global style processing...');
 			exports.globalStyle = exports.loadAndSortStyle(g.path, _.extend(
-				{ existingStyle: exports.globalStyle }, 
+				{ existingStyle: exports.globalStyle },
 				g.obj || {}
 			));
 		}
-	});	
+	});
 
 	styleOrderCounter++;
-}
+};
 
 /*
  * @method sortStyles
- * Given a parsed style from loadStyle(), sort all the style entries into an 
- * ordered array. This is the final operations to prepare a style for usage with 
+ * Given a parsed style from loadStyle(), sort all the style entries into an
+ * ordered array. This is the final operations to prepare a style for usage with
  * a Titanium UI component in Alloy.
  *
  * @param {Object} Parsed style object from a loadStyle() call
@@ -130,7 +135,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
  */
 exports.sortStyles = function(style, opts) {
 	var sortedStyles = [];
-	opts || (opts = {});
+	opts = opts || {};
 
 	if (_.isObject(style) && !_.isEmpty(style)) {
 		for (var key in style) {
@@ -179,11 +184,11 @@ exports.sortStyles = function(style, opts) {
 					}
 					obj.queries[q] = v;
 				});
-			} 
+			}
 
 			_.extend(obj, {
 				priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
-				key: newKey, 
+				key: newKey,
 				style: style[key]
 			});
 			sortedStyles.push(obj);
@@ -192,13 +197,14 @@ exports.sortStyles = function(style, opts) {
 
 	var theArray = opts.existingStyle ? opts.existingStyle.concat(sortedStyles) : sortedStyles;
 	return _.sortBy(theArray, 'priority');
-}
+};
 
 exports.loadStyle = function(tssFile) {
 	if (path.existsSync(tssFile)) {
 		// read the style file
+		var contents;
 		try {
-			var contents = fs.readFileSync(tssFile, 'utf8');
+			contents = fs.readFileSync(tssFile, 'utf8');
 		} catch (e) {
 			U.die('Failed to read style file "' + tssFile + '"', e);
 		}
@@ -210,10 +216,11 @@ exports.loadStyle = function(tssFile) {
 
 		// Add enclosing curly braces, if necessary
 		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
-			
+
 		// Process tss file then convert to JSON
+		var json;
 		try {
-			var json = grammar.parse(contents);
+			json = grammar.parse(contents);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
 			U.die([
@@ -222,7 +229,7 @@ exports.loadStyle = function(tssFile) {
 				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
 				'- line:    ' + e.line,
 				'- column:  ' + e.column,
-				'- offset:  ' + e.offset 
+				'- offset:  ' + e.offset
 			]);
 		}
 
@@ -233,7 +240,7 @@ exports.loadStyle = function(tssFile) {
 
 exports.loadAndSortStyle = function(tssFile, opts) {
 	return exports.sortStyles(exports.loadStyle(tssFile), opts);
-}
+};
 
 exports.createVariableStyle = function(keyValuePairs, value) {
 	var style = {};
@@ -256,25 +263,25 @@ exports.processStyle = function(_style, _state) {
 	var code = '';
 
 	function processStyle(style, opts) {
-		opts || (opts = {});
+		opts = opts || {};
 		style = opts.fromArray ? {0:style} : style;
-		var groups = {};
+		var groups = {}, sn, value;
 
 		// need to add "properties" and bindIds for ListItems
 		if (theState && theState.isListItem && opts.firstOrder && !opts.fromArray) {
-			for (var sn in style) {
-				var value = style[sn];
+			for (sn in style) {
+				value = style[sn];
 				var prefixes = sn.split(':');
 				if (prefixes.length > 1) {
 					var bindId = prefixes[0];
-					groups[bindId] || (groups[bindId] = {});
+					groups[bindId] = groups[bindId] || {};
 					groups[bindId][prefixes.slice(1).join(':')] = value;
 				} else {
 					// allow template to be specified
 					if (sn === 'template') {
 						groups.template = value;
 					} else {
-						groups.properties || (groups.properties = {});
+						groups.properties = groups.properties || {};
 						groups.properties[sn] = value;
 					}
 				}
@@ -282,9 +289,9 @@ exports.processStyle = function(_style, _state) {
 			style = groups;
 		}
 
-		for (var sn in style) {
-			var value = style[sn],
-				prefix = opts.fromArray ? '' : sn + ':';
+		for (sn in style) {
+			value = style[sn];
+			var prefix = opts.fromArray ? '' : sn + ':';
 
 			if (_.isString(value)) {
 				var matches = value.match(regex);
@@ -296,18 +303,18 @@ exports.processStyle = function(_style, _state) {
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
 				_.each(value, function(v) {
-		 			processStyle(v, {fromArray:true});
-		 		});
+					processStyle(v, {fromArray:true});
+				});
 				code += '],';
 			} else if (_.isObject(value)) {
-			 	if (value[STYLE_ALLOY_TYPE] === 'var') {
-			 		code += prefix + value.value + ','; // dynamic variable value
-			 	} else {
-			 		// recursively process objects
-			 		code += prefix + '{';
-			 		processStyle(value);
-			 		code += '},';
-			 	}
+				if (value[STYLE_ALLOY_TYPE] === 'var') {
+					code += prefix + value.value + ','; // dynamic variable value
+				} else {
+					// recursively process objects
+					code += prefix + '{';
+					processStyle(value);
+					code += '},';
+				}
 			} else {
 				code += prefix + JSON.stringify(value) + ','; // catch all, just stringify the value
 			}
@@ -339,7 +346,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		if ((style.isId && style.key === id) ||
 			(style.isClass && _.contains(classes, style.key)) ||
 			(style.isApi && styleApi === apiName)) {
-			
+
 			// manage potential runtime conditions for the style
 			var conditionals = {
 				platform: [],
@@ -402,11 +409,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var match = v.match(bindingRegex);
 				if (match !== null) {
 					var parts = match[1].split('.');
+					var modelVar;
 
 					// model binding
 					if (parts.length > 1) {
 						// are we bound to a global or controller-specific model?
-						var modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
+						modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
 						var attr = parts[0] === '$' ? parts[2] : parts[1];
 
 						// ensure that the bindings for this model have been initialized
@@ -427,20 +435,20 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 							bindingObj.condition = theState.condition;
 						}
 
-						// add this property to the global bindings map for the 
+						// add this property to the global bindings map for the
 						// current controller component
 						exports.bindingsMap[modelVar].push(bindingObj);
 
-						// since this property is data bound, don't include it in 
+						// since this property is data bound, don't include it in
 						// the style statically
 						delete style.style[k];
-					} 
+					}
 					// collection binding
 					else {
-						var modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
 						var standard = modelVar + ".get('" + match[1] + "')";
-						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard; 
+						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
 					}
 				}
@@ -470,15 +478,14 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		for (var i = 0, l = styleCollection.length; i < l; i++) {
 			if (styleCollection[i].condition) {
 				code += 'if (' + styleCollection[i].condition + ') ';
-			} 
+			}
 			code += '_.extend(o, {';
 			code += exports.processStyle(styleCollection[i].style, theState);
 			code += '});\n';
 		}
-		code += 'return o;\n'
-		code += '})()'
+		code += 'return o;\n';
+		code += '})()';
 	}
-	
-	return code;
-}
 
+	return code;
+};

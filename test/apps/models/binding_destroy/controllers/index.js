@@ -9,6 +9,6 @@ if (movies.length === 0) {
 }
 
 if (OS_IOS) {
-	Alloy.Globals.navgroup = $.navgroup;	
+	Alloy.Globals.navgroup = $.navgroup;
 }
 $.index.open();

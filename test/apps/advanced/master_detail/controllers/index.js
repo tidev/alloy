@@ -1,18 +1,18 @@
 if (OS_IOS && Alloy.isHandheld) {
-	Alloy.Globals.navgroup = $.navgroup;	
+	Alloy.Globals.navgroup = $.navgroup;
 }
 
 $.master.on('detail', function(e) {
 	// get the detail controller and window references
 	var controller = OS_IOS && Alloy.isTablet ? $.detail : Alloy.createController('detail');
 	var win = controller.getView();
-	
+
 	// get boxer stats by name
 	controller.setBoxerStats(e.row.fighterName);
-	
-	// open the detail windows 
+
+	// open the detail windows
 	if (OS_IOS && Alloy.isHandheld) {
-		Alloy.Globals.navgroup.open(win);	
+		Alloy.Globals.navgroup.open(win);
 	} else if (OS_ANDROID) {
 		win.open();
 	}

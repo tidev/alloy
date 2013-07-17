@@ -8,8 +8,8 @@ module.exports = function($, opts) {
 			api: 'Ti.UI.TableViewRow',
 			style: {
 				backgroundColor: "#fff",
-		        height: "60dp",
-		        id: "row"
+				height: "60dp",
+				id: "row"
 			}
 		});
 
@@ -17,15 +17,15 @@ module.exports = function($, opts) {
 			api: 'Ti.UI.Label',
 			style: {
 				width: Ti.UI.SIZE,
-		        height: Ti.UI.SIZE,
-		        color: "#000",
-		        top: "5dp",
-		        left: "10dp",
-		        font: {
-		            fontSize: OS_MOBILEWEB ? "24px" : "24dp",
-		            fontWeight: "bold"
-		        },
-		        id: "name"
+				height: Ti.UI.SIZE,
+				color: "#000",
+				top: "5dp",
+				left: "10dp",
+				font: {
+					fontSize: OS_MOBILEWEB ? "24px" : "24dp",
+					fontWeight: "bold"
+				},
+				id: "name"
 			}
 		});
 
@@ -33,15 +33,15 @@ module.exports = function($, opts) {
 			api: 'Ti.UI.Label',
 			style: {
 				width: Ti.UI.SIZE,
-		        height: Ti.UI.SIZE,
-		        color: "#000",
-		        bottom: "5dp",
-		        left: "20dp",
-		        font: {
-		            fontSize: OS_MOBILEWEB ? "16px" : "16dp",
-		            fontWeight: "normal"
-		        },
-		        id: "nickname"
+				height: Ti.UI.SIZE,
+				color: "#000",
+				bottom: "5dp",
+				left: "20dp",
+				font: {
+					fontSize: OS_MOBILEWEB ? "16px" : "16dp",
+					fontWeight: "normal"
+				},
+				id: "nickname"
 			}
 		});
 

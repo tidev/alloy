@@ -10,24 +10,24 @@ var fs = require('fs'),
 
 var alloyRoot = path.join(__dirname,'..','..');
 var templatePath = path.join(alloyRoot,'Alloy','template');
-var Harness = path.join(alloyRoot,'test','projects','Harness'); 
+var Harness = path.join(alloyRoot,'test','projects','Harness');
 var appPath = path.join(Harness,'app');
 
 function testView(viewName, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 	var paths, doc;
 
 	if (!opts.widgetId) {
 		paths = {
 			view: path.join(appPath,CONST.DIR.VIEW,viewName + '.' + CONST.FILE_EXT.VIEW),
 			template: path.join(templatePath,'view.xml')
-		}
+		};
 	} else {
 		var widgetPath = path.join(appPath,CONST.DIR.WIDGET,opts.widgetId);
 		paths = {
 			view: path.join(widgetPath,CONST.DIR.VIEW,viewName + '.' + CONST.FILE_EXT.VIEW),
 			template: path.join(templatePath,'widget','view.xml')
-		}
+		};
 	}
 
 	it('generates a view named "' + viewName + '"', function() {
@@ -42,7 +42,7 @@ function testView(viewName, opts) {
 		var theFunction = function() {
 			var xml = fs.readFileSync(paths.view, 'utf8');
 			var errorHandler = {};
-			errorHandler.error = errorHandler.fatalError = function(m) { 
+			errorHandler.error = errorHandler.fatalError = function(m) {
 				throw m;
 			};
 			doc = new DOMParser({
@@ -60,20 +60,20 @@ function testView(viewName, opts) {
 }
 
 function testStyle(viewName, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 	var paths;
 
 	if (!opts.widgetId) {
 		paths = {
 			style: path.join(appPath,CONST.DIR.STYLE,viewName + '.' + CONST.FILE_EXT.STYLE),
 			template: path.join(templatePath,'style.tss')
-		}
+		};
 	} else {
 		var widgetPath = path.join(appPath,CONST.DIR.WIDGET,opts.widgetId);
 		paths = {
 			style: path.join(widgetPath,CONST.DIR.STYLE,viewName + '.' + CONST.FILE_EXT.STYLE),
 			template: path.join(templatePath,'widget','style.tss')
-		}
+		};
 	}
 
 	it('generate a style named "' + viewName + '"', function() {
@@ -90,20 +90,20 @@ function testStyle(viewName, opts) {
 }
 
 function testController(viewName, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 	var paths;
 
 	if (!opts.widgetId) {
 		paths = {
 			controller: path.join(appPath,CONST.DIR.CONTROLLER,viewName + '.' + CONST.FILE_EXT.CONTROLLER),
 			template: path.join(templatePath,'controller.js')
-		}
+		};
 	} else {
 		var widgetPath = path.join(appPath,CONST.DIR.WIDGET,opts.widgetId);
 		paths = {
 			controller: path.join(widgetPath,CONST.DIR.CONTROLLER,viewName + '.' + CONST.FILE_EXT.CONTROLLER),
 			template: path.join(templatePath,'widget','controller.js')
-		}
+		};
 	}
 
 	it('controller named "' + viewName + '"', function() {
@@ -124,15 +124,15 @@ describe('alloy generate', function() {
 				expect(this.output.error).not.toBeNull();
 				expect(this.output.stderr.indexOf(CONST.GENERATE_TARGETS.join(','))).not.toBe(-1);
 			}
-		});	
+		});
 	});
 
 	it('exits with error when given an invalid target', function() {
 		TU.asyncExecTest('alloy generate invalidTarget', {
 			test: function() {
 				expect(this.output.error).not.toBeNull();
-			},
-		});	
+			}
+		});
 	});
 
 	describe('view', function() {
@@ -156,7 +156,7 @@ describe('alloy generate', function() {
 			});
 		});
 
-		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + Harness + '"'; 
+		var cmd = 'alloy generate view ' + viewName + ' --project-dir "' + Harness + '"';
 		it('executes `' + cmd + '` without error', function() {
 			TU.asyncExecTest(cmd, {reset:true});
 		});
@@ -186,7 +186,7 @@ describe('alloy generate', function() {
 			});
 		});
 
-		var cmd = 'alloy generate controller ' + viewName + ' --project-dir "' + Harness + '"'; 
+		var cmd = 'alloy generate controller ' + viewName + ' --project-dir "' + Harness + '"';
 		it('executes `' + cmd + '` without error', function() {
 			TU.asyncExecTest(cmd, {reset:true});
 		});
@@ -214,8 +214,8 @@ describe('alloy generate', function() {
 
 		var goodCmds = [
 			'alloy generate model ' + modelName + ' properties col1:string col2:int',
-			'alloy generate model ' + modelName + ' sql another:bool blah:float hustle:number',	
-			'alloy generate model ' + modelName + ' sql col1:int'		
+			'alloy generate model ' + modelName + ' sql another:bool blah:float hustle:number',
+			'alloy generate model ' + modelName + ' sql col1:int'
 		];
 
 		var badCmds = [
@@ -287,11 +287,11 @@ describe('alloy generate', function() {
 
 		it('executes without error from project directory', function() {
 			TU.asyncExecTest('cd "' + Harness + '" && alloy generate jmk', {reset:true});
-		});		
+		});
 
 		it('executes without error from app directory', function() {
 			TU.asyncExecTest('cd "' + path.join(Harness,'app') + '" && alloy generate jmk', {reset:true});
-		});		
+		});
 
 		it('executes without error with --projectDir', function() {
 			TU.asyncExecTest('alloy generate jmk --project-dir "' + Harness + '"', {reset:true});

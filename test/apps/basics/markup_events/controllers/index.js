@@ -1,4 +1,4 @@
-function doClick(e) {  
+function doClick(e) {
     alert($.t.text);
 }
 

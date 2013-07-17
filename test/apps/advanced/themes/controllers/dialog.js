@@ -11,7 +11,7 @@ function closeDialog(e) {
 	if (!OS_ANDROID) {
 		$.progressFront.animate();
 	}
-	
+
 	// close dialog
 	$.dialog.close();
 }
@@ -21,7 +21,7 @@ exports.show = function(duration) {
 	$.button.title = 'I quit!';
 	$.progressFront.width = 20;
 	$.dialog.open();
-	
+
 	// animate the custom progress dialog
 	anim = Ti.UI.createAnimation({
 		duration: duration,
@@ -34,5 +34,5 @@ exports.show = function(duration) {
 	if (!ENV_PROD) {
 		require('specs/dialog')($);
 	}
-}
+};
 
