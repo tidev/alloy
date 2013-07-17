@@ -3,7 +3,7 @@
  * Top-level module for Alloy functions.
  *
  * Alloy is an application framework built on top of the Titanium SDK designed to help rapidly
- * develop quality applications and reduce maintenance.
+ * develop high quality applications and reduce maintenance.
  *
  * Alloy uses the model-view-controller architecture to separate the application into three
  * components:
@@ -11,7 +11,7 @@
  *  * **Models** provide the data of the application. Alloy utilizes **Backbone Model and Collection**
  *     objects for this functionality.
  *
- *  * **Views** provide the GUI components to interact with the application, written using **XML markup**
+ *  * **Views** provide the UI components to interact with the application, written using **XML markup**
  *    and **Titanium Stylesheets (TSS)**, which abstracts the UI components of the Titanium API.
  *
  *  * **Controllers** provide the glue layer between the Model and View components as well as
@@ -39,7 +39,7 @@ function ucfirst(text) {
 };
 
 function addNamespace(apiName) {
-	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) + 
+	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) +
 		'.' + apiName;
 }
 
@@ -114,8 +114,8 @@ exports.C = function(name, modelDesc, model) {
 	}
 
 	// do any post collection creation code form the sync adapter
-	if (mod && _.isFunction(mod.afterCollectionCreate)) { 
-		mod.afterCollectionCreate(Collection); 
+	if (mod && _.isFunction(mod.afterCollectionCreate)) {
+		mod.afterCollectionCreate(Collection);
 	}
 
 	return Collection;
@@ -174,7 +174,7 @@ exports.createStyle = function(controller, opts) {
 	// Load the runtime style for the given controller
 	var styleArray;
 	if (controller && _.isObject(controller)) {
-		styleArray = require('alloy/widgets/' + controller.widgetId + 
+		styleArray = require('alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
 		styleArray = require('alloy/styles/' + controller)
@@ -189,7 +189,7 @@ exports.createStyle = function(controller, opts) {
 		// give the apiName a namespace if necessary
 		var styleApi = style.key;
 		if (style.isApi && styleApi.indexOf('.') === -1) {
-			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] || 
+			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] ||
 				CONST.NAMESPACE_DEFAULT) + '.' + styleApi;
 		}
 
@@ -200,7 +200,7 @@ exports.createStyle = function(controller, opts) {
 		} else if (style.isApi) {
 			if (style.key.indexOf('.') === -1) {
 				style.key = addNamespace(style.key);
-			} 
+			}
 			if (style.key !== apiName) { continue; }
 		} else {
 			// no matches, skip this style
@@ -208,7 +208,7 @@ exports.createStyle = function(controller, opts) {
 		}
 
 		// can we clear out any form factor queries?
-		if (style.queries && style.queries.formFactor && 
+		if (style.queries && style.queries.formFactor &&
 			!Alloy[style.queries.formFactor]) {
 			continue;
 		}
@@ -251,7 +251,7 @@ exports.addClass = function(controller, proxy, classes, opts) {
 		var beforeLen = pClasses.length;
 		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 		var newClasses = _.union(pClasses, classes || []);
-		
+
 		// make sure we actually added classes before processing styles
 		if (beforeLen === newClasses.length) {
 			opts && proxy.applyProperties(opts);
@@ -302,7 +302,7 @@ exports.resetClass = function(controller, proxy, classes, opts) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
-	if (typeof name !== 'undefined' && name !== null && 
+	if (typeof name !== 'undefined' && name !== null &&
 		_.isObject(name) && !_.isString(name)) {
 		args = name;
 		name = DEFAULT_WIDGET;

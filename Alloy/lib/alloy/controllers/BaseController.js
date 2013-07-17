@@ -1,4 +1,4 @@
-var Alloy = require('alloy'), 
+var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
@@ -91,12 +91,12 @@ var Controller = function() {
 		 * UI components. It is critical that this is called when employing
 		 * model/collection binding in order to avoid potential memory leaks.
 		 * $.destroy() should be called whenever a controller's UI is to
-		 * be "closed" or removed from the app. For more details, see the 
-		 * example app found here: 
+		 * be "closed" or removed from the app. For more details, see the
+		 * example app found here:
 		 * https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy
 		 */
 		destroy: function(){
-			// destroy() is defined during the compile process based on 
+			// destroy() is defined during the compile process based on
 			// the UI components and binding contained within the controller.
 		},
 
@@ -119,7 +119,7 @@ var Controller = function() {
 		 * @method createStyle
 		 * Creates a dictionary of properties based on the specified styles.
 		 *
-		 * You use this dictionary with the view object's
+		 * You can use this dictionary with the view object's
 		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
 		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
 		 * @param {AlloyStyleDict} opts Dictionary of styles to apply.
@@ -144,9 +144,9 @@ var Controller = function() {
 		 * Adds a TSS class to the specified view object.
 		 *
 		 * You can apply additional styles with the `opts` parameter.
-		 * @param {Object} proxy View object to modify.
+		 * @param {Object} proxy View object to which to add class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to apply.
-		 * @param {Dictionary} [opts] Dictionary of properties to apply.
+		 * @param {Dictionary} [opts] Dictionary of properties to apply after classes have been added.
 		 * @since 1.2.0
 		 */
 		addClass: function(proxy, classes, opts) {
@@ -158,7 +158,7 @@ var Controller = function() {
 		 * Removes a TSS class from the specified view object.
 		 *
 		 * You can apply additional styles after the removal with the `opts` parameter.
-		 * @param {Object} proxy View object to modify.
+		 * @param {Object} proxy View object from which to remove class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to remove.
 		 * @param {Dictionary} [opts] Dictionary of properties to apply after the class removal.
 		 * @since 1.2.0
@@ -169,7 +169,8 @@ var Controller = function() {
 
 		/**
 		 * @method resetClass
-		 * Removes all TSS classes from the specified view object.
+		 * Sets the array of TSS classes for the target View object, adding the classes specified and
+		 * removing any applied classes that are not specified.
 		 *
 		 * You can apply classes or styles after the reset using the `classes` or `opts` parameters.
 		 * @param {Object} proxy View object to reset.

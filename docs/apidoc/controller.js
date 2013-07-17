@@ -1,4 +1,4 @@
-/** 
+/**
  * @class Alloy.Controller.UI
  */
 
@@ -7,7 +7,7 @@
  * Creates a Titanium UI object with the specified styles.
  * @param {String} apiName Name of the Titanium object to create. This can either be the full class
  * name, such as `Ti.UI.Button`, or the XML element, such as `Button`.
- * @param {AlloyStyleDict} opts Dictionary of styles to apply.
+ * @param {AlloyStyleDict} opts Dictionary of styles to apply. `opts` may also contain any additional properties you would like to apply directly the created Titanium object.
  * @return {Titanium.UI.View/Alloy.Controller}
  * @since 1.2.0
  */
@@ -20,7 +20,7 @@
  * Simple JavaScript object of properties and TSS classes to apply to a Titanium UI object.
  *
  * All properties are optional.
- * 
+ *
  * The `apiName` property is only specified with the `createStyle` method.
  *
  * In addition to the properties defined below, you can also specify properties related to the
