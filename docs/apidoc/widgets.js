@@ -1,8 +1,24 @@
 /**
- * @class Alloy.widgets
+ * @class Alloy.Widget
  * Widgets are self-contained components that can be easily dropped into an Alloy project.
  * They were conceived as a way to reuse code in multiple projects or to be used multiple
  * times in the same project.
+ *
+ * Note that to use the methods list below, the correct namespace is `Widget.create*` not
+ * `Alloy.Widget.create*`.
+ *
+ * For more information on widgets, see [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
+ *
+ * #### Creating a Widget
+ *
+ * Widgets are essentially miniature Alloy projects that contain their own models, views, controllers
+ * and assets.  They are laid out the same way as an Alloy project.
+ *
+ * Use `Widget.createController()`, `Widget.createWidget()`,  `Widget.createModel()` and
+ * `Widget.createCollection()` rather than the `Alloy.create*` methods to create
+ * components relative to the widget context rather than the Alloy project.
+ *
+ * #### Using a Widget
  *
  * To use a widget in your Alloy project, first add it as a dependency in your config.json file.
  * The name of the widget is the key and the version of the widget is the value.
@@ -38,5 +54,34 @@
  * A widget can also be added to other widgets.  Follow the same procedure as above except the widget
  * configuration file is called widget.json instead of config.json.
  *
- * For more information on widgets, see [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
+ */
+
+/**
+ * @method createCollection
+ * @inheritdoc Alloy#createCollection
+ * @since 1.1.0
+ */
+
+/**
+ * @method createController
+ * @inheritdoc Alloy#createController
+ * @since 1.1.0
+ */
+
+/**
+ * @method createModel
+ * @inheritdoc Alloy#createModel
+ * @since 1.1.0
+ */
+
+/**
+ * @method createWidget
+ * @inheritdoc Alloy#createWidget
+ * @since 1.1.0
+ */
+
+/**
+ * @class Alloy.widgets
+ * List of widgets in the Alloy project. For information on using a widget in your project, see
+ * Alloy.Widget.
  */

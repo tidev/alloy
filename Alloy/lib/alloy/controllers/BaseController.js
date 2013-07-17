@@ -115,24 +115,69 @@ var Controller = function() {
 			}
 		},
 
+		/**
+		 * @method createStyle
+		 * Creates a dictionary of properties based on the specified styles.
+		 *
+		 * You can use this dictionary with the view object's
+		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
+		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
+		 * @param {AlloyStyleDict} opts Dictionary of styles to apply.
+		 * @return {Dictionary}
+		 * @since 1.2.0
+		 */
 		createStyle: function(opts) {
 			return Alloy.createStyle(getControllerParam(), opts);
 		},
 
+		/*
+		 * Documented in docs/apidoc/controller.js
+		 */
 		UI: {
 			create: function(apiName, opts) {
 				return Alloy.UI.create(getControllerParam(), apiName, opts);
 			}
 		},
 
+		/**
+		 * @method addClass
+		 * Adds a TSS class to the specified view object.
+		 *
+		 * You can apply additional styles with the `opts` parameter.
+		 * @param {Object} proxy View object to which to add class(es).
+		 * @param {Array<String>/String} classes Array or space-separated list of classes to apply.
+		 * @param {Dictionary} [opts] Dictionary of properties to apply after classes have been added.
+		 * @since 1.2.0
+		 */
 		addClass: function(proxy, classes, opts) {
 			return Alloy.addClass(getControllerParam(), proxy, classes, opts);
 		},
 
+		/**
+		 * @method removeClass
+		 * Removes a TSS class from the specified view object.
+		 *
+		 * You can apply additional styles after the removal with the `opts` parameter.
+		 * @param {Object} proxy View object from which to remove class(es).
+		 * @param {Array<String>/String} classes Array or space-separated list of classes to remove.
+		 * @param {Dictionary} [opts] Dictionary of properties to apply after the class removal.
+		 * @since 1.2.0
+		 */
 		removeClass: function(proxy, classes, opts) {
 			return Alloy.removeClass(getControllerParam(), proxy, classes, opts);
 		},
 
+		/**
+		 * @method resetClass
+		 * Sets the array of TSS classes for the target View object, adding the classes specified and
+		 * removing any applied classes that are not specified.
+		 *
+		 * You can apply classes or styles after the reset using the `classes` or `opts` parameters.
+		 * @param {Object} proxy View object to reset.
+		 * @param {Array<String>/String} [classes] Array or space-separated list of classes to apply after the reset.
+		 * @param {Dictionary} [opts] Dictionary of properties to apply after the reset.
+		 * @since 1.2.0
+		 */
 		resetClass: function(proxy, classes, opts) {
 			return Alloy.resetClass(getControllerParam(), proxy, classes, opts);
 		}
