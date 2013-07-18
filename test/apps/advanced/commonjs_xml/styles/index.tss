@@ -1,0 +1,23 @@
+'Label': {
+	color: '#000',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'normal'
+	}
+}
+
+'.blue': {
+	backgroundColor: '#007'
+}
+
+'.bigger': {
+	height: '100dp',
+	width: '100dp'
+}
+
+'#redOne': {
+	backgroundColor: '#a00'
+}
