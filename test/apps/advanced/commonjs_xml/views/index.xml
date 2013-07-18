@@ -26,8 +26,8 @@
 			component. Also, since these all return a valid Titanium proxy object, you can
 			further nest Titanium proxy objects inside of them.
 		-->
-		<Module module="specialView" method="createMassiveGreenView">
-			<Label>I'm nested!</Label>
+		<Module module="specialView" method="createMassiveGreenView" onClick="doClick">
+			<Label>click me</Label>
 		</Module>
 	</Window>
 </Alloy>
