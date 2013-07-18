@@ -293,7 +293,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		// determine which function name to use for event handling:
 		// * addEventListener() for Titanium proxies
 		// * on() for everything else (controllers, models, collections)
-		var eventFunc = /^(?:Ti|Titanium)\./.test(args.fullname) ? 'addEventListener' : 'on';
+		var eventFunc = /^(?:Ti\.|Titanium\.|Alloy\.Module)/.test(args.fullname) ? 'addEventListener' : 'on';
 
 		_.each(args.events, function(ev) {
 			var eventObj = {

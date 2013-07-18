@@ -127,6 +127,7 @@ exports.IMPLICIT_NAMESPACES = {
 	// Alloy
 	Collection: NS_ALLOY,
 	Model: NS_ALLOY,
+	Module: NS_ALLOY,
 	Require: NS_ALLOY,
 	Widget: NS_ALLOY,
 
