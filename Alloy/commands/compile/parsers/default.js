@@ -27,6 +27,12 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
+	// Require namespace if necessary
+	if (args.ns !== CONST.NAMESPACE_DEFAULT) {
+	  var nsObj = args.ns.replace(/([^a-z]+|^)([a-z])([a-z]*)/g, function (match, a, b, c) { return b.toUpperCase() + c.toLowerCase() });
+	  code += 'if (typeof ' + nsObj + ' === "undefined") var ' + nsObj + ' = require("' + args.ns + '");\n';
+	}
+		
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
