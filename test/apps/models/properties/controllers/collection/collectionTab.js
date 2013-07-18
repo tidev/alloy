@@ -1,4 +1,4 @@
-var items = Alloy.createCollection('collectionTab'), 
+var items = Alloy.createCollection('collectionTab'),
 	rowControllers = [];
 
 // update the row and save the model when the score changes
@@ -17,7 +17,7 @@ items.on('change:score', function(model) {
 // reset the table whenever a model is added or destroyed
 // completely. Also reset whenever the collection is reset.
 // Save the model changes if necessary.
-items.on('fetch', function(model) { 
+items.on('fetch', function(model) {
 	resetTableData();
 });
 
@@ -49,7 +49,7 @@ function resetTableData() {
 
 ////////////////////////////////////
 ////////// event handlers //////////
-//////////////////////////////////// 
+////////////////////////////////////
 function deleteItem(e) {
 	var model = items.get(e.row.id);
 	if (model) {

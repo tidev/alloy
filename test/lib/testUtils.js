@@ -14,7 +14,7 @@ exports.paths = {
 	templates: path.join(alloyRoot,'Alloy','template'),
 	harnessTemplate: path.join(alloyRoot,'test','projects','HarnessTemplate'),
 	harness: path.join(alloyRoot,'test','projects','Harness')
-}
+};
 
 // Recreate the test app harness
 //
@@ -36,12 +36,12 @@ function resetTestApp(callback) {
 }
 
 // Turns the arguments given to the callback of the exec() function
-// into an object literal. 
+// into an object literal.
 //
-// Params: 
+// Params:
 // * args: The "arguments" object from the callback of an exec() call
 //
-// Return: An object literal with the error, stdout, and stderr 
+// Return: An object literal with the error, stdout, and stderr
 function getExecObject(args) {
 	args = Array.prototype.slice.call(args, 0);
 	return {
@@ -53,20 +53,20 @@ function getExecObject(args) {
 
 // Convenience function for handling asynchronous tests that rely on the
 // exec() function. The output values from the first runs() block will
-// be available as this.output in the second runs() block where the 
+// be available as this.output in the second runs() block where the
 // actual tests are evaluated.
 //
 // Params:
 // * cmd:  The command to run through exec()
 // * opts: An object that can contain the following parameters:
-//     * timeout: How long to wait for the command to execute before declaring 
+//     * timeout: How long to wait for the command to execute before declaring
 //                the test failed
 //     * test:    The actual test function to execute on output returned from exec()
 //     * reset: If truthy, recreate the default test harness before executing
 //
 // Return: none
 exports.asyncExecTest = function(cmd, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 
 	runs(function() {
 		var self = this;
@@ -77,7 +77,7 @@ exports.asyncExecTest = function(cmd, opts) {
 				self.done = true;
 				self.output = getExecObject(arguments);
 			});
-		}
+		};
 
 		if (opts.reset) {
 			resetTestApp(function() {
@@ -88,13 +88,13 @@ exports.asyncExecTest = function(cmd, opts) {
 		}
 	});
 	waitsFor(
-		function() { return this.done; }, 
+		function() { return this.done; },
 		'exec("' + cmd + '") timed out', opts.timeout || exports.TIMEOUT_DEFAULT
 	);
 	runs(opts.test || function() {
 		expect(this.output.error).toBeNull();
 	});
-}
+};
 
 // Matchers for Jasmine
 
@@ -134,9 +134,9 @@ function toBeJavascriptFile(expected) {
     var notText = this.isNot ? " not" : "";
 	this.message = function () {
         return "Expected " + actual + notText + " to be a Javascript file";
-    }
+    };
 
-	try { 
+	try {
 		var js = fs.readFileSync(this.actual,'utf8');
 		return toBeJavascript.call({actual:js}, expected);
 	} catch (e) {
@@ -152,7 +152,7 @@ exports.addMatchers = function() {
 			toBeTssFile: toBeTssFile,
 			toHaveNoUndefinedStyles: function() {
 				return !_.find(this.actual, function(o) {
-					return o.key === 'undefined' && o.isApi
+					return o.key === 'undefined' && o.isApi;
 				});
 			},
 			toHaveSameContentAs: function(expected) {
@@ -169,4 +169,4 @@ exports.addMatchers = function() {
 			}
 		});
 	});
-}
+};

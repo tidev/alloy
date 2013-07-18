@@ -8,7 +8,7 @@ exports.addItem = function(collection) {
         image: '/' + random + '.png',
         timestamp: new Date().getTime()
     });
-    
+
     // add new model to local collection
     collection.add(model);
 
@@ -28,8 +28,8 @@ exports.removeItem = function(collection, index) {
 	// destroy the model from persistence
 	model.destroy();
 
-  	// update views from sql storage
-  	collection.fetch();
+	// update views from sql storage
+	collection.fetch();
 };
 
 exports.prepNavBar = function(window, callback) {

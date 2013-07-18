@@ -17,10 +17,10 @@ module.exports = function($) {
 			api: 'Ti.UI.Button',
 			style: {
 				width: Ti.UI.SIZE,
-		        height: Ti.UI.SIZE,
-		        title: "Click me",
-		        bottom: 20,
-		        id: "b"
+				height: Ti.UI.SIZE,
+				title: "Click me",
+				bottom: 20,
+				id: "b"
 			}
 		});
 	});

@@ -1,0 +1,79 @@
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center'
+}
+
+'.transform': {
+	transform: Alloy.Globals.transform
+}
+
+'.opacity': {
+	opacity: 0.5
+}
+
+'.bgGradient': {
+	backgroundGradient: {
+		type: 'linear',
+        startPoint: { x: '0%', y: '50%' },
+        endPoint: { x: '100%', y: '50%' },
+        colors: [
+        	{ color: 'red', offset: 0.0},
+        	{ color: 'blue', offset: 0.25 },
+        	{ color: 'red', offset: 1.0 }
+        ],
+	}
+}
+
+'.greenBg': {
+	backgroundColor: '#cfc'
+}
+
+'.red': {
+	color: '#a00'
+}
+
+'.shadow': {
+	shadowColor: '#888',
+	shadowOffset: { x:2, y:2 }
+}
+
+'.zIndex': {
+	zIndex: 100
+}
+
+'.huge': {
+	font: {
+		fontSize: '40dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.right': {
+	right: 0
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#changer': {
+	height: '50dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#006',
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	bottom: 0
+}
+
+'#behind': {
+	height: '100dp',
+	width: '100dp',
+	backgroundColor: '#0f0',
+	zIndex: 10
+}

@@ -13,24 +13,23 @@ exports.showTimestamp = false;
 
 exports.trace = function(msg) {
 	if (exports.logLevel >= exports.TRACE) { printMessage(msg, 'trace', 'grey'); }
-}
+};
 
 exports.debug = function(msg) {
 	if (exports.logLevel >= exports.DEBUG) { printMessage(msg, 'debug', 'cyan'); }
-}
+};
 
 exports.info = function(msg) {
 	if (exports.logLevel >= exports.INFO) { printMessage(msg, 'info', 'white'); }
-}
+};
 
 exports.warn = function(msg) {
 	if (exports.logLevel >= exports.WARN) { printMessage(msg, 'warn', 'yellow'); }
-}
+};
 
 exports.error = function(msg) {
 	if (exports.logLevel >= exports.ERROR) { printMessage(msg, 'error', 'red'); }
-}
-
+};
 
 // Private functions and members
 var levels = ['info','debug','error','warn','trace'];
@@ -52,9 +51,9 @@ var formattedDate = function() {
 	var pad = function(val) {
 		val += '';
 		return val.length < 2 ? '0' + val : val;
-	};  
-	return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate()) + ' ' + 
-	       pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+	};
+	return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate()) + ' ' +
+		pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
 };
 
 var printMessage = function(msg, level, color) {
@@ -65,7 +64,9 @@ var printMessage = function(msg, level, color) {
 	color = color || 'white';
 
 	// Have to wrap in a function to avoid "Illegal invocation" error on android
-	var logFunc = function(msg){(level === 'debug' || level === 'trace' ? console.log : console[level])(msg)};
+	var logFunc = function(msg) {
+		(level === 'debug' || level === 'trace' ? console.log : console[level])(msg);
+	};
 
 	function printLine(line) {
 		if (isArray(line)) {

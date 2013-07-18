@@ -31,7 +31,7 @@ function parse(node, state, args) {
 			}
 
 			if (isDataBound) {
-				localModel || (localModel = CU.generateUniqueId());
+				localModel = localModel || CU.generateUniqueId();
 				itemCode += CU.generateNodeExtended(child, state, {
 					parent: {},
 					local: true,
@@ -48,7 +48,7 @@ function parse(node, state, args) {
 					}
 				});
 			}
-		} 
+		}
 	});
 
 	// create the ListView itself
@@ -67,14 +67,14 @@ function parse(node, state, args) {
 
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
-		localModel || (localModel = CU.generateUniqueId());
+		localModel = localModel || CU.generateUniqueId();
 		var sps = sectionState.parent.symbol;
 
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
 			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,
-			post: 'opts.animation ? ' + 
+			post: 'opts.animation ? ' +
 				sps + '.setItems(' + itemsVar + ', opts.animation) : ' +
 				sps + '.setItems(' + itemsVar + ');'
 		});
@@ -84,5 +84,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
+	};
 }

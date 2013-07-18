@@ -2,24 +2,128 @@
  * @class Alloy
  * Top-level module for Alloy functions.
  *
+ * Alloy is an application framework built on top of the Titanium SDK designed to help rapidly
+ * develop high quality applications and reduce maintenance.
+ *
+ * Alloy uses the model-view-controller architecture to separate the application into three
+ * components:
+ *
+ *  * **Models** provide the data of the application. Alloy utilizes **Backbone Model and Collection**
+ *     objects for this functionality.
+ *
+ *  * **Views** provide the UI components to interact with the application, written using **XML markup**
+ *    and **Titanium Stylesheets (TSS)**, which abstracts the UI components of the Titanium API.
+ *
+ *  * **Controllers** provide the glue layer between the Model and View components as well as
+ *    additional application logic using the **Alloy API** and **Titanium API**.
+ *
+ * The API documentation provided here is used with Alloy Controllers and Widget Controllers to
+ * interact with the View and Model components of the application or widget.
+ *
+ * For guides on using Alloy, see
+ * [Alloy Framework](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Framework).
  */
-var 	   _ = require('alloy/underscore')._,
+var _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	CONST = require('alloy/constants');
-
-var DEFAULT_WIDGET = 'widget';
 
 exports.version = '1.2.0';
 exports._ = _;
 exports.Backbone = Backbone;
 
+var DEFAULT_WIDGET = 'widget';
+var IDENTITY_TRANSFORM = OS_ANDROID ? Ti.UI.create2DMatrix() : undefined;
+var RESET = {
+	bottom: null,
+	left: null,
+	right: null,
+	top: null,
+	height: null,
+	width: null,
+	shadowColor: null,
+	shadowOffset: null,
+	backgroundImage: null,
+	backgroundRepeat: null,
+	center: null,
+	layout: null,
+	backgroundSelectedColor: null,
+	backgroundSelectedImage: null,
+
+	// non-null resets
+	opacity: 1.0,
+	touchEnabled: true,
+	enabled: true,
+	horizontalWrap: true,
+	zIndex: 0,
+
+	//##### DISPARITIES #####//
+
+	// Setting to "null" on android works the first time. Leaves the color
+	// on subsequent calls.
+	backgroundColor: OS_ANDROID ? 'transparent' : null,
+
+	// creates a font slightly different (smaller) than default on iOS
+	// https://jira.appcelerator.org/browse/TIMOB-14565
+	font: null,
+
+	// Throws an exception on Android if set to null. Works on other platforms.
+	// https://jira.appcelerator.org/browse/TIMOB-14566
+	visible: true,
+
+	// Setting to "null" on android makes text transparent
+	// https://jira.appcelerator.org/browse/TIMOB-14567
+	color: OS_ANDROID ? '#000' : null,
+
+	// Android will leave artifact of previous transform unless the identity matrix is
+	// manually reset.
+	// https://jira.appcelerator.org/browse/TIMOB-14568
+	//
+	// Mobileweb does not respect matrix properties set in the constructor, despite the
+	// documentation at docs.appcelerator.com indicating that it should.
+	// https://jira.appcelerator.org/browse/TIMOB-14570
+	transform: OS_ANDROID ? IDENTITY_TRANSFORM : null,
+
+	// Crashes if set to null on anything but Android
+	// https://jira.appcelerator.org/browse/TIMOB-14571
+	backgroundGradient: !OS_ANDROID ? {} : null,
+
+	// All supported platforms have varying behavior with border properties
+	// https://jira.appcelerator.org/browse/TIMOB-14573
+	borderColor: OS_ANDROID ? null : 'transparent',
+
+	// https://jira.appcelerator.org/browse/TIMOB-14575
+	borderRadius: OS_IOS ? 0 : null,
+
+	// https://jira.appcelerator.org/browse/TIMOB-14574
+	borderWidth: OS_IOS ? 0 : null
+};
+
+if (OS_IOS) {
+	RESET = _.extend(RESET, {
+		backgroundLeftCap: 0,
+		backgroundTopCap: 0
+	});
+} else if (OS_ANDROID) {
+	RESET = _.extend(RESET, {
+		backgroundDisabledColor: null,
+		backgroundDisabledImage: null,
+		backgroundFocusedColor: null,
+		backgroundFocusedImage: null,
+		focusable: false,
+		keepScreenOn: false
+	});
+}
+if (OS_ANDROID || Ti.Platform.osname === 'tizen') {
+	RESET.softKeyboardOnFocus = Ti.UI.Android.SOFT_KEYBOARD_DEFAULT_ON_FOCUS;
+}
+
 function ucfirst(text) {
     if (!text) { return text; }
     return text[0].toUpperCase() + text.substr(1);
-};
+}
 
 function addNamespace(apiName) {
-	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) + 
+	return (CONST.IMPLICIT_NAMESPACES[apiName] || CONST.NAMESPACE_DEFAULT) +
 		'.' + apiName;
 }
 
@@ -48,7 +152,7 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// Run the pre model creation code, if any
     if (mod && _.isFunction(mod.beforeModelCreate)) {
-    	config = mod.beforeModelCreate(config, name) || config;
+		config = mod.beforeModelCreate(config, name) || config;
     }
 
 	// Create the Model object
@@ -94,8 +198,8 @@ exports.C = function(name, modelDesc, model) {
 	}
 
 	// do any post collection creation code form the sync adapter
-	if (mod && _.isFunction(mod.afterCollectionCreate)) { 
-		mod.afterCollectionCreate(Collection); 
+	if (mod && _.isFunction(mod.afterCollectionCreate)) {
+		mod.afterCollectionCreate(Collection);
 	}
 
 	return Collection;
@@ -103,7 +207,7 @@ exports.C = function(name, modelDesc, model) {
 
 exports.UI = {};
 exports.UI.create = function(controller, apiName, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 
 	// Make sure we have a full api name
 	var baseName, ns;
@@ -125,9 +229,9 @@ exports.UI.create = function(controller, apiName, opts) {
 
 	// create the titanium proxy object
 	return eval(ns)['create' + baseName](style);
-}
+};
 
-exports.createStyle = function(controller, opts) {
+exports.createStyle = function(controller, opts, defaults) {
 	var classes, apiName;
 
 	// If there's no opts, there's no reason to load the style module. Just
@@ -154,10 +258,10 @@ exports.createStyle = function(controller, opts) {
 	// Load the runtime style for the given controller
 	var styleArray;
 	if (controller && _.isObject(controller)) {
-		styleArray = require('alloy/widgets/' + controller.widgetId + 
+		styleArray = require('alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
-		styleArray = require('alloy/styles/' + controller)
+		styleArray = require('alloy/styles/' + controller);
 	}
 	var styleFinal = {};
 
@@ -169,7 +273,7 @@ exports.createStyle = function(controller, opts) {
 		// give the apiName a namespace if necessary
 		var styleApi = style.key;
 		if (style.isApi && styleApi.indexOf('.') === -1) {
-			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] || 
+			styleApi = (CONST.IMPLICIT_NAMESPACES[styleApi] ||
 				CONST.NAMESPACE_DEFAULT) + '.' + styleApi;
 		}
 
@@ -180,7 +284,7 @@ exports.createStyle = function(controller, opts) {
 		} else if (style.isApi) {
 			if (style.key.indexOf('.') === -1) {
 				style.key = addNamespace(style.key);
-			} 
+			}
 			if (style.key !== apiName) { continue; }
 		} else {
 			// no matches, skip this style
@@ -188,7 +292,7 @@ exports.createStyle = function(controller, opts) {
 		}
 
 		// can we clear out any form factor queries?
-		if (style.queries && style.queries.formFactor && 
+		if (style.queries && style.queries.formFactor &&
 			!Alloy[style.queries.formFactor]) {
 			continue;
 		}
@@ -208,22 +312,22 @@ exports.createStyle = function(controller, opts) {
 	styleFinal[CONST.CLASS_PROPERTY] = classes;
 	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
-	return styleFinal;
+	return defaults ? _.defaults(styleFinal,defaults) : styleFinal;
 };
 
-function processStyle(controller, proxy, classes, opts) {
-	opts || (opts = {});
+function processStyle(controller, proxy, classes, opts, defaults) {
+	opts = opts || {};
 	opts.classes = classes;
-	proxy.apiName && (opts.apiName = proxy.apiName);
-	proxy.id && (opts.id = proxy.id);
-	proxy.applyProperties(exports.createStyle(controller, opts));
-	OS_ANDROID && (proxy.classes = classes);
+	if (proxy.apiName) { opts.apiName = proxy.apiName; }
+	if (proxy.id) { opts.id = proxy.id; }
+	proxy.applyProperties(exports.createStyle(controller, opts, defaults));
+	if (OS_ANDROID) { proxy.classes = classes; }
 }
 
 exports.addClass = function(controller, proxy, classes, opts) {
 	// make sure we actually have classes to add
 	if (!classes) {
-		opts && proxy.applyProperties(opts);
+		if (opts) { proxy.applyProperties(opts); }
 		return;
 	} else {
 		// create a union of the existing classes with the new one(s)
@@ -231,25 +335,25 @@ exports.addClass = function(controller, proxy, classes, opts) {
 		var beforeLen = pClasses.length;
 		classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 		var newClasses = _.union(pClasses, classes || []);
-		
+
 		// make sure we actually added classes before processing styles
 		if (beforeLen === newClasses.length) {
-			opts && proxy.applyProperties(opts);
+			if (opts) { proxy.applyProperties(opts); }
 			return;
 		} else {
 			processStyle(controller, proxy, newClasses, opts);
 		}
 	}
-}
+};
 
 exports.removeClass = function(controller, proxy, classes, opts) {
-	classes || (classes = []);
+	classes = classes || [];
 	var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
 	var beforeLen = pClasses.length;
 
 	// make sure there's classes to remove before processing
 	if (!beforeLen || !classes.length) {
-		opts && proxy.applyProperties(opts);
+		if (opts) { proxy.applyProperties(opts); }
 		return;
 	} else {
 		// remove the given class(es)
@@ -258,19 +362,19 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 
 		// make sure there was actually a difference before processing
 		if (beforeLen === newClasses.length) {
-			opts && proxy.applyProperties(opts);
+			if (opts) { proxy.applyProperties(opts); }
 			return;
 		} else {
-			processStyle(controller, proxy, newClasses, opts);
+			processStyle(controller, proxy, newClasses, opts, RESET);
 		}
 	}
-}
+};
 
 exports.resetClass = function(controller, proxy, classes, opts) {
-	classes || (classes = []);
+	classes = classes || [];
 	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
-	processStyle(controller, proxy, classes, opts);
-}
+	processStyle(controller, proxy, classes, opts, RESET);
+};
 
 /**
  * @method createWidget
@@ -282,13 +386,13 @@ exports.resetClass = function(controller, proxy, classes, opts) {
  * @return {Alloy.Controller} Alloy widget controller object.
  */
 exports.createWidget = function(id, name, args) {
-	if (typeof name !== 'undefined' && name !== null && 
+	if (typeof name !== 'undefined' && name !== null &&
 		_.isObject(name) && !_.isString(name)) {
 		args = name;
 		name = DEFAULT_WIDGET;
 	}
 	return new (require('alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
-}
+};
 
 /**
  * @method createController
@@ -300,14 +404,14 @@ exports.createWidget = function(id, name, args) {
  */
 exports.createController = function(name, args) {
 	return new (require('alloy/controllers/' + name))(args);
-}
+};
 
 /**
  * @method createModel
  * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the
  * named model.
  *
- * See [Backbone.Model](http://backbonejs.org/#Model) in the Backbone.js documentation for
+ * See [Backbone.Model](http://docs.appcelerator.com/backbone/0.9.2/#Model) in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
  * @param {Object} [args] Arguments to pass to the model.
@@ -315,14 +419,14 @@ exports.createController = function(name, args) {
  */
 exports.createModel = function(name, args) {
 	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
-}
+};
 
 /**
  * @method createCollection
  * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
- * See [Backbone.Collection](http://backbonejs.org/#Collection) in the Backbone.js
+ * See [Backbone.Collection](http://docs.appcelerator.com/backbone/0.9.2/#Collection) in the Backbone.js
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
@@ -331,13 +435,13 @@ exports.createModel = function(name, args) {
  */
 exports.createCollection = function(name, args) {
 	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
-}
+};
 
 function isTabletFallback() {
-	return !(Math.min(
+	return Math.min(
 		Ti.Platform.displayCaps.platformHeight,
 		Ti.Platform.displayCaps.platformWidth
-	) < 700);
+	) >= 700;
 }
 
 /**
@@ -351,17 +455,17 @@ exports.isTablet = (function() {
 	} else if (OS_ANDROID) {
 		var psc = Ti.Platform.Android.physicalSizeCategory;
 		return psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE ||
-		       psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
+			psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
 	} else if (OS_MOBILEWEB) {
-		return !(Math.min(
+		return Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
-		) < 400);
+		) >= 400;
 	} else if (OS_BLACKBERRY) {
 		return (Ti.Platform.displayCaps.platformHeight === 600 &&
-		       Ti.Platform.displayCaps.platformWidth === 1024) ||
-			   (Ti.Platform.displayCaps.platformHeight === 1024 &&
-		       Ti.Platform.displayCaps.platformWidth === 600);
+			Ti.Platform.displayCaps.platformWidth === 1024) ||
+			(Ti.Platform.displayCaps.platformHeight === 1024 &&
+			Ti.Platform.displayCaps.platformWidth === 600);
 	} else {
 		return isTabletFallback();
 	}
@@ -411,9 +515,9 @@ exports.Models = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/model.js for docs site.
  */
- exports.Models.instance = function(name) {
- 	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
- };
+exports.Models.instance = function(name) {
+	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
+};
 
 /**
  * @property {Object} Collections
@@ -436,9 +540,9 @@ exports.Collections = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/collection.js for docs site.
  */
- exports.Collections.instance = function(name) {
- 	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
- };
+exports.Collections.instance = function(name) {
+	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
+};
 
 /**
  * @property {Object} CFG

@@ -31,7 +31,7 @@ function parse(node, state, args) {
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
 		code += (state.local ? 'var ' : '') + args.symbol + '={';
-		code += "type:'" + fullname + "',"; 
+		code += "type:'" + fullname + "',";
 		if (bindId) {
 			code += "bindId:'" + bindId + "',";
 		}
@@ -50,9 +50,9 @@ function parse(node, state, args) {
 		var childTemplates;
 		if (children.length > 0) {
 			childTemplates = CU.generateUniqueId();
-			
-			code += 'childTemplates: (function() {'
-			code += 'var ' + childTemplates + '=[];'; 
+
+			code += 'childTemplates: (function() {';
+			code += 'var ' + childTemplates + '=[];';
 
 			_.each(children, function(child) {
 				code += CU.generateNodeExtended(child, state, {
@@ -66,7 +66,7 @@ function parse(node, state, args) {
 			});
 
 			code += 'return ' + childTemplates + ';';
-			code += '})(),'; 
+			code += '})(),';
 		}
 
 		// add the additional arguments to the code
@@ -113,10 +113,10 @@ function parse(node, state, args) {
 				});
 			});
 
-			var pre =  "var children = " + args.symbol + ".children;" +
-					   "for (var d = children.length-1; d >= 0; d--) {" + 
-					   "	" + args.symbol + ".remove(children[d]);" +
-					   "}";
+			var pre = "var children = " + args.symbol + ".children;" +
+				"for (var d = children.length-1; d >= 0; d--) {" +
+				"	" + args.symbol + ".remove(children[d]);" +
+				"}";
 
 			code += _.template(CU.generateCollectionBindingTemplate(args), {
 				localModel: localModel,
@@ -148,4 +148,4 @@ function parse(node, state, args) {
 	}
 
 	return ret;
-};
+}

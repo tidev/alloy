@@ -9,8 +9,7 @@ var path = require('path'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	DOMParser = require("xmldom").DOMParser,
 	_ = require("./lib/alloy/underscore")._,
-	CONST = require('./common/constants')
-;
+	CONST = require('./common/constants');
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -24,7 +23,7 @@ exports.XML = {
 				str += serializer.serializeToString(node.childNodes[c]);
 			}
 		}
-		return str;
+		return str.replace(/\&amp;/g,'&');
 	},
 	getElementsFromNodes: function(nodeList) {
 		var elems = [];
@@ -39,13 +38,7 @@ exports.XML = {
 		return elems;
 	},
 	parseFromString: function(string) {
-		// TODO: https://jira.appcelerator.org/browse/ALOY-267
-		// var warn = console.warn;
-		// console.warn = function(msg) {
-		// 	exports.die(['Error parsing XML document', msg]);
-		// };
-
-		// TODO: https://jira.appcelerator.org/browse/ALOY-309
+		var doc;
 		try {
 			var errorHandler = {};
 			errorHandler.error = errorHandler.fatalError = function(m) {
@@ -54,11 +47,10 @@ exports.XML = {
 			errorHandler.warn = errorHandler.warning = function(m) {
 				logger.warn((m || '').split(/[\r\n]/));
 			};
-			var doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
+			doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
 		} catch (e) {
 			exports.die('Error parsing XML file.', e);
 		}
-		//console.warn = warn;
 
 		return doc;
 	},
@@ -100,7 +92,7 @@ exports.XML = {
 
 exports.tiapp = {
 	parse: function(dir) {
-		dir || (dir = './');
+		dir = dir || './';
 		var tiappPath = path.join(dir,'tiapp.xml');
 		if (!path.existsSync(tiappPath)) {
 			U.die('tiapp.xml file does not exist at "' + tiappPath + '"');
@@ -127,7 +119,7 @@ exports.tiapp = {
 		if (runtime === 'rhino') {
 			var stackSize = exports.tiapp.getProperty(doc, 'ti.android.threadstacksize');
 			if (stackSize !== null) {
-				if (parseInt(stackSize.nodeValue) < 32768) {
+				if (parseInt(stackSize.nodeValue, 10) < 32768) {
 					stackSize.nodeValue('32768');
 				}
 			} else {
@@ -147,9 +139,9 @@ exports.tiapp = {
 		}
 	},
 	install: function(type, dir, opts) {
-		type || (type = 'module');
-		dir || (dir = './');
-		opts || (opts = {});
+		type = type || 'module';
+		dir = dir || './';
+		opts = opts || {};
 
 		var err = 'Project creation failed. Unable to install ' + type + ' "' + (opts.name || opts.id) + '"';
 		var tiappPath = path.join(dir,'tiapp.xml');
@@ -251,7 +243,7 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	}
 
 	return paths;
-}
+};
 
 exports.createErrorOutput = function(msg, e) {
 	var errs = [msg || 'An unknown error occurred'];
@@ -259,35 +251,39 @@ exports.createErrorOutput = function(msg, e) {
 
 	if (e) {
 		var line = e.line || e.lineNumber;
-		if (e.message) { errs.push(e.message.split('\n')) }
-		if (line)  { posArray.push('line ' + line) }
-		if (e.col) { posArray.push('column ' + e.col) }
-		if (e.pos) { posArray.push('position ' + e.pos) }
-		if (posArray.length) { errs.push(posArray.join(', ')) }
+		if (e.message) { errs.push(e.message.split('\n')); }
+		if (line)  { posArray.push('line ' + line); }
+		if (e.col) { posArray.push('column ' + e.col); }
+		if (e.pos) { posArray.push('position ' + e.pos); }
+		if (posArray.length) { errs.push(posArray.join(', ')); }
 
 		// add the stack trace if we don't get anything good
-		if (errs.length < 2) { errs.unshift(e.stack) }
+		if (errs.length < 2) { errs.unshift(e.stack); }
 	} else {
 		errs.unshift(e.stack);
 	}
 
 	return errs;
-}
+};
 
 exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
-	opts || (opts = {});
+	opts = opts || {};
 
 	var exceptions = [];
-	opts.exceptions && _.each(opts.exceptions, function(ex) {
-		exceptions.push(ex);
-		exceptions.push(opts.platform + '/' + ex);
-	});
+	if (opts.exceptions) {
+			_.each(opts.exceptions, function(ex) {
+			exceptions.push(ex);
+			exceptions.push(opts.platform + '/' + ex);
+		});
+	}
 
 	// skip if target or source is not defined
 	if (!fs.existsSync(targetDir) || !srcDirs) {
 		return;
 	}
-	!_.isArray(srcDirs) && (srcDirs = [srcDirs]);
+	if (!_.isArray(srcDirs)) {
+		srcDirs = [srcDirs];
+	}
 
 	// check all target files
 	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
@@ -323,7 +319,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 			}
 		}
 	});
-}
+};
 
 exports.updateFiles = function(srcDir, dstDir) {
 	if (!fs.existsSync(srcDir)) {
@@ -360,10 +356,10 @@ exports.updateFiles = function(srcDir, dstDir) {
 			}
 		}
 	});
-}
+};
 
 exports.copyAlloyDir = function(appDir, sources, destDir) {
-	var sources = _.isArray(sources) ? sources : [sources];
+	sources = _.isArray(sources) ? sources : [sources];
 	_.each(sources, function(source) {
 		var sourceDir = path.join(appDir, source);
 		if (path.existsSync(sourceDir)) {
@@ -402,8 +398,9 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
 
+					var manifest;
 					try {
-						var manifest = jsonlint.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+						manifest = jsonlint.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
 					} catch (e) {
 						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) + '"', e);
 					}
@@ -418,8 +415,7 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	});
 
 	function walkWidgetDependencies(collection) {
-		if (collection == null)
-			return;
+		if (collection === null) { return; }
 
         dirs.push(collection);
 		for (var dependency in collection.manifest.dependencies) {
@@ -428,7 +424,7 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	}
 
     for (var id in appWidgets) {
-    	walkWidgetDependencies(collections[id]);
+		walkWidgetDependencies(collections[id]);
     }
 
 	return dirs;
@@ -452,11 +448,12 @@ exports.lcfirst = function (text) {
 
 exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-}
+};
 
 exports.rmdirContents = function(dir, exceptions) {
+	var files;
 	try {
-		var files = fs.readdirSync(dir);
+		files = fs.readdirSync(dir);
 	} catch (e) {
 		return;
 	}
@@ -485,7 +482,7 @@ exports.rmdirContents = function(dir, exceptions) {
 			fs.unlinkSync(currFile);
 		}
 	}
-}
+};
 
 exports.resolveAppHome = function() {
 	var indexView = path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW);
@@ -504,7 +501,7 @@ exports.resolveAppHome = function() {
 	var errs = [ 'No valid Alloy project found at the following paths (no "views/index.xml"):' ];
 	errs.push(paths);
 	exports.die(errs);
-}
+};
 
 exports.copyFileSync = function(srcFile, destFile) {
 	var BUF_LENGTH = 64 * 1024,
@@ -526,14 +523,14 @@ exports.copyFileSync = function(srcFile, destFile) {
 	}
 	fs.closeSync(fdr);
 	return fs.closeSync(fdw);
-}
+};
 
 exports.ensureDir = function(p) {
 	if (!path.existsSync(p)) {
 		//logger.debug("Creating directory: "+p);
 		wrench.mkdirSyncRecursive(p, 0777);
 	}
-}
+};
 
 exports.copyFilesAndDirs = function(f,d) {
 	var files = fs.readdirSync(f);
@@ -559,11 +556,11 @@ exports.copyFilesAndDirs = function(f,d) {
 			logger.warn('Could not copy ' + fpath);
 		}
 	}
-}
+};
 
 exports.isTiProject = function(dir) {
 	return (path.existsSync(path.join(dir,'tiapp.xml')));
-}
+};
 
 exports.die = function(msg, e) {
 	if (e) {
@@ -572,19 +569,19 @@ exports.die = function(msg, e) {
 		logger.error(msg);
 	}
 	process.exit(1);
-}
+};
 
 exports.dieWithNode = function(node, msg) {
 	msg = _.isArray(msg) ? msg : [msg];
 	msg.unshift('Error with <' + node.nodeName + '> at line ' + node.lineNumber);
 	exports.die(msg);
-}
+};
 
 exports.changeTime = function(file) {
 	if (!fs.existsSync(file)) { return -1; }
 	var stat = fs.statSync(file);
 	return Math.max(stat.mtime.getTime(),stat.ctime.getTime());
-}
+};
 
 exports.installPlugin = function(alloyPath, projectPath) {
 	var id = 'ti.alloy';
@@ -621,4 +618,4 @@ exports.installPlugin = function(alloyPath, projectPath) {
 		id: 'ti.alloy',
 		version: '1.0'
 	});
-}
+};

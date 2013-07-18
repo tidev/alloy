@@ -6,4 +6,4 @@ exports.definition = {
 			"collection_name": "colors"
 		}
 	}
-}
+};

@@ -14,11 +14,11 @@ var Harness = path.join(alloyRoot,'test','projects','Harness');
 var HarnessTemplate = Harness + 'Template';
 
 var RUNS = [
-	{ 
-		cmd: 'alloy new "' + Harness + '"', 
-		success: true 
+	{
+		cmd: 'alloy new "' + Harness + '"',
+		success: true
 	},
-	{ 
+	{
 		cmd: 'alloy new "' + Harness + '" two_tabbed',
 		success: true,
 		TO_BE_CREATED: [
@@ -59,7 +59,7 @@ var TO_BE_CREATED = [
 	path.join('plugins','ti.alloy','plugin.py'),
 	path.join('plugins','ti.alloy','hooks'),
 	path.join('plugins','ti.alloy','hooks','alloy.js'),
-	path.join('tiapp.xml'),
+	path.join('tiapp.xml')
 ];
 
 _.each(RUNS, function(run) {
@@ -72,11 +72,11 @@ _.each(RUNS, function(run) {
 			wrench.copyDirSyncRecursive(HarnessTemplate, Harness);
 
 			TU.asyncExecTest(run.cmd, {
-				timeout: TIMEOUT_DEFAULT, 
+				timeout: TIMEOUT_DEFAULT,
 				test: function() {
 					expect((this.output.error === null) === run.success).toBe(true);
 				}
-			});	
+			});
 		});
 
 		// process no further is this run is intended to fail
@@ -105,7 +105,7 @@ _.each(RUNS, function(run) {
 				if (plugin.nodeType === 1 &&
 					plugin.getAttribute('version') === '1.0' &&
 					plugin.childNodes[0] &&
-					/ti\.alloy/i.test(plugin.childNodes[0].nodeValue)) 
+					/ti\.alloy/i.test(plugin.childNodes[0].nodeValue))
 				{
 					found = true;
 					break;

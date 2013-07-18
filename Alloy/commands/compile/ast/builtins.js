@@ -87,4 +87,4 @@ exports.process = function(ast, config) {
 		}
 	}));
 	return ast;
-}
+};

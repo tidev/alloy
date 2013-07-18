@@ -10,5 +10,5 @@ exports.definition = {
 			"collection_name": "myModel"
 		}
 	}
-}
+};
 

@@ -1,3 +1,3 @@
 function doClick(e) {
-	alert(e.source.title);	
+	alert(e.source.title);
 }

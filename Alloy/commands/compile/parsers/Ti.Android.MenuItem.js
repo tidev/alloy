@@ -9,13 +9,13 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var code = '';
 	var styleObjectCode = styler.generateStyleParams(
-		state.styles, 
-		args.classes, 
-		args.id, 
-		CU.getNodeFullname(node), 
-		_.defaults(state.extraStyle || {}, args.createArgs || {}) 
+		state.styles,
+		args.classes,
+		args.id,
+		CU.getNodeFullname(node),
+		_.defaults(state.extraStyle || {}, args.createArgs || {})
 	);
-	var styleObjectSymbol = CU.generateUniqueId(); 
+	var styleObjectSymbol = CU.generateUniqueId();
 	var initStyle = '_.pick(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
 	var postStyle = '_.omit(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
 
@@ -28,4 +28,4 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
-};
+}

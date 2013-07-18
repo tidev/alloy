@@ -1,9 +1,9 @@
 $.index.open();
 
 function sayHi() {
-	alert('hi');	
+	alert('hi');
 }
 
 function doAlert() {
-	alert('alert');	
+	alert('alert');
 }

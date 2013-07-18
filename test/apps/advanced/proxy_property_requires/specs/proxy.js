@@ -13,17 +13,17 @@ module.exports = function($) {
 					height: "60dp",
 					backgroundColor: "#aaa",
 					id: "pullView"
-				} 
+				}
 			});
 
 			validateUiComponent($, 'pullText', {
 				api: 'Ti.UI.Label',
 				style: {
 					text: "Something about refreshing would be here",
-			        id: "pullText",
-			        height: Ti.UI.SIZE,
-			        width: Ti.UI.SIZE,
-			        bottom: "10"
+					id: "pullText",
+					height: Ti.UI.SIZE,
+					width: Ti.UI.SIZE,
+					bottom: "10"
 				}
 			});
 		}
@@ -34,14 +34,14 @@ module.exports = function($) {
 				height: "60dp",
 				backgroundColor: "#0f0",
 				id: "headerView"
-			} 
+			}
 		});
 
 		validateUiComponent($, 'headerText', {
 			api: 'Ti.UI.Label',
 			style: {
 				text: "I'm an ugly headerView",
-        		id: "headerText"
+				id: "headerText"
 			}
 		});
 
@@ -51,14 +51,14 @@ module.exports = function($) {
 				height: "60dp",
 				backgroundColor: "#0f0",
 				id: "footerView"
-			} 
+			}
 		});
 
 		validateUiComponent($, 'footerText', {
 			api: 'Ti.UI.Label',
 			style: {
 				text: "I'm an equally ugly footerView",
-        		id: "footerText"
+				id: "footerText"
 			}
 		});
 	});

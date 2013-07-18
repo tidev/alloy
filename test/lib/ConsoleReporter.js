@@ -4,13 +4,13 @@ var colors = require('colors');
 module.exports = function(opts) {
 	//inspired by mhevery's jasmine-node reporter
 	//https://github.com/mhevery/jasmine-node
-	opts || (opts = {});
+	opts = opts || {};
 
 	var doneCallback = opts.doneCallback || function() {};
 	var print, showColors;
 	if (typeof Ti !== 'undefined') {
-		print = Ti.Platform.osname === 'android' ? 
-			function(s){Ti.API.info(s)} : 
+		print = Ti.Platform.osname === 'android' ?
+			function(s) { Ti.API.info(s); } :
 			Ti.API.info;
 		showColors = false;
 	} else {
@@ -25,7 +25,7 @@ module.exports = function(opts) {
 		failure: 'failure'
 	};
 
-	var plainPrint = function(str) { return str; }
+	var plainPrint = function(str) { return str; };
 	var greenStr = showColors ? function(str) { return str.green; } : plainPrint;
 	var redStr = showColors ? function(str) { return str.red; } : plainPrint;
 	var yellowStr = showColors ? function(str) { return str.yellow; } : plainPrint;
@@ -70,10 +70,12 @@ module.exports = function(opts) {
 	function specFailureDetails(suiteDescription, specDescription, stackTraces, messages) {
 		print(' ');
 		print(suiteDescription + ' ' + specDescription);
-		for (var i = 0; i < messages.length; i++) {
+
+		var i;
+		for (i = 0; i < messages.length; i++) {
 			print(indent(messages[i], 2));
 		}
-		for (var i = 0; i < stackTraces.length; i++) {
+		for (i = 0; i < stackTraces.length; i++) {
 			print(indent(stackTraces[i], 2));
 		}
 	}

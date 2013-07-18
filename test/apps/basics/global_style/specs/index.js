@@ -8,7 +8,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: "#fff",
-        		id: "index"
+				id: "index"
 			}
 		});
 	});

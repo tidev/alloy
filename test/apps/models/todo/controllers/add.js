@@ -6,7 +6,7 @@ function addItem() {
         item : $.itemField.value,
         done : 0
     });
-    
+
     // add new model to the global collection
     todos.add(task);
 
@@ -29,4 +29,4 @@ function closeKeyboard(e) {
 
 function closeWindow() {
     $.addWin.close();
-};
+}

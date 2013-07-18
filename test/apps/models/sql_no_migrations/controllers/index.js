@@ -17,8 +17,8 @@ function addThing(e) {
 	things.add(model);
 	model.save();
 
-	// let's refresh so we can see the ids coming from the 
-	// autoincrement field in the sqlite database in the 
+	// let's refresh so we can see the ids coming from the
+	// autoincrement field in the sqlite database in the
 	// row click alerts
 	things.fetch();
 }

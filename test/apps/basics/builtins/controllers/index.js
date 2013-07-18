@@ -6,11 +6,11 @@
 var animation = require('alloy/animation'),
 	string = require('alloy/string');
 
-function ShakeClick(e) { 
+function ShakeClick(e) {
     animation.shake($.mover, 0, function (){ alert("Shake ended."); });
 }
 
-function FlashClick(e) { 
+function FlashClick(e) {
     animation.flash($.mover);
 }
 

@@ -35,7 +35,7 @@ module.exports = function(name, args, program) {
 
 	// create widget.json manifest file
 	fs.writeFileSync(
-		path.join(paths.widget,'widget.json'), 
+		path.join(paths.widget,'widget.json'),
 		_.template(fs.readFileSync(paths.widgetTemplate,'utf8'), {
 			id: escapeDoubleQuotes(widgetId),
 			name: escapeDoubleQuotes(name),
@@ -46,10 +46,10 @@ module.exports = function(name, args, program) {
 
 	// Add this widget as a dependency to our project
 	var configReadPath = path.existsSync(paths.config) ? paths.config : paths.configTemplate;
-	var content = fs.readFileSync(configReadPath,'utf8'); 
-	try { 
+	var content = fs.readFileSync(configReadPath,'utf8');
+	try {
 		var json = jsonlint.parse(content);
-		json.dependencies || (json.dependencies = {});
+		json.dependencies = json.dependencies || {};
 		json.dependencies[widgetId] = VERSION_DEFAULT;
 		fs.writeFileSync(paths.config, JSON.stringify(json, null, 4));
 	} catch (e) {
@@ -57,7 +57,7 @@ module.exports = function(name, args, program) {
 	}
 
 	logger.info('Generated widget named ' + name);
-}
+};
 
 function getPaths(appPath, widgetId) {
 	var alloy = path.join(__dirname,'..','..','..');

@@ -7,7 +7,11 @@ function openLink(e) {
 	win.add(Ti.UI.createWebView({
 		url: model.get('link')
 	}));
-	OS_IOS ? Alloy.Globals.navgroup.open(win) : win.open();
+	if (OS_IOS) {
+		Alloy.Globals.navgroup.open(win);
+	} else {
+		win.open();
+	}
 }
 
 $.theColor.backgroundColor = model.get('color');

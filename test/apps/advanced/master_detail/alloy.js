@@ -36,6 +36,6 @@ if (!OS_IOS && !OS_ANDROID) {
 			height: "5' 6\"",
 			weight: '121',
 			record: '31-1'
-		}	
-	}
+		}
+	};
 }

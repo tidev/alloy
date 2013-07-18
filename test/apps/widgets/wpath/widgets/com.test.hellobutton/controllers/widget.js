@@ -1,6 +1,6 @@
 function sayHello() {
 	// WPATH() will automatically make the path given to require() relative
-	// to the widget's folder structure in the project. If you were to put 
+	// to the widget's folder structure in the project. If you were to put
 	// the path in manually, it would look like this:
 	//
 	//     require('com.test.mywidget/hello').sayHello();

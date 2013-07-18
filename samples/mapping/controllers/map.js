@@ -8,13 +8,13 @@ exports.addAnnotation = function(geodata) {
     var annotation = Alloy.createController('annotation', {
         title: geodata.title,
         latitude: geodata.coords.latitude,
-        longitude: geodata.coords.longitude,
+        longitude: geodata.coords.longitude
     });
-    $.map.addAnnotation(annotation.getView()); 
+    $.map.addAnnotation(annotation.getView());
     $.map.setLocation({
-        latitude: geodata.coords.latitude, 
+        latitude: geodata.coords.latitude,
         longitude: geodata.coords.longitude,
-        latitudeDelta: 1, 
+        latitudeDelta: 1,
         longitudeDelta: 1
     });
 };

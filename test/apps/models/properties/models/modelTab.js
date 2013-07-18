@@ -1,4 +1,3 @@
-
 exports.definition = {
 	config: {
 		"columns": {
@@ -14,4 +13,4 @@ exports.definition = {
 			"collection_name": "singleModel"
 		}
 	}
-}
+};
