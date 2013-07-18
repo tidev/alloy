@@ -84,7 +84,7 @@ function parse(node, state, args) {
 	} else {
 		var module = node.getAttribute('module');
 		if (module) {
-			createFunc = node.getAttribute('method') || 'createView';
+			createFunc = node.getAttribute('method') || createFunc;
 			args.ns = 'require("'+module+'")';
 			delete args.createArgs['module'];
 			delete args.createArgs['method'];
