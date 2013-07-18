@@ -1,0 +1,19 @@
+<Alloy>
+	<Window backgroundColor="#fff">
+		<!--
+			Making sure single quote('), double quote("), and ampersand(&amp;) render correctly
+			when used in markup. Using a bare & instead of &amp; will work too, but is bad practice.
+		-->
+		<Label>'Hello foo &amp; bar"</Label>
+		<Button bottom="50">'Hello foo &amp; bar"</Button>
+
+		<OptionDialog id="options" title="App Options" destructive="3" cancel="2">
+			<Options>
+				<Option>option &amp;1</Option>
+				<Option>option 2</Option>
+				<Option>cancel &amp;</Option>
+				<Option>destructive</Option>
+			</Options>
+		</OptionDialog>
+	</Window>
+</Alloy>

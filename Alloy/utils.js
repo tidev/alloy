@@ -23,7 +23,7 @@ exports.XML = {
 				str += serializer.serializeToString(node.childNodes[c]);
 			}
 		}
-		return str;
+		return str.replace(/\&amp;/g,'&');
 	},
 	getElementsFromNodes: function(nodeList) {
 		var elems = [];

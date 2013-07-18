@@ -1,0 +1,3 @@
+$.index.open();
+
+$.options.show();
