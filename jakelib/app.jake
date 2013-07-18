@@ -113,7 +113,8 @@ namespace('app', function() {
 				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
-					path.join(targetAppPath,'lib')
+					path.join(targetAppPath,'lib'),
+					{preserve:true}
 				);
 				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
 			}
