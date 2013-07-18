@@ -22,12 +22,21 @@
 		<Module module="specialView" left="50dp"/>
 
 		<!--
-			finally we can specify an explicit "method" to be used to create the UI
+			We can specify an explicit "method" to be used to create the UI
 			component. Also, since these all return a valid Titanium proxy object, you can
 			further nest Titanium proxy objects inside of them.
 		-->
 		<Module module="specialView" method="createMassiveGreenView" onClick="doClick">
 			<Label>click me</Label>
 		</Module>
+
+		<!--
+			Finally, we can make use of the node name to get around using the custom
+			"method" for creation.
+		-->
+		<MassiveGreenView module="specialView" onClick="doClick">
+			<Label>or click me!</Label>
+		</MassiveGreenView>
+		<View module="specialView" onClick="doClick"/>
 	</Window>
 </Alloy>
