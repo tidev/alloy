@@ -26,7 +26,7 @@ function parse(node, state, args) {
 	if (state.local) {
 		args.symbol = CU.generateUniqueId();
 	}
-
+		
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
@@ -78,7 +78,7 @@ function parse(node, state, args) {
 	} else {
 		var module = node.getAttribute('module');
 		if (module) {
-			createFunc = node.getAttribute('method') || 'createView';
+			createFunc = node.getAttribute('method') || createFunc;
 			args.ns = 'require("'+module+'")';
 			delete args.createArgs['module'];
 			delete args.createArgs['method'];
