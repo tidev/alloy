@@ -4,7 +4,7 @@ function doClick(e) {
 }
 
 function setCurrentTab(e) {
-	currentTab = e.index;
+	currentTab = e.index + 1;
 }
 
 $.index.open();

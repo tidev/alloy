@@ -1,21 +1,21 @@
 <Alloy>
-	<TabGroup>
+	<TabGroup onFocus="setCurrentTab">
 		<Menu>
 			<MenuItem title="help" icon="/ic_menu_help.png" onClick="doClick"/>
 			<MenuItem title="home" icon="/ic_menu_home.png" onClick="doClick"/>
 		</Menu>
-		<Tab title="tab 1" onFocus="setCurrentTab">
+		<Tab title="tab 1">
 			<Window title="window 1">
 				<Label>Label 1</Label>
 			</Window>
 		</Tab>
 		<Tab title="tab 2">
-			<Window title="window 2" onFocus="setCurrentTab">
+			<Window title="window 2">
 				<Label>Label 2</Label>
 			</Window>
 		</Tab>
 		<Tab title="tab 3">
-			<Window title="window 3" onFocus="setCurrentTab">
+			<Window title="window 3">
 				<Label>Label 3</Label>
 			</Window>
 		</Tab>
