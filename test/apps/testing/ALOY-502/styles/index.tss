@@ -1,0 +1,19 @@
+'Window': {
+	backgroundColor: '#fff',
+	modal: false
+}
+
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	color: '#000',
+	textAlign: 'center',
+	font: {
+		fontSize: '48dp',
+		fontWeight: 'bold'
+	}
+}
+
+'#index': {
+	backgroundColor: '#fff'
+}
