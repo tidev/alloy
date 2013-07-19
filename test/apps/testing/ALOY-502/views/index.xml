@@ -1,0 +1,12 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="tab 1">
+			<Widget src="alloy.window"/>
+		</Tab>
+		<Tab title="tab 2">
+			<Window title="window 2">
+				<Label>label 2</Label>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
