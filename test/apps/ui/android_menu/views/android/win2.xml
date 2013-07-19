@@ -1,6 +1,6 @@
 <Alloy>
 	<Window>
-		<!-- You can also require andorid menus -->
+		<!-- You can also require android menus -->
 		<Require src="menu"/>
 
 		<!-- Build the rest of your UI as usual -->

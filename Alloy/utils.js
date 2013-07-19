@@ -214,6 +214,14 @@ exports.tiapp = {
 	}
 };
 
+exports.readTemplate = function(name) {
+	return fs.readFileSync(path.join(__dirname,'template',name),'utf8');
+};
+
+exports.evaluateTemplate = function(name, o) {
+	return _.template(exports.readTemplate(name), o);
+};
+
 exports.getAndValidateProjectPaths = function(argPath) {
 	var projectPath = path.resolve(argPath);
 
