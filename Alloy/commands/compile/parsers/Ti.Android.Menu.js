@@ -15,11 +15,13 @@ function parse(node, state, args) {
 	// if this isn't android, generate no code, but show a warning
 	var config = CU.getCompilerConfig(),
 		platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
-	if (platform !== 'android' && node.getAttribute('platform') !== 'android') {
-		logger.warn([
-			'<Menu> is only available in Android',
-			'To get rid of this warning, add platform="android" to your <Menu> element'
-		]);
+	if (platform !== 'android') {
+		if (node.getAttribute('platform') !== 'android') {
+			logger.warn([
+				'<Menu> is only available in Android',
+				'To get rid of this warning, add platform="android" to your <Menu> element'
+			]);
+		}
 		return {
 			parent: {},
 			styles: state.styles,
@@ -42,6 +44,7 @@ function parse(node, state, args) {
 
 		// generate code for the MenuItem
 		code += CU.generateNodeExtended(child, state, {
+			androidMenu: true,
 			parent: {
 				node: node,
 				symbol: eventObject + '.menu'
