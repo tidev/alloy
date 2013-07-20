@@ -25,7 +25,6 @@ function Sync(method, model, opts) {
 					list.push(TAP.getObject(prop));
 				}
 			});
-			model.reset(list);
 			resp = list;
 		} else {
 			// is model
