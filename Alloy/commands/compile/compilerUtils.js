@@ -691,9 +691,11 @@ exports.validateNodeName = function(node, names) {
 	// Is it an Alloy.Require?
 	if (fullname === 'Alloy.Require' || fullname === 'Alloy.Widget') {
 		var inspect = exports.inspectRequireNode(node);
-		ret = _.find(names, function(name) { return inspect.names[0] === name; });
-		if (/*inspect.length === 1 && */ ret) {
-			return ret;
+		ret = _.find(inspect.children, function(n) {
+			return _.contains(names, exports.getNodeFullname(n));
+		});
+		if (ret) {
+			return exports.getNodeFullname(ret);
 		}
 	}
 

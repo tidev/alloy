@@ -103,15 +103,16 @@ function parse(node, state, args) {
 	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + styler.generateStyleParams(
-		state.styles,
-		args.classes,
-		args.id,
-		type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
-		args.createArgs,
-		state
-	) + ");\n";
-	if (args.parent.symbol && !state.templateObject) {
+	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src +
+		"'," + extraArgs + styler.generateStyleParams(
+			state.styles,
+			args.classes,
+			args.id,
+			type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
+			args.createArgs,
+			state
+		) + ");\n";
+	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	}
 
