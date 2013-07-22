@@ -49,7 +49,7 @@ function parse(node, state, args) {
 	var childTemplates;
 	if (children.length > 0) {
 		childTemplates = CU.generateUniqueId();
-		code += 'var ' + childTemplates + '=[];'; 
+		code += 'var ' + childTemplates + '=[];';
 
 		_.each(children, function(child) {
 			code += CU.generateNodeExtended(child, state, {
@@ -66,13 +66,13 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = {"
+	code += (state.local ? 'var ' : '') + args.symbol + " = {";
 	code += _.reduce(argsObject, function(memo,v,k) {
 		return memo + k + ':' + v + ',';
 	}, '');
 	code += '};';
 
-	code += (state.templateObject || CONST.ITEM_TEMPLATE_VAR); 
+	code += (state.templateObject || CONST.ITEM_TEMPLATE_VAR);
 	code +=	'["' + name + '"]=' + args.symbol + ';';
 
 	// Update the parsing state
@@ -83,5 +83,5 @@ function parse(node, state, args) {
 		condition: state.condition || undefined,
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

@@ -373,13 +373,15 @@ function installDatabase(config) {
 	// get the database name from the db file path
 	var dbFile = config.adapter.db_file;
 	var table = config.adapter.collection_name;
-	var rx = /^([\/]{0,1})([^\/]+)\.[^\/]+$/;
+
+ 	var rx = /(^|.*\/)([^\/]+)\.[^\/]+$/;
 	var match = dbFile.match(rx);
 	if (match === null) {
 		throw 'Invalid sql database filename "' + dbFile + '"';
 	}
 	//var isAbsolute = match[1] ? true : false;
-	var dbName = config.adapter.db_name = match[2];
+	config.adapter.db_name = config.adapter.db_name || match[2];
+	var dbName = config.adapter.db_name;
 
 	// install and open the preloaded db
 	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');

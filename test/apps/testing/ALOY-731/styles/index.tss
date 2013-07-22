@@ -1,0 +1,32 @@
+'TextField': {
+	top: '10dp',
+	left: '15dp',
+	right: '15dp',
+	height: '40dp',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
+}
+
+'TextArea': {
+	top: '10dp',
+	left: '15dp',
+	right: '15dp',
+	height: '70dp',
+	borderRadius: 8,
+	borderColor: '#888',
+	borderWidth: 2
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+'.clear': {
+	hintText: 'I clear on edit'
+}
+
+'.noclear': {
+	hintText: 'I don\'t clear on edit'
+}

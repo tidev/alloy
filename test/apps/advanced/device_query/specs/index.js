@@ -19,7 +19,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: bgColor,
-        		id: "win"
+				id: "win"
 			}
 		});
 	});
@@ -43,15 +43,15 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				color: color,
-	            height: Ti.UI.SIZE,
-	            width: Ti.UI.SIZE,
-	            textAlign: "center",
-	            font: {
-	                fontSize: (Alloy.isTablet ? 96 : 48) + (OS_MOBILEWEB ? 'px' : 0),
-	                fontWeight: "bold"
-	            },
-	            text: text,
-	            id: 'osLabel'
+				height: Ti.UI.SIZE,
+				width: Ti.UI.SIZE,
+				textAlign: "center",
+				font: {
+					fontSize: (Alloy.isTablet ? 96 : 48) + (OS_MOBILEWEB ? 'px' : 0),
+					fontWeight: "bold"
+				},
+				text: text,
+				id: 'osLabel'
 			}
 		});
 	});

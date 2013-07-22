@@ -37,4 +37,4 @@ exports.process = function(ast, config) {
 		global_defs   : defines      // global definitions
 	});
 	return ast.transform(compressor);
-}
+};

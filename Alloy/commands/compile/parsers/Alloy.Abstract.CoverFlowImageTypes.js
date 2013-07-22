@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._; 
+var _ = require('../../../lib/alloy/underscore')._;
 
 exports.parse = function(node, state) {
 	state = _.extend(state, {

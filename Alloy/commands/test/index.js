@@ -24,7 +24,7 @@ module.exports = function(args, program) {
 	var newArgs = [];
 	if (program.spec && program.app) {
 		logger.warn('Ignoring --app, --spec takes precedence...');
-	} 
+	}
 
 	// determine whether we're running a spec or a test app
 	if (!program.spec && !program.app) {
@@ -54,4 +54,4 @@ module.exports = function(args, program) {
 	testcmd.stderr.on('data', function (data) {
 		console.log(U.trim(data + ''));
 	});
-}
+};

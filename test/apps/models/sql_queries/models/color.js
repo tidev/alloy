@@ -2,8 +2,8 @@ exports.definition = {
 	config: {
 		"adapter": {
 			"type": "sql",
-			"db_file": "/colors.sqlite",
+			"db_file": "/dbs/colors.sqlite",
 			"collection_name": "colors"
 		}
 	}
-}
+};

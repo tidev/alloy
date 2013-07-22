@@ -23,4 +23,4 @@ exports.definition = {
 			"idAttribute": "fighterId"
 		}
 	}
-}
+};

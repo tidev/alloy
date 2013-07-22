@@ -1,6 +1,6 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
-	CU = require('../compilerUtils'); 
+	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);

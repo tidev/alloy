@@ -11,7 +11,7 @@ _.extend(global, jlib);
 
 //Set up Jasmine to print to the console with our custom printer
 jasmine.getEnv().addReporter(new ConsoleReporter({
-	print: console.log, 
+	print: console.log,
 	showColors: true
 }));
 
@@ -21,7 +21,7 @@ function runSpecs(names) {
 		var fullpath = 'test/specs/' + name;
 		if (fs.statSync(fullpath).isDirectory()) {
 			fullpath = fullpath + '/index.js';
-		} 
+		}
 		console.log('Loading test spec from "' + fullpath + '"');
 		require('../' + fullpath);
 	});
@@ -29,14 +29,14 @@ function runSpecs(names) {
 }
 
 //Set up Jake namespace for testing
-namespace('test', function() {	
+namespace('test', function() {
 	desc('run a specific Jasmine test spec, by name - e.g. jake test:spec[specName] or jake test:spec[spec1,spec2,spec3]');
 	task('spec', function() {
 		runSpecs(arguments);
 	});
-	
+
 	desc('run all test specs in the spec directory - e.g. jake test:all');
 	task('all', function() {
-		runSpecs(fs.readdirSync(path.join(process.cwd(), 'test', 'specs')));		
+		runSpecs(fs.readdirSync(path.join(process.cwd(), 'test', 'specs')));
 	});
 });

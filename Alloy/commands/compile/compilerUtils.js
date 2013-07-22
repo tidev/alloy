@@ -24,18 +24,18 @@ var alloyRoot = path.join(__dirname,'..','..'),
 ////////// constants //////////
 ///////////////////////////////
 var RESERVED_ATTRIBUTES = [
-		'platform', 
-		'formFactor', 
-		CONST.BIND_COLLECTION, 
+		'platform',
+		'formFactor',
+		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY
 	],
 	RESERVED_ATTRIBUTES_REQ_INC = [
-		'platform', 
-		'type', 
-		'src', 
-		'formFactor', 
-		CONST.BIND_COLLECTION, 
+		'platform',
+		'type',
+		'src',
+		'formFactor',
+		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY
 	],
@@ -57,16 +57,13 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
-exports.autoStyle;
-exports.currentManifest;
-exports.currentDefaultId;
 
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
 exports.getCompilerConfig = function() {
 	return compilerConfig;
-}
+};
 
 exports.generateVarName = function(id, name) {
 	if (_.contains(CONST.JS_RESERVED_ALL,id)) {
@@ -77,11 +74,11 @@ exports.generateVarName = function(id, name) {
 		]);
 	}
 	return '$.__views.' + id;
-}
+};
 
 exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
-}
+};
 
 exports.getNodeFullname = function(node) {
 	var name = node.nodeName,
@@ -89,11 +86,11 @@ exports.getNodeFullname = function(node) {
 		fullname = ns + '.' + name;
 
 	return fullname;
-}
+};
 
 exports.getParserArgs = function(node, state, opts) {
-	state || (state = {});
-	opts || (opts = {});
+	state = state || {};
+	opts = opts || {};
 
 	var defaultId = opts.defaultId || undefined,
 		doSetId = opts.doSetId === false ? false : true,
@@ -106,25 +103,28 @@ exports.getParserArgs = function(node, state, opts) {
 		platformObj;
 
 	// make sure we're not reusing the default ID for the first top level element
-	if (id === CU.currentDefaultId && 
-		(node.parentNode && node.parentNode.nodeName !== 'Alloy')) {
-		U.dieWithNode(node, [
-			'Cannot use this view\'s default ID  "' + id + '" for current node',
-			'Only a top-level element in a view can use the default ID'
+	if (id === exports.currentDefaultId &&
+		(node.parentNode && node.parentNode.nodeName !== 'Alloy') &&
+		!node.__idWarningHandled) {
+		logger.warn([
+			'<' + name + '> at line ' + node.lineNumber +
+			' is using this view\'s default ID "' + id + '". ' +
+			'Only a top-level element in a view should use the default ID'
 		]);
+		node.__idWarningHandled = true;
 	}
 
 	// handle binding arguments
 	var bindObj = {};
 	bindObj[CONST.BIND_COLLECTION] = node.getAttribute(CONST.BIND_COLLECTION);
-	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE); 
-	bindObj[CONST.BIND_TRANSFORM] = node.getAttribute(CONST.BIND_TRANSFORM); 
-	bindObj[CONST.BIND_FUNCTION] = node.getAttribute(CONST.BIND_FUNCTION); 
+	bindObj[CONST.BIND_WHERE] = node.getAttribute(CONST.BIND_WHERE);
+	bindObj[CONST.BIND_TRANSFORM] = node.getAttribute(CONST.BIND_TRANSFORM);
+	bindObj[CONST.BIND_FUNCTION] = node.getAttribute(CONST.BIND_FUNCTION);
 
 	// cleanup namespaces and nodes
 	ns = ns.replace(/^Titanium\./, 'Ti.');
-	if (doSetId && !_.contains(CONST.MODEL_ELEMENTS, fullname)) { 
-		node.setAttribute('id', id); 
+	if (doSetId && !_.contains(CONST.MODEL_ELEMENTS, fullname)) {
+		node.setAttribute('id', id);
 	}
 
 	// process the platform attribute
@@ -151,10 +151,10 @@ exports.getParserArgs = function(node, state, opts) {
 	}
 
 	// get create arguments and events from attributes
-	var createArgs = {}, 
+	var createArgs = {},
 		events = [];
-	var attrs = _.contains(['Alloy.Require'], fullname) ? 
-		RESERVED_ATTRIBUTES_REQ_INC : 
+	var attrs = _.contains(['Alloy.Require'], fullname) ?
+		RESERVED_ATTRIBUTES_REQ_INC :
 		RESERVED_ATTRIBUTES;
 
 	// determine whether to autoStyle this component
@@ -174,7 +174,7 @@ exports.getParserArgs = function(node, state, opts) {
 	if (autoStyle) {
 		createArgs[CONST.APINAME_PROPERTY] = fullname;
 	}
-	
+
 	_.each(node.attributes, function(attr) {
 		var attrName = attr.nodeName;
 		if (_.contains(attrs, attrName)) { return; }
@@ -186,7 +186,7 @@ exports.getParserArgs = function(node, state, opts) {
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			if (/^(?:Ti|Titanium)\./.test(theValue)) { 
+			if (/^\s*(?:(?:Ti|Titanium)\.|L\(.+\)\s*$)/.test(theValue)) {
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
 
@@ -196,18 +196,22 @@ exports.getParserArgs = function(node, state, opts) {
 				}
 			} else {
 				createArgs[attrName] = theValue;
-			}			
+			}
 		}
 	});
-	
+
+	if (autoStyle && !createArgs[CONST.CLASS_PROPERTY]) {
+		createArgs[CONST.CLASS_PROPERTY] = [];
+	}
+
 	return _.extend({
 		ns: ns,
 		name: name,
-		id: id, 
+		id: id,
 		fullname: fullname,
 		formFactor: node.getAttribute('formFactor'),
 		symbol: exports.generateVarName(id, name),
-		classes: node.getAttribute('class').split(' ') || [],	
+		classes: node.getAttribute('class').split(' ') || [],
 		parent: state.parent || {},
 		platform: platformObj,
 		createArgs: createArgs,
@@ -217,16 +221,16 @@ exports.getParserArgs = function(node, state, opts) {
 
 exports.generateNodeExtended = function(node, state, newState) {
 	return exports.generateNode(node, _.extend(_.clone(state), newState));
-}
+};
 
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
-		code = { 
+		code = {
 			content: '',
-			pre: '' 
+			pre: ''
 		};
 
 	// Check for platform specific considerations
@@ -236,10 +240,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		_.each(args.platform, function(v,k) {
 			conditionArray.push(exports.CONDITION_MAP[k][conditionType]);
 		});
-		
+
 		code.condition = '(' + conditionArray.join(' || ') + ')';
 	}
-	
+
 	//Add form factor condition, if application form-factor specific runtime check
 	if (args.formFactor && exports.CONDITION_MAP[args.formFactor]) {
 		var check = exports.CONDITION_MAP[args.formFactor].runtime;
@@ -260,7 +264,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	var parserRequire = 'default';
 	if (_.contains(fs.readdirSync(parsersDir), args.fullname+'.js')) {
 		parserRequire = args.fullname+'.js';
-	} 
+	}
 
 	// Execute the appropriate tag parser and append code
 	var isLocal = state.local;
@@ -268,12 +272,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	code.content += state.code;
 
 	// Use local variable if given
-	isLocal && state.parent && (args.symbol = state.parent.symbol || args.symbol); 
+	if (isLocal && state.parent) { args.symbol = state.parent.symbol || args.symbol; }
 
 	// Use manually given args.symbol if present
-	state.args && (args.symbol = state.args.symbol || args.symbol);
-	//args.symbol = state.args && state.args.symbol ? state.args.symbol : args.symbol;
-	
+	if (state.args) { args.symbol = state.args.symbol || args.symbol; }
+
 	// add to list of top level views, if its top level
 	if (isTopLevel) { code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');'; }
 
@@ -284,13 +287,13 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// handle any events from markup
-	if (args.events && args.events.length > 0 && 
+	if (args.events && args.events.length > 0 &&
 		!_.contains(CONST.SKIP_EVENT_HANDLING, args.fullname) &&
 		!state.isViewTemplate) {
 		// determine which function name to use for event handling:
 		// * addEventListener() for Titanium proxies
 		// * on() for everything else (controllers, models, collections)
-		var eventFunc = /^(?:Ti|Titanium)\./.test(args.fullname) ? 'addEventListener' : 'on';
+		var eventFunc = /^(?:Ti\.|Titanium\.|Alloy\.Module)/.test(args.fullname) ? 'addEventListener' : 'on';
 
 		_.each(args.events, function(ev) {
 			var eventObj = {
@@ -315,7 +318,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			// add the generated code to the view code and post-controller code respectively
 			code.content += _.template(immediateTemplate, eventObj);
 			exports.postCode += _.template(deferTemplate, eventObj);
-		});	
+		});
 	}
 
 	// Continue parsing if necessary
@@ -326,11 +329,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
 				var newState = _.defaults({ parent: p }, state);
-				code.content += exports.generateNode(parent.childNodes.item(i), newState); 
+				code.content += exports.generateNode(parent.childNodes.item(i), newState);
 			}
-		}); 
+		});
 	}
-	
+
 	if (!isModelOrCollection) {
 		return code.condition ? _.template(codeTemplate, code) : code.content;
 	} else {
@@ -339,7 +342,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			pre: code.condition ? _.template(codeTemplate, {content:code.pre}) : code.pre
 		};
 	}
-}
+};
 
 exports.componentExists = function(appRelativePath, manifest) {
 	var isWidget = manifest;
@@ -359,16 +362,16 @@ exports.componentExists = function(appRelativePath, manifest) {
 
 	if (isWidget) {
 		componentPath = path.join(
-			config.dir.resourcesAlloy, 
-			CONST.DIR.WIDGET, 
-			manifest.id, 
-			CONST.DIR.COMPONENT, 
+			config.dir.resourcesAlloy,
+			CONST.DIR.WIDGET,
+			manifest.id,
+			CONST.DIR.COMPONENT,
 			basename + '.' + CONST.FILE_EXT.COMPONENT
 		);
-	} 
+	}
 
 	return path.existsSync(componentPath);
-}
+};
 
 exports.expandRequireNode = function(requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
@@ -390,13 +393,17 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		if (!src) {
 			return null;
 		} else if (fullname === 'Alloy.Require' && type === 'view') {
-			platform && fullpaths.push(path.join(compilerConfig.dir.views,platform,src));
+			if (platform) { fullpaths.push(path.join(compilerConfig.dir.views,platform,src)); }
 			fullpaths.push(path.join(compilerConfig.dir.views,src));
-		} else if (fullname === 'Alloy.Widget' || 
-			       fullname === 'Alloy.Require' && type === 'widget') {
-			platform && fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',platform,name));
+		} else if (fullname === 'Alloy.Widget' ||
+			(fullname === 'Alloy.Require' && type === 'widget')) {
+			if (platform) {
+				fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',platform,name));
+			}
 			fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',name));
-			platform && fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',platform,name));
+			if (platform) {
+				fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',platform,name));
+			}
 			fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',name));
 		} else {
 			return null;
@@ -404,8 +411,9 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 
 		// check the extensions on the paths to check
 		var found = false;
+		var fullpath;
 		for (var i = 0; i < fullpaths.length; i++) {
-			var fullpath = fullpaths[i];
+			fullpath = fullpaths[i];
 			fullpath += regex.test(fullpath) ? '' :  '.' + CONST.FILE_EXT.VIEW;
 			if (fs.existsSync(fullpath)) {
 				found = true;
@@ -416,7 +424,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		// abort if there's no view to be found
 		if (!found) {
 			U.die([
-				type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') + 
+				type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') +
 					'does not exist.',
 				'The following paths were inspected:'
 			].concat(fullpaths));
@@ -429,7 +437,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	function insertAfter(newElement,targetElement) {
 		//target is what you want it to go after. Look for this elements parent.
 		var parent = targetElement.parentNode;
-	 
+
 		//if the parents lastchild is the targetElement...
 		if(parent.lastchild == targetElement) {
 			//add the newElement after the target element.
@@ -492,7 +500,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	}
 
 	return cloneNode;
-}
+};
 
 exports.inspectRequireNode = function(node) {
 	var newNode = exports.expandRequireNode(node, true);
@@ -516,7 +524,7 @@ exports.inspectRequireNode = function(node) {
 		length: names.length,
 		names: names
 	};
-}
+};
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 	_.each(resources, function(dir) {
@@ -535,13 +543,13 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 			}
 		});
 	});
-}
+};
 
 function updateImplicitNamspaces(platform) {
 	switch(platform) {
 		case 'android':
 			break;
-		case 'ios': 
+		case 'ios':
 			break;
 		case 'mobileweb':
 			CONST.IMPLICIT_NAMESPACES.NavigationGroup = 'Ti.UI.MobileWeb';
@@ -575,7 +583,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	// validation
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
-	
+
 	var config = exports.generateConfig(obj);
 	obj.theme = config.theme;
 	obj.sourcemap = config.sourcemap;
@@ -590,7 +598,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	return obj;
 };
 
-exports.generateConfig = function(obj) { 
+exports.generateConfig = function(obj) {
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
 	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
@@ -600,15 +608,16 @@ exports.generateConfig = function(obj) {
 	var appCfg = path.join(obj.dir.home,'config.'+CONST.FILE_EXT.CONFIG);
 	var resourcesBase = (function() {
 		var base = obj.dir.resources;
-		platform && (base = path.join(base,platform));
+		if (platform) { base = path.join(base,platform); }
 		return path.join(base,'alloy');
 	})();
 	var resourcesCfg = path.join(resourcesBase,'CFG.js');
-	
+
 	// parse config.json, if it exists
 	if (path.existsSync(appCfg)) {
+		var j;
 		try {
-			var j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
+			j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
 		} catch (e) {
 			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 		}
@@ -617,7 +626,7 @@ exports.generateConfig = function(obj) {
 			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
 				logger.debug(k + ' = ' + JSON.stringify(v));
 				o[k] = v;
-			} 
+			}
 		});
 
 		if (alloyConfig) {
@@ -629,9 +638,8 @@ exports.generateConfig = function(obj) {
 		// app/config.json has not been modified since CFG.js was created
 		if (U.changeTime(appCfg) < U.changeTime(resourcesCfg)) {
 			return o;
-		} 
-	} else if (fs.existsSync(resourcesCfg) && 
-			   fs.readFileSync(resourcesCfg,'utf8') === defaultCfg) {
+		}
+	} else if (fs.existsSync(resourcesCfg) && fs.readFileSync(resourcesCfg,'utf8') === defaultCfg) {
 		return o;
 	}
 
@@ -652,14 +660,14 @@ exports.loadController = function(file) {
 		parentControllerName: '',
 		controller: '',
 		pre: ''
-	};
+	}, contents;
 
 	// Read the controller file
 	try {
 		if (!path.existsSync(file)) {
 			return code;
 		}
-		var contents = fs.readFileSync(file,'utf8');
+		contents = fs.readFileSync(file,'utf8');
 	} catch (e) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
@@ -674,18 +682,20 @@ exports.loadController = function(file) {
 exports.validateNodeName = function(node, names) {
 	var fullname = exports.getNodeFullname(node);
 	var ret = null;
-	_.isArray(names) || (names = [names]);
+	if (!_.isArray(names)) { names = [names]; }
 
 	// Is the node name in the given list of valid names?
-	ret = _.find(names, function(name) { return name === fullname });
+	ret = _.find(names, function(name) { return name === fullname; });
 	if (ret) { return ret; }
 
 	// Is it an Alloy.Require?
 	if (fullname === 'Alloy.Require' || fullname === 'Alloy.Widget') {
 		var inspect = exports.inspectRequireNode(node);
-		ret = _.find(names, function(name) { return inspect.names[0] === name });
-		if (/*inspect.length === 1 && */ ret) { 
-			return ret;
+		ret = _.find(inspect.children, function(n) {
+			return _.contains(names, exports.getNodeFullname(n));
+		});
+		if (ret) {
+			return exports.getNodeFullname(ret);
 		}
 	}
 

@@ -39,21 +39,21 @@ function changeImage(e) {
 	$.theImage.height = styles[imageIndex].height;
 	$.theImage.width = styles[imageIndex].width;
 	imageIndex++;
-	imageIndex >= styles.length && (imageIndex = 0);
+	if (imageIndex >= styles.length) { imageIndex = 0; }
 }
 changeImage();
 
-// Print the id, classes, and apiName of all UI components created from XML. 
+// Print the id, classes, and apiName of all UI components created from XML.
 // Depending on the value of "autoStyle" in config.json, the <Alloy> element, or
-// on each individual XML element, you will see whether or not those 
-// properties are populated. 
+// on each individual XML element, you will see whether or not those
+// properties are populated.
 //
-// An XML element without autoStyle enabled by one of the aforementioned means 
-// will have only the id property attached to the proxy. On the other hand, an 
-// XML element with autoStyle enabled will have id, classes, and apiName 
-// attached. This may not seem important now when styles are set only at compile 
-// time (or manually as in the touch listeners above), but is very important 
-// once you start using the $.addClass() and $.removeClass() functions in the 
+// An XML element without autoStyle enabled by one of the aforementioned means
+// will have only the id property attached to the proxy. On the other hand, an
+// XML element with autoStyle enabled will have id, classes, and apiName
+// attached. This may not seem important now when styles are set only at compile
+// time (or manually as in the touch listeners above), but is very important
+// once you start using the $.addClass() and $.removeClass() functions in the
 // "Add/Remove Class" section of this app.
 _.each(['win','scroll','label1','label2','theButton','theImage'], function(id) {
 	var proxy = $[id];

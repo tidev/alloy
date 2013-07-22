@@ -12,4 +12,4 @@ exports.definition = {
 			idAttribute: 'id'
 		}
 	}
-}
+};

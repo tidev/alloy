@@ -11,7 +11,7 @@ $.c.addEventListener('click',function(){
 	$.t.text = "You clicked C";
 });
 
-// anything defined against exports will be exposed as methods/properties 
+// anything defined against exports will be exposed as methods/properties
 // on any instance of the widget
 exports.setText = function(text){
 	$.t.text = text;
@@ -19,4 +19,4 @@ exports.setText = function(text){
 
 exports.getText = function() {
 	return $.t.text;
-}
+};

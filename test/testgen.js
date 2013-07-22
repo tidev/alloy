@@ -9,7 +9,7 @@ var fs = require('fs'),
 var alloyRoot = path.join(__dirname,'..'),
 	paths = {
 		apps: path.join(alloyRoot,'test','apps'),
-		harness: path.join(alloyRoot,'test','projects','Harness') 
+		harness: path.join(alloyRoot,'test','projects','Harness')
 	},
 	platformsArray = _.keys(platforms),
 	platformCtr = 0;
@@ -68,7 +68,7 @@ function doCompile(platform) {
 					fs.unlinkSync(bc);
 				}
 
-				console.log('Generated runtime files in ' + 
+				console.log('Generated runtime files in ' +
 					path.join('_generated',platform,l).cyan
 				);
 			}

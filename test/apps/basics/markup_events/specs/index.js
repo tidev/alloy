@@ -8,7 +8,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: "white",
-        		id: "index"
+				id: "index"
 			}
 		});
 	});
@@ -18,10 +18,10 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				width: Ti.UI.SIZE,
-		        height: Ti.UI.SIZE,
-		        color: "#900",
-		        id: "t",
-		        text: "CLICK ME"
+				height: Ti.UI.SIZE,
+				color: "#900",
+				id: "t",
+				text: "CLICK ME"
 			}
 		});
 	});

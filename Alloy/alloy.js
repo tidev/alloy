@@ -38,6 +38,7 @@ program
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
 	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
 	.option('-s, --spec <spec>', 'test spec to use with "alloy test"')
+	.option('-w, --all','require flag for generate styles')
 	.option('-x, --column <column>', 'Column for source map query', 1)
 	.option('-y, --line <line>', 'Line for source map query', 1)
 	.option('-z, --source <source>', 'Source original file for source map query');

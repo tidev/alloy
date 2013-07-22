@@ -1,0 +1,42 @@
+<!--
+	Here we're showing how you can use XML markup to add UI components from arbitrary
+	CommonJS modues into the view hierarchy. The key here is that your module must export
+	a function that returns a single Titanium proxy object. You can have other proxy objects
+	nested inside, but the return value must be a single parent.
+-->
+<Alloy>
+	<Window backgroundColor="#fff" layout="horizontal">
+		<!--
+			Default specialView from commonjs module. There's not need for a "method"
+			attribute since specialView.js defines a "createView" function, which is what
+			<Module> will use by default.
+		-->
+		<Module module="specialView"/>
+
+		<!-- We can use ids and classes to apply styles from TSS -->
+		<Module module="specialView" id="redOne"/>
+		<Module module="specialView" class="blue"/>
+		<Module module="specialView" class="bigger blue"/>
+
+		<!-- and it also supports inline properties as well -->
+		<Module module="specialView" left="50dp"/>
+
+		<!--
+			We can specify an explicit "method" to be used to create the UI
+			component. Also, since these all return a valid Titanium proxy object, you can
+			further nest Titanium proxy objects inside of them.
+		-->
+		<Module module="specialView" method="createMassiveGreenView" onClick="doClick">
+			<Label>click me</Label>
+		</Module>
+
+		<!--
+			Finally, we can make use of the node name to get around using the custom
+			"method" for creation.
+		-->
+		<MassiveGreenView module="specialView" onClick="doClick">
+			<Label>or click me!</Label>
+		</MassiveGreenView>
+		<View module="specialView" onClick="doClick"/>
+	</Window>
+</Alloy>

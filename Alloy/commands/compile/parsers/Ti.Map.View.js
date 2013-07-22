@@ -38,11 +38,11 @@ function parse(node, state, args) {
 			});
 
 			// When we are done processing the Annotation, remove it from the
-			// markup. That way we can just pass back the current Map state as 
+			// markup. That way we can just pass back the current Map state as
 			// the returned state and it can continue to process any other children
 			// without special handling
 			node.removeChild(child);
-		} 
+		}
 	}
 
 	// Create the initial Map code
@@ -51,5 +51,5 @@ function parse(node, state, args) {
 	code += mapState.code;
 
 	// Update the parsing state
-	return _.extend(mapState, {code:code}); 
-};
+	return _.extend(mapState, {code:code});
+}

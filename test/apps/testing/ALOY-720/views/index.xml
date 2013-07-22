@@ -1,0 +1,16 @@
+<Alloy>
+	<Window>
+		<NavigationGroup platform="ios">
+			<Window>
+				<RightNavButton>
+					<Widget src="alloy.button" title="ios" onClick="doSave"/>
+				</RightNavButton>
+			</Window>
+		</NavigationGroup>
+		<Menu platform="android">
+			<Widget src="alloy.button" title="android" onClick="doSave"/>
+		</Menu>
+
+		<Label id="info"/>
+	</Window>
+</Alloy>

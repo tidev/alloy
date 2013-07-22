@@ -32,14 +32,14 @@ for (var i = 0; i < 1023; i++) {
 				text: 'And this is the subtitle'
 			}
 		});
-		imageCtr >= IMAGES.length && (imageCtr = 0); 
+		if (imageCtr >= IMAGES.length) { imageCtr = 0; }
 	} else {
 		var textAlign = lastPos === 'left' ? (lastPos = 'right') : (lastPos = 'left');
 		moreItems.push({
 			template: 'template2',
 			label: {
 				text: 'row ' + (i+1),
-				color: '#' + hex + '0000', 
+				color: '#' + hex + '0000',
 				textAlign: textAlign,
 				width: Ti.UI.FILL
 			}

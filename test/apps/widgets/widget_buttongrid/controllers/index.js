@@ -2,7 +2,7 @@ var animation = require('alloy/animation');
 
 function IndexOpen(e) {
     $.logo.init({ image: '/images/alloy.png', width: 216, height: 200, opacity: 0.1 });
-    $.buttongrid.relayout(e);    
+    $.buttongrid.relayout(e);
 }
 
 var red = '#900A05';
@@ -28,6 +28,6 @@ $.buttongrid.init({
     duration: 1000
 });
 
-$.buttongrid.getButton('Drizzle').backgroundColor = "gray"; 
+$.buttongrid.getButton('Drizzle').backgroundColor = "gray";
 
 $.index.open();

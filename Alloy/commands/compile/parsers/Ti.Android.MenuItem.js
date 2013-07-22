@@ -1,4 +1,6 @@
 var CU = require('../compilerUtils'),
+	U = require('../../../utils'),
+	CONST = require('../../../common/constants'),
 	styler = require('../styler'),
 	_ = require('../../../lib/alloy/underscore')._;
 
@@ -9,23 +11,21 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var code = '';
 	var styleObjectCode = styler.generateStyleParams(
-		state.styles, 
-		args.classes, 
-		args.id, 
-		CU.getNodeFullname(node), 
-		_.defaults(state.extraStyle || {}, args.createArgs || {}) 
+		state.styles,
+		args.classes,
+		args.id,
+		CU.getNodeFullname(node),
+		_.defaults(state.extraStyle || {}, args.createArgs || {})
 	);
-	var styleObjectSymbol = CU.generateUniqueId(); 
-	var initStyle = '_.pick(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
-	var postStyle = '_.omit(' + styleObjectSymbol + ',Alloy.Android.menuItemCreateArgs)';
-
-	code += 'var ' + styleObjectSymbol + '=' + styleObjectCode + ';';
-	code += args.symbol + '=' + state.parent.symbol + ".add(" + initStyle + ");";
-	code += args.symbol + '.applyProperties(' + postStyle + ');';
 
 	return {
 		parent: {},
 		styles: state.styles,
-		code: code
+		code: U.evaluateTemplate('Ti.Android.MenuItem.js', {
+			item: args.symbol,
+			parent: state.parent.symbol || CONST.PARENT_SYMBOL_VAR,
+			style: CU.generateUniqueId(),
+			styleCode: styleObjectCode
+		})
 	};
-};
+}

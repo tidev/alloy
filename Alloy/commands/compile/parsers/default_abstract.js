@@ -38,5 +38,5 @@ function parse(node, state, args) {
 		condition: state.condition || undefined,
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

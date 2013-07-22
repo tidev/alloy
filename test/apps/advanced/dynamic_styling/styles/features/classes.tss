@@ -39,7 +39,7 @@
 }
 
 '.wide': {
-	height: null,
+	//height: null,
 	width: '100%'
 }
 
@@ -53,10 +53,7 @@
 	font: {
 		fontSize: '24dp',
 		fontWeight: 'bold'
-	},
-	backgroundColor: null,
-	height: null,
-	width: null
+	}
 }
 
 '.shadow': {

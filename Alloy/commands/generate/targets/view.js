@@ -2,10 +2,7 @@ var GU = require('../generateUtils'),
 	logger = require('../../../logger');
 
 module.exports = function(name, args, program) {
-	var types = ['VIEW','STYLE'];
-	for (var i = 0; i < types.length; i++) {
-		var type = types[i];
-		var info = GU.generate(name, type, program);
-		logger.info('Generated ' + type.toLowerCase() + ' named ' + name);
-	}
-}
+	var info = GU.generate(name, 'VIEW', program);
+	logger.info('Generated view named ' + name);
+	require('./style')(name, args, program);
+};

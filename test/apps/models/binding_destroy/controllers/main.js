@@ -3,7 +3,7 @@ function openWindow(name) {
 	if (OS_ANDROID) {
 		win.open();
 	} else {
-		Alloy.Globals.navgroup.open(win);	
+		Alloy.Globals.navgroup.open(win);
 	}
 }
 

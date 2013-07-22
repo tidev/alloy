@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label>This test app is only supported on iOS</Label>
+	</Window>
+</Alloy>

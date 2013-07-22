@@ -1,0 +1,16 @@
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	color: '#000',
+	textAlign: 'center',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	modal: false,
+	exitOnClose: true
+}

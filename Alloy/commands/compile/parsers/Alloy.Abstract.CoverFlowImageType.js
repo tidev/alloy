@@ -1,6 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils'),
-	CU = require('../compilerUtils'); 
+var U = require('../../../utils');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -20,11 +18,6 @@ function parse(node, state, args) {
 	if (height) { obj.height = height; }
 	if (width) { obj.width = width; }
 
-	if (_.isEmpty(obj)) {
-		// warn if there was no properties assigned
-		logger.warn('Child element of <CoverFlowView> at index ' + index + ' has no properties');
-	} 
-	
 	state.local = true;
 	state.extraStyle = obj;
 	var itemState = require('./default_abstract').parse(node, state);
@@ -32,7 +25,9 @@ function parse(node, state, args) {
 	delete state.extraStyle;
 
 	var code = itemState.code;
-	!state.model && (code += state.itemsArray + '.push(' + itemState.parent.symbol + ');'); 
+	if (!state.model) {
+		code += state.itemsArray + '.push(' + itemState.parent.symbol + ');';
+	}
 
 	return {
 		parent: {},

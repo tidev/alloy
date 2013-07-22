@@ -8,16 +8,16 @@ module.exports = function($) {
 			api: 'Ti.UI.Button',
 			style: {
 				title: "left",
-        		id: "leftButton"
-			} 
+				id: "leftButton"
+			}
 		});
 
 		validateUiComponent($, 'rightButton', {
 			api: 'Ti.UI.Button',
 			style: {
 				title: "right",
-        		id: "rightButton"
-			} 
+				id: "rightButton"
+			}
 		});
 	});
 };

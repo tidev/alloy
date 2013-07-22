@@ -31,7 +31,7 @@ function parse(node, state, args) {
 				});
 
 				// When we are done processing the DashboardItem, remove it from the
-				// markup. That way we can just pass back the current DashboardView state as 
+				// markup. That way we can just pass back the current DashboardView state as
 				// the returned state and it can continue to process any other children
 				// without special handling
 				node.removeChild(child);
@@ -75,8 +75,8 @@ function parse(node, state, args) {
 			items: itemCode,
 			post: dashState.parent.symbol + '.data=' + localArray + ';'
 		});
-	} 
+	}
 
 	// Update the parsing state
-	return _.extend(dashState, {code:code}); 
-};
+	return _.extend(dashState, {code:code});
+}

@@ -6,14 +6,14 @@ var fs = require('fs'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	platforms = require('../../platforms/index');
-	
+
 var TIMEOUT_COMPILE = 10000;
 var GEN_FOLDER = '_generated';
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
 		apps: path.join(alloyRoot,'test','apps'),
-		harness: path.join(alloyRoot,'test','projects','Harness') 
+		harness: path.join(alloyRoot,'test','projects','Harness')
 	},
 	compilerDirectives = (function() {
 		var cds = [];
@@ -28,10 +28,10 @@ var alloyRoot = path.join(__dirname,'..','..'),
 // The alloy command test suite
 describe('alloy compile', function() {
 	TU.addMatchers();
-	
+
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
-		if (process.env.app && file !== process.env.app) { return; } 
+		if (process.env.app && file !== process.env.app) { return; }
 
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
@@ -43,7 +43,7 @@ describe('alloy compile', function() {
 
 			_.each(platforms, function(platform,k) {
 				describe(('[' + platform.platform + ']').cyan, function () {
-					it('compiles without critical error', 
+					it('compiles without critical error',
 						function() {
 							TU.asyncExecTest(
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
@@ -71,11 +71,11 @@ describe('alloy compile', function() {
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
 									return;
-								} 
+								}
 								var content = fs.readFileSync(fullpath, 'utf8');
 								expect(cdRegex.test(content)).toBeFalsy();
 							});
-						}); 
+						});
 					});
 
 					it('has no undefined style entries', function() {
@@ -93,7 +93,7 @@ describe('alloy compile', function() {
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
 									return;
-								} 
+								}
 
 								// TODO: Can no longer require() the styles since they
 								//       are preprocessed for runtime now. Find a better
@@ -103,7 +103,7 @@ describe('alloy compile', function() {
 								// var json = require(fullpath);
 								// expect(json).toHaveNoUndefinedStyles();
 							});
-						}); 
+						});
 					});
 
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
@@ -115,7 +115,7 @@ describe('alloy compile', function() {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);
-						
+
 						it ('generated a ' + gFile.yellow + ' file', function() {
 							expect(fs.existsSync(newFile)).toBeTruthy();
 						});

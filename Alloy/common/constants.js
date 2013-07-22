@@ -1,20 +1,20 @@
 var isTitanium = typeof Titanium !== 'undefined';
-var _;
+var _, generatePlatformArray;
 
 if (isTitanium) {
 	_ = require('alloy/underscore')._;
 } else {
 	var platforms = require('../../platforms/index');
 	_ = require('../lib/alloy/underscore')._;
-	
+
 	// iterate through supported platforms to create specific constants
-	function generatePlatformArray(key) {
+	generatePlatformArray = function(key) {
 		var ret = [];
 		_.each(_.keys(platforms), function(p) {
 			ret.push(platforms[p][key]);
 		});
 		return ret;
-	} 
+	};
 
 	// generate compile time constants based on supported platforms
 	exports.PLATFORMS = generatePlatformArray('platform');
@@ -59,7 +59,7 @@ exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
 
 // Listings for supported platforms and commands
 exports.INSTALL_TYPES = ['plugin'];
-exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget'];
+exports.GENERATE_TARGETS = ['controller', 'jmk', 'model', 'migration', 'view', 'widget', 'style'];
 exports.DEPLOY_TYPES = [
 	{ key: 'ENV_DEV', value: 'development' },
 	{ key: 'ENV_DEVELOPMENT', value: 'development' },
@@ -127,6 +127,7 @@ exports.IMPLICIT_NAMESPACES = {
 	// Alloy
 	Collection: NS_ALLOY,
 	Model: NS_ALLOY,
+	Module: NS_ALLOY,
 	Require: NS_ALLOY,
 	Widget: NS_ALLOY,
 
@@ -170,8 +171,8 @@ exports.IMPLICIT_NAMESPACES = {
 	SplitWindow: NS_TI_UI_IPAD,
 
 	// Ti.UI.iPhone
-	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ? 
-		NS_TI_UI_MOBILEWEB: NS_TI_UI_IPHONE, 
+	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ?
+		NS_TI_UI_MOBILEWEB: NS_TI_UI_IPHONE,
 	StatusBar: NS_TI_UI_IPHONE,
 
 	// Ti.UI.Window

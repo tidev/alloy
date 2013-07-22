@@ -14,18 +14,21 @@ function parse(node, state, args) {
 	code += groupState.code;
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-		var theNode = CU.validateNodeName(child, 'Ti.UI.Tab');
+		var theNode = CU.validateNodeName(child, ['Ti.UI.Tab','Ti.Android.Menu']);
 		if (theNode) {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
+			var ext = { parent: {} };
+			if (theNode === 'Ti.UI.Tab') {
+				ext.post = function(node, state, args) {
 					return groupState.parent.symbol + '.addTab(' + state.parent.symbol + ');';
-				}
-			});
+				};
+			} else if (theNode === 'Ti.Android.Menu') {
+				ext.parent.symbol = args.symbol;
+			}
+			code += CU.generateNodeExtended(child, state, ext);
 		} else {
 			U.die([
 				'Invalid <TabGroup> child type: ' + CU.getNodeFullname(child),
-				'All <TabGroup> children must be <Tab>'
+				'All <TabGroup> children must be <Tab> or <Menu>'
 			]);
 		}
 	});
@@ -35,5 +38,5 @@ function parse(node, state, args) {
 		parent: {},
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

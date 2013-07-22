@@ -6,4 +6,4 @@ exports.definition = {
 			db_file: '/articles.sqlite'
 		}
 	}
-}
+};

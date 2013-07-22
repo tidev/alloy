@@ -15,12 +15,12 @@ module.exports = function($) {
 		validateUiComponent($, 'b', {
 			api: 'Ti.UI.Button',
 			style: {
-		        width: "50%",
-		        height: Ti.UI.SIZE,
-		        randomProp: "OK",
-		        title: "click me",
-		        id: "b"
-		    }
+				width: "50%",
+				height: Ti.UI.SIZE,
+				randomProp: "OK",
+				title: "click me",
+				id: "b"
+			}
 		});
 	});
 

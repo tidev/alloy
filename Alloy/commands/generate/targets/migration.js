@@ -15,4 +15,4 @@ module.exports = function(name, args, program, template) {
 		}
 	});
 	logger.info('Generated ' + type.toLowerCase() + ' named ' + name);
-}
+};

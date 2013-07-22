@@ -11,5 +11,5 @@ exports.definition = {
 			"collection_name": "journal"
 		}
 	}
-}
+};
 

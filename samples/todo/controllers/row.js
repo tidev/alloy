@@ -2,9 +2,9 @@ var moment = require('alloy/moment');
 var todos = Alloy.Collections.todo;
 var id;
 
-// $model represents the current model accessible to this 
+// $model represents the current model accessible to this
 // controller from the markup's model-view binding. $model
-// will be null if there is no binding in place. 
+// will be null if there is no binding in place.
 
 if ($model) {
 	id = $model.id;
@@ -32,7 +32,7 @@ function toggleStatus(e) {
 	todo.set({
 		"done": todo.get('done') ? 0 : 1,
 		"date_completed": moment().unix()
-  	}).save(); 
+	}).save();
 }
 
 // delete the IDed todo from the collection

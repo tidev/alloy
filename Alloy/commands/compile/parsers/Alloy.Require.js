@@ -40,15 +40,19 @@ function parse(node, state, args) {
 	switch(type) {
 		case 'view':
 			method = 'createController';
-			platform && paths.push(path.join(appPath,CONST.DIR.VIEW,platform,src));
+			if (platform) { paths.push(path.join(appPath,CONST.DIR.VIEW,platform,src)); }
 			paths.push(path.join(appPath,CONST.DIR.VIEW,src));
 			break;
 		case 'widget':
 			method = 'createWidget';
 			extraArgs = "'" + name + "',";
-			platform && paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,platform,name));
+			if (platform) {
+				paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,platform,name));
+			}
 			paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,name));
-			platform && paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,platform,name));
+			if (platform) {
+				paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,platform,name));
+			}
 			paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,name));
 			break;
 		default:
@@ -70,7 +74,7 @@ function parse(node, state, args) {
 	// abort if there's no view to be found
 	if (!found) {
 		U.die([
-			type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') + 
+			type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') +
 				'does not exist.',
 			'The following paths were inspected:'
 		].concat(paths));
@@ -89,22 +93,26 @@ function parse(node, state, args) {
 	// add extra createArgs if present
 	var xArgs = {};
 
-	state.model && (xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--'+state.model);
-	state.parent && state.parent.symbol && 
-		(xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--'+state.parent.symbol);
-	state.templateObject && (xArgs[CONST.ITEM_TEMPLATE_VAR] = '__ALLOY_EXPR__--'+state.templateObject);
+	if (state.model) { xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--' + state.model; }
+	if (state.parent && state.parent.symbol) {
+		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
+	}
+	if (state.templateObject) {
+		xArgs[CONST.ITEM_TEMPLATE_VAR] = '__ALLOY_EXPR__--' + state.templateObject;
+	}
 	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src + "'," + extraArgs + styler.generateStyleParams(
-		state.styles,
-		args.classes,
-		args.id,
-		type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
-		args.createArgs,
-		state
-	) + ");\n";
-	if (args.parent.symbol && !state.templateObject) {
+	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src +
+		"'," + extraArgs + styler.generateStyleParams(
+			state.styles,
+			args.classes,
+			args.id,
+			type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
+			args.createArgs,
+			state
+		) + ");\n";
+	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	}
 
@@ -115,5 +123,5 @@ function parse(node, state, args) {
 		},
 		styles: state.styles,
 		code: code
-	}
-};
+	};
+}

@@ -9,19 +9,19 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		arrayName = CU.generateUniqueId(),
-		activitySymbol = (state.parent.symbol || CONST.PARENT_SYMBOL_VAR) + '.activity',
-		eventObject = 'e';
+	var eventObject = 'e',
+		code = '';
 
 	// if this isn't android, generate no code, but show a warning
-	var config = CU.getCompilerConfig();
-	var platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
-	if (platform !== 'android' && node.getAttribute('platform') !== 'android') {
-		logger.warn([
-			'<Menu> is only available in Android',
-			'To get rid of this warning, add platform="android" to your <Menu> element'
-		]);
+	var config = CU.getCompilerConfig(),
+		platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
+	if (platform !== 'android') {
+		if (node.getAttribute('platform') !== 'android') {
+			logger.warn([
+				'<Menu> is only available in Android',
+				'To get rid of this warning, add platform="android" to your <Menu> element'
+			]);
+		}
 		return {
 			parent: {},
 			styles: state.styles,
@@ -29,24 +29,11 @@ function parse(node, state, args) {
 		};
 	}
 
-	// assert that the parent is a Ti.UI.Window if possible
-	if (state.parent && state.parent.node) {
-		var parentNode = CU.validateNodeName(state.parent.node, 'Ti.UI.Window');
-		if (!parentNode) {
-			U.die([
-				'Invalid parent type for <Menu>: ' + state.parent.node.nodeName,
-				'<Menu> must have a Ti.UI.Window as a parent'
-			]);
-		}
-	}
-
 	// Start the onCreateOptionsMenu() call
-	var code = activitySymbol + '.onCreateOptionsMenu = function(' + eventObject + ') {';
-
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var childArgs = CU.getParserArgs(child, state);
 		var theNode = CU.validateNodeName(child, 'Ti.Android.MenuItem');
-		
+
 		// Make sure we are dealing with MenuItems
 		if (!theNode) {
 			U.die([
@@ -57,20 +44,23 @@ function parse(node, state, args) {
 
 		// generate code for the MenuItem
 		code += CU.generateNodeExtended(child, state, {
-			parent: { 
+			androidMenu: true,
+			parent: {
 				node: node,
 				symbol: eventObject + '.menu'
 			}
 		});
 	});
 
-	// close the onCreateOptionsMenu() call
-	code += '};';
-
 	// Update the parsing state
 	return {
 		parent: {},
 		styles: state.styles,
-		code: code
-	}
-};
+		code: U.evaluateTemplate('Ti.Android.Menu.js', {
+			parent: state.parent.symbol || CONST.PARENT_SYMBOL_VAR,
+			code: code,
+			eventObject: eventObject,
+			openFunc: CU.generateUniqueId()
+		})
+	};
+}
