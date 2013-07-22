@@ -26,7 +26,7 @@ module.exports = function(projectRoot, language) {
             return {
                 merged: result,
                 unused: content,
-                new: newStrings
+                newStrings: newStrings
             };
         },
 

@@ -59,6 +59,6 @@ module.exports = function(args, program) {
         logger.info('Did not write the i18n file - please pass the "--force" option.'.red);
     }
 
-    var status = 'Completed i18n extraction. Found ' + merged.new.length + ' new strings.';
+    var status = 'Completed i18n extraction. Found ' + merged.newStrings.length + ' new strings.';
     logger.info(status.green);
 };
