@@ -16,8 +16,8 @@ function extractStrings() {
 
         // filter only js and style files
         files = _.filter(files, function(f) {
-            return f.substr(-styleSuffix.length) == styleSuffix
-                || f.substr(-controllerSuffix.length) == controllerSuffix
+            return f.substr(-styleSuffix.length) == styleSuffix ||
+                f.substr(-controllerSuffix.length) == controllerSuffix;
         });
 
         var strings = [];

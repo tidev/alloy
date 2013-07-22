@@ -56,4 +56,4 @@ module.exports = function(projectRoot, language) {
     };
 
     return api;
-}
+};
