@@ -12,7 +12,7 @@ module.exports = function(projectRoot, language) {
             var result = {};
             var newStrings = [];
 
-            for (key in strings) {
+            for (var key in strings) {
                 var string = strings[key];
                 result[string] = content[string] || string;
 
@@ -46,7 +46,7 @@ module.exports = function(projectRoot, language) {
         write: function(strings) {
             var result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resources>";
 
-            for (key in strings) {
+            for (var key in strings) {
                 result += "\n  <string name=\"" + key + "\"><![CDATA[" + strings[key] + "]]></string>";
             }
 
