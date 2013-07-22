@@ -29,6 +29,7 @@ program
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --app <app>', 'Test app folder for running "alloy test"')
+	.option('-A, --apply', 'Applies command changes [extract-i18n]')
 	.option('-b, --noBanner', 'Disable the banner')
 	.option('-c, --config <config>','Pass in compiler configuration')
 	.option('-f, --force','Force the command to execute')
@@ -47,7 +48,10 @@ program.command('new'.blue+' <dir>'.white)
 		.description('    create a new alloy project'.grey);
 
 program.command('compile'.blue+' [dir]'.white)
-		.description('compile into titanium sourcecode'.grey);
+		.description('    compile into titanium source code'.grey);
+
+program.command('extract-i18n'.blue+' <language>'.white)
+		.description('    extracts i18n strings from the source code (js and tss files)'.grey);
 
 program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);

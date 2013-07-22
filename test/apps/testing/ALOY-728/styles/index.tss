@@ -1,0 +1,24 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'.someClass': {
+	// Impractical, but makes sure they are all supported. All 3 of these keys should be put
+	// into the generated strings.xml file
+	text: L("thekey1"),
+	text: Ti.Locale.getString("thekey2"),
+	text: Titanium.Locale.getString("thekey3"),
+
+	backgroundColor: '#000'
+}
+
+'#label': {
+	text: L('tester', 'nothing assigned yet'),
+	color: '#000',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
