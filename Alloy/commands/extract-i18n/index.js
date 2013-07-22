@@ -7,6 +7,11 @@ var fs = require('fs'),
     logger = require('../../logger'),
     i18nHandler = require('./i18nHandler');
 
+var searchString = "(?:L|Ti.Locale.getString|Titanium.Locale.getString)" +
+    "\\(\\s*[\"']([a-zA-Z]\\w*?)[\"']\\s*[\\),]";
+var searchRegex = new RegExp(searchString, 'g');
+var valueRegex = new RegExp(searchString);
+
 function extractStrings() {
     try {
         var sourceDir = paths.app;
@@ -16,49 +21,48 @@ function extractStrings() {
 
         // filter only js and style files
         files = _.filter(files, function(f) {
-            return f.substr(-styleSuffix.length) == styleSuffix ||
-                f.substr(-controllerSuffix.length) == controllerSuffix;
+            return f.substr(-styleSuffix.length) === styleSuffix ||
+                f.substr(-controllerSuffix.length) === controllerSuffix;
         });
 
         var strings = [];
         _.each(files, function(f) {
             var file = path.join(sourceDir, f);
             var fileContent = fs.readFileSync(file, 'utf8');
-            var calls = fileContent.match(/L\([\"'](.*?)[\"']\)/g);
+            var calls = fileContent.match(searchRegex);
 
             if (calls && calls.length > 0) {
                 logger.debug(file + ': ' + calls.length + ' strings found.');
 
                 _.each(calls, function(call) {
-                    strings.push(call.substr(3, call.length - 5));
+                    var matches = call.match(valueRegex);
+                    strings.push(matches[1]);
                 });
             }
         });
 
         strings = _.uniq(strings);
-        logger.info("Found " + strings.length + " unique i18n strings in code.");
+        logger.info("Found " + strings.length + " unique i18n strings in code. Checking against current i18n file...");
         return strings;
-    } catch(E) {
+    } catch(e) {
         return [];
     }
 }
 
 module.exports = function(args, program) {
     paths = U.getAndValidateProjectPaths(
-        program.outputPath || args[0] || process.cwd()
+        program.outputPath || process.cwd()
     );
-    var strings = extractStrings();
     var language = args[0] || 'en';
+    logger.info('extract-i18n for "i18n/' + language + '/strings.xml"');
+
+    var strings = extractStrings();
     var handler = i18nHandler(paths.project, language);
-    var merged = handler.merge(strings);
+    var newStrings = handler.merge(strings);
 
-    if (program.force) {
-        handler.write(merged.merged);
-        logger.info('Wrote strings in the i18n file.'.green);
+    if (program.apply) {
+        handler.write(newStrings);
     } else {
-        logger.info('Did not write the i18n file - please pass the "--force" option.'.red);
+        handler.print(newStrings);
     }
-
-    var status = 'Completed i18n extraction. Found ' + merged.newStrings.length + ' new strings.';
-    logger.info(status.green);
 };

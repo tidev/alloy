@@ -29,6 +29,7 @@ program
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
 	.option('-a, --app <app>', 'Test app folder for running "alloy test"')
+	.option('-A, --apply', 'Applies command changes [extract-i18n]')
 	.option('-b, --noBanner', 'Disable the banner')
 	.option('-c, --config <config>','Pass in compiler configuration')
 	.option('-f, --force','Force the command to execute')
