@@ -47,7 +47,10 @@ program.command('new'.blue+' <dir>'.white)
 		.description('    create a new alloy project'.grey);
 
 program.command('compile'.blue+' [dir]'.white)
-		.description('compile into titanium sourcecode'.grey);
+		.description('    compile into titanium sourcecode'.grey);
+
+program.command('extract-i18n'.blue+' <language>'.white)
+		.description('    extracts i18n strings from the sourcecode (js and tss files)'.grey);
 
 program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);
