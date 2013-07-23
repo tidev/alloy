@@ -1,0 +1,9 @@
+'Window': {
+	backgroundColor: '#00f'
+}
+
+'ImageView': {
+	top: '50dp',
+	height: '100dp',
+	width: '100dp'
+}

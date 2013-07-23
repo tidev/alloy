@@ -1,0 +1,5 @@
+'#index': {
+	modal: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
