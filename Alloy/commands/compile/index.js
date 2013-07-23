@@ -12,7 +12,8 @@ var path = require('path'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
 	CONST = require('../../common/constants'),
-	platforms = require('../../../platforms/index');
+	platforms = require('../../../platforms/index'),
+	BuildLog = require('./BuildLog');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -43,6 +44,9 @@ module.exports = function(args, program) {
 		paths = U.getAndValidateProjectPaths(
 			program.outputPath || args[0] || process.cwd()
 		);
+
+	// get the build log
+	var buildLog = new BuildLog(paths.project);
 
 	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
 	var tiVersion = U.tiapp.getTitaniumSdkVersion(U.tiapp.parse(paths.project));
@@ -131,6 +135,10 @@ module.exports = function(args, program) {
 	if (theme) { logger.debug('theme = ' + theme); }
 	logger.debug('');
 
+	// identify theme changes and update build log
+	var themeChanged = theme !== buildLog.data.theme;
+	buildLog.data.theme = theme;
+
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
@@ -147,7 +155,11 @@ module.exports = function(args, program) {
 
 	// Copy in all developer assets, libs, and additional resources
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
-		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources);
+		var opts = {};
+		if (type === 'ASSETS') {
+			opts.themeChanged = themeChanged;
+		}
+		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources, opts);
 	});
 
 	// copy in test specs if not in production
@@ -278,6 +290,9 @@ module.exports = function(args, program) {
 	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
 	}
+
+	// write out the log for this build
+	buildLog.write();
 
 	BENCHMARK('TOTAL', true);
 };
