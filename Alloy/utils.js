@@ -329,7 +329,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 	});
 };
 
-exports.updateFiles = function(srcDir, dstDir) {
+exports.updateFiles = function(srcDir, dstDir, opts) {
 	if (!fs.existsSync(srcDir)) {
 		return;
 	}
@@ -348,7 +348,7 @@ exports.updateFiles = function(srcDir, dstDir) {
 			if (!dstStat.isDirectory()) {
 				// copy file in if it is a JS file or if its mtime is
 				// greater than the one in Resources
-				if (path.extname(src) === '.js' ||
+				if (path.extname(src) === '.js' || opts.themeChanged ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
 					logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
 					exports.copyFileSync(src,dst);

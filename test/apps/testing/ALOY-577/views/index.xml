@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<ImageView image="/red.png"/>
+		<ImageView image="/blue.png"/>
+	</Window>
+</Alloy>
