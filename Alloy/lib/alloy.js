@@ -462,10 +462,9 @@ exports.isTablet = (function() {
 			Ti.Platform.displayCaps.platformWidth
 		) >= 400;
 	} else if (OS_BLACKBERRY) {
-		return (Ti.Platform.displayCaps.platformHeight === 600 &&
-			Ti.Platform.displayCaps.platformWidth === 1024) ||
-			(Ti.Platform.displayCaps.platformHeight === 1024 &&
-			Ti.Platform.displayCaps.platformWidth === 600);
+		// Tablets not currently supported by BB TiSDK
+		// https://jira.appcelerator.org/browse/TIMOB-13225
+		return false;
 	} else {
 		return isTabletFallback();
 	}
