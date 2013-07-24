@@ -279,7 +279,7 @@ exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
 
 	var exceptions = [];
 	if (opts.exceptions) {
-			_.each(opts.exceptions, function(ex) {
+		_.each(opts.exceptions, function(ex) {
 			exceptions.push(ex);
 			exceptions.push(opts.platform + '/' + ex);
 		});
