@@ -27,8 +27,8 @@ function Orphanage(projectDir, _platform, opts) {
 	};
 
 	// get widgets in use
-	_.each(U.getWidgetDirectories(dirs.app) || [], function(dir) {
-		widgets[fs.basename(dir)] = dir;
+	_.each(U.getWidgetDirectories(dirs.app) || [], function(wObj) {
+		widgets[path.basename(wObj.dir)] = wObj.dir;
 	});
 }
 module.exports = Orphanage;
@@ -54,14 +54,15 @@ Orphanage.prototype.clean = function() {
 
 Orphanage.prototype.removeAll = function(opts) {
 	opts = opts || {};
+	var suffix = opts.widgetId ? ' from widget "' + opts.widgetId + "'" : '';
 
-	logger.debug('Removing orphaned controllers...');
+	logger.debug('Removing orphaned controllers' + suffix + '...');
 	this.removeControllers(opts);
 
-	logger.debug('Removing orphaned models...');
+	logger.debug('Removing orphaned models' + suffix + '...');
 	this.removeModels(opts);
 
-	logger.debug('Removing orphaned styles...');
+	logger.debug('Removing orphaned styles' + suffix + '...');
 	this.removeStyles(opts);
 };
 
@@ -168,12 +169,18 @@ function getChecks(file, fullpath, opts) {
 	// use explicit full location paths
 	} else if (opts.locations) {
 		// Is it a widget file?
-		for (var i = 0; i < widgets.length; i++) {
-			var widgetId = fs.basename(widgets[i]);
+		var keys = _.keys(widgets);
+		for (var i = 0; i < keys.length; i++) {
+			var widgetId = keys[i];
 			var parts = file.split(/[\\\/]/);
 
 			// strip off the platform if present
-			if (parts[0] === platforms[platform]) { parts.shift(); }
+			if (parts[0] === titaniumFolder) { parts.shift(); }
+
+			// did we find the widget root path?
+			if (parts.length === 1 && parts[0] === widgetId) {
+				return null;
+			}
 
 			// is this a widget asset?
 			if (_.contains(parts, widgetId)) {
@@ -270,6 +277,11 @@ function remove(opts) {
 		checks = getChecks(file, runtimeFullpath, _.extend({ widgetId: opts.widgetId },
 			types ? { types: types } : { locations: locations }));
 
+		// if checks is null, we already know we can skip it
+		if (checks === null) {
+			return;
+		}
+
 		// If we find the corresponding app folder file(s), skip this file
 		for (i = 0; i < checks.length; i++) {
 			if (fs.existsSync(checks[i])) {
@@ -278,9 +290,19 @@ function remove(opts) {
 			}
 		}
 
+		// It's an orphan, delete it
 		if (!found) {
-			console.log('ORPHAN: ' + runtimeFullpath);
-			// delete, might be folder or file
+			// already deleted, perhaps a file in a deleted directory
+			if (!fs.existsSync(runtimeFullpath)) { return; }
+			logger.trace('* ' + file);
+
+			// delete the directory ot file
+			var targetStat = fs.statSync(runtimeFullpath);
+			if (targetStat.isDirectory()) {
+				wrench.rmdirSyncRecursive(runtimeFullpath, true);
+			} else {
+				fs.unlinkSync(runtimeFullpath);
+			}
 		}
 	});
 }

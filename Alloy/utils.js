@@ -274,61 +274,6 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 };
 
-exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
-	opts = opts || {};
-
-	var exceptions = [];
-	if (opts.exceptions) {
-		_.each(opts.exceptions, function(ex) {
-			exceptions.push(ex);
-			exceptions.push(opts.platform + '/' + ex);
-		});
-	}
-
-	// skip if target or source is not defined
-	if (!fs.existsSync(targetDir) || !srcDirs) {
-		return;
-	}
-	if (!_.isArray(srcDirs)) {
-		srcDirs = [srcDirs];
-	}
-
-	// check all target files
-	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
-		// skip the app.js and node acs files
-		if (file === 'app.js' || NODE_ACS_REGEX.test(file)) { return; }
-		if (_.contains(exceptions, file)) { return; }
-
-		// see if this target exists in any of the src dirs
-		var found = false;
-		for (var i = 0; i < srcDirs.length; i++) {
-			var srcDir = srcDirs[i];
-			var src = path.join(srcDir,file);
-			if (fs.existsSync(src)) {
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			var target = path.join(targetDir,file);
-
-			// already deleted, perhaps a file in a deleted directory
-			if (!fs.existsSync(target)) { return; }
-
-			// delete the file/directory
-			var targetStat = fs.statSync(target);
-			if (targetStat.isDirectory()) {
-				logger.trace('Deleting orphan directory ' + target.yellow);
-				wrench.rmdirSyncRecursive(target,true);
-			} else {
-				logger.trace('Deleting orphan file ' + target.yellow);
-				fs.unlinkSync(target);
-			}
-		}
-	});
-};
-
 exports.updateFiles = function(srcDir, dstDir, opts) {
 	if (!fs.existsSync(srcDir)) {
 		return;

@@ -12,7 +12,8 @@ var path = require('path'),
 	CU = require('./compilerUtils'),
 	CONST = require('../../common/constants'),
 	platforms = require('../../../platforms/index'),
-	BuildLog = require('./BuildLog');
+	BuildLog = require('./BuildLog'),
+	Orphanage = require('./Orphanage');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -89,54 +90,21 @@ module.exports = function(args, program) {
 		]);
 	}
 
-	// wipe the controllers, models, and widgets
-	logger.debug('----- CLEANING RESOURCES -----');
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
-
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.MODEL + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.MODEL));
-
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.WIDGET + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.WIDGET));
-	logger.debug(' ');
-
-	// GET RID OF ORPHAN FILES
-	U.deleteOrphanFiles(
-		paths.resources,
-		[
-			path.join(alloyRoot,'lib'),
-			path.join(alloyRoot,'common'),
-			path.join(paths.app,CONST.DIR.ASSETS),
-			path.join(paths.app,CONST.DIR.LIB),
-			path.join(paths.app,'vendor')
-		],
-		{
-			exceptions: [
-				// still need to check for builtins
-				path.join('alloy'),
-				path.join('alloy','CFG.js'),
-				path.join('alloy','constants.js'),
-				path.join('alloy','controllers'),
-				path.join('alloy','widgets'),
-				path.join('alloy','models')
-			],
-			platform: platforms[buildPlatform].titaniumFolder
-		}
-	);
-
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-
-	// identify current theme, if any
 	theme = compileConfig.theme;
-	if (theme) { logger.debug('theme = ' + theme); }
 	logger.debug('');
 
 	// identify theme changes and update build log
 	var themeChanged = theme !== buildLog.data.theme;
 	buildLog.data.theme = theme;
+
+	// wipe the controllers, models, and widgets
+	logger.debug('----- CLEANING RESOURCES -----');
+	var orphanage = new Orphanage(paths.project, buildPlatform, { theme: theme });
+	orphanage.clean();
+	logger.debug(' ');
 
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
