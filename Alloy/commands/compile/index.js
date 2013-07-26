@@ -209,7 +209,7 @@ module.exports = function(args, program) {
 	styler.loadGlobalStyles(paths.app, theme ? {theme:theme} : {});
 
 	// Create collection of all widget and app paths
-	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
+	var widgetDirs = U.getWidgetDirectories(paths.app);
 	var viewCollection = widgetDirs;
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 

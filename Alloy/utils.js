@@ -380,7 +380,7 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 	});
 };
 
-exports.getWidgetDirectories = function(outputPath, appDir) {
+exports.getWidgetDirectories = function(appDir) {
 	var configPath = path.join(appDir, 'config.json');
 	var appWidgets = [];
 	if (path.existsSync(configPath)) {
@@ -396,7 +396,7 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	var collections = [];
 	var widgetPaths = [];
 	widgetPaths.push(path.join(__dirname,'..','widgets'));
-	widgetPaths.push(path.join(outputPath,'app','widgets'));
+	widgetPaths.push(path.join(appDir,'widgets'));
 
 	_.each(widgetPaths, function(widgetPath) {
 		if (path.existsSync(widgetPath)) {
