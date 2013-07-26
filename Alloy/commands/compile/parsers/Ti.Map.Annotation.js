@@ -1,24 +1,25 @@
 var styler = require('../styler'),
-	CU = require('../compilerUtils');
+	CU = require('../compilerUtils'),
+	_ = require('../../../lib/alloy/underscore');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	var latitude = node.getAttribute('latitude'),
-		longitude = node.getAttribute('longitude'),
-		extraStyle = [];
-
-	if (latitude) { extraStyle.push(['latitude', parseFloat(latitude)]); }
-	if (longitude) { extraStyle.push(['longitude', parseFloat(longitude)]); }
-	if (extraStyle.length > 0) {
-		state.extraStyle = styler.createVariableStyle(extraStyle);
-	}
+	var extraStyle = [];
+	_.each(['latitude', 'longitude'], function(attr) {
+		var geo = node.getAttribute(attr);
+		if (geo) {
+			extraStyle.push([attr, parseFloat(geo)]);
+			node.removeAttribute(attr);
+		}
+	});
 
 	var code = require('./default').parse(node, {
 		parent: {},
-		styles: state.styles
+		styles: state.styles,
+		extraStyle: styler.createVariableStyle(extraStyle)
 	}).code;
 
 	return {
