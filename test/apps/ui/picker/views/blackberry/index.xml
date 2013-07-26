@@ -1,0 +1,14 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="Single Column">
+			<Window title="Single Column">
+				<Picker>
+					<PickerRow title="row 1"/>
+					<PickerRow title="row 2"/>
+					<PickerRow title="row 3"/>
+					<PickerRow title="row 4"/>
+				</Picker>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
