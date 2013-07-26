@@ -94,17 +94,15 @@ module.exports = function(args, program) {
 	logger.debug('----- CONFIG.JSON -----');
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
 	theme = compileConfig.theme;
-	logger.debug('');
-
-	// identify theme changes and update build log
-	var themeChanged = theme !== buildLog.data.theme;
+	buildLog.data.themeChanged = theme !== buildLog.data.theme;
 	buildLog.data.theme = theme;
+	logger.debug('');
 
 	// wipe the controllers, models, and widgets
 	logger.debug('----- CLEANING RESOURCES -----');
 	var orphanage = new Orphanage(paths.project, buildPlatform, { theme: theme });
 	orphanage.clean();
-	logger.debug(' ');
+	logger.debug('');
 
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
@@ -124,7 +122,7 @@ module.exports = function(args, program) {
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
 		var opts = {};
 		if (type === 'ASSETS') {
-			opts.themeChanged = themeChanged;
+			opts.themeChanged = buildLog.data.themeChanged;
 		}
 		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources, opts);
 	});
