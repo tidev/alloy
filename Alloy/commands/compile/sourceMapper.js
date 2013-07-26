@@ -109,7 +109,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// create uglify-js source map and stream it out
 	var stream, sourceMap;
-	if (compileConfig.sourcemap !== false) {
+	if (compileConfig.sourcemap) {
 		sourceMap = uglifyjs.SourceMap({
 			file: target.filename,
 			orig: mapper.toString()

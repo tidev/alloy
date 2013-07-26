@@ -1,6 +1,7 @@
 var U = require('../../utils'),
 	colors = require('colors'),
 	path = require('path'),
+	os = require('os'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
@@ -538,7 +539,6 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 				if (!path.existsSync(destDir)) {
 					wrench.mkdirSyncRecursive(destDir, 0777);
 				}
-				//console.log('Copying assets ' + source + ' --> ' + dest);
 				U.copyFileSync(source, dest);
 			}
 		});
@@ -580,25 +580,39 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 		obj.dir[dir] = path.resolve(path.join(alloyRoot,dir));
 	});
 
-	// validation
+	// ensure the generated directories exist
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
 
-	var config = exports.generateConfig(obj);
-	obj.theme = config.theme;
-	obj.sourcemap = config.sourcemap;
-	obj[CONST.AUTOSTYLE_PROPERTY] = config[CONST.AUTOSTYLE_PROPERTY] || false;
+	// process the config.json file
+	var config = generateConfig(obj);
+
+	// validate and normalize config params
+	var configs = {
+		// sets the theme
+		theme: config.theme,
+
+		// are we going to generate sourcemaps?
+		sourcemap: typeof config.sourcemap === 'undefined' ? true : config.sourcemap,
+
+		// are we enabling dynamic styling for all generated components?
+		autoStyle: config.autoStyle || false,
+
+		// the list of widget dependencies
+		dependencies: config.dependencies || {}
+	};
+	logger.debug(JSON.stringify(configs, null, '  ').split(os.EOL));
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
 
 	// keep a copy of the config for this module
-	compilerConfig = obj;
+	compilerConfig = _.extend(obj, configs);
 
 	return obj;
 };
 
-exports.generateConfig = function(obj) {
+ function generateConfig(obj) {
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
 	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
@@ -624,7 +638,6 @@ exports.generateConfig = function(obj) {
 
 		_.each(j, function(v,k) {
 			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
-				logger.debug(k + ' = ' + JSON.stringify(v));
 				o[k] = v;
 			}
 		});
@@ -653,7 +666,7 @@ exports.generateConfig = function(obj) {
 	);
 
 	return o;
-};
+}
 
 exports.loadController = function(file) {
 	var code = {
