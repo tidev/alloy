@@ -345,35 +345,6 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 };
 
-exports.componentExists = function(appRelativePath, manifest) {
-	var isWidget = manifest;
-	var config = exports.getCompilerConfig();
-
-	// Prepare the path the is relative the the "app" directory
-	var stripPsRegex  = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
-	var stripExtRegex = new RegExp('\\.(?:' + CONST.FILE_EXT.VIEW + '|' + CONST.FILE_EXT.CONTROLLER + ')$');
-	var basename = appRelativePath.replace(stripPsRegex,'').replace(stripExtRegex,'');
-
-	// compose potential component path
-	var componentPath = path.join(
-		config.dir.resourcesAlloy,
-		CONST.DIR.COMPONENT,
-		basename + '.' + CONST.FILE_EXT.COMPONENT
-	);
-
-	if (isWidget) {
-		componentPath = path.join(
-			config.dir.resourcesAlloy,
-			CONST.DIR.WIDGET,
-			manifest.id,
-			CONST.DIR.COMPONENT,
-			basename + '.' + CONST.FILE_EXT.COMPONENT
-		);
-	}
-
-	return path.existsSync(componentPath);
-};
-
 exports.expandRequireNode = function(requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
 
@@ -537,7 +508,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 				var destDir = path.join(resourceDir, path.dirname(file), widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
-					wrench.mkdirSyncRecursive(destDir, 0777);
+					wrench.mkdirSyncRecursive(destDir, 0755);
 				}
 				U.copyFileSync(source, dest);
 			}
@@ -609,7 +580,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	return obj;
 };
 
- function generateConfig(obj) {
+function generateConfig(obj) {
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
 	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
@@ -654,7 +625,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	}
 
 	// write out the config runtime module
-	wrench.mkdirSyncRecursive(resourcesBase, 0777);
+	wrench.mkdirSyncRecursive(resourcesBase, 0755);
 
 	//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
