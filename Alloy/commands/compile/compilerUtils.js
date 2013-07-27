@@ -584,23 +584,20 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	U.ensureDir(obj.dir.resources);
 	U.ensureDir(obj.dir.resourcesAlloy);
 
-	// process the config.json file
-	var config = generateConfig(obj);
-
-	// validate and normalize config params
-	var configs = {
+	// process and normalize the config.json file
+	var configs = _.defaults(generateConfig(obj), {
 		// sets the theme
-		theme: config.theme,
+		theme: undefined,
 
 		// are we going to generate sourcemaps?
-		sourcemap: typeof config.sourcemap === 'undefined' ? true : config.sourcemap,
+		sourcemap: true,
 
 		// are we enabling dynamic styling for all generated components?
-		autoStyle: config.autoStyle || false,
+		autoStyle: false,
 
 		// the list of widget dependencies
-		dependencies: config.dependencies || {}
-	};
+		dependencies: {}
+	});
 	logger.debug(JSON.stringify(configs, null, '  ').split(os.EOL));
 
 	// update implicit namespaces, if possible
@@ -659,7 +656,7 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 	// write out the config runtime module
 	wrench.mkdirSyncRecursive(resourcesBase, 0777);
 
-	logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
+	//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
 		resourcesCfg,
 		"module.exports=" + JSON.stringify(o) + ";"

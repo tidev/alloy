@@ -52,6 +52,7 @@ Orphanage.prototype.clean = function() {
 	this.removeAssets();
 };
 
+// TODO: handle specs
 Orphanage.prototype.removeAll = function(opts) {
 	opts = opts || {};
 	var suffix = opts.widgetId ? ' from widget "' + opts.widgetId + "'" : '';
@@ -92,12 +93,31 @@ Orphanage.prototype.removeStyles = function(opts) {
 };
 
 Orphanage.prototype.removeAssets = function() {
-	var locations = [
-		path.join(dirs.app, CONST.DIR.ASSETS),
-		path.join(dirs.app, CONST.DIR.ASSETS, platforms[platform].titaniumFolder),
-		path.join(dirs.app, CONST.DIR.LIB),
-		path.join(dirs.app, CONST.DIR.VENDOR)
+	var baseLocations = [
+		CONST.DIR.ASSETS,
+		path.join(CONST.DIR.ASSETS, platforms[platform].titaniumFolder),
+		CONST.DIR.LIB,
+		CONST.DIR.VENDOR
 	];
+	var locations = [];
+
+	// Add the base locations
+	_.each(baseLocations, function(loc) {
+		var newLoc = path.join(dirs.app, loc);
+		if (fs.existsSync(newLoc)) {
+			locations.push(newLoc);
+		}
+	});
+
+	// Make sure we check the widgets paths as well
+	_.each(widgets, function(wDir, wId) {
+		_.each(baseLocations, function(loc) {
+			var widgetLoc = path.join(wDir, loc);
+			if (fs.existsSync(widgetLoc)) {
+				locations.push(widgetLoc);
+			}
+		});
+	});
 
 	// add theme locations, if necessary
 	if (theme) {
@@ -184,15 +204,8 @@ function getChecks(file, fullpath, opts) {
 
 			// is this a widget asset?
 			if (_.contains(parts, widgetId)) {
-				var wDir = widgets[widgetId];
-				var wFile = _.without(parts, widgetId).join('/');
-				checks.push(
-					path.join(wDir, CONST.DIR.ASSETS, wFile),
-					path.join(wDir, CONST.DIR.ASSETS, platform, wFile),
-					path.join(wDir, CONST.DIR.LIB, wFile),
-					path.join(wDir, CONST.DIR.VENDOR, wFile)
-				);
-				return checks;
+				file = _.without(parts, widgetId).join('/');
+				break;
 			}
 		}
 
@@ -268,8 +281,9 @@ function remove(opts) {
 		var found = false;
 		var checks, i;
 
-		// skip exceptions
-		if (!opts.widgetId && isException(file, exceptions)) {
+		// skip if file no longer exists, or if it's an exception
+		if (!fs.existsSync(runtimeFullpath) ||
+			(!opts.widgetId && isException(file, exceptions))) {
 			return;
 		}
 
