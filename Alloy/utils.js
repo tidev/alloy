@@ -279,7 +279,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		return;
 	}
 	if (!fs.existsSync(dstDir)) {
-		wrench.mkdirSyncRecursive(dstDir, 0777);
+		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
@@ -302,7 +302,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		} else {
 			if (srcStat.isDirectory()) {
 				logger.debug('Creating directory ' + dst.yellow);
-				wrench.mkdirSyncRecursive(dst,0777);
+				wrench.mkdirSyncRecursive(dst, 0755);
 			} else {
 				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
 				exports.copyFileSync(src,dst);
@@ -479,9 +479,8 @@ exports.copyFileSync = function(srcFile, destFile) {
 };
 
 exports.ensureDir = function(p) {
-	if (!path.existsSync(p)) {
-		//logger.debug("Creating directory: "+p);
-		wrench.mkdirSyncRecursive(p, 0777);
+	if (!fs.existsSync(p)) {
+		wrench.mkdirSyncRecursive(p, 0755);
 	}
 };
 
