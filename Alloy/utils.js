@@ -94,7 +94,7 @@ exports.tiapp = {
 	parse: function(dir) {
 		dir = dir || './';
 		var tiappPath = path.join(dir,'tiapp.xml');
-		if (!path.existsSync(tiappPath)) {
+		if (!fs.existsSync(tiappPath)) {
 			U.die('tiapp.xml file does not exist at "' + tiappPath + '"');
 		}
 		return exports.XML.parseFromFile(tiappPath);
@@ -145,7 +145,7 @@ exports.tiapp = {
 
 		var err = 'Project creation failed. Unable to install ' + type + ' "' + (opts.name || opts.id) + '"';
 		var tiappPath = path.join(dir,'tiapp.xml');
-		if (!path.existsSync(tiappPath)) {
+		if (!fs.existsSync(tiappPath)) {
 			U.die([ 'tiapp.xml file does not exist at "' + tiappPath + '"', err ]);
 		}
 
@@ -226,7 +226,8 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	var projectPath = path.resolve(argPath);
 
 	// See if we got the "app" path or the project path as an argument
-	projectPath = path.existsSync(path.join(projectPath,'..','tiapp.xml')) ? path.join(projectPath,'..') : projectPath;
+	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
+		path.join(projectPath,'..') : projectPath;
 
 	// Assign paths objects
 	var paths = {
@@ -240,13 +241,13 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	paths.resourcesAlloy = path.join(paths.resources,'alloy');
 
 	// validate project and "app" paths
-	if (!path.existsSync(paths.project)) {
+	if (!fs.existsSync(paths.project)) {
 		exports.die('Titanium project path does not exist at "' + paths.project + '".');
-	} else if (!path.existsSync(path.join(paths.project,'tiapp.xml'))) {
+	} else if (!fs.existsSync(path.join(paths.project,'tiapp.xml'))) {
 		exports.die('Invalid Titanium project path (no tiapp.xml) at "' + paths.project + '"');
-	} else if (!path.existsSync(paths.app)) {
+	} else if (!fs.existsSync(paths.app)) {
 		exports.die('Alloy "app" directory does not exist at "' + paths.app + '"');
-	} else if (!path.existsSync(paths.index)) {
+	} else if (!fs.existsSync(paths.index)) {
 		exports.die('Alloy "app" directory has no "' + paths.indexBase + '" file at "' + paths.index + '".');
 	}
 
@@ -296,7 +297,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				if (path.extname(src) === '.js' || opts.themeChanged ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
 					logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
-					exports.copyFileSync(src,dst);
+					exports.copyFileSync(src, dst);
 				}
 			}
 		} else {
@@ -305,22 +306,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				wrench.mkdirSyncRecursive(dst, 0755);
 			} else {
 				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
-				exports.copyFileSync(src,dst);
+				exports.copyFileSync(src, dst);
 			}
-		}
-	});
-};
-
-exports.copyAlloyDir = function(appDir, sources, destDir) {
-	sources = _.isArray(sources) ? sources : [sources];
-	_.each(sources, function(source) {
-		var sourceDir = path.join(appDir, source);
-		if (path.existsSync(sourceDir)) {
-			logger.info('Copying ' + source + ' from: ' + sourceDir.yellow);
-			if (!path.existsSync(destDir)) {
-				wrench.mkdirSyncRecursive(destDir, 0777);
-			}
-			exports.copyFilesAndDirs(sourceDir, destDir);
 		}
 	});
 };
@@ -328,7 +315,7 @@ exports.copyAlloyDir = function(appDir, sources, destDir) {
 exports.getWidgetDirectories = function(appDir) {
 	var configPath = path.join(appDir, 'config.json');
 	var appWidgets = [];
-	if (path.existsSync(configPath)) {
+	if (fs.existsSync(configPath)) {
 		try {
 			var content = fs.readFileSync(configPath,'utf8');
 			appWidgets = jsonlint.parse(content).dependencies;
@@ -344,7 +331,7 @@ exports.getWidgetDirectories = function(appDir) {
 	widgetPaths.push(path.join(appDir,'widgets'));
 
 	_.each(widgetPaths, function(widgetPath) {
-		if (path.existsSync(widgetPath)) {
+		if (fs.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
 				var wDir = path.join(widgetPath,wFiles[i]);
@@ -445,7 +432,7 @@ exports.resolveAppHome = function() {
 	for (var i = 0; i < paths.length; i++) {
 		paths[i] = path.resolve(paths[i]);
 		var testPath = path.join(paths[i],indexView);
-		if (path.existsSync(testPath)) {
+		if (fs.existsSync(testPath)) {
 			return paths[i];
 		}
 	}
@@ -482,36 +469,6 @@ exports.ensureDir = function(p) {
 	if (!fs.existsSync(p)) {
 		wrench.mkdirSyncRecursive(p, 0755);
 	}
-};
-
-exports.copyFilesAndDirs = function(f,d) {
-	var files = fs.readdirSync(f);
-	for (var c=0;c<files.length;c++)
-	{
-		var file = files[c];
-		var fpath = path.join(f,file);
-		var stats = fs.lstatSync(fpath);
-		var rd = path.join(d,file);
-		logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
-		try {
-			if (stats.isDirectory())
-			{
-				exports.ensureDir(rd);
-				wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
-			}
-			else
-			{
-				exports.copyFileSync(fpath,rd);
-			}
-		}
-		catch (e) {
-			logger.warn('Could not copy ' + fpath);
-		}
-	}
-};
-
-exports.isTiProject = function(dir) {
-	return (path.existsSync(path.join(dir,'tiapp.xml')));
 };
 
 exports.die = function(msg, e) {
@@ -555,7 +512,7 @@ exports.installPlugin = function(alloyPath, projectPath) {
 		var destFile = path.join(o.dest,o.file);
 
 		// skip if the src and dest are the same file
-		if (path.existsSync(destFile) &&
+		if (fs.existsSync(destFile) &&
 			fs.readFileSync(srcFile,'utf8') === fs.readFileSync(destFile,'utf8')) {
 			return;
 		}
