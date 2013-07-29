@@ -500,6 +500,10 @@ exports.changeTime = function(file) {
 	return Math.max(stat.mtime.getTime(),stat.ctime.getTime());
 };
 
+exports.stripColors = function(str) {
+	return str.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '');
+};
+
 exports.installPlugin = function(alloyPath, projectPath) {
 	var id = 'ti.alloy';
 	var plugins = {
