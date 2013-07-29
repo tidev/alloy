@@ -345,9 +345,9 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 	});
 
 	_.each(['COMPONENT','RUNTIME_STYLE'], function(fileType) {
-		files[fileType] = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR[fileType]);
-		if (dirname) { files[fileType] = path.join(files[fileType],dirname); }
-		files[fileType] = path.join(files[fileType],viewName+'.js');
+		files[fileType] = path.join(compileConfig.dir.resources, 'alloy', CONST.DIR[fileType]);
+		if (dirname) { files[fileType] = path.join(files[fileType], dirname); }
+		files[fileType] = path.join(files[fileType], viewName+'.js');
 	});
 
 	// we are processing a view, not just a controller

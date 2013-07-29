@@ -553,7 +553,6 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 
 	// ensure the generated directories exist
 	U.ensureDir(obj.dir.resources);
-	U.ensureDir(obj.dir.resourcesAlloy);
 
 	// process and normalize the config.json file
 	var configs = _.defaults(generateConfig(obj), {
