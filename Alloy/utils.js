@@ -285,9 +285,13 @@ exports.createErrorOutput = function(msg, e) {
 
 exports.updateFiles = function(srcDir, dstDir, opts) {
 	opts = opts || {};
+	opts.rootDir = opts.rootDir || dstDir;
+
 	if (!fs.existsSync(srcDir)) {
 		return;
 	}
+	logger.trace('SRC_DIR=' + srcDir);
+
 	if (!fs.existsSync(dstDir)) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
@@ -303,6 +307,12 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			return;
 		}
 
+		// if this is the current platform-specific folder, adjust the dst path
+		var parts = file.split(/[\/\\]/);
+		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
+			dst = path.join(dstDir, parts.slice(1).join('/'));
+		}
+
 		var srcStat = fs.statSync(src);
 		if (fs.existsSync(dst)) {
 			var dstStat = fs.statSync(dst);
@@ -312,20 +322,24 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				// greater than the one in Resources
 				if (path.extname(src) === '.js' || opts.themeChanged ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
-					logger.trace('Copying ' + src.yellow + ' to ' + dst.yellow);
+					logger.trace('Copying ' +
+						path.join('SRC_DIR', path.relative(srcDir, src)).yellow + ' --> ' +
+						path.relative(opts.rootDir, dst).yellow);
 					exports.copyFileSync(src, dst);
 				}
 			}
 		} else {
 			if (srcStat.isDirectory()) {
-				logger.trace('Creating directory ' + dst.yellow);
+				logger.trace('Creating directory ' + path.relative(opts.rootDir, dst).yellow);
 				wrench.mkdirSyncRecursive(dst, 0755);
 			} else {
-				logger.trace('Copying ' + src.yellow + ' to ' + dst.yellow);
+				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
+					' --> ' + path.relative(opts.rootDir, dst).yellow);
 				exports.copyFileSync(src, dst);
 			}
 		}
 	});
+	logger.trace('');
 };
 
 exports.getWidgetDirectories = function(appDir) {

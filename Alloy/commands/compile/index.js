@@ -115,11 +115,13 @@ module.exports = function(args, program) {
 	// copy in all lib resources from alloy module
 	U.updateFiles(
 		path.join(alloyRoot, 'lib'),
-		path.join(paths.resources, titaniumFolder)
+		path.join(paths.resources, titaniumFolder),
+		{ rootDir: paths.project }
 	);
 	U.updateFiles(
 		path.join(alloyRoot, 'common'),
-		path.join(paths.resources, titaniumFolder, 'alloy')
+		path.join(paths.resources, titaniumFolder, 'alloy'),
+		{ rootDir: paths.project }
 	);
 
 	// create runtime folder structure for alloy
@@ -130,11 +132,16 @@ module.exports = function(args, program) {
 
 	// Copy in all developer assets, libs, and additional resources
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
-		var opts = {};
+		var opts = {
+			rootDir: paths.project
+		};
 		if (type === 'ASSETS') {
-			opts.themeChanged = buildLog.data.themeChanged;
-			opts.filter = new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]');
-			opts.exceptions = otherPlatforms;
+			opts = _.extend(opts, {
+				themeChanged: buildLog.data.themeChanged,
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder
+			});
 		}
 		U.updateFiles(
 			path.join(paths.app, CONST.DIR[type]),
@@ -147,11 +154,10 @@ module.exports = function(args, program) {
 	if (alloyConfig.deploytype !== 'production') {
 		U.updateFiles(
 			path.join(paths.app,'specs'),
-			path.join(paths.resources, titaniumFolder, 'specs')
+			path.join(paths.resources, titaniumFolder, 'specs'),
+			{ rootDir: paths.project }
 		);
 	}
-
-	logger.debug('');
 
 	// check theme for assets
 	if (theme) {
