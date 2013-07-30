@@ -304,16 +304,16 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				// greater than the one in Resources
 				if (path.extname(src) === '.js' || opts.themeChanged ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
-					logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
+					logger.trace('Copying ' + src.yellow + ' to ' + dst.yellow);
 					exports.copyFileSync(src, dst);
 				}
 			}
 		} else {
 			if (srcStat.isDirectory()) {
-				logger.debug('Creating directory ' + dst.yellow);
+				logger.trace('Creating directory ' + dst.yellow);
 				wrench.mkdirSyncRecursive(dst, 0755);
 			} else {
-				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
+				logger.trace('Copying ' + src.yellow + ' to ' + dst.yellow);
 				exports.copyFileSync(src, dst);
 			}
 		}
