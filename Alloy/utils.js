@@ -284,6 +284,7 @@ exports.createErrorOutput = function(msg, e) {
 };
 
 exports.updateFiles = function(srcDir, dstDir, opts) {
+	opts = opts || {};
 	if (!fs.existsSync(srcDir)) {
 		return;
 	}
@@ -294,8 +295,15 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
-		var srcStat = fs.statSync(src);
 
+		// make sure the file exists and that it is not filtered
+		if (!fs.existsSync(src) ||
+			(opts.filter && opts.filter.test(file)) ||
+			(opts.exceptions && _.contains(opts.exceptions, file))) {
+			return;
+		}
+
+		var srcStat = fs.statSync(src);
 		if (fs.existsSync(dst)) {
 			var dstStat = fs.statSync(dst);
 

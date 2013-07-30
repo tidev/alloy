@@ -20,6 +20,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	compileConfig = {},
+	otherPlatforms,
 	buildPlatform,
 	titaniumFolder,
 	theme;
@@ -91,6 +92,7 @@ module.exports = function(args, program) {
 		]);
 	}
 	titaniumFolder = platforms[buildPlatform].titaniumFolder;
+	otherPlatforms = _.without(CONST.PLATFORM_FOLDERS, titaniumFolder);
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
@@ -131,6 +133,8 @@ module.exports = function(args, program) {
 		var opts = {};
 		if (type === 'ASSETS') {
 			opts.themeChanged = buildLog.data.themeChanged;
+			opts.filter = new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]');
+			opts.exceptions = otherPlatforms;
 		}
 		U.updateFiles(
 			path.join(paths.app, CONST.DIR[type]),
@@ -751,11 +755,13 @@ function optimizeCompiledCode() {
 			'alloy/underscore.js',
 			'alloy/widget.js'
 		];
-		var rx = new RegExp('^(?:' +
-			_.without(CONST.PLATFORM_FOLDERS, titaniumFolder).join('|') +
-		')');
+		_.each(exceptions.slice(0), function(ex) {
+			exceptions.push(path.join(titaniumFolder, ex));
+		});
+
+		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return (/\.js\s*$/).test(f) && !rx.test(f) && !_.find(exceptions, function(e) {
+			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
 		});
