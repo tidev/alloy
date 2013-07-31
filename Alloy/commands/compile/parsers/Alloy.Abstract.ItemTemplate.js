@@ -52,6 +52,15 @@ function parse(node, state, args) {
 		code += 'var ' + childTemplates + '=[];';
 
 		_.each(children, function(child) {
+			if (child.nodeName === 'Require' || child.nodeName === 'Widget') {
+				U.dieWithNode(child, [
+					'<ItemTemplate> cannot contain <Require> or <Widget> elements.',
+					'ListView currently only supports Titanium API elements:',
+					'  examples: <Label>, <Button>, <ImageView>, etc...',
+					'Please reference the ListView guide at docs.appcelerator.com for more details.'
+				]);
+			}
+
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				local: true,
