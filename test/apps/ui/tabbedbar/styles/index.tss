@@ -1,17 +1,24 @@
-"Window": {
+'Window': {
 	backgroundColor: '#fff'
-},
-"TabbedBar": {
+}
+
+'TabbedBar': {
 	width: '90%',
 	height: Ti.UI.SIZE
-},
-"Button": {
+}
+
+'Button': {
 	width: Ti.UI.SIZE
-},
-"Label": {
+}
+
+'Label': {
 	color: '#000',
 	font: {
 		fontSize: '18dp',
 		fontWeight: 'bold'
 	}
+}
+
+'#label1': {
+	title: 'tab1'
 }
