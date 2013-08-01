@@ -105,6 +105,7 @@ function parse(node, state, args) {
 	// return the current modified state if we need to continue processing
 	} else {
 		return _.extend(state, {
+			isCollectionBound: isCollectionBound,
 			parent: { node: node },
 			code: code
 		});

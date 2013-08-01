@@ -1,0 +1,27 @@
+<Alloy>
+    <Window layout="horizontal" backgroundColor="#fff">
+        <View class="container">
+            <TableView dataCollection="feed" top="10" separatorColor="#ffffff" height="600">
+                <TableViewRow height="200">
+                    <Label text="first" align="left" left="10"/>
+                    <TabbedBar left="50" top="10">
+                        <Labels>
+                            <Label>TAB1</Label>
+                            <Label title="{fourth}"/>
+                            <Label>TAB3</Label>
+                        </Labels>
+                    </TabbedBar>
+                </TableViewRow>
+                <TableViewRow>
+                    <Label text="second"/>
+                </TableViewRow>
+                <TableViewRow>
+                    <Label text="third"/>
+                </TableViewRow>
+                <TableViewRow>
+                    <Label text="fourth"/>
+                </TableViewRow>
+            </TableView>
+        </View>
+    </Window>
+</Alloy>
