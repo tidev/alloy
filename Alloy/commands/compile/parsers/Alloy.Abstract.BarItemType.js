@@ -29,7 +29,7 @@ function parse(node, state, args) {
 	delete state.extraStyle;
 
 	var code = itemState.code;
-	if (!state.model) {
+	if (!state.isCollectionBound || !state.model) {
 		code += state.itemsArray + '.push(' + itemState.parent.symbol + ');';
 	}
 
