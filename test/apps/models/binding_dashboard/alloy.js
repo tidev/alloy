@@ -1,1 +1,3 @@
-Alloy.Collections.icons = Alloy.createCollection('icon');
+if (OS_IOS) {
+	Alloy.Collections.icons = Alloy.createCollection('icon');
+}

@@ -1,0 +1,12 @@
+<Alloy>
+	<Window>
+		<Toolbar top="0dp">
+			<Items>
+				<Button id="editButton" onClick="toggleEditMode">Edit</Button>
+			</Items>
+		</Toolbar>
+		<DashboardView dataCollection="icons" id="dash" onClick="resetBadge" onEdit="handleEdit" onCommit="handleCommit">
+			<DashboardItem image="{image}" selectedImage="{selectedImage}" badge="{badge}" label="{label}" modelId="{alloy_id}"/>
+		</DashboardView>
+	</Window>
+</Alloy>
