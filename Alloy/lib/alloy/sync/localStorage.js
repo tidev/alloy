@@ -5,15 +5,15 @@ var _ = require('alloy/underscore')._;
 
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-};
+}
 
 function guid() {
    return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
-};
+}
 
 function InitAdapter() {
-	if (!OS_MOBILEWEB) {
-		throw 'localStorage persistence supported only with MobileWeb.';
+	if (!OS_MOBILEWEB && !OS_TIZEN) {
+		throw 'localStorage persistence supported only with MobileWeb and Tizen.';
 	}
 }
 
@@ -31,12 +31,12 @@ function Sync(method, model, opts) {
 		case 'create':
 			if (!model.id) {
 				model.id = guid();
-		        model.set(model.idAttribute, model.id);
+				model.set(model.idAttribute, model.id);
 			}
 			data[model.id] = model;
-	    	storeModel(data);
-	    	resp = model.toJSON();
-	    	break;
+			storeModel(data);
+			resp = model.toJSON();
+			break;
 
 		case 'read':
 			var store = localStorage.getItem(name);
@@ -44,9 +44,9 @@ function Sync(method, model, opts) {
 
             var len = 0;
             for (var key in store_data) {
-            	var m = new model.config.Model(store_data[key]);
-            	model.models.push(m);
-            	len++;
+				var m = new model.config.Model(store_data[key]);
+				model.models.push(m);
+				len++;
             }
 
             model.length = len;

@@ -456,7 +456,7 @@ exports.isTablet = (function() {
 		var psc = Ti.Platform.Android.physicalSizeCategory;
 		return psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE ||
 			psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
-	} else if (OS_MOBILEWEB) {
+	} else if (OS_MOBILEWEB || OS_TIZEN) {
 		return Math.min(
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
