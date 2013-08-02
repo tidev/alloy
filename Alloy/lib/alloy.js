@@ -113,9 +113,6 @@ if (OS_IOS) {
 		keepScreenOn: false
 	});
 }
-if (OS_ANDROID || Ti.Platform.osname === 'tizen') {
-	RESET.softKeyboardOnFocus = Ti.UI.Android.SOFT_KEYBOARD_DEFAULT_ON_FOCUS;
-}
 
 function ucfirst(text) {
     if (!text) { return text; }
