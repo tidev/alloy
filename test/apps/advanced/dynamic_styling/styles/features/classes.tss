@@ -1,7 +1,3 @@
-'.container': {
-	layout: 'vertical'
-}
-
 // button styles
 '.blueButton': {
 	backgroundColor: '#38c0f4',
@@ -63,8 +59,11 @@
 
 '.redbg': {
 	backgroundColor: '#a00',
-	borderRadius: 8,
 	color: '#fff'
+}
+
+'.redbg[platform=ios]': {
+	borderRadius: 8
 }
 
 '.bigger': {
