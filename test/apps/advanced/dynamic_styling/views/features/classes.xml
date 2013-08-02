@@ -6,34 +6,36 @@
 	<Window id="win">
 		<Require src="header" title="classes"/>
 		<ScrollView id="scroll" class="container">
-			<!--
-				"label1" and "label2" are initialized identically, except that
-				"label2" has autoStyle disabled.
-			-->
-			<Label id="label1" class="medium shadow">autoStyle="true"</Label>
+			<View layout="vertical">
+				<!--
+					"label1" and "label2" are initialized identically, except that
+					"label2" has autoStyle disabled.
+				-->
+				<Label id="label1" class="medium shadow">autoStyle="true"</Label>
 
-			<!--
-				Notice that "label2" has autoStyle="false". This means that
-				unlike the other components that will be created from XML,
-				label2 will not have "classes" or "apiName" attached to the
-				resulting proxy object. This is only really a concern when
-				adding or removing classes from a component, as will be made
-				apparent when clicking these labels to toggle their classes.
-				Specifically, because "medium shadow" is not autoStyled to
-				label2, those classes will continue to be overriden by
-				"redbg" and "bigger" even after they have been removed. label1
-				will behave as expected.
-			-->
-			<Label id="label2" class="medium shadow" autoStyle="false">autoStyle="false"</Label>
+				<!--
+					Notice that "label2" has autoStyle="false". This means that
+					unlike the other components that will be created from XML,
+					label2 will not have "classes" or "apiName" attached to the
+					resulting proxy object. This is only really a concern when
+					adding or removing classes from a component, as will be made
+					apparent when clicking these labels to toggle their classes.
+					Specifically, because "medium shadow" is not autoStyled to
+					label2, those classes will continue to be overriden by
+					"redbg" and "bigger" even after they have been removed. label1
+					will behave as expected.
+				-->
+				<Label id="label2" class="medium shadow" autoStyle="false">autoStyle="false"</Label>
 
-			<!--
-				Use this button to toggle the classes attached to the test labels
-			-->
-			<Label id="theButton" class="blueButton" onTouchstart="buttonDown" onTouchend="buttonUp">
-				add "redbg bigger" classes
-			</Label>
+				<!--
+					Use this button to toggle the classes attached to the test labels
+				-->
+				<Label id="theButton" class="blueButton" onTouchstart="buttonDown" onTouchend="buttonUp">
+					add "redbg bigger" classes
+				</Label>
 
-			<ImageView id="theImage" onClick="changeImage"/>
+				<ImageView id="theImage" onClick="changeImage"/>
+			</View>
 		</ScrollView>
 	</Window>
 </Alloy>
