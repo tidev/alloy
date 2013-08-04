@@ -9,6 +9,7 @@ var path = require('path'),
 	logger = require('../../logger'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	U = require('../../utils'),
+	tiapp = require('../../tiapp'),
 	CU = require('./compilerUtils'),
 	CONST = require('../../common/constants'),
 	platforms = require('../../../platforms/index'),
@@ -47,22 +48,12 @@ module.exports = function(args, program) {
 			program.outputPath || args[0] || process.cwd()
 		);
 
-	// get the build log
+	// Initialize modules used throughout the compile process
 	var buildLog = new BuildLog(paths.project);
+	tiapp.init(path.join(paths.project, 'tiapp.xml'));
 
-	// Parse the tiapp.xml and make sure the sdk-version is at least 3.0.0
-	var tiVersion = U.tiapp.getTitaniumSdkVersion(U.tiapp.parse(paths.project));
-	if (tiVersion === null) {
-		logger.warn('Unable to determine Titanium SDK version from tiapp.xml.');
-		logger.warn('Your app may have unexpected behavior. Make sure your tiapp.xml is valid.');
-	} else if (tiSdkVersionNumber(tiVersion) < tiSdkVersionNumber(CONST.MINIMUM_TI_SDK)) {
-		logger.error('Alloy 1.0.0+ requires Titanium SDK ' + CONST.MINIMUM_TI_SDK + ' or higher.');
-		logger.error('Version "' + tiVersion + '" was found in the "sdk-version" field of your tiapp.xml.');
-		logger.error('If you are building with the old titanium.py script and are specifying an SDK version ');
-		logger.error('as a CLI argument that is different than the one in your tiapp.xml, please change the');
-		logger.error('version in your tiapp.xml file. ');
-		process.exit(1);
-	}
+	// validate the current Titanium SDK version, exit on failure
+	tiapp.validateSdkVersion();
 
 	// construct compiler config from command line config parameters
 	// and print the configuration data
@@ -189,8 +180,8 @@ module.exports = function(args, program) {
 	}
 
 	// TODO: https://jira.appcelerator.org/browse/ALOY-477
-	if (buildPlatform === 'android') {
-		U.tiapp.upStackSizeForRhino(paths.project);
+	if (buildPlatform === 'android' && tiapp.version.lt('3.1.0')) {
+		tiapp.upStackSizeForRhino();
 	}
 
 	logger.info('----- MVC GENERATION -----');
@@ -223,13 +214,15 @@ module.exports = function(args, program) {
 			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
 				if (viewRegex.test(view) && filterRegex.test(view)) {
 					// make sure this controller is only generated once
-					var fp = path.join(collection.dir,view.substring(0,view.lastIndexOf('.')));
-					if (tracker[fp]) { return; }
+					var theFile = view.substring(0, view.lastIndexOf('.'));
+					var fp = path.join(collection.dir, theFile);
+					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
+					if (tracker[theKey]) { return; }
 
 					// generate runtime controller
 					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 					parseAlloyComponent(view, collection.dir, collection.manifest);
-					tracker[fp] = true;
+					tracker[theKey] = true;
 				}
 			});
 		}
@@ -241,13 +234,15 @@ module.exports = function(args, program) {
 			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
 				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
 					// make sure this controller is only generated once
-					var fp = path.join(collection.dir,controller.substring(0,controller.lastIndexOf('.')));
-					if (tracker[fp]) { return; }
+					var theFile = controller.substring(0,controller.lastIndexOf('.'));
+					var fp = path.join(collection.dir, theFile);
+					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
+					if (tracker[theKey]) { return; }
 
 					// generate runtime controller
 					logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 					parseAlloyComponent(controller, collection.dir, collection.manifest, true);
-					tracker[fp] = true;
+					tracker[theKey] = true;
 				}
 			});
 		}

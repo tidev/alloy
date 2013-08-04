@@ -14,5 +14,6 @@
 		fontSize: '12dp',
 		fontWeight: 'bold'
 	},
-	touchEnabled: false
+	touchEnabled: false,
+	bubbleParent: false
 }

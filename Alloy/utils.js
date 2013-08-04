@@ -6,6 +6,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('./logger'),
+	tiapp = require('./tiapp'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	DOMParser = require("xmldom").DOMParser,
 	_ = require("./lib/alloy/underscore")._,
@@ -87,130 +88,6 @@ exports.XML = {
 		} else {
 			return exports.XML.previousSiblingElement(node.previousSibling);
 		}
-	}
-};
-
-exports.tiapp = {
-	parse: function(dir) {
-		dir = dir || './';
-		var tiappPath = path.join(dir,'tiapp.xml');
-		if (!fs.existsSync(tiappPath)) {
-			U.die('tiapp.xml file does not exist at "' + tiappPath + '"');
-		}
-		return exports.XML.parseFromFile(tiappPath);
-	},
-	getTitaniumSdkVersion: function(doc) {
-		var elems = doc.documentElement.getElementsByTagName('sdk-version');
-		return elems && elems.length > 0 ? exports.XML.getNodeText(elems.item(elems.length-1)) : null;
-	},
-	getProperty: function(doc, name) {
-		var props = doc.documentElement.getElementsByTagName('property');
-		for (var i = 0; i < props.length; i++) {
-			if (props.item(i).getAttribute('name') === name) {
-				return props.item(i);
-			}
-		}
-		return null;
-	},
-	upStackSizeForRhino: function(dir) {
-		var doc = exports.tiapp.parse(dir);
-		var runtime = exports.XML.getNodeText(exports.tiapp.getProperty(doc, 'ti.android.runtime'));
-
-		if (runtime === 'rhino') {
-			var stackSize = exports.tiapp.getProperty(doc, 'ti.android.threadstacksize');
-			if (stackSize !== null) {
-				if (parseInt(stackSize.nodeValue, 10) < 32768) {
-					stackSize.nodeValue('32768');
-				}
-			} else {
-				var node = doc.createElement('property');
-				var text = doc.createTextNode('32768');
-				node.setAttribute('name','ti.android.threadstacksize');
-				node.setAttribute('type','int');
-				node.appendChild(text);
-
-				doc.documentElement.appendChild(node);
-			}
-
-			// serialize the xml and write to tiapp.xml
-			var serializer = new XMLSerializer();
-			var newxml = serializer.serializeToString(doc);
-			fs.writeFileSync(path.join(dir,'tiapp.xml'),newxml,'utf8');
-		}
-	},
-	install: function(type, dir, opts) {
-		type = type || 'module';
-		dir = dir || './';
-		opts = opts || {};
-
-		var err = 'Project creation failed. Unable to install ' + type + ' "' + (opts.name || opts.id) + '"';
-		var tiappPath = path.join(dir,'tiapp.xml');
-		if (!fs.existsSync(tiappPath)) {
-			U.die([ 'tiapp.xml file does not exist at "' + tiappPath + '"', err ]);
-		}
-
-		// read the tiapp.xml file
-		var doc = exports.XML.parseFromFile(tiappPath);
-		var collection = doc.documentElement.getElementsByTagName(type + 's');
-		var found = false;
-
-		// Determine if the module or plugin is already installed
-		if (collection.length > 0) {
-			var items = collection.item(0).getElementsByTagName(type);
-			if (items.length > 0) {
-				for (var c = 0; c < items.length; c++) {
-					var theItem = items.item(c);
-					var theItemText = exports.XML.getNodeText(theItem);
-
-					// TODO: https://jira.appcelerator.org/browse/ALOY-188
-					if (theItemText == opts.id) {
-						found = true;
-						break;
-					}
-				}
-			}
-		}
-
-		// install module or plugin
-		if (!found) {
-			// create the node to be inserted
-			var node = doc.createElement(type);
-			var text = doc.createTextNode(opts.id);
-			if (opts.platform) {
-				node.setAttribute('platform',opts.platform);
-			}
-			if (opts.version) {
-				node.setAttribute('version',opts.version);
-			}
-			node.appendChild(text);
-
-			// add the node into tiapp.xml
-			var pna = null;
-			if (collection.length === 0) {
-				var pn = doc.createElement(type + 's');
-				doc.documentElement.appendChild(pn);
-				doc.documentElement.appendChild(doc.createTextNode("\n"));
-				pna = pn;
-			} else {
-				pna = collection.item(0);
-			}
-			pna.appendChild(node);
-			pna.appendChild(doc.createTextNode("\n"));
-
-			// serialize the xml and write to tiapp.xml
-			var serializer = new XMLSerializer();
-			var newxml = serializer.serializeToString(doc);
-			fs.writeFileSync(tiappPath,newxml,'utf8');
-
-			logger.info('Installed "' + opts.id + '" ' + type + ' to ' + tiappPath);
-		}
-
-	},
-	installModule: function(dir, opts) {
-		this.install('module', dir, opts);
-	},
-	installPlugin: function(dir, opts) {
-		this.install('plugin', dir, opts);
 	}
 };
 
@@ -557,7 +434,8 @@ exports.installPlugin = function(alloyPath, projectPath) {
 	});
 
 	// add the plugin to tiapp.xml, if necessary
-	exports.tiapp.installPlugin(projectPath, {
+	tiapp.init(path.join(projectPath, 'tiapp.xml'));
+	tiapp.installPlugin({
 		id: 'ti.alloy',
 		version: '1.0'
 	});
