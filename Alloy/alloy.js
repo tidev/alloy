@@ -8,16 +8,13 @@
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
-	pkginfo = require('pkginfo'),
+	pkginfo = require('pkginfo')(module, 'version'),
 	path = require('path'),
 	fs = require('fs'),
 	CONST = require('./common/constants');
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
-
-// setup our module so have the pkginfo version from package.json
-pkginfo(module,'name','version');
 
 ////////////////////////////////////
 ////////// MAIN EXECUTION //////////

@@ -24,6 +24,8 @@ if (isTitanium) {
 
 // General default values
 exports.ALLOY_DIR = 'app';
+exports.ALLOY_RUNTIME_DIR = 'alloy';
+exports.RESOURCES_DIR = 'Resources';
 exports.NAME_DEFAULT = 'index';
 exports.NAME_WIDGET_DEFAULT = 'widget';
 exports.GLOBAL_STYLE = 'app.tss';
@@ -95,7 +97,8 @@ exports.DIR = {
 	LIB: 'lib',
 	COMPONENT: 'controllers',
 	MAP: 'build/map',
-	VENDOR: 'vendor'
+	VENDOR: 'vendor',
+	THEME: 'themes'
 };
 
 // constants identifying JS reserved words

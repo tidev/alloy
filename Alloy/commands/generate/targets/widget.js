@@ -23,15 +23,16 @@ module.exports = function(name, args, program) {
 	// create default alloy widget folders and files
 	_.each(types, function(type) {
 		var typeFolder = path.join(paths.widget, CONST.DIR[type]);
-		var typeTemplate = path.join(paths.template,'widget',type.toLowerCase() + '.' + CONST.FILE_EXT[type]);
+		var typeTemplate = path.join(paths.template,'widget',type.toLowerCase() + '.' +
+			CONST.FILE_EXT[type]);
 
-		wrench.mkdirSyncRecursive(typeFolder, 0777);
+		wrench.mkdirSyncRecursive(typeFolder, 0755);
 		fs.writeFileSync(
 			path.join(typeFolder,CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
 			fs.readFileSync(typeTemplate,'utf8')
 		);
 	});
-	wrench.mkdirSyncRecursive(path.join(paths.widget,CONST.DIR.ASSETS), 0777);
+	wrench.mkdirSyncRecursive(path.join(paths.widget,CONST.DIR.ASSETS), 0755);
 
 	// create widget.json manifest file
 	fs.writeFileSync(

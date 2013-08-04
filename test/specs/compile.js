@@ -108,7 +108,7 @@ describe('alloy compile', function() {
 
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
 					if (!fs.existsSync(genFolder)) { return; }
-					var hrFolder = path.join(paths.harness,'Resources');
+					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
 					var files = wrench.readdirSyncRecursive(genFolder);
 
 					_.each(files, function(gFile) {

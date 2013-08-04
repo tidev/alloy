@@ -3,7 +3,6 @@ var path = require('path'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),
-	jsonlint = require('jsonlint'),
 	sourceMapper = require('./sourceMapper'),
 	styler = require('./styler'),
 	_ = require("../../lib/alloy/underscore")._,
@@ -14,14 +13,17 @@ var path = require('path'),
 	CU = require('./compilerUtils'),
 	CONST = require('../../common/constants'),
 	platforms = require('../../../platforms/index'),
-	BuildLog = require('./BuildLog');
+	BuildLog = require('./BuildLog'),
+	Orphanage = require('./Orphanage');
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
 	modelRegex = new RegExp('\\.' + CONST.FILE_EXT.MODEL + '$'),
 	compileConfig = {},
+	otherPlatforms,
 	buildPlatform,
+	titaniumFolder,
 	theme;
 
 var times = {
@@ -80,85 +82,73 @@ module.exports = function(args, program) {
 			'  Ex. "alloy compile --config platform=ios"'
 		]);
 	}
-
-	// wipe the controllers, models, and widgets
-	logger.debug('----- CLEANING RESOURCES -----');
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.COMPONENT + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.COMPONENT), ['BaseController.js']);
-
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.MODEL + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.MODEL));
-
-	logger.debug('Cleaning "Resources/alloy/' + CONST.DIR.WIDGET + '" folder...');
-	U.rmdirContents(path.join(paths.resourcesAlloy,CONST.DIR.WIDGET));
-	logger.debug(' ');
-
-	// GET RID OF ORPHAN FILES
-	U.deleteOrphanFiles(
-		paths.resources,
-		[
-			path.join(alloyRoot,'lib'),
-			path.join(alloyRoot,'common'),
-			path.join(paths.app,CONST.DIR.ASSETS),
-			path.join(paths.app,CONST.DIR.LIB),
-			path.join(paths.app,'vendor')
-		],
-		{
-			exceptions: [
-				// still need to check for builtins
-				path.join('alloy'),
-				path.join('alloy','CFG.js'),
-				path.join('alloy','constants.js'),
-				path.join('alloy','controllers'),
-				path.join('alloy','widgets'),
-				path.join('alloy','models')
-			],
-			platform: platforms[buildPlatform].titaniumFolder
-		}
-	);
+	titaniumFolder = platforms[buildPlatform].titaniumFolder;
+	otherPlatforms = _.without(CONST.PLATFORM_FOLDERS, titaniumFolder);
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
-
-	// identify current theme, if any
 	theme = compileConfig.theme;
-	if (theme) { logger.debug('theme = ' + theme); }
+	buildLog.data.themeChanged = theme !== buildLog.data.theme;
+	buildLog.data.theme = theme;
 	logger.debug('');
 
-	// identify theme changes and update build log
-	var themeChanged = theme !== buildLog.data.theme;
-	buildLog.data.theme = theme;
+	// wipe the controllers, models, and widgets
+	logger.debug('----- CLEANING RESOURCES -----');
+	var orphanage = new Orphanage(paths.project, buildPlatform, { theme: theme });
+	orphanage.clean();
+	logger.debug('');
 
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
 	// copy in all lib resources from alloy module
-	U.updateFiles(path.join(alloyRoot, 'lib'), paths.resources);
-	U.updateFiles(path.join(alloyRoot, 'common'), path.join(paths.resources,'alloy'));
+	U.updateFiles(
+		path.join(alloyRoot, 'lib'),
+		path.join(paths.resources, titaniumFolder),
+		{ rootDir: paths.project }
+	);
+	U.updateFiles(
+		path.join(alloyRoot, 'common'),
+		path.join(paths.resources, titaniumFolder, 'alloy'),
+		{ rootDir: paths.project }
+	);
 
 	// create runtime folder structure for alloy
 	_.each(['COMPONENT','WIDGET','RUNTIME_STYLE'], function(type) {
-		var p = path.join(paths.resourcesAlloy, CONST.DIR[type]);
-		wrench.mkdirSyncRecursive(p, 0777);
+		var p = path.join(paths.resources, titaniumFolder, 'alloy', CONST.DIR[type]);
+		wrench.mkdirSyncRecursive(p, 0755);
 	});
 
 	// Copy in all developer assets, libs, and additional resources
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
-		var opts = {};
+		var opts = {
+			rootDir: paths.project
+		};
 		if (type === 'ASSETS') {
-			opts.themeChanged = themeChanged;
+			opts = _.extend(opts, {
+				themeChanged: buildLog.data.themeChanged,
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder
+			});
 		}
-		U.updateFiles(path.join(paths.app,CONST.DIR[type]), paths.resources, opts);
+		U.updateFiles(
+			path.join(paths.app, CONST.DIR[type]),
+			path.join(paths.resources, titaniumFolder),
+			opts
+		);
 	});
 
 	// copy in test specs if not in production
 	if (alloyConfig.deploytype !== 'production') {
-		U.updateFiles(path.join(paths.app,'specs'), path.join(paths.resources,'specs'));
+		U.updateFiles(
+			path.join(paths.app,'specs'),
+			path.join(paths.resources, titaniumFolder, 'specs'),
+			{ rootDir: paths.project }
+		);
 	}
-
-	logger.debug('');
 
 	// check theme for assets
 	if (theme) {
@@ -171,7 +161,7 @@ module.exports = function(args, program) {
 
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app,"alloy.jmk"));
+	var alloyJMK = path.resolve(path.join(paths.app, "alloy.jmk"));
 	if (path.existsSync(alloyJMK)) {
 		logger.debug('Loading "alloy.jmk" compiler hooks...');
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
@@ -201,7 +191,7 @@ module.exports = function(args, program) {
 	styler.loadGlobalStyles(paths.app, theme ? {theme:theme} : {});
 
 	// Create collection of all widget and app paths
-	var widgetDirs = U.getWidgetDirectories(paths.project, paths.app);
+	var widgetDirs = U.getWidgetDirectories(paths.app);
 	var viewCollection = widgetDirs;
 	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 
@@ -261,10 +251,10 @@ module.exports = function(args, program) {
 
 	// generate app.js
 	logger.info('[app.js] Titanium entry point processing...');
-	var appJS = path.join(compileConfig.dir.resources,"app.js");
+	var appJS = path.join(compileConfig.dir.resources, titaniumFolder, "app.js");
 	sourceMapper.generateCodeAndSourceMap({
 		target: {
-			filename: 'Resources/app.js',
+			filename: 'Resources/' + titaniumFolder + '/app.js',
 			filepath: appJS,
 			template: path.join(alloyRoot,'template','app.js')
 		},
@@ -296,7 +286,7 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function parseAlloyComponent(view,dir,manifest,noView) {
+function parseAlloyComponent(view, dir, manifest, noView) {
 	var parseType = noView ? 'controller' : 'view';
 
 	// validate parameters
@@ -305,7 +295,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	var dirRegex = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
 	var basename = path.basename(view, '.' + CONST.FILE_EXT[parseType.toUpperCase()]);
-		dirname = path.dirname(view).replace(dirRegex,''), // /^(?:android|ios|mobileweb)[\\\/]*/,''),
+		dirname = path.dirname(view).replace(dirRegex,''),
 		viewName = basename,
 		template = {
 			viewCode: '',
@@ -336,9 +326,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
 	_.each(searchPaths, function(fileType) {
 		// get the path values for the file
-		var fileTypeRoot = path.join(dir,CONST.DIR[fileType]);
-		var filename = viewName+'.'+CONST.FILE_EXT[fileType];
-		var filepath = dirname ? path.join(dirname,filename) : filename;
+		var fileTypeRoot = path.join(dir, CONST.DIR[fileType]);
+		var filename = viewName + '.' + CONST.FILE_EXT[fileType];
+		var filepath = dirname ? path.join(dirname, filename) : filename;
 
 		// check for platform-specific versions of the file
 		var baseFile = path.join(fileTypeRoot,filepath);
@@ -360,9 +350,9 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	});
 
 	_.each(['COMPONENT','RUNTIME_STYLE'], function(fileType) {
-		files[fileType] = path.join(compileConfig.dir.resourcesAlloy,CONST.DIR[fileType]);
-		if (dirname) { files[fileType] = path.join(files[fileType],dirname); }
-		files[fileType] = path.join(files[fileType],viewName+'.js');
+		files[fileType] = path.join(compileConfig.dir.resources, 'alloy', CONST.DIR[fileType]);
+		if (dirname) { files[fileType] = path.join(files[fileType], dirname); }
+		files[fileType] = path.join(files[fileType], viewName+'.js');
 	});
 
 	// we are processing a view, not just a controller
@@ -554,18 +544,34 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 
 	// prep the controller paths based on whether it's an app
 	// controller or widget controller
-	var targetFilepath = files.COMPONENT;
-	var runtimeStylePath = files.RUNTIME_STYLE;
+	var targetFilepath = path.join(compileConfig.dir.resources, titaniumFolder,
+		path.relative(compileConfig.dir.resources, files.COMPONENT));
+	var runtimeStylePath = path.join(compileConfig.dir.resources, titaniumFolder,
+		path.relative(compileConfig.dir.resources, files.RUNTIME_STYLE));
 	if (manifest) {
-		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir), 0777);
-		wrench.mkdirSyncRecursive(path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir), 0777);
+		wrench.mkdirSyncRecursive(
+			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+				manifest.id, widgetDir),
+			0755
+		);
+		wrench.mkdirSyncRecursive(
+			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+				manifest.id, widgetStyleDir),
+			0755
+		);
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
-			compileConfig.dir.resources,
+			path.join(compileConfig.dir.resources, titaniumFolder),
 			manifest.id
 		);
-		targetFilepath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetDir, viewName + '.js');
-		runtimeStylePath = path.join(compileConfig.dir.resourcesAlloy, CONST.DIR.WIDGET, manifest.id, widgetStyleDir, viewName + '.js');
+		targetFilepath = path.join(
+			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
+			widgetDir, viewName + '.js'
+		);
+		runtimeStylePath = path.join(
+			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
+			widgetStyleDir, viewName + '.js'
+		);
 	}
 
 	// generate the code and source map for the current controller
@@ -584,7 +590,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	}, compileConfig);
 
 	// initiate runtime style module creation
-	var relativeStylePath = path.relative(compileConfig.dir.project,runtimeStylePath);
+	var relativeStylePath = path.relative(compileConfig.dir.project, runtimeStylePath);
 	logger.info('  created:     "' + relativeStylePath + '"');
 
 	// pre-process runtime controllers to save runtime performance
@@ -635,7 +641,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	});
 
 	// write out the pre-processed styles to runtime module files
-	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
+	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0755);
 	fs.writeFileSync(
 		runtimeStylePath,
 		'module.exports = [' + processedStyles.join(',') + '];'
@@ -711,11 +717,13 @@ function processModels(dirs) {
 
 			// write the model to the runtime file
 			var casedBasename = U.properCase(basename);
-			var modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'models');
+			var modelRuntimeDir = path.join(compileConfig.dir.resources,
+				titaniumFolder, 'alloy', 'models');
 			if (isWidget) {
-				modelRuntimeDir = path.join(compileConfig.dir.resourcesAlloy,'widgets',manifest.id,'models');
+				modelRuntimeDir = path.join(compileConfig.dir.resources,
+					titaniumFolder, 'alloy', 'widgets', manifest.id, 'models');
 			}
-			wrench.mkdirSyncRecursive(modelRuntimeDir, 0777);
+			wrench.mkdirSyncRecursive(modelRuntimeDir, 0755);
 			fs.writeFileSync(path.join(modelRuntimeDir,casedBasename+'.js'), code);
 			models.push(casedBasename);
 		});
@@ -745,10 +753,16 @@ function optimizeCompiledCode() {
 			'alloy/styles/',
 			'alloy/backbone.js',
 			'alloy/constants.js',
-			'alloy/underscore.js'
+			'alloy/underscore.js',
+			'alloy/widget.js'
 		];
+		_.each(exceptions.slice(0), function(ex) {
+			exceptions.push(path.join(titaniumFolder, ex));
+		});
+
+		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return (/\.js\s*$/).test(f) && !_.find(exceptions, function(e) {
+			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
 		});

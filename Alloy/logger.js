@@ -1,5 +1,5 @@
 var colors = require('colors'),
-	strip = require('stripcolorcodes');
+	U = require('./utils');
 
 exports.TRACE = 4;
 exports.DEBUG = 3;
@@ -74,9 +74,10 @@ var printMessage = function(msg, level, color) {
 				printLine(line[i]);
 			}
 		} else {
-			var tag = (exports.showTimestamp ? formattedDate() + ' -- ' : '') + '[' + level.toUpperCase() + '] ';
+			var tag = (exports.showTimestamp ? formattedDate() + ' -- ' : '') + '[' +
+				level.toUpperCase() + '] ';
 			var str = tag.grey + (line || '')[color];
-			if (exports.stripColors) { str = strip(str); }
+			if (exports.stripColors) { str = U.stripColors(str); }
 			logFunc(str);
 		}
 	}
