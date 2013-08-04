@@ -1,6 +1,7 @@
 var U = require('../../utils'),
 	colors = require('colors'),
 	path = require('path'),
+	os = require('os'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
@@ -344,35 +345,6 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 };
 
-exports.componentExists = function(appRelativePath, manifest) {
-	var isWidget = manifest;
-	var config = exports.getCompilerConfig();
-
-	// Prepare the path the is relative the the "app" directory
-	var stripPsRegex  = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
-	var stripExtRegex = new RegExp('\\.(?:' + CONST.FILE_EXT.VIEW + '|' + CONST.FILE_EXT.CONTROLLER + ')$');
-	var basename = appRelativePath.replace(stripPsRegex,'').replace(stripExtRegex,'');
-
-	// compose potential component path
-	var componentPath = path.join(
-		config.dir.resourcesAlloy,
-		CONST.DIR.COMPONENT,
-		basename + '.' + CONST.FILE_EXT.COMPONENT
-	);
-
-	if (isWidget) {
-		componentPath = path.join(
-			config.dir.resourcesAlloy,
-			CONST.DIR.WIDGET,
-			manifest.id,
-			CONST.DIR.COMPONENT,
-			basename + '.' + CONST.FILE_EXT.COMPONENT
-		);
-	}
-
-	return path.existsSync(componentPath);
-};
-
 exports.expandRequireNode = function(requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
 
@@ -536,9 +508,8 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
 				var destDir = path.join(resourceDir, path.dirname(file), widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
-					wrench.mkdirSyncRecursive(destDir, 0777);
+					wrench.mkdirSyncRecursive(destDir, 0755);
 				}
-				//console.log('Copying assets ' + source + ' --> ' + dest);
 				U.copyFileSync(source, dest);
 			}
 		});
@@ -580,25 +551,35 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 		obj.dir[dir] = path.resolve(path.join(alloyRoot,dir));
 	});
 
-	// validation
+	// ensure the generated directories exist
 	U.ensureDir(obj.dir.resources);
-	U.ensureDir(obj.dir.resourcesAlloy);
 
-	var config = exports.generateConfig(obj);
-	obj.theme = config.theme;
-	obj.sourcemap = config.sourcemap;
-	obj[CONST.AUTOSTYLE_PROPERTY] = config[CONST.AUTOSTYLE_PROPERTY] || false;
+	// process and normalize the config.json file
+	var configs = _.defaults(generateConfig(obj), {
+		// sets the theme
+		theme: undefined,
+
+		// are we going to generate sourcemaps?
+		sourcemap: true,
+
+		// are we enabling dynamic styling for all generated components?
+		autoStyle: false,
+
+		// the list of widget dependencies
+		dependencies: {}
+	});
+	logger.debug(JSON.stringify(configs, null, '  ').split(os.EOL));
 
 	// update implicit namespaces, if possible
 	updateImplicitNamspaces(alloyConfig.platform);
 
 	// keep a copy of the config for this module
-	compilerConfig = obj;
+	compilerConfig = _.extend(obj, configs);
 
 	return obj;
 };
 
-exports.generateConfig = function(obj) {
+function generateConfig(obj) {
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
 	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
@@ -624,7 +605,6 @@ exports.generateConfig = function(obj) {
 
 		_.each(j, function(v,k) {
 			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
-				logger.debug(k + ' = ' + JSON.stringify(v));
 				o[k] = v;
 			}
 		});
@@ -644,16 +624,16 @@ exports.generateConfig = function(obj) {
 	}
 
 	// write out the config runtime module
-	wrench.mkdirSyncRecursive(resourcesBase, 0777);
+	wrench.mkdirSyncRecursive(resourcesBase, 0755);
 
-	logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
+	//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 	fs.writeFileSync(
 		resourcesCfg,
 		"module.exports=" + JSON.stringify(o) + ";"
 	);
 
 	return o;
-};
+}
 
 exports.loadController = function(file) {
 	var code = {

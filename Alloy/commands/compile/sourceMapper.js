@@ -109,7 +109,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// create uglify-js source map and stream it out
 	var stream, sourceMap;
-	if (compileConfig.sourcemap !== false) {
+	if (compileConfig.sourcemap) {
 		sourceMap = uglifyjs.SourceMap({
 			file: target.filename,
 			orig: mapper.toString()
@@ -125,7 +125,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// write the generated controller code
 	var outfile = target.filepath;
 	var relativeOutfile = path.relative(compileConfig.dir.project,outfile);
-	wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
+	wrench.mkdirSyncRecursive(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, stream.toString());
 	logger.info('  created:    "' + relativeOutfile + '"');
 
@@ -134,7 +134,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
 		outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 		relativeOutfile = path.relative(compileConfig.dir.project,outfile);
-		wrench.mkdirSyncRecursive(path.dirname(outfile), 0777);
+		wrench.mkdirSyncRecursive(path.dirname(outfile), 0755);
 		fs.writeFileSync(outfile, sourceMap.toString());
 		logger.debug('  map:        "' + relativeOutfile + '"');
 	}

@@ -103,7 +103,8 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	var projectPath = path.resolve(argPath);
 
 	// See if we got the "app" path or the project path as an argument
-	projectPath = path.existsSync(path.join(projectPath,'..','tiapp.xml')) ? path.join(projectPath,'..') : projectPath;
+	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
+		path.join(projectPath,'..') : projectPath;
 
 	// Assign paths objects
 	var paths = {
@@ -117,14 +118,22 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	paths.resourcesAlloy = path.join(paths.resources,'alloy');
 
 	// validate project and "app" paths
-	if (!path.existsSync(paths.project)) {
+	if (!fs.existsSync(paths.project)) {
 		exports.die('Titanium project path does not exist at "' + paths.project + '".');
-	} else if (!path.existsSync(path.join(paths.project,'tiapp.xml'))) {
+	} else if (!fs.existsSync(path.join(paths.project,'tiapp.xml'))) {
 		exports.die('Invalid Titanium project path (no tiapp.xml) at "' + paths.project + '"');
-	} else if (!path.existsSync(paths.app)) {
+	} else if (!fs.existsSync(paths.app)) {
 		exports.die('Alloy "app" directory does not exist at "' + paths.app + '"');
-	} else if (!path.existsSync(paths.index)) {
+	} else if (!fs.existsSync(paths.index)) {
 		exports.die('Alloy "app" directory has no "' + paths.indexBase + '" file at "' + paths.index + '".');
+	}
+
+	// TODO: https://jira.appcelerator.org/browse/TIMOB-14683
+	// Resources/app.js must be present, even if not used
+	var appjs = path.join(paths.resources, 'app.js');
+	if (!fs.existsSync(appjs)) {
+		wrench.mkdirSyncRecursive(paths.resources, 0755);
+		fs.writeFileSync(appjs, '');
 	}
 
 	return paths;
@@ -151,74 +160,37 @@ exports.createErrorOutput = function(msg, e) {
 	return errs;
 };
 
-exports.deleteOrphanFiles = function(targetDir, srcDirs, opts) {
-	opts = opts || {};
-
-	var exceptions = [];
-	if (opts.exceptions) {
-			_.each(opts.exceptions, function(ex) {
-			exceptions.push(ex);
-			exceptions.push(opts.platform + '/' + ex);
-		});
-	}
-
-	// skip if target or source is not defined
-	if (!fs.existsSync(targetDir) || !srcDirs) {
-		return;
-	}
-	if (!_.isArray(srcDirs)) {
-		srcDirs = [srcDirs];
-	}
-
-	// check all target files
-	_.each(wrench.readdirSyncRecursive(targetDir), function(file) {
-		// skip the app.js and node acs files
-		if (file === 'app.js' || NODE_ACS_REGEX.test(file)) { return; }
-		if (_.contains(exceptions, file)) { return; }
-
-		// see if this target exists in any of the src dirs
-		var found = false;
-		for (var i = 0; i < srcDirs.length; i++) {
-			var srcDir = srcDirs[i];
-			var src = path.join(srcDir,file);
-			if (fs.existsSync(src)) {
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			var target = path.join(targetDir,file);
-
-			// already deleted, perhaps a file in a deleted directory
-			if (!fs.existsSync(target)) { return; }
-
-			// delete the file/directory
-			var targetStat = fs.statSync(target);
-			if (targetStat.isDirectory()) {
-				logger.trace('Deleting orphan directory ' + target.yellow);
-				wrench.rmdirSyncRecursive(target,true);
-			} else {
-				logger.trace('Deleting orphan file ' + target.yellow);
-				fs.unlinkSync(target);
-			}
-		}
-	});
-};
-
 exports.updateFiles = function(srcDir, dstDir, opts) {
+	opts = opts || {};
+	opts.rootDir = opts.rootDir || dstDir;
+
 	if (!fs.existsSync(srcDir)) {
 		return;
 	}
+	logger.trace('SRC_DIR=' + srcDir);
+
 	if (!fs.existsSync(dstDir)) {
-		wrench.mkdirSyncRecursive(dstDir, 0777);
+		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
-		var srcStat = fs.statSync(src);
 
+		// make sure the file exists and that it is not filtered
+		if (!fs.existsSync(src) ||
+			(opts.filter && opts.filter.test(file)) ||
+			(opts.exceptions && _.contains(opts.exceptions, file))) {
+			return;
+		}
+
+		// if this is the current platform-specific folder, adjust the dst path
+		var parts = file.split(/[\/\\]/);
+		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
+			dst = path.join(dstDir, parts.slice(1).join('/'));
+		}
+
+		var srcStat = fs.statSync(src);
 		if (fs.existsSync(dst)) {
 			var dstStat = fs.statSync(dst);
 
@@ -227,40 +199,30 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				// greater than the one in Resources
 				if (path.extname(src) === '.js' || opts.themeChanged ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
-					logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
-					exports.copyFileSync(src,dst);
+					logger.trace('Copying ' +
+						path.join('SRC_DIR', path.relative(srcDir, src)).yellow + ' --> ' +
+						path.relative(opts.rootDir, dst).yellow);
+					exports.copyFileSync(src, dst);
 				}
 			}
 		} else {
 			if (srcStat.isDirectory()) {
-				logger.debug('Creating directory ' + dst.yellow);
-				wrench.mkdirSyncRecursive(dst,0777);
+				logger.trace('Creating directory ' + path.relative(opts.rootDir, dst).yellow);
+				wrench.mkdirSyncRecursive(dst, 0755);
 			} else {
-				logger.debug('Copying ' + src.yellow + ' to ' + dst.yellow);
-				exports.copyFileSync(src,dst);
+				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
+					' --> ' + path.relative(opts.rootDir, dst).yellow);
+				exports.copyFileSync(src, dst);
 			}
 		}
 	});
+	logger.trace('');
 };
 
-exports.copyAlloyDir = function(appDir, sources, destDir) {
-	sources = _.isArray(sources) ? sources : [sources];
-	_.each(sources, function(source) {
-		var sourceDir = path.join(appDir, source);
-		if (path.existsSync(sourceDir)) {
-			logger.info('Copying ' + source + ' from: ' + sourceDir.yellow);
-			if (!path.existsSync(destDir)) {
-				wrench.mkdirSyncRecursive(destDir, 0777);
-			}
-			exports.copyFilesAndDirs(sourceDir, destDir);
-		}
-	});
-};
-
-exports.getWidgetDirectories = function(outputPath, appDir) {
+exports.getWidgetDirectories = function(appDir) {
 	var configPath = path.join(appDir, 'config.json');
 	var appWidgets = [];
-	if (path.existsSync(configPath)) {
+	if (fs.existsSync(configPath)) {
 		try {
 			var content = fs.readFileSync(configPath,'utf8');
 			appWidgets = jsonlint.parse(content).dependencies;
@@ -273,10 +235,10 @@ exports.getWidgetDirectories = function(outputPath, appDir) {
 	var collections = [];
 	var widgetPaths = [];
 	widgetPaths.push(path.join(__dirname,'..','widgets'));
-	widgetPaths.push(path.join(outputPath,'app','widgets'));
+	widgetPaths.push(path.join(appDir,'widgets'));
 
 	_.each(widgetPaths, function(widgetPath) {
-		if (path.existsSync(widgetPath)) {
+		if (fs.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
 				var wDir = path.join(widgetPath,wFiles[i]);
@@ -377,7 +339,7 @@ exports.resolveAppHome = function() {
 	for (var i = 0; i < paths.length; i++) {
 		paths[i] = path.resolve(paths[i]);
 		var testPath = path.join(paths[i],indexView);
-		if (path.existsSync(testPath)) {
+		if (fs.existsSync(testPath)) {
 			return paths[i];
 		}
 	}
@@ -411,40 +373,9 @@ exports.copyFileSync = function(srcFile, destFile) {
 };
 
 exports.ensureDir = function(p) {
-	if (!path.existsSync(p)) {
-		//logger.debug("Creating directory: "+p);
-		wrench.mkdirSyncRecursive(p, 0777);
+	if (!fs.existsSync(p)) {
+		wrench.mkdirSyncRecursive(p, 0755);
 	}
-};
-
-exports.copyFilesAndDirs = function(f,d) {
-	var files = fs.readdirSync(f);
-	for (var c=0;c<files.length;c++)
-	{
-		var file = files[c];
-		var fpath = path.join(f,file);
-		var stats = fs.lstatSync(fpath);
-		var rd = path.join(d,file);
-		logger.debug('Copying ' + fpath.yellow + ' to '.cyan + d.yellow);
-		try {
-			if (stats.isDirectory())
-			{
-				exports.ensureDir(rd);
-				wrench.copyDirSyncRecursive(fpath, rd, {preserve:true});
-			}
-			else
-			{
-				exports.copyFileSync(fpath,rd);
-			}
-		}
-		catch (e) {
-			logger.warn('Could not copy ' + fpath);
-		}
-	}
-};
-
-exports.isTiProject = function(dir) {
-	return (path.existsSync(path.join(dir,'tiapp.xml')));
 };
 
 exports.die = function(msg, e) {
@@ -468,6 +399,10 @@ exports.changeTime = function(file) {
 	return Math.max(stat.mtime.getTime(),stat.ctime.getTime());
 };
 
+exports.stripColors = function(str) {
+	return str.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '');
+};
+
 exports.installPlugin = function(alloyPath, projectPath) {
 	var id = 'ti.alloy';
 	var plugins = {
@@ -488,7 +423,7 @@ exports.installPlugin = function(alloyPath, projectPath) {
 		var destFile = path.join(o.dest,o.file);
 
 		// skip if the src and dest are the same file
-		if (path.existsSync(destFile) &&
+		if (fs.existsSync(destFile) &&
 			fs.readFileSync(srcFile,'utf8') === fs.readFileSync(destFile,'utf8')) {
 			return;
 		}
