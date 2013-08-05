@@ -640,11 +640,15 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 	});
 
 	// write out the pre-processed styles to runtime module files
-	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0777);
-	fs.writeFileSync(
-		runtimeStylePath,
-		'module.exports = [' + processedStyles.join(',') + '];'
-	);
+	var styleCode = 'module.exports = [' + processedStyles.join(',') + '];';
+	if (manifest) {
+		styleCode += _.template(
+			fs.readFileSync(path.join(alloyRoot,'template','wpath.js'), 'utf8'),
+			{ WIDGETID: manifest.id }
+		);
+	}
+	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0755);
+	fs.writeFileSync(runtimeStylePath, styleCode);
 }
 
 function findModelMigrations(name, inDir) {
