@@ -107,7 +107,12 @@ module.exports = function(args, program) {
 	U.updateFiles(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
-		{ rootDir: paths.project }
+		{
+			rootDir: paths.project,
+			exceptions: _.map(_.difference(CONST.ADAPTERS, compileConfig.adapters), function(a) {
+				return path.join('alloy', 'sync', a + '.js');
+			})
+		}
 	);
 	U.updateFiles(
 		path.join(alloyRoot, 'common'),
