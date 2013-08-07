@@ -5,7 +5,7 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.2.0 Release Candidate (2 August 2013)
+## 1.2.0 Alpha (2 August 2013)
 
 * [Full list of Issues that were addressed in Release 1.2.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15334)
 
@@ -19,7 +19,7 @@ passed to `applyProperties` or a create method, or modify TSS class styles to an
 the fly.
 
 For more information, see:
-* [Dynamic Styles guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Dynamic_Styles) 
+* [Dynamic Styles guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Dynamic_Styles)
 * [dynamic_styling Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/dynamic_styling)
 * Refer to the "New APIs" section below.
 
@@ -84,7 +84,7 @@ The following APIs are new in Release 1.2.0.
 
 Just 2 quick fixes to reduce the size of the Alloy distribution and fix one regression.
 
-* [ALOY-625](https://jira.appcelerator.org/browse/ALOY-625). app.tss not being applied to views that don't have view-specific styles. 
+* [ALOY-625](https://jira.appcelerator.org/browse/ALOY-625). app.tss not being applied to views that don't have view-specific styles.
 * [ALOY-626](https://jira.appcelerator.org/browse/ALOY-626). Remove unneeded resources from samples/mapping.
 
 ## 1.1.0 (April 2013)
@@ -210,7 +210,7 @@ SDK 2.1.x and later.
 #### Backbone Events API Removed from View Proxies and Controllers
 
 For Alloy View proxies and Controllers, that is, objects either referenced with `$.myid` or
-created with `createController` and `getView` methods, you cannot use the Backbone Events 
+created with `createController` and `getView` methods, you cannot use the Backbone Events
 API `on`, `off` and `trigger` methods to bind and unbind event callbacks, or fire events.
 Use the Titanium SDK API `addEventListener`, `removeEventListener` and `fireEvent` methods instead.
 
@@ -272,7 +272,7 @@ your data to the new table schema of the Alloy 1.0.0 SQLite sync adapter.
 First, manually remove the following files from your Alloy project:
 
 * Resources/alloy.js
-* Resources/alloy/sync/sql.js 
+* Resources/alloy/sync/sql.js
 
 Next, create a one-time migration file to transfer your model data to the new database schema.
 Adapt the following code for your table schema.  Replace `title`, `author` and `isbn`
@@ -296,11 +296,11 @@ deletes the old table from the database, creates a new table, then copies your d
         db.execute('INSERT INTO ' + table + ' SELECT title,author,isbn,alloy_id FROM book_backup;');
         db.execute('DROP TABLE book_backup;');
     };
-    
+
     migration.down = function(migrator) {
-    
+
     }
-    
+
 Run your application once to migrate your data, then remove the migration file.
 
 Note the `migrator.db` object in the previous example.  This object is a handle to a `Ti.Database` instance
@@ -315,10 +315,10 @@ information about the new SQLite sync adapter and the new migration features.
 
 The `ti.physicalSizeCategory` module has been replaced by a background module part of Titanium SDK 3.0.x.
 No action is needed to migrate to the new module.  However, your `tiapp.xml` file still references this module,
-but does not affect the compilation or execution of the application.  You may safely remove this reference from your 
+but does not affect the compilation or execution of the application.  You may safely remove this reference from your
 `tiapp.xml` file.
 
-Previously, this module was copied to an Alloy project as part of the `alloy new` command 
+Previously, this module was copied to an Alloy project as part of the `alloy new` command
 and used to determine the size of an Android device.
 
 
@@ -332,7 +332,7 @@ The following deprecated APIs have been removed in this release:
 | `Alloy.getController` | method | Creates a local instance of a controller. Use [Alloy.createController](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createController) instead. |
 | `Alloy.getModel` | method | Creates a local instance of a model. Use [Alloy.createModel](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createModel) instead. |
 | `Alloy.getWidget` | method | Creates a local instance of a widget. Use [Alloy.createWidget](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createWidget) instead. |
-| `Alloy.globals` | property | Global namespace. Use [Alloy.Globals](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-property-Globals) instead. | 
+| `Alloy.globals` | property | Global namespace. Use [Alloy.Globals](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-property-Globals) instead. |
 | `datatime.js` | builtin | Collection of functions for datetime formatting. Use [moment.js](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.builtins.moment) instead. |
 | `size` | XML/TSS attribute | Defines size-specific view components or styles. Use the `formFactor` attribute instead. |
 
@@ -380,18 +380,18 @@ The following deprecated APIs have been removed in this release:
 
 * Tons of sql sync adapter features and fixes
 	* **IMPORTANT**: Please read the [notes on the sql_new adapter](https://github.com/appcelerator/alloy/edit/master/CHANGELOG.md#additional-notes-for-035) below.
-	* [ALOY-458](https://jira.appcelerator.org/browse/ALOY-458). The sql adapter now allows you to execute custom queries on fetch(). The [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app uses this, specifically in this [controller file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/controllers/main.js). 
+	* [ALOY-458](https://jira.appcelerator.org/browse/ALOY-458). The sql adapter now allows you to execute custom queries on fetch(). The [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app uses this, specifically in this [controller file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/controllers/main.js).
 	* [ALOY-447](https://jira.appcelerator.org/browse/ALOY-447). Alloy Model column definitions now support SQLite keywords, like PRIMARY KEY and AUTOINCREMENT. The [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) test app shows how to use it.
 	* [ALOY-467](https://jira.appcelerator.org/browse/ALOY-467). idAttribute is now assignable from the model.js file's definition object. The [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) test app, specifically this [model file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_keywords/models/fighters.js) shows how to use it to identify which column in your table is the unique identifier for syncing between SQLite and Backbone.
 	* [ALOY-453](https://jira.appcelerator.org/browse/ALOY-453). Full support for up() and down() migrations in sql adapter. [models/sql_keywords](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_keywords) is also a multiple migration test app.
 	* [ALOY-345](https://jira.appcelerator.org/browse/ALOY-345). sql adapter databases can now be preloaded from a database file. The [models/sql_preload](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_preload) test app shows how.
-	* [ALOY-456](https://jira.appcelerator.org/browse/ALOY-456). sql adapter now supports multiple SQLite databases. The [model/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app makes use of multiple SQLite databases. 
-	* [ALOY-468](https://jira.appcelerator.org/browse/ALOY-468). Added insertRow() and deleteRow() functions to migration object. You can see these in use for prepopulating and deleting rows in this [migration file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/migrations/201301161234567_user.js) of the [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app. 
+	* [ALOY-456](https://jira.appcelerator.org/browse/ALOY-456). sql adapter now supports multiple SQLite databases. The [model/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app makes use of multiple SQLite databases.
+	* [ALOY-468](https://jira.appcelerator.org/browse/ALOY-468). Added insertRow() and deleteRow() functions to migration object. You can see these in use for prepopulating and deleting rows in this [migration file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/migrations/201301161234567_user.js) of the [models/sql_queries](https://github.com/appcelerator/alloy/tree/master/test/apps/models/sql_queries) test app.
 * TSS parsing and features
 	* [ALOY-272](https://jira.appcelerator.org/browse/ALOY-272). TSS parsing is now grammar based. Makes [code assist in TiStudio](https://jira.appcelerator.org/browse/ALOY-389) possible.
 	* [ALOY-252](https://jira.appcelerator.org/browse/ALOY-252). Commas are now optional between top-level style objects in TSS files. Check this [style file](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/styles/app.tss) for an example.
 	* [ALOY-452](https://jira.appcelerator.org/browse/ALOY-452). expr() syntax has been removed from TSS files. Here is the [cleaner and more powerful alternative](https://github.com/appcelerator/alloy/commit/e9fdc93c9760a1590c0abd0136662c11dc678066#commitcomment-2401085) for using runtime values in TSS files.
-* [ALOY-284](https://jira.appcelerator.org/browse/ALOY-284). Titanium constants can now be used as XML attributes in markup. Check this [view xml file](https://github.com/appcelerator/alloy/blob/master/test/apps/testing/grammar/views/index.xml) for an example. 
+* [ALOY-284](https://jira.appcelerator.org/browse/ALOY-284). Titanium constants can now be used as XML attributes in markup. Check this [view xml file](https://github.com/appcelerator/alloy/blob/master/test/apps/testing/grammar/views/index.xml) for an example.
 
 ### Bug fixes and improvements
 
@@ -402,7 +402,7 @@ The following deprecated APIs have been removed in this release:
 
 ### Additional Notes for 0.3.5
 
-Due to the massive amount of changes in the sql adapter, it is being introduced as ["sql_new"](https://github.com/appcelerator/alloy/blob/master/Alloy/lib/alloy/sync/sql_new.js). This is the "type" you would use in your model definitions, as seen in this [model from the models/sql_queries](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/models/user.js) test app. The unchanged "sql" adapter still exists temporarily for compatibility. 
+Due to the massive amount of changes in the sql adapter, it is being introduced as ["sql_new"](https://github.com/appcelerator/alloy/blob/master/Alloy/lib/alloy/sync/sql_new.js). This is the "type" you would use in your model definitions, as seen in this [model from the models/sql_queries](https://github.com/appcelerator/alloy/blob/master/test/apps/models/sql_queries/models/user.js) test app. The unchanged "sql" adapter still exists temporarily for compatibility.
 
 All freshly built apps will work with the **sql_new** adapter, including all the sql ones in the [test/apps/models folder](https://github.com/appcelerator/alloy/tree/master/test/apps/models) in the repo. There _may_ be conflicts, though, if you attempt to just drop the **sql_new** adapter on an app that has been previously using the old **sql** adapter. This is because **sql_new** uses a different, smarter, less invasive means of identifying the unique id of your sql records, adding an "alloy_id" column only if absolutely necessary. If you can delete your existing sql storage and just rebuild it, then all you need to do is delete and then you can start using the **sql_new** adapter. If not, we'll have a migration guide soon.
 
@@ -484,7 +484,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 * Removed node-appc dependency.
 * Added Alloy splash screens and icons
 * Updated widgets, added new button-grid widget.
- 
+
 0.2.42
 --------
 * Ti.UI.OptionDialog markup parser added. Check out this link for a test app and usage: [https://github.com/appcelerator/alloy/tree/master/test/apps/ui/optiondialog](https://github.com/appcelerator/alloy/tree/master/test/apps/ui/optiondialog)
