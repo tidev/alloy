@@ -9,14 +9,15 @@ var fs = require('fs'),
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..');
 
-var dirs, platform, titaniumFolder, theme;
+var dirs, platform, titaniumFolder, theme, adapters;
 var widgets = {};
 
 function Orphanage(projectDir, _platform, opts) {
 	opts = opts || {};
 	platform = _platform;
 	titaniumFolder = platforms[platform].titaniumFolder;
-	theme = opts.theme;
+	theme = opts.theme,
+	adapters = opts.adapters || [];
 
 	// gather directories to be used throughout Orphanage
 	var resourcesDir = path.join(projectDir, CONST.RESOURCES_DIR);
@@ -38,6 +39,10 @@ Orphanage.prototype.clean = function() {
 
 	// Clean the base app folder
 	this.removeAll();
+
+	// get rid of unused adapters
+	logger.debug('Removing orphaned sync adapters...');
+	this.removeAdapters();
 
 	// Clean out each widget
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
@@ -65,6 +70,30 @@ Orphanage.prototype.removeAll = function(opts) {
 
 	logger.debug('Removing orphaned styles' + suffix + '...');
 	this.removeStyles(opts);
+};
+
+Orphanage.prototype.removeAdapters = function(opts) {
+	opts = _.clone(opts || {});
+	var paths = [
+		path.join('alloy', 'sync'),
+		path.join(titaniumFolder, 'alloy', 'sync')
+	];
+
+	_.each(paths, function(p) {
+		var adapterDir = path.join(dirs.resources, p);
+		if (!fs.existsSync(adapterDir)) {
+			return;
+		}
+
+		_.each(fs.readdirSync(adapterDir), function(adapterFile) {
+			var fullpath = path.join(adapterDir, adapterFile);
+			var adapterName = adapterFile.replace(/\.js$/, '');
+			if (!_.contains(adapters, adapterName)) {
+				fs.unlinkSync(fullpath);
+				logger.trace('* ' + path.join(p, adapterFile));
+			}
+		});
+	});
 };
 
 Orphanage.prototype.removeControllers = function(opts) {

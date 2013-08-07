@@ -95,7 +95,10 @@ module.exports = function(args, program) {
 
 	// wipe the controllers, models, and widgets
 	logger.debug('----- CLEANING RESOURCES -----');
-	var orphanage = new Orphanage(paths.project, buildPlatform, { theme: theme });
+	var orphanage = new Orphanage(paths.project, buildPlatform, {
+		theme: theme,
+		adapters: compileConfig.adapters
+	});
 	orphanage.clean();
 	logger.debug('');
 
@@ -107,7 +110,12 @@ module.exports = function(args, program) {
 	U.updateFiles(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
-		{ rootDir: paths.project }
+		{
+			rootDir: paths.project,
+			exceptions: _.map(_.difference(CONST.ADAPTERS, compileConfig.adapters), function(a) {
+				return path.join('alloy', 'sync', a + '.js');
+			})
+		}
 	);
 	U.updateFiles(
 		path.join(alloyRoot, 'common'),

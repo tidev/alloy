@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label>Check the Alloy compile log and ensure that the sync adapters are not listed in the processed files.</Label>
+	</Window>
+</Alloy>
