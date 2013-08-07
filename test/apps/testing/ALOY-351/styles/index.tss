@@ -1,0 +1,11 @@
+'Label': {
+	color: '#000',
+	left: 20,
+	right: 20
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}

@@ -50,7 +50,11 @@ function Sync(method, model, opts) {
             }
 
             model.length = len;
-            len === 1 ? resp = model.models[0] : resp = model.models;
+            if (len === 1) {
+				resp = model.models[0];
+            } else {
+				resp = model.models;
+            }
 			break;
 
 		case 'update':
@@ -68,10 +72,10 @@ function Sync(method, model, opts) {
 
 	// process success/error handlers, if present
 	if (resp) {
-        _.isFunction(opts.success) && opts.success(resp);
-        method === "read" && model.trigger("fetch");
+        if (_.isFunction(opts.success)) { opts.success(resp); }
+        if (method === "read") { model.trigger("fetch"); }
     } else {
-    	_.isFunction(opts.error) && opts.error(resp);
+		if (_.isFunction(opts.error)) { opts.error(resp); }
     }
 }
 

@@ -566,8 +566,19 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 		autoStyle: false,
 
 		// the list of widget dependencies
-		dependencies: {}
+		dependencies: {},
+
+		// TODO: Include no adapters by default
+		adapters: CONST.ADAPTERS
 	});
+
+	// normalize adapters
+	if (!configs.adapters) {
+		configs.adapters = [];
+	} else if (!_.isArray(configs.adapters)) {
+		configs.adapters = [configs.adapters];
+	}
+
 	logger.debug(JSON.stringify(configs, null, '  ').split(os.EOL));
 
 	// update implicit namespaces, if possible
