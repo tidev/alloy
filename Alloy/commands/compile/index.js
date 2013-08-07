@@ -95,7 +95,10 @@ module.exports = function(args, program) {
 
 	// wipe the controllers, models, and widgets
 	logger.debug('----- CLEANING RESOURCES -----');
-	var orphanage = new Orphanage(paths.project, buildPlatform, { theme: theme });
+	var orphanage = new Orphanage(paths.project, buildPlatform, {
+		theme: theme,
+		adapters: compileConfig.adapters
+	});
 	orphanage.clean();
 	logger.debug('');
 
