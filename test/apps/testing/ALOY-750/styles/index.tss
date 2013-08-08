@@ -1,0 +1,16 @@
+'TextField': {
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	color: '#000',
+	width: 250,
+	height: 60
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#index[platform=android]': {
+	windowSoftInputMode: Ti.UI.Android.SOFT_INPUT_STATE_HIDDEN | Ti.UI.Android.SOFT_INPUT_ADJUST_PAN
+}
