@@ -1,27 +1,44 @@
-/* 
+/*
    - TSS parser based on JSON parser from https://github.com/dmajda/pegjs/blob/master/examples/json.pegjs
    - JSON parser based on the grammar described at http://json.org/. */
 
 /* ===== Syntactical Elements ===== */
+{
+  var ALLOY_EXPR = '__ALLOY_EXPR__--';
+  function processValue(o) {
+    if (Object.prototype.toString.call(o) === '[object String]') {
+      var str = o.replace(ALLOY_EXPR,'');
+      if (str.length === o.length) {
+        return '"' + str.replace(/"/g, "\\\"") + '"';
+      } else {
+        return str;
+      }
+    } else {
+      return o;
+    }
+  }
+}
 
 start
   = __ topobject:topobject __ { return topobject; }
 
 topobject
   = "{" __ "}"           { return {};      }
-  / "{" __ topmembers:topmembers __ "}" { return topmembers; } 
+  / "{" __ topmembers:topmembers __ "}" { return topmembers; }
 
 object
   = "{" __ "}"                { return {};      }
   / "{" __ members:members __ "}" { return members; }
 
 topmembers
-  /* = head:pair tail:(__ ","? __ pair)* { */
   = head:pair tail:(___ pair?)* {
       var result = {};
       result[head[0]] = head[1];
       for (var i = 0; i < tail.length; i++) {
         result[tail[i][1][0]] = tail[i][1][1];
+      }
+      if (typeof result['undefined'] === 'undefined') {
+        delete result['undefined'];
       }
       return result;
     }
@@ -56,6 +73,16 @@ elements
     }
 
 value
+  = head:basevalue tail:(__ bitwise_operator __ basevalue)+ {
+      var str = processValue(head);
+      for (var i = 0; i < tail.length; i++) {
+        str += tail[i][1] + processValue(tail[i][3]);
+      }
+      return ALLOY_EXPR + str;
+    }
+  / basevalue
+
+basevalue
   = LocaleCall
   / TiConstant
   / WPATH
@@ -65,9 +92,16 @@ value
   / array
   / "true" __  { return true;   }
   / "false" __ { return false;  }
-  / "null" __  { return "__ALLOY_EXPR__--null"; }
+  / "null" __  { return ALLOY_EXPR + "null"; }
 
 /* ===== Lexical Elements ===== */
+
+bitwise_operator "bitwise_operator"
+  = ">>"
+  / ">>>"
+  / "<<"
+  / "<<<"
+  / op: [&|^] { return op; }
 
 OpenParen
   = '(' { return '('; }
@@ -77,12 +111,12 @@ CloseParen
 
 WPATH
   = 'WPATH' OpenParen __ param1:paramString __ (paramComma __ paramString)* __ CloseParen {
-    return '__ALLOY_EXPR__--WPATH(' + param1 + ')';
+    return ALLOY_EXPR + 'WPATH(' + param1 + ')';
   }
 
 LocaleCall
-  = Locale OpenParen __ param1:paramString __ param2:(paramComma __ paramString)? __ CloseParen { 
-    return '__ALLOY_EXPR__--L(' + param1 + (param2 ? param2.join('') : '') + ')'; 
+  = Locale OpenParen __ param1:paramString __ param2:(paramComma __ paramString)? __ CloseParen {
+    return ALLOY_EXPR + 'L(' + param1 + (param2 ? param2.join('') : '') + ')';
   }
 
 Locale
@@ -91,7 +125,7 @@ Locale
 
 TiConstant
   = parts:(TiNS ('.' bareString)+) {
-    var tc = '__ALLOY_EXPR__--' + parts[0];
+    var tc = ALLOY_EXPR + parts[0];
     var len = parts[1] ? parts[1].length : 0;
     for (var i = 0; i < len; i++) {
       tc += parts[1][i].join('');
@@ -112,7 +146,7 @@ paramString
   / "'" "'" __             { return "''";    }
   / '"' chars:chars '"' __ { return '"' + chars + '"'; }
   / "'" schars:schars "'" __ { return "'" + schars + "'"; }
-  / c:TiConstant { return c.replace('__ALLOY_EXPR__--', ''); }
+  / c:TiConstant { return c.replace(ALLOY_EXPR, ''); }
 
 string "string"
   = '"' '"' __             { return "";    }
@@ -123,7 +157,7 @@ string "string"
 bareString "bare word"
   = chars:bareChar+ { return chars.join(''); }
 
-bareChar 
+bareChar
   = [a-zA-Z0-9_$]
 
 schars
