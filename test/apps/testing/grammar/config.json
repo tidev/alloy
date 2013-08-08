@@ -1,5 +1,7 @@
 {
 	"dependencies": {
 		"com.test.hellobutton": "1.0"
-	}
+	},
+	"sourcemap": false,
+	"adapters": []
 }
