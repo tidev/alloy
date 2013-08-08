@@ -4,5 +4,6 @@
     "os:blackberry": { "someValue": "Blackberry" },
     "os:ios": { "someValue": "iOS" },
     "os:mobileweb": { "someValue": "Mobileweb" },
-    "dependencies": {}
+    "sourcemap": false,
+    "adapters": []
 }

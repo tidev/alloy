@@ -1,3 +1,5 @@
 {
-	"autoStyle": false
+	"autoStyle": false,
+	"sourcemap": false,
+	"adapters": []
 }

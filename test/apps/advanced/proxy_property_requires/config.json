@@ -1,10 +1,6 @@
 {
-	"global": {}, 
-	"env:development": {}, 
-	"env:test": {}, 
-	"env:production": {}, 
-	"os:ios": {}, 
-	"os:android": {}, 
+	"sourcemap": false,
+	"adapters": [],
 	"dependencies": {
 	   "com.foo.widget": "1.0"
 	}
