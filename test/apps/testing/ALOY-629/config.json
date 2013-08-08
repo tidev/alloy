@@ -1,3 +1,5 @@
 {
-	"theme":"appc"
+	"theme":"appc",
+	"sourcemap": false,
+	"adapters": []
 }

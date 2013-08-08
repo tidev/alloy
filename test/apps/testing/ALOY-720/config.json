@@ -1,5 +1,7 @@
 {
 	"dependencies": {
 		"alloy.button": "1.0"
-	}
+	},
+	"sourcemap": false,
+	"adapters": []
 }

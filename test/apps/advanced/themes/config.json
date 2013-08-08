@@ -1,15 +1,13 @@
 {
 	"global": {
 		"theme": "blue"
-	}, 
-	"env:development": {}, 
-	"env:test": {}, 
-	"env:production": {}, 
+	},
 	"os:ios": {
 		"theme": "green"
-	}, 
+	},
 	"os:android": {
 		"theme": "dark"
-	}, 
-	"dependencies": {}
+	},
+	"sourcemap": false,
+	"adapters": []
 }

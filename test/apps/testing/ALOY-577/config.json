@@ -1,3 +1,5 @@
 {
-	"theme": "red"
+	"theme": "red",
+	"sourcemap": false,
+	"adapters": []
 }
