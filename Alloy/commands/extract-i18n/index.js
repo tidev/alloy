@@ -7,10 +7,10 @@ var fs = require('fs'),
     logger = require('../../logger'),
     i18nHandler = require('./i18nHandler');
 
-var searchString = "(?:L|Ti.Locale.getString|Titanium.Locale.getString)" +
-    "\\(\\s*[\"']([a-zA-Z]\\w*?)[\"']\\s*[\\),]";
-var searchRegex = new RegExp(searchString, 'g');
-var valueRegex = new RegExp(searchString);
+var searchString = "(?:set|[^a-z])(?:L|Ti.Locale.getString|Titanium.Locale.getString|titleid|textid|messageid|titlepromptid|subtitleid|hinttextid|promptid)" +
+    "\\s*[\\(:=]\\s*[\"']([a-z]\\w*?)[\"']";
+var searchRegex = new RegExp(searchString, 'gi');
+var valueRegex = new RegExp(searchString, 'i');
 
 function extractStrings() {
     try {
@@ -18,11 +18,13 @@ function extractStrings() {
         var files = wrench.readdirSyncRecursive(sourceDir);
         var styleSuffix = '.' + CONST.FILE_EXT.STYLE;
         var controllerSuffix = '.' + CONST.FILE_EXT.CONTROLLER;
+        var viewSuffix = '.' + CONST.FILE_EXT.VIEW;
 
         // filter only js and style files
         files = _.filter(files, function(f) {
             return f.substr(-styleSuffix.length) === styleSuffix ||
-                f.substr(-controllerSuffix.length) === controllerSuffix;
+                f.substr(-controllerSuffix.length) === controllerSuffix ||
+                f.substr(-viewSuffix.length) === viewSuffix;
         });
 
         var strings = [];
