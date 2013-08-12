@@ -57,12 +57,11 @@ module.exports = function(args, program) {
     logger.info('extract-i18n for "i18n/' + language + '/strings.xml"');
 
     var strings = extractStrings();
-    var handler = i18nHandler(paths.project, language);
-    var newStrings = handler.merge(strings);
+    var handler = i18nHandler(paths.project, language, program.clean);
 
     if (program.apply) {
-        handler.write(newStrings);
+        handler.write(strings);
     } else {
-        handler.print(newStrings);
+        handler.print(strings);
     }
 };
