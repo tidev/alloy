@@ -20,7 +20,7 @@ function extractStrings() {
         var controllerSuffix = '.' + CONST.FILE_EXT.CONTROLLER;
         var viewSuffix = '.' + CONST.FILE_EXT.VIEW;
 
-        // filter only js and style files
+        // filter only js, style and view files
         files = _.filter(files, function(f) {
             return f.substr(-styleSuffix.length) === styleSuffix ||
                 f.substr(-controllerSuffix.length) === controllerSuffix ||
