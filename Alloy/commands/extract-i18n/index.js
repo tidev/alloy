@@ -6,36 +6,33 @@ var fs = require('fs'),
     _ = require("../../lib/alloy/underscore")._,
     logger = require('../../logger'),
     i18nHandler = require('./i18nHandler'),
-    uglifyjs = require('uglify-js');
+    uglifyjs = require('uglify-js'),
+    styler = require('./../compile/styler');
 
-var properties = 'titleid|textid|messageid|titlepromptid|subtitleid|hinttextid|promptid';
-var viewProperties = properties.split('|');
-
-var searchString = "(?:set|[^a-z])(?:L|Ti.Locale.getString|Titanium.Locale.getString|" + properties + ")" +
-    "\\s*[\\(:]\\s*[\"']([a-z]\\w*?)[\"']";
-var searchRegex = new RegExp(searchString, 'gi');
-var valueRegex = new RegExp(searchString, 'i');
+var properties = 'titleid|textid|messageid|titlepromptid|subtitleid|hinttextid|promptid'.split('|');
 
 function extractStringsFromViewNodes(nodes, strings) {
     var elements = U.XML.getElementsFromNodes(nodes);
 
+    // for each node
     _.each(elements, function(element) {
+
+        // for each i18n property
         _.each(properties, function (property) {
+
+            // has property as attribute
             if (element.hasAttribute(property)) {
                 strings.push(element.getAttribute(property));
             }
         });
+
+        // recurse childNodes
         if (element.hasChildNodes) {
             extractStringsFromViewNodes(element.childNodes, strings);
         }
     });
 
     return strings;
-}
-
-function extractStringsFromView(view) {
-    var docRoot = U.XML.getAlloyFromFile(view);
-    return extractStringsFromViewNodes(docRoot.childNodes, []);
 }
 
 function extractStringsFromController(controller) {
@@ -82,6 +79,28 @@ function extractStringsFromController(controller) {
     return strings;
 }
 
+function extractStringsFromStyleNodes(nodes, strings) {
+
+    // for each node
+    _.each(nodes, function (value, property) {
+
+        // has string value
+        if (_.isString(value)) {
+
+            // is i18n property
+            if (_.contains(properties, property)) {
+                strings.push(value);
+            }
+
+        // recurse child nodes
+        } else if (_.isObject(value)) {
+            extractStringsFromStyleNodes(value, strings);
+        }
+    });
+
+    return strings;
+}
+
 function extractStrings() {
     try {
         var sourceDir = paths.app;
@@ -92,40 +111,28 @@ function extractStrings() {
 
         var strings = [];
         _.each(files, function(f) {
-            var file = path.join(sourceDir, f);
+            var file = path.join(sourceDir, f),
+                found = 0;
 
             // view
             if (f.substr(-viewSuffix.length) === viewSuffix) {
-                var found = extractStringsFromView(file);
-
-                if (found.length > 0) {
-                    logger.debug(file + ': ' + found.length + ' strings found.');
-                    strings = _.union(strings, found);
-                }
+                found = extractStringsFromViewNodes(U.XML.getAlloyFromFile(file).childNodes, []);
 
             // controller
             } else if (f.substr(-controllerSuffix.length) === controllerSuffix) {
-                var found = extractStringsFromController(file);
-
-                if (found.length > 0) {
-                    //logger.debug(file + ': ' + found.length + ' strings found.');
-                    strings = _.union(strings, found);
-                }
-                logger.debug(file + ': ' + found.length + ' strings found.');
+                found = extractStringsFromController(file);
 
             // style
             } else if (f.substr(-styleSuffix.length) === styleSuffix) {
-                var fileContent = fs.readFileSync(file, 'utf8');
-                var calls = fileContent.match(searchRegex);
+                found = extractStringsFromStyleNodes(styler.loadStyle(file), []);
 
-                if (calls && calls.length > 0) {
-                    logger.debug(file + ': ' + calls.length + ' strings found.');
+            } else {
+                return;
+            }
 
-                    _.each(calls, function(call) {
-                        var matches = call.match(valueRegex);
-                        strings.push(matches[1]);
-                    });
-                }
+            if (found.length > 0) {
+                logger.debug(file + ': ' + found.length + ' strings found.');
+                strings = _.union(strings, found);
             }
         });
 
