@@ -635,22 +635,21 @@ exports.generateConfig = function(obj) {
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
 		}
 
-		// app/config.json has not been modified since CFG.js was created
-		if (U.changeTime(appCfg) < U.changeTime(resourcesCfg)) {
-			return o;
-		}
-	} else if (fs.existsSync(resourcesCfg) && fs.readFileSync(resourcesCfg,'utf8') === defaultCfg) {
-		return o;
+		// TODO: only regenerate the CFG.js when necessary, using the file timestamps and the
+		//       build log entry for deploy type to know when.
 	}
 
 	// write out the config runtime module
 	wrench.mkdirSyncRecursive(resourcesBase, 0777);
 
-	logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
-	fs.writeFileSync(
-		resourcesCfg,
-		"module.exports=" + JSON.stringify(o) + ";"
-	);
+	//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
+	var output = "module.exports=" + JSON.stringify(o) + ";";
+	fs.writeFileSync(resourcesCfg, output);
+
+	// TODO: deal with TIMOB-14884
+	if (alloyConfig.platform === 'ios') {
+		fs.writeFileSync(path.join(obj.dir.resources, 'alloy', 'CFG.js'), output);
+	}
 
 	return o;
 };
