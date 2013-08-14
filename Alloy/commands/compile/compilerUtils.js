@@ -639,7 +639,11 @@ function generateConfig(obj) {
 
 	// TODO: deal with TIMOB-14884
 	if (alloyConfig.platform === 'ios') {
-		fs.writeFileSync(path.join(obj.dir.resources, 'alloy', 'CFG.js'), output);
+		var baseFolder = path.join(obj.dir.resources, 'alloy');
+		if (!fs.existsSync(baseFolder)) {
+			wrench.mkdirSyncRecursive(baseFolder, 0755);
+		}
+		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}
 
 	return o;
