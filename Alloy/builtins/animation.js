@@ -23,6 +23,7 @@ exports.VERTICAL = 'vertical';
 /**
  * @method flip
  * Transitions from one view to another using a flip animation.
+ * The two views need to be positioned on top of each other.
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {String} [direction] direction ('horizontal' or 'vertical') to flip.
