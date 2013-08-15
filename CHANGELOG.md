@@ -8,7 +8,7 @@
 ## 1.2.0 (15 August 2013)
 
 * [Full list of Issues that were addressed in Release 1.2.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15334)
-* A fix for [ALOY-783](https://jira.appcelerator.org/browse/ALOY-783) is currently available in the 1.2.1-cr release, which can be installed like this: `[sudo] npm install -g alloy@1.2.1-cr`
+* A fix for [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789) is currently available in the 1.2.1-cr release, which can be installed like this: `[sudo] npm install -g alloy@1.2.1-cr`
 
 ### New Features
 
