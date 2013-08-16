@@ -22,7 +22,7 @@ exports.VERTICAL = 'vertical';
 
 /**
  * @method flip
- * Transitions from one view to another using a flip animation.
+ * Transitions from one view to another using a 3D flip animation (iOS only).
  * The two views need to be positioned on top of each other.
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
@@ -30,7 +30,7 @@ exports.VERTICAL = 'vertical';
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
  */
-exports.flip = function(from, to, direction, duration, finishCallback) {
+exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) {
     var vertical = (direction === exports.VERTICAL);
     var flipped_matrix = Ti.UI.create3DMatrix().rotate(
         -90,
@@ -56,6 +56,9 @@ exports.flip = function(from, to, direction, duration, finishCallback) {
         });
         finishCallback ? to.animate(to_animation, finishCallback) : to.animate(to_animation);
     });
+    
+} : function() {
+    Ti.API.error('The builtin flip-animation is iOS-only.');
 };
 
 /**
