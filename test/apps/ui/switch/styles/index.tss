@@ -1,0 +1,21 @@
+'Switch': {
+	top: '70dp'
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	modal: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+'.titles': {
+	value: false,
+	titleOn: "I'm on",
+	titleOff: "I'm off"
+}
+
+'.checkbox': {
+	value: true,
+	style: Ti.UI.Android.SWITCH_STYLE_CHECKBOX
+}

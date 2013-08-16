@@ -12,9 +12,9 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	// coerce value attribute to boolean for all platforms
 	if (node.hasAttribute('value')) {
-		state.extraStyle = styler.createVariableStyle('value', node.getAttribute('value') === 'true');
-	}
-	else if (REQUIRES_VALUE) {
+		state.extraStyle = styler.createVariableStyle('value',
+			node.getAttribute('value') === 'true');
+	} else if (REQUIRES_VALUE) {
 		// Workaround for https://jira.appcelerator.org/browse/TIMOB-9007
 		state.extraStyle = styler.createVariableStyle('value', false);
 	}
