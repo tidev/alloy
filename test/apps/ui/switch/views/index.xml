@@ -1,0 +1,12 @@
+<Alloy>
+	<Window>
+		<!-- just the default switch, works on all platforms -->
+		<Switch/>
+
+		<!-- switch with some platform-specific styling -->
+		<Switch class="titles" platform="android,tizen,mobileweb"/>
+
+		<!-- an android checkbox -->
+		<Switch class="checkbox" platform="android"/>
+  	</Window>
+</Alloy>
