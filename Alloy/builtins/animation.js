@@ -22,13 +22,15 @@ exports.VERTICAL = 'vertical';
 
 /**
  * @method flip
- * Transitions from one view to another using a 3D flip animation (iOS only).
+ * Transitions from one view to another using a 3D flip animation.
  * The two views need to be positioned on top of each other.
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {String} [direction] direction ('horizontal' or 'vertical') to flip.
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
+ * @platform iphone 1.2.2
+ * @platform ipad 1.2.2
  */
 exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) {
     var vertical = (direction === exports.VERTICAL);
@@ -56,30 +58,34 @@ exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) 
         });
         finishCallback ? to.animate(to_animation, finishCallback) : to.animate(to_animation);
     });
-    
+
 } : function() {
     Ti.API.error('The builtin flip-animation is iOS-only.');
 };
 
 /**
- * @method flip
+ * @method flipHorizontal
  * Transitions from one view to another using a horizontal flip animation.
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
+ * @platform iphone 1.2.2
+ * @platform ipad 1.2.2
  */
 exports.flipHorizontal = function(from, to, duration, finishCallback) {
     exports.flip(from, to, exports.HORIZONTAL, duration, finishCallback);
 };
 
 /**
- * @method flip
+ * @method flipVertical
  * Transitions from one view to another using a vertical flip animation.
  * @param {Titanium.UI.View} from View to fade out.
  * @param {Titanium.UI.View} to View to fade in.
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
+ * @platform iphone 1.2.2
+ * @platform ipad 1.2.2
  */
 exports.flipVertical = function(from, to, duration, finishCallback) {
     exports.flip(from, to, exports.VERTICAL, duration, finishCallback);
