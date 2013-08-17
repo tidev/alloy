@@ -1,36 +1,54 @@
-".container": {
-	layout: "vertical"
-},
-"#backdrop": {
-	backgroundColor: "#fff"
-},
-"#mover": {
-	backgroundColor: "#a00",
+'#index': {
+	backgroundColor: '#fff',
+	modal: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+'#mover': {
+	backgroundColor: '#a00',
 	height: Ti.UI.SIZE,
 	width: Ti.UI.SIZE,
-	top: "20dp"
-},
-"#label": {
-	color: "#eee",
+	top: '20dp'
+}
+
+'#label': {
+	color: '#eee',
 	font: {
-		fontSize: "28dp",
-		fontWeight: "bold"
+		fontSize: '28dp',
+		fontWeight: 'bold'
 	}
-},
-"#shake": {
-    width: Ti.UI.SIZE,
-    height: Ti.UI.SIZE,
-    color: "#000",
-    top: "20dp"
-},
-"#flash": {
-    width: Ti.UI.SIZE,
-    height: Ti.UI.SIZE,
-    color: "#000",
-    top: "20dp"
-},
-"#trim": {
-	height: Ti.UI.SIZE,
+}
+
+'.flipper': {
+	height: 150,
+	width: 150,
+	top: 40,
+	borderWidth: 1,
+	borderColor: '#00f'
+}
+
+'#front': {
+	text: 'front',
+	color: '#000',
+	backgroundColor: '#ccc',
+	textAlign: 'center',
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL
+}
+
+'#back': {
+	text: 'back',
+	color: '#ccc',
+	backgroundColor: '#000',
+	textAlign: 'center',
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL
+}
+
+'Button': {
 	width: Ti.UI.SIZE,
-	top: "20dp"
+    height: Ti.UI.SIZE,
+    color: '#000',
+    top: '20dp'
 }

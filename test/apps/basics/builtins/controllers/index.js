@@ -6,16 +6,36 @@
 var animation = require('alloy/animation'),
 	string = require('alloy/string');
 
-function ShakeClick(e) {
-    animation.shake($.mover, 0, function (){ alert("Shake ended."); });
+function shake(e) {
+    animation.shake($.mover, 0, function (){
+    	alert("Shake ended.");
+    });
 }
 
-function FlashClick(e) {
+function flash(e) {
     animation.flash($.mover);
 }
 
-function TrimClick(e) {
+function trim(e) {
 	$.label.text = string.trim($.label.text);
+}
+
+if (OS_IOS) {
+	function flip(e) {
+		var front, back;
+
+		e.bubbleParent = false;
+		if (e.source === $.back) {
+			front = $.back;
+			back = $.front;
+		} else {
+			front = $.front;
+			back = $.back;
+		}
+		animation.flipHorizontal(front, back, 500, function(e) {
+			Ti.API.info('flipped');
+		});
+	}
 }
 
 $.index.open();

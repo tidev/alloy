@@ -11,14 +11,6 @@ module.exports = function($) {
 			}
 		});
 
-		validateUiComponent($, 'backdrop', {
-			api: 'Ti.UI.View',
-			style: {
-				id: 'backdrop',
-				backgroundColor: '#fff'
-			}
-		});
-
 		validateUiComponent($, 'mover', {
 			api: 'Ti.UI.View',
 			style: {

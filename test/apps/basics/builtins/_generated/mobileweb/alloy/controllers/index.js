@@ -1,14 +1,28 @@
 function Controller() {
-    function ShakeClick() {
+    function shake() {
         animation.shake($.mover, 0, function() {
             alert("Shake ended.");
         });
     }
-    function FlashClick() {
+    function flash() {
         animation.flash($.mover);
     }
-    function TrimClick() {
+    function trim() {
         $.label.text = string.trim($.label.text);
+    }
+    function flip(e) {
+        var front, back;
+        e.bubbleParent = false;
+        if (e.source === $.back) {
+            front = $.back;
+            back = $.front;
+        } else {
+            front = $.front;
+            back = $.back;
+        }
+        animation.flipHorizontal(front, back, 500, function() {
+            Ti.API.info("flipped");
+        });
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
@@ -19,19 +33,13 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.index = Ti.UI.createWindow({
+        backgroundColor: "#fff",
+        modal: false,
+        exitOnClose: true,
+        layout: "vertical",
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.backdrop = Ti.UI.createView({
-        backgroundColor: "#fff",
-        id: "backdrop"
-    });
-    $.__views.index.add($.__views.backdrop);
-    $.__views.__alloyId1 = Ti.UI.createView({
-        layout: "vertical",
-        id: "__alloyId1"
-    });
-    $.__views.index.add($.__views.__alloyId1);
     $.__views.mover = Ti.UI.createView({
         backgroundColor: "#a00",
         height: Ti.UI.SIZE,
@@ -39,7 +47,7 @@ function Controller() {
         top: "20dp",
         id: "mover"
     });
-    $.__views.__alloyId1.add($.__views.mover);
+    $.__views.index.add($.__views.mover);
     $.__views.label = Ti.UI.createLabel({
         color: "#eee",
         font: {
@@ -58,8 +66,8 @@ function Controller() {
         title: "Shake",
         id: "shake"
     });
-    $.__views.__alloyId1.add($.__views.shake);
-    ShakeClick ? $.__views.shake.addEventListener("click", ShakeClick) : __defers["$.__views.shake!click!ShakeClick"] = true;
+    $.__views.index.add($.__views.shake);
+    shake ? $.__views.shake.addEventListener("click", shake) : __defers["$.__views.shake!click!shake"] = true;
     $.__views.flash = Ti.UI.createButton({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -68,25 +76,28 @@ function Controller() {
         title: "Flash",
         id: "flash"
     });
-    $.__views.__alloyId1.add($.__views.flash);
-    FlashClick ? $.__views.flash.addEventListener("click", FlashClick) : __defers["$.__views.flash!click!FlashClick"] = true;
+    $.__views.index.add($.__views.flash);
+    flash ? $.__views.flash.addEventListener("click", flash) : __defers["$.__views.flash!click!flash"] = true;
     $.__views.trim = Ti.UI.createButton({
-        height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
         top: "20dp",
         title: "Trim",
         id: "trim"
     });
-    $.__views.__alloyId1.add($.__views.trim);
-    TrimClick ? $.__views.trim.addEventListener("click", TrimClick) : __defers["$.__views.trim!click!TrimClick"] = true;
+    $.__views.index.add($.__views.trim);
+    trim ? $.__views.trim.addEventListener("click", trim) : __defers["$.__views.trim!click!trim"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var animation = require("alloy/animation"), string = require("alloy/string");
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.shake!click!ShakeClick"] && $.__views.shake.addEventListener("click", ShakeClick);
-    __defers["$.__views.flash!click!FlashClick"] && $.__views.flash.addEventListener("click", FlashClick);
-    __defers["$.__views.trim!click!TrimClick"] && $.__views.trim.addEventListener("click", TrimClick);
+    __defers["$.__views.shake!click!shake"] && $.__views.shake.addEventListener("click", shake);
+    __defers["$.__views.flash!click!flash"] && $.__views.flash.addEventListener("click", flash);
+    __defers["$.__views.trim!click!trim"] && $.__views.trim.addEventListener("click", trim);
+    __defers["$.__views.back!click!flip"] && $.__views.back.addEventListener("click", flip);
+    __defers["$.__views.front!click!flip"] && $.__views.front.addEventListener("click", flip);
     _.extend($, exports);
 }
 
