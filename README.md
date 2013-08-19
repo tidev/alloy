@@ -2,11 +2,7 @@
 
 **Latest stable version:** 1.2.0
 
-Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform).
-
-Alloy will allow Titanium developers, old and new, to develop cross-platform mobile applications easier and more effectively than ever. The separation of concerns will increase the scalability of your apps. Titanium best practices are generated for you under the hood, making your apps of the highest quality across platforms. The markup, styles, themes, and mountain of other Alloy features will take your producitivity to a whole new level.
-
-**_It's kind of a big deal._**
+Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
 ## Getting Started
 
@@ -20,15 +16,14 @@ Alloy will allow Titanium developers, old and new, to develop cross-platform mob
 ### from npm:
 
 ```bash
+# install the latest stable
 [sudo] npm install -g alloy
-```
 
-### from source:
+# install a specific version
+[sudo] npm install -g alloy@1.1.3
 
-```bash
-git clone https://github.com/appcelerator/alloy.git
-cd alloy
-[sudo] npm install -g .
+# install cutting edge directly from github
+[sudo] npm install -g git://github.com/appcelerator/alloy.git
 ```
 
 ### from Titanium Studio
@@ -36,6 +31,8 @@ cd alloy
 ...oh yeah, Studio will do it for you automatically. :)
 
 ## Running Sample Test Apps
+
+Apps are in the **test/apps** folder. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
 
 ```bash
 # clone the repo
@@ -54,12 +51,6 @@ npm install
 # run a test app
 jake app:run dir=basics/simple
 ```
-
-### Notes
-
-* `sudo` is only necessary on OSX/Linux systems
-* If you are running nodejs 0.10.0, you **MUST** install jake 0.5.9 or higher.
-* Apps are in the **test/apps** folder. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
 
 ### Importing the "Harness" to Titanium Studio
 
