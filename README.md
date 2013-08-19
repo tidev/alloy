@@ -94,16 +94,48 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 [You can digitally sign the CLA](http://bit.ly/app_cla) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA.  Once you've submitted it, you no longer need to send one for subsequent submissions.
 
-## Credits
+## Contributors
 
-Many credits should be noted in the development of Alloy.
-
-- The Titanium community.  It's been a number of years and probably well over 50+ application frameworks that have been built around Titanium and we finally felt that it made sense for Appcelerator to work to build and support an official framework.  Thanks to everyone for their innovations, input and feedback.
-- Jeff Haynie and Nolan Wright.  For their initial inspiration for Titanium and continued pushing to make it better. Codestrong.
-- Kevin Whinnery.  For his passionate and persistent pushing to come up with a "standard way" and his many initial ideas.
-- Russ McMahon. For his initial R&D work with Nolan to come up with the early versions and ideation.
-- Tony Lukasavage.  For helping provide the JS ninja coding skills and for being the Alloy lead.
-- Gabriel Tavridis. For helping provide the "herding of the engineering LOLcats" as the product manager for Alloy.
+```
+ project  : alloy
+ repo age : 1 year, 2 months ago
+ commits  : 2439
+ active   : 338 days
+ files    : 1805
+ authors  :
+  1971	tonylukasavage          80.8%
+   152	Tony Lukasavage         6.2%
+    87	Jeff Haynie             3.6%
+    75	Russ McMahon            3.1%
+    38	Kevin Whinnery          1.6%
+    24	Ben Hatfield            1.0%
+    21	Carl Orthlieb           0.9%
+    12	Fokke Zandbergen        0.5%
+     8	Issam Hakimi            0.3%
+     6	Arthur Evans            0.2%
+     6	Chris Barber            0.2%
+     5	Paul Mietz Egli         0.2%
+     4	David Bankier           0.2%
+     4	Xavier Lacot            0.2%
+     4	Joel Herron             0.2%
+     2	Aaron Saunders          0.1%
+     2	Bryan Hughes            0.1%
+     2	Davide Cassenti         0.1%
+     2	Marc Tamlyn             0.1%
+     2	miga                    0.1%
+     1	Kelly Nicholes          0.0%
+     1	Lee, JongEun            0.0%
+     1	Ajay kumar Guthikonda   0.0%
+     1	Matthew Lanham          0.0%
+     1	Micah Alcorn            0.0%
+     1	Daniel Waardal          0.0%
+     1	Daniel Mahon            0.0%
+     1	Andrew Blair            0.0%
+     1	Anders D. Johnson       0.0%
+     1	gitizenme               0.0%
+     1	J. Tangelder            0.0%
+     1	Family                  0.0%
+```
 
 ## Legal
 
