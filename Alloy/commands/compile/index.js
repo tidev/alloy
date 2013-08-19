@@ -3,16 +3,20 @@ var path = require('path'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),
-	sourceMapper = require('./sourceMapper'),
-	styler = require('./styler'),
-	_ = require("../../lib/alloy/underscore")._,
+
+	// alloy requires
+	_ = require('../../lib/alloy/underscore'),
 	logger = require('../../logger'),
-	CompilerMakeFile = require('./CompilerMakeFile'),
 	U = require('../../utils'),
 	tiapp = require('../../tiapp'),
-	CU = require('./compilerUtils'),
 	CONST = require('../../common/constants'),
 	platforms = require('../../../platforms/index'),
+
+	// alloy compiler requires
+	CU = require('./compilerUtils'),
+	styler = require('./styler'),
+	sourceMapper = require('./sourceMapper'),
+	CompilerMakeFile = require('./CompilerMakeFile'),
 	BuildLog = require('./BuildLog'),
 	Orphanage = require('./Orphanage');
 
@@ -31,11 +35,6 @@ var times = {
 	last: null,
 	msgs: []
 };
-
-function tiSdkVersionNumber(tiVersion) {
-	var parts = tiVersion.split && tiVersion.split('.');
-	return parts[0]*100 + parts[1]*10 + parts[2]*1; // *1 is to cast it to an integer
-}
 
 //////////////////////////////////////
 ////////// command function //////////
@@ -169,7 +168,7 @@ module.exports = function(args, program) {
 
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app, "alloy.jmk"));
+	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk"'));
 	if (path.existsSync(alloyJMK)) {
 		logger.debug('Loading "alloy.jmk" compiler hooks...');
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
@@ -183,7 +182,7 @@ module.exports = function(args, program) {
 			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
 		}
 
-		compilerMakeFile.trigger("pre:compile",_.clone(compileConfig));
+		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
 		logger.debug('');
 	}
 
@@ -208,7 +207,9 @@ module.exports = function(args, program) {
 
 	// Create a regex for determining which platform-specific
 	// folders should be used in the compile process
-	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) { return p === buildPlatform; });
+	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) {
+		return p === buildPlatform;
+	});
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
@@ -228,7 +229,8 @@ module.exports = function(args, program) {
 					if (tracker[theKey]) { return; }
 
 					// generate runtime controller
-					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
+					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id +
+						' ' : '') + 'view processing...');
 					parseAlloyComponent(view, collection.dir, collection.manifest);
 					tracker[theKey] = true;
 				}
@@ -248,7 +250,8 @@ module.exports = function(args, program) {
 					if (tracker[theKey]) { return; }
 
 					// generate runtime controller
-					logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
+					logger.info('[' + controller + '] ' + (collection.manifest ?
+						collection.manifest.id + ' ' : '') + 'controller processing...');
 					parseAlloyComponent(controller, collection.dir, collection.manifest, true);
 					tracker[theKey] = true;
 				}
@@ -259,7 +262,7 @@ module.exports = function(args, program) {
 
 	// generate app.js
 	logger.info('[app.js] Titanium entry point processing...');
-	var appJS = path.join(compileConfig.dir.resources, titaniumFolder, "app.js");
+	var appJS = path.join(compileConfig.dir.resources, titaniumFolder, 'app.js');
 	sourceMapper.generateCodeAndSourceMap({
 		target: {
 			filename: 'Resources/' + titaniumFolder + '/app.js',
@@ -281,7 +284,7 @@ module.exports = function(args, program) {
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
-		compilerMakeFile.trigger("post:compile",_.clone(compileConfig));
+		compilerMakeFile.trigger('post:compile', _.clone(compileConfig));
 	}
 
 	// write out the log for this build
@@ -302,7 +305,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 	if (!dir) { U.die('Failed to parse ' + parseType + ' "' + view + '", no directory given'); }
 
 	var dirRegex = new RegExp('^(?:' + CONST.PLATFORM_FOLDERS_ALLOY.join('|') + ')[\\\\\\/]*');
-	var basename = path.basename(view, '.' + CONST.FILE_EXT[parseType.toUpperCase()]);
+	var basename = path.basename(view, '.' + CONST.FILE_EXT[parseType.toUpperCase()]),
 		dirname = path.dirname(view).replace(dirRegex,''),
 		viewName = basename,
 		template = {
@@ -313,12 +316,18 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			controllerPath: dirname ? path.join(dirname,viewName) : viewName,
 			preCode: '',
 			postCode: '',
-			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" + manifest.id + "';",
-			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),{WIDGETID:manifest.id}),
+			Widget: !manifest ? '' : 'var ' + CONST.WIDGET_OBJECT +
+				" = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
+				manifest.id + "';",
+			WPATH: !manifest ? '' : _.template(
+				fs.readFileSync(path.join(alloyRoot,'template','wpath.js'),'utf8'),
+				{ WIDGETID: manifest.id }
+			),
 			__MAPMARKER_CONTROLLER_CODE__: ''
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT,dirname) : CONST.DIR.COMPONENT,
-		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE,dirname) : CONST.DIR.RUNTIME_STYLE,
+		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE,dirname) :
+			CONST.DIR.RUNTIME_STYLE,
 		state = { parent: {}, styles: [] },
 		files = {};
 
@@ -331,7 +340,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 	CU.currentDefaultId = viewName;
 
 	// create a list of file paths
-	searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
+	var searchPaths = noView ? ['CONTROLLER'] : ['VIEW','STYLE','CONTROLLER'];
 	_.each(searchPaths, function(fileType) {
 		// get the path values for the file
 		var fileTypeRoot = path.join(dir, CONST.DIR[fileType]);
@@ -372,7 +381,6 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		}
 
 		// load global style, if present
-		//state.styles = compileConfig && compileConfig.globalStyle ? compileConfig.globalStyle : [];
 		state.styles = styler.globalStyle || [];
 
 		// Load the style and update the state
@@ -404,7 +412,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 				});
 			}
 			if (path.existsSync(psThemeStylesFile)) {
-				logger.info('  theme:      "' + path.join(theme.toUpperCase(),buildPlatform,theStyle) + '"');
+				logger.info('  theme:      "' +
+					path.join(theme.toUpperCase(), buildPlatform, theStyle) + '"');
 				state.styles = styler.loadAndSortStyle(psThemeStylesFile, {
 					existingStyle: state.styles,
 					platform: true,
@@ -416,7 +425,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		// Load view from file into an XML document root node
 		var docRoot;
 		try {
-			logger.info('  view:       "' + path.relative(path.join(dir,CONST.DIR.VIEW),files.VIEW)+ '"');
+			logger.info('  view:       "' +
+				path.relative(path.join(dir, CONST.DIR.VIEW), files.VIEW) + '"');
 			docRoot = U.XML.getAlloyFromFile(files.VIEW);
 		} catch (e) {
 			U.die([
@@ -434,7 +444,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index') {
-			valid = [
+			var valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
 				'Ti.UI.TabGroup'
@@ -495,10 +505,12 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 	// process the controller code
 	if (path.existsSync(files.CONTROLLER)) {
-		logger.info('  controller: "' + path.relative(path.join(dir,CONST.DIR.CONTROLLER),files.CONTROLLER) + '"');
+		logger.info('  controller: "' +
+			path.relative(path.join(dir, CONST.DIR.CONTROLLER), files.CONTROLLER) + '"');
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
-	template.parentController = (cCode.parentControllerName !== '') ? cCode.parentControllerName : "'BaseController'";
+	template.parentController = (cCode.parentControllerName !== '') ?
+		cCode.parentControllerName : "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 
@@ -512,10 +524,11 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
 		template.viewCode += 'var ' + handlerVar + '=function() {';
-		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
+		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," +
+			handlerVar + ");";
 
 		// for each specific conditional within the bindings map....
-		_.each(_.groupBy(mapping, function(b) { return b.condition; }), function(bindings,condition) {
+		_.each(_.groupBy(mapping, function(b){return b.condition;}), function(bindings,condition) {
 			var bCode = '';
 
 			// for each binding belonging to this model/conditional pair...
@@ -536,7 +549,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 		});
 		template.viewCode += "};";
-		template.viewCode += modelVar + ".on('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
+		template.viewCode += modelVar + ".on('" + CONST.MODEL_BINDING_EVENTS + "'," +
+			handlerVar + ");";
 	});
 
 	// add destroy() function to view for cleaning up bindings
@@ -548,7 +562,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 	// create generated controller module code for this view/controller or widget
 	var controllerCode = template.__MAPMARKER_CONTROLLER_CODE__;
 	delete template.__MAPMARKER_CONTROLLER_CODE__;
-	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
+	var code = _.template(fs.readFileSync(
+		path.join(compileConfig.dir.template, 'component.js'), 'utf8'), template);
 
 	// prep the controller paths based on whether it's an app
 	// controller or widget controller
@@ -673,8 +688,8 @@ function findModelMigrations(name, inDir) {
 		files = files.sort(function(a,b){
 			var x = a.substring(0,a.length - part.length -1);
 			var y = b.substring(0,b.length - part.length -1);
-			if (x<y) return -1;
-			if (x>y) return 1;
+			if (x<y) { return -1; }
+			if (x>y) { return 1; }
 			return 0;
 		});
 
