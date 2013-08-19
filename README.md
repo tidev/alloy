@@ -2,7 +2,7 @@
 
 **Latest stable version:** 1.2.0
 
-Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). 
+Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform).
 
 Alloy will allow Titanium developers, old and new, to develop cross-platform mobile applications easier and more effectively than ever. The separation of concerns will increase the scalability of your apps. Titanium best practices are generated for you under the hood, making your apps of the highest quality across platforms. The markup, styles, themes, and mountain of other Alloy features will take your producitivity to a whole new level.
 
@@ -23,7 +23,7 @@ Alloy will allow Titanium developers, old and new, to develop cross-platform mob
 [sudo] npm install -g alloy
 ```
 
-### from source: 
+### from source:
 
 ```bash
 git clone https://github.com/appcelerator/alloy.git
@@ -35,17 +35,31 @@ cd alloy
 
 ...oh yeah, Studio will do it for you automatically. :)
 
-## Running Sample Test Apps 
+## Running Sample Test Apps
 
-This is primarily done by Alloy devs just for testing purposes, but you may find it useful.
+```
+# clone the repo
+git clone https://github.com/appcelerator/alloy.git
+cd alloy
 
-1. install jake: `[sudo] npm install -g jake`
-	* If you are running nodejs 0.10.0, you **MUST** install jake 0.5.9 or higher.
-2. Get into the root directory of the cloned alloy repository.
-3. Find a test app in **test/apps** folder you want to run. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
-4. Run jake: `jake app:run dir=basics/simple`
-	* You might get exceptions about uninstalled modules. If you do, simply install them by name: `[sudo] npm install -g MODULE_NAME`
-5. Lather, rinse, repeat
+# install jake globally
+[sudo] npm install -g jake
+
+# install alloy globally from the cloned repo
+[sudo] npm install -g .
+
+# install alloy's local testing dependencies
+npm install
+
+# run a test app
+jake app:run dir=basics/simple
+```
+
+### Notes
+
+* `sudo` is only necessary on OSX/Linux systems
+* If you are running nodejs 0.10.0, you **MUST** install jake 0.5.9 or higher.
+* Apps are in the **test/apps** folder. For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo).
 
 ### Importing the "Harness" to Titanium Studio
 
@@ -74,9 +88,9 @@ Other than that, all the usual rules for submitting feedback apply. The more cod
 
 ## Contributing
 
-Alloy is an open source project.  Alloy wouldn't be where it is now without contributions by the community. Please consider forking Alloy to improve, enhance or fix issues. If you feel like the community will benefit from your fork, please open a pull request. 
+Alloy is an open source project.  Alloy wouldn't be where it is now without contributions by the community. Please consider forking Alloy to improve, enhance or fix issues. If you feel like the community will benefit from your fork, please open a pull request.
 
-To protect the interests of the Alloy contributors, Appcelerator, customers and end users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is simple and straightforward - it requires that the contributions you make to any Appcelerator open source project are properly licensed and that you have the legal authority to make those changes. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes only a few minutes, and only needs to be completed once. 
+To protect the interests of the Alloy contributors, Appcelerator, customers and end users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is simple and straightforward - it requires that the contributions you make to any Appcelerator open source project are properly licensed and that you have the legal authority to make those changes. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes only a few minutes, and only needs to be completed once.
 
 [You can digitally sign the CLA](http://bit.ly/app_cla) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA.  Once you've submitted it, you no longer need to send one for subsequent submissions.
 
