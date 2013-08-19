@@ -247,9 +247,11 @@ exports.getWidgetDirectories = function(appDir) {
 
 					var manifest;
 					try {
-						manifest = jsonlint.parse(fs.readFileSync(path.join(wDir,'widget.json'),'utf8'));
+						manifest = jsonlint.parse(fs.readFileSync(
+							path.join(wDir, 'widget.json'), 'utf8'));
 					} catch (e) {
-						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) + '"', e);
+						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) +
+							'"', e);
 					}
 
 					collections[manifest.id] = {
@@ -270,8 +272,23 @@ exports.getWidgetDirectories = function(appDir) {
 		}
 	}
 
+	// walk the dependencies, tracking any missing widgets
+	var notFound = [];
     for (var id in appWidgets) {
-		walkWidgetDependencies(collections[id]);
+		if (!collections[id]) {
+			notFound.push(id);
+		} else {
+			walkWidgetDependencies(collections[id]);
+		}
+    }
+
+    // if there are missing widgets, abort and tell the developer which ones
+    if (!!notFound.length) {
+		exports.die([
+			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
+			'If you are not using these widgets, remove them from your config.json dependencies.',
+			'If you are using them, add them to your project\'s widget folder.'
+		]);
     }
 
 	return dirs;

@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"com.appcelerator.loading": "1.0",
+		"some.missing.widget": "3.3"
+	}
+}
