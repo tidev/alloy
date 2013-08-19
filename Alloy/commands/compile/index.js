@@ -223,14 +223,14 @@ module.exports = function(args, program) {
 				if (viewRegex.test(view) && filterRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
-					var fp = path.join(collection.dir, theFile);
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
-					if (tracker[theKey]) { return; }
+					var fp = path.join(collection.dir, theKey);
+					if (tracker[fp]) { return; }
 
 					// generate runtime controller
 					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'view processing...');
 					parseAlloyComponent(view, collection.dir, collection.manifest);
-					tracker[theKey] = true;
+					tracker[fp] = true;
 				}
 			});
 		}
@@ -243,14 +243,14 @@ module.exports = function(args, program) {
 				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0,controller.lastIndexOf('.'));
-					var fp = path.join(collection.dir, theFile);
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
-					if (tracker[theKey]) { return; }
+					var fp = path.join(collection.dir, theKey);
+					if (tracker[fp]) { return; }
 
 					// generate runtime controller
 					logger.info('[' + controller + '] ' + (collection.manifest ? collection.manifest.id + ' ' : '') + 'controller processing...');
 					parseAlloyComponent(controller, collection.dir, collection.manifest, true);
-					tracker[theKey] = true;
+					tracker[fp] = true;
 				}
 			});
 		}
