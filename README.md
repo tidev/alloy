@@ -37,7 +37,7 @@ cd alloy
 
 ## Running Sample Test Apps
 
-```
+```bash
 # clone the repo
 git clone https://github.com/appcelerator/alloy.git
 cd alloy
