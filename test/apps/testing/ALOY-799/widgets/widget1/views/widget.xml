@@ -1,0 +1,3 @@
+<Alloy>
+	<Label backgroundColor="#a00" color="#fff" height="70dp" width="200dp" top="50dp">I'm widget #1</Label>
+</Alloy>
