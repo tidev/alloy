@@ -16,7 +16,7 @@ function Orphanage(projectDir, _platform, opts) {
 	opts = opts || {};
 	platform = _platform;
 	titaniumFolder = platforms[platform].titaniumFolder;
-	theme = opts.theme,
+	theme = opts.theme;
 	adapters = opts.adapters || [];
 
 	// gather directories to be used throughout Orphanage
@@ -217,14 +217,17 @@ function getChecks(file, fullpath, opts) {
 
 	// use explicit full location paths
 	} else if (opts.locations) {
+		// strip off the platform if present
+		var parts = file.split(/[\\\/]/);
+		if (parts[0] === titaniumFolder) {
+			parts.shift();
+		}
+		file = parts.join('/');
+
 		// Is it a widget file?
 		var keys = _.keys(widgets);
 		for (var i = 0; i < keys.length; i++) {
 			var widgetId = keys[i];
-			var parts = file.split(/[\\\/]/);
-
-			// strip off the platform if present
-			if (parts[0] === titaniumFolder) { parts.shift(); }
 
 			// did we find the widget root path?
 			if (parts.length === 1 && parts[0] === widgetId) {
