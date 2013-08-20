@@ -1,0 +1,6 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}

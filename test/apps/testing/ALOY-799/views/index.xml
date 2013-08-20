@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Widget src="widget1"/>
+		<Widget src="widget2"/>
+		<Require src="widget"/>
+	</Window>
+</Alloy>
