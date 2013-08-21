@@ -1,5 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
+	os = require('os'),
 	wrench = require('wrench'),
 	colors = require('colors'),
 	TU = require('../lib/testUtils'),
@@ -111,7 +112,7 @@ describe('alloy compile', function() {
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
 					var files = wrench.readdirSyncRecursive(genFolder);
 
-					_.each(files, function(gFile) {
+					os.platform === 'darwin' && _.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);
