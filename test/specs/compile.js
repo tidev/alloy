@@ -39,7 +39,7 @@ describe('alloy compile', function() {
 			if (!path.existsSync(indexJs) || indexJs.indexOf(GEN_FOLDER) !== -1) { return; }
 
 			it('preparing test app', function() {
-				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1');
+				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1', { timeout: 10000 });
 			});
 
 			_.each(platforms, function(platform,k) {
@@ -112,7 +112,7 @@ describe('alloy compile', function() {
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
 					var files = wrench.readdirSyncRecursive(genFolder);
 
-					os.platform === 'darwin' && _.each(files, function(gFile) {
+					os.platform() === 'darwin' && _.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);

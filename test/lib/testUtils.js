@@ -1,5 +1,6 @@
 var exec = require('child_process').exec,
 	fs = require('fs'),
+	os = require('os'),
 	wrench = require('wrench'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
@@ -8,8 +9,9 @@ var exec = require('child_process').exec,
 	styler = require('../../Alloy/commands/compile/styler');
 
 var alloyRoot = path.join(__dirname,'..','..');
+var IS_WIN = /^win/i.test(os.platform());
 
-exports.TIMEOUT_DEFAULT = 2000;
+exports.TIMEOUT_DEFAULT = IS_WIN ? 5000 : 2000;
 exports.paths = {
 	templates: path.join(alloyRoot,'Alloy','template'),
 	harnessTemplate: path.join(alloyRoot,'test','projects','HarnessTemplate'),
@@ -156,7 +158,8 @@ exports.addMatchers = function() {
 				});
 			},
 			toHaveSameContentAs: function(expected) {
-				return fs.readFileSync(this.actual,'utf8') === fs.readFileSync(expected,'utf8');
+				return U.normalizeReturns(fs.readFileSync(this.actual,'utf8')) === 
+					U.normalizeReturns(fs.readFileSync(expected,'utf8'));
 			},
 			toExist: function(expected) {
 				return path.existsSync(this.actual);

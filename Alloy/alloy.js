@@ -5,6 +5,7 @@
  */
  var program = require('commander'),
 	logger = require("./logger"),
+	os = require('os'),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
@@ -15,6 +16,16 @@
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
+
+// avoid io issues on Windows in nodejs 0.10.X: https://github.com/joyent/node/issues/3584
+if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
+	console.error = function(m) {
+		fs.writeSync(2, m);
+	}
+	console.log = console.warn = console.info = function(m) {
+		fs.writeSync(1, m);
+	}
+}
 
 ////////////////////////////////////
 ////////// MAIN EXECUTION //////////

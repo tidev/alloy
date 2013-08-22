@@ -4,6 +4,7 @@ var fs = require('fs'),
 	ConsoleReporter = require('../test/lib/ConsoleReporter'),
 	_ = require('../Alloy/lib/alloy/underscore');
 
+process.env.ALLOY_TESTS = true;
 path.existsSync = fs.existsSync || path.existsSync;
 
 //globalize the Jasmine functions
@@ -37,6 +38,6 @@ namespace('test', function() {
 
 	desc('run all test specs in the spec directory - e.g. jake test:all');
 	task('all', function() {
-		runSpecs(fs.readdirSync(path.join(process.cwd(), 'test', 'specs')));
+		runSpecs(fs.readdirSync(path.join(process.cwd(), 'test', 'specs')).reverse());
 	});
 });
