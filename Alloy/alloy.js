@@ -101,6 +101,35 @@ function banner() {
 
 	if (!program.dump) {
 		console.log(logger.stripColors ? str : str.blue);
+		var date = new Date();
+		if (date.getDate() === 22 && date.getMonth() === 7) {
+			var bd =
+			"      , ,  ,   ,  ,  , ,   ,  , ,   , ,   ,\n"+
+			"     </ \\> \\> </ </ </ \\> </ </ \\> </ \\> </";
+			console.log(logger.stripColors ? bd : bd.red);
+			bd =
+			"     || || || || || || || || || || || || ||\n"+
+			"     || || || || || || || || || || || || ||\n"+
+			"     || || || || || || || || || || || || ||";
+			console.log(logger.stripColors ? bd : bd.yellow);
+			bd =
+			"  ((@))((@))((@))((@))((@))((@))((@))((@))((@))\n"+
+			"  ((@))((@))((@))((@))((@))((@))((@))((@))((@))";
+			console.log(logger.stripColors ? bd : bd.white);
+			bd =
+			"   |         _  _       _   _ ___    _       |\n"+
+			"   |  |_||\\ |_)|_)\\/   |_)||_) | |_|| \\|\\ \\/ |\n"+
+			"   |  | ||-\\|  |  /    |_)|| \\ | | ||_/|-\\/  |\n"+
+			"   |              ___ _                      |\n"+
+			"   |               | / \\ |\\ | \\/             |\n"+
+			"   |               | \\_/ | \\| /              |\n"+
+			"   |                                         |";
+			console.log(logger.stripColors ? bd : bd.yellow);
+			bd =
+			"  ((@))((@))((@))((@))((@))((@))((@))((@))((@))\n"+
+			"  ((@))((@))((@))((@))((@))((@))((@))((@))((@))\n";
+			console.log(logger.stripColors ? bd : bd.white);
+		}
 		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
 		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
