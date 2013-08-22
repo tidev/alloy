@@ -1,5 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
+	os = require('os'),
 	U = require('../Alloy/utils'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
 	CONST = require('../Alloy/common/constants'),
@@ -15,6 +16,9 @@ var	wrench = require('wrench'),
 	targetAppPath = path.join(harnessAppPath,'app'),
 	resourcesPath = path.join(harnessAppPath,'Resources'),
 	appDir = (/^ALOY-\d+$/.test(process.env.dir) ? 'testing/' : '') + process.env.dir;
+
+var IS_WIN = /^win/i.test(os.platform());
+var IS_OSX = os.platform() === 'darwin';
 
 function log(message) {
 	if (!process.env.quiet) {
@@ -70,13 +74,14 @@ function runApp() {
 	var e = process.env;
 	var newArgs = ['build',
 		'--project-dir', harnessAppPath,
-		'--platform', e.platform || 'ios'
+		'--platform', e.platform || (IS_OSX ? 'ios' : 'android'),
+		'--sdk', '3.1.2.GA'
 	];
 	if (e.tiversion) { newArgs = newArgs.concat(['--sdk',e.tiversion]); }
 	if (e.simtype) { newArgs = newArgs.concat(['--sim-type',e.simtype]); }
 
 	//run stdout/stderr back through console.log
-	var runcmd = spawn('titanium', newArgs);
+	var runcmd = spawn('titanium' + (IS_WIN ? '.cmd' : ''), newArgs);
 	runcmd.stdout.on('data', function (data) {
 		filterLog(data);
 	});
