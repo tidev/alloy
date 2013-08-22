@@ -8,7 +8,7 @@
         <target device="blackberry">true</target>
         <target device="tizen">true</target>
     </deployment-targets>
-    <sdk-version>3.1.1.GA</sdk-version>
+    <sdk-version>3.1.2.GA</sdk-version>
     <id>com.appcelerator.Harness</id>
     <name>Harness</name>
     <version>1.0</version>

@@ -1,5 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
+	os = require('os'),
 	exec = require('child_process').exec,
 	DOMParser = require("xmldom").DOMParser,
 	TU = require('../lib/testUtils'),
@@ -280,7 +281,8 @@ describe('alloy generate', function() {
 		});
 	});
 
-	describe('jmk', function() {
+	// TODO: https://jira.appcelerator.org/browse/ALOY-805
+	!/^win/i.test(os.platform()) && describe('jmk', function() {
 		var projectJmk = path.join(Harness,'app','alloy.jmk');
 		var alloyJmk = path.join(templatePath,'alloy.jmk');
 		var jmkContent;

@@ -627,3 +627,7 @@ exports.installPlugin = function(alloyPath, projectPath) {
 		version: '1.0'
 	});
 };
+
+exports.normalizeReturns = function(s) {
+	return s.replace(/\r\n/g, '\n');
+}

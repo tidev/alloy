@@ -5,6 +5,7 @@
  */
  var program = require('commander'),
 	logger = require("./logger"),
+	os = require('os'),
 	U = require('./utils'),
 	colors = require("colors"),
 	_ = require("./lib/alloy/underscore")._,
@@ -18,6 +19,16 @@ path.existsSync = fs.existsSync || path.existsSync;
 
 // setup our module so have the pkginfo version from package.json
 pkginfo(module,'name','version');
+
+// avoid io issues on Windows in nodejs 0.10.X: https://github.com/joyent/node/issues/3584
+if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
+	console.error = function(m) {
+		fs.writeSync(2, m);
+	}
+	console.log = console.warn = console.info = function(m) {
+		fs.writeSync(1, m);
+	}
+}
 
 ////////////////////////////////////
 ////////// MAIN EXECUTION //////////
