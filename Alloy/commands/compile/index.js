@@ -317,7 +317,7 @@ function parseAlloyComponent(view,dir,manifest,noView) {
 			modelVariable: CONST.BIND_MODEL_VAR,
 			parentVariable: CONST.PARENT_SYMBOL_VAR,
 			itemTemplateVariable: CONST.ITEM_TEMPLATE_VAR,
-			controllerPath: (dirname ? path.join(dirname,viewName) : viewName).replace(/\\/g, '\\\\'),
+			controllerPath: (dirname ? path.join(dirname,viewName) : viewName).replace(/\\/g, '/'),
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : "var " + CONST.WIDGET_OBJECT + " = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" + manifest.id + "';",
