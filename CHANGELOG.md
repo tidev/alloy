@@ -5,16 +5,10 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.2.1 Release Candidate (20 August 2013)
-
-install: `[sudo] npm install -g alloy@1.2.1-cr`
-
-* [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789). Fixed improper handling of printable escape characters in TSS.
-
 ## 1.2.0 (15 August 2013)
 
 * [Full list of Issues that were addressed in Release 1.2.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15334)
-* A fix for [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789) is currently available in the 1.2.1-cr release, which can be installed like this: `[sudo] npm install -g alloy@1.2.1-cr`
+* Fixes for a [handlful of Windows issues](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15445) are available in the latest 1.2.1 release candidate. You can install it like this: `[sudo] npm install -g alloy@1.2.1-cr2`.
 
 ### New Features
 
