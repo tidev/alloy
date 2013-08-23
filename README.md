@@ -1,6 +1,6 @@
 # Alloy
 
-**Latest stable version:** 1.2.1
+**Latest stable version:** 1.2.0
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
@@ -68,11 +68,11 @@ You can use these apps through Titanium Studio too. The easiest way to do that w
 * on OSX or Linux
     * Try using `sudo` with the `jake` command if you run into permission errors.
 * on Windows
-    * Due to a [bug in the titanium CLI](https://jira.appcelerator.org/browse/TIMOB-14933), when you run `jake app:run` the TiSDK 3.1.2.GA is automatically selected for you. Whether you use the default, or specify a new sdk with the `tiversion=VERSION` option, the version of the titanium CLI (`ti --version`) must match the version in your app's tiapp.xml file. By default, this value is also set to 3.1.2.GA in Alloy's test harness app's tiapp.xml file. 
-    * Don't run `jake` from within a user folder (i.e. `C:\Users\tony\alloy`), as you can get all kinds of non-obvious permissions failures from the child processing Alloy does. Your safest bet is to just `git clone` right to `C:\alloy`. 
+    * Due to a [bug in the titanium CLI](https://jira.appcelerator.org/browse/TIMOB-14933), when you run `jake app:run` the TiSDK 3.1.2.GA is automatically selected for you. Whether you use the default, or specify a new sdk with the `tiversion=VERSION` option, the version of the titanium CLI (`ti --version`) must match the version in your app's tiapp.xml file. By default, this value is also set to 3.1.2.GA in Alloy's test harness app's tiapp.xml file.
+    * Don't run `jake` from within a user folder (i.e. `C:\Users\tony\alloy`), as you can get all kinds of non-obvious permissions failures from the child processing Alloy does. Your safest bet is to just `git clone` right to `C:\alloy`.
     * Node.js has [an issue piping output between node processes on Windows](https://github.com/joyent/node/issues/3584). I've tried to [workaround](https://github.com/joyent/node/issues/3584#issuecomment-23064579) as best I can. You may still see errors pop up, so it's suggested that if you run the automated testintg via `jake test:all` or `npm test`, you do so on a non-Windows OS to ensure there's no red herring failures until the aforementioned node.js issue is resolved.
     * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
-    * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/appcelerator/alloy/tree/master/test/specs). 
+    * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/appcelerator/alloy/tree/master/test/specs).
 
 ## Feedback
 
