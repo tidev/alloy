@@ -1,6 +1,6 @@
 # Alloy
 
-**Latest stable version:** 1.2.0
+**Latest stable version:** 1.2.1
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform).
 

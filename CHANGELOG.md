@@ -5,19 +5,12 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.2.1-cr2 (23 August 2013)
+## 1.2.1 (27 August 2013)
 
-**install:** `[sudo] npm install -g alloy@1.2.1-cr2`
-
+* [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789). Fixed improper handling of printable escape characters in TSS.
 * [ALOY-802](https://jira.appcelerator.org/browse/ALOY-802). Fixed escape character handling issue in TSS on Windows.
 * [ALOY-803](https://jira.appcelerator.org/browse/ALOY-803). Fixed issue with controller subfolders on Windows.
 * [ALOY-804](https://jira.appcelerator.org/browse/ALOY-804). Fixed issues with `jake` on Windows.
-
-## 1.2.1-cr (20 August 2013)
-
-**install:** `[sudo] npm install -g alloy@1.2.1-cr`
-
-* [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789). Fixed improper handling of printable escape characters in TSS.
 
 ## 1.2.0 (15 August 2013)
 
