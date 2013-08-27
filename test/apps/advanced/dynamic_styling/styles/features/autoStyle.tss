@@ -16,6 +16,12 @@
 	}
 }
 
+".mainView": {
+    height: Ti.UI.SIZE,
+    width: Ti.UI.FILL,
+    layout: 'vertical'
+}
+
 '#theImage': {
 	image: '/ball.jpg',
 	top: '10dp'
