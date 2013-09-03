@@ -298,7 +298,7 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					code += prefix + '"' + value.replace(/\\/g, '\\\\')
+					code += prefix + '"' + value
 						.replace(/"/g, '\\"')
 						.replace(/\n/g, '\\n')
 						.replace(/\r/g, '\\r')
