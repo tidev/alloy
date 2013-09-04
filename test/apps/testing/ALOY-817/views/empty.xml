@@ -1,0 +1,3 @@
+<Alloy>
+	<Button bottom="50" onClick="buttonClick">useless button</Button>
+</Alloy>

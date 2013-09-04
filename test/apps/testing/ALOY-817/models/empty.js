@@ -1,0 +1,3 @@
+exports.definition = {
+	config: {}
+};
