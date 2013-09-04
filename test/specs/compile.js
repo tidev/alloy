@@ -32,7 +32,13 @@ describe('alloy compile', function() {
 
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
+
+		// TODO: Stop skipping the ui/navwindow test when TiSDK 3.1.3 is in the HarnessTemplate
+		//       tiapp.xml. We skip it now because it purposely fails compilation on any SDK below
+		//       TiSDK 3.1.3, where Ti.UI.iOS.NavigationWindow was introduced.
+		if (file === 'ui/navwindow') { return; }
 
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
