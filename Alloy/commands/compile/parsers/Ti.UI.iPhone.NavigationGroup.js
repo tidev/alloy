@@ -1,13 +1,24 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	styler = require('../styler'),
 	U = require('../../../utils'),
-	CU = require('../compilerUtils');
+	CU = require('../compilerUtils'),
+	tiapp = require('../../../tiapp'),
+	logger = require('../../../logger');
+
+var DEPRECATED_VERSION = '3.1.3';
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
+	if (tiapp.version.gte(tiapp.getSdkVersion(), DEPRECATED_VERSION)) {
+		logger.warn([
+			'Ti.UI.iPhone.NavigationGroup (line ' + node.lineNumber + ') is deprecated as of Titanium ' + DEPRECATED_VERSION,
+			'Use Ti.UI.iOS.NavigationWindow instead'
+		]);
+	}
+
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		err = ['NavigationGroup must have only one child element, which must be a Window'];
 		code = '';
