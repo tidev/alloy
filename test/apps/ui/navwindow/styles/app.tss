@@ -1,0 +1,14 @@
+'Window': {
+	backgroundColor: '#fff',
+	modal: false
+}
+
+'Label': {
+	color: '#000',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+'.space': {
+	top: 50
+}
