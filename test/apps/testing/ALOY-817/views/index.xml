@@ -1,0 +1,10 @@
+<Alloy>
+	<Collection src="empty" onChange="collectionChange"/>
+	<Model src="empty" onChange="modelChange"/>
+	<Model src="empty" instance="true" id="anotherModel" onChange="anotherModelChange"/>
+
+	<Window onClick="windowClick">
+		<View id="map2" ns="Alloy.Globals.Map" onClick="mapClick"/>
+		<Require src="empty" onInit="emptyInit"/>
+	</Window>
+</Alloy>

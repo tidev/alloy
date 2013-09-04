@@ -74,8 +74,8 @@ function parse(node, state, args) {
 		}
 
 		code += root + '.' + nodeName + 's.instance(\'' + src + '\');';
+		backboneVar = root + '.' + nodeName + 's.' + src;
 
-		// backboneVar = 'Alloy.' + nodeName + 's[\'' + src + '\']';
 		// code += backboneVar + ' || (' + backboneVar + ' = ' + createCall + ');';
 	} else {
 		id = id || args.id;
