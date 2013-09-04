@@ -1,0 +1,1 @@
+Alloy.Globals.Map = OS_ANDROID ? require('ti.map') : Ti.Map;

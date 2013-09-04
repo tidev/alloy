@@ -9,7 +9,7 @@
         <target device="tizen">true</target>
     </deployment-targets>
     <sdk-version>3.1.2.GA</sdk-version>
-    <id>com.appcelerator.Harness</id>
+    <id>com.appcelerator.AlloyHarness</id>
     <name>Harness</name>
     <version>1.0</version>
     <publisher>tlukasavage</publisher>
@@ -37,7 +37,31 @@
             <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
         </orientations>
     </iphone>
-    <android xmlns:android="http://schemas.android.com/apk/res/android"/>
+    <android xmlns:android="http://schemas.android.com/apk/res/android">
+        <manifest>
+            <!-- Allows the API to download data from Google Map servers -->
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <!-- Allows the API to cache data -->
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <!-- Use GPS for device location -->
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <!-- Use Wi-Fi or mobile connection for device location -->
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+            <!-- Allows the API to access Google web-based services -->
+            <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+            <!-- Specify OpenGL ES 2.0 as a requirement -->
+            <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+            <!-- Replace com.domain.appid with your application ID -->
+            <uses-permission android:name="com.appcelerator.AlloyHarness.permission.MAPS_RECEIVE"/>
+            <permission android:name="com.appcelerator.AlloyHarness.permission.MAPS_RECEIVE"
+                android:protectionLevel="signature"/>
+            <application>
+                <!-- Replace "PASTE YOUR GOOGLE MAPS API KEY HERE" with the Google API key you obtained -->
+                <meta-data android:name="com.google.android.maps.v2.API_KEY"
+                    android:value="AIzaSyBbK9MVK9fHB2OyoP_uzE7msXJzHi60C6o"/>
+            </application>
+        </manifest>
+    </android>
     <mobileweb>
         <precache/>
         <splash>
@@ -49,5 +73,6 @@
     <modules>
         <module version="2.0.1" platform="android">ti.paint</module>
         <module version="1.2" platform="iphone">ti.paint</module>
+        <module platform="android">ti.map</module>
     </modules>
 </ti:app>
