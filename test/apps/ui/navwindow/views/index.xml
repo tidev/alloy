@@ -1,0 +1,5 @@
+<Alloy>
+    <Window>
+    	<Label>This app runs only on iOS with TiSDK 3.1.3+</Label>
+    </Window>
+</Alloy>

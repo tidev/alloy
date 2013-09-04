@@ -1,0 +1,13 @@
+<Alloy>
+	<Window layout="vertical">
+		<LeftNavButton>
+			<Button onClick="popWindow">pop</Button>
+		</LeftNavButton>
+		<RightNavButton>
+			<Button onClick="Alloy.Globals.pushWindow">push</Button>
+		</RightNavButton>
+
+		<Label class="space">Click the left nav button above to pop this window off the navigation stack. Click the right one to push another window onto the stack.</Label>
+		<Label id="windowNumber" class="space"/>
+	</Window>
+</Alloy>

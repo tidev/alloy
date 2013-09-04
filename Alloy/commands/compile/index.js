@@ -447,7 +447,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			var valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
-				'Ti.UI.TabGroup'
+				'Ti.UI.TabGroup',
+				'Ti.UI.iOS.NavigationWindow'
 			].concat(CONST.MODEL_ELEMENTS);
 			_.each(rootChildren, function(node) {
 				var found = true;
