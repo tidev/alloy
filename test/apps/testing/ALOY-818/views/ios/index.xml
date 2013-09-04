@@ -1,0 +1,21 @@
+<Alloy>
+    <SplitWindow id="index" formFactor="tablet">
+        <!-- First window is the masterView -->
+        <NavigationWindow>
+            <Window title="Main Window">
+                <Label>I am the master view</Label>
+            </Window>
+         </NavigationWindow>
+
+        <!-- Second window is the detailView -->
+        <NavigationWindow>
+            <Window title="Detail Window">
+                <Label>I am the detail view.</Label>
+            </Window>
+        </NavigationWindow>
+    </SplitWindow>
+
+    <Window id="index" formFactor="handheld">
+        <Label>This app is only supported on iPad</Label>
+    </Window>
+</Alloy>
