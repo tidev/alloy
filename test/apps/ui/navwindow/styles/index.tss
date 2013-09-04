@@ -1,0 +1,7 @@
+'#index': {
+	exitOnClose: true
+}
+
+'#main': {
+	layout: 'vertical'
+}
