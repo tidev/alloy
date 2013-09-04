@@ -3,6 +3,8 @@ var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
+var VALID = ['Ti.UI.Window', 'Ti.UI.TabGroup', 'Ti.UI.iOS.NavigationWindow'];
+
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
@@ -10,15 +12,22 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		subParents = [],
-		code = '';
+		code = '',
+		err = [
+			'Ti.UI.iPad.SplitWindow (line ' + node.lineNumber + ') ',
+			'Ti.UI.iPad.SplitWindow must have exactly 2 children of one of the following types:',
+			'  [' + VALID.join(',') + ']',
+			'The first child is the master, the second is the child.'
+		];
 
 	// SplitWindow must have 2 windows as children
 	if (children.length !== 2) {
-		U.die('SplitWindow must have exactly 2 children that are Windows, a master and detail respectively');
+		err[0] += ' has ' + children.length + ' child elements';
+		U.die(err);
 	}
 
 	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, ['Ti.UI.Window','Ti.UI.TabGroup']);
+		var theNode = CU.validateNodeName(child, VALID);
 		var childArgs = CU.getParserArgs(child);
 		if (theNode) {
 			var subParentSymbol;
@@ -35,10 +44,8 @@ function parse(node, state, args) {
 				code += subParentSymbol + '.open();';
 			}
 		} else {
-			U.die([
-				'Invalid <SplitWindow> child type: ' + childArgs.fullname,
-				'<SplitWindow> must have 2 Windows as children'
-			]);
+			err[0] += ' invalid child type "' + childArgs.fullname + '"';
+			U.die(err);
 		}
 	});
 
