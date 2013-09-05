@@ -5,6 +5,12 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+## 1.2.2
+* [ALOY-813](https://jira.appcelerator.org/browse/ALOY-813). Fixed bug handling unicode characters in XML attributes.
+* [ALOY-817](https://jira.appcelerator.org/browse/ALOY-817). Fixed bug adding XML event handlers to UI components that use custom namesapces.
+* [ALOY-815](https://jira.appcelerator.org/browse/ALOY-815) & [ALOY-818](https://jira.appcelerator.org/browse/ALOY-818). Support Ti.UI.iOS.NavigationWindow API in XML
+
+
 ## 1.2.1 (27 August 2013)
 
 * [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789). Fixed improper handling of printable escape characters in TSS.
