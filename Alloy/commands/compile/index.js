@@ -168,7 +168,7 @@ module.exports = function(args, program) {
 
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk"'));
+	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
 	if (path.existsSync(alloyJMK)) {
 		logger.debug('Loading "alloy.jmk" compiler hooks...');
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
