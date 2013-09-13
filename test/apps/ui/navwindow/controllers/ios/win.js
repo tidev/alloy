@@ -1,6 +1,6 @@
-function popWindow(e) {
+function closeWindow(e) {
 	Alloy.Globals.ctr--;
-	Alloy.Globals.navwindow.pop($.win);
+	Alloy.Globals.navwindow.closeWindow($.win);
 }
 
 $.win.title = "Window #" + Alloy.Globals.ctr;
