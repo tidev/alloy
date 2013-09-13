@@ -2,7 +2,7 @@
 	<NavigationWindow platform="ios">
         <Window id="main" title="Main Window">
         	<Label class="space">Click the button below to "push" a new window onto the navigation stack</Label>
-        	<Button class="space" onClick="Alloy.Globals.pushWindow">push</Button>
+        	<Button class="space" onClick="Alloy.Globals.openWindow">push</Button>
         </Window>
     </NavigationWindow>
 </Alloy>
