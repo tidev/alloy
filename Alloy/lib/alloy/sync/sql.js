@@ -204,7 +204,18 @@ function Sync(method, model, opts) {
 			break;
 
 		case 'read':
-			sql = opts.query || 'SELECT * FROM ' + table;
+			// print warning about using both id and query
+			if (opts.query && opts.id) {
+				Ti.API.warn('Both "query" and "id" options were specified for model.fetch(). "id" will be ignored.');
+			}
+
+			// determine the query to execute
+			sql = 'SELECT * FROM ' + table;
+			if (opts.query) {
+				sql = opts.query;
+			} else if (opts.id) {
+				sql += ' WHERE ' + model.idAttribute + ' = ' + opts.id;
+			}
 
 			// execute the select query
 			db = Ti.Database.open(dbName);
@@ -224,7 +235,7 @@ function Sync(method, model, opts) {
 			while(rs.isValidRow())
 			{
 				var o = {};
-                var fc = 0;
+        var fc = 0;
 
                 // TODO: https://jira.appcelerator.org/browse/ALOY-459
 				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
