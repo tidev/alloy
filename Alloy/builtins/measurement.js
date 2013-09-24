@@ -15,7 +15,7 @@
 var dpi = Ti.Platform.displayCaps.dpi;
 
 /**
- * @method dpToPx
+ * @method dpToPX
  * Converts a density-independent pixel value to screen pixels.
  * @param {Number} val Value in density-independent pixels.
  * @return {Number} Converted value in screen pixels.
