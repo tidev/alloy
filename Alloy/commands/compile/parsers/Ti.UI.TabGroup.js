@@ -15,7 +15,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '',
-		tabArray, groupState;
+		tabArray, groupState, menuDefer;
 
 	if (!SUPPORTS_TABS) {
 		groupState = require('./default').parse(node, state);
@@ -41,10 +41,15 @@ function parse(node, state, args) {
 						return groupState.parent.symbol + '.addTab(' + state.parent.symbol + ');';
 					}
 				};
+
+				// generate the tab code
+				code += CU.generateNodeExtended(child, state, ext);
 			} else if (theNode === 'Ti.Android.Menu') {
 				ext.parent.symbol = args.symbol;
+
+				// don't create the menu until after the tabgroup
+				menuDefer = [ child, _.clone(state), { parent: { symbol: args.symbol } } ];
 			}
-			code += CU.generateNodeExtended(child, state, ext);
 		} else {
 			U.die([
 				'Invalid <TabGroup> child type: ' + CU.getNodeFullname(child),
@@ -62,6 +67,11 @@ function parse(node, state, args) {
 		// Create the TabGroup itself
 		groupState = require('./default').parse(node, state);
 		code += groupState.code;
+	}
+
+	// create the menu last, if necessary
+	if (menuDefer) {
+		code += CU.generateNodeExtended.apply(this, menuDefer);
 	}
 
 	// Update the parsing state

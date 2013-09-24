@@ -1,0 +1,14 @@
+<Alloy>
+    <TabGroup id="ScheduleGroup" onOpen="doOnOpen" onFocus="doOnFocus" activeTabIconTint="yellow" tabsBackgroundSelectedColor="yellow">
+        <Menu id="menu" platform="android">
+            <MenuItem id="refreshMenuItem" title="Refresh" onClick="doRefresh" showAsAction="Ti.Android.SHOW_AS_ACTION_IF_ROOM" itemId="1" />
+            <MenuItem id="settingsMenuItem" title="Settings" onClick="doSettingsMenuItem" showAsAction="Ti.Android.SHOW_AS_ACTION_IF_ROOM" itemId="0" />
+        </Menu>
+        <Tab title="tab 1">
+        	<Window title="tab 1" backgroundColor="#fff"/>
+        </Tab>
+        <Tab title="tab 2">
+        	<Window title="tab 2" backgroundColor="#fff"/>
+        </Tab>
+    </TabGroup>
+</Alloy>
