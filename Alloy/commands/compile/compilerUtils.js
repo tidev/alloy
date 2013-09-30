@@ -642,7 +642,7 @@ function generateConfig(obj) {
 	return o;
 };
 
-exports.parseConfig = function(file, o, alloyConfig) {
+exports.parseConfig = function(file, alloyConfig, o) {
 	var j;
 	try {
 		j = jsonlint.parse(fs.readFileSync(file,'utf8'));
