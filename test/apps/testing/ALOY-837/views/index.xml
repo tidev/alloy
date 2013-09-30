@@ -1,0 +1,7 @@
+<Alloy>
+    <Window backgroundColor="black">
+        <Button backgroundColor="white">
+            <Label text="Pellentesque habitant"/><!--ABCDEFGHIJ-->
+        </Button>
+    </Window>
+</Alloy>

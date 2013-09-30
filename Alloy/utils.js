@@ -20,7 +20,7 @@ exports.XML = {
 		var serializer = new XMLSerializer(),
 			str = '';
 		for (var c = 0; c < node.childNodes.length; c++) {
-			if (node.childNodes[c].nodeType != 1) {
+			if (node.childNodes[c].nodeType === 3) {
 				str += serializer.serializeToString(node.childNodes[c]);
 			}
 		}
