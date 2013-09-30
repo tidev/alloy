@@ -12,43 +12,54 @@
  *     var pointDP = measurement.pointPXToDP(pointPX);
  */
 
-var dpi = Ti.Platform.displayCaps.dpi;
+var dpi = Ti.Platform.displayCaps.dpi,
+    density = Ti.Platform.displayCaps.density;
 
 /**
  * @method dpToPx
  * Converts a density-independent pixel value to screen pixels.
  * @param {Number} val Value in density-independent pixels.
+ * @param {Boolean} retina Multiple dp by 2 for retina.
  * @return {Number} Converted value in screen pixels.
  */
-exports.dpToPX = function (val) {
-    if (!OS_ANDROID) {
+exports.dpToPX = function (val, retina) {
+    if (OS_ANDROID) {
+        return val * dpi / 160;
+    } else if (OS_IOS && retina) {
+        return val * (density === 'high') ? 2 : 1;
+    } else {
         return val;
     }
-    return val * dpi / 160;
 };
 
 /**
  * @method pxToDP
  * Converts a screen pixel value to density-independent pixels.
  * @param {Number} val Value in screen pixels.
+ * @param {Boolean} retina Devide px by 2 for retina.
  * @return {Number} Converted value in density-independent pixels.
  */
-exports.pxToDP = function (val) {
-    if (!OS_ANDROID) {
+exports.pxToDP = function (val, retina) {
+    if (OS_ANDROID) {
+        return val / dpi * 160;
+    } else if (OS_IOS && retina) {
+        return val / (density === 'high') ? 2 : 1;   
+    } else {
         return val;
     }
-    return val / dpi * 160;
 };
 
 /**
  * @method pointPXToDP
  * Converts a coordinate (x, y) from screen pixels to density-independent pixels.
  * @param {Number} val Coordinate in screen pixels.
+ *  @param {Boolean} retina Device px by 2 for retina.
  * @return {Number} Converted coordinate in density-independent pixels.
  */
-exports.pointPXToDP = function (pt) {
-    if (!OS_ANDROID) {
+exports.pointPXToDP = function (pt, retina) {
+    if (OS_ANDROID || (OS_IOS && retina)) {
+        return { x: exports.pxToDP(pt.x, retina), y: exports.pxToDP(pt.y, retina) };
+    } else {
         return pt;
     }
-    return { x: exports.pxToDP(pt.x), y: exports.pxToDP(pt.y) };
 };
