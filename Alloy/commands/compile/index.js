@@ -65,6 +65,10 @@ module.exports = function(args, program) {
 			logger.debug(parts[0] + ' = ' + parts[1]);
 		});
 	}
+	if (program.platform) {
+		logger.debug('platform = ' + program.platform);
+		alloyConfig.platform = program.platform;
+	}
 	if (!alloyConfig.deploytype) {
 		alloyConfig.deploytype = 'development';
 		logger.debug('deploytype = ' + alloyConfig.deploytype);
