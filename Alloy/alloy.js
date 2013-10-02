@@ -59,7 +59,7 @@ program.command('compile'.blue+' [dir]'.white)
 		.description('    compile into titanium source code'.grey);
 
 program.command('extract-i18n'.blue+' <language>'.white)
-		.description('    extracts i18n strings from the source code (js and tss files)'.grey);
+		.description('    extracts i18n strings from the source code (js, tss and xml files)'.grey);
 
 program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);
