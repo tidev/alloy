@@ -5,5 +5,8 @@
 ".button" : {
 	width: '50%',
 	height: Ti.UI.SIZE,
-	randomProp: 'OK'
+	randomProp: 'OK',
+    mainConfig: Alloy.CFG.mainConfig,
+    bothConfig: Alloy.CFG.bothConfig,
+    themeConfig: Alloy.CFG.themeConfig
 }

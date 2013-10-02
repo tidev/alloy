@@ -640,7 +640,7 @@ function generateConfig(obj) {
 	}
 
 	return o;
-};
+}
 
 exports.parseConfig = function(file, alloyConfig, o) {
 	var j;
