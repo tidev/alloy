@@ -19,9 +19,6 @@ function Controller() {
         width: "50%",
         height: Ti.UI.SIZE,
         randomProp: "OK",
-        mainConfig: Alloy.CFG.mainConfig,
-        bothConfig: Alloy.CFG.bothConfig,
-        themeConfig: Alloy.CFG.themeConfig,
         title: "click me",
         id: "b"
     });

@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Button id="b" class="button" onClick="showAlert">click me</Button>
+	</Window>
+</Alloy>
