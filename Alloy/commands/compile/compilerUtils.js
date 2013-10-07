@@ -625,6 +625,8 @@ function generateConfig(obj) {
 			o = _.extend(o, j['global']);
 			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
 			o = _.extend(o, j['os:'+alloyConfig.platform]);
+			o = _.extend(o, j['env:'+alloyConfig.deploytype + ' os:'+alloyConfig.platform]);
+			o = _.extend(o, j['os:'+alloyConfig.platform + ' env:'+alloyConfig.deploytype]);
 		}
 
 		// TODO: only regenerate the CFG.js when necessary, using the file timestamps and the

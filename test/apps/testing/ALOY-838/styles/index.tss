@@ -1,0 +1,8 @@
+".container": {
+	backgroundColor:"#fff"
+},
+"Button": {
+    title: Alloy.CFG.button,
+    osOnly: Alloy.CFG.osOnly,
+    envOnly: Alloy.CFG.envOnly,
+} 
