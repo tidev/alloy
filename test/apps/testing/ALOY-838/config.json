@@ -1,0 +1,53 @@
+{
+	"global": {
+        "button": "global",
+        "globalOnly": "global"
+    }, 
+	"env:development": {
+        "button": "env:development",
+        "envOnly": "development"
+    }, 
+	"env:test": {
+        "button": "env:test",
+        "envOnly": "test"
+    }, 
+	"env:production": {
+        "button": "env:production",
+        "envOnly": "production"
+    }, 
+	"os:android": {
+        "button": "os:android",
+        "osOnly": "android"
+    },
+	"os:blackberry": {
+        "button": "os:blackberry",
+        "osOnly": "blackberry"
+    },
+	"os:ios": {
+        "button": "os:ios",
+        "osOnly": "ios"
+    },
+	"os:mobileweb": {
+        "button": "os:mobileweb",
+        "osOnly": "mobileweb"
+    },
+    "os:ios env:development": {
+        "button": "os:ios env:development"
+    },
+    "env:development os:ios": {
+        "button": "env:development os:ios"
+    },
+    "os:ios env:test": {
+        "button": "os:ios env:development"
+    },
+    "env:test os:ios": {
+        "button": "env:development os:ios"
+    },
+    "os:ios env:production": {
+        "button": "os:ios env:development"
+    },
+    "env:production os:ios": {
+        "button": "env:development os:ios"
+    },
+	"dependencies": {}
+}
