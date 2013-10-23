@@ -96,43 +96,42 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ```
  project  : alloy
- repo age : 1 year, 2 months ago
- commits  : 2439
- active   : 338 days
- files    : 1805
+ repo age : 1 year, 4 months ago
+ commits  : 2510
+ active   : 357 days
+ files    : 1874
  authors  :
-  1971	tonylukasavage          80.8%
-   152	Tony Lukasavage         6.2%
-    87	Jeff Haynie             3.6%
-    75	Russ McMahon            3.1%
-    38	Kevin Whinnery          1.6%
-    24	Ben Hatfield            1.0%
-    21	Carl Orthlieb           0.9%
-    12	Fokke Zandbergen        0.5%
-     8	Issam Hakimi            0.3%
-     6	Arthur Evans            0.2%
-     6	Chris Barber            0.2%
-     5	Paul Mietz Egli         0.2%
-     4	David Bankier           0.2%
-     4	Xavier Lacot            0.2%
-     4	Joel Herron             0.2%
-     2	Aaron Saunders          0.1%
-     2	Bryan Hughes            0.1%
-     2	Davide Cassenti         0.1%
-     2	Marc Tamlyn             0.1%
-     2	miga                    0.1%
-     1	Kelly Nicholes          0.0%
-     1	Lee, JongEun            0.0%
-     1	Ajay kumar Guthikonda   0.0%
-     1	Matthew Lanham          0.0%
-     1	Micah Alcorn            0.0%
-     1	Daniel Waardal          0.0%
-     1	Daniel Mahon            0.0%
-     1	Andrew Blair            0.0%
-     1	Anders D. Johnson       0.0%
-     1	gitizenme               0.0%
-     1	J. Tangelder            0.0%
-     1	Family                  0.0%
+  2186  Tony Lukasavage         87.1%
+    87  Jeff Haynie             3.5%
+    75  Russ McMahon            3.0%
+    38  Kevin Whinnery          1.5%
+    24  Ben Hatfield            1.0%
+    21  Carl Orthlieb           0.8%
+    18  Fokke Zandbergen        0.7%
+     8  Issam Hakimi            0.3%
+     6  Chris Barber            0.2%
+     6  Arthur Evans            0.2%
+     5  David Bankier           0.2%
+     5  Paul Mietz Egli         0.2%
+     5  Xavier Lacot            0.2%
+     4  Joel Herron             0.2%
+     2  Aaron Saunders          0.1%
+     2  Bryan Hughes            0.1%
+     2  Davide Cassenti         0.1%
+     2  Marc Tamlyn             0.1%
+     2  miga                    0.1%
+     1  Kelly Nicholes          0.0%
+     1  Lee, JongEun            0.0%
+     1  Ajay kumar Guthikonda   0.0%
+     1  Matthew Lanham          0.0%
+     1  Micah Alcorn            0.0%
+     1  Daniel Waardal          0.0%
+     1  Daniel Mahon            0.0%
+     1  Andrew Blair            0.0%
+     1  Anders D. Johnson       0.0%
+     1  gitizenme               0.0%
+     1  J. Tangelder            0.0%
+     1  Family                  0.0%
 ```
 
 ## Legal
