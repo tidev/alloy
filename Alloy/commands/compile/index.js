@@ -105,6 +105,26 @@ module.exports = function(args, program) {
 	orphanage.clean();
 	logger.debug('');
 
+	// process project makefiles
+	compilerMakeFile = new CompilerMakeFile();
+	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
+	if (path.existsSync(alloyJMK)) {
+		logger.debug('Loading "alloy.jmk" compiler hooks...');
+		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
+
+		// process alloy.jmk compile file
+		try {
+			script.runInNewContext(compilerMakeFile);
+			compilerMakeFile.isActive = true;
+		} catch(e) {
+			logger.error(e.stack);
+			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
+		}
+
+		compilerMakeFile.trigger('pre:load', _.clone(compileConfig));
+		logger.debug('');
+	}
+
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
@@ -170,24 +190,9 @@ module.exports = function(args, program) {
 	}
 	logger.debug('');
 
-	// process project makefiles
-	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
-	if (path.existsSync(alloyJMK)) {
-		logger.debug('Loading "alloy.jmk" compiler hooks...');
-		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
-
-		// process alloy.jmk compile file
-		try {
-			script.runInNewContext(compilerMakeFile);
-			compilerMakeFile.isActive = true;
-		} catch(e) {
-			logger.error(e.stack);
-			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
-		}
-
+	// trigger our custom compiler makefile
+	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
-		logger.debug('');
 	}
 
 	// TODO: https://jira.appcelerator.org/browse/ALOY-477
