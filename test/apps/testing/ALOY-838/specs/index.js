@@ -18,7 +18,7 @@ module.exports = function($) {
 		validateUiComponent($, 'button', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "env:" + env + ' os:' + os,
+				title: "os:" + os + ' env:' + env,
 				osOnly: os,
 				envOnly: env,
 				id: "button"
