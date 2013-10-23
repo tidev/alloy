@@ -105,6 +105,26 @@ module.exports = function(args, program) {
 	orphanage.clean();
 	logger.debug('');
 
+	// process project makefiles
+	compilerMakeFile = new CompilerMakeFile();
+	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
+	if (path.existsSync(alloyJMK)) {
+		logger.debug('Loading "alloy.jmk" compiler hooks...');
+		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
+
+		// process alloy.jmk compile file
+		try {
+			script.runInNewContext(compilerMakeFile);
+			compilerMakeFile.isActive = true;
+		} catch(e) {
+			logger.error(e.stack);
+			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
+		}
+
+		compilerMakeFile.trigger('pre:load', _.clone(compileConfig));
+		logger.debug('');
+	}
+
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
@@ -131,26 +151,6 @@ module.exports = function(args, program) {
 		var p = path.join(paths.resources, titaniumFolder, 'alloy', CONST.DIR[type]);
 		wrench.mkdirSyncRecursive(p, 0755);
 	});
-
-	// process project makefiles
-	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
-	if (path.existsSync(alloyJMK)) {
-		logger.debug('Loading "alloy.jmk" compiler hooks...');
-		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
-
-		// process alloy.jmk compile file
-		try {
-			script.runInNewContext(compilerMakeFile);
-			compilerMakeFile.isActive = true;
-		} catch(e) {
-			logger.error(e.stack);
-			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
-		}
-
-		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
-		logger.debug('');
-	}
 
 	// Copy in all developer assets, libs, and additional resources
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
@@ -189,6 +189,11 @@ module.exports = function(args, program) {
 		}
 	}
 	logger.debug('');
+
+	// trigger our custom compiler makefile
+	if (compilerMakeFile.isActive) {
+		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
+	}
 
 	// TODO: https://jira.appcelerator.org/browse/ALOY-477
 	if (buildPlatform === 'android' && tiapp.version.lt('3.1.0')) {
