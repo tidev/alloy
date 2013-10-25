@@ -17,7 +17,7 @@ function Controller() {
     });
     $.__views.headerView.add($.__views.headerText);
     __parentSymbol.headerView = $.__views.headerView;
-    $.__views.__alloyId36 && $.addTopLevelView($.__views.__alloyId36);
+    $.__views.__alloyId35 && $.addTopLevelView($.__views.__alloyId35);
     $.__views.footerView = Ti.UI.createView({
         id: "footerView",
         height: "60dp",
@@ -29,7 +29,7 @@ function Controller() {
     });
     $.__views.footerView.add($.__views.footerText);
     __parentSymbol.footerView = $.__views.footerView;
-    $.__views.__alloyId37 && $.addTopLevelView($.__views.__alloyId37);
+    $.__views.__alloyId36 && $.addTopLevelView($.__views.__alloyId36);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/proxy")($);
