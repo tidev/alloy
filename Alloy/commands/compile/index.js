@@ -181,13 +181,20 @@ module.exports = function(args, program) {
 		);
 	}
 
-	// check theme for assets
-	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
-		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
-		}
-	}
+    // check theme for assets, platform and i18n
+    if (theme) {
+        _.each({
+            'assets': paths.resources,
+            'platform': path.join(paths.project, 'platform'),
+            'i18n': path.join(paths.project, 'i18n')
+        }, function (targetPath, folder) {
+            var themePath = path.join(paths.app,'themes',theme,folder);
+            logger.info(targetPath + ' > ' + themePath);
+            if (path.existsSync(themePath)) {
+                wrench.copyDirSyncRecursive(themePath, targetPath, {preserve:true});
+            }
+        });
+    }
 	logger.debug('');
 
 	// trigger our custom compiler makefile
