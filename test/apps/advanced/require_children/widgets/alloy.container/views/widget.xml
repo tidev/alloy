@@ -1,0 +1,12 @@
+<Alloy>
+	<View id="titlebar"/>
+	<View class="sep"/>
+	<ScrollView id="content">
+		<Label class="contentLabel">
+Bacon ipsum dolor sit amet tail turkey pork belly, sirloin fatback pork loin shank t-bone pork chop. Chuck drumstick biltong pig tongue beef, flank ham beef ribs ham hock short loin boudin filet mignon chicken ball tip. Biltong leberkas pastrami prosciutto, shoulder ham hock hamburger. Chicken filet mignon boudin drumstick.
+
+Doner shank sirloin, tenderloin corned beef jerky kevin ground round. Venison ham hock shoulder chicken pork belly tongue biltong beef ribs andouille flank pancetta capicola sausage boudin. Pig spare ribs jowl meatball beef ribs tail beef biltong strip steak drumstick corned beef leberkas ball tip fatback jerky. Pancetta cow chuck swine, tail beef pork loin frankfurter doner corned beef. Filet mignon beef tenderloin andouille.
+		</Label>
+		<View class="sep" top="10dp"/>
+	</ScrollView>
+</Alloy>

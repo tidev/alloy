@@ -1,0 +1,7 @@
+'Label': {
+	color: '#efefef'
+}
+
+'Button': {
+	color: Alloy.Globals.buttonColor
+}

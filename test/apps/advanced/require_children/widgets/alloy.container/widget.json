@@ -1,0 +1,9 @@
+{
+	"id": "alloy.container",
+	"name": "Alloy Container",
+	"description" : "Alloy Container",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"platforms":"android,ios,mobileweb,blackberry,tizen",
+	"dependencies": {}
+}

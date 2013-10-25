@@ -1,0 +1,9 @@
+<Alloy>
+
+	<Widget src="alloy.container">
+		<Label id="title">my title</Label>
+		<ImageView id="image" image="/logo.png"/>
+		<Button id="action" onClick="alertAction">action button</Button>
+	</Widget>
+
+</Alloy>
