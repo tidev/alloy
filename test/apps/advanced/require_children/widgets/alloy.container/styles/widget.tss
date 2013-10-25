@@ -49,3 +49,7 @@
 	height: '46dp',
 	width: Ti.UI.FILL
 }
+
+'.action[platform=ios]': {
+	backgroundImage: 'none'
+}
