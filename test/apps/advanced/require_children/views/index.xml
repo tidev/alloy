@@ -1,0 +1,17 @@
+<Alloy>
+	<TabGroup>
+
+		<Tab title="requires">
+			<Window title="requires">
+				<Require src="requires/index"/>
+			</Window>
+		</Tab>
+
+		<Tab title="widgets">
+			<Window title="widgets">
+				<Require src="widgets/index"/>
+			</Window>
+		</Tab>
+
+	</TabGroup>
+</Alloy>

@@ -1,0 +1,6 @@
+'#simple': {
+	backgroundColor: '#a00',
+	height: Ti.UI.FILL,
+	width: '50%',
+	layout: 'vertical'
+}

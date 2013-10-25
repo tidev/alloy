@@ -1,0 +1,18 @@
+'.outer': {
+	backgroundColor: '#D6655A',
+	height: '120dp',
+	width: '200dp',
+	bottom: '50dp'
+}
+
+'.middle': {
+	backgroundColor: '#DC9C76',
+	height: '90%',
+	width: '90%'
+}
+
+'#inner': {
+	backgroundColor: '#D6CCAD',
+	height: '90%',
+	width: '90%'
+}

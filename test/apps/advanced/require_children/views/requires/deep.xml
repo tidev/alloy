@@ -1,0 +1,7 @@
+<Alloy>
+	<View class="outer">
+		<View class="middle">
+			<View id="inner"/>
+		</View>
+	</View>
+</Alloy>
