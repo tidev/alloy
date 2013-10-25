@@ -452,7 +452,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-		if (viewName === 'index') {
+		if (viewName === 'index' && !dirname) {
 			var valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
