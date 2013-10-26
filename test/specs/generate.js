@@ -81,9 +81,9 @@ function testStyle(viewName, opts) {
 		expect(path.existsSync(paths.style)).toBe(true);
 	});
 
-	it('generated style matches the one in the alloy distribution', function() {
-		expect(paths.style).toHaveSameContentAs(paths.template);
-	});
+	// it('generated style matches the one in the alloy distribution', function() {
+	// 	expect(paths.style).toHaveSameContentAs(paths.template);
+	// });
 
 	it('style is valid TSS', function() {
 		expect(paths.style).toBeTssFile();
