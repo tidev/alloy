@@ -158,7 +158,7 @@ exports.addMatchers = function() {
 				});
 			},
 			toHaveSameContentAs: function(expected) {
-				return U.normalizeReturns(fs.readFileSync(this.actual,'utf8')) === 
+				return U.normalizeReturns(fs.readFileSync(this.actual,'utf8')) ===
 					U.normalizeReturns(fs.readFileSync(expected,'utf8'));
 			},
 			toExist: function(expected) {

@@ -32,6 +32,8 @@ exports._ = _;
 exports.Backbone = Backbone;
 
 var DEFAULT_WIDGET = 'widget';
+var TI_VERSION = Ti.version;
+var MW320_CHECK = OS_MOBILEWEB && TI_VERSION >= '3.2.0';
 var IDENTITY_TRANSFORM = OS_ANDROID ? Ti.UI.create2DMatrix() : undefined;
 var RESET = {
 	bottom: null,
@@ -309,6 +311,8 @@ exports.createStyle = function(controller, opts, defaults) {
 	styleFinal[CONST.CLASS_PROPERTY] = classes;
 	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
+	if (MW320_CHECK) { delete styleFinal[CONST.APINAME_PROPERTY]; }
+
 	return defaults ? _.defaults(styleFinal,defaults) : styleFinal;
 };
 
@@ -322,9 +326,13 @@ function processStyle(controller, proxy, classes, opts, defaults) {
 }
 
 exports.addClass = function(controller, proxy, classes, opts) {
+
 	// make sure we actually have classes to add
 	if (!classes) {
-		if (opts) { proxy.applyProperties(opts); }
+		if (opts) {
+			if (MW320_CHECK) { delete opts.apiName; }
+			proxy.applyProperties(opts);
+		}
 		return;
 	} else {
 		// create a union of the existing classes with the new one(s)
@@ -335,7 +343,10 @@ exports.addClass = function(controller, proxy, classes, opts) {
 
 		// make sure we actually added classes before processing styles
 		if (beforeLen === newClasses.length) {
-			if (opts) { proxy.applyProperties(opts); }
+			if (opts) {
+				if (MW320_CHECK) { delete opts.apiName; }
+				proxy.applyProperties(opts);
+			}
 			return;
 		} else {
 			processStyle(controller, proxy, newClasses, opts);
@@ -350,7 +361,10 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 
 	// make sure there's classes to remove before processing
 	if (!beforeLen || !classes.length) {
-		if (opts) { proxy.applyProperties(opts); }
+		if (opts) {
+			if (MW320_CHECK) { delete opts.apiName; }
+			proxy.applyProperties(opts);
+		}
 		return;
 	} else {
 		// remove the given class(es)
@@ -359,7 +373,10 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 
 		// make sure there was actually a difference before processing
 		if (beforeLen === newClasses.length) {
-			if (opts) { proxy.applyProperties(opts); }
+			if (opts) {
+				if (MW320_CHECK) { delete opts.apiName; }
+				proxy.applyProperties(opts);
+			}
 			return;
 		} else {
 			processStyle(controller, proxy, newClasses, opts, RESET);
