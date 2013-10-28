@@ -195,11 +195,6 @@ module.exports = function(args, program) {
 		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
 	}
 
-	// TODO: https://jira.appcelerator.org/browse/ALOY-477
-	if (buildPlatform === 'android' && tiapp.version.lt('3.1.0')) {
-		tiapp.upStackSizeForRhino();
-	}
-
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
