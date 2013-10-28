@@ -1,0 +1,23 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="Tab 1" icon="KS_nav_ui.png">
+			<SplitWindow id="splitWin" platform="ios" formFactor="tablet">
+				<Window>
+					<NavigationGroup>
+						<Require src="testwindow"/>
+					</NavigationGroup>
+				</Window>
+				<Window>
+					<NavigationGroup id="detail_navGroup">
+						<Require src="detailWin" />
+					</NavigationGroup>
+				</Window>
+			</SplitWindow>
+		</Tab>
+		<Tab title="Tab 2" icon="KS_nav_views.png">
+			<Window title="Tab 2">
+				<Label>I am Window 2</Label>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
