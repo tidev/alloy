@@ -43,31 +43,6 @@ tiapp.getProperty = function(name) {
 	return null;
 };
 
-// Increases the stack size property when the rhino runtime is used
-tiapp.upStackSizeForRhino = function() {
-	var runtime = U.XML.getNodeText(tiapp.getProperty(doc, 'ti.android.runtime'));
-	if (runtime === 'rhino') {
-		var stackSize = tiapp.getProperty(doc, 'ti.android.threadstacksize');
-		if (stackSize !== null) {
-			if (parseInt(stackSize.nodeValue, 10) < 32768) {
-				stackSize.nodeValue('32768');
-			}
-		} else {
-			var node = doc.createElement('property');
-			var text = doc.createTextNode('32768');
-			node.setAttribute('name', 'ti.android.threadstacksize');
-			node.setAttribute('type', 'int');
-			node.appendChild(text);
-			doc.documentElement.appendChild(node);
-		}
-
-		// serialize the xml and write to tiapp.xml
-		var serializer = new XMLSerializer();
-		var newxml = serializer.serializeToString(doc);
-		fs.writeFileSync(tiappFile, newxml, 'utf8');
-	}
-};
-
 // Add a module to the tiapp.xml
 tiapp.installModule = function(opts) {
 	install('module', opts);
