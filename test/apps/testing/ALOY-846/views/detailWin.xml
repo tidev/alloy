@@ -1,0 +1,5 @@
+<Alloy>
+	<Window id="detailWin" title="test 2 title">
+		<Label>Detail Window</Label>
+	</Window>
+</Alloy>
