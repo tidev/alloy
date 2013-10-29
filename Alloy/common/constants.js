@@ -99,7 +99,8 @@ exports.DIR = {
 	COMPONENT: 'controllers',
 	MAP: 'build/map',
 	VENDOR: 'vendor',
-	THEME: 'themes'
+	THEME: 'themes',
+	BUILD: 'build/alloy'
 };
 
 // constants identifying JS reserved words

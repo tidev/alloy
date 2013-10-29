@@ -3,6 +3,8 @@
 var path = require('path'),
 	fs = require('fs'),
 	colors = require('colors'),
+	crypto = require('crypto'),
+	util = require('util'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('./logger'),
@@ -460,4 +462,19 @@ exports.installPlugin = function(alloyPath, projectPath) {
 
 exports.normalizeReturns = function(s) {
 	return s.replace(/\r\n/g, '\n');
-}
+};
+
+exports.createHash = function(files) {
+	if (_.isString(files)) {
+		files = [files];
+	} else if (!_.isArray(files)) {
+		throw new TypeError('bad argument');
+	}
+
+	var source = '';
+	_.each(files, function(f) {
+		source += util.format('%s\n%s\n', f, fs.readFileSync(f, 'utf8'));
+	});
+
+	return crypto.createHash('md5').update(source).digest('hex');
+};
