@@ -6,9 +6,11 @@ var fs = require('fs'),
 	optimizer = require('./optimizer'),
 	grammar = require('../../grammar/tss'),
 	logger = require('../../logger'),
+	BuildLog = require('./BuildLog'),
 	CONST = require('../../common/constants');
 
 // constants
+var GLOBAL_STYLE_CACHE = 'global_style_cache.json';
 var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
@@ -62,13 +64,16 @@ exports.bindingsMap = {};
  * 3. global platform-specific
  * 4. global theme platform-specific
  *
- * This function does not return a result, but instead updates the global style
- * array that will be used as a base for all controller styling. This is
- * executed before any other styling is performed during the compile phase.
+ * This function updates the global style array that will be used as a base for
+ * all controller styling. This is executed before any other styling is
+ * performed during the compile phase. If the style is loaded from the cache,
+ * it returns true, otherwise it returns false.
  *
  * @param {String} Full path to the "app" folder of the target project
  * @param {String} The mobile platform for which to load styles
  * @param {Object} [opts] Additional options
+ *
+ * @returns {Boolean} true if cache was used, false if not
  */
 exports.loadGlobalStyles = function(appPath, opts) {
 	// reset the global style array
@@ -76,6 +81,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 
 	// validate/set arguments
 	opts = opts || {};
+	var ret = false;
 	var theme = opts.theme;
 	var apptss = CONST.GLOBAL_STYLE;
 	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
@@ -83,6 +89,8 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	if (theme) {
 		themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
 	}
+	var buildlog = BuildLog();
+	var cacheFile = path.join(appPath, '..', CONST.DIR.BUILD, GLOBAL_STYLE_CACHE);
 
 	// create array of global styles to load based on arguments
 	var loadArray = [];
@@ -91,7 +99,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 		msg: apptss
 	});
 	if (theme) {
-			loadArray.push({
+		loadArray.push({
 			path: path.join(themesDir,apptss),
 			msg: apptss + '(theme:' + theme + ')',
 			obj: { theme: true }
@@ -110,18 +118,50 @@ exports.loadGlobalStyles = function(appPath, opts) {
 		});
 	}
 
-	// load & merge each global style file to update the global style array
-	_.each(loadArray, function(g) {
-		if (path.existsSync(g.path)) {
-			logger.info('[' + g.msg + '] global style processing...');
-			exports.globalStyle = exports.loadAndSortStyle(g.path, _.extend(
-				{ existingStyle: exports.globalStyle },
-				g.obj || {}
-			));
+	// get rid of entries that don't exist
+	var len = loadArray.length;
+	for (var i = len - 1; i >= 0; i--) {
+		if (!path.existsSync(loadArray[i].path)) {
+			loadArray.splice(i, 1);
 		}
-	});
+	}
+
+	// create hash of existing global styles
+	var hash = U.createHash(_.pluck(loadArray, 'path'));
+
+	// see if we can use the cached global style
+	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile)) {
+
+		// load global style object from cache
+		logger.info('[global style] loading from cache...');
+		exports.globalStyle = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+		ret = true;
+
+	} else {
+
+		// add new hash to the buildlog
+		buildlog.data.globalStyleCacheHash = hash;
+
+		// create the new global style object
+		_.each(loadArray, function(g) {
+			if (path.existsSync(g.path)) {
+				logger.info('[' + g.msg + '] global style processing...');
+				exports.globalStyle = exports.loadAndSortStyle(g.path, _.extend(
+					{ existingStyle: exports.globalStyle },
+					g.obj || {}
+				));
+			}
+		});
+
+		// write global style object to cache
+		logger.info('[global style] writing to cache...');
+		fs.writeFileSync(cacheFile, JSON.stringify(exports.globalStyle));
+
+	}
 
 	styleOrderCounter++;
+
+	return ret;
 };
 
 /*
@@ -494,3 +534,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 	return code;
 };
+
+function getCacheFilePath(appPath, hash) {
+	return path.join(appPath, '..', CONST.DIR.BUILD, 'global_style_cache_' + hash + '.json');
+}

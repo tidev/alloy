@@ -1,6 +1,7 @@
 var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
+	CONST = require('../../common/constants'),
 	logger = require('../../logger');
 
 var dir, file, projectPath;
@@ -9,12 +10,12 @@ function BuildLog(_projectPath) {
 	// make/reference singleton instance
 	if (BuildLog.instance) {
 		return BuildLog.instance;
-    }
+  }
 	BuildLog.instance = this;
 
 	// set "private" variables
 	projectPath = _projectPath;
-	dir = path.join(projectPath, 'build', 'alloy');
+	dir = path.join(projectPath, CONST.DIR.BUILD);
 	file = path.join(dir, 'build.json');
 
 	// expose data object
