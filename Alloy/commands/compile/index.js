@@ -28,6 +28,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	otherPlatforms,
 	buildPlatform,
 	titaniumFolder,
+	buildLog,
 	theme;
 
 var times = {
@@ -48,7 +49,7 @@ module.exports = function(args, program) {
 		);
 
 	// Initialize modules used throughout the compile process
-	var buildLog = new BuildLog(paths.project);
+	buildLog = new BuildLog(paths.project);
 	tiapp.init(path.join(paths.project, 'tiapp.xml'));
 
 	// validate the current Titanium SDK version, exit on failure
@@ -264,23 +265,7 @@ module.exports = function(args, program) {
 	});
 	logger.info('');
 
-	// generate app.js
-	logger.info('[app.js] Titanium entry point processing...');
-	var appJS = path.join(compileConfig.dir.resources, titaniumFolder, 'app.js');
-	sourceMapper.generateCodeAndSourceMap({
-		target: {
-			filename: 'Resources/' + titaniumFolder + '/app.js',
-			filepath: appJS,
-			template: path.join(alloyRoot,'template','app.js')
-		},
-		data: {
-			'__MAPMARKER_ALLOY_JS__': {
-				filename: 'app/alloy.js',
-				filepath: path.join(paths.app,'alloy.js')
-			}
-		}
-	}, compileConfig);
-	logger.info('');
+	generateAppJs(paths, compileConfig);
 
 	// optimize code
 	logger.info('----- OPTIMIZING -----');
@@ -301,6 +286,45 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
+function generateAppJs(paths, compileConfig) {
+	var alloyJs = path.join(paths.app, 'alloy.js'),
+
+		// info needed to generate app.js
+		target = {
+			filename: 'Resources/' + titaniumFolder + '/app.js',
+			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
+			template: path.join(alloyRoot, 'template', 'app.js')
+		},
+
+		// additional data used for source mapping
+		data = {
+			'__MAPMARKER_ALLOY_JS__': {
+				filename: 'app/alloy.js',
+				filepath: alloyJs
+			}
+		},
+
+		// hash used to determine if we need to rebuild
+		hash = U.createHash(alloyJs);
+
+	// is it already generated from a prior copile?
+	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
+	if (buildLog.data[buildPlatform][alloyJs] === hash) {
+		logger.info('[app.js] using cached app.js...');
+
+	// if not, generate the platform-specific app.js and save its hash
+	} else {
+		logger.info('[app.js] Titanium entry point processing...');
+		sourceMapper.generateCodeAndSourceMap({
+			target: target,
+			data: data,
+		}, compileConfig);
+		buildLog.data[buildPlatform][alloyJs] = hash;
+	}
+
+	logger.info('');
+}
+
 function parseAlloyComponent(view, dir, manifest, noView) {
 	var parseType = noView ? 'controller' : 'view';
 
