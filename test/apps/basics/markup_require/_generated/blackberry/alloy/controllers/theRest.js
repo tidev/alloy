@@ -1,17 +1,19 @@
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "theRest";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    var __parentSymbol = arguments[0] ? arguments[0]["__parentSymbol"] : null;
     arguments[0] ? arguments[0]["$model"] : null;
     arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
     var exports = {};
     $.__views.middle = Alloy.createController("middle", {
-        id: "middle"
+        id: "middle",
+        __parentSymbol: __parentSymbol
     });
     $.__views.middle && $.addTopLevelView($.__views.middle);
     $.__views.bottom = Alloy.createController("bottom", {
-        id: "bottom"
+        id: "bottom",
+        __parentSymbol: __parentSymbol
     });
     $.__views.bottom && $.addTopLevelView($.__views.bottom);
     exports.destroy = function() {};
