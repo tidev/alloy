@@ -104,10 +104,12 @@ function parse(node, state, args) {
 	// add extra createArgs if present
 	var xArgs = {};
 
-	if (xChildren.length) { xArgs['children'] = '__ALLOY_EXPR__--[' + xChildren.join(',') + ']'; }
+	if (xChildren.length) { xArgs.children = '__ALLOY_EXPR__--[' + xChildren.join(',') + ']'; }
 	if (state.model) { xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--' + state.model; }
 	if (state.parent && state.parent.symbol) {
 		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
+	} else {
+		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + CONST.PARENT_SYMBOL_VAR;
 	}
 	if (state.templateObject) {
 		xArgs[CONST.ITEM_TEMPLATE_VAR] = '__ALLOY_EXPR__--' + state.templateObject;

@@ -1,0 +1,9 @@
+<Alloy>
+	<TabGroup>
+		<Tab>
+			<Window id="index" backgroundColor="#fff">
+				<Require src="next"/>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
