@@ -39,6 +39,7 @@
 							<Label class="wrapper section">section headerView</Label>
 						</HeaderView>
 
+						<!-- Due to TIMOB-15646, this footerView won't show up on Android -->
 						<!-- footerView -->
 						<FooterView>
 							<Label class="wrapper section">section footerView</Label>
@@ -89,6 +90,7 @@
 							<Label class="wrapper section">section headerView</Label>
 						</HeaderView>
 
+						<!-- Due to TIMOB-15646, this footerView won't show up on Android -->
 						<!-- footerView -->
 						<FooterView>
 							<Label class="wrapper section">section footerView</Label>
