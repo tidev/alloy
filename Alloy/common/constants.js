@@ -186,9 +186,13 @@ exports.IMPLICIT_NAMESPACES = {
 	RightNavButton: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
-	// Ti.UI.TableView
-	HeaderView: 'Ti.UI.TableView',
-	HeaderPullView: 'Ti.UI.TableView',
-	FooterView: 'Ti.UI.TableView',
-	Search: 'Ti.UI.TableView'
+	// proxy properties
+	FooterView: '_ProxyProperty._Lists',
+	HeaderView: '_ProxyProperty._Lists',
+	HeaderPullView: '_ProxyProperty._Lists',
+	Search: '_ProxyProperty._Lists',
+
+	// misc
+	SearchView: 'Ti.UI.Android'
+
 };

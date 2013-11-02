@@ -4,10 +4,10 @@ exports.parse = function(node, state) {
 	_.extend(state, {
 		proxyPropertyDefinition: {
 			parents: [
-				'Ti.UI.TableView'
-			],
-			children: [
-				'Ti.UI.SearchBar'
+				'Ti.UI.TableView',
+				'Ti.UI.TableViewSection',
+				'Ti.UI.ListView',
+				'Ti.UI.ListSection'
 			]
 		}
 	});

@@ -1,0 +1,25 @@
+'Window': {
+	backgroundColor: '#F2F4F4',
+	fullscreen: false
+}
+
+'.wrapper': {
+	height: '40dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#959CA6'
+}
+
+'.section': {
+	backgroundColor: '#455459'
+}
+
+'.pull': {
+	backgroundColor: '#323959',
+	height: '100dp',
+	width: Ti.UI.FILL
+}
+
+'#index': {
+	backgroundColor: '#F2F4F4',
+	exitOnClose: true
+}

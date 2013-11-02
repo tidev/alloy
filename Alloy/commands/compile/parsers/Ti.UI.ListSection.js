@@ -3,9 +3,14 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
 
+var PROXY_PROPERTIES = [
+	'_ProxyProperty._Lists.HeaderView',
+	'_ProxyProperty._Lists.FooterView'
+];
 var VALID = [
 	'Ti.UI.ListItem'
 ];
+var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -14,6 +19,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var code = '',
 		itemCode = '',
+		proxyPropertyCode = '',
 		itemsVar = CU.generateUniqueId(),
 		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		itemsArray, localModel;
@@ -21,9 +27,19 @@ function parse(node, state, args) {
 	// process each child
 	var children = U.XML.getElementsFromNodes(node.childNodes);
 	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, VALID);
+		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + VALID.join(',') + ']');
+			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+			proxyPropertyCode += CU.generateNodeExtended(child, state, {
+				parent: {
+					node: node,
+					symbol: '<%= proxyPropertyParent %>'
+				},
+
+				// don't use the "post" from Ti.UI.ListSection
+				post: null
+			});
 		} else if (theNode === 'Ti.UI.ListItem') {
 			if (!itemsArray) {
 				itemsArray = CU.generateUniqueId();
@@ -59,6 +75,12 @@ function parse(node, state, args) {
 	}
 	var sectionState = require('./default').parse(node, state);
 	code += sectionState.code;
+
+	// fill in the proxy property assignment template with the
+	// symbol used to represent the listsection
+	code += _.template(proxyPropertyCode, {
+		proxyPropertyParent: sectionState.parent.symbol
+	});
 
 	// add items to the ListView
 	if (itemsArray) {

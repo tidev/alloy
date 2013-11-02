@@ -5,15 +5,16 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CONST = require('../../../common/constants');
 
 var PROXY_PROPERTIES = [
-	'Ti.UI.TableView.HeaderView',
-	'Ti.UI.TableView.HeaderPullView',
-	'Ti.UI.TableView.FooterView',
-	'Ti.UI.TableView.Search'
+	'_ProxyProperty._Lists.HeaderView',
+	'_ProxyProperty._Lists.FooterView',
+	'_ProxyProperty._Lists.HeaderPullView',
+	'_ProxyProperty._Lists.Search'
 ];
 var VALID = [
 	'Ti.UI.TableViewRow',
 	'Ti.UI.TableViewSection',
-	'Ti.UI.SearchBar'
+	'Ti.UI.SearchBar',
+	'Ti.UI.Android.SearchView'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
 
@@ -39,8 +40,8 @@ function parse(node, state, args) {
 		// the table data, a searchbar, or a proxy property assigment
 		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
-		} else if (theNode === 'Ti.UI.SearchBar') {
+			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (theNode === 'Ti.UI.SearchBar' || theNode === 'Ti.UI.Android.SearchView') {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
@@ -56,6 +57,9 @@ function parse(node, state, args) {
 			});
 		// generate code for search bar
 		} else if (isSearchBar) {
+			if (!isNodeForCurrentPlatform(child, CU.getCompilerConfig().alloyConfig.platform)) {
+				return;
+			}
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
@@ -128,4 +132,8 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
+}
+
+function isNodeForCurrentPlatform(node, platform) {
+	return !node.hasAttribute('platform') || node.getAttribute('platform') === platform;
 }
