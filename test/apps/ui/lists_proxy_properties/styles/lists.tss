@@ -46,7 +46,7 @@
 	width: Ti.UI.FILL
 }
 
-'#index': {
+'#lists': {
 	backgroundColor: '#D6CCAD',
 	exitOnClose: true,
 	top: Alloy.Globals.top
