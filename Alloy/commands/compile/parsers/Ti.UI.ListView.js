@@ -31,8 +31,8 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		code = '',
-		proxyPropertyCode = '',
-		sectionArray, templateObject, searchBarName;
+		proxyProperties = {},
+		sectionArray, templateObject;
 
 	// sort the children of the ListView
 	var children = _.sortBy(U.XML.getElementsFromNodes(node.childNodes), function(n) {
@@ -74,10 +74,15 @@ function parse(node, state, args) {
 				}
 			});
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: '<%= proxyPropertyParent %>'
+			if (!CU.isNodeForCurrentPlatform(child)) {
+				return;
+			}
+			var nameParts = theNode.split('.');
+			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[prop] = state.parent.symbol;
 				}
 			});
 		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
@@ -87,27 +92,24 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					searchBarName = state.parent.symbol;
+					proxyProperties.searchView = state.parent.symbol;
 				}
 			});
 		}
 	});
 
+	// add all creation time properties to the state
 	var extras = [];
 	if (sectionArray) { extras.push(['sections', sectionArray]); }
 	if (templateObject) { extras.push(['templates', templateObject]); }
-	if (searchBarName) { extras.push(['searchView', searchBarName]); }
+	_.each(proxyProperties, function(v, k) {
+		extras.push([k, v]);
+	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself
 	var listState = require('./default').parse(node, state);
 	code += listState.code;
-
-	// fill in the proxy property assignment template with the
-	// symbol used to represent the listview
-	code += _.template(proxyPropertyCode, {
-		proxyPropertyParent: listState.parent.symbol
-	});
 
 	return {
 		parent: {},

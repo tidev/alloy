@@ -27,10 +27,11 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		code = '',
-		proxyPropertyCode = '',
 		itemCode = '',
 		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
-		searchBarName, localModel, arrayName;
+		extras = [],
+		proxyProperties = {},
+		localModel, arrayName;
 
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
@@ -51,10 +52,15 @@ function parse(node, state, args) {
 
 		// generate code for proxy property assignments
 		if (isProxyProperty) {
-			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: '<%= proxyPropertyParent %>'
+			if (!CU.isNodeForCurrentPlatform(child)) {
+				return;
+			}
+			var nameParts = theNode.split('.');
+			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[prop] = state.parent.symbol;
 				}
 			});
 		// generate code for search bar
@@ -65,7 +71,7 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					searchBarName = state.parent.symbol;
+					proxyProperties.search = state.parent.symbol;
 				}
 			});
 		// generate code for template row for model-view binding
@@ -96,10 +102,15 @@ function parse(node, state, args) {
 		}
 	});
 
-	// Create the initial TableView code
-	var extras = [];
+	// add data at creation time
 	if (arrayName) { extras.push(['data', arrayName]); }
-	if (searchBarName) { extras.push(['search', searchBarName]); }
+
+	// add all proxy properties at creation time
+	_.each(proxyProperties, function(v, k) {
+		extras.push([k, v]);
+	});
+
+	// if we got any extras, add them to the state
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// generate the code for the table itself
@@ -110,12 +121,6 @@ function parse(node, state, args) {
 	}
 	var tableState = require('./default').parse(node, state);
 	code += tableState.code;
-
-	// fill in the proxy property assignment template with the
-	// symbol used to represent the table
-	code += _.template(proxyPropertyCode, {
-		proxyPropertyParent: tableState.parent.symbol
-	});
 
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {

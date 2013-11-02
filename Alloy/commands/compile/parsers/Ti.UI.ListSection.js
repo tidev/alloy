@@ -1,4 +1,5 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -19,9 +20,10 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var code = '',
 		itemCode = '',
-		proxyPropertyCode = '',
 		itemsVar = CU.generateUniqueId(),
 		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
+		proxyProperties = {},
+		extras = [],
 		itemsArray, localModel;
 
 	// process each child
@@ -31,14 +33,16 @@ function parse(node, state, args) {
 		if (!theNode) {
 			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: '<%= proxyPropertyParent %>'
-				},
-
-				// don't use the "post" from Ti.UI.ListSection
-				post: null
+			if (!CU.isNodeForCurrentPlatform(child)) {
+				return;
+			}
+			var nameParts = theNode.split('.');
+			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[prop] = state.parent.symbol;
+				}
 			});
 		} else if (theNode === 'Ti.UI.ListItem') {
 			if (!itemsArray) {
@@ -73,14 +77,16 @@ function parse(node, state, args) {
 			node.removeAttribute(p);
 		});
 	}
+
+	// add all creation time properties to the state
+	_.each(proxyProperties, function(v, k) {
+		extras.push([k, v]);
+	});
+	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
+
+	// create the section
 	var sectionState = require('./default').parse(node, state);
 	code += sectionState.code;
-
-	// fill in the proxy property assignment template with the
-	// symbol used to represent the listsection
-	code += _.template(proxyPropertyCode, {
-		proxyPropertyParent: sectionState.parent.symbol
-	});
 
 	// add items to the ListView
 	if (itemsArray) {

@@ -11,5 +11,5 @@ exports.parse = function(node, state) {
 			]
 		}
 	});
-	return require('./Alloy.Abstract._ProxyProperty').parse(node, state);
+	return require('./_ProxyProperty').parse(node, state);
 };
