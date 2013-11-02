@@ -7,13 +7,18 @@ var _ = require('../../../lib/alloy/underscore')._,
 var PROXY_PROPERTIES = [
 	'_ProxyProperty._Lists.HeaderView',
 	'_ProxyProperty._Lists.FooterView',
-	'_ProxyProperty._Lists.PullView'
+	'_ProxyProperty._Lists.PullView',
+	'_ProxyProperty._Lists.SearchView'
+];
+var SEARCH_PROPERTIES = [
+	'Ti.UI.SearchBar',
+	'Ti.UI.Android.SearchView'
 ];
 var VALID = [
 	'Ti.UI.ListSection',
-	'Alloy.Abstract.Templates'
+	'Alloy.Abstract.Templates',
 ];
-var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, VALID);
 var ORDER = {
 	'Ti.UI.ListSection': 2,
 	'Alloy.Abstract.Templates': 1
@@ -27,7 +32,7 @@ function parse(node, state, args) {
 	var isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		code = '',
 		proxyPropertyCode = '',
-		sectionArray, templateObject;
+		sectionArray, templateObject, searchBarName;
 
 	// sort the children of the ListView
 	var children = _.sortBy(U.XML.getElementsFromNodes(node.childNodes), function(n) {
@@ -75,12 +80,23 @@ function parse(node, state, args) {
 					symbol: '<%= proxyPropertyParent %>'
 				}
 			});
+		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
+			if (!CU.isNodeForCurrentPlatform(child)) {
+				return;
+			}
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					searchBarName = state.parent.symbol;
+				}
+			});
 		}
 	});
 
 	var extras = [];
 	if (sectionArray) { extras.push(['sections', sectionArray]); }
 	if (templateObject) { extras.push(['templates', templateObject]); }
+	if (searchBarName) { extras.push(['searchView', searchBarName]); }
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself

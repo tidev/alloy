@@ -89,6 +89,11 @@ exports.getNodeFullname = function(node) {
 	return fullname;
 };
 
+exports.isNodeForCurrentPlatform = function(node) {
+	return !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig ||
+		node.getAttribute('platform') === compilerConfig.alloyConfig.platform;
+};
+
 exports.getParserArgs = function(node, state, opts) {
 	state = state || {};
 	opts = opts || {};

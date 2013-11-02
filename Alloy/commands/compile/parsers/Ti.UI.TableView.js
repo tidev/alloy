@@ -10,13 +10,15 @@ var PROXY_PROPERTIES = [
 	'_ProxyProperty._Lists.HeaderPullView',
 	'_ProxyProperty._Lists.Search'
 ];
-var VALID = [
-	'Ti.UI.TableViewRow',
-	'Ti.UI.TableViewSection',
+var SEARCH_PROPERTIES = [
 	'Ti.UI.SearchBar',
 	'Ti.UI.Android.SearchView'
 ];
-var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
+var VALID = [
+	'Ti.UI.TableViewRow',
+	'Ti.UI.TableViewSection'
+];
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, VALID);
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -41,7 +43,7 @@ function parse(node, state, args) {
 		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
 			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
-		} else if (theNode === 'Ti.UI.SearchBar' || theNode === 'Ti.UI.Android.SearchView') {
+		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
@@ -57,7 +59,7 @@ function parse(node, state, args) {
 			});
 		// generate code for search bar
 		} else if (isSearchBar) {
-			if (!isNodeForCurrentPlatform(child, CU.getCompilerConfig().alloyConfig.platform)) {
+			if (!CU.isNodeForCurrentPlatform(child)) {
 				return;
 			}
 			code += CU.generateNodeExtended(child, state, {
@@ -132,8 +134,4 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
-}
-
-function isNodeForCurrentPlatform(node, platform) {
-	return !node.hasAttribute('platform') || node.getAttribute('platform') === platform;
 }

@@ -1,25 +1,53 @@
 'Window': {
-	backgroundColor: '#F2F4F4',
+	barColor: '#42282F',
 	fullscreen: false
+}
+
+'ListView': {
+	separatorColor: '#42282F'
+}
+
+'ListItem': {
+	backgroundColor: '#D6CCAD'
+}
+
+'TableView': {
+	separatorColor: '#42282F',
+	backgroundColor: '#D6CCAD'
+}
+
+'Label': {
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.titleControl': {
+	height: '40dp',
+	width: Ti.UI.FILL,
+	textAlign: 'center'
 }
 
 '.wrapper': {
 	height: '40dp',
 	width: Ti.UI.FILL,
-	backgroundColor: '#959CA6'
+	backgroundColor: '#74A588'
 }
 
 '.section': {
-	backgroundColor: '#455459'
+	backgroundColor: '#D6655A'
 }
 
 '.pull': {
-	backgroundColor: '#323959',
+	backgroundColor: '#DC9C76',
 	height: '100dp',
 	width: Ti.UI.FILL
 }
 
 '#index': {
-	backgroundColor: '#F2F4F4',
-	exitOnClose: true
+	backgroundColor: '#D6CCAD',
+	exitOnClose: true,
+	top: Alloy.Globals.top
 }

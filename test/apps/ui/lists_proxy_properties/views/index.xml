@@ -1,7 +1,11 @@
 <Alloy>
 	<TabGroup>
 		<Tab title="table">
-			<Window title="table">
+			<Window>
+
+				<TitleControl>
+					<Label class="titleControl">TableView</Label>
+				</TitleControl>
 
 				<TableView>
 
@@ -53,7 +57,11 @@
 		</Tab>
 
 		<Tab title="table search">
-			<Window title="table search">
+			<Window>
+
+				<TitleControl>
+					<Label class="titleControl">TableView Search</Label>
+				</TitleControl>
 
 				<TableView>
 
@@ -99,7 +107,11 @@
 		</Tab>
 
 		<Tab title="list">
-			<Window title="list">
+			<Window>
+
+				<TitleControl>
+					<Label class="titleControl">ListView</Label>
+				</TitleControl>
 
 				<ListView>
 
@@ -113,6 +125,12 @@
 						<Label class="wrapper">footerView</Label>
 					</FooterView>
 
+					<!-- search, shorthand with Ti.UI.SearchBar -->
+					<SearchBar class="search" platform="ios"/>
+
+					<!-- search, shorthand with Ti.UI.Android.SearchView -->
+					<SearchView class="search" platform="android"/>
+
 					<!-- pullView -->
 					<PullView platform="ios">
 						<View class="pull">
@@ -122,10 +140,10 @@
 
 					<!-- plain section -->
 					<ListSection>
-						<ListItem title="row 1"/>
-						<ListItem title="row 2"/>
-						<ListItem title="row 3"/>
-						<ListItem title="row 4"/>
+						<ListItem title="row 1" searchableText="row 1"/>
+						<ListItem title="row 2" searchableText="row 2"/>
+						<ListItem title="row 3" searchableText="row 3"/>
+						<ListItem title="row 4" searchableText="row 4"/>
 					</ListSection>
 
 					<ListSection>
@@ -139,10 +157,10 @@
 							<Label class="wrapper section">section footerView</Label>
 						</FooterView>
 
-						<ListItem title="row 5"/>
-						<ListItem title="row 6"/>
-						<ListItem title="row 7"/>
-						<ListItem title="row 8"/>
+						<ListItem title="row 1.1" searchableText="row 1.1"/>
+						<ListItem title="row 1.2" searchableText="row 1.2"/>
+						<ListItem title="row 1.3" searchableText="row 1.3"/>
+						<ListItem title="row 1.4" searchableText="row 1.4"/>
 					</ListSection>
 
 				</ListView>
