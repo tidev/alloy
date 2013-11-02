@@ -190,6 +190,7 @@ exports.IMPLICIT_NAMESPACES = {
 	FooterView: '_ProxyProperty._Lists',
 	HeaderView: '_ProxyProperty._Lists',
 	HeaderPullView: '_ProxyProperty._Lists',
+	PullView: '_ProxyProperty._Lists',
 	Search: '_ProxyProperty._Lists',
 
 	// misc

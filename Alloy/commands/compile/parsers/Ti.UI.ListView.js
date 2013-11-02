@@ -7,7 +7,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 var PROXY_PROPERTIES = [
 	'_ProxyProperty._Lists.HeaderView',
 	'_ProxyProperty._Lists.FooterView',
-	'_ProxyProperty._Lists.HeaderPullView'
+	'_ProxyProperty._Lists.PullView'
 ];
 var VALID = [
 	'Ti.UI.ListSection',

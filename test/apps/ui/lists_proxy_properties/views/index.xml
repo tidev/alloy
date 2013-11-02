@@ -116,7 +116,7 @@
 					<!-- pullView -->
 					<PullView platform="ios">
 						<View class="pull">
-							<Label color="#F2F4F4" bottom="25dp">headerPullView</Label>
+							<Label color="#F2F4F4" bottom="25dp">pullView</Label>
 						</View>
 					</PullView>
 
