@@ -41,20 +41,70 @@ function parse(node, state, args) {
 
 	// process each child
 	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, ALL_VALID);
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
+			isSearchBar = false,
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false,
+			parentSymbol, controllerSymbol;
+
 		if (!theNode) {
-			U.dieWithNode(child, 'Ti.UI.ListView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+			U.dieWithNode(child, 'Ti.UI.ListView child elements must be one of the following: [' +
+				ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
+		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
+			isSearchBar = true;
+		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+			isProxyProperty = true;
+		}
+
+		// generate the node
+		if (theNode !== 'Alloy.Abstract.Templates') {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					parentSymbol = state.parent.symbol;
+					controllerSymbol = state.controller;
+				}
+			});
+		}
+
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var propertyName = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[propertyName] = controllerSymbol + '.getProxyPropertyEx("' + propertyName + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
+				}
+			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+
+		// generate code for search bar
+		} else if (isSearchBar) {
+			proxyProperties.searchView = parentSymbol;
+
+		// generate code for ListSection
 		} else if (theNode === 'Ti.UI.ListSection') {
 			if (!sectionArray) {
 				sectionArray = CU.generateUniqueId();
 				code += 'var ' + sectionArray + '=[];';
 			}
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					return sectionArray + '.push(' + state.parent.symbol + ');';
-				}
-			});
+			code += sectionArray + '.push(' + parentSymbol + ');';
+
+		// handle ItemTemplates
 		} else if (theNode === 'Alloy.Abstract.Templates') {
 			var templateNodes = U.XML.getElementsFromNodes(child.childNodes);
 			_.each(templateNodes, function(template) {
@@ -71,28 +121,6 @@ function parse(node, state, args) {
 						local: true,
 						templateObject: templateObject
 					});
-				}
-			});
-		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			var nameParts = theNode.split('.');
-			var prop = U.lcfirst(nameParts[nameParts.length-1]);
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					proxyProperties[prop] = state.parent.symbol;
-				}
-			});
-		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					proxyProperties.searchView = state.parent.symbol;
 				}
 			});
 		}

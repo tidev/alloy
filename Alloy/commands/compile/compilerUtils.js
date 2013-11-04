@@ -284,7 +284,16 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	if (state.args) { args.symbol = state.args.symbol || args.symbol; }
 
 	// add to list of top level views, if its top level
-	if (isTopLevel) { code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');'; }
+	if (isTopLevel) {
+		if (state.isProxyProperty) {
+			delete state.isProxyProperty;
+			var parts = args.fullname.split('.');
+			code.content += state.parent.symbol + ' && $.addProxyProperty("' + U.lcfirst(parts[parts.length-1]) +
+				'", ' + state.parent.symbol + ');';
+		} else {
+			code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');';
+		}
+	}
 
 	// handle any model/collection code
 	if (state.modelCode) {

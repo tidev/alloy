@@ -134,6 +134,7 @@ function parse(node, state, args) {
 		parent: {
 			symbol: args.symbol + '.getViewEx({recurse:true})'
 		},
+		controller: args.symbol,
 		styles: state.styles,
 		code: code
 	};

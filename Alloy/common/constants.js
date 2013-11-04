@@ -42,6 +42,7 @@ exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
+exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
@@ -192,8 +193,6 @@ exports.IMPLICIT_NAMESPACES = {
 	HeaderPullView: '_ProxyProperty._Lists',
 	PullView: '_ProxyProperty._Lists',
 	Search: '_ProxyProperty._Lists',
-
-	// misc
-	SearchView: 'Ti.UI.Android'
+	SearchView: '_ProxyProperty._Lists'
 
 };

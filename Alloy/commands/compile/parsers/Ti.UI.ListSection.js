@@ -27,29 +27,62 @@ function parse(node, state, args) {
 		itemsArray, localModel;
 
 	// process each child
-	var children = U.XML.getElementsFromNodes(node.childNodes);
-	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, ALL_VALID);
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false,
+			parentSymbol, controllerSymbol;
+
+		// validate the child element and determine if it's part of
+		// the table data or a proxy property assigment
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
+			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			var nameParts = theNode.split('.');
-			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+			isProxyProperty = true;
+		}
+
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// generate the controller node
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					proxyProperties[prop] = state.parent.symbol;
+					controllerSymbol = state.controller;
 				}
 			});
-		} else if (theNode === 'Ti.UI.ListItem') {
-			if (!itemsArray) {
-				itemsArray = CU.generateUniqueId();
-				code += 'var ' + itemsArray + '=[];';
-			}
 
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var prop = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[prop] = controllerSymbol + '.getProxyPropertyEx("' + prop + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
+				}
+			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[U.proxyPropertyNameFromFullname(theNode)] = state.parent.symbol;
+				}
+			});
+
+		// process all ListItems
+		} else if (theNode === 'Ti.UI.ListItem') {
+
+			// set up data bound items
 			if (isDataBound) {
 				localModel = localModel || CU.generateUniqueId();
 				itemCode += CU.generateNodeExtended(child, state, {
@@ -60,7 +93,13 @@ function parse(node, state, args) {
 						return itemsVar + '.push(' + state.parent.symbol + ');';
 					}
 				});
+
+			// generate static items
 			} else {
+				if (!itemsArray) {
+					itemsArray = CU.generateUniqueId();
+					code += 'var ' + itemsArray + '=[];';
+				}
 				code += CU.generateNodeExtended(child, state, {
 					parent: {},
 					post: function(node, state, args) {
@@ -69,6 +108,53 @@ function parse(node, state, args) {
 				});
 			}
 		}
+
+
+
+
+
+
+
+		// var theNode = CU.validateNodeName(child, ALL_VALID);
+		// if (!theNode) {
+		// 	U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
+		// } else if (_.contains(PROXY_PROPERTIES, theNode)) {
+		// 	if (!CU.isNodeForCurrentPlatform(child)) {
+		// 		return;
+		// 	}
+		// 	var nameParts = theNode.split('.');
+		// 	var prop = U.lcfirst(nameParts[nameParts.length-1]);
+		// 	code += CU.generateNodeExtended(child, state, {
+		// 		parent: {},
+		// 		post: function(node, state, args) {
+		// 			proxyProperties[prop] = state.parent.symbol;
+		// 		}
+		// 	});
+		// } else if (theNode === 'Ti.UI.ListItem') {
+		// 	if (!itemsArray) {
+		// 		itemsArray = CU.generateUniqueId();
+		// 		code += 'var ' + itemsArray + '=[];';
+		// 	}
+
+		// 	if (isDataBound) {
+		// 		localModel = localModel || CU.generateUniqueId();
+		// 		itemCode += CU.generateNodeExtended(child, state, {
+		// 			parent: {},
+		// 			local: true,
+		// 			model: localModel,
+		// 			post: function(node, state, args) {
+		// 				return itemsVar + '.push(' + state.parent.symbol + ');';
+		// 			}
+		// 		});
+		// 	} else {
+		// 		code += CU.generateNodeExtended(child, state, {
+		// 			parent: {},
+		// 			post: function(node, state, args) {
+		// 				return itemsArray + '.push(' + state.parent.symbol + ');';
+		// 			}
+		// 		});
+		// 	}
+		// }
 	});
 
 	// create the ListView itself

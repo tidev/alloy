@@ -48,14 +48,11 @@ function parse(node, state, args) {
 		});
 	});
 
-	// assign proxy property to parent
-	// code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) +
-	// 	'.' + U.lcfirst(node.nodeName) + '=' + proxy + ';';
-
 	return {
 		parent: {
 			symbol: proxy
 		},
+		isProxyProperty: true,
 		code: code
 	};
 }

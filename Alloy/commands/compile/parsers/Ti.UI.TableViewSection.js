@@ -25,31 +25,59 @@ function parse(node, state, args) {
 
 	// iterate through all children of the TableView
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-		var childArgs = CU.getParserArgs(child);
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false,
+			parentSymbol, controllerSymbol;
 
 		// validate the child element and determine if it's part of
-		// the table data, a searchbar, or a proxy property assigment
-		var theNode = CU.validateNodeName(child, ALL_VALID);
+		// the table data or a proxy property assigment
 		if (!theNode) {
-			U.dieWithNode(child, 'Ti.UI.TableViewSection child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
+		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+			isProxyProperty = true;
 		}
 
-		// generate code for proxy property assignments
-		if (_.contains(PROXY_PROPERTIES, theNode)) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			var nameParts = theNode.split('.');
-			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// generate the controller node
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					proxyProperties[prop] = state.parent.symbol;
+					controllerSymbol = state.controller;
+				}
+			});
+
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var prop = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[prop] = controllerSymbol + '.getProxyPropertyEx("' + prop + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
+				}
+			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[U.proxyPropertyNameFromFullname(theNode)] = state.parent.symbol;
 				}
 			});
 
 		// generate code for the static row
-		} else {
+		} else if (hasUiNodes || !isControllerNode) {
 			rowCode += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {

@@ -35,71 +35,89 @@ function parse(node, state, args) {
 
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
-		var childArgs = CU.getParserArgs(child),
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
 			isSearchBar = false,
-			isProxyProperty = false;
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false,
+			parentSymbol, controllerSymbol;
 
 		// validate the child element and determine if it's part of
 		// the table data, a searchbar, or a proxy property assigment
-		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
 			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
 		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
 		}
 
-		// generate code for proxy property assignments
-		if (isProxyProperty) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			var nameParts = theNode.split('.');
-			var prop = U.lcfirst(nameParts[nameParts.length-1]);
+		// generate the node
+		if (!isDataBound) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					proxyProperties[prop] = state.parent.symbol;
-				}
-			});
-		// generate code for search bar
-		} else if (isSearchBar) {
-			if (!CU.isNodeForCurrentPlatform(child)) {
-				return;
-			}
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					proxyProperties.search = state.parent.symbol;
-				}
-			});
-		// generate code for template row for model-view binding
-		} else if (isDataBound) {
-			localModel = localModel || CU.generateUniqueId();
-			itemCode += CU.generateNodeExtended(child, state, {
-				parent: {},
-				local: true,
-				model: localModel,
-				post: function(node, state, args) {
-					return 'rows.push(' + state.parent.symbol + ');\n';
-				}
-			});
-		// generate code for the static row/section/searchbar
-		} else {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					var postCode = '';
-					if (!arrayName) {
-						arrayName = CU.generateUniqueId();
-						postCode += 'var ' + arrayName + '=[];';
-					}
-					postCode += arrayName + '.push(' + state.parent.symbol + ');';
-					return postCode;
+					parentSymbol = state.parent.symbol;
+					controllerSymbol = state.controller;
 				}
 			});
 		}
+
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var propertyName = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[propertyName] = controllerSymbol + '.getProxyPropertyEx("' + propertyName + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
+				}
+			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+
+		// generate code for search bar
+		} else if (isSearchBar) {
+			proxyProperties.search = parentSymbol;
+
+		// are there UI elements yet to process?
+		} else if (hasUiNodes || !isControllerNode) {
+
+			// generate data binding code
+			if (isDataBound) {
+				localModel = localModel || CU.generateUniqueId();
+				itemCode += CU.generateNodeExtended(child, state, {
+					parent: {},
+					local: true,
+					model: localModel,
+					post: function(node, state, args) {
+						return 'rows.push(' + state.parent.symbol + ');\n';
+					}
+				});
+
+			// standard row/section processing
+			} else {
+				var postCode = '';
+				if (!arrayName) {
+					arrayName = CU.generateUniqueId();
+					postCode += 'var ' + arrayName + '=[];';
+				}
+				postCode += arrayName + '.push(' + parentSymbol + ');';
+				code += postCode;
+			}
+		}
+
 	});
 
 	// add data at creation time
