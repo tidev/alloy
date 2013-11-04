@@ -1,16 +1,16 @@
 function Controller() {
-    function __alloyId22() {
-        __alloyId22.opts || {};
-        var models = __alloyId21.models;
+    function __alloyId28() {
+        __alloyId28.opts || {};
+        var models = __alloyId27.models;
         var len = models.length;
         var rows = [];
         for (var i = 0; len > i; i++) {
-            var __alloyId19 = models[i];
-            __alloyId19.__transform = {};
-            var __alloyId20 = Alloy.createWidget("com.foo.widget", "row_bind", {
-                $model: __alloyId19
+            var __alloyId24 = models[i];
+            __alloyId24.__transform = {};
+            var __alloyId26 = Alloy.createWidget("com.foo.widget", "row_bind", {
+                $model: __alloyId24
             });
-            rows.push(__alloyId20.getViewEx({
+            rows.push(__alloyId26.getViewEx({
                 recurse: true
             }));
         }
@@ -94,8 +94,8 @@ function Controller() {
         id: "bindingTable"
     });
     $.__views.bindingWindow.add($.__views.bindingTable);
-    var __alloyId21 = Alloy.Collections["dummy"] || dummy;
-    __alloyId21.on("fetch destroy change add remove reset", __alloyId22);
+    var __alloyId27 = Alloy.Collections["dummy"] || dummy;
+    __alloyId27.on("fetch destroy change add remove reset", __alloyId28);
     $.__views.bindingTab = Ti.UI.createTab({
         window: $.__views.bindingWindow,
         id: "bindingTab",
@@ -107,41 +107,48 @@ function Controller() {
         id: "proxiesWindow",
         title: "proxy properties"
     });
-    $.__views.__alloyId27 = Ti.UI.createTableViewRow({
+    $.__views.__alloyId32 = Alloy.createController("proxy", {
+        id: "__alloyId32"
+    });
+    $.__views.__alloyId36 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId27"
+        id: "__alloyId36"
     });
-    var __alloyId28 = [];
-    __alloyId28.push($.__views.__alloyId27);
-    $.__views.__alloyId29 = Ti.UI.createTableViewRow({
+    var __alloyId37 = [];
+    __alloyId37.push($.__views.__alloyId36);
+    $.__views.__alloyId38 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId29"
+        id: "__alloyId38"
     });
-    __alloyId28.push($.__views.__alloyId29);
-    $.__views.__alloyId30 = Ti.UI.createTableViewRow({
+    __alloyId37.push($.__views.__alloyId38);
+    $.__views.__alloyId39 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId30"
+        id: "__alloyId39"
     });
-    __alloyId28.push($.__views.__alloyId30);
-    $.__views.__alloyId31 = Ti.UI.createTableViewRow({
+    __alloyId37.push($.__views.__alloyId39);
+    $.__views.__alloyId40 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId31"
+        id: "__alloyId40"
     });
-    __alloyId28.push($.__views.__alloyId31);
+    __alloyId37.push($.__views.__alloyId40);
     $.__views.proxiesTable = Ti.UI.createTableView({
-        data: __alloyId28,
+        data: __alloyId37,
+        headerPullView: $.__views.__alloyId32.getProxyPropertyEx("headerPullView", {
+            recurse: true
+        }),
+        headerView: $.__views.__alloyId32.getProxyPropertyEx("headerView", {
+            recurse: true
+        }),
+        footerView: $.__views.__alloyId32.getProxyPropertyEx("footerView", {
+            recurse: true
+        }),
         id: "proxiesTable"
     });
     $.__views.proxiesWindow.add($.__views.proxiesTable);
-    $.__views.__alloyId23 = Alloy.createController("proxy", {
-        id: "__alloyId23",
-        __parentSymbol: $.__views.proxiesTable
-    });
-    $.__views.__alloyId23.setParent($.__views.proxiesTable);
     $.__views.proxiesTab = Ti.UI.createTab({
         window: $.__views.proxiesWindow,
         id: "proxiesTab",
@@ -153,16 +160,16 @@ function Controller() {
         id: "windowWindow",
         title: "window"
     });
-    $.__views.__alloyId32 = Alloy.createController("window", {
-        id: "__alloyId32",
+    $.__views.__alloyId41 = Alloy.createController("window", {
+        id: "__alloyId41",
         __parentSymbol: $.__views.windowWindow
     });
-    $.__views.__alloyId32.setParent($.__views.windowWindow);
-    $.__views.__alloyId33 = Ti.UI.createLabel({
+    $.__views.__alloyId41.setParent($.__views.windowWindow);
+    $.__views.__alloyId42 = Ti.UI.createLabel({
         text: "This is a window",
-        id: "__alloyId33"
+        id: "__alloyId42"
     });
-    $.__views.windowWindow.add($.__views.__alloyId33);
+    $.__views.windowWindow.add($.__views.__alloyId42);
     $.__views.windowTab = Ti.UI.createTab({
         window: $.__views.windowWindow,
         id: "windowTab",
@@ -171,7 +178,7 @@ function Controller() {
     $.__views.index.addTab($.__views.windowTab);
     $.__views.index && $.addTopLevelView($.__views.index);
     exports.destroy = function() {
-        __alloyId21.off("fetch destroy change add remove reset", __alloyId22);
+        __alloyId27.off("fetch destroy change add remove reset", __alloyId28);
     };
     _.extend($, $.__views);
     $.index.open();

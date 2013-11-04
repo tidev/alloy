@@ -1,7 +1,7 @@
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "proxy";
-    var __parentSymbol = arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
     arguments[0] ? arguments[0]["$model"] : null;
     arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
@@ -16,8 +16,7 @@ function Controller() {
         id: "headerText"
     });
     $.__views.headerView.add($.__views.headerText);
-    __parentSymbol.headerView = $.__views.headerView;
-    $.__views.__alloyId35 && $.addTopLevelView($.__views.__alloyId35);
+    $.__views.headerView && $.addProxyProperty("headerView", $.__views.headerView);
     $.__views.footerView = Ti.UI.createView({
         id: "footerView",
         height: "60dp",
@@ -28,8 +27,7 @@ function Controller() {
         id: "footerText"
     });
     $.__views.footerView.add($.__views.footerText);
-    __parentSymbol.footerView = $.__views.footerView;
-    $.__views.__alloyId36 && $.addTopLevelView($.__views.__alloyId36);
+    $.__views.footerView && $.addProxyProperty("footerView", $.__views.footerView);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/proxy")($);

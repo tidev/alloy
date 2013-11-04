@@ -18,10 +18,6 @@ function Controller() {
         id: "master"
     });
     $.__views.master && $.addTopLevelView($.__views.master);
-    $.__views.table = Ti.UI.createTableView({
-        id: "table"
-    });
-    $.__views.master.add($.__views.table);
     $.__views.header = Ti.UI.createLabel({
         width: Ti.UI.FILL,
         height: "50dp",
@@ -35,7 +31,11 @@ function Controller() {
         text: "Boxers",
         id: "header"
     });
-    $.__views.table.headerView = $.__views.header;
+    $.__views.table = Ti.UI.createTableView({
+        headerView: $.__views.header,
+        id: "table"
+    });
+    $.__views.master.add($.__views.table);
     openDetail ? $.__views.table.addEventListener("click", openDetail) : __defers["$.__views.table!click!openDetail"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
