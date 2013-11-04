@@ -1,0 +1,9 @@
+'.wrapper': {
+	height: '40dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#74A588'
+}
+
+'.section': {
+	backgroundColor: '#D6655A'
+}

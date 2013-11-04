@@ -1,0 +1,7 @@
+'Label': {
+	color: '#fff',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}

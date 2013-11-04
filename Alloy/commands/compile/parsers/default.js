@@ -9,9 +9,17 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
+	var fullname = CU.getNodeFullname(node),
+		parts = fullname.split('.');
+
+	// is this just a proxy property?
+	if (parts[0] === '_ProxyProperty') {
+		return require('./_ProxyProperty.' + parts[1]).parse(node, state);
+	}
+
+	// start assembling a basic view creation
 	var createFunc = 'create' + node.nodeName,
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
-		fullname = CU.getNodeFullname(node),
 		generatedStyle = styler.generateStyleParams(
 			state.styles,
 			args.classes,
@@ -26,7 +34,7 @@ function parse(node, state, args) {
 	if (state.local) {
 		args.symbol = CU.generateUniqueId();
 	}
-		
+
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');

@@ -18,7 +18,6 @@ function Controller() {
         headerTitle: "Test",
         id: "__alloyId7"
     });
-    $.__views.__alloyId7 && $.addTopLevelView($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "table row",
@@ -37,6 +36,7 @@ function Controller() {
         id: "__alloyId10"
     });
     $.__views.__alloyId7.add($.__views.__alloyId10);
+    $.__views.__alloyId7 && $.addTopLevelView($.__views.__alloyId7);
     exports.destroy = function() {};
     _.extend($, $.__views);
     _.extend($, exports);

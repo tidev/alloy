@@ -36,12 +36,13 @@ exports.PLUGIN_NAME = 'ti.alloy';
 exports.EXPR_PREFIX = '#';
 exports.PLUGIN_FILE = 'plugin.py';
 exports.HOOK_FILE = 'alloy.js';
-exports.MINIMUM_TI_SDK = '3.0.0';
+exports.MINIMUM_TI_SDK = '3.2.0';
 exports.ITEM_TEMPLATE_VAR = '__itemTemplate';
 exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
+exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
@@ -186,9 +187,12 @@ exports.IMPLICIT_NAMESPACES = {
 	RightNavButton: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
-	// Ti.UI.TableView
-	HeaderView: 'Ti.UI.TableView',
-	HeaderPullView: 'Ti.UI.TableView',
-	FooterView: 'Ti.UI.TableView',
-	Search: 'Ti.UI.TableView'
+	// proxy properties
+	FooterView: '_ProxyProperty._Lists',
+	HeaderView: '_ProxyProperty._Lists',
+	HeaderPullView: '_ProxyProperty._Lists',
+	PullView: '_ProxyProperty._Lists',
+	Search: '_ProxyProperty._Lists',
+	SearchView: '_ProxyProperty._Lists'
+
 };

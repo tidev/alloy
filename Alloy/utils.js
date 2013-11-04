@@ -478,3 +478,8 @@ exports.createHash = function(files) {
 
 	return crypto.createHash('md5').update(source).digest('hex');
 };
+
+exports.proxyPropertyNameFromFullname = function(fullname) {
+	var nameParts = fullname.split('.');
+	return exports.lcfirst(nameParts[nameParts.length-1]);
+};

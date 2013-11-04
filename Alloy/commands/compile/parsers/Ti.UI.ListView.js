@@ -4,10 +4,21 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
 
+var PROXY_PROPERTIES = [
+	'_ProxyProperty._Lists.HeaderView',
+	'_ProxyProperty._Lists.FooterView',
+	'_ProxyProperty._Lists.PullView',
+	'_ProxyProperty._Lists.SearchView'
+];
+var SEARCH_PROPERTIES = [
+	'Ti.UI.SearchBar',
+	'Ti.UI.Android.SearchView'
+];
 var VALID = [
 	'Ti.UI.ListSection',
-	'Alloy.Abstract.Templates'
+	'Alloy.Abstract.Templates',
 ];
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, VALID);
 var ORDER = {
 	'Ti.UI.ListSection': 2,
 	'Alloy.Abstract.Templates': 1
@@ -20,6 +31,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		code = '',
+		proxyProperties = {},
 		sectionArray, templateObject;
 
 	// sort the children of the ListView
@@ -29,20 +41,70 @@ function parse(node, state, args) {
 
 	// process each child
 	_.each(children, function(child) {
-		var theNode = CU.validateNodeName(child, VALID);
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
+			isSearchBar = false,
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false,
+			parentSymbol, controllerSymbol;
+
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + VALID.join(',') + ']');
+			U.dieWithNode(child, 'Ti.UI.ListView child elements must be one of the following: [' +
+				ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
+		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
+			isSearchBar = true;
+		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+			isProxyProperty = true;
+		}
+
+		// generate the node
+		if (theNode !== 'Alloy.Abstract.Templates') {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					parentSymbol = state.parent.symbol;
+					controllerSymbol = state.controller;
+				}
+			});
+		}
+
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var propertyName = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[propertyName] = controllerSymbol + '.getProxyPropertyEx("' + propertyName + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
+				}
+			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+
+		// generate code for search bar
+		} else if (isSearchBar) {
+			proxyProperties.searchView = parentSymbol;
+
+		// generate code for ListSection
 		} else if (theNode === 'Ti.UI.ListSection') {
 			if (!sectionArray) {
 				sectionArray = CU.generateUniqueId();
 				code += 'var ' + sectionArray + '=[];';
 			}
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					return sectionArray + '.push(' + state.parent.symbol + ');';
-				}
-			});
+			code += sectionArray + '.push(' + parentSymbol + ');';
+
+		// handle ItemTemplates
 		} else if (theNode === 'Alloy.Abstract.Templates') {
 			var templateNodes = U.XML.getElementsFromNodes(child.childNodes);
 			_.each(templateNodes, function(template) {
@@ -64,9 +126,13 @@ function parse(node, state, args) {
 		}
 	});
 
+	// add all creation time properties to the state
 	var extras = [];
 	if (sectionArray) { extras.push(['sections', sectionArray]); }
 	if (templateObject) { extras.push(['templates', templateObject]); }
+	_.each(proxyProperties, function(v, k) {
+		extras.push([k, v]);
+	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself
