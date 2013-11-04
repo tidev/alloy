@@ -16,14 +16,6 @@
 	backgroundColor: '#D6CCAD'
 }
 
-'Label': {
-	color: '#fff',
-	font: {
-		fontSize: '24dp',
-		fontWeight: 'bold'
-	}
-}
-
 '.titleControl': {
 	height: '40dp',
 	width: Ti.UI.FILL,
@@ -44,6 +36,10 @@
 	backgroundColor: '#DC9C76',
 	height: '100dp',
 	width: Ti.UI.FILL
+}
+
+'.search': {
+	barColor: '#D6CCAD'
 }
 
 '#lists': {

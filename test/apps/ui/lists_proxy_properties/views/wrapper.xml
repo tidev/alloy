@@ -1,0 +1,8 @@
+<Alloy autoStyle="true">
+	<HeaderView>
+		<Label class="wrapper" id="headerView">headerView</Label>
+	</HeaderView>
+	<FooterView>
+		<Label class="wrapper" id="footerView">footerView</Label>
+	</FooterView>
+</Alloy>

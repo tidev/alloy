@@ -1,6 +1,6 @@
 <Alloy>
 	<TabGroup>
-		<Tab title="table">
+		<Tab title="tableview">
 			<Window>
 
 				<TitleControl>
@@ -9,15 +9,14 @@
 
 				<TableView>
 
-					<!-- headerView -->
-					<HeaderView>
-						<Label class="wrapper">headerView</Label>
-					</HeaderView>
+					<!-- header and footer views -->
+					<Require src="wrapper"/>
 
-					<!-- footerView -->
-					<FooterView>
-						<Label class="wrapper">footerView</Label>
-					</FooterView>
+					<!-- search, shorthand with Ti.UI.SearchBar -->
+					<SearchBar class="search" platform="ios"/>
+
+					<!-- search, shorthand with Ti.UI.Android.SearchView -->
+					<SearchView ns="Ti.UI.Android" class="search" platform="android"/>
 
 					<!-- headerPullView -->
 					<HeaderPullView platform="ios">
@@ -34,16 +33,9 @@
 					<!-- table section -->
 					<TableViewSection>
 
-						<!-- headerView -->
-						<HeaderView>
-							<Label class="wrapper section">section headerView</Label>
-						</HeaderView>
-
 						<!-- Due to TIMOB-15646, this footerView won't show up on Android -->
-						<!-- footerView -->
-						<FooterView>
-							<Label class="wrapper section">section footerView</Label>
-						</FooterView>
+						<!-- header and footer views -->
+						<Require src="wrapper" isSection="true"/>
 
 						<TableViewRow title="row 1.1"/>
 						<TableViewRow title="row 1.2"/>
@@ -57,58 +49,7 @@
 			</Window>
 		</Tab>
 
-		<Tab title="table search">
-			<Window>
-
-				<TitleControl>
-					<Label class="titleControl">TableView Search</Label>
-				</TitleControl>
-
-				<TableView>
-
-					<!-- footerView -->
-					<FooterView>
-						<Label class="wrapper">footerView</Label>
-					</FooterView>
-
-					<!-- search, shorthand with Ti.UI.SearchBar -->
-					<SearchBar class="search" platform="ios"/>
-
-					<!-- search, shorthand with Ti.UI.Android.SearchView -->
-					<SearchView class="search" platform="android"/>
-
-					<TableViewRow title="row 1"/>
-					<TableViewRow title="row 2"/>
-					<TableViewRow title="row 3"/>
-					<TableViewRow title="row 4"/>
-
-					<!-- table section -->
-					<TableViewSection>
-
-						<!-- headerView -->
-						<HeaderView>
-							<Label class="wrapper section">section headerView</Label>
-						</HeaderView>
-
-						<!-- Due to TIMOB-15646, this footerView won't show up on Android -->
-						<!-- footerView -->
-						<FooterView>
-							<Label class="wrapper section">section footerView</Label>
-						</FooterView>
-
-						<TableViewRow title="row 1.1"/>
-						<TableViewRow title="row 1.2"/>
-						<TableViewRow title="row 1.3"/>
-						<TableViewRow title="row 1.4"/>
-
-					</TableViewSection>
-
-				</TableView>
-
-			</Window>
-		</Tab>
-
-		<Tab title="list">
+		<Tab title="listview">
 			<Window>
 
 				<TitleControl>
@@ -117,21 +58,14 @@
 
 				<ListView>
 
-					<!-- headerView -->
-					<HeaderView>
-						<Label class="wrapper">headerView</Label>
-					</HeaderView>
-
-					<!-- footerView -->
-					<FooterView>
-						<Label class="wrapper">footerView</Label>
-					</FooterView>
+					<!-- header and footer views -->
+					<Require src="wrapper"/>
 
 					<!-- search, shorthand with Ti.UI.SearchBar -->
 					<SearchBar class="search" platform="ios"/>
 
 					<!-- search, shorthand with Ti.UI.Android.SearchView -->
-					<SearchView class="search" platform="android"/>
+					<SearchView ns="Ti.UI.Android" class="search" platform="android"/>
 
 					<!-- pullView -->
 					<PullView platform="ios">
@@ -149,15 +83,9 @@
 					</ListSection>
 
 					<ListSection>
-						<!-- headerView -->
-						<HeaderView>
-							<Label class="wrapper section">section headerView</Label>
-						</HeaderView>
 
-						<!-- footerView -->
-						<FooterView>
-							<Label class="wrapper section">section footerView</Label>
-						</FooterView>
+						<!-- header and footer views -->
+						<Require src="wrapper" isSection="true"/>
 
 						<ListItem title="row 1.1" searchableText="row 1.1"/>
 						<ListItem title="row 1.2" searchableText="row 1.2"/>
