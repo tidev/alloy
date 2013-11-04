@@ -12,6 +12,7 @@
 					<!-- header and footer views -->
 					<Require src="wrapper"/>
 
+					<!-- TIMOB-11994 prevents the searchbar from showing on iOS -->
 					<!-- search, shorthand with Ti.UI.SearchBar -->
 					<SearchBar class="search" platform="ios"/>
 
