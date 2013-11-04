@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<TableView>
+			<Widget src="tony.section"/>
+		</TableView>
+	</Window>
+</Alloy>

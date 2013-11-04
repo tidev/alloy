@@ -1,0 +1,9 @@
+<Alloy>
+	<TableViewSection>
+		<TableViewRow title="row 1"/>
+		<TableViewRow title="row 2"/>
+		<TableViewRow title="row 3"/>
+		<TableViewRow title="row 4"/>
+		<TableViewRow title="row 5"/>
+	</TableViewSection>
+</Alloy>
