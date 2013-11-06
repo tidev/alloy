@@ -13,18 +13,6 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.paint = require("ti.paint").createPaintView({
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        strokeColor: "#0f0",
-        strokeAlpha: 255,
-        strokeWidth: 10,
-        eraseMode: false,
-        id: "paint"
-    });
-    $.__views.index.add($.__views.paint);
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
