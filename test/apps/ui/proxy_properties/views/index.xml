@@ -12,9 +12,31 @@
 	    		<RightNavButton>
 	    			<Button onClick="doAlert">alert</Button>
 	    		</RightNavButton>
-	    		
+
 	    		<!-- test rest of the Window markup -->
 	    		<Require src="table"/>
+
+	    		<!-- iOS TextField proxy properties -->
+	    		<TextField id="textfield" platform="ios">
+	    			<LeftButton>
+	    				<Button onClick="sayHi" class="textButton">left</Button>
+	    			</LeftButton>
+	    			<RightButton>
+	    				<Button onClick="doAlert" class="textButton">right</Button>
+	    			</RightButton>
+
+	    			<!-- even nested proxy properties -->
+	    			<KeyboardToolbar>
+	    				<Toolbar>
+	    					<Items>
+									<Button>button 1</Button>
+									<FlexSpace/>
+									<Button>button 2</Button>
+								</Items>
+	    				</Toolbar>
+	    			</KeyboardToolbar>
+	    		</TextField>
+
 		    </Window>
 	    </NavigationGroup>
     </Window>

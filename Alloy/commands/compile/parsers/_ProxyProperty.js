@@ -53,6 +53,7 @@ function parse(node, state, args) {
 			symbol: proxy
 		},
 		isProxyProperty: true,
+		propertyName: U.lcfirst(args.fullname.match(/\.([^\.]+)$/)[1] || ''),
 		code: code
 	};
 }

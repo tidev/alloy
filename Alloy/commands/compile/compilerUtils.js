@@ -287,8 +287,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	if (isTopLevel) {
 		if (state.isProxyProperty) {
 			delete state.isProxyProperty;
-			var parts = args.fullname.split('.');
-			code.content += state.parent.symbol + ' && $.addProxyProperty("' + U.lcfirst(parts[parts.length-1]) +
+			code.content += state.parent.symbol + ' && $.addProxyProperty("' + state.propertyName +
 				'", ' + state.parent.symbol + ');';
 		} else {
 			code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');';
