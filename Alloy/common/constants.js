@@ -187,12 +187,17 @@ exports.IMPLICIT_NAMESPACES = {
 	RightNavButton: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
-	// proxy properties
+	// Table and List proxy properties
 	FooterView: '_ProxyProperty._Lists',
 	HeaderView: '_ProxyProperty._Lists',
 	HeaderPullView: '_ProxyProperty._Lists',
 	PullView: '_ProxyProperty._Lists',
 	Search: '_ProxyProperty._Lists',
-	SearchView: '_ProxyProperty._Lists'
+	SearchView: '_ProxyProperty._Lists',
+
+	// misc proxy properties
+	RightButton: '_ProxyProperty',
+	LeftButton: '_ProxyProperty',
+	KeyboardToolbar: '_ProxyProperty'
 
 };
