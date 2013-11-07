@@ -733,7 +733,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "   var opts = " + handlerFunc + ".opts || {};";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
-	transform && (code += " var func = e.fromAdapter ? function(){return arguments[0]} : " + transform + ";");
+	transform && (code += " var func = e && e.fromAdapter ? function(){return arguments[0]} : " + transform + ";");
 	code += "<%= pre %>";
 	code += "	for (var i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
