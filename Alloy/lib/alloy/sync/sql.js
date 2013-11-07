@@ -161,10 +161,11 @@ function Sync(method, model, opts) {
 		case 'update':
 			resp = (function() {
 				var attrObj = {};
+
 				if (!model.id) {
 					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj,{silent:true});
+					model.set(attrObj, { silent: true });
 				}
 
 				// assemble columns and values
@@ -188,7 +189,7 @@ function Sync(method, model, opts) {
 					if (rs && rs.isValidRow()) {
 						model.id = rs.field(0);
 						attrObj[model.idAttribute] = model.id;
-						model.set(attrObj, {silent:true});
+						model.set(attrObj, { silent: true });
 					} else {
 						Ti.API.warn('Unable to get ID from database for model: ' + model.toJSON());
 					}
@@ -277,13 +278,13 @@ function Sync(method, model, opts) {
 			break;
 	}
 
-    // process success/error handlers, if present
+  // process success/error handlers, if present
 	if (resp) {
-        if (_.isFunction(opts.success)) { opts.success(resp); }
-        if (method === "read") { model.trigger("fetch"); }
-    } else {
+		if (_.isFunction(opts.success)) { opts.success(resp); }
+		if (method === "read" && !opts.silent) { model.trigger("fetch", { fromAdapter: true }); }
+  } else {
 		if (_.isFunction(opts.error)) { opts.error(resp); }
-    }
+  }
 
 }
 
