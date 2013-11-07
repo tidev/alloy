@@ -1,0 +1,20 @@
+<Alloy>
+	<Window>
+		<View platform="ios">
+			<Toolbar>
+				<Items>
+					<Button systemButton="ACTION"/>
+					<FlexSpace/>
+					<Button systemButton="TRASH"/>
+					<FlexSpace/>
+					<Button systemButton="ADD"/>
+					<FlexSpace/>
+					<Button systemButton="CAMERA"/>
+					<FlexSpace/>
+					<Button systemButton="CANCEL"/>
+				</Items>
+			</Toolbar>
+		</View>
+		<Label platform="!ios">This app is supported only on iOS</Label>
+	</Window>
+</Alloy>
