@@ -7,6 +7,7 @@
 					<PickerRow title="row 2"/>
 					<PickerRow title="row 3"/>
 					<PickerRow title="row 4"/>
+					<Require src="pickerrow"/>
 				</Picker>
 			</Window>
 		</Tab>
@@ -18,13 +19,16 @@
 						<PickerRow title="row 2"/>
 						<PickerRow title="row 3"/>
 						<PickerRow title="row 4"/>
+						<Require src="pickerrow"/>
 					</PickerColumn>
 					<PickerColumn>
+						<Require src="pickerrow"/>
 						<PickerRow title="row 5"/>
 						<PickerRow title="row 6"/>
 						<PickerRow title="row 7"/>
 						<PickerRow title="row 8"/>
 					</PickerColumn>
+					<Require src="pickercolumn"/>
 				</Picker>
 			</Window>
 		</Tab>
