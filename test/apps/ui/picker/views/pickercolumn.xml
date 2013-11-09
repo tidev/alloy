@@ -1,0 +1,7 @@
+<Alloy>
+	<PickerColumn>
+		<PickerRow title="required row 1"/>
+		<PickerRow title="required row 2"/>
+		<PickerRow title="required row 3"/>
+	</PickerColumn>
+</Alloy>
