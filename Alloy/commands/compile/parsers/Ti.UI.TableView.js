@@ -40,8 +40,7 @@ function parse(node, state, args) {
 			isSearchBar = false,
 			isProxyProperty = false,
 			isControllerNode = false,
-			hasUiNodes = false,
-			parentSymbol, controllerSymbol;
+			hasUiNodes = false;
 
 		// validate the child element and determine if it's part of
 		// the table data, a searchbar, or a proxy property assigment
@@ -57,17 +56,6 @@ function parse(node, state, args) {
 			isProxyProperty = true;
 		}
 
-		// generate the node
-		if (!isDataBound) {
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					parentSymbol = state.parent.symbol;
-					controllerSymbol = state.controller;
-				}
-			});
-		}
-
 		// manually handle controller node proxy properties
 		if (isControllerNode) {
 
@@ -76,7 +64,13 @@ function parse(node, state, args) {
 			_.each(_.uniq(inspect.names), function(name) {
 				if (_.contains(PROXY_PROPERTIES, name)) {
 					var propertyName = U.proxyPropertyNameFromFullname(name);
-					proxyProperties[propertyName] = controllerSymbol + '.getProxyPropertyEx("' + propertyName + '", {recurse:true})';
+					code += CU.generateNodeExtended(child, state, {
+						parent: {},
+						post: function(node, state, args) {
+							proxyProperties[propertyName] = state.controller + '.getProxyPropertyEx("' +
+								propertyName + '", {recurse:true})';
+						}
+					});
 				} else {
 					hasUiNodes = true;
 				}
@@ -85,11 +79,21 @@ function parse(node, state, args) {
 
 		// generate code for proxy property assignments
 		if (isProxyProperty) {
-			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = state.parent.symbol;
+				}
+			});
 
 		// generate code for search bar
 		} else if (isSearchBar) {
-			proxyProperties.search = parentSymbol;
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties.search = state.parent.symbol;
+				}
+			});
 
 		// are there UI elements yet to process?
 		} else if (hasUiNodes || !isControllerNode) {
@@ -108,13 +112,16 @@ function parse(node, state, args) {
 
 			// standard row/section processing
 			} else {
-				var postCode = '';
 				if (!arrayName) {
 					arrayName = CU.generateUniqueId();
-					postCode += 'var ' + arrayName + '=[];';
+					code += 'var ' + arrayName + '=[];';
 				}
-				postCode += arrayName + '.push(' + parentSymbol + ');';
-				code += postCode;
+				code += CU.generateNodeExtended(child, state, {
+					parent: {},
+					post: function(node, state, args) {
+						return arrayName + '.push(' + state.parent.symbol + ');';
+					}
+				});
 			}
 		}
 
