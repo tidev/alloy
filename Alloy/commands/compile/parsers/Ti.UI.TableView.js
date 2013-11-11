@@ -31,7 +31,7 @@ function parse(node, state, args) {
 		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		extras = [],
 		proxyProperties = {},
-		localModel, arrayName;
+		localModel, arrayName, controllerSymbol;
 
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
@@ -64,13 +64,8 @@ function parse(node, state, args) {
 			_.each(_.uniq(inspect.names), function(name) {
 				if (_.contains(PROXY_PROPERTIES, name)) {
 					var propertyName = U.proxyPropertyNameFromFullname(name);
-					code += CU.generateNodeExtended(child, state, {
-						parent: {},
-						post: function(node, state, args) {
-							proxyProperties[propertyName] = state.controller + '.getProxyPropertyEx("' +
-								propertyName + '", {recurse:true})';
-						}
-					});
+					proxyProperties[propertyName] = '<%= controllerSymbol %>.getProxyPropertyEx("' +
+						propertyName + '", {recurse:true})';
 				} else {
 					hasUiNodes = true;
 				}
@@ -106,6 +101,7 @@ function parse(node, state, args) {
 					local: true,
 					model: localModel,
 					post: function(node, state, args) {
+						controllerSymbol = state.controller;
 						return 'rows.push(' + state.parent.symbol + ');\n';
 					}
 				});
@@ -119,10 +115,29 @@ function parse(node, state, args) {
 				code += CU.generateNodeExtended(child, state, {
 					parent: {},
 					post: function(node, state, args) {
+						controllerSymbol = state.controller;
 						return arrayName + '.push(' + state.parent.symbol + ');';
 					}
 				});
 			}
+
+		// if there's no UI nodes inside, just generate it
+		} else if (!hasUiNodes && isControllerNode) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					controllerSymbol = state.controller;
+				}
+			});
+		}
+
+		// fill in poxy property templates, if present
+		if (isControllerNode) {
+			_.each(proxyProperties, function(v,k) {
+				proxyProperties[k] = _.template(v, {
+					controllerSymbol: controllerSymbol
+				});
+			});
 		}
 
 	});

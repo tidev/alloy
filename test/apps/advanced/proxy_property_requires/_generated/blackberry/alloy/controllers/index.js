@@ -31,12 +31,12 @@ function Controller() {
         id: "staticWindow",
         title: "static"
     });
+    var __alloyId11 = [];
     $.__views.staticRow1 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow1",
         title: "1"
     });
-    var __alloyId11 = [];
     __alloyId11.push($.__views.staticRow1);
     $.__views.staticRow2 = Ti.UI.createTableViewRow({
         height: "50dp",
@@ -107,43 +107,43 @@ function Controller() {
         id: "proxiesWindow",
         title: "proxy properties"
     });
-    $.__views.__alloyId32 = Alloy.createController("proxy", {
-        id: "__alloyId32"
+    $.__views.__alloyId35 = Alloy.createController("proxy", {
+        id: "__alloyId35"
     });
-    $.__views.__alloyId36 = Ti.UI.createTableViewRow({
+    var __alloyId36 = [];
+    $.__views.__alloyId37 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId36"
+        id: "__alloyId37"
     });
-    var __alloyId37 = [];
-    __alloyId37.push($.__views.__alloyId36);
+    __alloyId36.push($.__views.__alloyId37);
     $.__views.__alloyId38 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
         id: "__alloyId38"
     });
-    __alloyId37.push($.__views.__alloyId38);
+    __alloyId36.push($.__views.__alloyId38);
     $.__views.__alloyId39 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
         id: "__alloyId39"
     });
-    __alloyId37.push($.__views.__alloyId39);
+    __alloyId36.push($.__views.__alloyId39);
     $.__views.__alloyId40 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
         id: "__alloyId40"
     });
-    __alloyId37.push($.__views.__alloyId40);
+    __alloyId36.push($.__views.__alloyId40);
     $.__views.proxiesTable = Ti.UI.createTableView({
-        data: __alloyId37,
-        headerPullView: $.__views.__alloyId32.getProxyPropertyEx("headerPullView", {
+        data: __alloyId36,
+        headerPullView: $.__views.__alloyId35.getProxyPropertyEx("headerPullView", {
             recurse: true
         }),
-        headerView: $.__views.__alloyId32.getProxyPropertyEx("headerView", {
+        headerView: $.__views.__alloyId35.getProxyPropertyEx("headerView", {
             recurse: true
         }),
-        footerView: $.__views.__alloyId32.getProxyPropertyEx("footerView", {
+        footerView: $.__views.__alloyId35.getProxyPropertyEx("footerView", {
             recurse: true
         }),
         id: "proxiesTable"

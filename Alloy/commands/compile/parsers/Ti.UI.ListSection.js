@@ -33,7 +33,7 @@ function parse(node, state, args) {
 			isProxyProperty = false,
 			isControllerNode = false,
 			hasUiNodes = false,
-			parentSymbol, controllerSymbol;
+			controllerSymbol;
 
 		// validate the child element and determine if it's part of
 		// the table data or a proxy property assigment
@@ -50,20 +50,13 @@ function parse(node, state, args) {
 		// manually handle controller node proxy properties
 		if (isControllerNode) {
 
-			// generate the controller node
-			code += CU.generateNodeExtended(child, state, {
-				parent: {},
-				post: function(node, state, args) {
-					controllerSymbol = state.controller;
-				}
-			});
-
 			// set up any proxy properties at the top-level of the controller
 			var inspect = CU.inspectRequireNode(child);
 			_.each(_.uniq(inspect.names), function(name) {
 				if (_.contains(PROXY_PROPERTIES, name)) {
 					var prop = U.proxyPropertyNameFromFullname(name);
-					proxyProperties[prop] = controllerSymbol + '.getProxyPropertyEx("' + prop + '", {recurse:true})';
+					proxyProperties[prop] = '<%= controllerSymbol %>.getProxyPropertyEx("' + prop +
+						'", {recurse:true})';
 				} else {
 					hasUiNodes = true;
 				}
@@ -90,6 +83,7 @@ function parse(node, state, args) {
 					local: true,
 					model: localModel,
 					post: function(node, state, args) {
+						controllerSymbol = state.controller;
 						return itemsVar + '.push(' + state.parent.symbol + ');';
 					}
 				});
@@ -103,58 +97,30 @@ function parse(node, state, args) {
 				code += CU.generateNodeExtended(child, state, {
 					parent: {},
 					post: function(node, state, args) {
+						controllerSymbol = state.controller;
 						return itemsArray + '.push(' + state.parent.symbol + ');';
 					}
 				});
 			}
+
+		// if there's no UI nodes inside, just generate it
+		} else if (!hasUiNodes && isControllerNode) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					controllerSymbol = state.controller;
+				}
+			});
 		}
 
-
-
-
-
-
-
-		// var theNode = CU.validateNodeName(child, ALL_VALID);
-		// if (!theNode) {
-		// 	U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
-		// } else if (_.contains(PROXY_PROPERTIES, theNode)) {
-		// 	if (!CU.isNodeForCurrentPlatform(child)) {
-		// 		return;
-		// 	}
-		// 	var nameParts = theNode.split('.');
-		// 	var prop = U.lcfirst(nameParts[nameParts.length-1]);
-		// 	code += CU.generateNodeExtended(child, state, {
-		// 		parent: {},
-		// 		post: function(node, state, args) {
-		// 			proxyProperties[prop] = state.parent.symbol;
-		// 		}
-		// 	});
-		// } else if (theNode === 'Ti.UI.ListItem') {
-		// 	if (!itemsArray) {
-		// 		itemsArray = CU.generateUniqueId();
-		// 		code += 'var ' + itemsArray + '=[];';
-		// 	}
-
-		// 	if (isDataBound) {
-		// 		localModel = localModel || CU.generateUniqueId();
-		// 		itemCode += CU.generateNodeExtended(child, state, {
-		// 			parent: {},
-		// 			local: true,
-		// 			model: localModel,
-		// 			post: function(node, state, args) {
-		// 				return itemsVar + '.push(' + state.parent.symbol + ');';
-		// 			}
-		// 		});
-		// 	} else {
-		// 		code += CU.generateNodeExtended(child, state, {
-		// 			parent: {},
-		// 			post: function(node, state, args) {
-		// 				return itemsArray + '.push(' + state.parent.symbol + ');';
-		// 			}
-		// 		});
-		// 	}
-		// }
+		// fill in poxy property templates, if present
+		if (isControllerNode) {
+			_.each(proxyProperties, function(v,k) {
+				proxyProperties[k] = _.template(v, {
+					controllerSymbol: controllerSymbol
+				});
+			});
+		}
 	});
 
 	// create the ListView itself
