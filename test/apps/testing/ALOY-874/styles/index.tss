@@ -1,0 +1,10 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'Window': {
+	backgroundColor: '#fff',
+	fullscreen: false
+}

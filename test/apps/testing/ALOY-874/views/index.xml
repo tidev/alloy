@@ -1,0 +1,43 @@
+<Alloy>
+    <Collection src="test" id="test" instance="true"/>
+
+    <TabGroup>
+    	<Tab title="table">
+    		<Window title="table">
+		        <TableView dataCollection="$.test" >
+		            <HeaderView>
+		                <View height="60">
+		                    <Label>Header</Label>
+		                </View>
+		            </HeaderView>
+		            <FooterView>
+		                <View height="60">
+		                    <Label>Footer</Label>
+		                </View>
+		            </FooterView>
+		            <TableViewRow title="{title}"/>
+		        </TableView>
+		    </Window>
+    	</Tab>
+    	<Tab title="list">
+    		<Window title="list">
+		        <ListView>
+	            <ListSection dataCollection="$.test">
+	            	<HeaderView>
+	                <View height="60">
+	                    <Label>Header</Label>
+	                </View>
+	            	</HeaderView>
+	            	<FooterView>
+		                <View height="60">
+		                    <Label>Footer</Label>
+		                </View>
+		            </FooterView>
+	            	<ListItem title="{title}"/>
+	            </ListSection>
+		        </ListView>
+		    </Window>
+    	</Tab>
+    </TabGroup>
+
+</Alloy>
