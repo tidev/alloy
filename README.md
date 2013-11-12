@@ -96,16 +96,16 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ```
  project  : alloy
- repo age : 1 year, 4 months ago
- commits  : 2510
- active   : 357 days
- files    : 1874
+ repo age : 1 year, 5 months ago
+ commits  : 2564
+ active   : 372 days
+ files    : 1925
  authors  :
-  2186  Tony Lukasavage         87.1%
-    87  Jeff Haynie             3.5%
-    75  Russ McMahon            3.0%
+  2240  Tony Lukasavage         87.4%
+    87  Jeff Haynie             3.4%
+    75  Russ McMahon            2.9%
     38  Kevin Whinnery          1.5%
-    24  Ben Hatfield            1.0%
+    24  Ben Hatfield            0.9%
     21  Carl Orthlieb           0.8%
     18  Fokke Zandbergen        0.7%
      8  Issam Hakimi            0.3%
@@ -131,7 +131,6 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
      1  Anders D. Johnson       0.0%
      1  gitizenme               0.0%
      1  J. Tangelder            0.0%
-     1  Family                  0.0%
 ```
 
 ## Legal
