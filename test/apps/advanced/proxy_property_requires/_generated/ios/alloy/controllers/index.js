@@ -1,5 +1,6 @@
 function Controller() {
-    function __alloyId29() {
+    function __alloyId29(e) {
+        if (e && e.fromAdapter) return;
         __alloyId29.opts || {};
         var models = __alloyId28.models;
         var len = models.length;
