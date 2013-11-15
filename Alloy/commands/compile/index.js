@@ -309,7 +309,7 @@ function generateAppJs(paths, compileConfig) {
 
 	// is it already generated from a prior copile?
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
-	if (buildLog.data[buildPlatform][alloyJs] === hash) {
+	if (fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');
 
 	// if not, generate the platform-specific app.js and save its hash
