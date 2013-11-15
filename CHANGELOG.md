@@ -14,7 +14,10 @@
 #### Titanium SDK Support
 
 Due changes in the application build process for both Alloy and the Titanium SDK,
-Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later.
+Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later. You can find details on this in the following tickets:
+
+* [TIMOB-14884](https://jira.appcelerator.org/browse/TIMOB-14884)
+* [ALOY-760](https://jira.appcelerator.org/browse/ALOY-760)
 
 ### New Features
 
@@ -22,7 +25,7 @@ Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later.
 
   * Support children elements for Widget and Require elements.  View objects created using the Widget
     and Require elements can contain child view elements, which are added as children views of the
-    parent Widget or Require view object.
+    parent Widget or Require view object. Example: [require_children](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/require_children)
 
   * Support `<HeaderView>`, `<FooterView>` and `<PullView>` as children tags of the `<ListView>` object to
     specify the `headerView`, `footerView` and `pullView` properties of `Titanium.UI.ListView`.
