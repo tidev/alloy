@@ -5,7 +5,98 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.2.2
+## 1.3.0 (10 December 2013)
+
+* [Full list of Issues that were addressed in Release 1.3.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15575)
+
+### Breaking Changes
+
+#### Titanium SDK Support
+
+Due changes in the application build process for both Alloy and the Titanium SDK,
+Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later.
+
+### New Features
+
+#### XML Markup Enhancements
+
+  * Support children elements for Widget and Require elements.  View objects created using the Widget
+    and Require elements can contain child view elements, which are added as children views of the
+    parent Widget or Require view object.
+
+  * Support `<HeaderView>`, `<FooterView>` and `<PullView>` as children tags of the `<ListView>` object to
+    specify the `headerView`, `footerView` and `pullView` properties of `Titanium.UI.ListView`.
+
+  * Support `<SearchBar>` and `<SearchView platform="android>` as children tags of the `<ListView>` object to
+    specify the `searchView` property of `Titanium.UI.ListView`.
+
+  * Support `<HeaderView>` and `<FooterView>` as children tags of the `<ListSection>` object to
+    specify the `headerView` and `footerView` properties of `Titanium.UI.ListSection`.
+
+  * Support `<LeftButton>`, `<RightButton>` and `<KeyboardToolbar>` as children tags of the `<TextField>` object to
+    specify the `leftButton`, `rightButton` and `keyboardToolbar` properties of `Titanium.UI.TextField`.
+    These properties are only supported on the iOS platform.
+
+  * Support shorthand method for declaring iOS system buttons.  When specifying the `system`
+    attribute for a Button object, you do not need to use the `Ti.UI` namespace. For example, the
+    following markup creates the iOS camera button:
+
+        <Button systemButton="CAMERA"/>
+
+#### TSS Enhancements
+
+  * Support for bitwise operators, which includes bit shifting ('>>', '<<', and '>>>'), bitwise AND
+    ('&'), bitwise OR ('|') and bitwise XOR ('^').
+
+#### Model Enhancements
+
+  * Support fetching a model using its ID attribute rather than an SQL query with the SQLite sync adapter.
+    For example, you can fetch a model by using the attribute:
+
+        myModel.fetch({id: 123});
+
+    rather than using an SQL query:
+
+        myModel.fetch({query: 'select * from ... where id = ' + 123 });
+
+#### New Compiler Hook
+
+This Release added a new compiler task called `pre:load` that is triggered before copying assets and
+other resources to the project's `Resources` folder.  This task is executed near the beginning of
+the Alloy compiliation process, after the project is cleaned.
+
+#### Support Platform and Environment-Specific Project Configurations
+
+In the project configuration file (`config.json`), you can combine the `os` and `env` keys together
+to specify an environment and platform configuration. For example, the code below specifies
+configurations for iOS test, iOS development and iOS production:
+
+    "os:ios env:production": {
+        "foo": "os:ios env:production"
+    },
+    "os:ios env:development": {
+        "foo": "os:ios env:development"
+    },
+    "os:ios env:test": {
+        "foo": "os:ios env:test"
+    }
+
+Previously, you could not specify both a platform and environment together.
+
+### New APIs
+
+The following APIs are new in Release 1.3.0.
+
+|API|Type|Note|
+|---|----|----|
+|`Alloy.builtins.animation.flip`|method|Transitions from one view to another using a 3D flip animation (iOS only).|
+|`Alloy.builtins.animation.flipHorizontal`|method|Transitions from one view to another using a horizontal flip animation (iOS only).|
+|`Alloy.builtins.animation.flipVertical`|method|Transitions from one view to another using a vertical flip animation (iOS only).|
+|`Alloy.builtins.animation.HORIZONTAL`|constant|Constant to specify a horizontal flip (iOS only).|
+|`Alloy.builtins.animation.VERTICAL`|constant|Constant to specify a vertical flip (iOS only).|
+
+## 1.2.2 (18 September 2013)
+
 * [ALOY-813](https://jira.appcelerator.org/browse/ALOY-813). Fixed bug handling unicode characters in XML attributes.
 * [ALOY-817](https://jira.appcelerator.org/browse/ALOY-817). Fixed bug adding XML event handlers to UI components that use custom namesapces.
 * [ALOY-815](https://jira.appcelerator.org/browse/ALOY-815) & [ALOY-818](https://jira.appcelerator.org/browse/ALOY-818). Support Ti.UI.iOS.NavigationWindow API in XML
