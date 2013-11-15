@@ -21,21 +21,14 @@ function addTestFighter(e) {
 	});
 	counter++;
 
-	// silent option we'll use on Backbone functions to
-	// prevent binding from firing
-	var silent = { silent: true };
+	// add model to the collection and save it to sqlite, make
+	// it silent so binding doesn't fire twice
+	fighters.add(model, { silent: true });
 
-	// add model to the collection and save it to sqlite
-	fighters.add(model, silent);
-
-	// make this silent, since it will auto-add an id to
-	// our model causing a "change" event
-	model.save(null, silent);
-
-	// let's refresh so we can see the ids coming from the
-	// autoincrement field in the sqlite database in the
-	// row click alerts
-	fighters.fetch();
+	// this will save the model to storage, update it with
+	// the automatically created id from the "server" (sqlite),
+	// which will in turn trigger the UI update
+	model.save();
 }
 
 fighters.fetch();
