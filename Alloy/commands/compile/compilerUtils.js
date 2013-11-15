@@ -724,16 +724,16 @@ exports.generateCollectionBindingTemplate = function(args) {
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
-	var transformCode = transform ? "func(<%= localModel %>)" : "{}";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
 
 	// construct code template
 	code += "var " + colVar + "=" + col + ";";
 	code += "function " + handlerFunc + "(e) {";
+	code += "   if (e && e.fromAdapter) { return; }";
 	code += "   var opts = " + handlerFunc + ".opts || {};";
 	code += "	var models = " + whereCode + ";";
 	code += "	var len = models.length;";
-	transform && (code += " var func = e && e.fromAdapter ? function(){return arguments[0]} : " + transform + ";");
 	code += "<%= pre %>";
 	code += "	for (var i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
