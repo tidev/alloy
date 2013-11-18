@@ -4,3 +4,4 @@ node_modules
 *.sublime-workspace
 .project
 TODO
+npm-debug.log
