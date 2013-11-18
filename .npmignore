@@ -6,3 +6,4 @@ test/projects/Harness
 test/projects/TiAppCopy
 TODO
 test/apps/testing
+npm-debug.log
