@@ -1,0 +1,31 @@
+"#t":{
+	textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
+	width : Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	text: "Click a button to display something",
+	color: "red"
+},
+
+"#hl": {
+	layout:"horizontal",
+	width : Ti.UI.FILL,
+	height : "100"
+},
+
+"#a" : {
+	title: "A",
+	width : Ti.UI.SIZE,
+	height: Ti.UI.SIZE
+},
+
+"#b" : {
+	title: "B",
+	width : Ti.UI.SIZE,
+	height: Ti.UI.SIZE
+},
+
+"#c" : {
+	title: "C",
+	width : Ti.UI.SIZE,
+	height: Ti.UI.SIZE
+}
