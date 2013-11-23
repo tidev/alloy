@@ -1,0 +1,10 @@
+<Alloy>
+	<View>
+		<Label id="t"></Label>
+		<View id="hl">
+			<Button id="a"></Button>
+			<Button id="b"></Button>
+			<Button id="c"></Button>
+		</View>
+	</View>
+</Alloy>
