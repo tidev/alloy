@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"com.foo.widget": "1.0"
+	},
+	"sourcemap": false
+}
