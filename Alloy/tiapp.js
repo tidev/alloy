@@ -60,7 +60,7 @@ tiapp.validateSdkVersion = function() {
 		logger.warn('Unable to determine Titanium SDK version from tiapp.xml.');
 		logger.warn('Your app may have unexpected behavior. Make sure your tiapp.xml is valid.');
 	} else if (tiapp.version.lt(tiVersion, CONST.MINIMUM_TI_SDK)) {
-		logger.error('Alloy ' + module.exports.version + ' requires Titanium SDK ' +
+		logger.error('Alloy ' + tiVersion + ' requires Titanium SDK ' +
 			CONST.MINIMUM_TI_SDK + ' or higher.');
 		logger.error('"' + tiVersion + '" was found in the "sdk-version" field of your tiapp.xml.');
 		logger.error('If you are building with the legacy titanium.py script and are specifying ');
