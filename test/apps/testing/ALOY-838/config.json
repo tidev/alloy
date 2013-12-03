@@ -49,5 +49,11 @@
     "env:production os:ios": {
         "button": "env:production os:ios"
     },
+    "os:android env:test": {
+        "button": "os:android env:test"
+    },
+    "os:android env:development": {
+        "button": "os:android env:development"
+    },
 	"dependencies": {}
 }
