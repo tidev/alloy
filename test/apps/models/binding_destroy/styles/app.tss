@@ -1,7 +1,13 @@
 "Window": {
     backgroundColor: '#fff',
     fullscreen: false
-},
+}
+
+"NavigationWindow": {
+    backgroundColor: '#fff',
+    fullscreen: false
+}
+
 "Label": {
     color: '#000'
 }

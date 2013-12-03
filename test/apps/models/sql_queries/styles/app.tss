@@ -3,6 +3,11 @@
 	navBarHidden: false
 }
 
+"NavigationWindow": {
+	backgroundColor: '#fff',
+	navBarHidden: false
+}
+
 "Window[platform=android]": {
 	navBarHidden: true
 }

@@ -9,18 +9,12 @@ module.exports = function($) {
 
 	describe('index controller', function() {
 		if (OS_IOS && Alloy.isHandheld) {
-			validateUiComponent($, 'index', {
-				api: 'Ti.UI.Window',
-				style: {
-					backgroundColor: '#fff',
-					id: "index"
-				}
-			});
 
-			validateUiComponent($, 'navgroup', {
+			validateUiComponent($, 'index', {
 				api: 'Ti.UI.iPhone.NavigationGroup',
 				style: {
-					id: "navgroup"
+					id: "index",
+					backgroundColor: '#fff'
 				}
 			});
 		}

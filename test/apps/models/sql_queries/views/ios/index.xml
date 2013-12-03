@@ -1,0 +1,10 @@
+<Alloy>
+    <NavigationWindow>
+    	<Window title="Users">
+    		<RightNavButton>
+    			<Button onClick="openAddUser">add user</Button>
+    		</RightNavButton>
+    		<Require src="main"/>
+    	</Window>
+    </NavigationWindow>
+</Alloy>
