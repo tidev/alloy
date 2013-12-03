@@ -1,0 +1,10 @@
+<Alloy>
+    <Window>
+
+    	<Require src="main"/>
+    	<Menu>
+    		<MenuItem title="add user" icon="ic_menu_add.png" onClick="openAddUser"/>
+    	</Menu>
+
+    </Window>
+</Alloy>

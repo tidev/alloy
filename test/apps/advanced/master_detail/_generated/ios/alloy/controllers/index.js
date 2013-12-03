@@ -25,30 +25,26 @@ function Controller() {
         $.__views.index && $.addTopLevelView($.__views.index);
     }
     if (true && !Alloy.isTablet) {
-        $.__views.index = Ti.UI.createWindow({
-            backgroundColor: "#fff",
-            id: "index"
-        });
-        $.__views.index && $.addTopLevelView($.__views.index);
         $.__views.master = Alloy.createController("master", {
             id: "master"
         });
-        $.__views.navgroup = Ti.UI.iPhone.createNavigationGroup({
+        $.__views.index = Ti.UI.iOS.createNavigationWindow({
+            backgroundColor: "#fff",
             window: $.__views.master.getViewEx({
                 recurse: true
             }),
-            id: "navgroup"
+            id: "index"
         });
-        $.__views.index.add($.__views.navgroup);
+        $.__views.index && $.addTopLevelView($.__views.index);
     }
     exports.destroy = function() {};
     _.extend($, $.__views);
-    true && Alloy.isHandheld && (Alloy.Globals.navgroup = $.navgroup);
+    true && Alloy.isHandheld && (Alloy.Globals.navgroup = $.index);
     $.master.on("detail", function(e) {
         var controller = true && Alloy.isTablet ? $.detail : Alloy.createController("detail");
         var win = controller.getView();
         controller.setBoxerStats(e.row.fighterName);
-        true && Alloy.isHandheld && Alloy.Globals.navgroup.open(win);
+        true && Alloy.isHandheld && Alloy.Globals.navgroup.openWindow(win);
     });
     $.index.open();
     require("specs/index")($);

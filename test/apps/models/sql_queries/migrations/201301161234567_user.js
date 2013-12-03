@@ -1,7 +1,6 @@
 var users = [
 	{ name: 'Tony', color: 'blue' },
 	{ name: 'Chris', color: 'red' },
-	{ name: 'Bryan', color: 'red' },
 	{ name: 'Christian', color: 'blue' },
 	{ name: 'Ingo', color: 'orange' }
 ];

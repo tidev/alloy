@@ -8,7 +8,7 @@ function openLink(e) {
 		url: model.get('link')
 	}));
 	if (OS_IOS) {
-		Alloy.Globals.navgroup.open(win);
+		Alloy.Globals.navgroup.openWindow(win);
 	} else {
 		win.open();
 	}
