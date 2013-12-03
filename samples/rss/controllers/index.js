@@ -3,7 +3,7 @@ var usesNavGroup = (OS_IOS && Alloy.isHandheld) || OS_MOBILEWEB;
 
 // save a global reference to the navgroup on iPhone
 if (usesNavGroup) {
-	Alloy.Globals.navgroup = $.navgroup;
+	Alloy.Globals.navgroup = OS_MOBILEWEB ? $.navgroup : $.index;
 }
 
 // respond to detail event triggered on index controller
@@ -17,7 +17,11 @@ $.master.on('detail', function(e) {
 
 	// open the detail windows
 	if (usesNavGroup) {
-		Alloy.Globals.navgroup.open(win);
+		if (OS_MOBILEWEB) {
+			Alloy.Globals.navgroup.open(win);
+		} else {
+			Alloy.Globals.navgroup.openWindow(win);
+		}
 	} else if (OS_ANDROID) {
 		win.open();
 	}

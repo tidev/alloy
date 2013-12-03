@@ -39,8 +39,8 @@ exports.loadRssFeed = function(o, tries) {
 			var item = items.item(i);
 			var image;
 			try {
-				var elems = item.getElementsByTagNameNS('http://mashable.com/', 'thumbnail');
-				image = elems.item(0).getElementsByTagName('img').item(0).getAttribute('src');
+				var elems = item.getElementsByTagNameNS('http://mashable.com/rss', 'thumbnail');
+				image = Ti.XML.parseString(elems.item(0).textContent).getElementsByTagName('img').item(0).getAttribute('src');
 			} catch (ex) {
 				image = '';
 			}
