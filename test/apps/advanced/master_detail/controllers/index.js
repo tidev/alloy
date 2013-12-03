@@ -1,5 +1,5 @@
 if (OS_IOS && Alloy.isHandheld) {
-	Alloy.Globals.navgroup = $.navgroup;
+	Alloy.Globals.navgroup = $.index;
 }
 
 $.master.on('detail', function(e) {
@@ -12,7 +12,7 @@ $.master.on('detail', function(e) {
 
 	// open the detail windows
 	if (OS_IOS && Alloy.isHandheld) {
-		Alloy.Globals.navgroup.open(win);
+		Alloy.Globals.navgroup.openWindow(win);
 	} else if (OS_ANDROID) {
 		win.open();
 	}

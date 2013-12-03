@@ -1,6 +1,7 @@
 "#master[platform=android]": {
     exitOnClose: true
-},
+}
+
 "#header": {
     height: '50dp',
     width: Ti.UI.FILL,

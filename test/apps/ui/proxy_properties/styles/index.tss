@@ -2,6 +2,10 @@
 	backgroundColor: '#fff'
 }
 
+'NavigationWindow': {
+	backgroundColor: '#fff'
+}
+
 'Label': {
 	width: Ti.UI.SIZE,
 	height: Ti.UI.SIZE,

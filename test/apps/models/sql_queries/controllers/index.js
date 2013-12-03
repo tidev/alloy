@@ -4,7 +4,7 @@ function openAddUser(e) {
 
 // save reference to NavigationGroup on iOS
 if (OS_IOS) {
-	Alloy.Globals.navgroup = $.navgroup;
+	Alloy.Globals.navgroup = $.index;
 }
 
 $.index.open();
