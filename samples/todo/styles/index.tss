@@ -2,13 +2,15 @@
 	fullscreen: false,
 	navBarHidden: true,
 	exitOnClose: true
-},
+}
+
 "#todoTable": {
-	top: '50dp',
+	top: Alloy.Globals.tableTop,
 	bottom: '46dp'
-},
+}
+
 "#header": {
-	top: 0,
+	top: Alloy.Globals.top,
 	height: "50dp",
 	width: Ti.UI.FILL,
 	backgroundGradient: {
@@ -20,7 +22,8 @@
 			{ color: "#800", offset: 1.0 }
 		]
 	}
-},
+}
+
 "#title": {
 	left: "10dp",
 	color: "#fff",
@@ -28,7 +31,8 @@
 		fontSize: '24dp',
 		fontWeight: 'bold'
 	}
-},
+}
+
 ".divider": {
 	height: "48dp",
 	width: "3dp",
@@ -44,13 +48,15 @@
 			{ color: "#666", offset: 1.0 }
 		]
 	}
-},
+}
+
 "#addView": {
 	top: 0,
 	bottom: 0,
 	right: 0,
 	width: "50dp"
-},
+}
+
 "#addImage": {
 	height: Ti.UI.FILL,
 	width: Ti.UI.FILL,
@@ -58,7 +64,8 @@
 	backgroundColor: "transparent",
 	image: "/ic_menu_add.png",
 	touchEnabled: false
-},
+}
+
 "#footer": {
 	bottom: 0,
 	height: '46dp',
@@ -72,12 +79,13 @@
 			{ color: "#800", offset: 1.0 }
 		]
 	}
-},
+}
+
 "#tabbedbar": {
 	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
-	backgroundColor: '#800',
+	backgroundColor: '#fff',
 	index: 0,
 	height: 40,
-	left: 20, 
+	left: 20,
 	right: 20
 }

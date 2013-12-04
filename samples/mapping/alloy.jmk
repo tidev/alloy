@@ -1,0 +1,103 @@
+var GOOGLE_API_KEY = 'AIzaSyBbK9MVK9fHB2OyoP_uzE7msXJzHi60C6o';
+
+var fs = require('fs'),
+	path = require('path'),
+	XMLSerializer = require("xmldom").XMLSerializer,
+	DOMParser = require("xmldom").DOMParser;
+
+task("pre:load", function(config, logger) {
+	var tiappFile = path.join(config.dir.project, 'tiapp.xml');
+	var doc = new DOMParser().parseFromString(fs.readFileSync(tiappFile, 'utf8'));
+
+	// add map module for platforms, if necessary
+	['android','iphone'].forEach(function(platform) {
+		installModule(doc, {
+			id: 'ti.map',
+			platform: platform
+		});
+	});
+
+	// add android-specific configurations
+	var root = doc.documentElement;
+	var appId = getNodeText(root.getElementsByTagName('id').item(0));
+	var content = fs.readFileSync(path.join(config.dir.home, 'androidManifest.template.xml'), 'utf8');
+	var rendered = content.replace(/<%= appId %>/g, appId).replace(/<%= googleApiKey %>/g, GOOGLE_API_KEY);
+	var androidNode = new DOMParser().parseFromString(rendered);
+	var removeNodes = root.getElementsByTagName('android');
+	for (var i = 0; i < removeNodes.length; i++) {
+		root.removeChild(removeNodes.item(i));
+	}
+	root.appendChild(androidNode);
+
+	// serialize the xml and write to tiapp.xml
+	var serializer = new XMLSerializer();
+	var newxml = serializer.serializeToString(doc);
+	fs.writeFileSync(tiappFile, newxml, 'utf8');
+});
+
+function getNodeText(node) {
+	if (!node) { return ''; }
+	var serializer = new XMLSerializer(),
+		str = '';
+	for (var c = 0; c < node.childNodes.length; c++) {
+		if (node.childNodes[c].nodeType === 3) {
+			str += serializer.serializeToString(node.childNodes[c]);
+		}
+	}
+	return str.replace(/\&amp;/g,'&');
+}
+
+function installModule(doc, opts) {
+	opts = opts || {};
+
+	var err = 'Project creation failed. Unable to install module "' +
+		(opts.name || opts.id) + '"';
+
+	// read the tiapp.xml file
+	var collection = doc.documentElement.getElementsByTagName('modules');
+	var found = false;
+
+	// Determine if the module or plugin is already installed
+	if (collection.length > 0) {
+		var items = collection.item(0).getElementsByTagName('module');
+		if (items.length > 0) {
+			for (var c = 0; c < items.length; c++) {
+				var theItem = items.item(c);
+				var theItemText = getNodeText(theItem);
+				if (theItemText === opts.id &&
+					(!opts.platform || opts.platform === theItem.getAttribute('platform'))) {
+					found = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// install module or plugin
+	if (!found) {
+		// create the node to be inserted
+		var node = doc.createElement('module');
+		var text = doc.createTextNode(opts.id);
+		if (opts.platform) {
+			node.setAttribute('platform',opts.platform);
+		}
+		if (opts.version) {
+			node.setAttribute('version',opts.version);
+		}
+		node.appendChild(text);
+
+		// add the node into tiapp.xml
+		var pna = null;
+		if (collection.length === 0) {
+			var pn = doc.createElement('modules');
+			doc.documentElement.appendChild(pn);
+			doc.documentElement.appendChild(doc.createTextNode("\n"));
+			pna = pn;
+		} else {
+			pna = collection.item(0);
+		}
+		pna.appendChild(node);
+		pna.appendChild(doc.createTextNode("\n"));
+	}
+
+}

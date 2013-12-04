@@ -6,33 +6,11 @@ var INDEXES = {
 };
 var whereIndex = INDEXES['All'];
 
-// make sure the current platform supports the current sync adapter
-var adapter = require('alloy/models/Todo').definition.config.adapter.type,
-	err;
-switch(adapter) {
-	case 'localStorage':
-		// only supported on Mobileweb
-		if (!OS_MOBILEWEB) { err = 'localStorage adapter only supported on Mobileweb'; }
-		break;
-	case 'properties':
-		// supported on all platforms
-		break;
-	case 'sql':
-	case 'sql_new':
-		// supported on android and ios
-		if (!OS_ANDROID && !OS_IOS) { err = 'sql adapter only supported on Android and iOS'; }
-		break;
-	default:
-		err = 'Unknown adapter type "' + adapter + '"';
-		break;
-}
+// open the window
+$.todoWin.open();
 
-if (err) {
-	alert(err);
-} else {
-	$.todoWin.open();
-	todos.fetch();
-}
+// fetch existing todo items from storage
+todos && todos.fetch();
 
 // Filter the fetched collection before rendering. Don't return the
 // collection itself, but instead return an array of models
