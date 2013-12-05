@@ -1,12 +1,11 @@
 "#index": {
-    height: Ti.UI.FILL,
-    top: "0dp",
-    fullscreen: false
-},
+	fullscreen: false,
+	exitOnClose: true
+}
 
 "#fill": {
-    backgroundImage: "/images/granite.png",
-    backgroundRepeat: true,
-    height: Ti.UI.FILL,
-    top: "0dp"
+	backgroundImage: "/images/granite.png",
+	backgroundRepeat: true,
+	height: Ti.UI.FILL,
+	width: Ti.UI.FILL
 }
