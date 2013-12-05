@@ -1,7 +1,7 @@
 {
-    "dependencies": {
-        "com.appcelerator.bouncylogo": "1.0"
-    },
-    "sourcemap": false,
-    "adapters": []
+	"dependencies": {
+		"com.appcelerator.bouncylogo": "1.0"
+	},
+	"sourcemap": false,
+	"adapters": []
 }

@@ -1,8 +1,8 @@
 <Alloy>
-    <Window onOpen="IndexOpen">
-        <View id="fill">
-            <Widget src="com.appcelerator.bouncylogo" id="logo" />
-            <Widget src="com.appcelerator.drawer" id="drawer"/>
-        </View>
-    </Window>
+	<Window onOpen="IndexOpen">
+		<View id="fill">
+			<Widget src="com.appcelerator.bouncylogo" id="logo" />
+			<Widget src="com.appcelerator.drawer" id="drawer"/>
+		</View>
+	</Window>
 </Alloy>
