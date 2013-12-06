@@ -1,0 +1,13 @@
+'Window': {
+	backgroundColor: '#000'
+}
+
+'Button': {
+	top: 200,
+	width: 200,
+	height: 50
+}
+
+'#index': {
+	backgroundColor: '#fff'
+}
