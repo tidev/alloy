@@ -42,6 +42,9 @@
 var args = arguments[0] || {};
 
 for (var k in args) {
+	// Ignore Alloy hidden properties to work around ALOY-897
+	if (k === 'id' || /^(?:__|#|$)/.test(k)) { continue; }
+
 	$.loading[k] = args[k];
 }
 
