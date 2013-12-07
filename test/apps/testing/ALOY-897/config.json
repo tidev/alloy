@@ -1,0 +1,7 @@
+{
+    "sourcemap": false,
+    "adapters": [],
+    "dependencies": {
+        "test": "1.0"
+    }
+}
