@@ -473,7 +473,7 @@ exports.createHash = function(files) {
 
 	var source = '';
 	_.each(files, function(f) {
-		source += util.format('%s\n%s\n', f, fs.readFileSync(f, 'utf8'));
+		source += util.format('%s\n%s\n', f, fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '');
 	});
 
 	return crypto.createHash('md5').update(source).digest('hex');
