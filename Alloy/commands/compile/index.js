@@ -267,6 +267,13 @@ module.exports = function(args, program) {
 
 	generateAppJs(paths, compileConfig);
 
+	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
+	// in platform-specific folders, so we just copy the platform-specific one to
+	// the Resources folder.
+	if (buildPlatform === 'ios' && alloyConfig.deploytype !== 'development') {
+		U.copyFileSync(path.join(paths.resources, titaniumFolder, 'app.js'), path.join(paths.resources, 'app.js'));
+	}
+
 	// optimize code
 	logger.info('----- OPTIMIZING -----');
 	optimizeCompiledCode(alloyConfig, paths);
