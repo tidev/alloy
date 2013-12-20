@@ -684,7 +684,7 @@ exports.loadController = function(file) {
 
 	// get the base controller for this controller
 	code.controller = contents;
-	code.parentControllerName = astController.getBaseController(contents);
+	code.parentControllerName = astController.getBaseController(contents, file);
 
 	return code;
 };
