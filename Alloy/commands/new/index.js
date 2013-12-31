@@ -34,16 +34,6 @@ module.exports = function(args, program) {
 		}
 	});
 
-	// copy in any Alloy-specific Resources files
-	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
-	_.each(CONST.PLATFORMS, function(p) {
-		wrench.copyDirSyncRecursive(
-			path.join(platformsDir,p,'Resources'),
-			paths.assets,
-			{preserve:true}
-		);
-	});
-
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
 		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0755);
@@ -73,6 +63,16 @@ module.exports = function(args, program) {
 		var p = path.join(paths.app,'assets',dir);
 		wrench.mkdirSyncRecursive(p, 0755);
 		wrench.copyDirSyncRecursive(rDir, p);
+	});
+
+	// copy in any Alloy-specific Resources files
+	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+	_.each(CONST.PLATFORMS, function(p) {
+		wrench.copyDirSyncRecursive(
+			path.join(platformsDir,p,'Resources'),
+			paths.assets,
+			{preserve:true}
+		);
 	});
 
 	// delete the build folder to give us a fresh run
