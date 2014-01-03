@@ -1,0 +1,14 @@
+<Alloy>
+	<Popover title="popover" height="300" width="250">
+		<ContentView>
+			<NavigationWindow id="navWindow">
+				<Window>
+					<RightNavButton>
+						<Button title="Open Window" onClick="open_window"/>
+					</RightNavButton>
+					<Label>This is a window in a popover</Label>
+				</Window>
+			</NavigationWindow>
+		</ContentView>
+	</Popover>
+</Alloy>
