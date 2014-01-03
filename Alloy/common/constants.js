@@ -142,6 +142,7 @@ exports.IMPLICIT_NAMESPACES = {
 	ButtonName: NS_ALLOY_ABSTRACT,
 	BarItemTypes: NS_ALLOY_ABSTRACT,
 	BarItemType: NS_ALLOY_ABSTRACT,
+	ContentView: NS_ALLOY_ABSTRACT,
 	CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
 	CoverFlowImageType: NS_ALLOY_ABSTRACT,
 	FlexSpace: NS_ALLOY_ABSTRACT,
