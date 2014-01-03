@@ -75,7 +75,7 @@ function runApp() {
 	var newArgs = ['build',
 		'--project-dir', harnessAppPath,
 		'--platform', e.platform || (IS_OSX ? 'ios' : 'android'),
-		'--sdk', '3.2.0'
+		'--sdk', '3.2.0.GA'
 	];
 	if (e.tiversion) { newArgs = newArgs.concat(['--sdk',e.tiversion]); }
 	if (e.simtype) { newArgs = newArgs.concat(['--sim-type',e.simtype]); }
