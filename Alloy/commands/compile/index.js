@@ -186,7 +186,7 @@ module.exports = function(args, program) {
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+			wrench.copyDirSyncRecursive(themeAssetsPath, path.join(paths.resources, titaniumFolder), {preserve:true});
 		}
 	}
 	logger.debug('');
