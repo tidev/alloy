@@ -69,7 +69,9 @@ _.each(RUNS, function(run) {
 			// Create a copy of Harness to work with
 			wrench.rmdirSyncRecursive(Harness, true);
 			wrench.mkdirSyncRecursive(Harness, 0777);
-			wrench.copyDirSyncRecursive(HarnessTemplate, Harness);
+			wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
+				forceDelete: true
+			});
 
 			TU.asyncExecTest(run.cmd, {
 				timeout: TIMEOUT_DEFAULT,
