@@ -1,0 +1,6 @@
+<Alloy>
+	<Window id="landingPageWindow">
+		<Require src="middle"/>
+		<Button onClick="closeWindow">CLOSE WINDOW</Button>
+	</Window>
+</Alloy>
