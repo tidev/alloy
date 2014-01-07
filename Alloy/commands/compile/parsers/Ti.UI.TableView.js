@@ -76,8 +76,17 @@ function parse(node, state, args) {
 		if (isProxyProperty) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				post: function(node, state, args) {
-					proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = state.parent.symbol;
+				post: function(node, _state, _args) {
+					if (_args.formFactor) {
+						state.styles.push({
+							isId: true,
+							key: args.id,
+							queries: { formFactor: 'tablet' },
+							style: styler.createVariableStyle(_state.propertyName, _state.parent.symbol)
+						});
+					} else {
+						proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = _state.parent.symbol;
+					}
 				}
 			});
 
@@ -131,7 +140,7 @@ function parse(node, state, args) {
 			});
 		}
 
-		// fill in poxy property templates, if present
+		// fill in proxy property templates, if present
 		if (isControllerNode) {
 			_.each(proxyProperties, function(v,k) {
 				proxyProperties[k] = _.template(v, {
