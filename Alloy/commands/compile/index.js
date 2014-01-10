@@ -825,7 +825,8 @@ function optimizeCompiledCode() {
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return rx.test(f) && !_.find(exceptions, function(e) {
+			// TODO: remove should.js check here once ALOY-921 is resolved
+			return rx.test(f) && !/(?:^|[\\\/])should\.js$/.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
 		});
