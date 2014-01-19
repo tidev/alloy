@@ -453,12 +453,13 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         window = Ti.UI.createWindow({
             backgroundColor: "transparent",
             zIndex: 1e3,
-            opacity: 0
+            opacity: 0,
+            navBarHidden: true
         }), view = Ti.UI.createView({
-            top: 10,
-            right: 10,
-            bottom: 10,
-            left: 10,
+            top: "10dp",
+            right: "10dp",
+            bottom: "10dp",
+            left: "10dp",
             backgroundColor: "#52D3FE",
             border: 10,
             borderColor: "#52D3FE",
@@ -468,7 +469,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         });
         var closeLabel = Ti.UI.createButton({
             font: {
-                fontSize: 11,
+                fontSize: "11sp",
                 fontWeight: "bold"
             },
             backgroundColor: "#52D3FE",
@@ -477,31 +478,22 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
             style: 0,
             borderRadius: 6,
             title: "X",
-            top: 8,
-            right: 8,
-            width: 30,
-            height: 30
+            top: "3dp",
+            right: "3dp",
+            width: "26dp",
+            height: "26dp"
         });
         closeLabel.addEventListener("click", destroyAuthorizeUI), window.open();
-        var offset = 0;
-        Ti.Android && (offset = "10dp"), loadingContainer = Ti.UI.createView({
-            top: offset,
-            right: offset,
-            bottom: offset,
-            left: offset,
+        loadingContainer = Ti.UI.createView({
             backgroundColor: "#fff"
         }), loadingView = Ti.UI.createProgressBar({
-            top: 10,
-            right: 10,
-            bottom: 10,
-            left: 10,
             min: 0,
             max: 1,
             value: .5,
             message: "Loading, please wait.",
             backgroundColor: "#fff",
             font: {
-                fontSize: 14,
+                fontSize: "14sp",
                 fontWeight: "bold"
             },
             style: 0
