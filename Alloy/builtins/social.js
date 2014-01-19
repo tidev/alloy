@@ -450,13 +450,14 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
     }, firstLoad = !0, loading = !1, estimates = JSON.parse(Ti.App.Properties.getString("Social-LoadingEstimates", "{}")), estimateID, startTime, intervalID = 0;
     this.showLoadingUI = function() {
         var animation = require('alloy/animation');
+        var isIOS7 = OS_IOS && parseInt(Ti.Platform.version, 10) > 6 ? true : false
         window = Ti.UI.createWindow({
             backgroundColor: "transparent",
             zIndex: 1e3,
             opacity: 0,
             navBarHidden: true
         }), view = Ti.UI.createView({
-            top: "10dp",
+            top: isIOS7 ? "30dp" : "10dp",
             right: "10dp",
             bottom: "10dp",
             left: "10dp",
@@ -478,7 +479,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
             style: 0,
             borderRadius: 6,
             title: "X",
-            top: "3dp",
+            top: isIOS7 ? "23dp" :"3dp",
             right: "3dp",
             width: "26dp",
             height: "26dp"
