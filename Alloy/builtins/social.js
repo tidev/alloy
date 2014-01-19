@@ -468,9 +468,14 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
             borderWidth: 4,
             zIndex: -1
         });
-        var closeLabel = Ti.UI.createButton({
+        var closeLabelContainer = Ti.UI.createView({
+            top: isIOS7 ? "20dp" : "0dp",
+            right: 0,
+            height: "30dp",
+            width: "32dp"
+        }), closeLabel = Ti.UI.createButton({
             font: {
-                fontSize: "11sp",
+                fontSize: "12sp",
                 fontWeight: "bold"
             },
             backgroundColor: "#52D3FE",
@@ -479,12 +484,12 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
             style: 0,
             borderRadius: 6,
             title: "X",
-            top: isIOS7 ? "23dp" :"3dp",
+            top: "3dp",
             right: "3dp",
-            width: "26dp",
-            height: "26dp"
+            width: "25dp",
+            height: "25dp"
         });
-        closeLabel.addEventListener("click", destroyAuthorizeUI), window.open();
+        closeLabelContainer.addEventListener("click", destroyAuthorizeUI), window.open();
         loadingContainer = Ti.UI.createView({
             backgroundColor: "#fff"
         }), loadingView = Ti.UI.createProgressBar({
@@ -498,18 +503,13 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
                 fontWeight: "bold"
             },
             style: 0
-        }), view.add(loadingContainer), loadingContainer.add(loadingView), loadingView.show(), window.add(view), window.add(closeLabel);
+        }), view.add(loadingContainer), loadingContainer.add(loadingView), loadingView.show(), closeLabelContainer.add(closeLabel), window.add(view), window.add(closeLabelContainer);
         animation.popIn(window);
         showLoading();
     }, this.showAuthorizeUI = function(pUrl, pReceivePinCallback) {
         receivePinCallback = pReceivePinCallback;
-        var offset = 0;
-        Ti.Android && (offset = "10dp"), webView = Ti.UI.createWebView({
+        webView = Ti.UI.createWebView({
             url: pUrl,
-            top: offset,
-            right: offset,
-            bottom: offset,
-            left: offset,
             autoDetect: [ Ti.UI.AUTODETECT_NONE ]
         }), webView.addEventListener("beforeload", showLoading), webView.addEventListener("load", authorizeUICallback), view.add(webView);
     }, this.getAccessToken = function(pUrl, callback) {
