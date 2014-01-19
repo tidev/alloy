@@ -449,10 +449,12 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         }
     }, firstLoad = !0, loading = !1, estimates = JSON.parse(Ti.App.Properties.getString("Social-LoadingEstimates", "{}")), estimateID, startTime, intervalID = 0;
     this.showLoadingUI = function() {
+        var animation = require('alloy/animation');
         window = Ti.UI.createWindow({
             backgroundColor: "transparent",
-            zIndex: 1e3
-        }), Ti.Android || (window.opacity = 0, window.transform = Ti.UI.create2DMatrix().scale(0)), view = Ti.UI.createView({
+            zIndex: 1e3,
+            opacity: 0
+        }), view = Ti.UI.createView({
             top: 10,
             right: 10,
             bottom: 10,
@@ -504,19 +506,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
             },
             style: 0
         }), view.add(loadingContainer), loadingContainer.add(loadingView), loadingView.show(), window.add(view), window.add(closeLabel);
-        if (!Ti.Android) {
-            var tooBig = Ti.UI.createAnimation({
-                transform: Ti.UI.create2DMatrix().scale(1.1),
-                opacity: 1,
-                duration: 350
-            }), shrinkBack = Ti.UI.createAnimation({
-                transform: Ti.UI.create2DMatrix(),
-                duration: 400
-            });
-            tooBig.addEventListener("complete", function() {
-                window.animate(shrinkBack);
-            }), window.animate(tooBig);
-        }
+        animation.popIn(window);
         showLoading();
     }, this.showAuthorizeUI = function(pUrl, pReceivePinCallback) {
         receivePinCallback = pReceivePinCallback;
