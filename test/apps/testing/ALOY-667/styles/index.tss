@@ -1,0 +1,5 @@
+'#welcomeNav': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
