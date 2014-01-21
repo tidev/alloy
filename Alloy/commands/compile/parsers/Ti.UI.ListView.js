@@ -14,11 +14,12 @@ var SEARCH_PROPERTIES = [
 	'Ti.UI.SearchBar',
 	'Ti.UI.Android.SearchView'
 ];
+var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.ListSection',
 	'Alloy.Abstract.Templates',
 ];
-var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, VALID);
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 var ORDER = {
 	'Ti.UI.ListSection': 2,
 	'Alloy.Abstract.Templates': 1
@@ -44,6 +45,7 @@ function parse(node, state, args) {
 		var fullname = CU.getNodeFullname(child),
 			theNode = CU.validateNodeName(child, ALL_VALID),
 			isSearchBar = false,
+			isRefreshControl = false,
 			isProxyProperty = false,
 			isControllerNode = false,
 			hasUiNodes = false,
@@ -56,6 +58,8 @@ function parse(node, state, args) {
 			return;
 		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
 			isControllerNode = true;
+		} else if (REFRESH_PROPERTY === theNode) {
+			isRefreshControl = true;
 		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
@@ -95,6 +99,10 @@ function parse(node, state, args) {
 		// generate code for search bar
 		} else if (isSearchBar) {
 			proxyProperties.searchView = parentSymbol;
+
+		// generate code for refreshControl
+		} else if (isRefreshControl) {
+			proxyProperties.refreshControl = parentSymbol;
 
 		// generate code for ListSection
 		} else if (theNode === 'Ti.UI.ListSection') {
