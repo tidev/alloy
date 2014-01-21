@@ -317,7 +317,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 				cb: ev.value,
 				escapedCb: ev.value.replace(/'/g, "\\'"),
 				func: eventFunc
-			};
+			}, postCode;
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
@@ -332,7 +332,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 			// add the generated code to the view code and post-controller code respectively
 			code.content += _.template(immediateTemplate, eventObj);
-			exports.postCode += _.template(deferTemplate, eventObj);
+			postCode = _.template(deferTemplate, eventObj);
+			exports.postCode += state.condition ? _.template(codeTemplate, {
+				condition: state.condition,
+				content: postCode
+			}) : postCode;
 		});
 	}
 
