@@ -86,6 +86,11 @@ describe('alloy compile', function() {
 					});
 
 					it('has no undefined style entries', function() {
+						// skip this test, since it specifically tests undefined values in TSS
+						if (file === 'testing/ALOY-822') {
+							return;
+						}
+
 						var hrDir = path.join(paths.harness,'Resources');
 						var cPaths = [
 							path.join(hrDir,'alloy','styles'),
