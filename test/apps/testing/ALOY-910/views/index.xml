@@ -1,0 +1,20 @@
+<Alloy>
+	<Window>
+		<TableView id="jobList">
+        	<SearchBar platform="ios" filterAttribute="title"/>
+        	<RefreshControl id="ptr" tintColor="#008"/>
+        	<TableViewRow title="tableview"/>
+        	<TableViewRow title="drag down to show refreshControl"/>
+        	<TableViewRow title="click here to open listview" onClick="openList"/>
+		</TableView>
+	</Window>
+	<Window id="listWin">
+		<ListView id="jobList" onClick="openList">
+        	<RefreshControl id="ptr" tintColor="#800"/>
+        	<ListSection>
+        		<ListItem title="listview"/>
+        		<ListItem title="drag down to show refreshControl"/>
+        	</ListSection>
+		</ListView>
+	</Window>
+</Alloy>
