@@ -1,0 +1,12 @@
+<Alloy>
+    <Window>
+        <ListView>
+            <ListSection>
+                <ListItem title="One" />
+                <ListItem title="Two" />
+                <ListItem title="Three" />
+            </ListSection>
+            <Require src="section" />
+        </ListView>
+    </Window>
+</Alloy>
