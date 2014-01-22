@@ -37,7 +37,7 @@ function parse(node, state, args) {
 
 	// sort the children of the ListView
 	var children = _.sortBy(U.XML.getElementsFromNodes(node.childNodes), function(n) {
-		return ORDER[CU.getNodeFullname(n)] || -1;
+		return ORDER[CU.validateNodeName(n, ALL_VALID)] || -1;
 	});
 
 	// process each child
