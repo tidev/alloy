@@ -630,7 +630,12 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
 			path.join(compileConfig.dir.resources, titaniumFolder),
-			manifest.id
+			manifest.id,
+			{
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder
+			}
 		);
 		targetFilepath = path.join(
 			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
