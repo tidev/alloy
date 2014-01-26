@@ -631,7 +631,8 @@
   // during a given window of time.
   _.throttle = function(func, wait) {
     var context, args, result;
-    var previous, timeout = 0;
+    var previous = 0;
+    var timeout = 0;
     var later = function() {
       previous = new Date;
       timeout = 0;
