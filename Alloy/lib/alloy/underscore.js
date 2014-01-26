@@ -630,11 +630,11 @@
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.
   _.throttle = function(func, wait) {
-    var context, args, timeout, result;
-    var previous = 0;
+    var context, args, result;
+    var previous, timeout = 0;
     var later = function() {
       previous = new Date;
-      timeout = null;
+      timeout = 0;
       result = func.apply(context, args);
     };
     return function() {
@@ -644,7 +644,7 @@
       args = arguments;
       if (remaining <= 0) {
         clearTimeout(timeout);
-        timeout = null;
+        timeout = 0;
         previous = now;
         result = func.apply(context, args);
       } else if (!timeout) {
@@ -659,11 +659,12 @@
   // N milliseconds. If `immediate` is passed, trigger the function on the
   // leading edge, instead of the trailing.
   _.debounce = function(func, wait, immediate) {
-    var timeout, result;
+    var result;
+    var timeout = 0;
     return function() {
       var context = this, args = arguments;
       var later = function() {
-        timeout = null;
+        timeout = 0;
         if (!immediate) result = func.apply(context, args);
       };
       var callNow = immediate && !timeout;
