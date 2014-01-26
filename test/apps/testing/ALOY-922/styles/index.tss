@@ -1,0 +1,5 @@
+'#settingsWin': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}

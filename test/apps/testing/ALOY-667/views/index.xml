@@ -1,0 +1,8 @@
+<Alloy>
+    <NavigationWindow id="welcomeNav" platform="ios">
+        <Window title="Modal">
+            <Button id="btnFoo" title="Show Contacts (ios)" platform="ios" onClick="exports.showContacts" />
+            <Button id="btnFoo" title="Show Contacts (android)" platform="android" onClick="exports.showContacts" />
+        </Window>
+    </NavigationWindow>
+</Alloy>

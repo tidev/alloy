@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<Widget src="test.widget">
+			<Window id="a" platform="ios" />
+    		<Window id="b" platform="android" />
+		</Widget>
+	</Window>
+</Alloy>

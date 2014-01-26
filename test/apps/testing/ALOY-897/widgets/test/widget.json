@@ -1,0 +1,13 @@
+{
+	"id": "test",
+	"name": "test",
+	"description" : "",
+	"author": "",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012",
+	"license":"Public Domain",
+	"min-alloy-version": "1.0",
+	"min-titanium-version":"2.1",
+	"tags":"",
+	"platforms":"android,blackberry,ios,mobileweb,tizen"
+}

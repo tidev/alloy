@@ -1,0 +1,14 @@
+<Alloy>
+	<Window>
+		<OptionDialog id="options" title="App Options" destructive="3" cancel="2">
+			<ButtonNames>
+				<ButtonName>button 1</ButtonName>
+				<ButtonName>button 2</ButtonName>
+			</ButtonNames>
+			<View  id= "androidView" layout="horizontal" platform="android">
+				<Label id="avLabel" text="This is a label"/>
+			</View>
+		</OptionDialog>
+		<Button onClick="showOptions">options</Button>
+	</Window>
+</Alloy>

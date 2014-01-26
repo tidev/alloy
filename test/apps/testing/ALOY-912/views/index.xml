@@ -1,0 +1,11 @@
+<Alloy>
+    <Window class="container">
+        <TableView>
+            <HeaderView formFactor="tablet">
+                <Label>
+                    Text
+                </Label>
+            </HeaderView>
+        </TableView>
+    </Window>
+</Alloy>

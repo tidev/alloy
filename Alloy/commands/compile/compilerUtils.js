@@ -29,7 +29,8 @@ var RESERVED_ATTRIBUTES = [
 		'formFactor',
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
-		CONST.AUTOSTYLE_PROPERTY
+		CONST.AUTOSTYLE_PROPERTY,
+		'ns'
 	],
 	RESERVED_ATTRIBUTES_REQ_INC = [
 		'platform',
@@ -38,7 +39,8 @@ var RESERVED_ATTRIBUTES = [
 		'formFactor',
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
-		CONST.AUTOSTYLE_PROPERTY
+		CONST.AUTOSTYLE_PROPERTY,
+		'ns'
 	],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
@@ -185,7 +187,7 @@ exports.getParserArgs = function(node, state, opts) {
 		var attrName = attr.nodeName;
 		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
-		if (matches !== null) {
+		if (matches !== null && exports.isNodeForCurrentPlatform(node)) {
 			events.push({
 				name: U.lcfirst(matches[1]),
 				value: node.getAttribute(attrName)
@@ -317,7 +319,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 				cb: ev.value,
 				escapedCb: ev.value.replace(/'/g, "\\'"),
 				func: eventFunc
-			};
+			}, postCode;
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
@@ -332,7 +334,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 			// add the generated code to the view code and post-controller code respectively
 			code.content += _.template(immediateTemplate, eventObj);
-			exports.postCode += _.template(deferTemplate, eventObj);
+			postCode = _.template(deferTemplate, eventObj);
+			exports.postCode += state.condition ? _.template(codeTemplate, {
+				condition: state.condition,
+				content: postCode
+			}) : postCode;
 		});
 	}
 
@@ -512,21 +518,41 @@ exports.inspectRequireNode = function(node) {
 	};
 };
 
-exports.copyWidgetResources = function(resources, resourceDir, widgetId) {
+exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
+	opts = opts || {};
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
+		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
 			var source = path.join(dir, file);
+
+			// make sure the file exists and that it is not filtered
+			if (!fs.existsSync(source) ||
+				(opts.filter && opts.filter.test(file)) ||
+				(opts.exceptions && _.contains(opts.exceptions, file))) {
+				return;
+			}
+
 			if (fs.statSync(source).isFile()) {
-				var destDir = path.join(resourceDir, path.dirname(file), widgetId);
+				var dirname = path.dirname(file);
+				var parts = dirname.split(/[\/\\]/);
+				if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
+					dirname = parts.slice(1).join('/');
+				}
+
+				var destDir = path.join(resourceDir, dirname, widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
 					wrench.mkdirSyncRecursive(destDir, 0755);
 				}
+
+				logger.trace('Copying ' + file.yellow + ' --> ' +
+					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
 			}
 		});
+		logger.trace(' ');
 	});
 };
 
