@@ -231,6 +231,12 @@ module.exports = function(args, program) {
 					var theFile = view.substring(0, view.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
 					var fp = path.join(collection.dir, theKey);
+          _.each(CONST.EXCLUDED_FILES, function(f){
+            // skips processing of views inside excluded directories (like .svn folders)
+            if(fp.indexOf(f) !== -1) {
+              tracker[fp] = true;
+            }
+          });
 					if (tracker[fp]) { return; }
 
 					// generate runtime controller
@@ -252,6 +258,12 @@ module.exports = function(args, program) {
 					var theFile = controller.substring(0,controller.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
 					var fp = path.join(collection.dir, theKey);
+          _.each(CONST.EXCLUDED_FILES, function(f){
+            // skips processing of controllers inside excluded directories (like .svn folders)
+            if(fp.indexOf(f) !== -1) {
+              tracker[fp] = true;
+            }
+          });
 					if (tracker[fp]) { return; }
 
 					// generate runtime controller

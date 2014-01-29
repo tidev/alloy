@@ -179,6 +179,15 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
 
+    var skipThisDirectory = false;
+    _.each(CONST.EXCLUDED_FILES, function(f){
+      // skips processing of files inside excluded directories (like .svn folders)
+      if(src.indexOf(f) !== -1) {
+        skipThisDirectory = true;
+      }
+    });
+    if(skipThisDirectory) return;
+
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
 			(opts.filter && opts.filter.test(file)) ||
