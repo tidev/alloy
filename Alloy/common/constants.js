@@ -103,6 +103,10 @@ exports.DIR = {
 	THEME: 'themes',
 	BUILD: 'build/alloy'
 };
+// folders/files to exclude when copying and processing files
+exports.EXCLUDED_FILES = [
+	'.svn'
+]
 
 // constants identifying JS reserved words
 exports.JS_RESERVED = [
