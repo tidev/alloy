@@ -217,6 +217,9 @@ module.exports = function(args, program) {
 	});
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
+  
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
@@ -226,17 +229,11 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir,CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
-				if (viewRegex.test(view) && filterRegex.test(view)) {
+				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
 					var fp = path.join(collection.dir, theKey);
-          _.each(CONST.EXCLUDED_FILES, function(f){
-            // skips processing of views inside excluded directories (like .svn folders)
-            if(fp.indexOf(f) !== -1) {
-              tracker[fp] = true;
-            }
-          });
 					if (tracker[fp]) { return; }
 
 					// generate runtime controller
@@ -253,17 +250,11 @@ module.exports = function(args, program) {
 		var theControllerDir = path.join(collection.dir,CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
 			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
-				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
+				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0,controller.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
 					var fp = path.join(collection.dir, theKey);
-          _.each(CONST.EXCLUDED_FILES, function(f){
-            // skips processing of controllers inside excluded directories (like .svn folders)
-            if(fp.indexOf(f) !== -1) {
-              tracker[fp] = true;
-            }
-          });
 					if (tracker[fp]) { return; }
 
 					// generate runtime controller

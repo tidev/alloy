@@ -175,18 +175,16 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
 
-    var skipThisDirectory = false;
-    _.each(CONST.EXCLUDED_FILES, function(f){
-      // skips processing of files inside excluded directories (like .svn folders)
-      if(src.indexOf(f) !== -1) {
-        skipThisDirectory = true;
-      }
-    });
-    if(skipThisDirectory) return;
+    if(excludeRegex.test(src)) {
+      return;
+    }
 
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
