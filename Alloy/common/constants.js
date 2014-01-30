@@ -104,9 +104,9 @@ exports.DIR = {
 	BUILD: 'build/alloy'
 };
 // folders/files to exclude when copying and processing files
-// accepts folder name (e.g. '.svn') or file (e.g. 'ignoreme.txt')
+// RegEx format: must escape special chars - so use \.svn not .svn
 exports.EXCLUDED_FILES = [
-	'.svn'
+	'\.svn'
 ];
 
 // constants identifying JS reserved words
