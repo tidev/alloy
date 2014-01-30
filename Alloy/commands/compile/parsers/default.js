@@ -10,12 +10,20 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var fullname = CU.getNodeFullname(node),
-		parts = fullname.split('.');
+		parts = fullname.split('.'),
+    extras = [];
 
 	// is this just a proxy property?
 	if (parts[0] === '_ProxyProperty') {
 		return require('./_ProxyProperty.' + parts[1]).parse(node, state);
 	}
+
+	// special handling for touchEnabled per ALOY-911
+	if (node.hasAttribute('touchEnabled')) {
+		var attr = node.getAttribute('touchEnabled');
+		extras.push(['touchEnabled', attr === 'true']);
+	}
+	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// start assembling a basic view creation
 	var createFunc = 'create' + node.nodeName,
