@@ -23,9 +23,9 @@
  */
 exports.confirm = function (args) {
     var alertDialog = Ti.UI.createAlertDialog({
-        title: args.title || 'Confirm',
-        message: args.message || 'Are you sure?',
-        buttonNames: [args.no || 'No', args.yes || 'Yes'],
+        title: args.title || L('alloy_dialogs_confirm_title', 'Confirm'),
+        message: args.message || L('alloy_dialogs_confirm_message', 'Are you sure?'),
+        buttonNames: [args.no || L('alloy_dialogs_confirm_no', 'No'), args.yes || L('alloy_dialogs_confirm_yes', 'Yes')],
         cancel: 0
     });
     alertDialog.addEventListener('click', function (evt) {
