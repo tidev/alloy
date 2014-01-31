@@ -175,6 +175,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
+	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
@@ -190,8 +191,15 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		var parts = file.split(/[\/\\]/);
 		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
 			dst = path.join(dstDir, parts.slice(1).join('/'));
+			ordered.push({ src:src, dst:dst });
+		} else {
+			ordered.unshift({ src:src, dst:dst });
 		}
+	});
 
+	_.each(ordered, function(o) {
+		var src = o.src;
+		var dst = o.dst;
 		var srcStat = fs.statSync(src);
 		if (fs.existsSync(dst)) {
 			var dstStat = fs.statSync(dst);
