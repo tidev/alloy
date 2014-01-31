@@ -1,0 +1,5 @@
+<Alloy>
+  <Window id="win2">
+    <Label>I'm in window 2</Label>
+  </Window>
+</Alloy>
