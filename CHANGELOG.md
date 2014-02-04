@@ -1,10 +1,23 @@
 ## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
-* Install Alloy by version: `[sudo] npm install -g alloy@1.2.0`
+* Install Alloy by version: `[sudo] npm install -g alloy@1.3.0`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.3.0 (21 December 2013)
+## 1.3.1 (not yet released)
+
+[Full list of Issues that were addressed in Release 1.3.1](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666)
+
+* [ALOY-905](https://jira.appcelerator.org/browse/ALOY-905). Alloy now supports TiSDK 3.0.0+ again!
+* [ALOY-907](https://jira.appcelerator.org/browse/ALOY-907). Fixed unhandled exception errors in invalid JS.
+* [ALOY-912](https://jira.appcelerator.org/browse/ALOY-912). Better handling of runtime conditionals on TableView proxy properties.
+* [ALOY-914](https://jira.appcelerator.org/browse/ALOY-914). Show Alloy appicon instead of Titanium default.
+* [ALOY-916](https://jira.appcelerator.org/browse/ALOY-916). Copy theme assets to platform-specific folders.
+* [ALOY-920](https://jira.appcelerator.org/browse/ALOY-920). Fixes compile time error when using should.js.
+* [ALOY-922](https://jira.appcelerator.org/browse/ALOY-922). Fixes error when using proxy properties on a TextField in an ItemTemplate.
+* [ALOY-937](https://jira.appcelerator.org/browse/ALOY-937). Fixes copying of platform-specific widget assets.
+
+## 1.3.0
 
 * [Full list of Issues that were addressed in Release 1.3.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15575)
 
