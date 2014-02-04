@@ -50,13 +50,18 @@ describe('alloy compile', function() {
 
 			_.each(platforms, function(platform,k) {
 				describe(('[' + platform.platform + ']').cyan, function () {
-					it('compiles without critical error',
+						it('compiles without critical error',
 						function() {
 							TU.asyncExecTest(
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									expect(this.output.error).toBeFalsy();
+									if (file === 'testing/ALOY-887') {
+										// this test specifically tests a compiler error
+										expect(this.output.error).toBeTruthy();
+									} else {
+										expect(this.output.error).toBeFalsy();
+									}
 								},
 								timeout: TIMEOUT_COMPILE
 							}
@@ -71,6 +76,10 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
+							if (file === 'testing/ALOY-887') {
+								// skip this test since this app forces a compile error
+								return;
+							}
 							if (!fs.existsSync(cPath)) { return; }
 							var files = wrench.readdirSyncRecursive(cPath);
 							_.each(files, function(file) {
