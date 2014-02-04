@@ -1,6 +1,6 @@
 # Alloy
 
-**Latest stable version:** 1.3.0
+**Latest stable version:** 1.3.1
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
@@ -96,18 +96,18 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ```
  project  : alloy
- repo age : 1 year, 5 months ago
- commits  : 2564
- active   : 372 days
- files    : 1925
+ repo age : 1 year, 8 months
+ active   : 400 days
+ commits  : 2613
+ files    : 1980
  authors  :
-  2240  Tony Lukasavage         87.4%
-    87  Jeff Haynie             3.4%
+  2285  Tony Lukasavage         87.4%
+    87  Jeff Haynie             3.3%
     75  Russ McMahon            2.9%
     38  Kevin Whinnery          1.5%
-    24  Ben Hatfield            0.9%
+    26  Ben Hatfield            1.0%
     21  Carl Orthlieb           0.8%
-    18  Fokke Zandbergen        0.7%
+    19  Fokke Zandbergen        0.7%
      8  Issam Hakimi            0.3%
      6  Chris Barber            0.2%
      6  Arthur Evans            0.2%
@@ -126,11 +126,13 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
      1  Matthew Lanham          0.0%
      1  Micah Alcorn            0.0%
      1  Daniel Waardal          0.0%
+     1  Praveen Innamuri        0.0%
      1  Daniel Mahon            0.0%
      1  Andrew Blair            0.0%
      1  Anders D. Johnson       0.0%
      1  gitizenme               0.0%
      1  J. Tangelder            0.0%
+     1  Family                  0.0%
 ```
 
 ## Legal
