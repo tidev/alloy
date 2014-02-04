@@ -1,0 +1,15 @@
+<Alloy>
+    <Window id="settingsWin" title="Settings" class="container" tabBarHidden="true">
+        <ListView id="listView" defaultItemTemplate="template" allowsSelection="false">
+            <Templates>
+                <ItemTemplate id="inputTemplate" name="inputTemplate">
+                    <TextField bindId="textfield" id="tf_username" onChange="TFUpdate" autocorrect="false" keyboardType="TI.Ui.KEYBOARD_EMAIL" hintText="User name / e-mail address"></TextField>
+                </ItemTemplate>
+            </Templates>
+
+            <ListSection headerTitle="Login Id" id="idSection">
+                <ListItem template="inputTemplate" textfield:value=""/>
+            </ListSection>
+        </ListView>
+    </Window>
+</Alloy>

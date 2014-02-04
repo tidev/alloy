@@ -1015,13 +1015,13 @@ module.exports = (function(){
                         if (result0 === null) {
                           pos0 = pos;
                           pos1 = pos;
-                          if (input.substr(pos, 4) === "null") {
-                            result0 = "null";
-                            pos += 4;
+                          if (input.substr(pos, 9) === "undefined") {
+                            result0 = "undefined";
+                            pos += 9;
                           } else {
                             result0 = null;
                             if (reportFailures === 0) {
-                              matchFailed("\"null\"");
+                              matchFailed("\"undefined\"");
                             }
                           }
                           if (result0 !== null) {
@@ -1037,10 +1037,41 @@ module.exports = (function(){
                             pos = pos1;
                           }
                           if (result0 !== null) {
-                            result0 = (function(offset) { return ALLOY_EXPR + "null"; })(pos0);
+                            result0 = (function(offset) { return ALLOY_EXPR + "undefined"; })(pos0);
                           }
                           if (result0 === null) {
                             pos = pos0;
+                          }
+                          if (result0 === null) {
+                            pos0 = pos;
+                            pos1 = pos;
+                            if (input.substr(pos, 4) === "null") {
+                              result0 = "null";
+                              pos += 4;
+                            } else {
+                              result0 = null;
+                              if (reportFailures === 0) {
+                                matchFailed("\"null\"");
+                              }
+                            }
+                            if (result0 !== null) {
+                              result1 = parse___();
+                              if (result1 !== null) {
+                                result0 = [result0, result1];
+                              } else {
+                                result0 = null;
+                                pos = pos1;
+                              }
+                            } else {
+                              result0 = null;
+                              pos = pos1;
+                            }
+                            if (result0 !== null) {
+                              result0 = (function(offset) { return ALLOY_EXPR + "null"; })(pos0);
+                            }
+                            if (result0 === null) {
+                              pos = pos0;
+                            }
                           }
                         }
                       }

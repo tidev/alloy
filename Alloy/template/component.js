@@ -4,27 +4,38 @@ var Alloy = require('alloy'),
 
 <%= WPATH %>
 
+function __processArg(obj, key) {
+	var arg = null;
+	if (obj) {
+		arg = obj[key] || null;
+		delete obj[key];
+	}
+	return arg;
+}
+
 function Controller() {
 	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	this.__controllerPath = '<%= controllerPath %>';
 
-	var <%= parentVariable %> = arguments[0] ? arguments[0]['<%= parentVariable %>'] : null;
-	var <%= modelVariable %> = arguments[0] ? arguments[0]['<%= modelVariable %>'] : null;
-	var <%= itemTemplateVariable %> = arguments[0] ? arguments[0]['<%= itemTemplateVariable %>'] : null;
+	if (arguments[0]) {
+		var <%= parentVariable %> = __processArg(arguments[0], '<%= parentVariable %>');
+		var <%= modelVariable %> = __processArg(arguments[0], '<%= modelVariable %>');
+		var <%= itemTemplateVariable %> = __processArg(arguments[0], '<%= itemTemplateVariable %>');
+	}
 	var $ = this;
 	var exports = {};
 	var __defers = {};
-	
+
 	// Generated code that must be executed before all UI and/or
-	// controller code. One example is all model and collection 
+	// controller code. One example is all model and collection
 	// declarations from markup.
 	<%= preCode %>
 
 	// Generated UI code
 	<%= viewCode %>
 
-	// make all IDed elements in $.__views available right on the $ in a 
+	// make all IDed elements in $.__views available right on the $ in a
 	// controller's internal code. Externally the IDed elements will
 	// be accessed with getView().
 	_.extend($, $.__views);
@@ -38,7 +49,7 @@ function Controller() {
 	// is executed.
 	<%= postCode %>
 
-	// Extend the $ instance with all functions and properties 
+	// Extend the $ instance with all functions and properties
 	// defined on the exports object.
 	_.extend($, exports);
 }

@@ -14,11 +14,12 @@ var SEARCH_PROPERTIES = [
 	'Ti.UI.SearchBar',
 	'Ti.UI.Android.SearchView'
 ];
+var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.TableViewRow',
 	'Ti.UI.TableViewSection'
 ];
-var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, VALID);
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -38,6 +39,7 @@ function parse(node, state, args) {
 		var fullname = CU.getNodeFullname(child),
 			theNode = CU.validateNodeName(child, ALL_VALID),
 			isSearchBar = false,
+			isRefreshControl = false,
 			isProxyProperty = false,
 			isControllerNode = false,
 			hasUiNodes = false;
@@ -50,6 +52,8 @@ function parse(node, state, args) {
 			return;
 		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
 			isControllerNode = true;
+		} else if (REFRESH_PROPERTY === theNode) {
+			isRefreshControl = true;
 		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
@@ -76,8 +80,17 @@ function parse(node, state, args) {
 		if (isProxyProperty) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
-				post: function(node, state, args) {
-					proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = state.parent.symbol;
+				post: function(node, _state, _args) {
+					if (_args.formFactor) {
+						state.styles.push({
+							isId: true,
+							key: args.id,
+							queries: { formFactor: 'tablet' },
+							style: styler.createVariableStyle(_state.propertyName, _state.parent.symbol)
+						});
+					} else {
+						proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = _state.parent.symbol;
+					}
 				}
 			});
 
@@ -87,6 +100,15 @@ function parse(node, state, args) {
 				parent: {},
 				post: function(node, state, args) {
 					proxyProperties.search = state.parent.symbol;
+				}
+			});
+
+		// generate code for refreshControl
+		} else if (isRefreshControl) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					proxyProperties.refreshControl = state.parent.symbol;
 				}
 			});
 
@@ -131,7 +153,7 @@ function parse(node, state, args) {
 			});
 		}
 
-		// fill in poxy property templates, if present
+		// fill in proxy property templates, if present
 		if (isControllerNode) {
 			_.each(proxyProperties, function(v,k) {
 				proxyProperties[k] = _.template(v, {
