@@ -1,0 +1,575 @@
+{
+    "version": "1.0",
+    "types": [
+        {
+            "functions": [
+                {
+                    "name": "addClass",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "required",
+                            "type": "Array",
+                            "name": "classes"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "opts"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "void"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Adds a TSS class to the specified view object. "
+                },
+                {
+                    "name": "createStyle",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "opts"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p></p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Creates a dictionary of properties based on the specified styles. "
+                },
+                {
+                    "name": "destroy",
+                    "parameters": [],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "void"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Frees binding resources associated with this controller and its\nUI components. "
+                },
+                {
+                    "name": "getTopLevelViews",
+                    "parameters": [],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Array",
+                        "description": "\n"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Returns a list of the root view elements associated with this controller. "
+                },
+                {
+                    "name": "getView",
+                    "parameters": [
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "id"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Object",
+                        "description": "\n"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Returns the specified view associated with this controller. "
+                },
+                {
+                    "name": "getViews",
+                    "parameters": [],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Array",
+                        "description": "\n"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Returns a list of all IDed view elements associated with this controller. "
+                },
+                {
+                    "name": "removeClass",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "required",
+                            "type": "Array",
+                            "name": "classes"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "opts"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "void"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Removes a TSS class from the specified view object. "
+                },
+                {
+                    "name": "resetClass",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Array",
+                            "name": "classes"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "opts"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "void"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Sets the array of TSS classes for the target View object, adding the classes specified and\nremoving any applied class"
+                }
+            ],
+            "name": "Alloy.Controller",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "<p>The base class for Alloy controllers.</p>"
+        },
+        {
+            "functions": [
+                {
+                    "name": "createCollection",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Backbone.Collection",
+                        "description": "<p>Backbone collection object.</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Factory method for instantiating a Backbone collection of model objects. "
+                },
+                {
+                    "name": "createController",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy controller object.</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Factory method for instantiating a controller. "
+                },
+                {
+                    "name": "createModel",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Backbone.Model",
+                        "description": "<p>Backbone model object.</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Factory method for instantiating a Backbone Model object. "
+                },
+                {
+                    "name": "createWidget",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "id"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy widget controller object.</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Factory method for instantiating a widget controller. "
+                }
+            ],
+            "name": "Alloy",
+            "isInternal": false,
+            "properties": [
+                {
+                    "name": "CFG",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Object",
+                    "isClassProperty": true,
+                    "description": "An object that stores Alloy configuration values as defined in your app's\napp/config.json file. "
+                },
+                {
+                    "name": "Collections",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Object",
+                    "isClassProperty": true,
+                    "description": "An object for storing globally accessible Alloy collections. "
+                },
+                {
+                    "name": "Globals",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Object",
+                    "isClassProperty": true,
+                    "description": "An object for storing globally accessible variables and functions. "
+                },
+                {
+                    "name": "Models",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Object",
+                    "isClassProperty": true,
+                    "description": "An object for storing globally accessible Alloy models. "
+                },
+                {
+                    "name": "isHandheld",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Boolean",
+                    "isClassProperty": true,
+                    "description": "<p><code>true</code> if the current device is a handheld device (not a tablet).</p>"
+                },
+                {
+                    "name": "isTablet",
+                    "isInternal": false,
+                    "isInstanceProperty": false,
+                    "type": "Boolean",
+                    "isClassProperty": true,
+                    "description": "<p><code>true</code> if the current device is a tablet.</p>"
+                }
+            ],
+            "events": [],
+            "description": "<p>Top-level module for Alloy functions.</p>"
+        },
+        {
+            "functions": [],
+            "name": "Alloy.builtins",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "<p>Alloy provides some additional utility libraries that simplify certain functions,\nsuch as animations, string manipultation and display unit conversion.  These libraries\nare referred to as \"builtins.\"</p>"
+        },
+        {
+            "functions": [
+                {
+                    "name": "instance",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Backbone.Collection",
+                        "description": "<p>An Alloy Collection object singleton</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Creates a singleton instance of a Collection based on the given model, or\nreturns an existing instance if one has alr"
+                }
+            ],
+            "name": "Alloy.Collections",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "<p>Class to access or create collections.</p>"
+        },
+        {
+            "functions": [
+                {
+                    "name": "create",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "apiName"
+                        },
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "opts"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p></p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Creates a Titanium UI object with the specified styles. "
+                }
+            ],
+            "name": "Alloy.Controller.UI",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "\n"
+        },
+        {
+            "functions": [
+                {
+                    "name": "instance",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        }
+                    ],
+                    "isInternal": false,
+                    "isClassProperty": false,
+                    "returns": {
+                        "type": "Backbone.Model",
+                        "description": "<p>An Alloy Model object singleton</p>"
+                    },
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Creates a singleton instance of a Model based on the given model, or\nreturns an existing instance if one has already "
+                }
+            ],
+            "name": "Alloy.Models",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "<p>Class to access or create models.</p>"
+        },
+        {
+            "functions": [
+                {
+                    "name": "createCollection",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "since": {
+                        "since": "1.1.0",
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "returns": {
+                        "type": "Backbone.Collection",
+                        "description": "<p>Backbone collection object.</p>"
+                    },
+                    "isClassProperty": false,
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "\n\nFactory method for instantiating a Backbone collection of model objects. "
+                },
+                {
+                    "name": "createController",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "since": {
+                        "since": "1.1.0",
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy controller object.</p>"
+                    },
+                    "isClassProperty": false,
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "\n\nFactory method for instantiating a controller. "
+                },
+                {
+                    "name": "createModel",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "since": {
+                        "since": "1.1.0",
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "returns": {
+                        "type": "Backbone.Model",
+                        "description": "<p>Backbone model object.</p>"
+                    },
+                    "isClassProperty": false,
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "\n\nFactory method for instantiating a Backbone Model object. "
+                },
+                {
+                    "name": "createWidget",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "id"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "since": {
+                        "since": "1.1.0",
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy widget controller object.</p>"
+                    },
+                    "isClassProperty": false,
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "\n\nFactory method for instantiating a widget controller. "
+                }
+            ],
+            "name": "Widget",
+            "isInternal": false,
+            "properties": [],
+            "events": [],
+            "description": "<p>Widgets are self-contained components that can be easily dropped into an Alloy project.\nThey were conceived as a way to reuse code in multiple projects or to be used multiple\ntimes in the same project.</p>"
+        }
+    ]
+}
