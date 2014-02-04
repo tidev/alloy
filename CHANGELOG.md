@@ -1,13 +1,12 @@
-
 ## General Information:
 * Install latest stable Alloy: `[sudo] npm install -g alloy`
 * Install Alloy by version: `[sudo] npm install -g alloy@1.3.0`
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.3.1
+## 1.3.1 (not yet released)
 
-* [Full list of Issues that were addressed in Release 1.3.1](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666)
+[Full list of Issues that were addressed in Release 1.3.1](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666)
 
 * [ALOY-905](https://jira.appcelerator.org/browse/ALOY-905). Alloy now supports TiSDK 3.0.0+ again!
 * [ALOY-907](https://jira.appcelerator.org/browse/ALOY-907). Fixed unhandled exception errors in invalid JS.

@@ -14,7 +14,7 @@ function parse(node, state, args) {
 		extras = [],
 		proxyProperties = {};
 
-	// iterate through all children of the TableView
+	// iterate through all children of the TextField
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var fullname = CU.getNodeFullname(child),
 			isProxyProperty = false,
@@ -23,7 +23,7 @@ function parse(node, state, args) {
 			controllerSymbol, parentSymbol;
 
 		// validate the child element and determine if it's part of
-		// the table data or a proxy property assigment
+		// the textfield or a proxy property assigment
 		if (!CU.isNodeForCurrentPlatform(child)) {
 			return;
 		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
@@ -60,7 +60,7 @@ function parse(node, state, args) {
 		if (isProxyProperty) {
 			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
 
-		// generate code for the static row
+		// generate code for the child components
 		} else if (hasUiNodes || !isControllerNode) {
 			postCode += '<%= parentSymbol %>.add(' + parentSymbol + ');';
 		}
@@ -77,7 +77,7 @@ function parse(node, state, args) {
 	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
-	// generate the code for the section itself
+	// generate the code for the textfield itself
 	var nodeState = require('./default').parse(node, state);
 	code += nodeState.code;
 
@@ -89,9 +89,8 @@ function parse(node, state, args) {
 	}
 
 	// Update the parsing state
-	return {
+	return _.extend(state, {
 		parent: {},
-		styles: state.styles,
 		code: code
-	};
+	});
 }

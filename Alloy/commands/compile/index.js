@@ -186,7 +186,17 @@ module.exports = function(args, program) {
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, path.join(paths.resources, titaniumFolder), {preserve:true});
+			U.updateFiles(
+				themeAssetsPath,
+				path.join(paths.resources, titaniumFolder),
+				{
+					rootDir: paths.project,
+					themeChanged: buildLog.data.themeChanged,
+					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+					exceptions: otherPlatforms,
+					titaniumFolder: titaniumFolder
+				}
+			);
 		}
 	}
 	logger.debug('');
@@ -529,8 +539,17 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
 		// process the UI nodes
+		var hasUsedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-			var defaultId = i === 0 ? viewName : undefined;
+
+			// should we use the default id?
+			var defaultId;
+			if (!hasUsedDefaultId && CU.isNodeForCurrentPlatform(node)) {
+				hasUsedDefaultId = true;
+				defaultId = viewName;
+			}
+
+			// generate the code for this node
 			var fullname = CU.getNodeFullname(node);
 			template.viewCode += CU.generateNode(node, {
 				parent:{},
@@ -621,7 +640,12 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
 			path.join(compileConfig.dir.resources, titaniumFolder),
-			manifest.id
+			manifest.id,
+			{
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder
+			}
 		);
 		targetFilepath = path.join(
 			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
@@ -825,7 +849,8 @@ function optimizeCompiledCode() {
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return rx.test(f) && !_.find(exceptions, function(e) {
+			// TODO: remove should.js check here once ALOY-921 is resolved
+			return rx.test(f) && !/(?:^|[\\\/])should\.js$/.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
 		});

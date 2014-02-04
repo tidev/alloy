@@ -1,0 +1,6 @@
+{
+	"id": "test.widget",
+	"name": "Test widget",
+	"version": "1.0",
+	"dependencies": {}
+}

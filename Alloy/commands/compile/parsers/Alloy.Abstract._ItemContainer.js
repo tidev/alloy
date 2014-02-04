@@ -24,7 +24,7 @@ function parse(node, state, args) {
 	var def = fixDefinition(state.itemContainerDefinition),
 		config = CU.getCompilerConfig(),
 		isAndroid = config && config.alloyConfig && config.alloyConfig.platform === 'android',
-		androidView = null;
+		androidView = null,
 		extras = [],
 		code = '';
 
@@ -93,6 +93,9 @@ function parse(node, state, args) {
 	code += outState.code;
 
 	// Update the parsing state
-	return _.extend(outState, {code:code});
+	return _.extend(outState, {
+		parent: {},
+		code: code
+	});
 
 }

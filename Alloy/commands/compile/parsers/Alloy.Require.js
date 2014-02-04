@@ -92,6 +92,7 @@ function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		xChildren = [];
 	_.each(children, function(child) {
+		if (!CU.isNodeForCurrentPlatform(child)) { return; }
 		var childArgs = CU.getParserArgs(child);
 		code += CU.generateNodeExtended(child, state, {
 			parent: {},
