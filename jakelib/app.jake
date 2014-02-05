@@ -138,4 +138,39 @@ namespace('app', function() {
 		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
 		runApp();
 	});
+
+	desc('compiles the example app, minus the index.xml & index.tss files');
+	task('setupNoXML', ['app:clobber'], function() {
+		log('Initializing Alloy project...');
+		if (!path.existsSync(resourcesPath)) {
+			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+		}
+		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
+			if (error) {
+				console.log(stdout);
+				console.log(stderr);
+				console.log(error);
+				process.exit(1);
+			} else {
+				log('Staging sample app "'+appDir+'" for launch...');
+				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
+				wrench.copyDirSyncRecursive(
+					path.join('test','lib'),
+					path.join(targetAppPath,'lib'),
+					{preserve:true}
+				);
+				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
+        log('Removing index.xml & index.tss');
+        fs.unlinkSync(path.join(targetAppPath,'views','index.xml'));
+        fs.unlinkSync(path.join(targetAppPath,'styles','index.tss'));
+			}
+		});
+	});
+
+  desc('run an example without copying index.xml and index.tss, for ALOY-656');
+  task('runNoXML', ['app:setupNoXML'], function () {
+    runApp();
+  });
+
 });
