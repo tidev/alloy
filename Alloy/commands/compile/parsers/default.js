@@ -23,7 +23,6 @@ function parse(node, state, args) {
 		var attr = node.getAttribute('touchEnabled');
 		extras.push(['touchEnabled', attr === 'true']);
 	}
-	//if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	if (extras.length) {
 		state.extraStyle = state.extraStyle || {};
