@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label text="Hello!" top="50">
+	</Window>
+</Alloy>
