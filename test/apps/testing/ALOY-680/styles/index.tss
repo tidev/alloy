@@ -1,0 +1,13 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#build': {
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	color: '#27ae60'
+}

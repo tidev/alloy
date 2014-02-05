@@ -71,6 +71,10 @@ exports.DEPLOY_TYPES = [
 	{ key: 'ENV_PROD', value: 'production' },
 	{ key: 'ENV_PRODUCTION', value: 'production' }
 ];
+exports.DIST_TYPES = [
+	{ key: 'DIST_ADHOC', value: ['dist-adhoc'] },
+	{ key: 'DIST_STORE', value: ['dist-appstore', 'dist-playstore'] }
+];
 
 // mappings of file extensions and folders for each file type
 exports.FILE_EXT = {
