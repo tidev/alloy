@@ -49,6 +49,10 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
+				if (platform.platform === 'tizen' || (process.platform === 'darwin' && platform.platform === 'blackberry')) {
+					return;
+				}
+
 				describe(('[' + platform.platform + ']').cyan, function () {
 						it('compiles without critical error',
 						function() {
