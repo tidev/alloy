@@ -48,7 +48,15 @@ exports.XML = {
 				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
-				logger.warn((m || '').split(/[\r\n]/));
+				// ALOY-840: die on unclosed XML tags
+				// xmldom hardcodes this as a warning with the string message 'unclosed xml attribute'
+				// even when it's a tag that's unclosed
+				if(m.indexOf('unclosed xml attribute') === -1) {
+					logger.warn((m || '').split(/[\r\n]/));
+				} else {
+					m = m.replace('unclosed xml attribute', 'Unclosed XML tag or attribute');
+					exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+				}
 			};
 			doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
 		} catch (e) {
