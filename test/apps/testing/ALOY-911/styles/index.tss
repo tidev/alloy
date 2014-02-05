@@ -1,0 +1,9 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+'#untouchable': {
+  height: 100,
+  backgroundColor: 'red'
+}

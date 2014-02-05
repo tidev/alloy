@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+    <View touchEnabled="false" id="untouchable" onClick="doClick">
+    </View>
+	</Window>
+</Alloy>
