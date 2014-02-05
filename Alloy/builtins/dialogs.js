@@ -8,6 +8,23 @@
  *     dialogs.confirm({});
  */
 
+/**
+ * @property {String} title
+ * To be used as default title for confirm-method AlertDialog
+ */
+exports.title = 'Confirm';
+
+/**
+ * @property {String} message
+ * To be used as default message for confirm-method AlertDialog
+ */
+exports.message = 'Are you sure?';
+
+/**
+ * @property {Array} buttonNames
+ * To be used as default buttonNames for confirm-method AlertDialog
+ */
+exports.buttonNames = ['No', 'Yes'];
 
 /**
  * @method confirm
@@ -22,17 +39,18 @@
  * @param {...*} [args.evt] Callback context.
  */
 exports.confirm = function (args) {
-    var alertDialog = Ti.UI.createAlertDialog({
-        title: args.title || 'Confirm',
-        message: args.message || 'Are you sure?',
-        buttonNames: [args.no || 'No', args.yes || 'Yes'],
-        cancel: 0
-    });
-    alertDialog.addEventListener('click', function (evt) {
-        if (evt.index) {
-            if (args.callback) { args.callback(args.evt || {}); }
-        }
-        args = null;
-    });
-    alertDialog.show();
+	args = args || {};
+	var alertDialog = Ti.UI.createAlertDialog({
+		title: args.title || exports.title,
+		message: args.message || exports.message,
+		buttonNames: [args.no || exports.buttonNames[0], args.yes || exports.buttonNames[1]],
+		cancel: 0
+	});
+	alertDialog.addEventListener('click', function (evt) {
+		if (evt.index) {
+			if (args.callback) { args.callback(args.evt || {}); }
+		}
+		args = null;
+	});
+	alertDialog.show();
 };
