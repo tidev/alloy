@@ -11,7 +11,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var fullname = CU.getNodeFullname(node),
 		parts = fullname.split('.'),
-    extras = [];
+		extras = [];
 
 	// is this just a proxy property?
 	if (parts[0] === '_ProxyProperty') {
@@ -23,7 +23,12 @@ function parse(node, state, args) {
 		var attr = node.getAttribute('touchEnabled');
 		extras.push(['touchEnabled', attr === 'true']);
 	}
-	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
+	//if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
+
+	if (extras.length) {
+		state.extraStyle = state.extraStyle || {};
+		state.extraStyle = _.extend(state.extraStyle, styler.createVariableStyle(extras));
+	}
 
 	// start assembling a basic view creation
 	var createFunc = 'create' + node.nodeName,

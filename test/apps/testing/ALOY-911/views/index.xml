@@ -1,6 +1,24 @@
 <Alloy>
 	<Window>
+		<TableView id="table" touchEnabled="true" onClick="doClick">
+			<HeaderView>
+				<Label id="headerView">header view</Label>
+			</HeaderView>
+			<TableViewRow>
+				<Label class="row">row 1</Label>
+			</TableViewRow>
+			<TableViewRow>
+				<Label class="row">row 2</Label>
+			</TableViewRow>
+			<TableViewRow>
+				<Label class="row">row 3</Label>
+			</TableViewRow>
+			<TableViewRow>
+				<Label class="row">row 4</Label>
+			</TableViewRow>
+		</TableView>
     <View touchEnabled="false" id="untouchable" onClick="doClick">
+    	<Label touchEnabled="false" id="untouchableLabel">i won't respond to clicks</Label>
     </View>
 	</Window>
 </Alloy>
