@@ -112,7 +112,7 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	var paths = {
 		project: projectPath,
 		app: path.join(projectPath,'app'),
-		indexBase: path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW)
+		indexBase: path.join(CONST.DIR.CONTROLLER,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.CONTROLLER)
 	};
 	paths.index = path.join(paths.app,paths.indexBase);
 	paths.assets = path.join(paths.app,'assets');
