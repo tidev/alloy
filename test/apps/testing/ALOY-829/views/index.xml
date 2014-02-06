@@ -2,7 +2,7 @@
 	<Window>
 		<ListView onItemclick="showInfo">
 			<ListSection id="section" dataCollection="name">
-				<ListItem title="{name}" modelId="{id}">
+				<ListItem title="{name}" modelId="{id}"/>
 			</ListSection>
 		</ListView>
 	</Window>
