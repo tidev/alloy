@@ -374,7 +374,7 @@ try {
 var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
     function showLoading() {
         if (loading) return;
-        loading = !0, loadingView.value = 0, estimateID = firstLoad ? "tokenRequest" : "pageLoad", estimates[estimateID] || (estimates[estimateID] = firstLoad ? 2e3 : 1e3), firstLoad = !1, startTime = (new Date).getTime(), intervalID = setInterval(updateProgress, 30), webView && webView.hide(), loadingView && loadingView.show(), loadingContainer && loadingContainer.show();
+        loading = !0, loadingView && (loadingView.value = 0), estimateID = firstLoad ? "tokenRequest" : "pageLoad", estimates[estimateID] || (estimates[estimateID] = firstLoad ? 2e3 : 1e3), firstLoad = !1, startTime = (new Date).getTime(), intervalID = setInterval(updateProgress, 30), webView && webView.hide(), loadingView && loadingView.show(), loadingContainer && loadingContainer.show();
     }
     function updateProgress() {
         loadingView && (loadingView.value = ((new Date).getTime() - startTime) / estimates[estimateID]);
