@@ -228,9 +228,6 @@ module.exports = function(args, program) {
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
-  // don't process XML/controller files inside .svn folders (ALOY-839)
-  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
-
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
 	var tracker = {};
