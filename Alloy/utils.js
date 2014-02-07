@@ -221,7 +221,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			if (!dstStat.isDirectory()) {
 				// copy file in if it is a JS file or if its mtime is
 				// greater than the one in Resources
-				if (path.extname(src) === '.js' || opts.themeChanged ||
+				if (path.extname(src) === '.js' || opts.themeChanged || opts.isNew ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
 					logger.trace('Copying ' +
 						path.join('SRC_DIR', path.relative(srcDir, src)).yellow + ' --> ' +
