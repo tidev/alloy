@@ -131,7 +131,7 @@ module.exports = function(args, program) {
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
 	// copy in all lib resources from alloy module
-	U.updateFiles(
+	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
 		{
@@ -141,7 +141,7 @@ module.exports = function(args, program) {
 			})
 		}
 	);
-	U.updateFiles(
+	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
 		{ rootDir: paths.project }
@@ -166,7 +166,7 @@ module.exports = function(args, program) {
 				titaniumFolder: titaniumFolder
 			});
 		}
-		U.updateFiles(
+		updateFilesWithBuildLog(
 			path.join(paths.app, CONST.DIR[type]),
 			path.join(paths.resources, titaniumFolder),
 			opts
@@ -175,7 +175,7 @@ module.exports = function(args, program) {
 
 	// copy in test specs if not in production
 	if (alloyConfig.deploytype !== 'production') {
-		U.updateFiles(
+		updateFilesWithBuildLog(
 			path.join(paths.app,'specs'),
 			path.join(paths.resources, titaniumFolder, 'specs'),
 			{ rootDir: paths.project }
@@ -186,7 +186,7 @@ module.exports = function(args, program) {
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 		if (path.existsSync(themeAssetsPath)) {
-			U.updateFiles(
+			updateFilesWithBuildLog(
 				themeAssetsPath,
 				path.join(paths.resources, titaniumFolder),
 				{
@@ -227,6 +227,9 @@ module.exports = function(args, program) {
 	});
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
+
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
@@ -808,6 +811,10 @@ function processModels(dirs) {
 	});
 
 	return models;
+}
+
+function updateFilesWithBuildLog(src, dst, opts) {
+	U.updateFiles(src, dst, _.extend({ isNew: buildLog.isNew }, opts));
 }
 
 function optimizeCompiledCode() {
