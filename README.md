@@ -1,6 +1,6 @@
 # Alloy
 
-**Latest stable version:** 1.3.0
+**Latest stable version:** 1.3.1
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
@@ -20,7 +20,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 [sudo] npm install -g alloy
 
 # install a specific version
-[sudo] npm install -g alloy@1.1.3
+[sudo] npm install -g alloy@1.3.1
 
 # install cutting edge directly from github
 [sudo] npm install -g git://github.com/appcelerator/alloy.git
