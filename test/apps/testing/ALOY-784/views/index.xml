@@ -1,0 +1,9 @@
+<Alloy>
+    <Window class="container" title="My Test App">
+        <Menu id="menu" platform="android" title="My XML Menu" onHomeIconItemSelected="doMenuClick">
+            <MenuItem id="item1" title="One" onClick="doMenuClick" />
+            <MenuItem id="item2" title="Two" onClick="doMenuClick" />
+        </Menu>
+        <Label id="label" onClick="doClick">Hello, World</Label>
+    </Window>
+</Alloy>
