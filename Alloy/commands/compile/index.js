@@ -158,14 +158,12 @@ module.exports = function(args, program) {
 		var opts = {
 			rootDir: paths.project
 		};
-		if (type === 'ASSETS') {
-			opts = _.extend(opts, {
-				themeChanged: buildLog.data.themeChanged,
-				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
-				exceptions: otherPlatforms,
-				titaniumFolder: titaniumFolder
-			});
-		}
+		opts = _.extend(opts, {
+			themeChanged: buildLog.data.themeChanged,
+			filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+			exceptions: otherPlatforms,
+			titaniumFolder: titaniumFolder
+		});
 		updateFilesWithBuildLog(
 			path.join(paths.app, CONST.DIR[type]),
 			path.join(paths.resources, titaniumFolder),
