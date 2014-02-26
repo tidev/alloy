@@ -1,3 +1,9 @@
+function toggleState() {
+    _.each(Alloy.Collections.heroes.models, function(model) {
+        model.set('status', Math.random() > 0.5);
+    });
+}
+
 if (!Ti.App.Properties.hasProperty('seeded')) {
 
     // add all items to collection

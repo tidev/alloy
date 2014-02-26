@@ -1,11 +1,16 @@
 <Alloy>
 	<Collection src="heroes"/>
-    <Window>
-        <TableView id="table" dataCollection="heroes" top="20">
-            <TableViewRow>
-                <Label text="{name}"></Label>
-                <Switch value="{status}"></Switch>
-            </TableViewRow>
-        </TableView>
-    </Window>
+	<NavigationWindow>
+		<Window title="data switches">
+			<RightNavButton>
+				<Button title="toggle" onClick="toggleState"/>
+			</RightNavButton>
+			<TableView id="table" dataCollection="heroes" top="20">
+				<TableViewRow>
+					<Label text="{name}"></Label>
+					<Switch value="{status}"></Switch>
+				</TableViewRow>
+			</TableView>
+		</Window>
+	</NavigationWindow>
 </Alloy>
