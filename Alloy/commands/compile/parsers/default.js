@@ -118,7 +118,7 @@ function parse(node, state, args) {
 			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 		}
 
-		if (isCollectionBound) {
+		if (isCollectionBound && CU.isNodeForCurrentPlatform(node)) {
 			var localModel = CU.generateUniqueId();
 			var itemCode = '';
 
