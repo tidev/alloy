@@ -118,7 +118,7 @@ function parse(node, state, args) {
 			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 		}
 
-		if (isCollectionBound) {
+		if (isCollectionBound && CU.isNodeForCurrentPlatform(node)) {
 			var localModel = CU.generateUniqueId();
 			var itemCode = '';
 
@@ -138,14 +138,12 @@ function parse(node, state, args) {
 				"	" + args.symbol + ".remove(children[d]);" +
 				"}";
 
-			if(CU.isNodeForCurrentPlatform(node)) {
-				code += _.template(CU.generateCollectionBindingTemplate(args), {
-					localModel: localModel,
-					pre: pre,
-					items: itemCode,
-					post: ''
-				});
-			}
+			code += _.template(CU.generateCollectionBindingTemplate(args), {
+				localModel: localModel,
+				pre: pre,
+				items: itemCode,
+				post: ''
+			});
 		}
 	}
 
