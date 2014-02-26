@@ -1,0 +1,10 @@
+<Alloy>
+	<NavigationWindow>
+		<Window title="Proxy Shorthands">
+			<LeftNavButton>
+				<Button title="Left" onClick="doLeftClick"/>
+			</LeftNavButton>
+			<RightNavButton title="Right" onClick="doRightClick"/>
+		</Window>
+	</NavigationWindow>
+</Alloy>
