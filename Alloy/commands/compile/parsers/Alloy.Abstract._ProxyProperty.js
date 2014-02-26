@@ -20,6 +20,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var def = fixDefinition(state.proxyPropertyDefinition),
+		proxyPropertyName = U.lcfirst(node.nodeName),
 		code = '',
 		proxy;
 
@@ -30,27 +31,9 @@ function parse(node, state, args) {
 		}
 	}
 
-	if(!node.hasChildNodes()) {
-		// Per ALOY-714, support shorthand notation for LeftNavButton, RightNavButton
-		var origNodeName = node.nodeName,
-			eventRegEx = /^on([A-Z].+)/;
-		node.nodeName = 'Button';
-		// need to remove the 'on*' properties from the node to prevent event listeners from being added twice
-		_.each(node.attributes, function(attr) {
-			if(eventRegEx.test(attr.name)) {
-				node.removeAttribute(attr.name);
-			}
-		});
-		code += CU.generateNodeExtended(node, state, {
-			parent: {},
-			post: function(node, state, args) {
-				proxy = state.parent.symbol;
-			}
-		});
-		// assign proxy property to parent based on its original node name
-		code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) +
-				'.' + U.lcfirst(origNodeName) + '=' + proxy + ';';
-	} else {
+	// standard proxy property handling
+	if(node.hasChildNodes()) {
+
 		// process children
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 			var childArgs = CU.getParserArgs(child, state);
@@ -70,13 +53,23 @@ function parse(node, state, args) {
 				}
 			});
 		});
-		// assign proxy property to parent
-		code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) +
-			'.' + U.lcfirst(node.nodeName) + '=' + proxy + ';';
+
+	// explicitly create nav buttons from proxy property element
+	} else if (_.contains(['LeftNavButton', 'RightNavButton'], node.nodeName)) {
+		node.nodeName = 'Button';
+		var exState = _.extend(_.clone(state), { parent: {} });
+		var buttonState = require('./Ti.UI.Button').parse(node, exState);
+		code += buttonState.code;
+		proxy = buttonState.parent.symbol;
+
+	// fail if there's no children and its not nav buttons
+	} else {
+		U.dieWithNode(node, '<' + node.nodeName + '> requires a child element');
 	}
 
-
-
+	// assign proxy property to parent
+	code += (state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) +
+			'.' + proxyPropertyName + '=' + proxy + ';';
 
 	return {
 		parent: {},
