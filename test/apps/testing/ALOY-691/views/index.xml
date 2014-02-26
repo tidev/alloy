@@ -1,0 +1,13 @@
+<Alloy>
+    <Collection src="test" />
+    <Window id="index">
+        <View id="content" dataCollection="test" dataFunction="render" platform="android">
+            <View></View>
+        </View>
+        <TableView id="content" dataCollection="test" dataFunction="render" platform="ios,mobileweb">
+            <TableViewRow>
+                <View></View>
+            </TableViewRow>
+        </TableView>
+    </Window>
+</Alloy>

@@ -138,12 +138,14 @@ function parse(node, state, args) {
 				"	" + args.symbol + ".remove(children[d]);" +
 				"}";
 
-			code += _.template(CU.generateCollectionBindingTemplate(args), {
-				localModel: localModel,
-				pre: pre,
-				items: itemCode,
-				post: ''
-			});
+			if(CU.isNodeForCurrentPlatform(node)) {
+				code += _.template(CU.generateCollectionBindingTemplate(args), {
+					localModel: localModel,
+					pre: pre,
+					items: itemCode,
+					post: ''
+				});
+			}
 		}
 	}
 
