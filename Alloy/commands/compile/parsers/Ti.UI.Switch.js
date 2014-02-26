@@ -17,8 +17,7 @@ function parse(node, state, args) {
 		var value = node.getAttribute('value');
 		if(!value.match(BINDING_REGEX)) {
 			// coerce value attribute to boolean if the switch is not bound to a collection
-			state.extraStyle = styler.createVariableStyle('value',
-				node.getAttribute('value') === 'true');
+			state.extraStyle = styler.createVariableStyle('value', value === 'true');
 		}
 	} else if (REQUIRES_VALUE) {
 		// Workaround for https://jira.appcelerator.org/browse/TIMOB-9007
