@@ -1,0 +1,6 @@
+"#lbl3": {
+	color: 'red'
+}
+"#lbl3[platform=android]": {
+	color: 'green'
+}

@@ -1,0 +1,11 @@
+"Window": {
+	backgroundColor: 'white'
+}
+"Label": {
+	color: 'black',
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE
+}
+"#lbl7": {
+	color: 'blue'
+}
