@@ -614,7 +614,7 @@ function generateConfig(obj) {
 			var themeCfg = path.join(obj.dir.home,'themes',o.theme,'config.'+CONST.FILE_EXT.CONFIG);
 
 			// parse theme config.json, if it exists
-			if (path.existsSync(appCfg)) {
+			if (path.existsSync(themeCfg)) {
 				o = exports.parseConfig(themeCfg, alloyConfig, o);
 			}
 		}
