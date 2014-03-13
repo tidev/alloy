@@ -1,0 +1,7 @@
+{
+	"adapters": [],
+	"sourcemap": false,
+	"dependencies": {
+		"com.appcelerator.loading": "1.0"
+	}
+}

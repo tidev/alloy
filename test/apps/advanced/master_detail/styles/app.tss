@@ -1,11 +1,17 @@
 "Window": {
 	backgroundColor:"#fff"
-},
+}
+
+"NavigationWindow": {
+	backgroundColor:"#fff"
+}
+
 "Window[platform=android]": {
     navBarHidden: true
-},
+}
+
 "Label": {
 	width: Ti.UI.SIZE,
 	height: Ti.UI.SIZE,
 	color: "#000"
-} 
+}

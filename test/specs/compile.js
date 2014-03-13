@@ -38,7 +38,7 @@ describe('alloy compile', function() {
 		// TODO: Stop skipping the ui/navwindow test when TiSDK 3.1.3 is in the HarnessTemplate
 		//       tiapp.xml. We skip it now because it purposely fails compilation on any SDK below
 		//       TiSDK 3.1.3, where Ti.UI.iOS.NavigationWindow was introduced.
-		if (file === 'ui/navwindow' || file === 'testing/ALOY-818') { return; }
+		if (file === 'ui/navwindow' || file === 'testing/ALOY-818' || file === 'testing/ALOY-840') { return; }
 
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
@@ -49,14 +49,23 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
+				if (platform.platform === 'tizen' || (process.platform === 'darwin' && platform.platform === 'blackberry')) {
+					return;
+				}
+
 				describe(('[' + platform.platform + ']').cyan, function () {
-					it('compiles without critical error',
+						it('compiles without critical error',
 						function() {
 							TU.asyncExecTest(
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									expect(this.output.error).toBeFalsy();
+									if (file === 'testing/ALOY-887') {
+										// this test specifically tests a compiler error
+										expect(this.output.error).toBeTruthy();
+									} else {
+										expect(this.output.error).toBeFalsy();
+									}
 								},
 								timeout: TIMEOUT_COMPILE
 							}
@@ -71,6 +80,10 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
+							if (file === 'testing/ALOY-887') {
+								// skip this test since this app forces a compile error
+								return;
+							}
 							if (!fs.existsSync(cPath)) { return; }
 							var files = wrench.readdirSyncRecursive(cPath);
 							_.each(files, function(file) {
@@ -86,6 +99,11 @@ describe('alloy compile', function() {
 					});
 
 					it('has no undefined style entries', function() {
+						// skip this test, since it specifically tests undefined values in TSS
+						if (file === 'testing/ALOY-822') {
+							return;
+						}
+
 						var hrDir = path.join(paths.harness,'Resources');
 						var cPaths = [
 							path.join(hrDir,'alloy','styles'),

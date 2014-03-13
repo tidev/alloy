@@ -1,0 +1,55 @@
+'.sep': {
+	height: '1dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#111'
+}
+
+'#titlebar': {
+	top: 0,
+	height: '50dp',
+	width: Ti.UI.FILL,
+	backgroundColor: '#2C3E50',
+	layout: 'horizontal'
+}
+
+'#content': {
+	top: '51dp',
+	bottom: 0,
+	width: Ti.UI.FILL,
+	backgroundColor: '#D7DADB',
+	layout: 'vertical'
+}
+
+'.contentLabel': {
+	color: '#111',
+	left: '10dp',
+	right: '10dp',
+	top: '10dp'
+}
+
+'.image': {
+	left: '10dp',
+	top: '4dp',
+	height: '42dp',
+	width: '42dp'
+}
+
+'.title': {
+	left: '10dp',
+	color: '#efefef',
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}
+
+'.action': {
+	color: '#f5f5f5',
+	backgroundColor: 'FC4349',
+	height: '46dp',
+	width: Ti.UI.FILL
+}
+
+'.action[platform=ios]': {
+	backgroundImage: 'none'
+}

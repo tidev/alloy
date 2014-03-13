@@ -3,6 +3,8 @@
 var path = require('path'),
 	fs = require('fs'),
 	colors = require('colors'),
+	crypto = require('crypto'),
+	util = require('util'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('./logger'),
@@ -20,7 +22,7 @@ exports.XML = {
 		var serializer = new XMLSerializer(),
 			str = '';
 		for (var c = 0; c < node.childNodes.length; c++) {
-			if (node.childNodes[c].nodeType != 1) {
+			if (node.childNodes[c].nodeType === 3) {
 				str += serializer.serializeToString(node.childNodes[c]);
 			}
 		}
@@ -46,7 +48,15 @@ exports.XML = {
 				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
-				logger.warn((m || '').split(/[\r\n]/));
+				// ALOY-840: die on unclosed XML tags
+				// xmldom hardcodes this as a warning with the string message 'unclosed xml attribute'
+				// even when it's a tag that's unclosed
+				if(m.indexOf('unclosed xml attribute') === -1) {
+					logger.warn((m || '').split(/[\r\n]/));
+				} else {
+					m = m.replace('unclosed xml attribute', 'Unclosed XML tag or attribute');
+					exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+				}
 			};
 			doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
 		} catch (e) {
@@ -110,7 +120,7 @@ exports.getAndValidateProjectPaths = function(argPath) {
 	var paths = {
 		project: projectPath,
 		app: path.join(projectPath,'app'),
-		indexBase: path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW)
+		indexBase: path.join(CONST.DIR.CONTROLLER,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.CONTROLLER)
 	};
 	paths.index = path.join(paths.app,paths.indexBase);
 	paths.assets = path.join(paths.app,'assets');
@@ -173,9 +183,16 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
+
+    if(excludeRegex.test(src)) {
+      return;
+    }
 
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
@@ -188,8 +205,15 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		var parts = file.split(/[\/\\]/);
 		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
 			dst = path.join(dstDir, parts.slice(1).join('/'));
+			ordered.push({ src:src, dst:dst });
+		} else {
+			ordered.unshift({ src:src, dst:dst });
 		}
+	});
 
+	_.each(ordered, function(o) {
+		var src = o.src;
+		var dst = o.dst;
 		var srcStat = fs.statSync(src);
 		if (fs.existsSync(dst)) {
 			var dstStat = fs.statSync(dst);
@@ -197,7 +221,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			if (!dstStat.isDirectory()) {
 				// copy file in if it is a JS file or if its mtime is
 				// greater than the one in Resources
-				if (path.extname(src) === '.js' || opts.themeChanged ||
+				if (path.extname(src) === '.js' || opts.themeChanged || opts.isNew ||
 					srcStat.mtime.getTime() > dstStat.mtime.getTime()) {
 					logger.trace('Copying ' +
 						path.join('SRC_DIR', path.relative(srcDir, src)).yellow + ' --> ' +
@@ -460,4 +484,24 @@ exports.installPlugin = function(alloyPath, projectPath) {
 
 exports.normalizeReturns = function(s) {
 	return s.replace(/\r\n/g, '\n');
-}
+};
+
+exports.createHash = function(files) {
+	if (_.isString(files)) {
+		files = [files];
+	} else if (!_.isArray(files)) {
+		throw new TypeError('bad argument');
+	}
+
+	var source = '';
+	_.each(files, function(f) {
+		source += util.format('%s\n%s\n', f, fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '');
+	});
+
+	return crypto.createHash('md5').update(source).digest('hex');
+};
+
+exports.proxyPropertyNameFromFullname = function(fullname) {
+	var nameParts = fullname.split('.');
+	return exports.lcfirst(nameParts[nameParts.length-1]);
+};

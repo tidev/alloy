@@ -19,7 +19,7 @@ function showColorInfo(e) {
 	if (colorModel) {
 		var win = Alloy.createController('color', colorModel).getView();
 		if (OS_IOS) {
-			Alloy.Globals.navgroup.open(win);
+			Alloy.Globals.navgroup.openWindow(win);
 		} else {
 			win.open();
 		}

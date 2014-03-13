@@ -1,0 +1,19 @@
+"Window": {
+	backgroundColor: '#fff'
+}
+
+"Button": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+
+"#avLabel": {
+	color: '#fff',
+	left: '20dp',
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center',
+	font: {
+		fontSize: '16dp'
+	}
+}

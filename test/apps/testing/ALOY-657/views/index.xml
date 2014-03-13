@@ -1,0 +1,14 @@
+<Alloy>
+	<Window>
+		<Toolbar>
+		    <Items>
+		        <FixedSpace/>
+		        <Button systemButton="Titanium.UI.iPhone.SystemButton.EDIT"/>
+		        <FixedSpace/>
+		        <Button systemButton="Titanium.UI.iPhone.SystemButton.ADD"/>
+		        <FixedSpace width="100"/>
+		        <Button systemButton="Titanium.UI.iPhone.SystemButton.DONE"/>
+		    </Items>
+		</Toolbar>
+	</Window>
+</Alloy>

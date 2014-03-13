@@ -1,0 +1,9 @@
+'Window': {
+	backgroundColor: '#fff'
+}
+
+'Button': {
+	top: 200,
+	width: 200,
+	height: 50
+}

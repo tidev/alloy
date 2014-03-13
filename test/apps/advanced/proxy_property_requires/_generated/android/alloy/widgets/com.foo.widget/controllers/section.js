@@ -4,25 +4,35 @@ function WPATH(s) {
     return true && 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     new (require("alloy/widget"))("com.foo.widget");
     this.__widgetId = "com.foo.widget";
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "section";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
-    $.__views.section = Ti.UI.createTableViewSection({
-        id: "section"
-    });
-    $.__views.section && $.addTopLevelView($.__views.section);
     $.__views.__alloyId3 = Ti.UI.createLabel({
         text: "Test",
         id: "__alloyId3"
     });
-    $.__views.section.headerView = $.__views.__alloyId3;
+    $.__views.section = Ti.UI.createTableViewSection({
+        headerView: $.__views.__alloyId3,
+        id: "section"
+    });
     $.__views.__alloyId4 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "android row",
@@ -41,6 +51,7 @@ function Controller() {
         id: "__alloyId6"
     });
     $.__views.section.add($.__views.__alloyId6);
+    $.__views.section && $.addTopLevelView($.__views.section);
     exports.destroy = function() {};
     _.extend($, $.__views);
     _.extend($, exports);

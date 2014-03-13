@@ -1,6 +1,14 @@
-var styler = require('../styler'),
+var _ = require('../../../lib/alloy/underscore')._,
+	styler = require('../styler'),
 	CU = require('../compilerUtils'),
 	U = require('../../../utils');
+
+var systemButtons = [
+	'ACTION', 'ACTIVITY', 'ADD', 'BOOKMARKS', 'CAMERA', 'CANCEL', 'COMPOSE', 'CONTACT_ADD',
+	'DISCLOSURE', 'DONE', 'EDIT', 'FAST_FORWARD', 'FIXED_SPACE', 'FLEXIBLE_SPACE', 'INFO_DARK',
+	'INFO_LIGHT', 'ORGANIZE', 'PAUSE', 'PLAY', 'REFRESH', 'REPLY', 'REWIND', 'SAVE', 'SPINNER',
+	'STOP', 'TRASH'
+];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -11,6 +19,11 @@ function parse(node, state, args) {
 	var nodeText = U.XML.getNodeText(node);
 	if (nodeText) {
 		state.extraStyle = styler.createVariableStyle('title', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+	}
+
+	var systemButton = node.getAttribute('systemButton');
+	if (_.contains(systemButtons, systemButton)) {
+		node.setAttribute('systemButton', 'Ti.UI.iPhone.SystemButton.' + systemButton);
 	}
 
 	// Generate runtime code using default

@@ -1,7 +1,12 @@
-"Window": {
+'Window': {
 	backgroundColor: '#fff'
-},
-"Label": {
+}
+
+'NavigationWindow': {
+	backgroundColor: '#fff'
+}
+
+'Label': {
 	width: Ti.UI.SIZE,
 	height: Ti.UI.SIZE,
 	color: '#000',
@@ -10,4 +15,20 @@
 		fontFamily: 'Helvetica Neue'
 	},
 	textAlign: 'center'
+}
+
+'.textButton': {
+	height: '40dp',
+	width: '40dp'
+}
+
+'#textfield': {
+	value: 'this is the value',
+	height: '50dp',
+	bottom: 0,
+	left: '20dp',
+	right: '20dp',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	leftButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS,
+	rightButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS
 }

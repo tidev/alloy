@@ -8,7 +8,7 @@
         <target device="blackberry">true</target>
         <target device="tizen">true</target>
     </deployment-targets>
-    <sdk-version>3.1.2.GA</sdk-version>
+    <sdk-version>3.2.0.GA</sdk-version>
     <id>com.appcelerator.AlloyHarness</id>
     <name>Harness</name>
     <version>1.0</version>
@@ -39,6 +39,7 @@
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
+            <uses-sdk android:targetSdkVersion="11"/>
             <!-- Allows the API to download data from Google Map servers -->
             <uses-permission android:name="android.permission.INTERNET"/>
             <!-- Allows the API to cache data -->
@@ -71,8 +72,8 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module version="2.0.1" platform="android">ti.paint</module>
         <module version="1.2" platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
+        <module platform="iphone">ti.map</module>
     </modules>
 </ti:app>

@@ -1,32 +1,32 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
-	CU = require('../compilerUtils');
+	CU = require('../compilerUtils'),
+	CONST = require('../../../common/constants');
+
+var ROWS = [
+	'Ti.UI.Row',
+	'Ti.UI.PickerRow'
+];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	var children = U.XML.getElementsFromNodes(node.childNodes),
-		errBase = 'All <PickerColumn> children must be rows. ',
-		code = '';
-
-	// Create the initial PickerColumn code
-	code += require('./default').parse(node, state).code;
+	var code = require('./default').parse(node, state).code;
 
 	// iterate through all children
-	for (var i = 0, l = children.length; i < l; i++) {
-		var child = children[i],
-			childArgs = CU.getParserArgs(child),
-			err = errBase + ' Invalid child at position ' + i;
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+		var theNode = CU.validateNodeName(child, ROWS),
+			isControllerNode = _.contains(CONST.CONTROLLER_NODES, CU.getNodeFullname(child));
 
-		// Validate that each child is a row
-		// TODO: Handle <Require>
-		if (childArgs.fullname === 'Ti.UI.PickerRow' ||
-			(childArgs.name === 'Row' && !child.getAttribute('ns'))) {
+		// make sure it's a valid node
+		if (!theNode) {
+			U.dieWithNode(child, 'Ti.UI.PickerColumn child elements must be one of the following: [' + ROWS.join(',') + ']');
+
+		// handle rows
+		} else if (_.contains(ROWS, theNode) && !isControllerNode) {
 			child.nodeName = 'PickerRow';
-		} else {
-			U.die(err);
 		}
 
 		// generate the code for each row and add it to the array
@@ -36,7 +36,7 @@ function parse(node, state, args) {
 				return args.symbol + '.addRow(' + state.parent.symbol + ');\n';
 			}
 		});
-	}
+	});
 
 	// Update the parsing state
 	return {

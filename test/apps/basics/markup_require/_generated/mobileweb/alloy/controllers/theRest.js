@@ -1,17 +1,30 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "theRest";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     $.__views.middle = Alloy.createController("middle", {
-        id: "middle"
+        id: "middle",
+        __parentSymbol: __parentSymbol
     });
     $.__views.middle && $.addTopLevelView($.__views.middle);
     $.__views.bottom = Alloy.createController("bottom", {
-        id: "bottom"
+        id: "bottom",
+        __parentSymbol: __parentSymbol
     });
     $.__views.bottom && $.addTopLevelView($.__views.bottom);
     exports.destroy = function() {};

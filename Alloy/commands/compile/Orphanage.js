@@ -88,9 +88,9 @@ Orphanage.prototype.removeAdapters = function(opts) {
 		_.each(fs.readdirSync(adapterDir), function(adapterFile) {
 			var fullpath = path.join(adapterDir, adapterFile);
 			var adapterName = adapterFile.replace(/\.js$/, '');
-			if (!_.contains(adapters, adapterName)) {
-				fs.unlinkSync(fullpath);
+			if (!_.contains(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
 				logger.trace('* ' + path.join(p, adapterFile));
+				fs.unlinkSync(fullpath);
 			}
 		});
 	});

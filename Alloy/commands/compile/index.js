@@ -28,6 +28,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	otherPlatforms,
 	buildPlatform,
 	titaniumFolder,
+	buildLog,
 	theme;
 
 var times = {
@@ -48,7 +49,7 @@ module.exports = function(args, program) {
 		);
 
 	// Initialize modules used throughout the compile process
-	var buildLog = new BuildLog(paths.project);
+	buildLog = new BuildLog(paths.project);
 	tiapp.init(path.join(paths.project, 'tiapp.xml'));
 
 	// validate the current Titanium SDK version, exit on failure
@@ -64,6 +65,10 @@ module.exports = function(args, program) {
 			alloyConfig[parts[0]] = parts[1];
 			logger.debug(parts[0] + ' = ' + parts[1]);
 		});
+	}
+	if (program.platform) {
+		logger.debug('platform = ' + program.platform);
+		alloyConfig.platform = program.platform;
 	}
 	if (!alloyConfig.deploytype) {
 		alloyConfig.deploytype = 'development';
@@ -101,12 +106,32 @@ module.exports = function(args, program) {
 	orphanage.clean();
 	logger.debug('');
 
+	// process project makefiles
+	compilerMakeFile = new CompilerMakeFile();
+	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
+	if (path.existsSync(alloyJMK)) {
+		logger.debug('Loading "alloy.jmk" compiler hooks...');
+		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
+
+		// process alloy.jmk compile file
+		try {
+			script.runInNewContext(compilerMakeFile);
+			compilerMakeFile.isActive = true;
+		} catch(e) {
+			logger.error(e.stack);
+			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
+		}
+
+		compilerMakeFile.trigger('pre:load', _.clone(compileConfig));
+		logger.debug('');
+	}
+
 	// create generated controllers folder in resources
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
 	// copy in all lib resources from alloy module
-	U.updateFiles(
+	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
 		{
@@ -116,7 +141,7 @@ module.exports = function(args, program) {
 			})
 		}
 	);
-	U.updateFiles(
+	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
 		{ rootDir: paths.project }
@@ -141,7 +166,7 @@ module.exports = function(args, program) {
 				titaniumFolder: titaniumFolder
 			});
 		}
-		U.updateFiles(
+		updateFilesWithBuildLog(
 			path.join(paths.app, CONST.DIR[type]),
 			path.join(paths.resources, titaniumFolder),
 			opts
@@ -150,7 +175,7 @@ module.exports = function(args, program) {
 
 	// copy in test specs if not in production
 	if (alloyConfig.deploytype !== 'production') {
-		U.updateFiles(
+		updateFilesWithBuildLog(
 			path.join(paths.app,'specs'),
 			path.join(paths.resources, titaniumFolder, 'specs'),
 			{ rootDir: paths.project }
@@ -161,34 +186,24 @@ module.exports = function(args, program) {
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+			updateFilesWithBuildLog(
+				themeAssetsPath,
+				path.join(paths.resources, titaniumFolder),
+				{
+					rootDir: paths.project,
+					themeChanged: buildLog.data.themeChanged,
+					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+					exceptions: otherPlatforms,
+					titaniumFolder: titaniumFolder
+				}
+			);
 		}
 	}
 	logger.debug('');
 
-	// process project makefiles
-	compilerMakeFile = new CompilerMakeFile();
-	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
-	if (path.existsSync(alloyJMK)) {
-		logger.debug('Loading "alloy.jmk" compiler hooks...');
-		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
-
-		// process alloy.jmk compile file
-		try {
-			script.runInNewContext(compilerMakeFile);
-			compilerMakeFile.isActive = true;
-		} catch(e) {
-			logger.error(e.stack);
-			U.die('Project build at "' + alloyJMK + '" generated an error during load.');
-		}
-
+	// trigger our custom compiler makefile
+	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
-		logger.debug('');
-	}
-
-	// TODO: https://jira.appcelerator.org/browse/ALOY-477
-	if (buildPlatform === 'android' && tiapp.version.lt('3.1.0')) {
-		tiapp.upStackSizeForRhino();
 	}
 
 	logger.info('----- MVC GENERATION -----');
@@ -213,6 +228,9 @@ module.exports = function(args, program) {
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
 	var tracker = {};
@@ -221,7 +239,7 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir,CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
-				if (viewRegex.test(view) && filterRegex.test(view)) {
+				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
@@ -242,7 +260,7 @@ module.exports = function(args, program) {
 		var theControllerDir = path.join(collection.dir,CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
 			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
-				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
+				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0,controller.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
@@ -260,23 +278,14 @@ module.exports = function(args, program) {
 	});
 	logger.info('');
 
-	// generate app.js
-	logger.info('[app.js] Titanium entry point processing...');
-	var appJS = path.join(compileConfig.dir.resources, titaniumFolder, 'app.js');
-	sourceMapper.generateCodeAndSourceMap({
-		target: {
-			filename: 'Resources/' + titaniumFolder + '/app.js',
-			filepath: appJS,
-			template: path.join(alloyRoot,'template','app.js')
-		},
-		data: {
-			'__MAPMARKER_ALLOY_JS__': {
-				filename: 'app/alloy.js',
-				filepath: path.join(paths.app,'alloy.js')
-			}
-		}
-	}, compileConfig);
-	logger.info('');
+	generateAppJs(paths, compileConfig);
+
+	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
+	// in platform-specific folders, so we just copy the platform-specific one to
+	// the Resources folder.
+	if (buildPlatform === 'ios' && tiapp.version.lt('3.2.0')) {
+		U.copyFileSync(path.join(paths.resources, titaniumFolder, 'app.js'), path.join(paths.resources, 'app.js'));
+	}
 
 	// optimize code
 	logger.info('----- OPTIMIZING -----');
@@ -297,6 +306,45 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
+function generateAppJs(paths, compileConfig) {
+	var alloyJs = path.join(paths.app, 'alloy.js'),
+
+		// info needed to generate app.js
+		target = {
+			filename: 'Resources/' + titaniumFolder + '/app.js',
+			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
+			template: path.join(alloyRoot, 'template', 'app.js')
+		},
+
+		// additional data used for source mapping
+		data = {
+			'__MAPMARKER_ALLOY_JS__': {
+				filename: 'app/alloy.js',
+				filepath: alloyJs
+			}
+		},
+
+		// hash used to determine if we need to rebuild
+		hash = U.createHash(alloyJs);
+
+	// is it already generated from a prior copile?
+	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
+	if (fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
+		logger.info('[app.js] using cached app.js...');
+
+	// if not, generate the platform-specific app.js and save its hash
+	} else {
+		logger.info('[app.js] Titanium entry point processing...');
+		sourceMapper.generateCodeAndSourceMap({
+			target: target,
+			data: data,
+		}, compileConfig);
+		buildLog.data[buildPlatform][alloyJs] = hash;
+	}
+
+	logger.info('');
+}
+
 function parseAlloyComponent(view, dir, manifest, noView) {
 	var parseType = noView ? 'controller' : 'view';
 
@@ -443,7 +491,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
-		if (viewName === 'index') {
+		if (viewName === 'index' && !dirname) {
 			var valid = [
 				'Ti.UI.Window',
 				'Ti.UI.iPad.SplitWindow',
@@ -494,8 +542,17 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
 		// process the UI nodes
+		var hasUsedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-			var defaultId = i === 0 ? viewName : undefined;
+
+			// should we use the default id?
+			var defaultId;
+			if (!hasUsedDefaultId && CU.isNodeForCurrentPlatform(node)) {
+				hasUsedDefaultId = true;
+				defaultId = viewName;
+			}
+
+			// generate the code for this node
 			var fullname = CU.getNodeFullname(node);
 			template.viewCode += CU.generateNode(node, {
 				parent:{},
@@ -586,7 +643,12 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
 			path.join(compileConfig.dir.resources, titaniumFolder),
-			manifest.id
+			manifest.id,
+			{
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder
+			}
 		);
 		targetFilepath = path.join(
 			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
@@ -760,6 +822,10 @@ function processModels(dirs) {
 	return models;
 }
 
+function updateFilesWithBuildLog(src, dst, opts) {
+	U.updateFiles(src, dst, _.extend({ isNew: buildLog.isNew }, opts));
+}
+
 function optimizeCompiledCode() {
 	var mods = [
 			'builtins',
@@ -790,7 +856,8 @@ function optimizeCompiledCode() {
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return rx.test(f) && !_.find(exceptions, function(e) {
+			// TODO: remove should.js check here once ALOY-921 is resolved
+			return rx.test(f) && !/(?:^|[\\\/])should\.js$/.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
 		});

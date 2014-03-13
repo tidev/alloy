@@ -1,9 +1,20 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     $.__views.index = Ti.UI.createWindow({
@@ -16,26 +27,26 @@ function Controller() {
         layout: "vertical"
     });
     $.__views.index.add($.__views.scroll);
-    $.__views.__alloyId1 = Ti.UI.createImageView({
+    $.__views.__alloyId0 = Ti.UI.createImageView({
         image: "/appc1.png",
+        id: "__alloyId0"
+    });
+    $.__views.scroll.add($.__views.__alloyId0);
+    $.__views.__alloyId1 = Ti.UI.createImageView({
+        image: "/appc2.png",
         id: "__alloyId1"
     });
     $.__views.scroll.add($.__views.__alloyId1);
     $.__views.__alloyId2 = Ti.UI.createImageView({
-        image: "/appc2.png",
+        image: "/appc3.png",
         id: "__alloyId2"
     });
     $.__views.scroll.add($.__views.__alloyId2);
     $.__views.__alloyId3 = Ti.UI.createImageView({
-        image: "/appc3.png",
+        image: "/appc4.png",
         id: "__alloyId3"
     });
     $.__views.scroll.add($.__views.__alloyId3);
-    $.__views.__alloyId4 = Ti.UI.createImageView({
-        image: "/appc4.png",
-        id: "__alloyId4"
-    });
-    $.__views.scroll.add($.__views.__alloyId4);
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();

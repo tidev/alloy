@@ -1,0 +1,11 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+'Label': {
+	left: 5
+}
+'Switch': {
+	right: 5
+}

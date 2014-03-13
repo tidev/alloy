@@ -1,0 +1,3 @@
+function closeWindow(){
+	$.landingPageWindow.close();
+}

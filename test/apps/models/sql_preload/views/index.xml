@@ -1,7 +1,7 @@
 <Alloy>
     <Window>
         <Label id="title" onClick="addTestFighter">Fighters</Label>
-        <TableView id="table" dataCollection="fighters" onClick="showId">
+        <TableView id="table" dataCollection="fighters" onClick="showId" dataTransform="transformData">
             <Require src="row"/>
         </TableView>
     </Window>

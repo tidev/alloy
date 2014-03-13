@@ -92,6 +92,7 @@ basevalue
   / array
   / "true" __  { return true;   }
   / "false" __ { return false;  }
+  / "undefined" __  { return ALLOY_EXPR + "undefined"; }
   / "null" __  { return ALLOY_EXPR + "null"; }
 
 /* ===== Lexical Elements ===== */

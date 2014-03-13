@@ -1,0 +1,8 @@
+'.leftside': {
+	left: 0
+}
+
+'.rightside': {
+	right: 0,
+	backgroundColor: '#00a'
+}

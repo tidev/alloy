@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label id="goodlabel">This is a label</Label>
+		<!--
+			<Label id="commentedlabel">Ooops, unclosed comment</Label>
+	</Window>
+</Alloy>

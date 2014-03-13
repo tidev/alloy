@@ -3,6 +3,12 @@
 		<Tab title="Basic Rows">
 			<Window title="Basic Rows">
 				<TableView>
+					<HeaderView>
+						<View backgroundColor="#a00" height="50dp"/>
+					</HeaderView>
+					<FooterView>
+						<View backgroundColor="#0a0" height="50dp"/>
+					</FooterView>
 					<TableViewRow><Label>Row 1</Label></TableViewRow>
 					<TableViewRow><Label>Row 2</Label></TableViewRow>
 					<TableViewRow><Label>Row 3</Label></TableViewRow>
@@ -15,7 +21,13 @@
 			<Window title="Sections &amp; Rows">
 				<TableView filterAttribute="title">
 					<SearchBar platform="android,ios"/>
-					<TableViewSection headerTitle="Section 1">
+					<TableViewSection>
+						<HeaderView>
+							<View backgroundColor="#a00" height="50dp"/>
+						</HeaderView>
+						<FooterView>
+							<View backgroundColor="#0a0" height="50dp"/>
+						</FooterView>
 						<TableViewRow title="Row 1"/>
 						<TableViewRow title="Row 2"/>
 						<TableViewRow title="Row 3"/>

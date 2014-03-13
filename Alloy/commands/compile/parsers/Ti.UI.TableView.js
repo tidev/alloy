@@ -5,17 +5,21 @@ var _ = require('../../../lib/alloy/underscore')._,
 	CONST = require('../../../common/constants');
 
 var PROXY_PROPERTIES = [
-	'Ti.UI.TableView.HeaderView',
-	'Ti.UI.TableView.HeaderPullView',
-	'Ti.UI.TableView.FooterView',
-	'Ti.UI.TableView.Search'
+	'_ProxyProperty._Lists.HeaderView',
+	'_ProxyProperty._Lists.FooterView',
+	'_ProxyProperty._Lists.HeaderPullView',
+	'_ProxyProperty._Lists.Search'
 ];
+var SEARCH_PROPERTIES = [
+	'Ti.UI.SearchBar',
+	'Ti.UI.Android.SearchView'
+];
+var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.TableViewRow',
-	'Ti.UI.TableViewSection',
-	'Ti.UI.SearchBar'
+	'Ti.UI.TableViewSection'
 ];
-var ALL_VALID = _.union(PROXY_PROPERTIES, VALID);
+var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -24,76 +28,151 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		code = '',
-		proxyPropertyCode = '',
 		itemCode = '',
 		isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
-		searchBarName, localModel, arrayName;
+		extras = [],
+		proxyProperties = {},
+		localModel, arrayName, controllerSymbol;
 
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
-		var childArgs = CU.getParserArgs(child),
+		var fullname = CU.getNodeFullname(child),
+			theNode = CU.validateNodeName(child, ALL_VALID),
 			isSearchBar = false,
-			isProxyProperty = false;
+			isRefreshControl = false,
+			isProxyProperty = false,
+			isControllerNode = false,
+			hasUiNodes = false;
 
 		// validate the child element and determine if it's part of
 		// the table data, a searchbar, or a proxy property assigment
-		var theNode = CU.validateNodeName(child, ALL_VALID);
 		if (!theNode) {
-			U.dieWithNode(child, 'Child element must be one of the following: [' + ALL_VALID.join(',') + ']');
-		} else if (theNode === 'Ti.UI.SearchBar') {
+			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
+		} else if (!CU.isNodeForCurrentPlatform(child)) {
+			return;
+		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+			isControllerNode = true;
+		} else if (REFRESH_PROPERTY === theNode) {
+			isRefreshControl = true;
+		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
 		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
 		}
 
-		// generate code for proxy property assignments
-		if (isProxyProperty) {
-			proxyPropertyCode += CU.generateNodeExtended(child, state, {
-				parent: {
-					node: node,
-					symbol: '<%= proxyPropertyParent %>'
+		// manually handle controller node proxy properties
+		if (isControllerNode) {
+
+			// set up any proxy properties at the top-level of the controller
+			var inspect = CU.inspectRequireNode(child);
+			_.each(_.uniq(inspect.names), function(name) {
+				if (_.contains(PROXY_PROPERTIES, name)) {
+					var propertyName = U.proxyPropertyNameFromFullname(name);
+					proxyProperties[propertyName] = '<%= controllerSymbol %>.getProxyPropertyEx("' +
+						propertyName + '", {recurse:true})';
+				} else {
+					hasUiNodes = true;
 				}
 			});
+		}
+
+		// generate code for proxy property assignments
+		if (isProxyProperty) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, _state, _args) {
+					if (_args.formFactor) {
+						state.styles.push({
+							isId: true,
+							key: args.id,
+							queries: { formFactor: 'tablet' },
+							style: styler.createVariableStyle(_state.propertyName, _state.parent.symbol)
+						});
+					} else {
+						proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = _state.parent.symbol;
+					}
+				}
+			});
+
 		// generate code for search bar
 		} else if (isSearchBar) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					searchBarName = state.parent.symbol;
+					proxyProperties.search = state.parent.symbol;
 				}
 			});
-		// generate code for template row for model-view binding
-		} else if (isDataBound) {
-			localModel = localModel || CU.generateUniqueId();
-			itemCode += CU.generateNodeExtended(child, state, {
-				parent: {},
-				local: true,
-				model: localModel,
-				post: function(node, state, args) {
-					return 'rows.push(' + state.parent.symbol + ');\n';
-				}
-			});
-		// generate code for the static row/section/searchbar
-		} else {
+
+		// generate code for refreshControl
+		} else if (isRefreshControl) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					var postCode = '';
-					if (!arrayName) {
-						arrayName = CU.generateUniqueId();
-						postCode += 'var ' + arrayName + '=[];';
+					proxyProperties.refreshControl = state.parent.symbol;
+				}
+			});
+
+		// are there UI elements yet to process?
+		} else if (hasUiNodes || !isControllerNode) {
+
+			// generate data binding code
+			if (isDataBound) {
+				localModel = localModel || CU.generateUniqueId();
+				itemCode += CU.generateNodeExtended(child, state, {
+					parent: {},
+					local: true,
+					model: localModel,
+					post: function(node, state, args) {
+						controllerSymbol = state.controller;
+						return 'rows.push(' + state.parent.symbol + ');\n';
 					}
-					postCode += arrayName + '.push(' + state.parent.symbol + ');';
-					return postCode;
+				});
+
+			// standard row/section processing
+			} else {
+				if (!arrayName) {
+					arrayName = CU.generateUniqueId();
+					code += 'var ' + arrayName + '=[];';
+				}
+				code += CU.generateNodeExtended(child, state, {
+					parent: {},
+					post: function(node, state, args) {
+						controllerSymbol = state.controller;
+						return arrayName + '.push(' + state.parent.symbol + ');';
+					}
+				});
+			}
+
+		// if there's no UI nodes inside, just generate it
+		} else if (!hasUiNodes && isControllerNode) {
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, args) {
+					controllerSymbol = state.controller;
 				}
 			});
 		}
+
+		// fill in proxy property templates, if present
+		if (isControllerNode) {
+			_.each(proxyProperties, function(v,k) {
+				proxyProperties[k] = _.template(v, {
+					controllerSymbol: controllerSymbol
+				});
+			});
+		}
+
 	});
 
-	// Create the initial TableView code
-	var extras = [];
+	// add data at creation time
 	if (arrayName) { extras.push(['data', arrayName]); }
-	if (searchBarName) { extras.push(['search', searchBarName]); }
+
+	// add all proxy properties at creation time
+	_.each(proxyProperties, function(v, k) {
+		extras.push([k, v]);
+	});
+
+	// if we got any extras, add them to the state
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// generate the code for the table itself
@@ -104,12 +183,6 @@ function parse(node, state, args) {
 	}
 	var tableState = require('./default').parse(node, state);
 	code += tableState.code;
-
-	// fill in the proxy property assignment template with the
-	// symbol used to represent the table
-	code += _.template(proxyPropertyCode, {
-		proxyPropertyParent: tableState.parent.symbol
-	});
 
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {

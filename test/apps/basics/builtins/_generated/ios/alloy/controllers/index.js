@@ -1,3 +1,12 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     function shake() {
         animation.shake($.mover, 0, function() {
@@ -26,9 +35,11 @@ function Controller() {
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     var __defers = {};
@@ -88,15 +99,15 @@ function Controller() {
     });
     $.__views.index.add($.__views.trim);
     trim ? $.__views.trim.addEventListener("click", trim) : __defers["$.__views.trim!click!trim"] = true;
-    $.__views.__alloyId1 = Ti.UI.createView({
+    $.__views.__alloyId0 = Ti.UI.createView({
         height: 150,
         width: 150,
         top: 40,
         borderWidth: 1,
         borderColor: "#00f",
-        id: "__alloyId1"
+        id: "__alloyId0"
     });
-    $.__views.index.add($.__views.__alloyId1);
+    $.__views.index.add($.__views.__alloyId0);
     $.__views.back = Ti.UI.createLabel({
         text: "back",
         color: "#ccc",
@@ -106,7 +117,7 @@ function Controller() {
         width: Ti.UI.FILL,
         id: "back"
     });
-    $.__views.__alloyId1.add($.__views.back);
+    $.__views.__alloyId0.add($.__views.back);
     flip ? $.__views.back.addEventListener("click", flip) : __defers["$.__views.back!click!flip"] = true;
     $.__views.front = Ti.UI.createLabel({
         text: "front",
@@ -117,7 +128,7 @@ function Controller() {
         width: Ti.UI.FILL,
         id: "front"
     });
-    $.__views.__alloyId1.add($.__views.front);
+    $.__views.__alloyId0.add($.__views.front);
     flip ? $.__views.front.addEventListener("click", flip) : __defers["$.__views.front!click!flip"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);

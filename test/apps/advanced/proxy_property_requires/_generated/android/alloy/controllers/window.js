@@ -1,12 +1,23 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     function showAlert(e) {
         alert(e.source.title);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "window";
-    var __parentSymbol = arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     var __defers = {};
@@ -23,7 +34,7 @@ function Controller() {
     });
     showAlert ? $.__views.rightButton.addEventListener("click", showAlert) : __defers["$.__views.rightButton!click!showAlert"] = true;
     __parentSymbol.rightNavButton = $.__views.rightButton;
-    $.__views.__alloyId38 && $.addTopLevelView($.__views.__alloyId38);
+    $.__views.__alloyId46 && $.addTopLevelView($.__views.__alloyId46);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/window")($);

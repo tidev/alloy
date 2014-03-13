@@ -1,0 +1,5 @@
+<Alloy>
+	<Window id="testwin" class="container">
+		<Label>Label</Label>
+	</Window>
+</Alloy>

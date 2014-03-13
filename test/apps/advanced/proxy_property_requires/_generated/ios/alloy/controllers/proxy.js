@@ -1,9 +1,20 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "proxy";
-    var __parentSymbol = arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     $.__views.pullView = Ti.UI.createView({
@@ -19,8 +30,7 @@ function Controller() {
         bottom: "10"
     });
     $.__views.pullView.add($.__views.pullText);
-    __parentSymbol.headerPullView = $.__views.pullView;
-    $.__views.proxy && $.addTopLevelView($.__views.proxy);
+    $.__views.pullView && $.addProxyProperty("headerPullView", $.__views.pullView);
     $.__views.headerView = Ti.UI.createView({
         id: "headerView",
         height: "60dp",
@@ -31,8 +41,7 @@ function Controller() {
         id: "headerText"
     });
     $.__views.headerView.add($.__views.headerText);
-    __parentSymbol.headerView = $.__views.headerView;
-    $.__views.__alloyId36 && $.addTopLevelView($.__views.__alloyId36);
+    $.__views.headerView && $.addProxyProperty("headerView", $.__views.headerView);
     $.__views.footerView = Ti.UI.createView({
         id: "footerView",
         height: "60dp",
@@ -43,8 +52,7 @@ function Controller() {
         id: "footerText"
     });
     $.__views.footerView.add($.__views.footerText);
-    __parentSymbol.footerView = $.__views.footerView;
-    $.__views.__alloyId37 && $.addTopLevelView($.__views.__alloyId37);
+    $.__views.footerView && $.addProxyProperty("footerView", $.__views.footerView);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/proxy")($);

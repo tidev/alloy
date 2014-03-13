@@ -1,0 +1,8 @@
+{
+	"id": "com.foo.widget",
+	"name": "Foo Widget",
+	"description" : "my cool widget",
+	"author": "Tony Lukasavage",
+	"version": "1.0",
+	"dependencies": {}
+}

@@ -1,0 +1,3 @@
+<Alloy>
+	<View id="loading" height="50dp" width="50dp" backgroundColor="#a00"/>
+</Alloy>

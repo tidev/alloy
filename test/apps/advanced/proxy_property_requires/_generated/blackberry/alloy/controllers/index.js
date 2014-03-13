@@ -1,16 +1,26 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
-    function __alloyId23() {
-        __alloyId23.opts || {};
-        var models = __alloyId22.models;
+    function __alloyId29(e) {
+        if (e && e.fromAdapter) return;
+        __alloyId29.opts || {};
+        var models = __alloyId28.models;
         var len = models.length;
         var rows = [];
         for (var i = 0; len > i; i++) {
-            var __alloyId20 = models[i];
-            __alloyId20.__transform = {};
-            var __alloyId21 = Alloy.createWidget("com.foo.widget", "row_bind", {
-                $model: __alloyId20
+            var __alloyId25 = models[i];
+            __alloyId25.__transform = {};
+            var __alloyId27 = Alloy.createWidget("com.foo.widget", "row_bind", {
+                $model: __alloyId25
             });
-            rows.push(__alloyId21.getViewEx({
+            rows.push(__alloyId27.getViewEx({
                 recurse: true
             }));
         }
@@ -18,9 +28,11 @@ function Controller() {
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     $.__views.index = Ti.UI.createTabGroup({
@@ -31,12 +43,12 @@ function Controller() {
         id: "staticWindow",
         title: "static"
     });
+    var __alloyId12 = [];
     $.__views.staticRow1 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow1",
         title: "1"
     });
-    var __alloyId12 = [];
     __alloyId12.push($.__views.staticRow1);
     $.__views.staticRow2 = Ti.UI.createTableViewRow({
         height: "50dp",
@@ -94,8 +106,8 @@ function Controller() {
         id: "bindingTable"
     });
     $.__views.bindingWindow.add($.__views.bindingTable);
-    var __alloyId22 = Alloy.Collections["dummy"] || dummy;
-    __alloyId22.on("fetch destroy change add remove reset", __alloyId23);
+    var __alloyId28 = Alloy.Collections["dummy"] || dummy;
+    __alloyId28.on("fetch destroy change add remove reset", __alloyId29);
     $.__views.bindingTab = Ti.UI.createTab({
         window: $.__views.bindingWindow,
         id: "bindingTab",
@@ -107,41 +119,48 @@ function Controller() {
         id: "proxiesWindow",
         title: "proxy properties"
     });
-    $.__views.__alloyId28 = Ti.UI.createTableViewRow({
+    $.__views.__alloyId36 = Alloy.createController("proxy", {
+        id: "__alloyId36"
+    });
+    var __alloyId37 = [];
+    $.__views.__alloyId38 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId28"
+        id: "__alloyId38"
     });
-    var __alloyId29 = [];
-    __alloyId29.push($.__views.__alloyId28);
-    $.__views.__alloyId30 = Ti.UI.createTableViewRow({
+    __alloyId37.push($.__views.__alloyId38);
+    $.__views.__alloyId39 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId30"
+        id: "__alloyId39"
     });
-    __alloyId29.push($.__views.__alloyId30);
-    $.__views.__alloyId31 = Ti.UI.createTableViewRow({
+    __alloyId37.push($.__views.__alloyId39);
+    $.__views.__alloyId40 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId31"
+        id: "__alloyId40"
     });
-    __alloyId29.push($.__views.__alloyId31);
-    $.__views.__alloyId32 = Ti.UI.createTableViewRow({
+    __alloyId37.push($.__views.__alloyId40);
+    $.__views.__alloyId41 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "stuff",
-        id: "__alloyId32"
+        id: "__alloyId41"
     });
-    __alloyId29.push($.__views.__alloyId32);
+    __alloyId37.push($.__views.__alloyId41);
     $.__views.proxiesTable = Ti.UI.createTableView({
-        data: __alloyId29,
+        data: __alloyId37,
+        headerPullView: $.__views.__alloyId36.getProxyPropertyEx("headerPullView", {
+            recurse: true
+        }),
+        headerView: $.__views.__alloyId36.getProxyPropertyEx("headerView", {
+            recurse: true
+        }),
+        footerView: $.__views.__alloyId36.getProxyPropertyEx("footerView", {
+            recurse: true
+        }),
         id: "proxiesTable"
     });
     $.__views.proxiesWindow.add($.__views.proxiesTable);
-    $.__views.__alloyId24 = Alloy.createController("proxy", {
-        id: "__alloyId24",
-        __parentSymbol: $.__views.proxiesTable
-    });
-    $.__views.__alloyId24.setParent($.__views.proxiesTable);
     $.__views.proxiesTab = Ti.UI.createTab({
         window: $.__views.proxiesWindow,
         id: "proxiesTab",
@@ -153,16 +172,16 @@ function Controller() {
         id: "windowWindow",
         title: "window"
     });
-    $.__views.__alloyId33 = Alloy.createController("window", {
-        id: "__alloyId33",
+    $.__views.__alloyId42 = Alloy.createController("window", {
+        id: "__alloyId42",
         __parentSymbol: $.__views.windowWindow
     });
-    $.__views.__alloyId33.setParent($.__views.windowWindow);
-    $.__views.__alloyId34 = Ti.UI.createLabel({
+    $.__views.__alloyId42.setParent($.__views.windowWindow);
+    $.__views.__alloyId43 = Ti.UI.createLabel({
         text: "This is a window",
-        id: "__alloyId34"
+        id: "__alloyId43"
     });
-    $.__views.windowWindow.add($.__views.__alloyId34);
+    $.__views.windowWindow.add($.__views.__alloyId43);
     $.__views.windowTab = Ti.UI.createTab({
         window: $.__views.windowWindow,
         id: "windowTab",
@@ -171,7 +190,7 @@ function Controller() {
     $.__views.index.addTab($.__views.windowTab);
     $.__views.index && $.addTopLevelView($.__views.index);
     exports.destroy = function() {
-        __alloyId22.off("fetch destroy change add remove reset", __alloyId23);
+        __alloyId28.off("fetch destroy change add remove reset", __alloyId29);
     };
     _.extend($, $.__views);
     $.index.open();

@@ -1,0 +1,19 @@
+<Alloy>
+
+	<Require src="requires/simple" class="leftside">
+		<Label>hi there</Label>
+		<Label>I'm on the left side</Label>
+		<Button onClick="alertTitle">left button</Button>
+	</Require>
+
+	<Require src="requires/simple" class="rightside">
+		<Label>hi there</Label>
+		<Label>I'm on the right side</Label>
+		<Button onClick="alertTitle">right button</Button>
+	</Require>
+
+	<Require src="requires/deep">
+		<Label color="#42282F">I'm 3 views deep</Label>
+	</Require>
+
+</Alloy>

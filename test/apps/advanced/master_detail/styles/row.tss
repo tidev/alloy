@@ -1,7 +1,8 @@
 "#row": {
 	backgroundColor: "#fff",
 	height: '60dp'
-},
+}
+
 "#name": {
     top: '5dp',
     left: '10dp',
@@ -9,7 +10,8 @@
         fontSize: '24dp',
         fontWeight: 'bold'
     }
-},
+}
+
 "#nickname": {
     bottom: '5dp',
     left: '20dp',

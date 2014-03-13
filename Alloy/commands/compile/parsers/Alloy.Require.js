@@ -22,8 +22,6 @@ function parse(node, state, args) {
 	// validate src
 	if (!src) {
 		U.die('<Require> elements must have a "src" attribute.');
-	} else if (U.XML.getElementsFromNodes(node.childNodes).length !== 0) {
-		U.die('<Require> elements may not have child elements.');
 	}
 
 	// determine which Alloy method to use
@@ -90,12 +88,29 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
+	// process the children, if any
+	var children = U.XML.getElementsFromNodes(node.childNodes),
+		xChildren = [];
+	_.each(children, function(child) {
+		if (!CU.isNodeForCurrentPlatform(child)) { return; }
+		var childArgs = CU.getParserArgs(child);
+		code += CU.generateNodeExtended(child, state, {
+			parent: {},
+			post: function(node, state, args) {
+				xChildren.push(state.parent.symbol);
+			}
+		});
+	});
+
 	// add extra createArgs if present
 	var xArgs = {};
 
+	if (xChildren.length) { xArgs.children = '__ALLOY_EXPR__--[' + xChildren.join(',') + ']'; }
 	if (state.model) { xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--' + state.model; }
 	if (state.parent && state.parent.symbol) {
 		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
+	} else if (CU.currentDefaultId !== 'index') {
+		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + CONST.PARENT_SYMBOL_VAR;
 	}
 	if (state.templateObject) {
 		xArgs[CONST.ITEM_TEMPLATE_VAR] = '__ALLOY_EXPR__--' + state.templateObject;
@@ -118,9 +133,9 @@ function parse(node, state, args) {
 
 	return {
 		parent: {
-			node: node,
 			symbol: args.symbol + '.getViewEx({recurse:true})'
 		},
+		controller: args.symbol,
 		styles: state.styles,
 		code: code
 	};

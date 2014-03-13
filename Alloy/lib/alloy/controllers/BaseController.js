@@ -27,6 +27,7 @@ var Controller = function() {
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
+		__proxyProperties: {},
 		setParent: function(parent) {
 			var len = roots.length;
 
@@ -48,6 +49,12 @@ var Controller = function() {
 		},
 		addTopLevelView: function(view) {
 			roots.push(view);
+		},
+		addProxyProperty: function(key, value) {
+			this.__proxyProperties[key] = value;
+		},
+		removeProxyProperty: function(key) {
+			delete this.__proxyProperties[key];
 		},
 
 		/**
@@ -75,6 +82,15 @@ var Controller = function() {
 			}
 			return this.__views[id];
 		},
+		removeView: function(id) {
+			delete this[id];
+			delete this.__views[id];
+		},
+
+		getProxyProperty: function(name) {
+			return this.__proxyProperties[name];
+		},
+
 		/**
 		 * @method getViews
 		 * Returns a list of all IDed view elements associated with this controller.
@@ -105,13 +121,32 @@ var Controller = function() {
 			var recurse = opts.recurse || false;
 			if (recurse) {
 				var view = this.getView();
-				if (view.__iamalloy) {
+				if (!view) {
+					return null;
+				} else if (view.__iamalloy) {
 					return view.getViewEx({ recurse: true });
 				} else {
 					return view;
 				}
 			} else {
 				return this.getView();
+			}
+		},
+
+		// getProxyPropertyEx for advanced parsing and element traversal
+		getProxyPropertyEx: function(name, opts) {
+			var recurse = opts.recurse || false;
+			if (recurse) {
+				var view = this.getProxyProperty(name);
+				if (!view) {
+					return null;
+				} else if (view.__iamalloy) {
+					return view.getProxyProperty(name, { recurse: true });
+				} else {
+					return view;
+				}
+			} else {
+				return this.getView(name);
 			}
 		},
 

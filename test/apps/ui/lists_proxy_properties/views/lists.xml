@@ -1,0 +1,103 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="tableview">
+			<Window>
+
+				<TitleControl>
+					<Label class="titleControl">TableView</Label>
+				</TitleControl>
+
+				<TableView>
+
+					<!-- header and footer views -->
+					<Require src="wrapper"/>
+
+					<!-- TIMOB-11994 prevents the searchbar from showing on iOS -->
+					<!-- search, shorthand with Ti.UI.SearchBar -->
+					<SearchBar class="search" platform="ios"/>
+
+					<!-- search, shorthand with Ti.UI.Android.SearchView -->
+					<SearchView ns="Ti.UI.Android" class="search" platform="android"/>
+
+					<!-- headerPullView -->
+					<HeaderPullView platform="ios">
+						<View class="pull">
+							<Label color="#F2F4F4" bottom="25dp">headerPullView</Label>
+						</View>
+					</HeaderPullView>
+
+					<TableViewRow title="row 1"/>
+					<TableViewRow title="row 2"/>
+					<TableViewRow title="row 3"/>
+					<TableViewRow title="row 4"/>
+
+					<!-- table section -->
+					<TableViewSection>
+
+						<!-- Due to TIMOB-15646, this footerView won't show up on Android -->
+						<!-- header and footer views -->
+						<Require src="wrapper" isSection="true"/>
+
+						<TableViewRow title="row 1.1"/>
+						<TableViewRow title="row 1.2"/>
+						<TableViewRow title="row 1.3"/>
+						<TableViewRow title="row 1.4"/>
+
+					</TableViewSection>
+
+				</TableView>
+
+			</Window>
+		</Tab>
+
+		<Tab title="listview">
+			<Window>
+
+				<TitleControl>
+					<Label class="titleControl">ListView</Label>
+				</TitleControl>
+
+				<ListView>
+
+					<!-- header and footer views -->
+					<Require src="wrapper"/>
+
+					<!-- search, shorthand with Ti.UI.SearchBar -->
+					<SearchBar class="search" platform="ios"/>
+
+					<!-- search, shorthand with Ti.UI.Android.SearchView -->
+					<SearchView ns="Ti.UI.Android" class="search" platform="android"/>
+
+					<!-- pullView -->
+					<PullView platform="ios">
+						<View class="pull">
+							<Label color="#F2F4F4" bottom="25dp">pullView</Label>
+						</View>
+					</PullView>
+
+					<!-- plain section -->
+					<ListSection>
+						<ListItem title="row 1" searchableText="row 1"/>
+						<ListItem title="row 2" searchableText="row 2"/>
+						<ListItem title="row 3" searchableText="row 3"/>
+						<ListItem title="row 4" searchableText="row 4"/>
+					</ListSection>
+
+					<ListSection>
+
+						<!-- header and footer views -->
+						<Require src="wrapper" isSection="true"/>
+
+						<ListItem title="row 1.1" searchableText="row 1.1"/>
+						<ListItem title="row 1.2" searchableText="row 1.2"/>
+						<ListItem title="row 1.3" searchableText="row 1.3"/>
+						<ListItem title="row 1.4" searchableText="row 1.4"/>
+					</ListSection>
+
+				</ListView>
+
+			</Window>
+		</Tab>
+
+	</TabGroup>
+</Alloy>

@@ -42,6 +42,7 @@ exports.PARENT_SYMBOL_VAR = '__parentSymbol';
 exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
+exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
@@ -69,6 +70,10 @@ exports.DEPLOY_TYPES = [
 	{ key: 'ENV_TEST', value: 'test' },
 	{ key: 'ENV_PROD', value: 'production' },
 	{ key: 'ENV_PRODUCTION', value: 'production' }
+];
+exports.DIST_TYPES = [
+	{ key: 'DIST_ADHOC', value: ['dist-adhoc'] },
+	{ key: 'DIST_STORE', value: ['dist-appstore', 'dist-playstore'] }
 ];
 
 // mappings of file extensions and folders for each file type
@@ -99,8 +104,14 @@ exports.DIR = {
 	COMPONENT: 'controllers',
 	MAP: 'build/map',
 	VENDOR: 'vendor',
-	THEME: 'themes'
+	THEME: 'themes',
+	BUILD: 'build/alloy'
 };
+// folders/files to exclude when copying and processing files
+// RegEx format: must escape special chars - so use \.svn not .svn
+exports.EXCLUDED_FILES = [
+	'\\.svn'
+];
 
 // constants identifying JS reserved words
 exports.JS_RESERVED = [
@@ -140,9 +151,11 @@ exports.IMPLICIT_NAMESPACES = {
 	ButtonName: NS_ALLOY_ABSTRACT,
 	BarItemTypes: NS_ALLOY_ABSTRACT,
 	BarItemType: NS_ALLOY_ABSTRACT,
+	ContentView: NS_ALLOY_ABSTRACT,
 	CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
 	CoverFlowImageType: NS_ALLOY_ABSTRACT,
 	FlexSpace: NS_ALLOY_ABSTRACT,
+	FixedSpace: NS_ALLOY_ABSTRACT,
 	Images: NS_ALLOY_ABSTRACT,
 	Item: NS_ALLOY_ABSTRACT,
 	Items: NS_ALLOY_ABSTRACT,
@@ -185,9 +198,17 @@ exports.IMPLICIT_NAMESPACES = {
 	RightNavButton: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
-	// Ti.UI.TableView
-	HeaderView: 'Ti.UI.TableView',
-	HeaderPullView: 'Ti.UI.TableView',
-	FooterView: 'Ti.UI.TableView',
-	Search: 'Ti.UI.TableView'
+	// Table and List proxy properties
+	FooterView: '_ProxyProperty._Lists',
+	HeaderView: '_ProxyProperty._Lists',
+	HeaderPullView: '_ProxyProperty._Lists',
+	PullView: '_ProxyProperty._Lists',
+	Search: '_ProxyProperty._Lists',
+	SearchView: '_ProxyProperty._Lists',
+
+	// misc proxy properties
+	RightButton: '_ProxyProperty',
+	LeftButton: '_ProxyProperty',
+	KeyboardToolbar: '_ProxyProperty'
+
 };

@@ -7,6 +7,12 @@ function showId(e) {
 	}
 }
 
+function transformData(model) {
+	var attrs = model.toJSON();
+	Ti.API.info('attrs: ' + JSON.stringify(attrs));
+	return attrs;
+}
+
 function addTestFighter(e) {
 	// create the test fighter model
 	var model = Alloy.createModel('fighters', {
@@ -15,14 +21,14 @@ function addTestFighter(e) {
 	});
 	counter++;
 
-	// add model to the collection and save it to sqlite
-	fighters.add(model);
-	model.save();
+	// add model to the collection and save it to sqlite, make
+	// it silent so binding doesn't fire twice
+	fighters.add(model, { silent: true });
 
-	// let's refresh so we can see the ids coming from the
-	// autoincrement field in the sqlite database in the
-	// row click alerts
-	fighters.fetch();
+	// this will save the model to storage, update it with
+	// the automatically created id from the "server" (sqlite),
+	// which will in turn trigger the UI update
+	model.save();
 }
 
 fighters.fetch();

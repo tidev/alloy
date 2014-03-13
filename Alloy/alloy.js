@@ -112,7 +112,7 @@ function banner() {
 
 	if (!program.dump) {
 		console.log(logger.stripColors ? str : str.blue);
-		var m = "Alloy by Appcelerator. The MVC app framework for Titanium.\n".white;
+		var m = "Alloy " + module.exports.version + " by Appcelerator. The MVC app framework for Titanium.\n".white;
 		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
 }

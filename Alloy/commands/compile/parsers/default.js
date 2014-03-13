@@ -9,9 +9,29 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
+	var fullname = CU.getNodeFullname(node),
+		parts = fullname.split('.'),
+		extras = [];
+
+	// is this just a proxy property?
+	if (parts[0] === '_ProxyProperty') {
+		return require('./_ProxyProperty.' + parts[1]).parse(node, state);
+	}
+
+	// special handling for touchEnabled per ALOY-911
+	if (node.hasAttribute('touchEnabled')) {
+		var attr = node.getAttribute('touchEnabled');
+		extras.push(['touchEnabled', attr === 'true']);
+	}
+
+	if (extras.length) {
+		state.extraStyle = state.extraStyle || {};
+		state.extraStyle = _.extend(state.extraStyle, styler.createVariableStyle(extras));
+	}
+
+	// start assembling a basic view creation
 	var createFunc = 'create' + node.nodeName,
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
-		fullname = CU.getNodeFullname(node),
 		generatedStyle = styler.generateStyleParams(
 			state.styles,
 			args.classes,
@@ -26,7 +46,7 @@ function parse(node, state, args) {
 	if (state.local) {
 		args.symbol = CU.generateUniqueId();
 	}
-		
+
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
@@ -98,7 +118,7 @@ function parse(node, state, args) {
 			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 		}
 
-		if (isCollectionBound) {
+		if (isCollectionBound && CU.isNodeForCurrentPlatform(node)) {
 			var localModel = CU.generateUniqueId();
 			var itemCode = '';
 

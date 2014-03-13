@@ -1,5 +1,5 @@
 $.addAddress.on('addAnnotation', function(e) {
-    $.map.addAnnotation(e.geodata);
+	$.map.addAnnotation(e.geodata);
 });
 
 $.index.open();
