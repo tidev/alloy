@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<Picker id="picker" top="50"
+			type="Ti.UI.PICKER_TYPE_DATE"
+			minDate="2013,2,4"
+			maxDate="2014,11,31"
+			value="2014,3,12">
+		</Picker>
+	</Window>
+</Alloy>
