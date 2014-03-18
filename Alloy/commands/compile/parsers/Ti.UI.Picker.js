@@ -25,6 +25,7 @@ exports.parse = function(node, state) {
 };
 
 function validDate(d, dateField) {
+	// not using _.isDate() because it accepts some invalid date strings
 	if(Object.prototype.toString.call(d) !== "[object Date]" || isNaN(d.getTime())) {
 		U.die("Invalid date string. " + dateField + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
 	} else {

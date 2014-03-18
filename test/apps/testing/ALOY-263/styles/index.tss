@@ -3,3 +3,9 @@
 	fullscreen: false,
 	exitOnClose: true
 }
+"#picker": {
+	value: 'July 4, 2013'
+}
+"#txt": {
+	value: "July 0, 2013"
+}
