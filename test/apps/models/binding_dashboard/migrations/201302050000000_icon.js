@@ -3,55 +3,64 @@ var icons = [
 		image: 'account_off.png',
 		selectedImage: 'account_on.png',
 		badge: 10,
-		label: 'account'
+		label: 'account',
+		weight: 0
 	},
 	{
 		image: 'calls_off.png',
 		selectedImage: 'calls_on.png',
 		badge: 110,
-		label: 'calls'
+		label: 'calls',
+		weight: 1
 	},
 	{
 		image: 'cases_off.png',
 		selectedImage: 'cases_on.png',
 		badge: 0,
-		label: 'cases'
+		label: 'cases',
+		weight: 2
 	},
 	{
 		image: 'contacts_off.png',
 		selectedImage: 'contacts_on.png',
 		badge: 0,
-		label: 'contacts'
+		label: 'contacts',
+		weight: 3
 	},
 	{
 		image: 'emps_off.png',
 		selectedImage: 'emps_on.png',
 		badge: 0,
-		label: 'employees'
+		label: 'employees',
+		weight: 4
 	},
 	{
 		image: 'leads_off.png',
 		selectedImage: 'leads_on.png',
 		badge: 1,
-		label: 'leads'
+		label: 'leads',
+		weight: 5
 	},
 	{
 		image: 'meetings_off.png',
 		selectedImage: 'meetings_on.png',
 		badge: 4,
-		label: 'meetings'
+		label: 'meetings',
+		weight: 6
 	},
 	{
 		image: 'opps_off.png',
 		selectedImage: 'opps_on.png',
 		badge: 0,
-		label: 'opps'
+		label: 'opps',
+		weight: 7
 	},
 	{
 		image: 'tasks_off.png',
 		selectedImage: 'tasks_on.png',
 		badge: 28,
-		label: 'tasks'
+		label: 'tasks',
+		weight: 8
 	}
 ];
 
