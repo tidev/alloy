@@ -7,7 +7,7 @@
 "#todoWin[platform=android]": {
 	navBarHidden: false
 }
-"#todoTable": {
+"#todoTable[platform=ios]": {
 	top: '50dp',
 	bottom: '46dp'
 },
@@ -81,6 +81,6 @@
 	backgroundColor: '#f88',
 	index: 0,
 	height: 40,
-	left: 20, 
+	left: 20,
 	right: 20
 }
