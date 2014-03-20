@@ -1,8 +1,12 @@
 "#todoWin": {
 	fullscreen: false,
 	navBarHidden: true,
-	exitOnClose: true
+	exitOnClose: true,
+	top:Alloy.Globals.winTop
 },
+"#todoWin[platform=android]": {
+	navBarHidden: false
+}
 "#todoTable": {
 	top: '50dp',
 	bottom: '46dp'
@@ -74,8 +78,7 @@
 	}
 },
 "#tabbedbar": {
-	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
-	backgroundColor: '#800',
+	backgroundColor: '#f88',
 	index: 0,
 	height: 40,
 	left: 20, 
