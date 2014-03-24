@@ -25,7 +25,6 @@ exports.generateMigrationFileName = function(t) {
 };
 
 exports.generate = function(name, type, program, args) {
-//logger.info(JSON.stringify(program.widgetname))
 	args = args || {};
 	var ext = '.'+CONST.FILE_EXT[type];
 	var paths = U.getAndValidateProjectPaths(program.outputPath);
