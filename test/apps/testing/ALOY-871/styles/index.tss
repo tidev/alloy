@@ -36,3 +36,6 @@
 		fontFamily: "Cochin-BoldItalic"
 	}
 }
+"#iPhone5Label": {
+	text: 'iPhone5'
+}

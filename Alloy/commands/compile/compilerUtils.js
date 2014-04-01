@@ -27,6 +27,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 var RESERVED_ATTRIBUTES = [
 		'platform',
 		'formFactor',
+		'if',
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
@@ -37,6 +38,7 @@ var RESERVED_ATTRIBUTES = [
 		'type',
 		'src',
 		'formFactor',
+		'if',
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
@@ -108,6 +110,7 @@ exports.getParserArgs = function(node, state, opts) {
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
+		tssIf = node.getAttribute('if'),
 		platformObj;
 
 	// make sure we're not reusing the default ID for the first top level element
@@ -220,6 +223,7 @@ exports.getParserArgs = function(node, state, opts) {
 		formFactor: node.getAttribute('formFactor'),
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],
+		tssIf: node.getAttribute('if').split(' ') || [],
 		parent: state.parent || {},
 		platform: platformObj,
 		createArgs: createArgs,
@@ -256,6 +260,15 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	if (args.formFactor && exports.CONDITION_MAP[args.formFactor]) {
 		var check = exports.CONDITION_MAP[args.formFactor].runtime;
 		code.condition = (code.condition) ? code.condition += ' && ' + check : check;
+	}
+
+	// ALOY-871: add the if condition check
+	if(args.tssIf && args.tssIf.length >0) {
+		if(code.condition) {
+			code.condition += (' && (' + args.tssIf.join(' || ') + ')');
+		} else {
+			code.condition = args.tssIf.join(' || ');
+		}
 	}
 
 	// pass relevant conditional information in state
