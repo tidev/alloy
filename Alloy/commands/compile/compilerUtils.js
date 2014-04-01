@@ -263,7 +263,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// ALOY-871: add the if condition check
-	if(args.tssIf && args.tssIf.length >0) {
+	args.tssIf = _.compact(args.tssIf);
+	if(args.tssIf.length >0) {
 		if(code.condition) {
 			code.condition += (' && (' + args.tssIf.join(' || ') + ')');
 		} else {
