@@ -36,6 +36,18 @@
   			</KeyboardToolbar>
   		</TextField>
 
+			<TextArea id="textarea" platform="ios">
+  			<KeyboardToolbar>
+  				<Toolbar>
+  					<Items>
+							<FlexSpace/>
+							<Label text="Wowzers"/>
+							<Button systemButton="ADD"/>
+						</Items>
+  				</Toolbar>
+  			</KeyboardToolbar>
+			</TextArea>
+
     </Window>
   </NavigationWindow>
 </Alloy>
