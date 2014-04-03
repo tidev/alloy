@@ -25,11 +25,9 @@ function Controller() {
     if (!Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            _.extend(o, {});
             Alloy.isHandheld && _.extend(o, {
                 backgroundColor: "blue"
             });
-            _.extend(o, {});
             Alloy.isTablet && _.extend(o, {
                 backgroundColor: "red"
             });
@@ -51,11 +49,9 @@ function Controller() {
     if (Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            _.extend(o, {});
             Alloy.isHandheld && _.extend(o, {
                 backgroundColor: "blue"
             });
-            _.extend(o, {});
             Alloy.isTablet && _.extend(o, {
                 backgroundColor: "red"
             });
@@ -76,11 +72,9 @@ function Controller() {
     }
     $.__views.container = Ti.UI.createView(function() {
         var o = {};
-        _.extend(o, {});
         Alloy.isHandheld && _.extend(o, {
             backgroundColor: "blue"
         });
-        _.extend(o, {});
         Alloy.isTablet && _.extend(o, {
             backgroundColor: "red"
         });

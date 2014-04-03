@@ -524,9 +524,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (styleCollection[i].condition) {
 				code += 'if (' + styleCollection[i].condition + ') ';
 			}
-			code += '_.extend(o, {';
-			code += exports.processStyle(styleCollection[i].style, theState);
-			code += '});\n';
+			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
+			if(!_.isEmpty(tmpStyle)) {
+				code += '_.extend(o, {';
+				code += tmpStyle;
+				code += '});\n';
+			}
 		}
 		code += 'return o;\n';
 		code += '})()';
