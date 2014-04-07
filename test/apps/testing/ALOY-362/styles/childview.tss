@@ -1,0 +1,8 @@
+'#label': {
+	width: Ti.UI.SIZE, /* should be overridden */
+	height: '200dp',
+	color: 'white',
+	font: {
+		fontWeight: 'bold'
+	}
+}

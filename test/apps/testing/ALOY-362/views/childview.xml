@@ -1,0 +1,6 @@
+<Alloy>
+	<View layout="vertical">
+		<Label id="label"/>
+		<Label id="anotherlabel"/>
+	</View>
+</Alloy>
