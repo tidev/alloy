@@ -215,7 +215,7 @@ function Sync(method, model, opts) {
 			if (opts.query) {
 				sql = opts.query;
 			} else if (opts.id) {
-				sql += ' WHERE ' + model.idAttribute + ' = ' + opts.id;
+				sql += ' WHERE ' + (model.idAttribute ? model.idAttribute : ALLOY_ID_DEFAULT) + ' = ' + (_.isString(opts.id) ? '"' + opts.id + '"' : opts.id);
 			}
 
 			// execute the select query
