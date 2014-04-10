@@ -12,14 +12,13 @@ module.exports = function($) {
 					title: 'button ' + (i+1),
 			        id: id
 				}, i !== 2 ? {
-					apiName: "Ti.UI.Button", 
+					apiName: "Ti.UI.Button",
 					classes: [ "bob", "lou" ]
 				} : {})
 			});
 		}
 
 		it('has #button3, which has no apiName or classes', function() {
-			expect($.button3.apiName).toBeUndefined();
 			expect($.button3.classes).toBeUndefined();
 		});
 	});
