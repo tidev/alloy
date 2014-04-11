@@ -17,6 +17,7 @@ var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
 var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
 var VALUES = {
+	TSSIF: 1000000,
 	ID:     100000,
 	CLASS:   10000,
 	API:      1000,
@@ -219,6 +220,8 @@ exports.sortStyles = function(style, opts) {
 						v = v.split(',');
 					} else if (q === 'formFactor') {
 						priority += VALUES.FORMFACTOR + VALUES.SUM;
+					} else if (q === 'if') {
+						priority += VALUES.TSSIF + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
 					}
@@ -424,7 +427,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 				// assemble runtime query
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
-				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
+				var joinString = (pcond && conditionals.formFactor) ? ' && ' : '';
 				var conditional = pcond + joinString + conditionals.formFactor;
 
 				// push styles if we need to insert a conditional
@@ -434,11 +437,28 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						styleCollection.push({style:style.style, condition:conditional});
 						lastObj = {};
 					}
-				} else {
+				} else if(!q.if) {
 					_.extend(lastObj,style.style);
 				}
+
+
+				// ALOY-871: handle custom TSS queries with if conditional
+				if(q.if) {
+					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
+					var ffJoinString = (ffcond) ? ' && ' : '';
+					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
+
+					// push styles if we need to insert a conditional
+					if (conditional) {
+						if (lastObj) {
+							styleCollection.push({style:lastObj});
+							styleCollection.push({style:style.style, condition:conditional});
+							lastObj = {};
+						}
+					}
+				}
 			} else {
-				_.extend(lastObj, style.style);
+				_.extend(lastObj,style.style);
 			}
 		}
 	});

@@ -1,0 +1,41 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+'#lbl': {
+	text: 'Foo is false',
+	color: 'black'
+}
+'#lbl[if=Alloy.Globals.foo]': {
+	text: 'Foo is true',
+	color: 'red',
+	font: {
+		fontSize: 24
+	}
+}
+'#lbl[if=Alloy.Globals.isIOS7]': {
+	top: 50
+}
+'#lbl[if=Alloy.Globals.isTalliPhone]': {
+	backgroundColor: 'yellow'
+}
+'#lbl[formFactor=handheld]': {
+	text: 'Foo is really a handheld',
+	color: 'blue',
+	font: {
+		fontWeight: 'bold'
+	}
+}
+'#lbl[if=Alloy.Globals.foo formFactor=tablet]': {
+	text: 'Foo is really a tablet',
+	color: 'green',
+	font: {
+		fontWeight: 'bold',
+		fontSize: 40,
+		fontFamily: "Cochin-BoldItalic"
+	}
+}
+"#iPhone5Label": {
+	text: 'iPhone5'
+}

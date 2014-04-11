@@ -704,6 +704,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 						// do nothing, we don't need the platform key anymore
 					} else if (queryKey === 'formFactor') {
 						queriesObj[queryKey] = 'is' + U.ucfirst(query);
+					} else if (queryKey === 'if') {
+						queriesObj[queryKey] =  query;
 					} else {
 						logger.warn('Unknown device query "' + queryKey + '"');
 					}
