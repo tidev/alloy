@@ -1,0 +1,11 @@
+'Window': {
+    backgroundColor: 'white'
+}
+
+'Label': {
+    top: 100
+}
+
+'ImageView': {
+    top: 200
+}

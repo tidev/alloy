@@ -1,0 +1,6 @@
+<Alloy>
+    <Window>
+        <Label textid="hello_world" />
+        <ImageView image="/images/a.png" />
+    </Window>
+</Alloy>
