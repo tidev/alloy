@@ -1,0 +1,8 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"Window[formFactor=handheld]": {
+	title: 'Handheld'
+}
