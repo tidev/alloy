@@ -647,25 +647,15 @@ function generateConfig(obj) {
 
 	// parse config.json, if it exists
 	if (path.existsSync(appCfg)) {
-		var j;
-		try {
-			j = jsonlint.parse(fs.readFileSync(appCfg,'utf8'));
-		} catch (e) {
-			U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
-		}
+		o = exports.parseConfig(appCfg, alloyConfig, o);
 
-		_.each(j, function(v,k) {
-			if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
-				o[k] = v;
+		if (o.theme) {
+			var themeCfg = path.join(obj.dir.home,'themes',o.theme,'config.'+CONST.FILE_EXT.CONFIG);
+
+			// parse theme config.json, if it exists
+			if (path.existsSync(themeCfg)) {
+				o = exports.parseConfig(themeCfg, alloyConfig, o);
 			}
-		});
-
-		if (alloyConfig) {
-			o = _.extend(o, j['global']);
-			o = _.extend(o, j['env:'+alloyConfig.deploytype]);
-			o = _.extend(o, j['os:'+alloyConfig.platform]);
-			o = _.extend(o, j['env:'+alloyConfig.deploytype + ' os:'+alloyConfig.platform]);
-			o = _.extend(o, j['os:'+alloyConfig.platform + ' env:'+alloyConfig.deploytype]);
 		}
 
 		// TODO: only regenerate the CFG.js when necessary, using the file timestamps and the
@@ -690,6 +680,32 @@ function generateConfig(obj) {
 
 	return o;
 }
+
+exports.parseConfig = function(file, alloyConfig, o) {
+	var j;
+	try {
+		j = jsonlint.parse(fs.readFileSync(file,'utf8'));
+	} catch (e) {
+		U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
+	}
+
+	_.each(j, function(v,k) {
+		if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
+			logger.debug(k + ' = ' + JSON.stringify(v));
+			o[k] = v;
+		}
+	});
+
+	if (alloyConfig) {
+		o = _.extend(o, j['global']);
+		o = _.extend(o, j['env:'+alloyConfig.deploytype]);
+		o = _.extend(o, j['os:'+alloyConfig.platform]);
+		o = _.extend(o, j['env:'+alloyConfig.deploytype + ' os:'+alloyConfig.platform]);
+		o = _.extend(o, j['os:'+alloyConfig.platform + ' env:'+alloyConfig.deploytype]);
+	}
+
+	return o;
+};
 
 exports.loadController = function(file) {
 	var code = {

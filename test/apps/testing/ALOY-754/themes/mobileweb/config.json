@@ -1,0 +1,7 @@
+{
+    "global": {
+        "bothConfig": "theme:mobileweb",
+        "themeConfig": "theme:mobileweb"
+    },
+    "dependencies": {}
+}

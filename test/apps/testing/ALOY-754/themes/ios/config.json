@@ -1,0 +1,7 @@
+{
+    "global": {
+        "bothConfig": "theme:ios",
+        "themeConfig": "theme:ios"
+    },
+    "dependencies": {}
+}
