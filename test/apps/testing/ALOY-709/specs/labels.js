@@ -19,7 +19,7 @@ module.exports = function($) {
 		});
 
 		for (var i = 0; i < 3; i++) {
-			var id = '__alloyId' + (i+3);
+			var id = '__alloyId' + (i+2);
 			validateUiComponent($, id, {
 				api: 'Ti.UI.Label',
 				style: _.extend({
@@ -31,7 +31,7 @@ module.exports = function($) {
 			        text: "label " + (i+1),
 			        id: id
 				}, autoStyle || i === 1 ? {
-					apiName: "Ti.UI.Label", 
+					apiName: "Ti.UI.Label",
 					classes: [ "someClass" ]
 				} : {})
 			});

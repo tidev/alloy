@@ -53,10 +53,6 @@ module.exports = function($) {
 			it('has #index, which has "apiName" property', function() {
 				expect($.index.apiName).toEqual('Ti.UI.Window');
 			});
-		} else {
-			it('has #index, which has undefined "apiName" property', function() {
-				expect($.index.apiName).toBeUndefined();
-			});
 		}
 
 		if (autoStyle) {
@@ -72,10 +68,6 @@ module.exports = function($) {
 		if (autoStyle) {
 			it('has #label, which has "apiName" property', function() {
 				expect($.label.apiName).toEqual('Ti.UI.Label');
-			});
-		} else {
-			it('has #label, which has undefined "apiName" property', function() {
-				expect($.label.apiName).toBeUndefined();
 			});
 		}
 	});
