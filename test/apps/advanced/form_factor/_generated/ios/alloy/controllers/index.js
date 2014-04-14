@@ -1,9 +1,20 @@
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
+}
+
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
     var $ = this;
     var exports = {};
     $.__views.index = Ti.UI.createWindow({
@@ -14,11 +25,9 @@ function Controller() {
     if (!Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            _.extend(o, {});
             Alloy.isHandheld && _.extend(o, {
                 backgroundColor: "blue"
             });
-            _.extend(o, {});
             Alloy.isTablet && _.extend(o, {
                 backgroundColor: "red"
             });
@@ -40,11 +49,9 @@ function Controller() {
     if (Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            _.extend(o, {});
             Alloy.isHandheld && _.extend(o, {
                 backgroundColor: "blue"
             });
-            _.extend(o, {});
             Alloy.isTablet && _.extend(o, {
                 backgroundColor: "red"
             });
@@ -65,11 +72,9 @@ function Controller() {
     }
     $.__views.container = Ti.UI.createView(function() {
         var o = {};
-        _.extend(o, {});
         Alloy.isHandheld && _.extend(o, {
             backgroundColor: "blue"
         });
-        _.extend(o, {});
         Alloy.isTablet && _.extend(o, {
             backgroundColor: "red"
         });

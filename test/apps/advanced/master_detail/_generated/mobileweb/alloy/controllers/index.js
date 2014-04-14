@@ -1,85 +1,33 @@
-function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
-    this.__controllerPath = "row";
-    arguments[0] ? arguments[0]["__parentSymbol"] : null;
-    arguments[0] ? arguments[0]["$model"] : null;
-    arguments[0] ? arguments[0]["__itemTemplate"] : null;
-    var $ = this;
-    var exports = {};
-    $.__views.row = Ti.UI.createTableViewRow({
-        backgroundColor: "#fff",
-        height: "60dp",
-        id: "row"
-    });
-    $.__views.row && $.addTopLevelView($.__views.row);
-    $.__views.name = Ti.UI.createLabel({
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
-        top: "5dp",
-        left: "10dp",
-        font: {
-            fontSize: "24dp",
-            fontWeight: "bold"
-        },
-        id: "name"
-    });
-    $.__views.row.add($.__views.name);
-    $.__views.nickname = Ti.UI.createLabel({
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
-        bottom: "5dp",
-        left: "20dp",
-        font: {
-            fontSize: "16dp",
-            fontWeight: "normal"
-        },
-        id: "nickname"
-    });
-    $.__views.row.add($.__views.nickname);
-    exports.destroy = function() {};
-    _.extend($, $.__views);
-    var args = arguments[0] || {};
-    $.row.fighterName = $.name.text = args.name;
-    $.nickname.text = args.nickname;
-    require("specs/row")($, {
-        name: args.name,
-        nickname: args.nickname
-    });
-    _.extend($, exports);
+function __processArg(obj, key) {
+    var arg = null;
+    if (obj) {
+        arg = obj[key] || null;
+        delete obj[key];
+    }
+    return arg;
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
-
-module.exports = Controller;record = Ti.UI.createLabel({
-        left: 15,
-        top: 10,
-        font: {
-            fontSize: "18dp",
-            fontWeight: "normal"
-        },
-        textAlign: "left",
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
-        id: "record"
-    });
-    $.__views.detail.add($.__views.record);
+function Controller() {
+    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    this.__controllerPath = "index";
+    if (arguments[0]) {
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
+    }
+    var $ = this;
+    var exports = {};
     exports.destroy = function() {};
     _.extend($, $.__views);
-    exports.setBoxerStats = function(name) {
-        var stats = Alloy.Globals.data[name];
-        $.detail.title = name;
-        $.age.text = "Age: " + stats.age;
-        $.height.text = "Height: " + stats.height;
-        $.weight.text = "Weight: " + stats.weight;
-        $.record.text = "Record: " + stats.record;
-        require("specs/detail")($, {
-            name: name,
-            stats: stats
-        });
-    };
+    $.master.on("detail", function(e) {
+        var controller = Alloy.createController("detail");
+        {
+            controller.getView();
+        }
+        controller.setBoxerStats(e.row.fighterName);
+    });
+    $.index.open();
+    require("specs/index")($);
     _.extend($, exports);
 }
 
