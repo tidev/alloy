@@ -1,12 +1,3 @@
-function __processArg(obj, key) {
-    var arg = null;
-    if (obj) {
-        arg = obj[key] || null;
-        delete obj[key];
-    }
-    return arg;
-}
-
 function Controller() {
     function openDialog(e) {
         Alloy.createController(e.source.title, {
@@ -15,11 +6,9 @@ function Controller() {
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
-    }
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["$model"] : null;
+    arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
     var exports = {};
     var __defers = {};
@@ -51,6 +40,20 @@ function Controller() {
     require("specs/index")($);
     __defers["$.__views.__alloyId1!click!openDialog"] && $.__views.__alloyId1.addEventListener("click", openDialog);
     __defers["$.__views.__alloyId2!click!openDialog"] && $.__views.__alloyId2.addEventListener("click", openDialog);
+    _.extend($, exports);
+}
+
+var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+
+module.exports = Controller;function() {
+        $.refWin.remove($.cover);
+        $.refWin.remove($.dialog);
+        $.refWin = $.cover = $.dialog = null;
+    };
+    require("specs/baseDialog")($, {
+        message: $.message.text
+    });
+    __defers["$.__views.closeButton!click!exports.closeDialog"] && $.__views.closeButton.addEventListener("click", exports.closeDialog);
     _.extend($, exports);
 }
 

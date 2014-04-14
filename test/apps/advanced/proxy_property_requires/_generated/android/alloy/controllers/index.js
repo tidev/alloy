@@ -1,66 +1,54 @@
-function __processArg(obj, key) {
-    var arg = null;
-    if (obj) {
-        arg = obj[key] || null;
-        delete obj[key];
-    }
-    return arg;
+function WPATH(s) {
+    var index = s.lastIndexOf("/");
+    var path = -1 === index ? "com.foo.widget/" + s : s.substring(0, index) + "/com.foo.widget/" + s.substring(index + 1);
+    return true && 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
 function Controller() {
-    function __alloyId29(e) {
-        if (e && e.fromAdapter) return;
-        __alloyId29.opts || {};
-        var models = __alloyId28.models;
-        var len = models.length;
-        var rows = [];
-        for (var i = 0; len > i; i++) {
-            var __alloyId25 = models[i];
-            __alloyId25.__transform = {};
-            var __alloyId27 = Alloy.createWidget("com.foo.widget", "row_bind", {
-                $model: __alloyId25
-            });
-            rows.push(__alloyId27.getViewEx({
-                recurse: true
-            }));
-        }
-        $.__views.bindingTable.setData(rows);
-    }
+    new (require("alloy/widget"))("com.foo.widget");
+    this.__widgetId = "com.foo.widget";
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
-    this.__controllerPath = "index";
-    if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
-    }
+    this.__controllerPath = "section";
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["$model"] : null;
+    arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
     var exports = {};
-    var __alloyId11 = [];
-    $.__views.staticWindow = Ti.UI.createWindow({
-        backgroundColor: "#fff",
-        id: "staticWindow",
-        title: "static"
+    $.__views.__alloyId3 = Ti.UI.createLabel({
+        text: "Test",
+        id: "__alloyId3"
     });
-    var __alloyId12 = [];
-    $.__views.staticRow1 = Ti.UI.createTableViewRow({
+    $.__views.section = Ti.UI.createTableViewSection({
+        headerView: $.__views.__alloyId3,
+        id: "section"
+    });
+    $.__views.__alloyId4 = Ti.UI.createTableViewRow({
         height: "50dp",
-        id: "staticRow1",
-        title: "1"
+        title: "android row",
+        id: "__alloyId4"
     });
-    __alloyId12.push($.__views.staticRow1);
-    $.__views.staticRow2 = Ti.UI.createTableViewRow({
+    $.__views.section.add($.__views.__alloyId4);
+    $.__views.__alloyId5 = Ti.UI.createTableViewRow({
         height: "50dp",
-        id: "staticRow2",
-        title: "2"
+        title: "android row",
+        id: "__alloyId5"
     });
-    __alloyId12.push($.__views.staticRow2);
-    $.__views.staticWidgetSection = Alloy.createWidget("com.foo.widget", "section", {
-        id: "staticWidgetSection"
+    $.__views.section.add($.__views.__alloyId5);
+    $.__views.__alloyId6 = Ti.UI.createTableViewRow({
+        height: "50dp",
+        title: "android row",
+        id: "__alloyId6"
     });
-    __alloyId12.push($.__views.staticWidgetSection.getViewEx({
-        recurse: true
-    }));
-    $.__views.staticWidgetRow1 = Alloy.createWidget("com.foo.widget", "row", {
+    $.__views.section.add($.__views.__alloyId6);
+    $.__views.section && $.addTopLevelView($.__views.section);
+    exports.destroy = function() {};
+    _.extend($, $.__views);
+    _.extend($, exports);
+}
+
+var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+
+module.exports = Controller;cWidgetRow1 = Alloy.createWidget("com.foo.widget", "row", {
         id: "staticWidgetRow1"
     });
     __alloyId12.push($.__views.staticWidgetRow1.getViewEx({

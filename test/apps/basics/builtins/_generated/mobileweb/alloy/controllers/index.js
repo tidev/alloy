@@ -1,12 +1,3 @@
-function __processArg(obj, key) {
-    var arg = null;
-    if (obj) {
-        arg = obj[key] || null;
-        delete obj[key];
-    }
-    return arg;
-}
-
 function Controller() {
     function shake() {
         animation.shake($.mover, 0, function() {
@@ -19,13 +10,25 @@ function Controller() {
     function trim() {
         $.label.text = string.trim($.label.text);
     }
+    function flip(e) {
+        var front, back;
+        e.bubbleParent = false;
+        if (e.source === $.back) {
+            front = $.back;
+            back = $.front;
+        } else {
+            front = $.front;
+            back = $.back;
+        }
+        animation.flipHorizontal(front, back, 500, function() {
+            Ti.API.info("flipped");
+        });
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
-    if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
-    }
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["$model"] : null;
+    arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
     var exports = {};
     var __defers = {};
@@ -93,6 +96,8 @@ function Controller() {
     __defers["$.__views.shake!click!shake"] && $.__views.shake.addEventListener("click", shake);
     __defers["$.__views.flash!click!flash"] && $.__views.flash.addEventListener("click", flash);
     __defers["$.__views.trim!click!trim"] && $.__views.trim.addEventListener("click", trim);
+    __defers["$.__views.back!click!flip"] && $.__views.back.addEventListener("click", flip);
+    __defers["$.__views.front!click!flip"] && $.__views.front.addEventListener("click", flip);
     _.extend($, exports);
 }
 

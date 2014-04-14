@@ -1,64 +1,81 @@
-function __processArg(obj, key) {
-    var arg = null;
-    if (obj) {
-        arg = obj[key] || null;
-        delete obj[key];
-    }
-    return arg;
-}
-
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
-    this.__controllerPath = "index";
-    if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
-    }
+    this.__controllerPath = "row";
+    arguments[0] ? arguments[0]["__parentSymbol"] : null;
+    arguments[0] ? arguments[0]["$model"] : null;
+    arguments[0] ? arguments[0]["__itemTemplate"] : null;
     var $ = this;
     var exports = {};
-    if (true && Alloy.isTablet) {
-        $.__views.master = Alloy.createController("master", {
-            id: "master"
-        });
-        $.__views.detail = Alloy.createController("detail", {
-            id: "detail"
-        });
-        $.__views.index = Ti.UI.iPad.createSplitWindow({
-            masterView: $.__views.master.getViewEx({
-                recurse: true
-            }),
-            detailView: $.__views.detail.getViewEx({
-                recurse: true
-            }),
-            id: "index"
-        });
-        $.__views.index && $.addTopLevelView($.__views.index);
-    }
-    if (true && !Alloy.isTablet) {
-        $.__views.master = Alloy.createController("master", {
-            id: "master"
-        });
-        $.__views.index = Ti.UI.iOS.createNavigationWindow({
-            backgroundColor: "#fff",
-            window: $.__views.master.getViewEx({
-                recurse: true
-            }),
-            id: "index"
-        });
-        $.__views.index && $.addTopLevelView($.__views.index);
-    }
+    $.__views.row = Ti.UI.createTableViewRow({
+        backgroundColor: "#fff",
+        height: "60dp",
+        id: "row"
+    });
+    $.__views.row && $.addTopLevelView($.__views.row);
+    $.__views.name = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
+        top: "5dp",
+        left: "10dp",
+        font: {
+            fontSize: "24dp",
+            fontWeight: "bold"
+        },
+        id: "name"
+    });
+    $.__views.row.add($.__views.name);
+    $.__views.nickname = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
+        bottom: "5dp",
+        left: "20dp",
+        font: {
+            fontSize: "16dp",
+            fontWeight: "normal"
+        },
+        id: "nickname"
+    });
+    $.__views.row.add($.__views.nickname);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    true && Alloy.isHandheld && (Alloy.Globals.navgroup = $.index);
-    $.master.on("detail", function(e) {
-        var controller = true && Alloy.isTablet ? $.detail : Alloy.createController("detail");
+    var args = arguments[0] || {};
+    $.row.fighterName = $.name.text = args.name;
+    $.nickname.text = args.nickname;
+    require("specs/row")($, {
+        name: args.name,
+        nickname: args.nickname
+    });
+    _.extend($, exports);
+}
+
+var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+
+module.exports = Controller;ablet ? $.detail : Alloy.createController("detail");
         var win = controller.getView();
         controller.setBoxerStats(e.row.fighterName);
         true && Alloy.isHandheld && Alloy.Globals.navgroup.openWindow(win);
     });
     $.index.open();
     require("specs/index")($);
+    _.extend($, exports);
+}
+
+var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+
+module.exports = Controller;setBoxerStats = function(name) {
+        var stats = Alloy.Globals.data[name];
+        $.detail.title = name;
+        $.age.text = "Age: " + stats.age;
+        $.height.text = "Height: " + stats.height;
+        $.weight.text = "Weight: " + stats.weight;
+        $.record.text = "Record: " + stats.record;
+        require("specs/detail")($, {
+            name: name,
+            stats: stats
+        });
+    };
     _.extend($, exports);
 }
 
