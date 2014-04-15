@@ -3,7 +3,7 @@
     <Window id="todoWin" title="Todo">
   	
         <!-- header -->
-        <View id="header">
+        <View id="header" platform="ios,mobileweb,blackberry">
             <Label id="title">Alloy Todo</Label>
             <View class="divider"/>
             <View id="addView" onClick="addToDoItem">
@@ -39,9 +39,10 @@
     
         <!-- Android: menu -->
         <Menu platform="android">
-            <MenuItem title="All" onClick="showTasks"/>
-            <MenuItem title="Active" onClick="showTasks"/>
-            <MenuItem title="Done" onClick="showTasks"/>
+            <MenuItem icon="Ti.Android.R.drawable.ic_input_add" onClick="addToDoItem" showAsAction="Ti.Android.SHOW_AS_ACTION_ALWAYS"/>
+            <MenuItem title="All" onClick="showTasks" showAsAction="Ti.Android.SHOW_AS_ACTION_NEVER"/>
+            <MenuItem title="Active" onClick="showTasks" showAsAction="Ti.Android.SHOW_AS_ACTION_NEVER"/>
+            <MenuItem title="Done" onClick="showTasks" showAsAction="Ti.Android.SHOW_AS_ACTION_NEVER"/>
         </Menu>
     </Window>
 </Alloy>
