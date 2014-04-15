@@ -2,7 +2,9 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._;
+	_ = require('../../../lib/alloy/underscore')._,
+	tiapp = require('../../../tiapp'),
+	platform = CU.getCompilerConfig().alloyConfig.platform;
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -41,6 +43,11 @@ function parse(node, state, args) {
 			state
 		),
 		code = '';
+	if(node.nodeName==='Annotation' && ( (platform=='ios' && tiapp.version.gte('3.2.0')) || platform=='android' && tiapp.version.gte('3.1.0'))) {
+		// ALOY-800: on iOS & Android, using the external ti.map module, set the
+		// namespace so that the ti.map module's createAnnotation() method is used
+		args.ns = 'require("ti.map")';
+	}
 
 	// make symbol a local variable if necessary
 	if (state.local) {

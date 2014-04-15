@@ -4,7 +4,8 @@ migration.up = function(migrator) {
 			image: 'TEXT',
 			selectedImage: 'TEXT',
 			badge: 'INTEGER',
-			label: 'TEXT'
+			label: 'TEXT',
+			weight: 'INTEGER'
 		}
 	});
 };

@@ -182,23 +182,21 @@ module.exports = function(args, program) {
 		);
 	}
 
-	// check theme for assets
-	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
-		if (path.existsSync(themeAssetsPath)) {
-			updateFilesWithBuildLog(
-				themeAssetsPath,
-				path.join(paths.resources, titaniumFolder),
-				{
-					rootDir: paths.project,
-					themeChanged: buildLog.data.themeChanged,
-					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
-					exceptions: otherPlatforms,
-					titaniumFolder: titaniumFolder
-				}
-			);
-		}
-	}
+    // check theme for assets, platform and i18n
+    if (theme) {
+        _.each({
+            'assets': paths.resources,
+            'platform': path.join(paths.project, 'platform'),
+            'i18n': path.join(paths.project, 'i18n')
+        }, function (targetPath, folder) {
+            var themePath = path.join(paths.app,'themes',theme,folder);
+            logger.info(targetPath + ' > ' + themePath);
+            if (path.existsSync(themePath)) {
+                wrench.copyDirSyncRecursive(themePath, targetPath, {preserve:true});
+            }
+        });
+    }
+
 	logger.debug('');
 
 	// trigger our custom compiler makefile
@@ -706,6 +704,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 						// do nothing, we don't need the platform key anymore
 					} else if (queryKey === 'formFactor') {
 						queriesObj[queryKey] = 'is' + U.ucfirst(query);
+					} else if (queryKey === 'if') {
+						queriesObj[queryKey] =  query;
 					} else {
 						logger.warn('Unknown device query "' + queryKey + '"');
 					}

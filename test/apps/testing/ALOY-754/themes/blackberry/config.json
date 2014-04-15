@@ -1,0 +1,7 @@
+{
+    "global": {
+        "bothConfig": "theme:blackberry",
+        "themeConfig": "theme:blackberry"
+    },
+    "dependencies": {}
+}

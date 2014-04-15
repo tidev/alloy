@@ -46,7 +46,6 @@ function Controller() {
         Alloy.isTablet && _.extend(o, {
             text: "iPad"
         });
-        _.extend(o, {});
         Alloy.isHandheld && _.extend(o, {
             text: "iPhone"
         });

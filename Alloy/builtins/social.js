@@ -6,16 +6,16 @@
  * - Logging into Twitter and authorizing the application through the OAuth protocol.
  * - Posting tweets to the user's Twitter account.
  *
- * To use the social builtin library, require it with the `alloy` root 
+ * To use the social builtin library, require it with the `alloy` root
  * directory in your `require` call. For example:
- * 
+ *
  *     var social = require('alloy/social').create({
  *         consumerSecret: 'consumer-secret',
  *         consumerKey: 'consumer-key'
  *     });
  *
  * ## Login and Authorization
- * 
+ *
  * To use a social media provider, a user must log in and authorize the application to perform
  * certain actions, such as accessing profile information or posting messages.
  *
@@ -28,25 +28,26 @@
  * [https://dev.twitter.com/apps/new](https://dev.twitter.com/apps/new)
  *
  * ## Example
- * 
+ *
  * This example authorizes the application, posts a message to the user's Twitter account, then
  * deauthorizes the application.
  *
  *		// If not authorized, get authorization from the user
- *		if(!social.isAuthorized()) { 
+ *		if(!social.isAuthorized()) {
  *			social.authorize();
  *		}
- *		
+ *
  *		// Post a message
- *		// Setup both callbacks for confirmation
+ *      // Setup both callbacks for confirmation
+ *      // Note: share() automatically calls authorize() so an explicit call as above is unnecessary
  *		social.share({
  *			message: "Salut, Monde!",
  *			success: function(e) {alert('Success!')},
  *			error: function(e) {alert('Error!')}
- *		});	
+ *		});
  *
  *		// Deauthorize the application
- *		social.deauthorize(); 
+ *		social.deauthorize();
  */
 
 function hex_sha1(s) {
@@ -571,7 +572,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
  * @param {String} settings.consumerSecret Shared secret used to authenticate the key.
  * @param {String} settings.consumerKey Key used to identify the client to the service provider.
  * @return {Object} Instance of social to make subsequent API calls.
- */  
+ */
 
 exports.create = function(settings) {
     var site = (settings.site || "twitter").toLowerCase(), adapter = new OAuthAdapter(settings.consumerSecret, settings.consumerKey, "HMAC-SHA1");
@@ -593,14 +594,14 @@ exports.create = function(settings) {
         deauthorize: function() {
             adapter.clearAccessToken(site);
         },
-        /** 
+        /**
          * @method authorize
-         * Authorizes the client to the service provider to access user data. 
-         * If successful, the client will receive an access token, which will be saved for future 
+         * Authorizes the client to the service provider to access user data.
+         * If successful, the client will receive an access token, which will be saved for future
          * usage.
          * Call this function after opening the parent view or else the authorize UI window will
          * appear in the background behind the view and unusable to the user.
-         * @param {Function} [callback] Callback function executed after successfully retrieving 
+         * @param {Function} [callback] Callback function executed after successfully retrieving
          * an access token.
          */
         authorize: function(callback) {
@@ -617,7 +618,7 @@ exports.create = function(settings) {
         },
         /**
          * @method share
-         * Sends an update to the service provider.
+         * Sends an update to the service provider. Implicitly calls authorize() to authorize your app.
          * @param {...*} options Update parameters.
          * @param {String} options.message Message to send.
          * @param {Function} [options.success] Callback function executed after a successful update.

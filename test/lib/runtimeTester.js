@@ -116,7 +116,11 @@ function addMatchers() {
 			},
 			toHaveFunction: function(func) {
 				return _.isFunction(this.actual[func]);
-			}
+			},
+            toBeFile: function() {
+                var file = _.isString(this.actual) ? Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, this.actual) : this.actual;
+                return file.exists() && file.isFile();
+            }
 		});
 	});
 }

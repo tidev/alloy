@@ -17,6 +17,7 @@ var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
 var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
 var VALUES = {
+	TSSIF: 1000000,
 	ID:     100000,
 	CLASS:   10000,
 	API:      1000,
@@ -26,6 +27,9 @@ var VALUES = {
 	THEME:       0.9,
 	ORDER:       0.0001
 };
+var DATEFIELDS = [
+	'minDate', 'value', 'maxDate'
+];
 
 // private variables
 var styleOrderCounter = 1;
@@ -219,6 +223,8 @@ exports.sortStyles = function(style, opts) {
 						v = v.split(',');
 					} else if (q === 'formFactor') {
 						priority += VALUES.FORMFACTOR + VALUES.SUM;
+					} else if (q === 'if') {
+						priority += VALUES.TSSIF + VALUES.SUM;
 					} else {
 						priority += VALUES.SUM;
 					}
@@ -338,12 +344,26 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					code += prefix + '"' + value
-						.replace(/"/g, '\\"')
-						.replace(/\n/g, '\\n')
-						.replace(/\r/g, '\\r')
-						.replace(/\u2028/g, '\\u2028')
-						.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+						// ALOY-263, support date/time style pickers
+						var d = new Date(value);
+						if(DATEFIELDS.indexOf(sn) !== -1) {
+							if(Object.prototype.toString.call(d) === "[object Date]" &&
+							!isNaN(d.getTime())) {
+								// Convert date string to date object and confirm it's a valid date
+								code += prefix + 'new Date("'+d.toString()+'"),';
+							} else {
+								U.die("Invalid TSS date string. " + sn + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
+							}
+						}
+					} else {
+						code += prefix + '"' + value
+							.replace(/"/g, '\\"')
+							.replace(/\n/g, '\\n')
+							.replace(/\r/g, '\\r')
+							.replace(/\u2028/g, '\\u2028')
+							.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+					}
 				}
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
@@ -424,7 +444,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 				// assemble runtime query
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
-				var joinString = pcond && conditionals.formFactor ? ' && ' : '';
+				var joinString = (pcond && conditionals.formFactor) ? ' && ' : '';
 				var conditional = pcond + joinString + conditionals.formFactor;
 
 				// push styles if we need to insert a conditional
@@ -434,11 +454,28 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						styleCollection.push({style:style.style, condition:conditional});
 						lastObj = {};
 					}
-				} else {
-					_.extend(lastObj,style.style);
+				} else if(!q.if) {
+					lastObj = U.deepExtend(lastObj, style.style);
+				}
+
+
+				// ALOY-871: handle custom TSS queries with if conditional
+				if(q.if) {
+					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
+					var ffJoinString = (ffcond) ? ' && ' : '';
+					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
+
+					// push styles if we need to insert a conditional
+					if (conditional) {
+						if (lastObj) {
+							styleCollection.push({style:lastObj});
+							styleCollection.push({style:style.style, condition:conditional});
+							lastObj = {};
+						}
+					}
 				}
 			} else {
-				_.extend(lastObj, style.style);
+					lastObj = U.deepExtend(lastObj, style.style);
 			}
 		}
 	});
@@ -524,9 +561,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (styleCollection[i].condition) {
 				code += 'if (' + styleCollection[i].condition + ') ';
 			}
-			code += '_.extend(o, {';
-			code += exports.processStyle(styleCollection[i].style, theState);
-			code += '});\n';
+			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
+			if(!_.isEmpty(tmpStyle)) {
+				code += '_.extend(o, {';
+				code += tmpStyle;
+				code += '});\n';
+			}
 		}
 		code += 'return o;\n';
 		code += '})()';

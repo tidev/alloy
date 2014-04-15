@@ -1,0 +1,7 @@
+{
+    "global": {
+        "bothConfig": "theme:android",
+        "themeConfig": "theme:android"
+    },
+    "dependencies": {}
+}
