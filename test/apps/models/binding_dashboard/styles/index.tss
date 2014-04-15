@@ -1,18 +1,22 @@
 "Window": {
-	backgroundColor: '#fff',
+	backgroundColor: '#13386c',
 	exitOnClose: true,
-	modal: false
+	modal: false,
+	top: Alloy.Globals.winTop
 }
-
-"Label": {
-	color: '#000'
+"#toolbar": {
+	top: 0,
+	backgroundColor: '#eee'
+}
+"#helptext": {
+	color: 'white',
+	font: { fontSize: 14 },
+	text: 'Click an item to reset badge\nPress and hold an item to enable edit mode',
+	textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	top: 55
 }
 
 "#dash": {
 	top: 100,
 	wobble: true
-}
-
-"#editButton": {
-	style: Ti.UI.iPhone.SystemButtonStyle.DONE
 }
