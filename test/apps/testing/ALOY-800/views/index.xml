@@ -1,0 +1,8 @@
+<Alloy>
+  <Window class='container'>
+    <Module id="map" module="ti.map" method="createView">
+      <Annotation title="XML Annotation" latitude="37.389569" longitude="-122.050212" />
+      <Annotation id="annotation2"/>
+    </Module>
+  </Window>
+</Alloy>
