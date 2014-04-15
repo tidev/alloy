@@ -455,7 +455,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						lastObj = {};
 					}
 				} else if(!q.if) {
-					_.extend(lastObj,style.style);
+					lastObj = U.deepExtend(lastObj, style.style);
 				}
 
 
@@ -475,7 +475,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					}
 				}
 			} else {
-				_.extend(lastObj,style.style);
+					lastObj = U.deepExtend(lastObj, style.style);
 			}
 		}
 	});
