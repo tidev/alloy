@@ -633,6 +633,9 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 		configs.adapters = [configs.adapters];
 	}
 
+	// extend formFactors from config.json
+	_.extend(exports.CONDITION_MAP, configs.formFactors);
+
 	logger.debug(JSON.stringify(configs, null, '  ').split(os.EOL));
 
 	// update implicit namespaces, if possible

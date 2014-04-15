@@ -419,10 +419,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				}
 
 				// handle formFactor device query
-				if (q.formFactor === 'tablet') {
-					conditionals.formFactor = 'Alloy.isTablet';
-				} else if (q.formFactor === 'handheld') {
-					conditionals.formFactor = 'Alloy.isHandheld';
+				if(CU.CONDITION_MAP[q.formFactor]){
+					conditionals.formFactor=CU.CONDITION_MAP[q.formFactor]['runtime'];
+				}else{
+					logger.warn('Unknown formFactor "'+q.formFactor+'"');
 				}
 
 				// assemble runtime query
