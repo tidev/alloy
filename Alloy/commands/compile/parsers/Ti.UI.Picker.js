@@ -1,7 +1,8 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
-	CONST = require('../../../common/constants');
+	CONST = require('../../../common/constants'),
+	styler = require('../styler');
 
 var ROWS = [
 	'Ti.UI.Row',
@@ -12,16 +13,63 @@ var COLUMNS = [
 	'Ti.UI.PickerColumn',
 ];
 var VALID = _.union(ROWS, COLUMNS);
+var DATETIMETYPES = [
+	'Ti.UI.PICKER_TYPE_DATE',
+	'Ti.UI.PICKER_TYPE_TIME',
+	'Ti.UI.PICKER_TYPE_DATE_AND_TIME',
+	'Ti.UI.PICKER_TYPE_COUNT_DOWN_TIMER'
+];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
+function validDate(d, dateField) {
+	// not using _.isDate() because it accepts some invalid date strings
+	if(Object.prototype.toString.call(d) !== "[object Date]" || isNaN(d.getTime())) {
+		U.die("Invalid date string. " + dateField + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
+	} else {
+		return true;
+	}
+}
+
 // TODO: Improve effeciency https://jira.appcelerator.org/browse/ALOY-265
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		errBase = 'All <Picker> children must be either columns or rows. ',
-		code = '', arrayName;
+		code = '', arrayName,
+		extras = [];
+
+	// ALOY-263, support date/time type pickers
+	if (node.hasAttribute('type') && DATETIMETYPES.indexOf(node.getAttribute('type')) !== -1) {
+		// We have a date or time type picker so cast the string values to date objects
+		var d;
+		if(node.hasAttribute('value')) {
+			d = new Date(node.getAttribute('value'));
+			if(validDate(d, 'value')) {
+				extras.push(['value', 'new Date("'+d.toString()+'")']);
+			}
+		}
+		if(node.hasAttribute('minDate')) {
+			d = new Date(node.getAttribute('minDate'));
+			if(validDate(d, 'minDate')) {
+				extras.push(['minDate', 'new Date("'+d.toString()+'")']);
+			}
+		}
+		if(node.hasAttribute('maxDate')) {
+			d = new Date(node.getAttribute('maxDate'));
+			if(validDate(d, 'maxDate')) {
+				extras.push(['maxDate', 'new Date("'+d.toString()+'")']);
+			}
+		}
+		// Then, handle a couple of boolean date/time related attributes
+		attr = node.getAttribute('format24');
+		extras.push(['format24', attr === 'true']);
+		attr = node.getAttribute('calendarViewShown');
+		extras.push(['calendarViewShown', attr === 'true']);
+		// Finally, add all the new attributes/properties
+		if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
+	}
 
 	// Create the initial Picker code
 	code += require('./default').parse(node, state).code;

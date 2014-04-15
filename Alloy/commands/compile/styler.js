@@ -27,6 +27,9 @@ var VALUES = {
 	THEME:       0.9,
 	ORDER:       0.0001
 };
+var DATEFIELDS = [
+	'minDate', 'value', 'maxDate'
+];
 
 // private variables
 var styleOrderCounter = 1;
@@ -341,12 +344,26 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					code += prefix + '"' + value
-						.replace(/"/g, '\\"')
-						.replace(/\n/g, '\\n')
-						.replace(/\r/g, '\\r')
-						.replace(/\u2028/g, '\\u2028')
-						.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+						// ALOY-263, support date/time style pickers
+						var d = new Date(value);
+						if(DATEFIELDS.indexOf(sn) !== -1) {
+							if(Object.prototype.toString.call(d) === "[object Date]" &&
+							!isNaN(d.getTime())) {
+								// Convert date string to date object and confirm it's a valid date
+								code += prefix + 'new Date("'+d.toString()+'"),';
+							} else {
+								U.die("Invalid TSS date string. " + sn + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
+							}
+						}
+					} else {
+						code += prefix + '"' + value
+							.replace(/"/g, '\\"')
+							.replace(/\n/g, '\\n')
+							.replace(/\r/g, '\\r')
+							.replace(/\u2028/g, '\\u2028')
+							.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+					}
 				}
 			} else if (_.isArray(value)) {
 				code += prefix + '[';
