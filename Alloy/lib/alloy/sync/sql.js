@@ -418,21 +418,37 @@ function installDatabase(config) {
 
 	// compose config.columns from table definition in database
 	var rs = db.execute('pragma table_info("' + table + '");');
-	var columns = {};
-	while (rs.isValidRow()) {
-		var cName = rs.fieldByName('name');
-		var cType = rs.fieldByName('type');
-		columns[cName] = cType;
+	var columns = {}, cName, cType;
+	if(rs) {
+		while (rs.isValidRow()) {
+			cName = rs.fieldByName('name');
+			cType = rs.fieldByName('type');
+			columns[cName] = cType;
 
-		// see if it already has the ALLOY_ID_DEFAULT
-		if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
-			config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+			// see if it already has the ALLOY_ID_DEFAULT
+			if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
+				config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+			}
+
+			rs.next();
 		}
+		rs.close();
+	} else {
+		var idAttribute = (config.adapter.idAttribute) ? config.adapter.idAttribute : ALLOY_ID_DEFAULT;
+		for (var k in config.columns) {
+			cName = k;
+			cType = config.columns[k];
 
-		rs.next();
+			// see if it already has the ALLOY_ID_DEFAULT
+			if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
+				config.adapter.idAttribute = ALLOY_ID_DEFAULT;
+			} else if(k === config.adapter.idAttribute) {
+				cType += " UNIQUE";
+			}
+			columns[cName] = cType;
+		}
 	}
 	config.columns = columns;
-	rs.close();
 
 	// make sure we have a unique id field
 	if (config.adapter.idAttribute) {
