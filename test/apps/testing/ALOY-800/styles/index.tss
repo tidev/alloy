@@ -1,0 +1,16 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#map": {
+  userLocation: false,
+  mapType: Alloy.Globals.Map.SATELLITE_TYPE,
+  animate: true,
+	region: { latitude: 37.38, latitudeDelta: 0.2, longitude: -122.05, longitudeDelta: 0.2 	}
+}
+"#annotation2": {
+  title: "TSS Annotation",
+  latitude:37.392, 
+  longitude:-122.061
+}
