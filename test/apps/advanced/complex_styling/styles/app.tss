@@ -1,0 +1,12 @@
+"Window": {
+	backgroundColor: 'yellow'
+}
+"#lbl6": {
+	font: {
+		fontWeight: 'bold',
+		fontSize: '32dp'
+	}
+}
+"Label": {
+	left: 0
+}

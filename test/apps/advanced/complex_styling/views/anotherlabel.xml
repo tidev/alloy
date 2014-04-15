@@ -1,0 +1,3 @@
+<Alloy>
+	<Label id="lbl5" class="label">5. Required in, default font size, pink on iOS from platform-specifc TSS file, orange on other platforms from common TSS file</Label>
+</Alloy>

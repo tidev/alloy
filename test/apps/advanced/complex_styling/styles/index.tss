@@ -1,0 +1,59 @@
+'Window[platform=android]': {
+	backgroundColor: '#fff',
+	exitOnClose: true
+}
+"#sv": {
+	layout: 'vertical',
+	top: Alloy.Globals.scrollTop,
+	backgroundColor: '#fff'
+}
+"Label": {
+	color: 'black',
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE
+},
+".lbl": {
+	textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+	font: {
+		fontSize: '12dp'
+	}
+}
+".lbl[platform=android]": {
+	font: {
+		fontSize: '16dp'
+	}
+}
+"#lbl1": {
+	color: 'blue'
+}
+"#lbl1[platform=android]": {
+	color: 'green'
+}
+"#lbl2": {
+	text: "2. Text set in TSS, ID selector's left property overrides app.tss",
+	left: '20dp'
+}
+"#lbl4": {
+	color: 'orange', /* overridden in XML */
+	textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT
+}
+"#lbl5": {
+	color: 'purple',
+	text: 'This text is purple'
+}
+"#lbl6": {
+	font: {
+		fontFamily: 'Zapfino'
+	}
+}
+"#lbl6[platform=android]": {
+	font: {
+		fontFamily: 'FirecatMedium'
+	}
+}
+"#lbl9[formFactor=handheld]": {
+	color: 'green'
+}
+"#lbl9[formFactor=tablet]": {
+	color: 'purple'
+}

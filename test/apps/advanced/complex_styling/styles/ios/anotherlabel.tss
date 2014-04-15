@@ -1,0 +1,4 @@
+"#lbl5": {
+	color: 'pink',
+	text: '5. This text is pink' /* won't override text set in XML */
+}
