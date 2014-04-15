@@ -29,7 +29,12 @@ exports.generate = function(name, type, program, args) {
 	var ext = '.'+CONST.FILE_EXT[type];
 	var paths = U.getAndValidateProjectPaths(program.outputPath);
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
-	var dir = path.join(paths.app,CONST.DIR[type]);
+	// ALOY-372 - Support 'alloy generate' command for widget components
+	var widgetPath = (program.widgetname) ? CONST.DIR['WIDGET']+path.sep+program.widgetname : '';
+	if(widgetPath && !fs.existsSync(path.join(paths.app,widgetPath))) {
+		U.die('No widget named ' + program.widgetname + ' in this project.');
+	}
+	var dir = path.join(paths.app,widgetPath,CONST.DIR[type]);
 
 	// add the platform-specific folder to the path, if necessary
 	if (program.platform) {
