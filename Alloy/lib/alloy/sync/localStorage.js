@@ -12,8 +12,8 @@ function guid() {
 }
 
 function InitAdapter() {
-	if (!OS_MOBILEWEB && !OS_TIZEN) {
-		throw 'localStorage persistence supported only with MobileWeb and Tizen.';
+	if (!OS_MOBILEWEB) {
+		throw 'localStorage persistence supported only with MobileWeb.';
 	}
 }
 
