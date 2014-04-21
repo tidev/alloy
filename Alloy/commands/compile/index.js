@@ -182,20 +182,20 @@ module.exports = function(args, program) {
 		);
 	}
 
-    // check theme for assets, platform and i18n
-    if (theme) {
-        _.each({
-            'assets': paths.resources,
-            'platform': path.join(paths.project, 'platform'),
-            'i18n': path.join(paths.project, 'i18n')
-        }, function (targetPath, folder) {
-            var themePath = path.join(paths.app,'themes',theme,folder);
-            logger.info(targetPath + ' > ' + themePath);
-            if (path.existsSync(themePath)) {
-                wrench.copyDirSyncRecursive(themePath, targetPath, {preserve:true});
-            }
-        });
-    }
+	// check theme for assets, platform and i18n
+	if (theme) {
+		_.each({
+			'assets': paths.resources,
+			'platform': path.join(paths.project, 'platform'),
+			'i18n': path.join(paths.project, 'i18n')
+		}, function (targetPath, folder) {
+			var themePath = path.join(paths.app,'themes',theme,folder);
+			logger.info(targetPath + ' > ' + themePath);
+			if (path.existsSync(themePath)) {
+				wrench.copyDirSyncRecursive(themePath, targetPath, {preserve:true});
+			}
+		});
+	}
 
 	logger.debug('');
 
@@ -272,6 +272,36 @@ module.exports = function(args, program) {
 					tracker[fp] = true;
 				}
 			});
+		}
+		if(collection.manifest && theme) {
+			// this is a widget and a theme is being applied
+			if(fs.existsSync(path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets'))) {
+				// the widget has been themed and has assets to copy
+				logger.info('Processing theme assets for ' + collection.manifest.id + ' widget');
+				var widgetAssetSourceDir = path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets');
+				var widgetAssetTargetDir = path.join(paths.resources, titaniumFolder, collection.manifest.id);
+				logger.info('>>>>> widgetAssetSourceDir: ' + widgetAssetSourceDir);
+				logger.info('>>>>> widgetAssetTargetDir: ' + widgetAssetTargetDir);
+				_.each(fs.readdirSync(widgetAssetSourceDir), function(file) {
+					if((fs.statSync(path.join(widgetAssetSourceDir, file))).isFile()) {
+						logger.info('>>>>> file: ' + file);
+						fs.writeFileSync(path.join(widgetAssetTargetDir, file), fs.readFileSync(path.join(widgetAssetSourceDir, file), {encoding:'binary'}), {encoding:'binary'});
+					}
+				});
+				logger.info('---------------------------');
+				// check for platform-specifc assets and copy them if they exist
+				if(fs.existsSync(path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets', buildPlatform))) {
+					widgetAssetSourceDir = path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets', buildPlatform);
+					logger.info('>>>>> widgetAssetSourceDir: ' + widgetAssetSourceDir);
+					logger.info('Processing platform-specific theme assets for ' + collection.manifest.id + ' widget');
+					_.each(fs.readdirSync(widgetAssetSourceDir), function(file) {
+						if((fs.statSync(path.join(widgetAssetSourceDir, file))).isFile()) {
+							logger.info('>>>>> file: ' + file);
+							fs.writeFileSync(path.join(widgetAssetTargetDir, file), fs.readFileSync(path.join(widgetAssetSourceDir, file), {encoding:'binary'}), {encoding:'binary'});
+						}
+					});
+				}
+			}
 		}
 	});
 	logger.info('');
@@ -444,13 +474,25 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			});
 		}
 
-		if (theme && !manifest) {
-			var themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
-			var theStyle = dirname ? path.join(dirname,viewName+'.tss') : viewName+'.tss';
-			var themeStylesFile = path.join(themeStylesDir,theStyle);
-			var psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);
+		if (theme) {
+			// if a theme is applied, override TSS definitions with those defined in the theme
+			var themeStylesDir, theStyle, themeStylesFile, psThemeStylesFile;
+			if(!manifest) {
+				// theming a "normal" controller
+				themeStylesDir = path.join(compileConfig.dir.themes,theme,'styles');
+				theStyle = dirname ? path.join(dirname,viewName+'.tss') : viewName+'.tss';
+				themeStylesFile = path.join(themeStylesDir,theStyle);
+				psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);
+			} else {
+				// theming a widget
+				themeStylesDir = path.join(compileConfig.dir.themes,theme,'widgets',manifest.id,'styles');
+				theStyle = dirname ? path.join(dirname,viewName+'.tss') : viewName+'.tss';
+				themeStylesFile = path.join(themeStylesDir,theStyle);
+				psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);
+			}
 
 			if (path.existsSync(themeStylesFile)) {
+				// load theme-specific styles, overriding default definitions
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
 				state.styles = styler.loadAndSortStyle(themeStylesFile, {
 					existingStyle: state.styles,
@@ -458,6 +500,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 				});
 			}
 			if (path.existsSync(psThemeStylesFile)) {
+				// load theme- and platform-specific styles, overriding default definitions
 				logger.info('  theme:      "' +
 					path.join(theme.toUpperCase(), buildPlatform, theStyle) + '"');
 				state.styles = styler.loadAndSortStyle(psThemeStylesFile, {
