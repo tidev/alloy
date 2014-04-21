@@ -553,3 +553,20 @@ exports.deepExtend = function(obj) {
   });
   return obj;
 };
+
+/*
+Two date-related functions for ALOY-263
+	- used by compile/parsers/Ti.UI.Picker.js and compile/styler.js
+*/
+exports.isValidDate = function(d, dateField) {
+	// not using _.isDate() because it accepts some invalid date strings
+	if(!require('moment')(d).isValid()) {
+		exports.die("Invalid date string. " + dateField + " must be a string that can be parsed by MomentJS's `moment()` constructor.");
+	} else {
+		return true;
+	}
+};
+exports.createDate = function(val) {
+	return require('moment')(val).toDate();
+};
+

@@ -1,5 +1,6 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
+	logger = require('../../../logger'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants'),
 	styler = require('../styler');
@@ -24,14 +25,6 @@ exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
-function validDate(d, dateField) {
-	// not using _.isDate() because it accepts some invalid date strings
-	if(Object.prototype.toString.call(d) !== "[object Date]" || isNaN(d.getTime())) {
-		U.die("Invalid date string. " + dateField + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
-	} else {
-		return true;
-	}
-}
 
 // TODO: Improve effeciency https://jira.appcelerator.org/browse/ALOY-265
 function parse(node, state, args) {
@@ -45,20 +38,20 @@ function parse(node, state, args) {
 		// We have a date or time type picker so cast the string values to date objects
 		var d;
 		if(node.hasAttribute('value')) {
-			d = new Date(node.getAttribute('value'));
-			if(validDate(d, 'value')) {
+			d = U.createDate(node.getAttribute('value'));
+			if(U.isValidDate(d, 'value')) {
 				extras.push(['value', 'new Date("'+d.toString()+'")']);
 			}
 		}
 		if(node.hasAttribute('minDate')) {
-			d = new Date(node.getAttribute('minDate'));
-			if(validDate(d, 'minDate')) {
+			d = U.createDate(node.getAttribute('minDate'));
+			if(U.isValidDate(d, 'minDate')) {
 				extras.push(['minDate', 'new Date("'+d.toString()+'")']);
 			}
 		}
 		if(node.hasAttribute('maxDate')) {
-			d = new Date(node.getAttribute('maxDate'));
-			if(validDate(d, 'maxDate')) {
+			d = U.createDate(node.getAttribute('maxDate'));
+			if(U.isValidDate(d, 'maxDate')) {
 				extras.push(['maxDate', 'new Date("'+d.toString()+'")']);
 			}
 		}

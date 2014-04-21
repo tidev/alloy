@@ -346,16 +346,19 @@ exports.processStyle = function(_style, _state) {
 				} else {
 					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
 						// ALOY-263, support date/time style pickers
-						var d = new Date(value);
+						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
-							if(Object.prototype.toString.call(d) === "[object Date]" &&
+							if(U.isValidDate(d, sn)) {
+								code += prefix + 'new Date("'+d.toString()+'"),';
+							}
+/*							if(Object.prototype.toString.call(d) === "[object Date]" &&
 							!isNaN(d.getTime())) {
 								// Convert date string to date object and confirm it's a valid date
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							} else {
 								U.die("Invalid TSS date string. " + sn + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
 							}
-						}
+*/						}
 					} else {
 						code += prefix + '"' + value
 							.replace(/"/g, '\\"')
