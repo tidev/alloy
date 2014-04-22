@@ -66,7 +66,7 @@ function parse(node, state, args) {
 			navigationMode: node.getAttribute('navigationMode') ? node.getAttribute('navigationMode') : undefined,
 			onHomeIconItemSelected: node.getAttribute('onHomeIconItemSelected') ? node.getAttribute('onHomeIconItemSelected') : undefined
 		};
-	if(menuTssStyles[0].style) {
+	if(menuTssStyles[0] && menuTssStyles[0].style) {
 		_.defaults(xmlStyles, menuTssStyles[0].style);
 	}
 	if(xmlStyles.title)  { code += state.parent.symbol + '.activity.actionBar.title = "' + xmlStyles.title + '";'; }
