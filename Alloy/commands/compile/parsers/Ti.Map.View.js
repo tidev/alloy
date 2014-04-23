@@ -1,7 +1,8 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	styler = require('../styler'),
 	U = require('../../../utils'),
-	CU = require('../compilerUtils');
+	CU = require('../compilerUtils'),
+	CONST = require('../../../common/constants');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -10,7 +11,16 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		arrayName = CU.generateUniqueId(),
-		code = 'var ' + arrayName + ' = [];\n';
+		code = 'var ' + arrayName + ' = [];\n',
+		itemCode = '',
+		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
+		localModel, controllerSymbol;
+
+	if (isCollectionBound) {
+		_.each(CONST.BIND_PROPERTIES, function(p) {
+			node.removeAttribute(p);
+		});
+	}
 
 	// iterate through all children
 	for (var i = 0, l = children.length; i < l; i++) {
@@ -28,7 +38,6 @@ function parse(node, state, args) {
 					continue;
 				}
 			}
-
 			// generate code for the Annotation
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
@@ -49,6 +58,23 @@ function parse(node, state, args) {
 	state.extraStyle = styler.createVariableStyle('annotations', arrayName);
 	var mapState = require('./default').parse(node, state);
 	code += mapState.code;
+
+	if (isCollectionBound) {
+		_.each(CONST.BIND_PROPERTIES, function(p) {
+			node.removeAttribute(p);
+		});
+		localModel = localModel || CU.generateUniqueId();
+
+		// set a custom property for special handling of Annotations in CU.generateCollectionBindingTemplate()
+		args.isDataBoundMap = true;
+		code += _.template(CU.generateCollectionBindingTemplate(args), {
+			localModel: localModel,
+			pre: '',
+			items: itemCode,
+			annotationArray: arrayName,
+			post: args.symbol + ".annotations=" + arrayName + ";"
+		});
+	}
 
 	// Update the parsing state
 	return _.extend(mapState, {code:code});
