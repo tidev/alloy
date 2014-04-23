@@ -1,0 +1,10 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#map": {
+  userLocation: false,
+  animate: true,
+	region: { latitude: 37.3892876, latitudeDelta: 0.015, longitude: -122.0502364, longitudeDelta: 0.015 }
+}
