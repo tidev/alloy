@@ -793,7 +793,19 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "<%= pre %>";
 	code += "	for (var i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
-	code += "		<%= localModel %>.__transform = " + transformCode + ";";
+	if(!args.isDataBoundMap) {
+		code += "		<%= localModel %>.__transform = " + transformCode + ";";
+	} else {
+		// because (ti.map).annotations[] doesn't accept an array of anonymous objects
+		// we convert them to actual Annotations before pushing them to the array
+		if(transform) {
+			// createAnnotation() requires JSON. While localModel is a Model,
+			// transformed models are JSON
+			code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation(" + transformCode + "));";
+		} else {
+			code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation((<%= localModel %>).toJSON()));";
+		}
+	}
 	code += "<%= items %>";
 	code += "	}";
 	code += "<%= post %>";

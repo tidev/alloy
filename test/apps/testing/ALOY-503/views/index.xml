@@ -1,0 +1,14 @@
+<Alloy>
+	<Collection src="pins"/>
+	<Window class='container'>
+		<!--
+			// optionally, add one or both of these attributes to the Module tag
+			// (associated functions are already defined in the index.js file)
+			dataTransform="doTransform"
+			dataFilter="doFilter"
+		-->
+		<Module id="map" module="ti.map" method="createView" dataCollection="pins" >
+			<Annotation title="XML Annotation" latitude="37.39" longitude="-122.051" />
+		</Module>
+	</Window>
+</Alloy>
