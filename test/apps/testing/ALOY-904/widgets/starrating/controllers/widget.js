@@ -3,11 +3,11 @@ var args = arguments[0] || {},
 	rating = 0,
 	max = 5;
 
-// The widget's parent object is made available in the args.viewParent property.
-Ti.API.info("WIDGET PARENT'S ID IS: " + args.viewParent.id);
-if(args.viewParent) {
+// The widget's parent object is made available in the args.widgetParent property.
+Ti.API.info("WIDGET PARENT'S ID IS: " + args.widgetParent.id);
+if(args.widgetParent) {
 	// just because you can doesn't mean you do this sort of thing:
-	args.viewParent.add(Ti.UI.createLabel({
+	args.widgetParent.add(Ti.UI.createLabel({
 		text: 'Created in the widget!',
 		top: 200,
 		color: 'red'
