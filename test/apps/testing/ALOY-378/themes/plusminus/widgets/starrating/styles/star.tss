@@ -1,0 +1,6 @@
+'.star': {
+	height:'32dp',
+	width: '10dp',
+	left:'8dp',
+	bottom: '5dp'
+}

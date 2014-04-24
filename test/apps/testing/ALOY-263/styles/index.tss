@@ -4,7 +4,7 @@
 	exitOnClose: true
 }
 "#picker": {
-	value: 'July 4, 2013'
+	value: "2014-12-17T03:24:00"
 }
 "#txt": {
 	value: "July 0, 2013"

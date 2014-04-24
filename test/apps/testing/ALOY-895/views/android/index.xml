@@ -1,0 +1,13 @@
+<Alloy>
+	<Collection src="heroes"/>
+		<Window title="data switches">
+				<Button title="toggle" onClick="toggleState" top='5'/>
+			<TableView id="table" dataCollection="heroes" top="40">
+				<TableViewRow>
+					<Label text="{name}"></Label>
+					<Switch value="{status}"></Switch>
+				</TableViewRow>
+			</TableView>
+		</Window>
+</Alloy>
+

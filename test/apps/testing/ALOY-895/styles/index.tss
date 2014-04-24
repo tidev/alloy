@@ -6,6 +6,12 @@
 'Label': {
 	left: 5
 }
+'Label[platform=android]': {
+	font:{
+		fontSize:'18px'
+	},
+	color:'black'
+}
 'Switch': {
 	right: 5
 }
