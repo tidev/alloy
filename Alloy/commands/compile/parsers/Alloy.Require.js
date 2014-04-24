@@ -109,6 +109,9 @@ function parse(node, state, args) {
 	if (state.model) { xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--' + state.model; }
 	if (state.parent && state.parent.symbol) {
 		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
+		if(type==='widget') {
+			xArgs[CONST.VIEW_PARENT_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
+		}
 	} else if (CU.currentDefaultId !== 'index') {
 		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + CONST.PARENT_SYMBOL_VAR;
 	}

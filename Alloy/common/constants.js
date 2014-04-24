@@ -39,6 +39,7 @@ exports.HOOK_FILE = 'alloy.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
 exports.ITEM_TEMPLATE_VAR = '__itemTemplate';
 exports.PARENT_SYMBOL_VAR = '__parentSymbol';
+exports.VIEW_PARENT_VAR = 'widgetParent';
 exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
