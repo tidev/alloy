@@ -1,0 +1,44 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#scrolly": {
+	layout: "vertical"
+},
+"#scrolly[platform=ios]": {
+	top: 20
+},
+"TextField": {
+	top: 40, width: '85%', height: '40dp',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+}
+"TextArea": {
+	top: 40, width: '85%', height: '40dp',
+	borderWidth: 1,
+	borderColor: '#999'
+}
+"#normal":{
+	keyboardType: 'DEFAULT',
+	returnKeyType: 'DEFAULT',
+	autocorrect: true,
+	autocapitalization: 'WORDS',
+	hintText: 'default'
+},
+"#numeric":{
+	hintText: 'numbers_punctuation / done'
+},
+"#web":{
+	hintText: 'url / go'
+},
+"#password":{
+	keyboardType: Ti.UI.KEYBOARD_DEFAULT,
+	hintText: 'password',
+	passwordMask: true,
+	autocorrect: false,
+	autocapitalization: 'NONE'
+}
+"#textarea": {
+	keyboardType: 'numbers_punctuation',
+	returnKeyType: 'send'
+}

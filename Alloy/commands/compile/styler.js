@@ -30,6 +30,18 @@ var VALUES = {
 var DATEFIELDS = [
 	'minDate', 'value', 'maxDate'
 ];
+var KEYBOARD_TYPES = [
+	'DEFAULT', 'ASCII', 'NUMBERS_PUNCTUATION', 'URL', 'EMAIL', 'DECIMAL_PAD', 'NAMEPHONE_PAD',
+	'NUMBER_PAD', 'PHONE_PAD'
+];
+var RETURN_KEY_TYPES = [
+	'DEFAULT', 'DONE', 'EMERGENCY_CALL', 'GO', 'GOOGLE', 'JOIN', 'NEXT', 'ROUTE',
+	'SEARCH', 'SEND', 'YAHOO'
+];
+var AUTOCAPITALIZATION_TYPES = [
+	'ALL', 'NONE', 'SENTENCES', 'WORDS'
+];
+var KEYBOARD_PROPERTIES = ['keyboardType', 'returnKeyType', 'autocapitalization'];
 
 // private variables
 var styleOrderCounter = 1;
@@ -351,21 +363,28 @@ exports.processStyle = function(_style, _state) {
 							if(U.isValidDate(d, sn)) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}
-/*							if(Object.prototype.toString.call(d) === "[object Date]" &&
-							!isNaN(d.getTime())) {
-								// Convert date string to date object and confirm it's a valid date
-								code += prefix + 'new Date("'+d.toString()+'"),';
-							} else {
-								U.die("Invalid TSS date string. " + sn + " must be a string that can be parsed by JavaScript's `new Date()` constructor.");
-							}
-*/						}
+						}
 					} else {
-						code += prefix + '"' + value
-							.replace(/"/g, '\\"')
-							.replace(/\n/g, '\\n')
-							.replace(/\r/g, '\\r')
-							.replace(/\u2028/g, '\\u2028')
-							.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
+							code += prefix + '"' + value
+								.replace(/"/g, '\\"')
+								.replace(/\n/g, '\\n')
+								.replace(/\r/g, '\\r')
+								.replace(/\u2028/g, '\\u2028')
+								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
+						} else {
+							// keyboard type shortcuts for TextField, TextArea
+							// support shortcuts for keyboard type, return key type, and autocapitalization
+							if (sn===KEYBOARD_PROPERTIES[0] && _.contains(KEYBOARD_TYPES, value.toUpperCase())) {
+								code += prefix + 'Ti.UI.KEYBOARD_' + value.toUpperCase() + ',';
+							}
+							if (sn===KEYBOARD_PROPERTIES[1] && _.contains(RETURN_KEY_TYPES, value.toUpperCase())) {
+								code += prefix + 'Ti.UI.RETURNKEY_' + value.toUpperCase() + ',';
+							}
+							if (sn===KEYBOARD_PROPERTIES[2] && _.contains(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
+								code += prefix + 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + value.toUpperCase() + ',';
+							}
+						}
 					}
 				}
 			} else if (_.isArray(value)) {
