@@ -418,12 +418,12 @@ exports.createWidget = function(id, name, args) {
  */
 exports.createController = function(name, args) {
 	var newController = new (require('alloy/controllers/' + name))(args);
-	if(args && args.autoView && _.isObject(args.autoView)) {
-		_.each(args.autoView, function(props, id) {
-			if(newController[id]) {
-				_.each(props, function(val, key) {
-					newController[id][key] = val;
-				});
+	if(_.isObject(args)) {
+		_.each(_.keys(args), function(key) {
+			if (key.indexOf('#') === 0 && key !== '#') {
+				if(newController[key.substring(1)]) {
+					newController[key.substring(1)].applyProperties(args[key]);
+				}
 			}
 		});
 	}
