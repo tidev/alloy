@@ -1,6 +1,6 @@
 $.index.add(Alloy.createController('childview', {
-	autoView: {
-		label: {
+	alloyAutoView: {
+		"#label": {
 			text: 'I am a label',
 			top: 50,
 			width: Ti.UI.FILL,
@@ -12,11 +12,11 @@ $.index.add(Alloy.createController('childview', {
 				endPoint: { x: '100%', y: '50%' },
 				colors: [ { color: 'red', offset: 0.0}, { color: 'blue', offset: 0.25 }, { color: 'red', offset: 1.0 } ],
 		}},
-		anotherlabel: {
+		"#anotherlabel": {
 			text: 'I am also a label',
 			foo: 'bar'
 		},
-		someNonExistentId: { text: 'I do not exist'}
+		"#someNonExistentId": { text: 'I do not exist'}
 	}
 }).getView());
 
