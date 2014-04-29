@@ -417,6 +417,20 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
+	return new (require('alloy/controllers/' + name))(args);
+};
+
+/**
+ * @method createControllerlessView
+ * Factory method for instantiating a controllerless view, one that has an XML file
+ * but no corresponding JS file (or an empty one). Creates and returns an instance
+ * of the named controller.
+ * @param {String} name Name of controller to instantiate.
+ * @param {Object} [args] Arguments to pass to the controller. Must contain an object
+ *    whose keys are the IDs of components to which styles will be applied.
+ * @return {Alloy.Controller} Alloy controller object.
+ */
+exports.createControllerlessView = function(name, args) {
 	var newController = new (require('alloy/controllers/' + name))(args);
 	if(_.isObject(args)) {
 		_.each(_.keys(args), function(key) {
@@ -429,6 +443,7 @@ exports.createController = function(name, args) {
 	}
 	return newController;
 };
+
 
 /**
  * @method createModel

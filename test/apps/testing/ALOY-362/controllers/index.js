@@ -1,4 +1,4 @@
-$.index.add(Alloy.createController('childview', {
+$.index.add(Alloy.createControllerlessView('childview', {
 	"#label": {
 		text: 'I am a label',
 		top: 50,
@@ -16,6 +16,10 @@ $.index.add(Alloy.createController('childview', {
 		foo: 'bar'
 	},
 	"#someNonExistentId": { text: 'I do not exist'}
+}).getView());
+
+$.index.add(Alloy.createController('normalchild', {
+	text: 'Set the old-fashioned way'
 }).getView());
 
 $.index.open();
