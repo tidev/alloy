@@ -501,6 +501,13 @@ exports.createHash = function(files) {
 	return crypto.createHash('md5').update(source).digest('hex');
 };
 
+exports.createHashFromString = function(string) {
+	if (!_.isString(string)) {
+		throw new TypeError('bad argument');
+	}
+	return crypto.createHash('md5').update(string).digest('hex');
+};
+
 exports.proxyPropertyNameFromFullname = function(fullname) {
 	var nameParts = fullname.split('.');
 	return exports.lcfirst(nameParts[nameParts.length-1]);
