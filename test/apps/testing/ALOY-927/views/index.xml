@@ -1,0 +1,11 @@
+<Alloy>
+	<Window title="Keyboard Types">
+		<ScrollView id="scrolly">
+			<TextField id="normal"/>
+			<TextField id="numeric" keyboardType="numbers_punctuation" returnKeyType="done"/>
+			<TextField id="web" keyboardType="URL" returnKeyType="GO"/>
+			<TextField id="password"/>
+			<TextArea id="textarea" autocapitalization="all"/>
+		</ScrollView>
+	</Window>
+</Alloy>

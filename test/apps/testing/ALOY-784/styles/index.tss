@@ -10,15 +10,15 @@
     title: "Two",
     icon: Ti.Android.R.drawable.ic_menu_share
 },
- 
+
 "Label": {
     width: Ti.UI.SIZE,
     height: Ti.UI.SIZE,
     color: "#fff"
-} 
-"menu": {
+}
+"#menu": {
 	title: "My Menu",
 	icon: "/actionicon.png",
 	displayHomeAsUp: true,
-	backgroundImage: "/actionbackground.png"	
+	backgroundImage: "/actionbackground.png"
 }

@@ -10,7 +10,7 @@ var info = {
 		var desc = {
 			properties: {
 				description: 'Local persistence adapter that uses Ti.App.Properties storage',
-				platforms: ['android','ios','mobileweb','tizen','blackberry']
+				platforms: ['android','ios','mobileweb','blackberry']
 			},
 			sql: {
 				description: 'Local persistence adapter that uses SQLite storage',
@@ -18,7 +18,7 @@ var info = {
 			},
 			localStorage: {
 				description: 'Local persistence adapter that uses HTML5 localStorage API',
-				platforms: ['mobileweb','tizen']
+				platforms: ['mobileweb']
 			}
 		};
 		console.log(JSON.stringify(desc, null, 4));
