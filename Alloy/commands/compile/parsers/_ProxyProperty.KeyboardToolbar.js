@@ -5,7 +5,7 @@ exports.parse = function(node, state) {
 		proxyPropertyDefinition: {
 			parents: [
 				'Ti.UI.TextField',
-        'Ti.UI.TextArea'
+				'Ti.UI.TextArea'
 			]
 		}
 	});
