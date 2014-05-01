@@ -468,6 +468,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
 				var joinString = (pcond && conditionals.formFactor) ? ' && ' : '';
 				var conditional = pcond + joinString + conditionals.formFactor;
+				if(q.if) {
+					// ALOY-871: handle custom TSS queries with if conditional
+					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
+					var ffJoinString = (ffcond) ? ' && ' : '';
+					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
+				}
 
 				// push styles if we need to insert a conditional
 				if (conditional) {
@@ -478,23 +484,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					}
 				} else if(!q.if) {
 					lastObj = U.deepExtend(lastObj, style.style);
-				}
-
-
-				// ALOY-871: handle custom TSS queries with if conditional
-				if(q.if) {
-					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
-					var ffJoinString = (ffcond) ? ' && ' : '';
-					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
-
-					// push styles if we need to insert a conditional
-					if (conditional) {
-						if (lastObj) {
-							styleCollection.push({style:lastObj});
-							styleCollection.push({style:style.style, condition:conditional});
-							lastObj = {};
-						}
-					}
 				}
 			} else {
 					lastObj = U.deepExtend(lastObj, style.style);

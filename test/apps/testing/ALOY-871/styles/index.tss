@@ -4,12 +4,11 @@
 	exitOnClose: true
 }
 '#lbl': {
-	text: 'Foo is false',
+	text: 'Alloy.Globals.foo is false',
 	color: 'black'
 }
 '#lbl[if=Alloy.Globals.foo]': {
-	text: 'Foo is true',
-	color: 'red',
+	text: 'Alloy.Globals.foo is true',
 	font: {
 		fontSize: 24
 	}
@@ -21,14 +20,11 @@
 	backgroundColor: 'yellow'
 }
 '#lbl[formFactor=handheld]': {
-	text: 'Foo is really a handheld',
-	color: 'blue',
-	font: {
-		fontWeight: 'bold'
-	}
+	text: 'Handheld and Alloy.Globals.foo false',
+	color: 'blue'
 }
 '#lbl[if=Alloy.Globals.foo formFactor=tablet]': {
-	text: 'Foo is really a tablet',
+	text: 'Alloy.Globals.foo is true, and this is a tablet',
 	color: 'green',
 	font: {
 		fontWeight: 'bold',
@@ -38,4 +34,13 @@
 }
 "#iPhone5Label": {
 	text: 'iPhone5'
+}
+"#pre989label": {
+	bottom: 10
+}
+"#pre989label[platform=ios,android formFactor=tablet]": {
+	text: "Tablet (existing TSS functionality)"
+}
+"#pre989label[platform=ios,android formFactor=handheld]": {
+	text: "Handheld (existing TSS functionality)"
 }
