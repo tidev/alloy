@@ -58,7 +58,7 @@ function parse(node, state, args) {
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
 		code += (state.local ? 'var ' : '') + args.symbol + '={';
-		code += "type:'" + fullname + "',";
+		code += "__type:'" + fullname + "',";
 		if (bindId) {
 			code += "bindId:'" + bindId + "',";
 		}

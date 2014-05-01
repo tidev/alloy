@@ -356,7 +356,7 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+					if(typeof style.__type !== 'undefined' && (style.__type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
 						// ALOY-263, support date/time style pickers
 						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
