@@ -534,6 +534,10 @@ exports.inspectRequireNode = function(node) {
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	opts = opts || {};
+	var platform;
+	if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
+		platform = compilerConfig.alloyConfig.platform;
+	}
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
@@ -568,6 +572,28 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		});
 		logger.trace(' ');
 	});
+	if(opts.theme) {
+		// if this widget has been themed, copy its theme assets atop the stock ones
+		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
+		if(fs.existsSync(widgetThemeDir)) {
+			logger.trace('Processing themed widgets');
+			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
+			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
+			if(fs.existsSync(widgetAssetSourceDir)) {
+				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+			}
+			// platform-specific assets from the widget must override those of the theme
+			if(platform && path.existsSync(path.join(resources[0], platform))) {
+				wrench.copyDirSyncRecursive(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
+			}
+			// however platform-specific theme assets must override the platform assets from the widget
+			if(platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
+				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
+				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
+				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+			}
+		}
+	}
 };
 
 function updateImplicitNamspaces(platform) {
