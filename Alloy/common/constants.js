@@ -151,7 +151,6 @@ exports.IMPLICIT_NAMESPACES = {
 	ButtonName: NS_ALLOY_ABSTRACT,
 	BarItemTypes: NS_ALLOY_ABSTRACT,
 	BarItemType: NS_ALLOY_ABSTRACT,
-	ContentView: NS_ALLOY_ABSTRACT,
 	CoverFlowImageTypes: NS_ALLOY_ABSTRACT,
 	CoverFlowImageType: NS_ALLOY_ABSTRACT,
 	FlexSpace: NS_ALLOY_ABSTRACT,
@@ -198,6 +197,9 @@ exports.IMPLICIT_NAMESPACES = {
 	RightNavButton: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
+	// Ti.UI.iPad.Popover
+	ContentView: 'Ti.UI.iPad.Popover',
+
 	// Table and List proxy properties
 	FooterView: '_ProxyProperty._Lists',
 	HeaderView: '_ProxyProperty._Lists',
@@ -209,6 +211,6 @@ exports.IMPLICIT_NAMESPACES = {
 	// misc proxy properties
 	RightButton: '_ProxyProperty',
 	LeftButton: '_ProxyProperty',
-	KeyboardToolbar: '_ProxyProperty'
+	KeyboardToolbar: '_ProxyProperty',
 
 };
