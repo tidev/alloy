@@ -266,36 +266,6 @@ module.exports = function(args, program) {
 				}
 			});
 		}
-		if(collection.manifest && theme) {
-			// this is a widget and a theme is being applied
-			if(fs.existsSync(path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets'))) {
-				// the widget has been themed and has assets to copy
-				logger.info('Processing theme assets for ' + collection.manifest.id + ' widget');
-				var widgetAssetSourceDir = path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets');
-				var widgetAssetTargetDir = path.join(paths.resources, titaniumFolder, collection.manifest.id);
-				logger.info('>>>>> widgetAssetSourceDir: ' + widgetAssetSourceDir);
-				logger.info('>>>>> widgetAssetTargetDir: ' + widgetAssetTargetDir);
-				_.each(fs.readdirSync(widgetAssetSourceDir), function(file) {
-					if((fs.statSync(path.join(widgetAssetSourceDir, file))).isFile()) {
-						logger.info('>>>>> file: ' + file);
-						fs.writeFileSync(path.join(widgetAssetTargetDir, file), fs.readFileSync(path.join(widgetAssetSourceDir, file), {encoding:'binary'}), {encoding:'binary'});
-					}
-				});
-				logger.info('---------------------------');
-				// check for platform-specifc assets and copy them if they exist
-				if(fs.existsSync(path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets', buildPlatform))) {
-					widgetAssetSourceDir = path.join(paths.app, 'themes', theme, 'widgets', collection.manifest.id, 'assets', buildPlatform);
-					logger.info('>>>>> widgetAssetSourceDir: ' + widgetAssetSourceDir);
-					logger.info('Processing platform-specific theme assets for ' + collection.manifest.id + ' widget');
-					_.each(fs.readdirSync(widgetAssetSourceDir), function(file) {
-						if((fs.statSync(path.join(widgetAssetSourceDir, file))).isFile()) {
-							logger.info('>>>>> file: ' + file);
-							fs.writeFileSync(path.join(widgetAssetTargetDir, file), fs.readFileSync(path.join(widgetAssetSourceDir, file), {encoding:'binary'}), {encoding:'binary'});
-						}
-					});
-				}
-			}
-		}
 	});
 	logger.info('');
 
@@ -681,7 +651,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			{
 				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
 				exceptions: otherPlatforms,
-				titaniumFolder: titaniumFolder
+				titaniumFolder: titaniumFolder,
+				theme: theme
 			}
 		);
 		targetFilepath = path.join(
