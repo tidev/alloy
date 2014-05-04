@@ -25,10 +25,20 @@
 '#textfield': {
 	value: 'this is the value',
 	height: '50dp',
-	bottom: 0,
+	bottom: '50dp',
 	left: '20dp',
 	right: '20dp',
 	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
 	leftButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS,
 	rightButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS
+}
+
+'#textarea': {
+	value: 'textarea here',
+	height: '50dp',
+	bottom: 0,
+	left: '8dp',
+	right: '8dp',
+	borderColor: 'pink',
+	borderWidth: 1,
 }
