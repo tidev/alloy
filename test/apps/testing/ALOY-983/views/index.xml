@@ -1,0 +1,7 @@
+<Alloy>
+	<Window layout="vertical">
+		<Button id="button1" top="250" onClick="openPopover">Show View-based Popover</Button>
+		<Button id="button2" top="50" onClick="openPopoverWin">Show Window-based Popover</Button>
+		<Button id="button3" top="50" onClick="openPopoverNavWin">Show NavigationWindow-based Popover</Button>
+	</Window>
+</Alloy>
