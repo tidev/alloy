@@ -1,0 +1,37 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+/* */
+'#lbl': {
+	text: 'Default label text',
+	color: 'black'
+}
+/*
+	If you change the alloy.js file to set someProperty to false,
+	this style rule won't be applied
+ */
+'#lbl[if=Alloy.Globals.someProperty]': {
+	text: 'Alloy.Globals.someProperty is true',
+	font: {
+		fontSize: '16dp'
+	},
+	color: 'blue'
+}
+'#lbl[formFactor=tablet if=Alloy.Globals.someProperty]': {
+	text: 'Alloy.Globals.someProperty is true',
+	font: {
+		fontSize: '24dp'
+	},
+	color: 'green'
+}
+'#lbl[if=Alloy.Globals.isIOS7]': {
+	top: 50
+}
+'#lbl[if=Alloy.Globals.isTalliPhone]': {
+	backgroundColor: 'yellow'
+}
+"#iPhone5Label": {
+	text: 'iPhone5'
+}
