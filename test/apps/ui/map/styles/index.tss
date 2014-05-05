@@ -7,20 +7,21 @@
 		latitudeDelta: 0.2,
 		longitude: -122.05,
 		longitudeDelta: 0.2
-	}
+	},
+	mapType: Alloy.Globals.Map.SATELLITE_TYPE
 },
 "#annotation1": {
-	title:"Mountain View", 
-	latitude:37.389569, 
+	title:"Mountain View",
+	latitude:37.389569,
 	longitude:-122.050212
 },
 "#annotation2": {
-	title:"Google HQ", 
-	latitude:37.4231054, 
+	title:"Google HQ",
+	latitude:37.4231054,
 	longitude:-122.0823988
 },
 "#annotation3": {
-	title:"Apple HQ", 
-	latitude:37.3308525, 
+	title:"Apple HQ",
+	latitude:37.3308525,
 	longitude:-122.0296837
 }

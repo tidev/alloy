@@ -1,6 +1,6 @@
 <Alloy>
 	<Window class='container'>
-		<View ns="Ti.Map" id="map">
+    	<Module id="map" module="ti.map" method="createView" platform="ios,android">
 			<!-- annotation styled via tss file -->
 			<Annotation id="annotation1"/>
 
@@ -14,12 +14,21 @@
 			<!-- annotation via <Require> tag -->
 			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
 
-			<!-- 
+			<!--
 				Lets add a UI component to show Annotations being declared
 			    side-by-side with child components. Map subviews will appear
 			    on iOS only.
 			-->
 			<Require src="overlay" platform="ios"/>
+		</Module>
+    	<View id="map" ns="ti.map" method="createView" platform="mobileweb">
+    		<!--
+    			Mobileweb doesn't support the Ti.Map add-on module but uses the
+    			built-in Ti.Map object. For this, we need to add the ns="ti.map" attribute
+    		-->
+			<Annotation id="annotation1"/>
+			<Annotation title="Palo Alto" latitude="37.47" longitude="-122.12"/>
+			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
 		</View>
 	</Window>
 </Alloy>
