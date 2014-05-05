@@ -91,7 +91,7 @@ module.exports = function(args, program) {
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
-	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig);
+	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig, buildLog);
 	theme = compileConfig.theme;
 	buildLog.data.themeChanged = theme !== buildLog.data.theme;
 	buildLog.data.theme = theme;

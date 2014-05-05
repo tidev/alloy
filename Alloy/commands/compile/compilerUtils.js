@@ -608,7 +608,7 @@ function updateImplicitNamspaces(platform) {
 	}
 }
 
-exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
+exports.createCompileConfig = function(inputPath, outputPath, alloyConfig, buildLog) {
 	var dirs = ['assets','config','controllers','lib','migrations','models','styles','themes','vendor','views','widgets'];
 	var libDirs = ['builtins','template'];
 	var resources = path.resolve(path.join(outputPath,'Resources'));
@@ -620,7 +620,8 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 			project: path.resolve(outputPath),
 			resources: resources,
 			resourcesAlloy: path.join(resources,'alloy')
-		}
+		},
+		buildLog: buildLog
 	};
 
 	// create list of dirs
@@ -671,10 +672,11 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig) {
 };
 
 function generateConfig(obj) {
+	var buildLog = obj.buildLog;
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
 	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
-	var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
+	//var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
 
 	// get the app and resources locations
 	var appCfg = path.join(obj.dir.home,'config.'+CONST.FILE_EXT.CONFIG);
@@ -697,25 +699,32 @@ function generateConfig(obj) {
 				o = exports.parseConfig(themeCfg, alloyConfig, o);
 			}
 		}
-
-		// TODO: only regenerate the CFG.js when necessary, using the file timestamps and the
-		//       build log entry for deploy type to know when.
 	}
 
-	// write out the config runtime module
-	wrench.mkdirSyncRecursive(resourcesBase, 0755);
+	// only regenerate the CFG.js when necessary
+	var hash = U.createHashFromString(JSON.stringify(o));
+	if(buildLog.data.cfgHash && buildLog.data.cfgHash === hash && fs.existsSync(path.join(obj.dir.resources, 'alloy', 'CFG.js'))) {
+		// use cached CFG.js file
+		logger.info(' [config.json] config.json unchanged, using cached config.json...');
+	} else {
+		// cached CFG.js is out of sync with config.json, regenerate and save
+		logger.info(' [config.json] regenerating CFG.js from config.json...');
+		buildLog.data.cfgHash = hash;
+		// write out the config runtime module
+		wrench.mkdirSyncRecursive(resourcesBase, 0755);
 
-	//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
-	var output = "module.exports=" + JSON.stringify(o) + ";";
-	fs.writeFileSync(resourcesCfg, output);
+		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
+		var output = "module.exports=" + JSON.stringify(o) + ";";
+		fs.writeFileSync(resourcesCfg, output);
 
-	// TODO: deal with TIMOB-14884
-	if (alloyConfig.platform === 'ios') {
-		var baseFolder = path.join(obj.dir.resources, 'alloy');
-		if (!fs.existsSync(baseFolder)) {
-			wrench.mkdirSyncRecursive(baseFolder, 0755);
+		// TODO: deal with TIMOB-14884
+		if (alloyConfig.platform === 'ios') {
+			var baseFolder = path.join(obj.dir.resources, 'alloy');
+			if (!fs.existsSync(baseFolder)) {
+				wrench.mkdirSyncRecursive(baseFolder, 0755);
+			}
+			fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 		}
-		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}
 
 	return o;
