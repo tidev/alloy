@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label id="lbl"/>
+		<Label if="Alloy.Globals.isTalliPhone" id="iPhone5Label"/>
+	</Window>
+</Alloy>

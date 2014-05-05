@@ -1,29 +1,24 @@
-Namespaces
+Maps
 ==========
 
-In this example, we're going to show how we can use Titanium UI components in the markup view hierarchy that our outside of the `Ti.UI` namespace. 
+The built-in maps module has been replaced by the Ti.Maps add-on module. This extension module is provided with the rest of the Titanium APIs, but not included in projects by default. Typically, you must add this module in your tiapp.xml. However, Alloy makes this easy ... if you use the `<Module>` tag.
 
-By default, all UI components in the markup view hierarchy are prefixed with the `Ti.UI` namespace when created. This is a convenience feature, as a vast majority of the components that compose most Titanium apps are contained within this namespace. 
+In this example, we're going to show how we can use maps on iOS, Android, and MobileWeb.
 
-```xml
-<!-- Creates a Ti.UI.Button -->
-<Button id="mybutton">button title</Button> 
+You will need a reference to the Ti.Map object (the module or built-in object) throughout your app. The best way to do this is with the alloy.js file. In it, we'll add this line:
+
+```
+Alloy.Globals.Map = (OS_IOS || OS_ANDROID) ? require('ti.map') : Ti.Map;
 ```
 
-There are, however, a few UI components outside this namespace. Some of those components include:
+That creates a reference to either the external module, or the built-in object, depending on your platform. Next, you will add the appropriate markup
 
-* Ti.Map.View & Ti.Map.Annotation
-* Ti.Media.VideoPlayer & Ti.Media.AudioPlayer
-* Ti.UI.Android.*
-* Ti.UI.iPhone.*
-* Ti.UI.iPad.*
-* Ti.UI.iOS.*
-* Ti.UI.MobileWeb.*
-
-Accessing those components in your markup is simple. You just need to add the `ns` attribute to your markup element, with the desired namespace prefix as its value. So to create a `Ti.Map.View`, you'd do the following:
 
 ```xml
-<View ns="Ti.Map" id="map"/>
+<Module id="map" module="ti.map" method="createView" platform="ios,android"/>
+<View ns="Ti.Map" id="map" platform="mobileweb/>
 ```
 
-It's that simple. The full example here does exactly that, and references the created `Ti.Map.View` component in the **index.js** controller to add annotations to the map.
+If you look to the index.xml file, you'll see how we're defining annotations with the `<Annotation>` tag. Map and annotation attributes can be specified in the view, style sheet, or controller.
+
+**Note:** You must reference the appropriate object when referencing the map constants. Refer to the index.tss file to see how we reference the appropriate map object to set the mapType property to the appropriate constant.
