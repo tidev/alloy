@@ -1,0 +1,8 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#picker": {
+	value: "December 17, 2013"
+}
