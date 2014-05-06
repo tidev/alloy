@@ -239,8 +239,6 @@ function Sync(method, model, opts) {
         var fc = 0;
 
                 // RESOLVED: https://jira.appcelerator.org/browse/ALOY-459
-                                // TODO : remove after test
-				//fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
                                 fc = rs.fieldCount;
 
 				// create list of rows returned from query
