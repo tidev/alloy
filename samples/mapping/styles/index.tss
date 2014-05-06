@@ -3,3 +3,6 @@
     fullscreen: false,
     exitOnClose: true
 }
+".container": {
+	top: Alloy.Globals.winTop
+}
