@@ -1,0 +1,10 @@
+<Alloy>
+	<Window>
+		<Label id="title1" class="label"/>
+		<Label id="title2" class="label"/>
+		<Label id="title3" class="label"/>
+		<Label id="title4"/>
+		<Label id="title5" class="label" if="Alloy.Globals.someProperty"/>
+		<Label id="title6" class="label" platform="android" if="Alloy.Globals.someProperty"/>
+	</Window>
+</Alloy>
