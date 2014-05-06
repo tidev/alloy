@@ -1,0 +1,12 @@
+".container": {
+	backgroundColor:"white"
+},
+
+"#label1": {
+	width: Ti.UI.SIZE,
+	font: {
+		fontSize: '10px'
+	},
+	color: "#000"
+}
+
