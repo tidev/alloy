@@ -238,8 +238,8 @@ function Sync(method, model, opts) {
 				var o = {};
         var fc = 0;
 
-                // TODO: https://jira.appcelerator.org/browse/ALOY-459
-				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
+                // RESOLVED: https://jira.appcelerator.org/browse/ALOY-459
+                                fc = rs.fieldCount;
 
 				// create list of rows returned from query
 				_.times(fc,function(c){
