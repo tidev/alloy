@@ -1,21 +1,20 @@
 ".container": {
 },
 "MenuItem": {
-    showAsAction: Ti.Android.SHOW_AS_ACTION_ALWAYS
+	showAsAction: Ti.Android.SHOW_AS_ACTION_ALWAYS
 },
 "#item1": {
-    title: "One"
+	title: "One"
 },
 "#item2": {
-    title: "Two",
-    icon: Ti.Android.R.drawable.ic_menu_share
+	title: "Two",
+	icon: Ti.Android.R.drawable.ic_menu_share
 },
- 
 "Label": {
-    width: Ti.UI.SIZE,
-    height: Ti.UI.SIZE,
-    color: "#fff"
-} 
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#fff"
+},
 "menu": {
 	title: "My Menu",
 	displayHomeAsUp: true
