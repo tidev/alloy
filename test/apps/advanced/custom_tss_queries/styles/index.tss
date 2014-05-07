@@ -1,37 +1,44 @@
-'#index': {
-	backgroundColor: '#fff',
-	fullscreen: false,
-	exitOnClose: true
+"Window":{
+	layout:"vertical",
+	backgroundColor:'white',
+	top:20
 }
-/* */
-'#lbl': {
-	text: 'Default label text',
-	color: 'black'
-}
-/*
-	If you change the alloy.js file to set someProperty to false,
-	this style rule won't be applied
- */
-'#lbl[if=Alloy.Globals.someProperty]': {
-	text: 'Alloy.Globals.someProperty is true',
-	font: {
-		fontSize: '16dp'
-	},
+/* Class selector applied to labels of class=label */
+".label": {
 	color: 'blue'
 }
-'#lbl[formFactor=tablet if=Alloy.Globals.someProperty]': {
-	text: 'Alloy.Globals.someProperty is true',
+/* Component selector applied to all labels, though will be overridden */
+"Label":{
+	top:10,
+	text: "Default label text",
 	font: {
-		fontSize: '24dp'
-	},
-	color: 'green'
+		fontSize: '14dp'
+	}
 }
-'#lbl[if=Alloy.Globals.isIOS7]': {
-	top: 50
+/* Platform selector applied to all labels, but a lower priority than the custom TSS conditional */
+"Label[platform=ios]":{
+	text: "Alloy.Globals.someProperty!=true"
 }
-'#lbl[if=Alloy.Globals.isTalliPhone]': {
-	backgroundColor: 'yellow'
+/* Custom TSS overrides component and class selectors if someProperty is true */
+"Label[if=Alloy.Globals.someProperty]":{
+	text: "Custom TSS: Alloy.Globals.someProperty==true"
 }
-"#iPhone5Label": {
-	text: 'iPhone5'
+/* ID selector overrides other selectors if platform is iOS */
+"#title1[platform=ios]": {
+	text: "Platform: this is iOS"
+}
+"#title1[if=Alloy.Globals.someProperty]": {
+	text: "Overriding platform with custom TSS"
+}
+/* Selector overrides only if platform is Android and someProperty is true */
+"#title2[platform=android if=Alloy.Globals.someProperty]": {
+	text: "Platform: Android, Alloy.Globals.someProperty==true"
+}
+"#title2[platform=ios if=Alloy.Globals.someProperty]": {
+	text: "Platform: iOS, Alloy.Globals.someProperty==true"
+}
+
+/* ID selector overrides other selectors if platform is iOS */
+"#title3":{
+	text: "You should see this for label 3"
 }
