@@ -1,4 +1,0 @@
-{
-	"sourcemap": false,
-	"adapters": ["sql"]
-}
