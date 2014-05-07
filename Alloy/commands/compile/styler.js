@@ -17,10 +17,10 @@ var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
 var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
 var VALUES = {
-	TSSIF: 1000000,
 	ID:     100000,
 	CLASS:   10000,
 	API:      1000,
+	TSSIF:     500,
 	PLATFORM:  100,
 	FORMFACTOR: 10,
 	SUM:         1,
