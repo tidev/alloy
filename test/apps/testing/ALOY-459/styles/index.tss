@@ -1,0 +1,17 @@
+".container": {
+	backgroundColor:"white",
+	top: Alloy.Globals.winTop
+},
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+},
+"#addRow": {
+	top: 0,
+	title: 'Add a row',
+	height: '30dp'
+},
+"TableView": {
+	top: '40dp'
+}

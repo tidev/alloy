@@ -1,0 +1,11 @@
+<Alloy>
+	<Collection src="rows" />
+	<Window id="index"  title="Model Test" class='container'>
+		<Button id="addRow" />
+		<TableView id="table" dataCollection="rows">
+			<TableViewRow>
+				<Label text="{title}" left="5"/>
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>
