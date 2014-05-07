@@ -236,10 +236,7 @@ function Sync(method, model, opts) {
 			while(rs.isValidRow())
 			{
 				var o = {};
-        var fc = 0;
-
-                // RESOLVED: https://jira.appcelerator.org/browse/ALOY-459
-                                fc = rs.fieldCount;
+       				var fc = rs.fieldCount;
 
 				// create list of rows returned from query
 				_.times(fc,function(c){
@@ -459,7 +456,6 @@ function installDatabase(config) {
 	} else {
 		Ti.API.info('No config.adapter.idAttribute specified for table "' + table + '"');
 		Ti.API.info('Adding "' + ALLOY_ID_DEFAULT + '" to uniquely identify rows');
-
 		var fullStrings = [],
 			colStrings = [];
 		_.each(config.columns, function(type, name) {
