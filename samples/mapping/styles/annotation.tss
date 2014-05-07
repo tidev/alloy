@@ -1,5 +1,5 @@
 "Annotation": {
     animate: true,
-    pincolor: Titanium.Map.ANNOTATION_RED,
-    leftButton: '/images/delete.png'
+    pincolor: Ti.Map.ANNOTATION_RED,
+    leftButton: '/delete.png'
 }
