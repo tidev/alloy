@@ -57,8 +57,10 @@ function parse(node, state, args) {
 			// generate a list of style defined in the TSS file
 			return elem.key == node.getAttribute('id');
 		}),
+
 		xmlStyles = {
 			title: node.getAttribute('title') ? node.getAttribute('title') : undefined,
+			subtitle: node.getAttribute('subtitle') ? node.getAttribute('subtitle') : undefined,
 			backgroundImage: node.getAttribute('backgroundImage') ? node.getAttribute('backgroundImage') : undefined,
 			displayHomeAsUp: node.getAttribute('displayHomeAsUp') ? node.getAttribute('displayHomeAsUp') : undefined,
 			icon: node.getAttribute('icon') ? node.getAttribute('icon') : undefined,
@@ -74,6 +76,7 @@ function parse(node, state, args) {
 		// to speed up execution of the resulting code
 		code += 'if(' + state.parent.symbol + '.activity.actionBar) {\n';
 			if(xmlStyles.title)  { code += state.parent.symbol + '.activity.actionBar.title = "' + xmlStyles.title + '";'; }
+			if(xmlStyles.subtitle)  { code += state.parent.symbol + '.activity.actionBar.subtitle = "' + xmlStyles.subtitle + '";'; }
 			if(xmlStyles.backgroundImage)  { code += state.parent.symbol + '.activity.actionBar.backgroundImage = "' + xmlStyles.backgroundImage + '";'; }
 			if(xmlStyles.displayHomeAsUp)  { code += state.parent.symbol + '.activity.actionBar.displayHomeAsUp = ' + xmlStyles.displayHomeAsUp + ';'; }
 			if(xmlStyles.icon)  { code += state.parent.symbol + '.activity.actionBar.icon = "' + xmlStyles.icon + '";'; }
