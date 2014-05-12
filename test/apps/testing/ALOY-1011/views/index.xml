@@ -1,0 +1,12 @@
+<Alloy>
+	<Window class="container" title="ALOY-991">
+		<Menu id="actionmenu" class="menuclass" platform="android">
+			<MenuItem id="item1" title="One" onClick="doMenuClick1" />
+			<MenuItem id="item2" title="Two" onClick="doMenuClick2" />
+		</Menu>
+		<Label platform="android" id="label" class="labelclass" onClick="doClick"></Label>
+		<View id="bottomview" class="viewclass">
+			<Label id="viewlabel"/>
+		</View>
+	</Window>
+</Alloy>

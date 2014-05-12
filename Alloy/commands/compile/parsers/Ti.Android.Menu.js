@@ -54,22 +54,24 @@ function parse(node, state, args) {
 
 	// ALOY-784, support Activity properties as attributes of <Menu>
 	var menuTssStyles = _.filter(state.styles, function(elem) {
-			// generate a list of style defined in the TSS file
-			return elem.key == node.getAttribute('id');
-		}),
-
-		xmlStyles = {
-			title: node.getAttribute('title') ? node.getAttribute('title') : undefined,
-			subtitle: node.getAttribute('subtitle') ? node.getAttribute('subtitle') : undefined,
-			backgroundImage: node.getAttribute('backgroundImage') ? node.getAttribute('backgroundImage') : undefined,
-			displayHomeAsUp: node.getAttribute('displayHomeAsUp') ? node.getAttribute('displayHomeAsUp') : undefined,
-			icon: node.getAttribute('icon') ? node.getAttribute('icon') : undefined,
-			logo: node.getAttribute('logo') ? node.getAttribute('logo') : undefined,
-			navigationMode: node.getAttribute('navigationMode') ? node.getAttribute('navigationMode') : undefined,
-			onHomeIconItemSelected: node.getAttribute('onHomeIconItemSelected') ? node.getAttribute('onHomeIconItemSelected') : undefined
-		};
-	if(menuTssStyles[0] && menuTssStyles[0].style) {
-		_.defaults(xmlStyles, menuTssStyles[0].style);
+			// generates a sorted array of styles filtered to include only elements
+			// associated with the menu (by ID, class, or API name)
+			return elem.key === node.getAttribute('id') || elem.key === node.getAttribute('class') || elem.key === node.nodeName;
+		});
+	var xmlStyles = {
+		title: node.getAttribute('title') ? node.getAttribute('title') : undefined,
+		subtitle: node.getAttribute('subtitle') ? node.getAttribute('subtitle') : undefined,
+		backgroundImage: node.getAttribute('backgroundImage') ? node.getAttribute('backgroundImage') : undefined,
+		displayHomeAsUp: node.getAttribute('displayHomeAsUp') ? node.getAttribute('displayHomeAsUp') : undefined,
+		icon: node.getAttribute('icon') ? node.getAttribute('icon') : undefined,
+		logo: node.getAttribute('logo') ? node.getAttribute('logo') : undefined,
+		navigationMode: node.getAttribute('navigationMode') ? node.getAttribute('navigationMode') : undefined,
+		onHomeIconItemSelected: node.getAttribute('onHomeIconItemSelected') ? node.getAttribute('onHomeIconItemSelected') : undefined
+	};
+	// to respect proper style hierarchy, take the last element in the array (which will be the highest priority)
+	var menuTssKey = _.isArray(menuTssStyles) ? menuTssStyles.length-1 : 0;
+	if(menuTssStyles[menuTssKey] && menuTssStyles[menuTssKey].style) {
+		_.defaults(xmlStyles, menuTssStyles[menuTssKey].style);
 	}
 	if((_.filter(_.values(xmlStyles), function(val) { return val !== undefined; })).length > 0) {
 		// TODO: once Android 2.x support is deprecated, remove the if(actionBar) test from the following
