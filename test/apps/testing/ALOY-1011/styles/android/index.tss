@@ -1,0 +1,28 @@
+//"Menu":{
+//	title: "subfolder API menu subtitle"
+//}
+
+//".menuclass": {
+//	displayHomeAsUp:true,
+//	title:"class subfolder Menu Title "
+//}
+
+//"#actionmenu":{
+//	title:"subfolder ID Menu Title ",
+//	subtitle:'subfolder ID menu subtitle'
+//}
+
+
+
+".viewclass":{
+	bottom:10,
+	height:200,
+	backgroundColor:'red'
+}
+"#viewlabel":{
+	text:"Android platform!"
+}
+
+".labelclass":{
+	text:'class label subfolder - you should see this'
+}

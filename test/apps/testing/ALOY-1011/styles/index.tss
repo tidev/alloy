@@ -1,0 +1,36 @@
+"Menu":{
+	title:"index API menu subtitle"
+}
+".menuclass": {
+	displayHomeAsUp: true,
+	title:"index class Menu Title "
+}
+"#actionmenu":{
+	title:"index ID Menu Title ",
+	subtitle:'index ID subtitle'
+}
+
+"MenuItem": {
+	showAsAction: Ti.Android.SHOW_AS_ACTION_ALWAYS
+},
+"#item1": {
+	title: "One"
+},
+"#item2": {
+	title: "Two",
+	icon: Ti.Android.R.drawable.ic_menu_share
+},
+
+
+".viewclass":{
+	bottom:10,
+	height:200,
+	backgroundColor:'orange'
+}
+"#viewlabel":{
+	text:"Not an Android!"
+}
+
+".labelclass":{
+	text:'class label index'
+}
