@@ -1,14 +1,15 @@
 <Alloy>
 	<Window class="container">
 		<ScrollView class="scroll" id="sv">
-			<Label class="lbl" id="lbl1" platform="android">1. Platform attribute in XML sets to green on Android, font size from index.tss</Label>
-			<Label class="lbl" id="lbl1" platform="ios">1. Platform attribute in XML sets to blue on iOS, font size from index.tss</Label>
+			<Label class="lbl" id="lbl1" platform="android">1. Platform attribute in XML sets to green on Android from platform specific TSS ID style, font size</Label>
+			<Label class="lbl" id="lbl1" platform="ios">1. Platform attribute in XML sets to blue from generic TSS ID style, font size from index.tss</Label>
+			<Label class="lbl" id="lbl1" platform="mobileweb">1. Platform attribute in XML sets to blue from generic TSS ID style, font size from index.tss</Label>
 			<Label class="lbl" id="lbl2"></Label>
 			<Require src="label"/>
 			<Label class="lbl" id="lbl4" color="blue">4. Text alignment and font size set in index.tss, XML color attribute overrides TSS</Label>
 			<Require src="anotherlabel"/>
 			<Label class="lbl" id="lbl6">6. Bold, large, custom font, font properties mixed from various stylesheets</Label>
-			<Label class="lbl" id="lbl7">7. Theme controls color: iOS=blue, Android=green, rest=black, font size from main index.tss</Label>
+			<Label class="lbl" id="lbl7">7. Theme controls color: iOS=blue, Android=green, MobileWeb=red, generic=black, font size from main index.tss</Label>
 			<Require src="requiredlabel"/>
 			<Label class="lbl" id="lbl9" formFactor="handheld">9. Device query in XML and TSS to set text and color (green on handheld)</Label>
 			<Label class="lbl" id="lbl9" formFactor="tablet">9. Device query in XML and TSS to set text and color (purple on tablet)</Label>
