@@ -538,63 +538,105 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
 		platform = compilerConfig.alloyConfig.platform;
 	}
+
+	// widget assets priority
+	// 4 - themed widget platform-specific assets
+	// 3 - widget platform specific assets
+	// 2 - themed widget non-platform-specific assets
+	// 1 - widget non-platform-specific assets
+	var resourceFiles = {};
+
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
-		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
+
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
-			var source = path.join(dir, file);
-
-			// make sure the file exists and that it is not filtered
-			if (!fs.existsSync(source) ||
-				(opts.filter && opts.filter.test(file)) ||
-				(opts.exceptions && _.contains(opts.exceptions, file))) {
-				return;
-			}
-
-			if (fs.statSync(source).isFile()) {
-				var dirname = path.dirname(file);
-				var parts = dirname.split(/[\/\\]/);
-				if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
-					dirname = parts.slice(1).join('/');
-				}
-
-				var destDir = path.join(resourceDir, dirname, widgetId);
-				var dest = path.join(destDir, path.basename(file));
-				if (!path.existsSync(destDir)) {
-					wrench.mkdirSyncRecursive(destDir, 0755);
-				}
-
-				logger.trace('Copying ' + file.yellow + ' --> ' +
-					path.relative(compilerConfig.dir.project, dest).yellow + '...');
-				U.copyFileSync(source, dest);
-			}
+			addResourceFile({
+				'dir': dir,
+				'file': file,
+				'resourceFiles': resourceFiles,
+				'precedences': [1,3],
+				'opts': opts,
+				'platform': platform
+			});
 		});
-		logger.trace(' ');
 	});
+
 	if(opts.theme) {
-		// if this widget has been themed, copy its theme assets atop the stock ones
 		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
-		if(fs.existsSync(widgetThemeDir)) {
+		if (fs.existsSync(widgetThemeDir)) {
 			logger.trace('Processing themed widgets');
 			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
-			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
-			if(fs.existsSync(widgetAssetSourceDir)) {
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
-			}
-			// platform-specific assets from the widget must override those of the theme
-			if(platform && path.existsSync(path.join(resources[0], platform))) {
-				wrench.copyDirSyncRecursive(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
-			}
-			// however platform-specific theme assets must override the platform assets from the widget
-			if(platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
-				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
-				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
-			}
+			var themeFiles = wrench.readdirSyncRecursive(widgetAssetSourceDir);
+
+			_.each(themeFiles, function(file) {
+				addResourceFile({
+					'dir': widgetAssetSourceDir,
+					'file': file,
+					'resourceFiles': resourceFiles,
+					'precedences': [2,4],
+					'opts': opts,
+					'platform': platform
+				});
+			});
 		}
 	}
+
+	_.each(resourceFiles, function(rfile) {
+		var file = rfile.file;
+		var dirname = path.dirname(file);
+		var parts = dirname.split(path.sep);
+
+		if (opts.titaniumFolder &&
+			(parts[0] === opts.titaniumFolder || (parts[0] === "ios" && opts.titaniumFolder === "iphone"))) {
+			dirname = parts.slice(1).join(path.sep);
+		}
+
+		var destDir = path.join(resourceDir, dirname, widgetId);
+		var dest = path.join(destDir, path.basename(file));
+
+		if (!path.existsSync(destDir)) {
+			wrench.mkdirSyncRecursive(destDir, 0755);
+		}
+
+		logger.trace('Copying ' + file.yellow + ' --> ' +
+			path.relative(compilerConfig.dir.project, dest).yellow + '...');
+		U.copyFileSync(rfile.source, dest);
+	});
 };
+
+function addResourceFile(obj) {
+	var source = path.join(obj.dir, obj.file);
+
+	// make sure the file exists and that it is not filtered
+	if (!fs.existsSync(source) ||
+		(obj.opts.filter && obj.opts.filter.test(obj.file)) ||
+		(obj.opts.exceptions && _.contains(obj.opts.exceptions, obj.file)) ||
+		(obj.platform && _.include(obj.file, path.sep) && obj.file.indexOf(obj.platform + path.sep)!=0)) {
+		return;
+	}
+
+	if (fs.statSync(source).isFile()) {
+		var filename = path.basename(obj.file);
+		var precedence = obj.precedences[0];
+
+		if(path.dirname(obj.file) == obj.platform) {
+			precedence = obj.precedences[1];
+		}
+
+		// if the file is not in the list of resource files to be copied
+		// or it was added but the previous source had a lower precedence
+		// put this file to the list of resource files to be copied
+		if (!(filename in obj.resourceFiles) ||
+			(obj.resourceFiles[filename].precedence < precedence)) {
+				obj.resourceFiles[filename] = {
+					'precedence': precedence,
+					'source': source,
+					'file': obj.file
+				};
+		}
+	}
+}
 
 function updateImplicitNamspaces(platform) {
 	switch(platform) {
