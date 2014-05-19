@@ -26,6 +26,12 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
+	if(!CU.isNodeForCurrentPlatform(node)) {
+		// return an empty object to fix https://jira.appcelerator.org/browse/ALOY-691
+		return {
+			code: ''
+		};
+	}
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		code = '',
 		itemCode = '',
