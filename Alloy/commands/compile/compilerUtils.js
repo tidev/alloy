@@ -31,7 +31,9 @@ var RESERVED_ATTRIBUTES = [
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
-		'ns'
+		'ns',
+		'method',
+		'module'
 	],
 	RESERVED_ATTRIBUTES_REQ_INC = [
 		'platform',
@@ -42,7 +44,9 @@ var RESERVED_ATTRIBUTES = [
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
-		'ns'
+		'ns',
+		'method',
+		'module'
 	],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
