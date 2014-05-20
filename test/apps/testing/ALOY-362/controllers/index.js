@@ -25,6 +25,21 @@ childView.updateViews({
 
 $.index.add(childView.getView());
 
+var opts = {
+	'#normallabel': {
+		text: 'i used updateViews()',
+		color: '#a00',
+		font: {
+			fontWeight: 'bold',
+			fontSize: 24
+		},
+		bottom: 50
+	}
+};
+
+// chain calls
+$.index.add(Alloy.createController('normalChild').updateViews(opts).getView());
+
 $.index.add(Alloy.createController('normalchild', {
 	text: 'Set the old-fashioned way'
 }).getView());

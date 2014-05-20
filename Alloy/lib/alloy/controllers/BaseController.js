@@ -234,6 +234,7 @@ var Controller = function() {
 					}
 				});
 			}
+			return this;
 		}
 	});
 };
