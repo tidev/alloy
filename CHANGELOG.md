@@ -34,7 +34,7 @@ method.
      Pass a style dictionary as the only argument to the method.  The style dictionary contains key-value pairs,
      where the key is the id of the view component and the value is another dictionary containing
      key-value pairs of attributes you want to set for the view component.
-  3. Use the `getView()` method to with the controller instance to retrieve the view of the
+  3. Use the `getView()` method with the controller instance to retrieve the view of the
      controller, which can be added to another view.
 
 See also:
