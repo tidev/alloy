@@ -1,4 +1,5 @@
-$.index.add(Alloy.createControllerlessView('childview', {
+var childView = Alloy.createController('childview');
+childView.updateViews({
 	"#label": {
 		text: 'I am a label',
 		top: 50,
@@ -15,8 +16,14 @@ $.index.add(Alloy.createControllerlessView('childview', {
 		text: 'I am also a label',
 		foo: 'bar'
 	},
-	"#someNonExistentId": { text: 'I do not exist'}
-}).getView());
+	"#someNonExistentId": { text: 'I do not exist'},
+	"#aRequiredView": {
+		text: "I was <Require>d in but updateViews() won't work on me",
+		bottom: 50
+	}
+});
+
+$.index.add(childView.getView());
 
 $.index.add(Alloy.createController('normalchild', {
 	text: 'Set the old-fashioned way'
