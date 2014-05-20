@@ -22,10 +22,20 @@ Note that the `ENV_PRODUCTION` constant will be true too since these deployments
 
 #### Controller-less Views
 
-As of this Release, Alloy provides a new method,
-[Alloy.createControllerlessView](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createControllerlessView),
-to create a controller from a view file that does not have a corresponding controller file.
-Use this method to dynamically generate views as building blocks for the application UI.
+As of this Release, Alloy provides a new way to create controller-less views.  Each component in
+the controller-less view needs to be assigned an `id` attribute.  Using the `Require` or `Widget`
+elements to include external views in the controller-less view does not work using this procedure,
+that is, you can include the external views, but the styles cannot be updated with the `updateViews`
+method.
+
+  1. Use the `Alloy.createController()` method to create a controller from the controller-less view.
+  2. Use the [updateViews()](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.Controller-method-updateViews)
+     method with the controller instance to update the styles of the view components.
+     Pass a style dictionary as the only argument to the method.  The style dictionary contains key-value pairs,
+     where the key is the id of the view component and the value is another dictionary containing
+     key-value pairs of attributes you want to set for the view component.
+  3. Use the `getView()` method to with the controller instance to retrieve the view of the
+     controller, which can be added to another view.
 
 See also:
 
@@ -51,7 +61,7 @@ See also:
   * [Alloy Styles and Themes: Custom Query Styles](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Styles_and_Themes-section-35621526_AlloyStylesandThemes-CustomQueryStyles)
   * [Custom TSS queries test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/advanced/custom_tss_queries)
 
-#### Map Module Intergration
+#### Map Module Integration
 
 This release introduces better integration with the [ti.map module](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map),
 which includes the ability to define `Annotation` objects in XML markup and support for data-view binding.
@@ -156,7 +166,7 @@ The following APIs are new in Release 1.4.0.
 
 |API|Type|Note|
 |---|----|----|
-|`Alloy.createControllerlessView`|method|Creates a controller from a controller-less view.|
+|`Alloy.Controller.updateViews`|method|Applies a dictionary of properties to the components of a view in the controller.|
 
 
 
