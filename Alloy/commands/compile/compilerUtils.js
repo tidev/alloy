@@ -99,7 +99,8 @@ exports.getNodeFullname = function(node) {
 
 exports.isNodeForCurrentPlatform = function(node) {
 	return !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig ||
-		node.getAttribute('platform') === compilerConfig.alloyConfig.platform;
+		node.getAttribute('platform').indexOf(compilerConfig.alloyConfig.platform) !== -1
+		/*node.getAttribute('platform') === compilerConfig.alloyConfig.platform*/;
 };
 
 exports.getParserArgs = function(node, state, opts) {
