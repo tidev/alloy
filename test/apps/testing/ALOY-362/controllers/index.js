@@ -16,14 +16,25 @@ childView.updateViews({
 		text: 'I am also a label',
 		foo: 'bar'
 	},
-	"#someNonExistentId": { text: 'I do not exist'},
-	"#aRequiredView": {
-		text: "I was <Require>d in but updateViews() won't work on me",
-		bottom: 50
-	}
+	"#someNonExistentId": { text: 'I do not exist'}
 });
 
 $.index.add(childView.getView());
+
+var opts = {
+	'#normallabel': {
+		text: 'i used updateViews()',
+		color: '#a00',
+		font: {
+			fontWeight: 'bold',
+			fontSize: 24
+		},
+		bottom: 50
+	}
+};
+
+// chain calls
+$.index.add(Alloy.createController('normalchild').updateViews(opts).getView());
 
 $.index.add(Alloy.createController('normalchild', {
 	text: 'Set the old-fashioned way'
