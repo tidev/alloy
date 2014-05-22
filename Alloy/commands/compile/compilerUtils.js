@@ -241,6 +241,9 @@ exports.generateNodeExtended = function(node, state, newState) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
+	if(!exports.isNodeForCurrentPlatform(node)) {
+		return '';
+	}
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
