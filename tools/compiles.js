@@ -8,9 +8,6 @@ var harnessPath = path.join(__dirname, '..', 'test', 'projects', 'Harness');
 
 async.series(_.map(platforms, function(p) {
 
-	// skip tizen
-	if (p.platform === 'tizen') { return function(cb){ return cb(); }; }
-
 	// return a function that compiles and copies generated code for the given app
 	return function(callback) {
 

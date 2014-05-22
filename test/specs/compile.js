@@ -49,7 +49,7 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
-				if (platform.platform === 'tizen' || (process.platform === 'darwin' && platform.platform === 'blackberry')) {
+				if (process.platform === 'darwin' && platform.platform === 'blackberry') {
 					return;
 				}
 
