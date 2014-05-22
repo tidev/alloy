@@ -1,17 +1,6 @@
-<!-- 
 <Alloy>
-	<Window class="container" layout="vertical">
-			<Label class="lbl" id="lbl1">1. Hello, World</Label>
-			<Label class="lbl" id="lbl2">2. Hello, World</Label>
-			<Label class="lbl" id="lbl3">3. Hello, World</Label>
-			<Label class="h1 bold">4. This is my styled text</Label> 
+	<Window class="container">
+		<Label id="lbl1" class="lbl" >Hello, World</Label>
+		<Label class="lbl" id="lbl2">7. Theme controls color: </Label>
 	</Window>
-</Alloy>
--->
-
-<Alloy>
-    <Window class="container">
-        <Label id="lbl1" class="lbl" >Hello, World</Label>
-        <Label class="lbl" id="lbl2">7. Theme controls color: </Label>
-    </Window>
 </Alloy>
