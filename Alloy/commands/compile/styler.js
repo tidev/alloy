@@ -440,6 +440,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				formFactor: ''
 			};
 
+			// [ALOY-1023] create a tempt obj to prevent style.style from being
+			// modified by U.deepExtend
+			var tempStyleObj = JSON.parse(JSON.stringify(style.style));
+
 			if (style.queries) {
 				// handle platform device query
 				// - Make compile time comparison if possible
@@ -483,10 +487,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						lastObj = {};
 					}
 				} else if(!q.if) {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = U.deepExtend(lastObj, tempStyleObj);
 				}
 			} else {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = U.deepExtend(lastObj, tempStyleObj);
 			}
 		}
 	});

@@ -1,0 +1,17 @@
+"Window": {
+    backgroundColor:'gray',
+    layout:'vertical'
+}
+
+"#lbl1": {
+    font: {
+        fontWeight: 'bold',
+        fontSize: '24dp'
+    },
+    top:20
+}
+
+"#lbl2": {
+    color: 'blue',
+    top:20
+}
