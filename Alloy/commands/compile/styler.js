@@ -7,7 +7,8 @@ var fs = require('fs'),
 	grammar = require('../../grammar/tss'),
 	logger = require('../../logger'),
 	BuildLog = require('./BuildLog'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	deepExtend = require('node.extend');
 
 // constants
 var GLOBAL_STYLE_CACHE = 'global_style_cache.json';
@@ -483,10 +484,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						lastObj = {};
 					}
 				} else if(!q.if) {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 				}
 			} else {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 			}
 		}
 	});
