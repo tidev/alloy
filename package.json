@@ -33,7 +33,9 @@
     "uglify-js":       "2.2.5",
     "source-map":      "0.1.9",
     "xml2tss":         "0.0.5",
-    "moment":          ">=2.4.0"
+    "moment":          ">=2.4.0",
+    "is":              "0.3.0",
+    "node.extend":      "1.0.10"
   },
   "license":"Apache Public License v2",
   "bin": {
