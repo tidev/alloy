@@ -1,0 +1,18 @@
+"#lbl1": {
+	font: {
+		fontFamily: 'Zapfino'
+	}
+}
+
+"#lbl1[platform=android]": {
+	font:{
+		fontFamily:'Roboto'
+	}
+}
+
+".lbl": {
+	textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+	font: {
+		fontSize: '12dp'
+	}
+}

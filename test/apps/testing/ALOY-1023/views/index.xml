@@ -1,0 +1,6 @@
+<Alloy>
+	<Window class="container">
+		<Label id="lbl1" class="lbl" >Hello, World</Label>
+		<Label class="lbl" id="lbl2">7. Theme controls color: </Label>
+	</Window>
+</Alloy>
