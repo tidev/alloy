@@ -2,11 +2,8 @@
  
     <Window class="container" platform="ios">
         <Label id="label">Hello, World</Label>
- 
                 <Require src="toRequire"/>  
- 
     </Window>
- 
  
     <Window class="container" platform="android">
         <Label id="label">Hello, World</Label>
