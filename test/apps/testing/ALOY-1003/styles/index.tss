@@ -1,0 +1,15 @@
+"#index": {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#list": {
+	top: 20,
+	bottom: '50dp'
+}
+
+"#picker": {
+	value: "May 26, 2014",
+	top: 200
+}
