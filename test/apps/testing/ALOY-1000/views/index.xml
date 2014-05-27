@@ -1,0 +1,11 @@
+<Alloy>
+	<Model src="book" />
+	<Window class="container" layout="vertical">
+		<Button onClick="doClick">Click Me</Button>
+		<View>
+			<Label id="title" onClick="doClick" text="{book.title}" />
+			<Label id="author" onClick="doClick" text="{book.author}" />
+			<Label id="genre" onClick="doClick" text="{book.genre}" />
+		</View>
+	</Window>
+</Alloy>
