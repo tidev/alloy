@@ -1,0 +1,22 @@
+<Alloy>
+	<Window id="todoWin" title="Todo" platform="android,ios">
+		<View id="header">
+			<Label id="title"> Alloy Todo </Label>
+			<View class="divider"/>
+			<View id="addView" onClick="addToDoItem">
+				<ImageView id="addImage"/>
+			</View>
+		</View>
+		<View id="todoTable" dataCollection="todo" dataFilter="whereFunction" dataTransform="transformFunction">
+			<View id="row">
+				<Label id="task" text="{item}"/>
+				<TextField id="textField" value="1" color="#000" text="Quantity"  onBlur="setQuantity" />
+			</View>
+		</View>
+		<View id="footer">
+			<TabbedBar onClick="showTasks" id="tabbedbar">
+				<Label> All </Label>
+			</TabbedBar>
+		</View>
+	</Window>
+</Alloy>

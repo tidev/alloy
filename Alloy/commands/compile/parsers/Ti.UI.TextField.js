@@ -117,7 +117,7 @@ function parse(node, state, args) {
 
 	// Update the parsing state
 	return _.extend(state, {
-		parent: {},
+		parent: nodeState.parent,
 		code: code
 	});
 }
