@@ -14,7 +14,7 @@
 * [ALOY-503](https://jira.appcelerator.org/browse/ALOY-503). Adds support for data binding with annotations.
 * [ALOY-871](https://jira.appcelerator.org/browse/ALOY-871). Adds support for custom variables in TSS queries.
 * [ALOY-927](https://jira.appcelerator.org/browse/ALOY-927). Adds shorthand notations for keyboard and return key types with TextField and TextArea.
-* [ALOY-874](https://jira.appcelerator.org/browse/ALOY-874). Set Android ActionBar properties via the Menu element.
+* [ALOY-784](https://jira.appcelerator.org/browse/ALOY-784). Set Android ActionBar properties via the Menu element.
 * [ALOY-656](https://jira.appcelerator.org/browse/ALOY-656). Alloy no longer requires an index.xml file.
 * [ALOY-362](https://jira.appcelerator.org/browse/ALOY-362). Adds support for controller-less views with some controller logic.
 * [ALOY-372](https://jira.appcelerator.org/browse/ALOY-372). Use `alloy generate` to create new widget components.
