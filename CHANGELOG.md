@@ -10,7 +10,7 @@
 
 * [ALOY-752](https://jira.appcelerator.org/browse/ALOY-752). Font properties are properly merged when multiple style rules apply.
 * [ALOY-1005](https://jira.appcelerator.org/browse/ALOY-1005). Child elements of a platform-specific tag are not processed when building for non-target platforms.
-* [ALOY-800](https://jira.appcelerator.org/browse/ALOY-800). Adds support for <Annotation> tags within <Module module="ti.map">.
+* [ALOY-800](https://jira.appcelerator.org/browse/ALOY-800). Adds support for `<Annotation>` tags within `<Module module="ti.map">`.
 * [ALOY-503](https://jira.appcelerator.org/browse/ALOY-503). Adds support for data binding with annotations.
 * [ALOY-871](https://jira.appcelerator.org/browse/ALOY-871). Adds support for custom variables in TSS queries.
 * [ALOY-927](https://jira.appcelerator.org/browse/ALOY-927). Adds shorthand notations for keyboard and return key types with TextField and TextArea.
