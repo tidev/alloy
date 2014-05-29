@@ -4,6 +4,24 @@
 * [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
 * [Alloy on NPM](https://npmjs.org/package/alloy)
 
+## 1.4.0
+
+[Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16148)
+
+* [ALOY-752](https://jira.appcelerator.org/browse/ALOY-752). Font properties are properly merged when multiple style rules apply.
+* [ALOY-1005](https://jira.appcelerator.org/browse/ALOY-1005). Child elements of a platform-specific tag are not processed when building for non-target platforms.
+* [ALOY-800](https://jira.appcelerator.org/browse/ALOY-800). Adds support for <Annotation> tags within <Module module="ti.map">.
+* [ALOY-503](https://jira.appcelerator.org/browse/ALOY-503). Adds support for data binding with annotations.
+* [ALOY-871](https://jira.appcelerator.org/browse/ALOY-871). Adds support for custom variables in TSS queries.
+* [ALOY-927](https://jira.appcelerator.org/browse/ALOY-927). Adds shorthand notations for keyboard and return key types with TextField and TextArea.
+* [ALOY-874](https://jira.appcelerator.org/browse/ALOY-874). Set Android ActionBar properties via the Menu element.
+* [ALOY-656](https://jira.appcelerator.org/browse/ALOY-656). Alloy no longer requires an index.xml file.
+* [ALOY-362](https://jira.appcelerator.org/browse/ALOY-362). Adds support for controller-less views with some controller logic.
+* [ALOY-372](https://jira.appcelerator.org/browse/ALOY-372). Use `alloy generate` to create new widget components.
+* [ALOY-263](https://jira.appcelerator.org/browse/ALOY-263). Adds support for date/time type pickers.
+* [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Adds support for theming widgets.
+* [ALOY-955](https://jira.appcelerator.org/browse/ALOY-955). Removes Tizen support from Alloy.
+
 ## 1.3.1
 
 [Full list of Issues that were addressed in Release 1.3.1](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666)
