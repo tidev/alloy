@@ -141,6 +141,13 @@ function parse(node, state, args) {
 	_.each(proxyProperties, function(v, k) {
 		extras.push([k, v]);
 	});
+	// ALOY-1033: manually handle the case where the <SearchBar> is outside
+	// the <ListView> and linked to the list via the searchView attribute
+	if (node.hasAttribute('searchView')) {
+		var attr = node.getAttribute('searchView');
+		extras.push(['searchView', '$.__views.'+attr]);
+		node.removeAttribute('searchView');
+	}
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
 	// create the ListView itself
