@@ -1,0 +1,9 @@
+".container": {
+	backgroundColor:"white",
+	top: Alloy.Globals.winTop
+},
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+}
