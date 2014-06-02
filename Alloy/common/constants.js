@@ -195,6 +195,8 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.UI.Window
 	LeftNavButton: 'Ti.UI.Window',
 	RightNavButton: 'Ti.UI.Window',
+	LeftNavButtons: 'Ti.UI.Window',
+	RightNavButtons: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
 
 	// Ti.UI.iPad.Popover
