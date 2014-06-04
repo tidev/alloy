@@ -540,16 +540,22 @@ exports.inspectRequireNode = function(node) {
 };
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
+
 	opts = opts || {};
 	var platform;
 	if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
 		platform = compilerConfig.alloyConfig.platform;
 	}
+
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
+
+			// [ALOY-1002] Remove platform-specific folders
+			if (_.include(file, path.sep)) { return; }
+
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -579,6 +585,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		});
 		logger.trace(' ');
 	});
+
 	if(opts.theme) {
 		// if this widget has been themed, copy its theme assets atop the stock ones
 		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
@@ -599,6 +606,15 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
 				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
+
+			// [ALOY-1002] Remove platform-specific folders copied from theme
+			var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+			_.each(files, function(file) {
+				var source = path.join(widgetAssetTargetDir, file);
+				if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
+					wrench.rmdirSyncRecursive(source);
+				}
+			});
 		}
 	}
 };
