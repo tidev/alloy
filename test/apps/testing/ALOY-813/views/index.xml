@@ -1,7 +1,7 @@
 <Alloy>
 	<Window backgroundColor="#fff" layout="vertical" modal="false" exitOnClose="true">
-		<Label top="20" text="\ue012\nnext line"/>
-		<Label top="20">\ue012\nnext line</Label>
+		<Label top="20" text="\u2764\u263a\nnext line"/>
+		<Label top="20">\u2764\u263a\nnext line</Label>
 		<Label top="20" id="code"/>
 	</Window>
 </Alloy>
