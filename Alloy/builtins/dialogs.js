@@ -40,6 +40,11 @@ exports.buttonNames = ['No', 'Yes'];
  */
 exports.confirm = function (args) {
 	args = args || {};
+	if(args.buttonNames) {
+		args.no = args.no || args.buttonNames[0];
+		args.yes = args.yes || args.buttonNames[1];
+	}
+
 	var alertDialog = Ti.UI.createAlertDialog({
 		title: args.title || exports.title,
 		message: args.message || exports.message,

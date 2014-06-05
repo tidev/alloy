@@ -34,7 +34,7 @@ function Controller() {
     });
     showAlert ? $.__views.rightButton.addEventListener("click", showAlert) : __defers["$.__views.rightButton!click!showAlert"] = true;
     __parentSymbol.rightNavButton = $.__views.rightButton;
-    $.__views.__alloyId47 && $.addTopLevelView($.__views.__alloyId47);
+    $.__views.__alloyId39 && $.addTopLevelView($.__views.__alloyId39);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/window")($);

@@ -186,10 +186,19 @@ module.exports = function(args, program) {
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 		if (path.existsSync(themeAssetsPath)) {
-			wrench.copyDirSyncRecursive(themeAssetsPath, paths.resources, {preserve:true});
+			updateFilesWithBuildLog(
+				themeAssetsPath,
+				path.join(paths.resources, titaniumFolder),
+				{
+					rootDir: paths.project,
+					themeChanged: buildLog.data.themeChanged,
+					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+					exceptions: otherPlatforms,
+					titaniumFolder: titaniumFolder
+				}
+			);
 		}
 	}
-
 	logger.debug('');
 
 	// trigger our custom compiler makefile

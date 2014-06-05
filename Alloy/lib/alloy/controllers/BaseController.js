@@ -228,12 +228,13 @@ var Controller = function() {
 			if(_.isObject(args)) {
 				_.each(_.keys(args), function(key) {
 					var elem = views[key.substring(1)];
-					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.getApiName === 'function') {
+					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.applyProperties === 'function') {
 						// apply the properties but make sure we're applying them to a Ti.UI object (not a controller)
 						elem.applyProperties(args[key]);
 					}
 				});
 			}
+			return this;
 		}
 	});
 };

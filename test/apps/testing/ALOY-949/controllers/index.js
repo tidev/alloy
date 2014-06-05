@@ -18,9 +18,20 @@ function changeWithExports() {
 
 function changeWithArgs() {
 	dialogs.confirm({
-		title: 'Confirm (args)',
-		message: 'Are the args working?',
+		title: 'Confirm (args.buttonNames)',
+		message: 'Are the args.buttonNames working?',
 		buttonNames: ['Nope', 'Yup'],
+		callback: changeWithArgsAgain
+	});
+}
+
+function changeWithArgsAgain() {
+	dialogs.confirm({
+		title: 'Confirm (args.no:Neh & args.yes:Yeah)',
+		message: 'Are the args.no & args.yes taking precedence?',
+		buttonNames:["Nope", 'Yup'],
+		no: 'Neh',
+		yes: 'Yeah',
 		callback: shouldUseExportsAgainByDefault
 	});
 }

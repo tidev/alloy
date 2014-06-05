@@ -6,7 +6,6 @@
         <target device="ipad">true</target>
         <target device="android">true</target>
         <target device="blackberry">true</target>
-        <target device="tizen">true</target>
     </deployment-targets>
     <sdk-version>3.2.3.GA</sdk-version>
     <id>com.appcelerator.AlloyHarness</id>

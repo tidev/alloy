@@ -7,7 +7,8 @@ var fs = require('fs'),
 	grammar = require('../../grammar/tss'),
 	logger = require('../../logger'),
 	BuildLog = require('./BuildLog'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	deepExtend = require('node.extend');
 
 // constants
 var GLOBAL_STYLE_CACHE = 'global_style_cache.json';
@@ -356,7 +357,7 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+					if(typeof style.type !== 'undefined' && !(_.isObject(style.type)) && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
 						// ALOY-263, support date/time style pickers
 						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
@@ -447,7 +448,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var q = style.queries;
 				if (q.platform) {
 					if (platform) {
-						if (!_.contains(q.platform,platform)) {
+						var isForCurrentPlatform = false;
+						_.each(q.platform.toString().split(','), function(p) {
+							// need to account for multiple platforms and negation, such as platform=ios or
+							// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+							if(p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
+								isForCurrentPlatform = true;
+							}
+						});
+						if (!isForCurrentPlatform) {
 							return;
 						}
 					} else {
@@ -483,10 +492,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						lastObj = {};
 					}
 				} else if(!q.if) {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 				}
 			} else {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 			}
 		}
 	});

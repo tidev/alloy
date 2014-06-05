@@ -98,10 +98,16 @@ exports.getNodeFullname = function(node) {
 };
 
 exports.isNodeForCurrentPlatform = function(node) {
-	return !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig ||
-		node.getAttribute('platform') === compilerConfig.alloyConfig.platform;
+	var isForCurrentPlatform =  !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig;
+	_.each(node.getAttribute('platform').split(','), function(p) {
+		// need to account for multiple platforms and negation, such as
+		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+		if(p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
+			isForCurrentPlatform = true;
+		}
+	});
+	return isForCurrentPlatform;
 };
-
 exports.getParserArgs = function(node, state, opts) {
 	state = state || {};
 	opts = opts || {};
@@ -241,6 +247,9 @@ exports.generateNodeExtended = function(node, state, newState) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
+	if(!exports.isNodeForCurrentPlatform(node)) {
+		return '';
+	}
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
@@ -537,16 +546,22 @@ exports.inspectRequireNode = function(node) {
 };
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
+
 	opts = opts || {};
 	var platform;
 	if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
 		platform = compilerConfig.alloyConfig.platform;
 	}
+
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
+
+			// [ALOY-1002] Remove platform-specific folders
+			if (_.include(file, path.sep)) { return; }
+
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -576,6 +591,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		});
 		logger.trace(' ');
 	});
+
 	if(opts.theme) {
 		// if this widget has been themed, copy its theme assets atop the stock ones
 		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
@@ -596,6 +612,15 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
 				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
+
+			// [ALOY-1002] Remove platform-specific folders copied from theme
+			var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+			_.each(files, function(file) {
+				var source = path.join(widgetAssetTargetDir, file);
+				if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
+					wrench.rmdirSyncRecursive(source);
+				}
+			});
 		}
 	}
 };
