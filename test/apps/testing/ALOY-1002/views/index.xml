@@ -1,0 +1,7 @@
+<Alloy>
+	<Window id="index" title="Books" class='container'>
+		<Widget id="starwidget" src="starrating" max='5' initialRating='2.5' top="20"/>
+		<TableView id="table" top="50">
+		</TableView>
+	</Window>
+</Alloy>
