@@ -448,7 +448,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var q = style.queries;
 				if (q.platform) {
 					if (platform) {
-						if (!_.contains(q.platform,platform)) {
+						var isForCurrentPlatform = false;
+						_.each(q.platform.toString().split(','), function(p) {
+							// need to account for multiple platforms and negation, such as platform=ios or
+							// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+							if(p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
+								isForCurrentPlatform = true;
+							}
+						});
+						if (!isForCurrentPlatform) {
 							return;
 						}
 					} else {
