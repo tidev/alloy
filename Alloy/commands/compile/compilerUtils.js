@@ -98,10 +98,16 @@ exports.getNodeFullname = function(node) {
 };
 
 exports.isNodeForCurrentPlatform = function(node) {
-	return !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig ||
-		node.getAttribute('platform').indexOf(compilerConfig.alloyConfig.platform) !== -1;
+	var isForCurrentPlatform =  !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig;
+	_.each(node.getAttribute('platform').split(','), function(p) {
+		// need to account for multiple platforms and negation, such as
+		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+		if(p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
+			isForCurrentPlatform = true;
+		}
+	});
+	return isForCurrentPlatform;
 };
-
 exports.getParserArgs = function(node, state, opts) {
 	state = state || {};
 	opts = opts || {};
