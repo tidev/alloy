@@ -20,7 +20,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 [sudo] npm install -g alloy
 
 # install a specific version
-[sudo] npm install -g alloy@1.4.0-beta
+[sudo] npm install -g alloy@1.4.0-beta2
 
 # install cutting edge directly from github
 [sudo] npm install -g git://github.com/appcelerator/alloy.git
