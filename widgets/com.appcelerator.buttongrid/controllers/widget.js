@@ -87,6 +87,8 @@
  * global event handlers, you must call the **destroy()** function on the widget when you are done using it.
  * This will free all memory resources associated with the widget. If you have autoLayout="false", then you are
  * not required to call **destroy()** when you are done with the widget.
+ *
+ * @deprecated 1.4.0 For a maintained version of this widget, see [gitt.io](http://gitt.io/component/com.appcelerator.buttongrid).
  */
 
 var TEXTSIZE = 10;

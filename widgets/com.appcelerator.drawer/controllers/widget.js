@@ -90,6 +90,7 @@
  *         ]
  *     });
  *
+ * @deprecated 1.4.0 For a maintained version of this widget, see [gitt.io](http://gitt.io/component/com.appcelerator.drawer).
  */
 
 var DRAWER_PULLTAB_HEIGHT = 16;

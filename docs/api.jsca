@@ -23,10 +23,14 @@
                         }
                     ],
                     "isInternal": false,
-                    "isClassProperty": false,
+                    "since": {
+                        "since": "1.2.0",
+                        "version": "Titanium Mobile SDK"
+                    },
                     "returns": {
                         "type": "void"
                     },
+                    "isClassProperty": false,
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
@@ -42,11 +46,15 @@
                         }
                     ],
                     "isInternal": false,
-                    "isClassProperty": false,
+                    "since": {
+                        "since": "1.2.0",
+                        "version": "Titanium Mobile SDK"
+                    },
                     "returns": {
                         "type": "Object",
-                        "description": "<p></p>"
+                        "description": "\n"
                     },
+                    "isClassProperty": false,
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
@@ -133,10 +141,14 @@
                         }
                     ],
                     "isInternal": false,
-                    "isClassProperty": false,
+                    "since": {
+                        "since": "1.2.0",
+                        "version": "Titanium Mobile SDK"
+                    },
                     "returns": {
                         "type": "void"
                     },
+                    "isClassProperty": false,
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
@@ -162,14 +174,42 @@
                         }
                     ],
                     "isInternal": false,
-                    "isClassProperty": false,
+                    "since": {
+                        "since": "1.2.0",
+                        "version": "Titanium Mobile SDK"
+                    },
                     "returns": {
                         "type": "void"
                     },
+                    "isClassProperty": false,
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
                     "description": "Sets the array of TSS classes for the target View object, adding the classes specified and\nremoving any applied class"
+                },
+                {
+                    "name": "updateViews",
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "isInternal": false,
+                    "since": {
+                        "since": "1.4.0",
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>this</p>"
+                    },
+                    "isClassProperty": false,
+                    "isConstruction": false,
+                    "isMethod": true,
+                    "isInstanceProperty": true,
+                    "description": "Applies a set of properties to view elements associated with this controller "
                 }
             ],
             "name": "Alloy.Controller",
@@ -395,11 +435,15 @@
                         }
                     ],
                     "isInternal": false,
-                    "isClassProperty": false,
+                    "since": {
+                        "since": "1.2.0",
+                        "version": "Titanium Mobile SDK"
+                    },
                     "returns": {
                         "type": "Object",
-                        "description": "<p></p>"
+                        "description": "\n"
                     },
+                    "isClassProperty": false,
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
@@ -470,7 +514,7 @@
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
-                    "description": "\n\nFactory method for instantiating a Backbone collection of model objects. "
+                    "description": "Factory method for instantiating a Backbone collection of model objects. "
                 },
                 {
                     "name": "createController",
@@ -499,7 +543,7 @@
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
-                    "description": "\n\nFactory method for instantiating a controller. "
+                    "description": "Factory method for instantiating a controller. "
                 },
                 {
                     "name": "createModel",
@@ -528,7 +572,7 @@
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
-                    "description": "\n\nFactory method for instantiating a Backbone Model object. "
+                    "description": "Factory method for instantiating a Backbone Model object. "
                 },
                 {
                     "name": "createWidget",
@@ -562,7 +606,7 @@
                     "isConstruction": false,
                     "isMethod": true,
                     "isInstanceProperty": true,
-                    "description": "\n\nFactory method for instantiating a widget controller. "
+                    "description": "Factory method for instantiating a widget controller. "
                 }
             ],
             "name": "Widget",

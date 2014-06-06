@@ -51,6 +51,8 @@
  *     function IndexOpen(e) {
  *         $.logo.init({ image: '/images/alloy.png', width: 216, height: 200 });
  *     }
+ *
+ * @deprecated 1.4.0 For a maintained version of this widget, see [gitt.io](http://gitt.io/component/com.appcelerator.bouncylogo).
  */
 
 var defaults = {
