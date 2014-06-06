@@ -3,6 +3,19 @@
 
 [Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16137)
 
+#### Deprecations
+
+##### Sample Widgets
+
+The sample widgets included in the Alloy repository are deprecated and will be removed from the repo
+in a future version. There are known issues with some of the widgets, which will not be addressed.
+
+If you would like to take over maintenance and support for any of these widgets, please contact Tim
+Poulsen at [tpoulsen@appcelerator.com](mailto:tpoulsen@appcelerator.com).
+
+To find replacements for these widgets, or to find other widgets,
+we recommend you visit [http://gitt.io](http://gitt.io).
+
 #### New Features
 
 ##### Compiler Directives for Distribution Targets
