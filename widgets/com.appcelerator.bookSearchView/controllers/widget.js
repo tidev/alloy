@@ -17,6 +17,8 @@
  *     <Widget id="bsv" src="com.appcelerator.bookSearchView"/>
  *
  * Note: the `id` attribute is a unique identfier and can be anything. `bsv` is just an example.
+ *
+ * @deprecated 1.4.0 For a maintained version of this widget, see [gitt.io](http://gitt.io/component/com.appcelerator.bookSearchView)
  */
 $.sfb.setHandlers({
 	success: function(books) {
