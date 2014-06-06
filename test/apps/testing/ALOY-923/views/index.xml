@@ -1,6 +1,6 @@
 <Alloy>
 	<Window id="index">
-		<ListView id="listView">
+		<ListView id="listView" platform="ios">
 			<Templates>
 				<ItemTemplate id="inputTemplate" name="inputTemplate">
 					<TextField bindId="textfield" id="tf_username"  autocorrect="false" keyboardType="TI.Ui.KEYBOARD_EMAIL" hintText="User name / e-mail address">
@@ -15,5 +15,6 @@
 				<ListItem template="inputTemplate" textfield:value=""/>
 			</ListSection>
 		</ListView>
+		<Label platform="android,mobileweb,blackberry">This app is supported on iOS only.</Label>
 	</Window>
 </Alloy>
