@@ -1,0 +1,19 @@
+<Alloy>
+	<Window id="index">
+		<ListView id="listView">
+			<Templates>
+				<ItemTemplate id="inputTemplate" name="inputTemplate">
+					<TextField bindId="textfield" id="tf_username"  autocorrect="false" keyboardType="TI.Ui.KEYBOARD_EMAIL" hintText="User name / e-mail address">
+						<RightButton>
+							<Button class="rightButton" onClick="clickRightButton">Right</Button>
+						</RightButton>
+					</TextField>
+				</ItemTemplate>
+			</Templates>
+
+			<ListSection headerTitle="Login Id" id="idSection">
+				<ListItem template="inputTemplate" textfield:value=""/>
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

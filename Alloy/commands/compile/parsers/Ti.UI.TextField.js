@@ -49,7 +49,7 @@ function parse(node, state, args) {
 			parent: {},
 			post: function(node, state, args) {
 				controllerSymbol = state.controller;
-				parentSymbol = state.parent ? state.parent.symbol : null;
+				parentSymbol = state.parent ? state.parent.symbol : state.item.symbol;
 			}
 		});
 
