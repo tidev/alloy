@@ -1,5 +1,7 @@
 
-### Alloy 1.4.0 Alpha - 05/29/2014
+## Titanium Alloy Release Notes
+
+### Release 1.4.0 (05/29/2014)
 
 [Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16137)
 
