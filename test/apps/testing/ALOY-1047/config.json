@@ -1,0 +1,13 @@
+{
+    "global": {
+    	"theme": "plusminus"
+    },
+    "env:development": {},
+    "env:test": {},
+    "env:production": {},
+    "os:ios": {},
+    "os:android": {},
+    "dependencies": {
+        "starrating": "1.0"
+    }
+}
