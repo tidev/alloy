@@ -1,30 +1,193 @@
-## General Information:
-* Install latest stable Alloy: `[sudo] npm install -g alloy`
-* Install Alloy by version: `[sudo] npm install -g alloy@1.3.1`
-* [Alloy Documentation](http://docs.appcelerator.com/titanium/3.0/#!/guide/Alloy_Framework)
-* [Alloy on NPM](https://npmjs.org/package/alloy)
 
-## 1.4.0
+## Titanium Alloy Release Notes
 
-[Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16148)
+### Release 1.4.0 (05/29/2014)
 
-* [ALOY-752](https://jira.appcelerator.org/browse/ALOY-752). Font properties are properly merged when multiple style rules apply.
-* [ALOY-1005](https://jira.appcelerator.org/browse/ALOY-1005). Child elements of a platform-specific tag are not processed when building for non-target platforms.
-* [ALOY-800](https://jira.appcelerator.org/browse/ALOY-800). Adds support for &lt;Annotation> tags within &lt;Module module="ti.map">.
-* [ALOY-503](https://jira.appcelerator.org/browse/ALOY-503). Adds support for data binding with annotations.
-* [ALOY-871](https://jira.appcelerator.org/browse/ALOY-871). Adds support for custom variables in TSS queries.
-* [ALOY-927](https://jira.appcelerator.org/browse/ALOY-927). Adds shorthand notations for keyboard and return key types with TextField and TextArea.
-* [ALOY-784](https://jira.appcelerator.org/browse/ALOY-784). Set Android ActionBar properties via the Menu element.
-* [ALOY-656](https://jira.appcelerator.org/browse/ALOY-656). Alloy no longer requires an index.xml file.
-* [ALOY-362](https://jira.appcelerator.org/browse/ALOY-362). Adds support for controller-less views with some controller logic.
-* [ALOY-372](https://jira.appcelerator.org/browse/ALOY-372). Use `alloy generate` to create new widget components.
-* [ALOY-263](https://jira.appcelerator.org/browse/ALOY-263). Adds support for date/time type pickers.
-* [ALOY-378](https://jira.appcelerator.org/browse/ALOY-378). Adds support for theming widgets.
-* [ALOY-955](https://jira.appcelerator.org/browse/ALOY-955). Removes Tizen support from Alloy.
+[Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16137)
 
-## 1.3.1
+#### Deprecations
 
-[Full list of Issues that were addressed in Release 1.3.1](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666)
+##### Sample Widgets
+
+The sample widgets included in the Alloy repository are deprecated and will be removed from the repo
+in a future version. There are known issues with some of the widgets, which will not be addressed.
+
+If you would like to take over maintenance and support for any of these widgets, please contact Tim
+Poulsen at [tpoulsen@appcelerator.com](mailto:tpoulsen@appcelerator.com).
+
+To find replacements for these widgets, or to find other widgets,
+we recommend you visit [http://gitt.io](http://gitt.io).
+
+#### New Features
+
+##### Compiler Directives for Distribution Targets
+
+This release introduces two new compiler directives used to distinguish distribution targets:
+
+  * `DIST_ADHOC` : true if the current compiler target is built for iOS Ad Hoc distribution,
+     for example, if you set the `-T dist-adhoc` option when building with the Titanium CLI.
+  * `DIST_STORE` : true if the current compiler target is built for deployment to the
+     Google Play Store or iTunes App Store, for example, if you set the `-T dist-store` option when
+     building with the Titanium CLI.
+
+Use these compiler directives in your controller code or initializer file (`alloy.js`).
+
+Note that the `ENV_PRODUCTION` constant will be true too since these deployments are only for production builds.
+
+
+##### Controller-less Views
+
+As of this Release, Alloy provides a new way to create controller-less views.  Each component in
+the controller-less view needs to be assigned an `id` attribute.  Using the `Require` or `Widget`
+elements to include external views in the controller-less view does not work using this procedure,
+that is, you can include the external views, but the styles cannot be updated with the `updateViews`
+method.
+
+  1. Use the `Alloy.createController()` method to create a controller from the controller-less view.
+  2. Use the [updateViews()](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.Controller-method-updateViews)
+     method with the controller instance to update the styles of the view components.
+     Pass a style dictionary as the only argument to the method.  The style dictionary contains key-value pairs,
+     where the key is the id of the view component and the value is another dictionary containing
+     key-value pairs of attributes you want to set for the view component.
+  3. Use the `getView()` method with the controller instance to retrieve the view of the
+     controller, which can be added to another view.
+
+See also:
+
+  * [Alloy Guides: Views without Controllers](http://docs.appcelerator.com/titanium/latest/#!/guide/Views_without_Controllers)
+  * [Controller-less View test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-362)
+
+
+##### Custom Query Styles
+
+This release introduces the ability to use a custom query to determine if a style should be
+applied or not. For example, the application can query if the device is running iOS 7 or later,
+then apply a style to compensate for view components appearing behind the status bar.
+
+To use a custom query:
+
+  1. Define a conditional statement, which returns a boolean value, and assign it to a property in
+     the `Alloy.Globals` namespace.
+  2. Assign the `if` attribute to an element in the XML file or in the conditional block of the TSS file to
+     the defined query with the `Alloy.Globals` namespace.
+
+See also:
+
+  * [Alloy Styles and Themes: Custom Query Styles](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Styles_and_Themes-section-35621526_AlloyStylesandThemes-CustomQueryStyles)
+  * [Custom TSS queries test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/advanced/custom_tss_queries)
+
+##### Map Module Integration
+
+This release introduces better integration with the [ti.map module](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map),
+which includes the ability to define `Annotation` objects in XML markup and support for data-view binding.
+
+To add `Annotation` objects in the XML markup, use the `<Module>` tag to load the map module
+and create a map view.  Add `<Annotation>` tags as children of the `<Module>` tag.
+
+To support data-view binding, set the `dataCollection` attribute to the name of the collection in
+the `<Module>` tag.  Map attributes to bind in the `<Annotation>` tag.  The `<Module>` tag also
+supports the `dataFilter` and `dataTransform` attributes.
+
+    <Alloy>
+        <Collection src="places"/>
+        <Window>
+            <Module id="mapview" module="ti.map" method="createView" dataCollection="places">
+                <Annotation latitude="{latitude}" longitude="{longitude}" title="{title}" />
+            </Module>
+        </Window>
+    </Alloy>
+
+See also:
+
+  * Alloy Example in [ti.map module](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map)
+  * [Map Module test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-800)
+  * [Map Module with Data Binding test app](http://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-503)
+
+
+##### Widget Component Generation
+
+The Alloy CLI can now generate controller, view and style components for widgets.
+Add the `--widgetname <WIDGET_NAME>` option to the `alloy generate` command
+to create components for the specified widget.
+
+##### Widget Themes
+
+This release supports themes for widgets.  Widget themes work the same as project themes except for
+the placement of the files.
+
+Inside your theme folder (`app/themes/<THEME_NAME>`), create `widgets/<WIDGET_NAME>` folders,
+where `<THEME_NAME>` is the name of the theme and `<WIDGET_NAME>` is the name of the widget.
+
+Create two folders, `assets` and `styles`, to place your custom images and styles for your widget,
+respectively.  The `assets` and `styles` folders need to be placed in the folder that is named after
+the widget.
+
+If the theme is enabled, the files in the widget theme folder will replace the default ones
+used by the widget.
+
+See also:
+
+  * "Themes" section in [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
+  * [Widget Themes test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-378)
+
+
+##### XML Markup/TSS Enhancements
+
+  * Support the Android Action Bar in XML and TSS using the `Menu` element.  To define an action bar in XML markup,
+    add the `<Menu>` tag as a child of either a `<Window>` or `<TabGroup>`. To add action items in XML markup, add
+    `<MenuItem>` tags as children of `<Menu>`.  The `ActionBar` attributes may be defined in the XML
+    markup or TSS file. For details, see the "Android ActionBar Attributes in the Menu Element" section in
+    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+
+  * Support `Button` attributes in `<LeftNavButton>` and `<RightNavButton>`.  Instead of
+    creating a `Button` object for the `LeftNavButton` or `RightNavButton` elements, add the
+    `Button` attributes to either `LeftNavButton` or `RightNavButton` in either the XML markup
+    or the TSS file. For details, see the "iOS Navigation Button Shorthand" section in
+    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+
+  * Support Date Picker attributes. The
+    [maxDate](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-maxDate)
+    [minDate](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-minDate),
+    and [value](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-value)
+    attributes now accept date strings. For Alloy XML and TSS files, use a date string that can
+    be parsed by the [moment.js constructor](http://momentjs.com/docs/#/parsing/string/), which includes
+    ISO-8601 and RFC2822 dates.
+
+  * Support the localization function, `L()`, as node text for the `OptionDialog`'s `<Option>` tag.
+
+  * Support [Titanium.UI.RefreshControl](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.RefreshControl)
+    in XML markup.  Add the `<RefreshControl>` tag as a child of either `<ListView>` or `<TableView>`.
+
+  * Add shorthand notation for `TextField` keyboard attributes. When specifying either the `keyboardType` or
+    `returnKeyType` attributes, you do not need to use `Titanium.UI.KEYBOARD_` or `Titanium.UI.RETURNKEYTYPE_`
+    as part of the constant name. For details, see the "TextField Keyboard Shorthands" section in
+    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+
+  * Support `undefined` as a settable value in the TSS files.  Assign `undefined` to an attribute
+    to unset it.  Do not encase `undefined` in quotes.
+
+See also:
+
+  * [Action Bar test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-784)
+  * [Button Shorthand test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-714)
+  * [Date Picker test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-263)
+  * [Options Dialog with Localization Function test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-1009)
+  * [Refresh Control test app](https://github.com/appcelerator/alloy/tree/master/test/apps/testing/ALOY-910)
+  * [Text Field Keyboard Shorthand test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-927)
+
+#### New APIs
+
+The following APIs are new in Release 1.4.0.
+
+|API|Type|Note|
+|---|----|----|
+|`Alloy.Controller.updateViews`|method|Applies a dictionary of properties to the components of a view in the controller.|
+
+---
+### Release 1.3.1 (02/10/2014)
+
+Below are the new key features and fixes in this release. Also see the 
+[full list of changes](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15666).
 
 * [ALOY-905](https://jira.appcelerator.org/browse/ALOY-905). Alloy now supports TiSDK 3.0.0+ again!
 * [ALOY-907](https://jira.appcelerator.org/browse/ALOY-907). Fixed unhandled exception errors in invalid JS.
@@ -35,13 +198,15 @@
 * [ALOY-922](https://jira.appcelerator.org/browse/ALOY-922). Fixes error when using proxy properties on a TextField in an ItemTemplate.
 * [ALOY-937](https://jira.appcelerator.org/browse/ALOY-937). Fixes copying of platform-specific widget assets.
 
-## 1.3.0
+---
+### Release 1.3.0 (12/20/2013)
 
-* [Full list of Issues that were addressed in Release 1.3.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15575)
+Below are the new key features and fixes in this release. Also see the 
+[full list of changes](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15575).
 
-### Breaking Changes
+#### Breaking Changes
 
-#### Titanium SDK Support
+##### Titanium SDK Support
 
 Due changes in the application build process for both Alloy and the Titanium SDK,
 Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later. You can find details on this in the following tickets:
@@ -49,7 +214,7 @@ Alloy 1.3.0 only supports Titanium SDK 3.2.0 and later. You can find details on 
 * [TIMOB-14884](https://jira.appcelerator.org/browse/TIMOB-14884)
 * [ALOY-760](https://jira.appcelerator.org/browse/ALOY-760)
 
-### New Features
+#### New Features
 
 #### XML Markup Enhancements
 
@@ -116,7 +281,7 @@ configurations for iOS test, iOS development and iOS production:
 
 Previously, you could not specify both a platform and environment together.
 
-### New APIs
+#### New APIs
 
 The following APIs are new in Release 1.3.0.
 
@@ -128,27 +293,31 @@ The following APIs are new in Release 1.3.0.
 |`Alloy.builtins.animation.HORIZONTAL`|constant|Constant to specify a horizontal flip (iOS only).|
 |`Alloy.builtins.animation.VERTICAL`|constant|Constant to specify a vertical flip (iOS only).|
 
-## 1.2.2 (18 September 2013)
+--- 
+
+### Release 1.2.2 (18 September 2013)
 
 * [ALOY-813](https://jira.appcelerator.org/browse/ALOY-813). Fixed bug handling unicode characters in XML attributes.
 * [ALOY-817](https://jira.appcelerator.org/browse/ALOY-817). Fixed bug adding XML event handlers to UI components that use custom namesapces.
 * [ALOY-815](https://jira.appcelerator.org/browse/ALOY-815) & [ALOY-818](https://jira.appcelerator.org/browse/ALOY-818). Support Ti.UI.iOS.NavigationWindow API in XML
 
-## 1.2.1 (27 August 2013)
+--- 
+### Release 1.2.1 (27 August 2013)
 
 * [ALOY-789](https://jira.appcelerator.org/browse/ALOY-789). Fixed improper handling of printable escape characters in TSS.
 * [ALOY-802](https://jira.appcelerator.org/browse/ALOY-802). Fixed escape character handling issue in TSS on Windows.
 * [ALOY-803](https://jira.appcelerator.org/browse/ALOY-803). Fixed issue with controller subfolders on Windows.
 * [ALOY-804](https://jira.appcelerator.org/browse/ALOY-804). Fixed issues with `jake` on Windows.
 
-## 1.2.0 (15 August 2013)
+--- 
+### Release 1.2.0 (15 August 2013)
 
 * [Full list of Issues that were addressed in Release 1.2.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15334)
 * Fixes for a [handlful of Windows issues](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15445) are available in the latest 1.2.1 release candidate. You can install it like this: `[sudo] npm install -g alloy@1.2.1-cr2`.
 
-### New Features
+#### New Features
 
-#### Dynamic Styling
+##### Dynamic Styling
 
 As of this Release, Alloy supports changing styles dynamically during runtime. There are two methods
 to support dynamic styling in Alloy.  You can either generate a dynamic style dictionary that can be
@@ -160,7 +329,7 @@ For more information, see:
 * [dynamic_styling Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/dynamic_styling)
 * Refer to the "New APIs" section below.
 
-#### ListView in Markup
+##### ListView in Markup
 
 ListView objects can now be created in markup and with collection-view binding enabled.
 
@@ -170,7 +339,7 @@ For more information, see:
 * [ListView API Reference](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListView)
 * [Alloy Data Binding guide](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_listview)
 
-#### Module Markup Element
+##### Module Markup Element
 
 Use the new `Module` XML element to include a view from a native module.
 
@@ -178,7 +347,7 @@ For more information, see:
 * "Module XML Element" section in the [Alloy XML Markup guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup)
 * [native_modules Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/native_modules)
 
-#### CLI Command to Generate Styles
+##### CLI Command to Generate Styles
 
 Style files can be generated using the Alloy CLI.  The Alloy CLI extracts the IDs and classes from
 the markup file to create a skeleton style file.
@@ -186,7 +355,7 @@ the markup file to create a skeleton style file.
 For more information, see the "Generating a Style" section in the
 [Alloy Tasks guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks).
 
-### New APIs
+#### New APIs
 
 The following APIs are new in Release 1.2.0.
 
@@ -198,37 +367,41 @@ The following APIs are new in Release 1.2.0.
 |`Alloy.Controller.resetClass`|method|Applies TSS classes to the specified view object and removes any applied classes that are not specified.|
 |`Alloy.Controller.UI.create`|method|Creates a Titanium UI object with the specified styles.|
 
-## 1.1.3 (17 June 2013)
+--- 
+### Release 1.1.3 (17 June 2013)
 
-### New Features
+#### New Features
 
 * [ALOY-661](https://jira.appcelerator.org/browse/ALOY-661). Code Processor: Get Alloy to recompile before an analysis
 
-## 1.1.2 (2 May 2013)
+--- 
+### Release 1.1.2 (2 May 2013)
 
-### New Features
+#### New Features
 
 * [ALOY-424](https://jira.appcelerator.org/browse/ALOY-424). Blackberry support
 
-### Bug Fixes
+#### Bug Fixes
 
 * [ALOY-628](https://jira.appcelerator.org/browse/ALOY-628). Error loading platform-specific theme-based styles
 * [ALOY-632](https://jira.appcelerator.org/browse/ALOY-632). Builtins being copied into Resources directory more than once causing runtime errors
 * [ALOY-633](https://jira.appcelerator.org/browse/ALOY-633). Compiler directives (OS_IOS) undefined when referenced inside a widget
 * [ALOY-635](https://jira.appcelerator.org/browse/ALOY-635). Styles not being sorted properly among global, controller, platform-specific, and theme
 
-## 1.1.1 (19 April 2013)
+--- 
+### Release 1.1.1 (19 April 2013)
 
 Just 2 quick fixes to reduce the size of the Alloy distribution and fix one regression.
 
 * [ALOY-625](https://jira.appcelerator.org/browse/ALOY-625). app.tss not being applied to views that don't have view-specific styles.
 * [ALOY-626](https://jira.appcelerator.org/browse/ALOY-626). Remove unneeded resources from samples/mapping.
 
-## 1.1.0 (April 2013)
+--- 
+### Release 1.1.0 (April 2013)
 
   * [Full list of Issues that were addressed in Release 1.1.0](https://jira.appcelerator.org/secure/IssueNavigator.jspa?mode=hide&requestId=15057)
 
-### Breaking Changes
+#### Breaking Changes
 
 #### Alloy Run Command
 
@@ -331,7 +504,8 @@ Various enhancements to XML markup:
 Refer to [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup)
 for more information.
 
-## 1.0.0 (19 February 2013)
+--- 
+### 1.0.0 (19 February 2013)
 
 ### ** Breaking Changes **
 
@@ -502,7 +676,7 @@ The following deprecated APIs have been removed in this release:
 
 * [ALOY-330](https://jira.appcelerator.org/browse/ALOY-330). Make `alloy run` execute `titanium build`. The `alloy run` command will be removed in version 1.1.0 in favor of only using the `titanium build` command of the Titanium CLI.
 
-
+--- 
 
 ## 0.3.6 (18 January 2013)
 
@@ -510,7 +684,7 @@ The following deprecated APIs have been removed in this release:
 
 * [ALOY-474](https://jira.appcelerator.org/browse/ALOY-474). Allow extra commas in TSS files.
 
-
+--- 
 ## 0.3.5 (18 January 2013)
 
 ### New features
@@ -545,6 +719,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 
 **One final important note** is that the old **sql** adapter will be replaced with **sql_new** when Alloy 1.0.0 is released, tentatively scheduled for mid-February. This'll give you a month to try it out and migrate data if necessary. Any questions or concerns, hit me up at the [google group](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy).
 
+--- 
 ## 0.3.4 (20 December 2012)
 
 ### Important Note for Model/Collection Binding Feature
@@ -569,6 +744,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 * [ALOY-438](https://jira.appcelerator.org/browse/ALOY-438). Fixed bug where the Backbone off() function on Titanium proxies created from markup was not working.
 
 
+--- 
 ## 0.3.3 (6 December 2012)
 
 ### New features
@@ -592,6 +768,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 ### Deprecations
 * [ALOY-401](http://jira.appcelerator.org/browse/ALOY-401). Deprecate Alloy.globals; use Alloy.Globals instead.
 
+--- 
 ## 0.3.2 (15 November 2012)
 
 ### Bug fixes and improvements
@@ -601,6 +778,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 * [ALOY-365](http://jira.appcelerator.org/browse/ALOY-365). Add Alloy.globals namespace for global context.
 * [ALOY-380](http://jira.appcelerator.org/browse/ALOY-380). Create app/alloy.js file automatically for all new projects.
 
+--- 
 ## 0.3.1 (2 November 2012)
 
 ### New features
@@ -616,12 +794,14 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 * [ALOY-352](http://jira.appcelerator.org/browse/ALOY-352). Fix SQL adapter to work if no migrations are present.
 * [ALOY-354](http://jira.appcelerator.org/browse/ALOY-354). Fix "alloy generate jmk" command.
 
+--- 
 0.3.0 (beta)
 ------------
 * Removed node-appc dependency.
 * Added Alloy splash screens and icons
 * Updated widgets, added new button-grid widget.
 
+--- 
 0.2.42
 --------
 * Ti.UI.OptionDialog markup parser added. Check out this link for a test app and usage: [https://github.com/appcelerator/alloy/tree/master/test/apps/ui/optiondialog](https://github.com/appcelerator/alloy/tree/master/test/apps/ui/optiondialog)
