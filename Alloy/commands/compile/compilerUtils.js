@@ -614,13 +614,15 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 			}
 
 			// [ALOY-1002] Remove platform-specific folders copied from theme
-			var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
-			_.each(files, function(file) {
-				var source = path.join(widgetAssetTargetDir, file);
-				if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
-					wrench.rmdirSyncRecursive(source);
-				}
-			});
+			if (fs.existsSync(widgetAssetTargetDir)) {
+				var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+				_.each(files, function(file) {
+					var source = path.join(widgetAssetTargetDir, file);
+					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
+						wrench.rmdirSyncRecursive(source);
+					}
+				});
+			}
 		}
 	}
 };
