@@ -233,7 +233,7 @@ exports.getParserArgs = function(node, state, opts) {
 		formFactor: node.getAttribute('formFactor'),
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],
-		tssIf: node.getAttribute('if').split(' ') || [],
+		tssIf: node.getAttribute('if').split(',') || [],
 		parent: state.parent || {},
 		platform: platformObj,
 		createArgs: createArgs,
