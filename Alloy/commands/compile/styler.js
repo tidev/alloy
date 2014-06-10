@@ -481,7 +481,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// ALOY-871: handle custom TSS queries with if conditional
 					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
 					var ffJoinString = (ffcond) ? ' && ' : '';
-					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
+					conditional = pcond + joinString + ffcond + ffJoinString + "(" + q.if.split(',').join(' || ')+")";
 				}
 
 				// push styles if we need to insert a conditional

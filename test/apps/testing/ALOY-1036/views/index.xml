@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label class="classLabel" id="testLabel"/>
+		<Label id="testLabel2" if="Alloy.Globals.custom1,Alloy.Globals.custom2" bottom="100" platform="ios,android" formFactor="tablet,handheld">Added in XML</Label>
+	</Window>
+</Alloy>

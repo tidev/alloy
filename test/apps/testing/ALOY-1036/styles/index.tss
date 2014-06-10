@@ -1,0 +1,22 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"Window[platform=ios]": {
+	top: 20
+}
+"Label":{
+    font:{
+        fontSize:'22dp'
+    },
+    color:'purple'
+}
+ 
+".classLabel":{
+    text:"Simple class label applied"
+}
+ 
+".classLabel[platform=ios,android formFactor=tablet,handheld if=Alloy.Globals.custom1,Alloy.Globals.custom2]":{
+    text:"iOS or Android! Styles conditionals correctly applied"
+}
