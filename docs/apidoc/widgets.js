@@ -49,7 +49,7 @@
  * For example, the following controller code is equivalent to the previous view markup example.
  *
  *     var loadIcon = Alloy.createWidget("com.appcelerator.loading");
- *     win.add(loadIcon);
+ *     win.add(loadIcon.getView());
  *
  * A widget can also be added to other widgets.  Follow the same procedure as above except the widget
  * configuration file is called widget.json instead of config.json.
