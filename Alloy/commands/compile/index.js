@@ -191,7 +191,7 @@ module.exports = function(args, program) {
 				path.join(paths.resources, titaniumFolder),
 				{
 					rootDir: paths.project,
-					themeChanged: buildLog.data.themeChanged,
+					themeChanged: true,
 					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
 					exceptions: otherPlatforms,
 					titaniumFolder: titaniumFolder
