@@ -12,7 +12,8 @@ var path = require('path'),
 	XMLSerializer = require("xmldom").XMLSerializer,
 	DOMParser = require("xmldom").DOMParser,
 	_ = require("./lib/alloy/underscore")._,
-	CONST = require('./common/constants');
+	CONST = require('./common/constants'),
+	sourceMapper = require('./commands/compile/sourceMapper');
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -238,6 +239,28 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 					' --> ' + path.relative(opts.rootDir, dst).yellow);
 				exports.copyFileSync(src, dst);
 			}
+		}
+		if(!srcStat.isDirectory() && opts.createSourceMap) {
+			var tpath = path.join(opts.rootDir,'build','map','Resources',(opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform),'alloy');
+			var target = {
+				filename: path.join(tpath, path.basename(src)),
+				filepath: path.dirname(dst),
+				template: dst
+			},
+			data = {
+				'__MAPMARKER_NONCONTROLLER__': {
+					filename: src,
+					filepath: path.dirname(src),
+				}
+			};
+			sourceMapper.generateSourceMap({
+				target: target,
+				data: data,
+				origFile: {
+					filename: src,
+					filepath: path.dirname(src)
+				}
+			}, opts.compileConfig);
 		}
 	});
 	logger.trace('');

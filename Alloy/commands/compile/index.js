@@ -156,14 +156,17 @@ module.exports = function(args, program) {
 	// Copy in all developer assets, libs, and additional resources
 	_.each(['ASSETS','LIB','VENDOR'], function(type) {
 		var opts = {
-			rootDir: paths.project
+			rootDir: paths.project,
+			createSourceMap: compileConfig.sourcemap,
+			compileConfig: compileConfig
 		};
 		if (type === 'ASSETS') {
 			opts = _.extend(opts, {
 				themeChanged: buildLog.data.themeChanged,
 				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
 				exceptions: otherPlatforms,
-				titaniumFolder: titaniumFolder
+				titaniumFolder: titaniumFolder,
+				createSourceMap: false
 			});
 		}
 		updateFilesWithBuildLog(
