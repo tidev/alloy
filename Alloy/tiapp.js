@@ -29,7 +29,7 @@ tiapp.parse = function(file) {
 // Get the Titanium SDK version as a string
 tiapp.getSdkVersion = function() {
 	var elems = doc.documentElement.getElementsByTagName('sdk-version');
-	return elems && elems.length > 0 ? U.XML.getNodeText(elems.item(elems.length-1)) : null;
+	return elems && elems.length > 0 ? U.XML.getNodeText(elems.item(elems.length-1)) : (process.env.sdk || null);
 };
 
 // Get the value of a property from the tiapp.xml
