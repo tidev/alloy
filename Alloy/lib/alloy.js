@@ -117,8 +117,8 @@ if (OS_IOS) {
 }
 
 function ucfirst(text) {
-    if (!text) { return text; }
-    return text[0].toUpperCase() + text.substr(1);
+		if (!text) { return text; }
+		return text[0].toUpperCase() + text.substr(1);
 }
 
 function addNamespace(apiName) {
@@ -150,9 +150,9 @@ exports.M = function(name, modelDesc, migrations) {
 	if (migrations) { extendClass.migrations = migrations; }
 
 	// Run the pre model creation code, if any
-    if (mod && _.isFunction(mod.beforeModelCreate)) {
+		if (mod && _.isFunction(mod.beforeModelCreate)) {
 		config = mod.beforeModelCreate(config, name) || config;
-    }
+		}
 
 	// Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass);
@@ -297,7 +297,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		}
 
 		// Merge this style into the existing style object
-		_.extend(styleFinal, style.style);
+		deepExtend(true, styleFinal, style.style);
 	}
 
 	// TODO: cache the style based on the opts and controller
@@ -307,7 +307,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		CONST.CLASS_PROPERTY,
 		CONST.APINAME_PROPERTY
 	]);
-	_.extend(styleFinal, extraStyle);
+	deepExtend(true, styleFinal, extraStyle);
 	styleFinal[CONST.CLASS_PROPERTY] = classes;
 	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
@@ -592,3 +592,78 @@ if (OS_ANDROID) {
 	exports.Android = {};
 	exports.Android.menuItemCreateArgs = ['itemId', 'groupId', 'title', 'order', 'actionView', 'checkable', 'checked', 'enabled', 'icon', 'showAsAction', 'titleCondensed', 'visible'];
 }
+
+/*
+ * Adapted version of node.extend https://www.npmjs.org/package/node.extend
+ * 
+ * Original copyright:
+ * 
+ * node.extend
+ * Copyright 2011, John Resig
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * @fileoverview
+ * Port of jQuery.extend that actually works on node.js
+ */
+function deepExtend() {
+	var target = arguments[0] || {};
+	var i = 1;
+	var length = arguments.length;
+	var deep = false;
+	var options, name, src, copy, copy_is_array, clone;
+
+	// Handle a deep copy situation
+	if (typeof target === 'boolean') {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	}
+
+	// Handle case when target is a string or something (possible in deep copy)
+	if (typeof target !== 'object' && !_.isFunction(target)) {
+		target = {};
+	}
+
+	for (; i < length; i++) {
+		// Only deal with non-null/undefined values
+		options = arguments[i]
+		if (options != null) {
+			if (typeof options === 'string') {
+					options = options.split('');
+			}
+			// Extend the base object
+			for (name in options) {
+				src = target[name];
+				copy = options[name];
+
+				// Prevent never-ending loop
+				if (target === copy) {
+					continue;
+				}
+
+				// Recurse if we're merging plain objects or arrays
+				if (deep && copy && (_.isObject(copy) || (copy_is_array = _.isArray(copy)))) {
+					if (copy_is_array) {
+						copy_is_array = false;
+						clone = src && _.isArray(src) ? src : [];
+					} else {
+						clone = src && _.isObject(src) ? src : {};
+					}
+
+					// Never move original objects, clone them
+					target[name] = deepExtend(deep, clone, copy);
+
+				// Don't bring in undefined values
+				} else if (typeof copy !== 'undefined') {
+					target[name] = copy;
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
