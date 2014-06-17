@@ -1,0 +1,15 @@
+'Label': {
+	top: '5dp',
+	color: 'gray',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	right: 20
+}
+
+"#header": {
+	top: "20dp"
+}

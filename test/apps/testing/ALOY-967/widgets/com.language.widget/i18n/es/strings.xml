@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="language__click_button">Haga clic en el botón para ver los eventos del calendario seleccionado</string>
+	<string name="language__intro_text">Esta aplicación muestra las capacidades de plataforma cruzada de la plataforma de Appcelerator</string>
+	<string name="language__create_sample_event">Crear evento Muestra</string>
+	<string name="language__view_event">Ver Eventos</string>
+	<string name="language__select_calendar">Seleccione el tipo de calendario</string>
+</resources>

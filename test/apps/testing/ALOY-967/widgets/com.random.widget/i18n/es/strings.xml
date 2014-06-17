@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="random__click_button">Haga clic en el botón para ver los eventos del calendario seleccionado</string>
+	<string name="random__coupons">Cupones</string>
+	<string name="random__welcome">bienvenido</string>
+</resources>

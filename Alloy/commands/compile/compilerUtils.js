@@ -9,6 +9,7 @@ var U = require('../../utils'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	styler = require('./styler'),
+	XMLSerializer = require("xmldom").XMLSerializer,
 	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
@@ -626,6 +627,57 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		}
 	}
 };
+
+// [ALOY-967] Create a temp location, merge i18n string files
+exports.mergeI18n = function(srcI18nDir, compileConfigDir) {
+	logger.info('  i18n:     "' + srcI18nDir + '"');
+
+	var tempDir = path.join(compileConfigDir.project, CONST.DIR.MERGED_I18N),
+		appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
+		serializer = new XMLSerializer();
+
+	// create the temp i18n folder & merge the widget's i18n files to temp folder
+	if (!fs.existsSync(tempDir)) {
+		wrench.mkdirSyncRecursive(tempDir, 0755);
+		if(fs.existsSync(appI18nDir)) {
+			wrench.copyDirSyncRecursive(appI18nDir, tempDir, {preserve: true});
+			exports.mergeI18n(srcI18nDir, compileConfigDir);
+		} else {
+			wrench.copyDirSyncRecursive(srcI18nDir, tempDir, {preserve: true});
+		}
+	} else {
+		if (fs.existsSync(srcI18nDir)) {
+			var files = wrench.readdirSyncRecursive(srcI18nDir);
+			_.each(files, function(file) {
+				var source = path.join(srcI18nDir, file);
+				var outputPath = path.join(tempDir, file);
+
+				if (!path.existsSync(outputPath)) {
+					if (fs.statSync(source).isDirectory()) {
+						wrench.mkdirSyncRecursive(outputPath, 0755);
+					} else {
+						U.copyFileSync(source, outputPath);
+					}
+				} else {
+					if (fs.statSync(source).isFile()) {
+						var doc = U.XML.parseFromFile(outputPath);
+						var root = doc.documentElement;
+
+						var sourcexml = U.XML.parseFromFile(source);
+						_.each(sourcexml.getElementsByTagName('string'), function(node){
+							root.appendChild(doc.createTextNode('    '));
+							root.appendChild(node);
+							root.appendChild(doc.createTextNode('\n'));
+						});
+
+						fs.writeFileSync(outputPath, serializer.serializeToString(doc), 'utf8');
+					}
+				}
+			});
+		}
+	}
+};
+
 
 function updateImplicitNamspaces(platform) {
 	switch(platform) {
