@@ -1,0 +1,7 @@
+<Alloy>
+	<Window class="container">
+		<Module module="specialView" method="createSpecialView" onClick="doClick">
+			<Label>Click Me!</Label>
+		</Module>
+	</Window>
+</Alloy>
