@@ -18,6 +18,10 @@ exports.init = function (logger, config, cli, appc) {
 		spawn = require('child_process').spawn,
 		parallel = appc.async.parallel;
 
+		if(!process.env.sdk) {
+			process.env.sdk = cli.sdk.name;
+		}
+
 	function run(deviceFamily, deployType, target, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {

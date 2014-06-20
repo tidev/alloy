@@ -1,14 +1,22 @@
 ".container": {
 	backgroundColor:"white"
-},
+}
+
 "Label": {
+	top: 100,
 	width: Ti.UI.SIZE,
 	height: Ti.UI.SIZE,
 	color: "#000"
 }
 
-"#label": {
+".family": {
 	font: {
-		fontSize: 12
+		fontFamily: 'AmericanTypewriter'
+	}
+}
+
+".size": {
+	font: {
+		fontSize: 30
 	}
 }
