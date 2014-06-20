@@ -1,0 +1,4 @@
+<Alloy>
+	<Label id="header">This is com.random.widget</Label>
+	<Label text="L('random__welcome')"/>
+</Alloy>

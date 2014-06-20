@@ -22,6 +22,12 @@ exports.init = function (logger, config, cli, appc) {
 			process.env.sdk = cli.sdk.name;
 		}
 
+	var CONST = {
+		I18N: 'i18n',
+		I18N_ORIG: "i18n_original",
+		I18N_TMP: "i18n_tmp"
+	};
+
 	function run(deviceFamily, deployType, target, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
@@ -146,9 +152,15 @@ exports.init = function (logger, config, cli, appc) {
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
+						removeDir(path.join(cli.argv["project-dir"], CONST.I18N_TMP));
 						process.exit(1);
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
+						swapFolderNames(
+							path.join(cli.argv["project-dir"], CONST.I18N_TMP),
+							path.join(cli.argv["project-dir"], CONST.I18N),
+							{"extra" : "_original"}
+						);
 					}
 					finished();
 				});
@@ -180,5 +192,49 @@ exports.init = function (logger, config, cli, appc) {
 
 	cli.addHook('codeprocessor.pre.run', function (build, finished) {
 		run('none', 'development', undefined, finished);
+	});
+
+	function removeDir(target) {
+		if (fs.existsSync(target)) {
+			fs.readdirSync(target).forEach(function(file,index) {
+				var curr = target + "/" + file;
+				if (fs.lstatSync(curr).isDirectory()) {
+					removeDir(curr);
+				} else {
+					fs.unlinkSync(curr);
+				}
+			});
+			fs.rmdirSync(target);
+		}
+	}
+
+	function swapFolderNames(fromDir, toDir, opt) {
+		if (!afs.exists(toDir) && afs.exists(fromDir)) {
+			fs.renameSync(fromDir, toDir);
+			fs.mkdirSync(fromDir); //for post compile clean up
+		} else if (afs.exists(toDir) && afs.exists(fromDir)) {
+			fs.renameSync(toDir, toDir+opt.extra); //rename original folder temporarily
+			fs.renameSync(fromDir, toDir); //rename merged folder
+		}
+	}
+
+	cli.addHook('build.post.compile', function (build, finished) {
+		var i18nOrigDir = path.join(cli.argv["project-dir"], CONST.I18N_ORIG),
+			i18nNewDir = path.join(cli.argv["project-dir"], CONST.I18N),
+			i18nTempDir = path.join(cli.argv["project-dir"], CONST.I18N_TMP);
+
+		if (afs.exists(i18nOrigDir)) {
+			if (afs.exists(i18nNewDir)) {
+				removeDir(i18nNewDir);
+			}
+			fs.renameSync(i18nOrigDir, i18nNewDir);
+		} else {
+			if (afs.exists(i18nTempDir) && afs.exists(i18nNewDir)) {
+				removeDir(i18nTempDir);
+				removeDir(i18nNewDir);
+			}
+		}
+
+		finished();
 	});
 };

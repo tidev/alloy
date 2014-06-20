@@ -650,6 +650,12 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 				manifest.id, widgetStyleDir),
 			0755
 		);
+
+		// [ALOY-967] Check if there's an i18n dir in widget folder
+		if (fs.existsSync(path.join(dir,CONST.DIR.I18N))) {
+			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir);
+		}
+
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
 			path.join(compileConfig.dir.resources, titaniumFolder),

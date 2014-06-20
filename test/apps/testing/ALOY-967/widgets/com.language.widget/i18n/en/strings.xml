@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="language__click_button">Click on the button to display the events for the selected calendar</string>
+	<string name="language__intro_text">i18n from com.mylanguage.widget</string>
+	<string name="language__create_sample_event">Create Sample Event</string>
+	<string name="languag__view_event">View Events</string>
+	<string name="language__select_calendar">Select the calendar type</string>
+</resources>

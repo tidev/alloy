@@ -1,0 +1,4 @@
+<Alloy>
+	<Label id="header">This is com.language.widget</Label>
+	<Label id="myLabel"/>
+</Alloy>
