@@ -200,7 +200,7 @@ exports.getParserArgs = function(node, state, opts) {
 		var attrName = attr.nodeName;
 		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
-		if (matches !== null && exports.isNodeForCurrentPlatform(node) && attrName !== 'onHomeIconItemSelected') {
+		if (matches !== null && exports.isNodeForCurrentPlatform(node) && !_.contains(CONST.SPECIAL_PROPERTY_NAMES, attrName)) {
 			events.push({
 				name: U.lcfirst(matches[1]),
 				value: node.getAttribute(attrName)
