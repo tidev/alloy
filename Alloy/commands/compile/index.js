@@ -163,6 +163,8 @@ module.exports = function(args, program) {
 				themeChanged: buildLog.data.themeChanged,
 				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
 				exceptions: otherPlatforms,
+				createSourceMap: (type==='ASSETS') ? false : compileConfig.sourcemap,
+				compileConfig: compileConfig,
 				titaniumFolder: titaniumFolder
 			}
 		);
@@ -868,6 +870,7 @@ function optimizeCompiledCode() {
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
 			// TODO: remove should.js check here once ALOY-921 is resolved
+			//		also remove check in sourceMapper.js exports.generateSourceMap()
 			return rx.test(f) && !/(?:^|[\\\/])should\.js$/.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			});
