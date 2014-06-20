@@ -218,3 +218,9 @@ exports.IMPLICIT_NAMESPACES = {
 	KeyboardToolbar: '_ProxyProperty',
 
 };
+
+// properties named with "on" that aren't used to signify event listeners
+exports.SPECIAL_PROPERTY_NAMES = [
+	'onHomeIconItemSelected',
+	'onTintColor'
+];
