@@ -1,0 +1,9 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#picker":{
+	type:"Ti.UI.PICKER_TYPE_DATE"
+}
