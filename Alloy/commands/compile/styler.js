@@ -364,6 +364,8 @@ exports.processStyle = function(_style, _state) {
 							if(U.isValidDate(d, sn)) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}
+						} else {
+							code += prefix + value + ",";
 						}
 					} else {
 						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
