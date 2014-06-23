@@ -1,0 +1,18 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+
+'Label': {
+	top: '30dp',
+	color: '#222',
+	font: {
+		fontSize: '12dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	left: 20
+}

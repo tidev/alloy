@@ -179,9 +179,12 @@ module.exports = function(args, program) {
 		);
 	}
 
-	// check theme for assets
+	// check theme for assets, i18n and platform folders
 	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
+		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets'),
+			themeI18nPath = path.join(paths.app,'themes',theme,'i18n'),
+			themePlatformPath = path.join(paths.app,'themes',theme,'platform');
+
 		if (path.existsSync(themeAssetsPath)) {
 			updateFilesWithBuildLog(
 				themeAssetsPath,
@@ -193,6 +196,18 @@ module.exports = function(args, program) {
 					exceptions: otherPlatforms,
 					titaniumFolder: titaniumFolder
 				}
+			);
+		}
+
+		if (path.existsSync(themeI18nPath)) {
+			CU.mergeI18n(themeI18nPath, compileConfig.dir);
+		}
+
+		if (path.existsSync(themePlatformPath)) {
+			updateFilesWithBuildLog(
+				themePlatformPath,
+				path.join(paths.project, 'platform'),
+				{ rootDir: paths.project }
 			);
 		}
 	}
