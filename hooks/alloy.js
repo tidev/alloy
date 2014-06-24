@@ -121,7 +121,7 @@ exports.init = function (logger, config, cli, appc) {
 				if (process.platform === 'win32') { cmd.shift(); }
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
-				var child = spawn(cmd.shift(), cmd);
+				var child = spawn(cmd.shift(), cmd, { stdio: 'inherit'});
 
 				function checkLine(line) {
 					var re = new RegExp(
