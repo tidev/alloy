@@ -199,16 +199,24 @@ module.exports = function(args, program) {
 			);
 		}
 
+		// [ALOY-858] Theme "i18n" and "platform" folders
 		if (path.existsSync(themeI18nPath)) {
 			CU.mergeI18n(themeI18nPath, compileConfig.dir);
 		}
 
 		if (path.existsSync(themePlatformPath)) {
-			updateFilesWithBuildLog(
-				themePlatformPath,
-				path.join(paths.project, 'platform'),
-				{ rootDir: paths.project }
-			);
+			logger.info('  platform:     "' + themePlatformPath + '"');
+
+			var tempDir = path.join(paths.project, CONST.DIR.MERGED_PLATFORM),
+				appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
+
+			if (!fs.existsSync(tempDir)) {
+				wrench.mkdirSyncRecursive(tempDir, 0755);
+				if (fs.existsSync(appPlatformDir)) {
+					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
+				}
+			}
+			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
 		}
 	}
 	logger.debug('');

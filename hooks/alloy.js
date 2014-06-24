@@ -24,8 +24,11 @@ exports.init = function (logger, config, cli, appc) {
 
 	var CONST = {
 		I18N: 'i18n',
-		I18N_ORIG: "i18n_original",
-		I18N_TMP: "i18n_tmp"
+		I18N_ORIG: 'i18n_original',
+		I18N_TMP: 'i18n_tmp',
+		PLATFORM: 'platform',
+		PLATFORM_ORIG: 'platform_original',
+		PLATFORM_TMP: 'platform_tmp'
 	};
 
 	function run(deviceFamily, deployType, target, finished) {
@@ -152,15 +155,19 @@ exports.init = function (logger, config, cli, appc) {
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
-						removeDir(path.join(cli.argv["project-dir"], CONST.I18N_TMP));
+						[CONST.I18N_TMP, CONST.PLATFORM_TMP].forEach(function (folder) {
+							removeDir(path.join(cli.argv["project-dir"], folder));
+						});
 						process.exit(1);
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
-						swapFolderNames(
-							path.join(cli.argv["project-dir"], CONST.I18N_TMP),
-							path.join(cli.argv["project-dir"], CONST.I18N),
-							{"extra" : "_original"}
-						);
+						[CONST.I18N, CONST.PLATFORM].forEach(function (folder) {
+							swapFolderNames(
+								path.join(cli.argv["project-dir"], folder+"_tmp"),
+								path.join(cli.argv["project-dir"], folder),
+								{"extra" : "_original"}
+							);
+						});
 					}
 					finished();
 				});
@@ -218,22 +225,27 @@ exports.init = function (logger, config, cli, appc) {
 		}
 	}
 
-	cli.addHook('build.post.compile', function (build, finished) {
-		var i18nOrigDir = path.join(cli.argv["project-dir"], CONST.I18N_ORIG),
-			i18nNewDir = path.join(cli.argv["project-dir"], CONST.I18N),
-			i18nTempDir = path.join(cli.argv["project-dir"], CONST.I18N_TMP);
+	function cleanUpTempFolder(projRoot, oDir, nDir, tDir) {
+		var origDir = path.join(projRoot, oDir),
+			newDir = path.join(projRoot, nDir),
+			tempDir = path.join(projRoot, tDir);
 
-		if (afs.exists(i18nOrigDir)) {
-			if (afs.exists(i18nNewDir)) {
-				removeDir(i18nNewDir);
+		if (afs.exists(origDir)) {
+			if (afs.exists(newDir)) {
+				removeDir(newDir);
 			}
-			fs.renameSync(i18nOrigDir, i18nNewDir);
+			fs.renameSync(origDir, newDir);
 		} else {
-			if (afs.exists(i18nTempDir) && afs.exists(i18nNewDir)) {
-				removeDir(i18nTempDir);
-				removeDir(i18nNewDir);
+			if (afs.exists(tempDir) && afs.exists(newDir)) {
+				removeDir(tempDir);
+				removeDir(newDir);
 			}
 		}
+	}
+
+	cli.addHook('build.post.compile', function (build, finished) {
+		cleanUpTempFolder(cli.argv["project-dir"], CONST.I18N_ORIG, CONST.I18N, CONST.I18N_TMP);
+		cleanUpTempFolder(cli.argv["project-dir"], CONST.PLATFORM_ORIG, CONST.PLATFORM, CONST.PLATFORM_TMP);
 
 		finished();
 	});
