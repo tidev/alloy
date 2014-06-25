@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<string name="mytheme__hello_world">Hello themes i18n!</string>
+	<string name="hello_world">Theme's hello_world overrides app's hello_world</string>
 </resources>

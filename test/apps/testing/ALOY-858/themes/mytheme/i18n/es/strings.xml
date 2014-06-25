@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<string name="mytheme__hello_world">Hola themes i18n!</string>
+	<string name="hello_world">Hello_world de Tema anula hello_world de aplicación</string>
 </resources>

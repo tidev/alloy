@@ -44,6 +44,8 @@ Orphanage.prototype.clean = function() {
 	logger.debug('Removing orphaned sync adapters...');
 	this.removeAdapters();
 
+	this.removeMergedTempFolders();
+
 	// Clean out each widget
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
 	if (fs.existsSync(widgets)) {
@@ -181,6 +183,27 @@ Orphanage.prototype.removeAssets = function() {
 		locations: locations,
 		exceptions: exceptions
 	});
+};
+
+Orphanage.prototype.removeMergedTempFolders = function() {
+	var projDir = path.join(dirs.app, '..');
+	_.each(
+		[path.join(projDir, CONST.DIR.MERGED_I18N), path.join(projDir, CONST.DIR.MERGED_PLATFORM)],
+		function(tempDir){
+			if (fs.existsSync(tempDir)) {
+				wrench.rmdirSyncRecursive(tempDir, true);
+			}
+		}
+	);
+
+	_.each(
+		[path.join(projDir, CONST.DIR.I18N), path.join(projDir, CONST.DIR.PLATFORM)],
+		function(origDir){
+			if (fs.existsSync(origDir+"_original")) {
+				fs.renameSync(origDir+"_original", origDir);
+			}
+		}
+	);
 };
 
 // private function

@@ -1,5 +1,6 @@
 <Alloy>
 	<Window>
+		<Label textid="hello_world" />
 		<Label textid="mytheme__hello_world" />
 		<ImageView image="/images/a.png" />
 		<Require type="widget" src="com.random.widget" id="widget_random"/>

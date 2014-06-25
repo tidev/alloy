@@ -636,7 +636,7 @@ exports.mergeI18n = function(srcI18nDir, compileConfigDir) {
 		appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
 		serializer = new XMLSerializer();
 
-	// create the temp i18n folder & merge the widget's i18n files to temp folder
+	// create the temp i18n folder & merge the source i18n files to temp folder
 	if (!fs.existsSync(tempDir)) {
 		wrench.mkdirSyncRecursive(tempDir, 0755);
 		if(fs.existsSync(appI18nDir)) {

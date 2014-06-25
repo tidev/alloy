@@ -29,7 +29,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	buildPlatform,
 	titaniumFolder,
 	buildLog,
-	theme;
+	theme,
+	widgetIds = [];
 
 var times = {
 	first: null,
@@ -179,11 +180,9 @@ module.exports = function(args, program) {
 		);
 	}
 
-	// check theme for assets, i18n and platform folders
+	// check theme for assets
 	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets'),
-			themeI18nPath = path.join(paths.app,'themes',theme,'i18n'),
-			themePlatformPath = path.join(paths.app,'themes',theme,'platform');
+		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
 
 		if (path.existsSync(themeAssetsPath)) {
 			updateFilesWithBuildLog(
@@ -197,26 +196,6 @@ module.exports = function(args, program) {
 					titaniumFolder: titaniumFolder
 				}
 			);
-		}
-
-		// [ALOY-858] Theme "i18n" and "platform" folders
-		if (path.existsSync(themeI18nPath)) {
-			CU.mergeI18n(themeI18nPath, compileConfig.dir);
-		}
-
-		if (path.existsSync(themePlatformPath)) {
-			logger.info('  platform:     "' + themePlatformPath + '"');
-
-			var tempDir = path.join(paths.project, CONST.DIR.MERGED_PLATFORM),
-				appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
-
-			if (!fs.existsSync(tempDir)) {
-				wrench.mkdirSyncRecursive(tempDir, 0755);
-				if (fs.existsSync(appPlatformDir)) {
-					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
-				}
-			}
-			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
 		}
 	}
 	logger.debug('');
@@ -298,6 +277,39 @@ module.exports = function(args, program) {
 	});
 	logger.info('');
 
+	// [ALOY-858] merge "i18n" dir in theme folder
+	if (theme) {
+		var themeI18nPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.I18N),
+			themePlatformPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.PLATFORM);
+
+		if (path.existsSync(themePlatformPath)) {
+			logger.info('  platform:     "' + themePlatformPath + '"');
+
+			var tempDir = path.join(paths.project, CONST.DIR.MERGED_PLATFORM),
+				appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
+
+			if (!fs.existsSync(tempDir)) {
+				wrench.mkdirSyncRecursive(tempDir, 0755);
+				if (fs.existsSync(appPlatformDir)) {
+					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
+				}
+			}
+			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
+		}
+
+		if (path.existsSync(themeI18nPath)) {
+			CU.mergeI18n(themeI18nPath, compileConfig.dir);
+		}
+
+		_.each(widgetIds, function(id){
+			var themeWidgetDir = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.WIDGET, id, CONST.DIR.I18N);
+			if (path.existsSync(themeWidgetDir)) {
+				CU.mergeI18n(themeWidgetDir, compileConfig.dir);
+			}
+		});
+	}
+	logger.info('');
+	
 	generateAppJs(paths, compileConfig);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
@@ -674,10 +686,11 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			0755
 		);
 
-		// [ALOY-967] Check if there's an i18n dir in widget folder
+		// [ALOY-967] merge "i18n" dir in widget folder
 		if (fs.existsSync(path.join(dir,CONST.DIR.I18N))) {
 			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir);
 		}
+		widgetIds.push(manifest.id);
 
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
