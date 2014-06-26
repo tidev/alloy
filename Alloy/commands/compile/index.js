@@ -205,6 +205,22 @@ module.exports = function(args, program) {
 		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
 	}
 
+	// [ALOY-858] Prepping folders for merging
+	_.each(['i18n', 'platform'], function(folder){
+		var dirPath = path.join(paths.project, folder);
+		var buildDir = path.join(paths.project, 'build', folder);
+		if (path.existsSync(dirPath)) {
+			if(path.existsSync(buildDir)) {
+				wrench.rmdirSyncRecursive(buildDir);
+			}
+			wrench.mkdirSyncRecursive(buildDir, 0755);
+			updateFilesWithBuildLog(
+				dirPath,
+				buildDir
+			);
+		}
+	});
+
 	logger.info('----- MVC GENERATION -----');
 
 	// create the global style, if it exists
@@ -285,16 +301,11 @@ module.exports = function(args, program) {
 		if (path.existsSync(themePlatformPath)) {
 			logger.info('  platform:     "' + themePlatformPath + '"');
 
-			var tempDir = path.join(paths.project, CONST.DIR.MERGED_PLATFORM),
-				appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
-
-			if (!fs.existsSync(tempDir)) {
-				wrench.mkdirSyncRecursive(tempDir, 0755);
-				if (fs.existsSync(appPlatformDir)) {
-					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
-				}
+			var appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
+			if (!fs.existsSync(appPlatformDir)) {
+				wrench.mkdirSyncRecursive(appPlatformDir, 0755);
 			}
-			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
+			wrench.copyDirSyncRecursive(themePlatformPath, appPlatformDir, {preserve: false});
 		}
 
 		if (path.existsSync(themeI18nPath)) {
@@ -309,7 +320,7 @@ module.exports = function(args, program) {
 		});
 	}
 	logger.info('');
-	
+
 	generateAppJs(paths, compileConfig);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js

@@ -22,15 +22,6 @@ exports.init = function (logger, config, cli, appc) {
 			process.env.sdk = cli.sdk.name;
 		}
 
-	var CONST = {
-		I18N: 'i18n',
-		I18N_ORIG: 'i18n_original',
-		I18N_TMP: 'i18n_tmp',
-		PLATFORM: 'platform',
-		PLATFORM_ORIG: 'platform_original',
-		PLATFORM_TMP: 'platform_tmp'
-	};
-
 	function run(deviceFamily, deployType, target, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
@@ -155,19 +146,9 @@ exports.init = function (logger, config, cli, appc) {
 				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
-						[CONST.I18N_TMP, CONST.PLATFORM_TMP].forEach(function (folder) {
-							removeDir(path.join(cli.argv["project-dir"], folder));
-						});
 						process.exit(1);
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
-						[CONST.I18N, CONST.PLATFORM].forEach(function (folder) {
-							swapFolderNames(
-								path.join(cli.argv["project-dir"], folder+"_tmp"),
-								path.join(cli.argv["project-dir"], folder),
-								{"extra" : "_original"}
-							);
-						});
 					}
 					finished();
 				});
@@ -201,9 +182,10 @@ exports.init = function (logger, config, cli, appc) {
 		run('none', 'development', undefined, finished);
 	});
 
+
 	function removeDir(target) {
 		if (fs.existsSync(target)) {
-			fs.readdirSync(target).forEach(function(file,index) {
+			fs.readdirSync(target).forEach(function (file,index) {
 				var curr = target + "/" + file;
 				if (fs.lstatSync(curr).isDirectory()) {
 					removeDir(curr);
@@ -215,38 +197,31 @@ exports.init = function (logger, config, cli, appc) {
 		}
 	}
 
-	function swapFolderNames(fromDir, toDir, opt) {
-		if (!afs.exists(toDir) && afs.exists(fromDir)) {
-			fs.renameSync(fromDir, toDir);
-			fs.mkdirSync(fromDir); //for post compile clean up
-		} else if (afs.exists(toDir) && afs.exists(fromDir)) {
-			fs.renameSync(toDir, toDir+opt.extra); //rename original folder temporarily
-			fs.renameSync(fromDir, toDir); //rename merged folder
-		}
-	}
-
-	function cleanUpTempFolder(projRoot, oDir, nDir, tDir) {
-		var origDir = path.join(projRoot, oDir),
-			newDir = path.join(projRoot, nDir),
-			tempDir = path.join(projRoot, tDir);
-
-		if (afs.exists(origDir)) {
-			if (afs.exists(newDir)) {
-				removeDir(newDir);
-			}
-			fs.renameSync(origDir, newDir);
+	function copyDir(src, dest) {
+		if (fs.existsSync(src) && fs.statSync(src).isDirectory()) {
+			fs.mkdirSync(dest);
+			fs.readdirSync(src).forEach(function (childName) {
+				copyDir(path.join(src, childName),
+				path.join(dest, childName));
+			});
 		} else {
-			if (afs.exists(tempDir) && afs.exists(newDir)) {
-				removeDir(tempDir);
-				removeDir(newDir);
-			}
+			fs.linkSync(src, dest);
 		}
 	}
 
 	cli.addHook('build.post.compile', function (build, finished) {
-		cleanUpTempFolder(cli.argv["project-dir"], CONST.I18N_ORIG, CONST.I18N, CONST.I18N_TMP);
-		cleanUpTempFolder(cli.argv["project-dir"], CONST.PLATFORM_ORIG, CONST.PLATFORM, CONST.PLATFORM_TMP);
 
+		['i18n', 'platform'].forEach(function (folder) {
+			var dirPath = path.join(cli.argv["project-dir"], folder);
+			var buildDir = path.join(cli.argv["project-dir"], 'build', folder);
+			if (path.existsSync(dirPath)) {
+				removeDir(dirPath);
+				if (path.existsSync(buildDir)) {
+					copyDir(buildDir, dirPath);
+					removeDir(buildDir);
+				}
+			}
+		});
 		finished();
 	});
 };

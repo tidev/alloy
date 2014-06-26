@@ -44,7 +44,7 @@ Orphanage.prototype.clean = function() {
 	logger.debug('Removing orphaned sync adapters...');
 	this.removeAdapters();
 
-	this.removeMergedTempFolders();
+	this.cleanUpMergedTempFiles();
 
 	// Clean out each widget
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
@@ -185,26 +185,19 @@ Orphanage.prototype.removeAssets = function() {
 	});
 };
 
-Orphanage.prototype.removeMergedTempFolders = function() {
-	var projDir = path.join(dirs.app, '..');
-	_.each(
-		[path.join(projDir, CONST.DIR.MERGED_I18N), path.join(projDir, CONST.DIR.MERGED_PLATFORM)],
-		function(tempDir){
-			if (fs.existsSync(tempDir)) {
-				wrench.rmdirSyncRecursive(tempDir, true);
-			}
-		}
-	);
 
-	_.each(
-		[path.join(projDir, CONST.DIR.I18N), path.join(projDir, CONST.DIR.PLATFORM)],
-		function(origDir){
-			if (fs.existsSync(origDir+"_original")) {
-				fs.renameSync(origDir+"_original", origDir);
-			}
+Orphanage.prototype.cleanUpMergedTempFiles = function() {
+	var projDir = path.join(dirs.app, '..');
+	_.each([CONST.DIR.I18N, CONST.DIR.PLATFORM], function(folder){
+		var dirPath = path.join(projDir, folder);
+		var buildDir = path.join(projDir, 'build', folder);
+		if (path.existsSync(dirPath) && path.existsSync(buildDir)) {
+			wrench.copyDirSyncRecursive(buildDir, dirPath, {preserve: false});
+			wrench.rmdirSyncRecursive(buildDir);
 		}
-	);
+	});
 };
+
 
 // private function
 function extension(file, newExt) {
