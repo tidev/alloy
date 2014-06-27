@@ -214,10 +214,7 @@ module.exports = function(args, program) {
 				wrench.rmdirSyncRecursive(buildDir);
 			}
 			wrench.mkdirSyncRecursive(buildDir, 0755);
-			updateFilesWithBuildLog(
-				dirPath,
-				buildDir
-			);
+			wrench.copyDirSyncRecursive(dirPath, buildDir, {preserve: false});
 		}
 	});
 

@@ -186,7 +186,7 @@ exports.init = function (logger, config, cli, appc) {
 	function removeDir(target) {
 		if (fs.existsSync(target)) {
 			fs.readdirSync(target).forEach(function (file,index) {
-				var curr = target + "/" + file;
+				var curr = path.join(target, file);
 				if (fs.lstatSync(curr).isDirectory()) {
 					removeDir(curr);
 				} else {
@@ -222,6 +222,7 @@ exports.init = function (logger, config, cli, appc) {
 				}
 			}
 		});
+
 		finished();
 	});
 };
