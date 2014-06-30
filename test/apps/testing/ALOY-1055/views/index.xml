@@ -1,0 +1,33 @@
+<Alloy>
+	<Window>
+		<ScrollableView>
+			<ListView id="listView" defaultItemTemplate="template">
+				<Templates>
+					<ItemTemplate name="template">
+						<Label bindId="info" id="title" />
+						<Label bindId="es_info" id="subtitle" />
+					</ItemTemplate>
+				</Templates>
+				<ListSection headerTitle="Fruit / Frutas">
+					<ListItem info:text="Apple" es_info:text="Manzana"/>
+					<ListItem info:text="Banana" es_info:text="Banana" />
+				</ListSection>
+				<ListSection headerTitle="Vegetables / Verduras">
+					<ListItem info:text="Carrot" es_info:text="Zanahoria" />
+					<ListItem info:text="Potato" es_info:text="Patata" />
+				</ListSection>
+				<ListSection headerTitle="Grains / Granos">
+					<ListItem info:text="Corn" es_info:text="Maiz" />
+					<ListItem info:text="Rice" es_info:text="Arroz" />
+				</ListSection>
+			</ListView>
+			<ListView id="list">
+				<ListSection>
+					<ListItem title="List item 1"></ListItem>
+					<ListItem title="List item 2"></ListItem>
+					<ListItem title="List item 3"></ListItem>
+				</ListSection>
+			</ListView>
+		</ScrollableView>
+	</Window>
+</Alloy>

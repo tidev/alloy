@@ -23,7 +23,7 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
-					return arrayName + '.push(' + state.parent.symbol + ');\n';
+					return (state && state.parent && state.parent.symbol) ? arrayName + '.push(' + state.parent.symbol + ');\n' : '';
 				}
 			});
 		}
