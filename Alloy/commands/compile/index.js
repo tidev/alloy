@@ -566,7 +566,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			var fullname = CU.getNodeFullname(node);
 			template.viewCode += CU.generateNode(node, {
 				parent:{},
-				styles:state.styles
+				styles:state.styles,
+				widgetId: manifest ? manifest.id : undefined
 			}, defaultId, true);
 		});
 	}

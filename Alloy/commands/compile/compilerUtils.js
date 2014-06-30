@@ -304,8 +304,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// Execute the appropriate tag parser and append code
 	var isLocal = state.local;
+	// [ALOY-787] keeping track of widget id
+	var widgetId = state.widgetId;
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
+	state.widgetId = widgetId;
 
 	// Use local variable if given
 	if (isLocal && state.parent) { args.symbol = state.parent.symbol || args.symbol; }
