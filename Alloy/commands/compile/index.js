@@ -29,7 +29,8 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	buildPlatform,
 	titaniumFolder,
 	buildLog,
-	theme;
+	theme,
+	widgetIds = [];
 
 var times = {
 	first: null,
@@ -182,6 +183,7 @@ module.exports = function(args, program) {
 	// check theme for assets
 	if (theme) {
 		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
+
 		if (path.existsSync(themeAssetsPath)) {
 			updateFilesWithBuildLog(
 				themeAssetsPath,
@@ -202,6 +204,19 @@ module.exports = function(args, program) {
 	if (compilerMakeFile.isActive) {
 		compilerMakeFile.trigger('pre:compile', _.clone(compileConfig));
 	}
+
+	// [ALOY-858] Prepping folders for merging
+	_.each(['i18n', 'platform'], function(folder){
+		var dirPath = path.join(paths.project, folder);
+		var buildDir = path.join(paths.project, 'build', folder);
+		if (path.existsSync(dirPath)) {
+			if(path.existsSync(buildDir)) {
+				wrench.rmdirSyncRecursive(buildDir);
+			}
+			wrench.mkdirSyncRecursive(buildDir, 0755);
+			wrench.copyDirSyncRecursive(dirPath, buildDir, {preserve: false});
+		}
+	});
 
 	logger.info('----- MVC GENERATION -----');
 
@@ -273,6 +288,34 @@ module.exports = function(args, program) {
 			});
 		}
 	});
+	logger.info('');
+
+	// [ALOY-858] merge "i18n" dir in theme folder
+	if (theme) {
+		var themeI18nPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.I18N),
+			themePlatformPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.PLATFORM);
+
+		if (path.existsSync(themePlatformPath)) {
+			logger.info('  platform:     "' + themePlatformPath + '"');
+
+			var appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
+			if (!fs.existsSync(appPlatformDir)) {
+				wrench.mkdirSyncRecursive(appPlatformDir, 0755);
+			}
+			wrench.copyDirSyncRecursive(themePlatformPath, appPlatformDir, {preserve: false});
+		}
+
+		if (path.existsSync(themeI18nPath)) {
+			CU.mergeI18n(themeI18nPath, compileConfig.dir);
+		}
+
+		_.each(widgetIds, function(id){
+			var themeWidgetDir = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.WIDGET, id, CONST.DIR.I18N);
+			if (path.existsSync(themeWidgetDir)) {
+				CU.mergeI18n(themeWidgetDir, compileConfig.dir);
+			}
+		});
+	}
 	logger.info('');
 
 	generateAppJs(paths, compileConfig);
@@ -651,10 +694,11 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			0755
 		);
 
-		// [ALOY-967] Check if there's an i18n dir in widget folder
+		// [ALOY-967] merge "i18n" dir in widget folder
 		if (fs.existsSync(path.join(dir,CONST.DIR.I18N))) {
 			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir);
 		}
+		widgetIds.push(manifest.id);
 
 		CU.copyWidgetResources(
 			[path.join(dir,CONST.DIR.ASSETS), path.join(dir,CONST.DIR.LIB)],
