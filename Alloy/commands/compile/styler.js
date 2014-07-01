@@ -275,6 +275,8 @@ exports.loadStyle = function(tssFile) {
 
 		// Add enclosing curly braces, if necessary
 		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+		// [ALOY-793] double-escape '\' in tss
+		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
 		// Process tss file then convert to JSON
 		var json;

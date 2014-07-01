@@ -1,0 +1,41 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: "vertical",
+	top: 30
+}
+
+"Label": {
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE,
+	color: "#000",
+	textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+	font: {
+		fontSize: '12dp'
+	},
+	left: 30
+}
+
+".title": {
+	font: {
+		fontSize: '14dp'
+	},
+	top: 50
+}
+
+"#topLabel0": {
+	text: 'no  slash'
+}
+
+"#topLabel1": {
+	text: 'one \ slash, ignored'
+}
+
+"#topLabel2": {
+	text: 'two \\ slashes, should see 1 slash'
+}
+
+"#topLabel3": {
+	text: 'look here \u2764'
+}

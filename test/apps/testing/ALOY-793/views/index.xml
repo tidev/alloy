@@ -1,0 +1,15 @@
+<Alloy>
+	<Window>
+		<Label class="title">In TSS</Label>
+		<Label id='topLabel0' />
+		<Label id='topLabel1' />
+		<Label id='topLabel2' />
+		<Label id='topLabel3' />
+
+		<Label class="title">In XML</Label>
+		<Label>NO SLASH</Label>
+		<Label>ONE \ SLASH, IGNORED</Label>
+		<Label>TWO \\ SLASHES, 1 SLASH APPEARS</Label>
+		<Label>LOOK HERE \u2764</Label>
+	</Window>
+</Alloy>
