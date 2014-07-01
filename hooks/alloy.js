@@ -111,7 +111,7 @@ exports.init = function (logger, config, cli, appc) {
 				if (process.platform === 'win32') { cmd.shift(); }
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
-				var child = (process.platform === 'win32') ? spawn(cmd.shift(), cmd, { stdio: 'inherit'}) : spawn(cmd.shift(), cmd);
+				var child = (process.platform === 'win32') ? spawn(cmd.shift(), cmd, { stdio: 'inherit' }) : spawn(cmd.shift(), cmd);
 
 				function checkLine(line) {
 					var re = new RegExp(
@@ -129,17 +129,17 @@ exports.init = function (logger, config, cli, appc) {
 					}
 				}
 
-				child.stdout.on('data', function (data) {
+				child.stdout !== null && child.stdout.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
 						checkLine(line);
 					});
 				});
-				child.stderr.on('data', function (data) {
+				child.stderr !== null && child.stderr.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
 						checkLine(line);
 					});
 				});
-				child.on('exit', function (code) {
+				child !== null && child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
 						process.exit(1);
