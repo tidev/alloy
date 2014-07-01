@@ -1,0 +1,4 @@
+<Alloy>
+	<!-- <Widget src="my.widget" name="other" /> -->
+	<Widget name="other" />
+</Alloy>
