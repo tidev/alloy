@@ -240,7 +240,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				exports.copyFileSync(src, dst);
 			}
 		}
-		if(!srcStat.isDirectory() && opts.createSourceMap) {
+		if(!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
 			var tpath = path.join(opts.rootDir,'build','map','Resources',(opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform),'alloy');
 			var target = {
 				filename: path.join(tpath, path.basename(src)),
