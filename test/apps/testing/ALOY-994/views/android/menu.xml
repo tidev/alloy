@@ -1,0 +1,6 @@
+<Alloy>
+	<Menu>
+		<MenuItem title="require 1" icon="/ic_menu_goto.png" onClick="doClick"/>
+		<MenuItem title="require 2" icon="/ic_menu_manage.png" onClick="doClick"/>
+	</Menu>
+</Alloy>
