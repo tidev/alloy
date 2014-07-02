@@ -5,7 +5,6 @@
 		<Label text="TabbedBar" />
 		<TabbedBar id="tb">
 			<Labels>
-				<Label>L('foo')</Label>
 				<Label title='L(foo)' />
 				<Label title='L("foo")' />
 				<Label class='foo' />
@@ -15,7 +14,6 @@
 		<Label text="ButtonBar" />
 		<ButtonBar id="bb" platform="ios">
 			<Labels>
-				<Label>L('foo')</Label>
 				<Label title="L(foo)" />
 				<Label title="L('foo')" />
 				<Label class="foo" />

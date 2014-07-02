@@ -18,10 +18,10 @@ function parse(node, state, args) {
 	var width = node.getAttribute('width');
 
 	// [ALOY-1052] Alloy: Support use of L in XML proxy elements
-	if (/^\s*L\((['\"])(.+)\1\)\s*$/.test(title)) {
+	if (U.isLocaleAlias(title)) {
 		title = styler.STYLE_EXPR_PREFIX + title;
 	}
-	
+
 	// assign valid values to the object
 	if (title) { obj.title = title; }
 	if (image) { obj.image = image; }
