@@ -1,4 +1,5 @@
-var U = require('../../../utils');
+var U = require('../../../utils'),
+	styler = require('../styler');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -16,6 +17,11 @@ function parse(node, state, args) {
 	var enabled = node.getAttribute('enabled') !== 'false'; // defaults to true
 	var width = node.getAttribute('width');
 
+	// [ALOY-1052] Alloy: Support use of L in XML proxy elements
+	if (/^\s*L\((['\"])(.+)\1\)\s*$/.test(title)) {
+		title = styler.STYLE_EXPR_PREFIX + title;
+	}
+	
 	// assign valid values to the object
 	if (title) { obj.title = title; }
 	if (image) { obj.image = image; }

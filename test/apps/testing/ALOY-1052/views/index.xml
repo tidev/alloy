@@ -1,0 +1,25 @@
+<Alloy>
+	<Window class="container">
+		<Label text="L('foo')" />
+
+		<Label text="TabbedBar" />
+		<TabbedBar id="tb">
+			<Labels>
+				<Label>L('foo')</Label>
+				<Label title='L(foo)' />
+				<Label title='L("foo")' />
+				<Label class='foo' />
+			</Labels>
+		</TabbedBar>
+
+		<Label text="ButtonBar" />
+		<ButtonBar id="bb" platform="ios">
+			<Labels>
+				<Label>L('foo')</Label>
+				<Label title="L(foo)" />
+				<Label title="L('foo')" />
+				<Label class="foo" />
+			</Labels>
+		</ButtonBar>
+	</Window>
+</Alloy>
