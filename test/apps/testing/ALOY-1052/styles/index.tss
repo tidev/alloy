@@ -1,0 +1,18 @@
+".container": {
+	backgroundColor:"white",
+	layout: "vertical"
+}
+
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	top: "25dp",
+	color: "#000",
+	font: {
+		fontSize: 12
+	}
+}
+
+".foo": {
+	title: L('foo')
+}

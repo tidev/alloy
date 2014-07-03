@@ -552,3 +552,6 @@ exports.createDate = function(val) {
 	return require('moment')(val).toDate();
 };
 
+exports.isLocaleAlias = function(string) {
+	return /^\s*L\((['\"])(.+)\1\)\s*$/.test(string);
+};
