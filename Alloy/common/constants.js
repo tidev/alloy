@@ -169,6 +169,7 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.Android
 	Menu: NS_TI_ANDROID,
 	MenuItem: NS_TI_ANDROID,
+	ActionBar: NS_TI_ANDROID,
 
 	// Ti.Map
 	Annotation: NS_TI_MAP,
@@ -222,5 +223,7 @@ exports.IMPLICIT_NAMESPACES = {
 // properties named with "on" that aren't used to signify event listeners
 exports.SPECIAL_PROPERTY_NAMES = [
 	'onHomeIconItemSelected',
-	'onTintColor'
+	'onTintColor',
+	'onCreateOptionsMenu',
+	'onPrepareOptionsMenu'
 ];
