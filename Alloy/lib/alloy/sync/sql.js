@@ -231,7 +231,7 @@ function Sync(method, model, opts) {
 
 			var values = [];
 			var fieldNames = [];
-			var fieldCount = rs.fieldCount;
+			var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
 			var getField = rs.field;
 			var i = 0;
 			
