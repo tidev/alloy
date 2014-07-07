@@ -208,7 +208,7 @@ exports.getParserArgs = function(node, state, opts) {
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			if (/^\s*(?:(?:Ti|Titanium)\.|L\(.+\)\s*$)/.test(theValue)) {
+			if (/^\s*(?:(?:Ti|Titanium)\.|L\((['\"])(.+)\1\)\s*$)/.test(theValue)) {
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
 
