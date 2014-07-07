@@ -10,7 +10,11 @@ function parse(node, state, args) {
 	// Get label text from node text, if present
 	var nodeText = U.XML.getNodeText(node);
 	if (nodeText) {
-		state.extraStyle = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+		if (U.isLocaleAlias(nodeText)) {
+			state.extraStyle = {'text': styler.STYLE_EXPR_PREFIX + nodeText};
+		} else {
+			state.extraStyle = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+		}
 	}
 
 	// Generate runtime code using default
