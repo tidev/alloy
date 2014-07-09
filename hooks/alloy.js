@@ -111,7 +111,7 @@ exports.init = function (logger, config, cli, appc) {
 				};
 			}), function () {
 				var cmd = [paths.node, paths.alloy, 'compile', appDir, '--config', config];
-				if (cli.argv['no-colors']) { cmd.push('--no-colors'); }
+				if (cli.argv['no-colors'] || cli.argv['color'] === false) { cmd.push('--no-colors'); }
 				if (process.platform === 'win32') { cmd.shift(); }
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
