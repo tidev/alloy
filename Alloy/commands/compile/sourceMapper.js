@@ -25,7 +25,6 @@ exports.OPTIONS_OUTPUT = {
 	inline_script : false, // escape "</script"?
 	width         : 80,    // informative maximum line width (for beautified output)
 	max_line_len  : 32000, // maximum line length (for non-beautified output)
-	ie_proof      : false,  // output IE-safe code?
 	beautify      : true, // beautify output?
 	bracketize    : false, // use brackets every time?
 	comments      : false, // output comments?
