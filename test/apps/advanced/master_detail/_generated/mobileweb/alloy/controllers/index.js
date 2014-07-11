@@ -11,9 +11,15 @@ function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
+        {
+            __processArg(arguments[0], "__parentSymbol");
+        }
+        {
+            __processArg(arguments[0], "$model");
+        }
+        {
+            __processArg(arguments[0], "__itemTemplate");
+        }
     }
     var $ = this;
     var exports = {};
@@ -21,9 +27,7 @@ function Controller() {
     _.extend($, $.__views);
     $.master.on("detail", function(e) {
         var controller = Alloy.createController("detail");
-        {
-            controller.getView();
-        }
+        controller.getView();
         controller.setBoxerStats(e.row.fighterName);
     });
     $.index.open();
