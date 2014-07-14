@@ -174,6 +174,24 @@ See also:
   * [Refresh Control test app](https://github.com/appcelerator/alloy/tree/master/test/apps/testing/ALOY-910)
   * [Text Field Keyboard Shorthand test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-927)
 
+
+#### Known Issues
+
+##### Alloy Plugin
+
+Alloy 1.4.0 includes changes to the Alloy plugin, which is used by Studio to compile and launch your
+project. These changes will be applied automatically the first time you build a project after
+updating to 1.4.0. However, because the first build uses the old plugin, there is a small chance
+that it will fail. Retrying the build should resolve the issue, or you can manually update the
+plugin with the following command:
+
+    alloy install plugin [path_to_project]
+
+If you enter this command while in your project's folder, omit the path.
+
+CLI users are not affected by this change.
+
+
 #### New APIs
 
 The following APIs are new in Release 1.4.0.
