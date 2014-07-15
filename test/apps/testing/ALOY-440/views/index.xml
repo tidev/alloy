@@ -1,0 +1,16 @@
+<Alloy>
+	<Collection src="fruits"/>
+	<Collection src="colors"/>
+	<Window>
+		<Picker id="picker" top="50">
+			<PickerColumn id="column1" dataCollection="fruits">
+				<!-- PickerRow can accept a title attribute or child Label -->
+				<PickerRow><Label text="{name}"/></PickerRow>
+			</PickerColumn>
+			<!-- Picker shorthand notation, title attribute, and transforms supported -->
+			<Column id="column2" dataCollection="colors" dataTransform="doTransform">
+				<Row title="{color}"/>
+			</Column>
+		</Picker>
+	</Window>
+</Alloy>
