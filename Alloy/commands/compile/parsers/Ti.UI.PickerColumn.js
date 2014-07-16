@@ -1,8 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
-	CONST = require('../../../common/constants'),
-	logger = require('../../../logger');
+	CONST = require('../../../common/constants');
 
 var ROWS = [
 	'Ti.UI.Row',
