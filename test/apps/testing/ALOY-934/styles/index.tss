@@ -1,0 +1,10 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"Label[platform=android]": {
+	font: {
+		fontSize: '14dp'
+	}
+}
