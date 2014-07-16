@@ -1,6 +1,8 @@
 <Alloy>
 	<Model src="book"/>
 	<Window class="container" layout="vertical" top='20'>
+		<Label>{book.title}</Label>
+		<Label>Written by {book.author}</Label>
 		<Label text="- Reading List -" />
 		<Label text="{book.title}" />
 		<Label text="Written by {book.author}" />
