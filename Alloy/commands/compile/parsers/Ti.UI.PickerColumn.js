@@ -13,6 +13,16 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
+	var isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
+		localModel,
+		rowCode = "";
+
+	// generate the code for the table itself
+	if (isDataBound) {
+		_.each(CONST.BIND_PROPERTIES, function(p) {
+			node.removeAttribute(p);
+		});
+	}
 	var code = require('./default').parse(node, state).code;
 
 	// iterate through all children
@@ -29,14 +39,39 @@ function parse(node, state, args) {
 			child.nodeName = 'PickerRow';
 		}
 
-		// generate the code for each row and add it to the array
-		code += CU.generateNodeExtended(child, state, {
-			parent: {},
-			post: function(node, state, a) {
-				return args.symbol + '.addRow(' + state.parent.symbol + ');\n';
-			}
-		});
+		// generate data binding code
+		if (isDataBound) {
+			localModel = localModel || CU.generateUniqueId();
+			rowCode += CU.generateNodeExtended(child, state, {
+				parent: {},
+				model: localModel,
+				post: function(node, state, args) {
+					return 'rows.push(' + state.parent.symbol + ');\n';
+				}
+			});
+		// standard row processing
+		} else {
+
+			// generate the code for each row and add it to the array
+			code += CU.generateNodeExtended(child, state, {
+				parent: {},
+				post: function(node, state, a) {
+					return args.symbol + '.addRow(' + state.parent.symbol + ');\n';
+				}
+			});
+		}
 	});
+
+	// finally, fill in any model-view binding code, if present
+	if (isDataBound) {
+		localModel = localModel || CU.generateUniqueId();
+		code += _.template(CU.generateCollectionBindingTemplate(args), {
+			localModel: localModel,
+			pre: "var rows=[];",
+			items: rowCode,
+			post: "_.each(rows, function(row) { " + args.symbol + ".addRow(row); });"
+		});
+	}
 
 	// Update the parsing state
 	return {
