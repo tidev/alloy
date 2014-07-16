@@ -628,7 +628,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 	// process the bindingsMap, if it contains any data bindings
 	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
-	bTemplate += "<%= model %>.transform()['<%= attr %>']:<%= model %>.get('<%= attr %>');";
+	bTemplate += "<%= model %>.transform()['<%= attr %>']: _.template('<%= tplVal %>', {<%= mname %>: <%= model %>.toJSON()});";
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping,modelVar) {
@@ -649,7 +649,9 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 					id: binding.id,
 					prop: binding.prop,
 					model: modelVar,
-					attr: binding.attr
+					attr: binding.attr,
+					mname: binding.mname,
+					tplVal: binding.tplVal
 				});
 			});
 

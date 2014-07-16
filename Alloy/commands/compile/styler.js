@@ -16,7 +16,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
+var BINDING_REGEX = /\{([^}]+)\}/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
@@ -516,6 +516,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				if (match !== null) {
 					var parts = match[1].split('.');
 					var modelVar;
+					var templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
 
 					// model binding
 					if (parts.length > 1) {
@@ -532,7 +533,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						var bindingObj = {
 							id: id,
 							prop: k,
-							attr: attr
+							attr: attr,
+							mname: parts[0] === '$' ? parts[1] : parts[0],
+							tplVal: templateStr
 						};
 
 						// make sure bindings are wrapped in any conditionals
@@ -552,8 +555,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// collection binding
 					else {
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+						var bindingStr = templateStr.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
+							var v = code.replace(/\\'/g, "'");
+							return "'+" + modelVar +".get('" + v + "') + '";
+						});
 						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-						var standard = modelVar + ".get('" + match[1] + "')";
+						var standard = "'" + bindingStr +"'";
 						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
 					}

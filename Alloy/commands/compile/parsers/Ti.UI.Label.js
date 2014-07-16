@@ -15,6 +15,10 @@ function parse(node, state, args) {
 		} else {
 			state.extraStyle = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
 		}
+
+		if (nodeText.match(/\{([^}]+)\}/) !== null) {
+			state.extraStyle["text"] = nodeText;
+		}
 	}
 
 	// Generate runtime code using default
