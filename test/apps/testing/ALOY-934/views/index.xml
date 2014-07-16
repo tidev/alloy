@@ -1,0 +1,23 @@
+<Alloy>
+	<Window>
+		<OptionDialog id="dialog" title="Delete File?">
+			<Options>
+				<Option>Confirm</Option>
+				<Option platform="ios">Help</Option>
+				<Option>Cancel</Option>
+			</Options>
+
+			<!-- The ButtonNames tag sets the Android-only buttonNames property. -->
+			<ButtonNames>
+				<ButtonName>Help</ButtonName>
+			</ButtonNames>
+
+			<!-- Add a View or AndroidView for the androidView property here. -->
+			<AndroidView platform="android">
+				<Label text="In an AndroidView"/>
+			</AndroidView>
+
+		</OptionDialog>
+		<Label text="Click for OptionDialog" onClick="showOptions"/>
+	</Window>
+</Alloy>
