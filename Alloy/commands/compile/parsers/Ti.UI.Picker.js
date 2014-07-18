@@ -18,7 +18,11 @@ var DATETIMETYPES = [
 	'Ti.UI.PICKER_TYPE_DATE',
 	'Ti.UI.PICKER_TYPE_TIME',
 	'Ti.UI.PICKER_TYPE_DATE_AND_TIME',
-	'Ti.UI.PICKER_TYPE_COUNT_DOWN_TIMER'
+	'Ti.UI.PICKER_TYPE_COUNT_DOWN_TIMER',
+	'Titanium.UI.PICKER_TYPE_DATE',
+	'Titanium.UI.PICKER_TYPE_TIME',
+	'Titanium.UI.PICKER_TYPE_DATE_AND_TIME',
+	'Titanium.UI.PICKER_TYPE_COUNT_DOWN_TIMER'
 ];
 
 exports.parse = function(node, state) {
@@ -34,7 +38,8 @@ function parse(node, state, args) {
 		extras = [];
 
 	// ALOY-263, support date/time type pickers
-	if (node.hasAttribute('type') && DATETIMETYPES.indexOf(node.getAttribute('type')) !== -1) {
+	if (node.hasAttribute('type') && _.contains(DATETIMETYPES, node.getAttribute('type'))) {
+		logger.info('>>>>>>>>>>>>>>>>> date/time type <<<<<<<<<<<<<')
 		// We have a date or time type picker so cast the string values to date objects
 		var d;
 		if(node.hasAttribute('value')) {

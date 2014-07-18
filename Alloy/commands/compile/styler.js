@@ -359,7 +359,7 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
 						// ALOY-263, support date/time style pickers
 						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
@@ -367,7 +367,12 @@ exports.processStyle = function(_style, _state) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}
 						} else {
-							code += prefix + value + ",";
+							code += prefix + '"' + value
+								.replace(/"/g, '\\"')
+								.replace(/\n/g, '\\n')
+								.replace(/\r/g, '\\r')
+								.replace(/\u2028/g, '\\u2028')
+								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
 						}
 					} else {
 						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {

@@ -1,7 +1,7 @@
 <Alloy>
 	<Window>
 		<TextField id="txt" value="July 4, 2014" top="20"/>
-		<Picker id="picker" top="50"
+		<Picker id="somepicker" top="50"
 			type="Ti.UI.PICKER_TYPE_DATE"
 			minDate= "2013-02-08 09:30:26 Z"
 			maxDate="2015,11,17">

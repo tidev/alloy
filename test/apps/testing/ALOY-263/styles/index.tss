@@ -3,7 +3,7 @@
 	fullscreen: false,
 	exitOnClose: true
 }
-"#picker": {
+"#somepicker": {
 	value: "2014-12-17T03:24:00"
 }
 "#txt": {
