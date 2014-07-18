@@ -39,7 +39,6 @@ function parse(node, state, args) {
 
 	// ALOY-263, support date/time type pickers
 	if (node.hasAttribute('type') && _.contains(DATETIMETYPES, node.getAttribute('type'))) {
-		logger.info('>>>>>>>>>>>>>>>>> date/time type <<<<<<<<<<<<<')
 		// We have a date or time type picker so cast the string values to date objects
 		var d;
 		if(node.hasAttribute('value')) {
