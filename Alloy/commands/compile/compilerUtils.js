@@ -208,9 +208,14 @@ exports.getParserArgs = function(node, state, opts) {
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			if (/^\s*(?:(?:Ti|Titanium)\.|L\((['\"])(.+)\1\)\s*$)/.test(theValue)) {
+			if (/^\s*(?:(?:Ti|Titanium)\.|L\(.+\)\s*$)/.test(theValue)) {
+				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
+				if (match !== null) {
+					theValue = theValue.replace(/\(/g, '("').replace(/\)/g, '")');
+				}
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
+
 
 			if (attrName === 'class') {
 				if (autoStyle) {
