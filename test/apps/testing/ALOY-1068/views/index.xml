@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label text="L(foo)" />
+		<Label text="L('foo')" />
+		<Label textid="foo" />
+	</Window>
+</Alloy>
