@@ -367,7 +367,12 @@ exports.processStyle = function(_style, _state) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}
 						} else {
-							code += prefix + value + ",";
+							code += prefix + '"' + value
+								.replace(/"/g, '\\"')
+								.replace(/\n/g, '\\n')
+								.replace(/\r/g, '\\r')
+								.replace(/\u2028/g, '\\u2028')
+								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
 						}
 					} else {
 						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
