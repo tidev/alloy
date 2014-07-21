@@ -67,6 +67,7 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.models = [];
 
 //////////////////////////////////////
 ////////// public interface //////////
