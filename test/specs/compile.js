@@ -12,6 +12,13 @@ var fs = require('fs'),
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
 var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
 var GEN_FOLDER = '_generated';
+var TEST_FOLDER = 'testing';
+var EXCLUDE_FOLDERS = [
+	'ui'+sep+'navwindow',
+	TEST_FOLDER+sep+'ALOY-818',
+	TEST_FOLDER+sep+'ALOY-840',
+	TEST_FOLDER+sep+'ALOY-1080'
+];
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
@@ -40,7 +47,7 @@ describe('alloy compile', function() {
 		// TODO: Stop skipping the ui/navwindow test when TiSDK 3.1.3 is in the HarnessTemplate
 		//       tiapp.xml. We skip it now because it purposely fails compilation on any SDK below
 		//       TiSDK 3.1.3, where Ti.UI.iOS.NavigationWindow was introduced.
-		if (file === 'ui'+sep+'navwindow' || file === 'testing'+sep+'ALOY-818' || file === 'testing'+sep+'ALOY-840') { return; }
+		if (_.contains(EXCLUDE_FOLDERS, file)) { return; }
 
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
