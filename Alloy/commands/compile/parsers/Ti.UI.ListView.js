@@ -35,6 +35,10 @@ function parse(node, state, args) {
 		proxyProperties = {},
 		sectionArray, templateObject;
 
+	if (isDataBound) {
+		U.dieWithNode(node, "'dataCollection' attribute should be set on <ListSection>.")
+	}
+
 	// sort the children of the ListView
 	var children = _.sortBy(U.XML.getElementsFromNodes(node.childNodes), function(n) {
 		return ORDER[CU.validateNodeName(n, ALL_VALID)] || -1;
