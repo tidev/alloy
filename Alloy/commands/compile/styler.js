@@ -519,12 +519,24 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					var parts = match[1].split('.');
-					var modelVar;
-					var templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
-
+					var parts = match[1].split('.'),
+						partsLen = parts.length,
+						modelVar,
+						templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
+						
 					// model binding
 					if (parts.length > 1) {
+
+						if (CU.models.length !== 0) {
+							if (partsLen > 3 ||
+								(parts[0] !== '$' && !_.contains(CU.models, parts[0]))) {
+								U.die([
+									'Attempt to reference the deep object reference : "' + match[1] + '".',
+									'Instead, please map the object property to an attribute of the model.'
+								]);
+							}
+						}
+
 						// are we bound to a global or controller-specific model?
 						modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
 						var attr = parts[0] === '$' ? parts[2] : parts[1];

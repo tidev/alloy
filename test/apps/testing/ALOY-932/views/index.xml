@@ -1,0 +1,10 @@
+<Alloy>
+	<Collection src="fruits" />
+	<Window>
+		<TableView id="tableview" dataCollection="fruits" top="30">
+			<TableViewRow id="row">
+				<Label class="rowName" text="{name.color}" />
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>

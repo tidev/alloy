@@ -231,6 +231,9 @@ module.exports = function(args, program) {
 
 	// Process all models
 	var models = processModels(viewCollection);
+	_.each(models, function(m) {
+		CU.models.push(m.charAt(0).toLowerCase() + m.slice(1));
+	});
 
 	// Create a regex for determining which platform-specific
 	// folders should be used in the compile process

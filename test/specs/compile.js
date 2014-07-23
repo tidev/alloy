@@ -17,7 +17,8 @@ var EXCLUDE_FOLDERS = [
 	'ui'+sep+'navwindow',
 	TEST_FOLDER+sep+'ALOY-818',
 	TEST_FOLDER+sep+'ALOY-840',
-	TEST_FOLDER+sep+'ALOY-1080'
+	TEST_FOLDER+sep+'ALOY-1080',
+	TEST_FOLDER+sep+'ALOY-932'
 ];
 
 var alloyRoot = path.join(__dirname,'..','..'),
