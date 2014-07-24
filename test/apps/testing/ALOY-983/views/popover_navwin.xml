@@ -1,12 +1,11 @@
 <Alloy>
 	<Popover id="popover" height='100' width='250'>
-		<!-- If you remove the ContentView tags, it works as expected -->
 		<ContentView>
-		<NavigationWindow id="popViewNavWin" backgroundColor='green' height="300">
-			<Window title="Navigation Window">
-				<Label>Popover with a NavigationWindow</Label>
-			</Window>
-		</NavigationWindow>
-	</ContentView>
+			<NavigationWindow id="popViewNavWin" backgroundColor='green' height="300">
+				<Window title="Navigation Window">
+					<Label>Popover with a NavigationWindow</Label>
+				</Window>
+			</NavigationWindow>
+		</ContentView>
 	</Popover>
 </Alloy>

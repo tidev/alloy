@@ -1,10 +1,9 @@
 <Alloy>
 	<Popover id="popover" height='100' width='250'>
-		<!-- If you remove the ContentView tags, it works as expected -->
 		<ContentView>
-		<Window id="popViewWin" backgroundColor='green'>
-			<Label>Popover with a Window</Label>
-		</Window>
-	</ContentView>
+			<Window id="popViewWin" backgroundColor='green'>
+				<Label>Popover with a Window</Label>
+			</Window>
+		</ContentView>
 	</Popover>
 </Alloy>
