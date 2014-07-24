@@ -1,5 +1,3 @@
-
-
 function open_window(e) {
 	var win = Ti.UI.createWindow({
 		backgroundColor: "blue"
