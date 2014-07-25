@@ -870,8 +870,10 @@
             get = function (k) {
                 if (!languages[k] && hasModule) {
                     try {
-                        require('./lang/' + k);
-                    } catch (e) { }
+                        loadLang(k, require('alloy/moment/lang/' + k));
+                    } catch (e) {
+                        return moment.fn._lang;
+                    }
                 }
                 return languages[k];
             };
@@ -2593,6 +2595,7 @@
 
     // CommonJS module is defined
     if (hasModule) {
+        moment.lang(Ti.Locale.getCurrentLanguage());
         module.exports = moment;
     } else if (typeof define === "function" && define.amd) {
         define("moment", function (require, exports, module) {
