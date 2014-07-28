@@ -1,6 +1,6 @@
 ## Titanium Alloy Release Notes
 
-### Release 1.4.1
+### Release 1.4.1 (07/28/2014)
 
 [Full list of Issues that were addressed in Release 1.4.1](https://jira.appcelerator.org/issues/?filter=16369)
 
