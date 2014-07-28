@@ -2,7 +2,10 @@
 
 ### Release 1.4.1 (07/28/2014)
 
-[Full list of Issues that were addressed in Release 1.4.1](https://jira.appcelerator.org/issues/?filter=16369)
+Below are the fixes included in this release.
+
+* [ALOY-1091](https://jira.appcelerator.org/browse/ALOY-1091). id property of <Picker> other than 'picker' is treated as a variable
+* [ALOY-1094](https://jira.appcelerator.org/browse/ALOY-1094). Date or time pickers: cannot use Ti.UI.* type constants, must use Titanium.UI.* abbreviations
 
 ### Release 1.4.0 (07/17/2014)
 
