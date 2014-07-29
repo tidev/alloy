@@ -104,6 +104,7 @@ exports.isNodeForCurrentPlatform = function(node) {
 	_.each(node.getAttribute('platform').split(','), function(p) {
 		// need to account for multiple platforms and negation, such as
 		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+		p = p.trim();
 		if(p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
 			isForCurrentPlatform = true;
 		}
