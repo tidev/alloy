@@ -15,6 +15,9 @@ function parse(node, state, args) {
 		parts = fullname.split('.'),
 		extras = [];
 
+	if(CU[CONST.DOCROOT_MODULE_PROPERTY] && !node.hasAttribute('module')) {
+		node.setAttribute('module', CU[CONST.DOCROOT_MODULE_PROPERTY]);
+	}
 	// is this just a proxy property?
 	if (parts[0] === '_ProxyProperty') {
 		return require('./_ProxyProperty.' + parts[1]).parse(node, state);
@@ -106,21 +109,33 @@ function parse(node, state, args) {
 		var module = node.getAttribute('module');
 		if (module) {
 			createFunc = node.getAttribute('method') || createFunc;
-			args.ns = 'require("'+module+'")';
+			code += (state.local ? 'var ' : '') + args.symbol + " = " + '(require("'+module+'").'+createFunc+' || ' + args.ns + "." + createFunc+")(\n";
+			code += styler.generateStyleParams(
+				state.styles,
+				args.classes,
+				args.id,
+				fullname,
+				_.defaults(state.extraStyle || {}, args.createArgs || {}),
+				state
+			) + '\n';
+			code += ");\n";
+
+
 			delete args.createArgs['module'];
 			delete args.createArgs['method'];
+		} else {
+			code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
+			code += styler.generateStyleParams(
+				state.styles,
+				args.classes,
+				args.id,
+				fullname,
+				_.defaults(state.extraStyle || {}, args.createArgs || {}),
+				state
+			) + '\n';
+			code += ");\n";
 		}
 
-		code += (state.local ? 'var ' : '') + args.symbol + " = " + args.ns + "." + createFunc + "(\n";
-		code += styler.generateStyleParams(
-			state.styles,
-			args.classes,
-			args.id,
-			fullname,
-			_.defaults(state.extraStyle || {}, args.createArgs || {}),
-			state
-		) + '\n';
-		code += ");\n";
 		if (args.parent.symbol) {
 			code += args.parent.symbol + ".add(" + args.symbol + ");\n";
 		}

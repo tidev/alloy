@@ -31,7 +31,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.paint = require("ti.paint").createPaintView({
+    $.__views.paint = (require("ti.paint").createPaintView || Ti.UI.createPaintView)({
         top: 0,
         right: 0,
         bottom: 0,
