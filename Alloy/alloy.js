@@ -72,8 +72,11 @@ program.parse(process.argv);
 Error.stackTraceLimit = Infinity;
 logger.stripColors = program['colors'] === false;
 logger.logLevel = program['logLevel'] || logger.TRACE;
+if(program.config && program.config.indexOf('logLevel')!==-1) {
+	logger.logLevel = -1;
+}
 
-if (!program.noBanner && program.args[0] !== 'info') {
+if (!program.noBanner && program.args[0] !== 'info' && (program.config && program.config.indexOf('noBanner')===-1)) {
 	banner();
 }
 
