@@ -10,10 +10,6 @@ var whereIndex = INDEXES['All'];
 var adapter = require('alloy/models/Todo').definition.config.adapter.type,
 	err;
 switch(adapter) {
-	case 'localStorage':
-		// only supported on Mobileweb
-		if (!OS_MOBILEWEB) { err = 'localStorage adapter only supported on Mobileweb'; }
-		break;
 	case 'properties':
 		// supported on all platforms
 		break;
