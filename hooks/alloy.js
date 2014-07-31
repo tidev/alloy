@@ -5,6 +5,7 @@
  */
 
 exports.cliVersion = '>=3.X';
+var SILENT = true;
 
 exports.init = function (logger, config, cli, appc) {
 	var path = require('path'),
@@ -22,7 +23,7 @@ exports.init = function (logger, config, cli, appc) {
 			process.env.sdk = cli.sdk.name;
 		}
 
-	function run(deviceFamily, deployType, target, finished, analyze) {
+	function run(deviceFamily, deployType, target, finished, silent) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
 			logger.info(__('Project not an Alloy app, continuing'));
@@ -48,7 +49,7 @@ exports.init = function (logger, config, cli, appc) {
 				deploytype: deployType || cli.argv['deploy-type'] || 'development',
 				target: target
 			};
-		if(analyze) {
+		if(silent) {
 			// turn off all logging output for code analyzer build hook
 			config.noBanner = 'true';
 			config.logLevel = '-1';
@@ -184,7 +185,7 @@ exports.init = function (logger, config, cli, appc) {
 	});
 
 	cli.addHook('codeprocessor.pre.run', function (build, finished) {
-		run('none', 'development', undefined, finished, true);
+		run('none', 'development', undefined, finished, SILENT);
 	});
 
 
