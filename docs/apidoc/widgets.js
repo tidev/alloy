@@ -49,7 +49,7 @@
  * For example, the following controller code is equivalent to the previous view markup example.
  *
  *     var loadIcon = Alloy.createWidget("com.appcelerator.loading");
- *     win.add(loadIcon);
+ *     win.add(loadIcon.getView());
  *
  * A widget can also be added to other widgets.  Follow the same procedure as above except the widget
  * configuration file is called widget.json instead of config.json.
@@ -82,6 +82,11 @@
 
 /**
  * @class Alloy.widgets
- * List of widgets in the Alloy project. For information on using a widget in your project, see
+ * As of Release 1.4.0, the sample widgets are deprecated and no longer supported.  These widgets
+ * will be removed in a future release of Alloy.
+ *
+ * Maintained versions of the sample widgets are available at [http://gitt.io/](http://gitt.io/).
+ *
+ * List of sample widgets in the Alloy project. For information on using a widget in your project, see
  * Alloy.Widget.
  */

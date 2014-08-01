@@ -1,0 +1,5 @@
+<Alloy>
+	<View>
+		<Label>my.widget loaded</Label>
+	</View>
+</Alloy>

@@ -36,6 +36,8 @@
  *
  * Prefix the special variable `$` and the widget ID to the element ID, to access
  * that view element, for example, `$.loading.loading` will give you access to the ImageView.
+ *
+ * @deprecated 1.4.0 For a maintained version of this widget, see [gitt.io](http://gitt.io/component/com.appcelerator.loading).
  */
 
 

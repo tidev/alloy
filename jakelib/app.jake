@@ -71,14 +71,26 @@ function runApp() {
 	log('Running sample app "'+appDir+'"...');
 
 	// create array for `titanium build` args
-	var e = process.env;
+	var args = process.argv;
 	var newArgs = ['build',
-		'--project-dir', harnessAppPath,
-		'--platform', e.platform || (IS_OSX ? 'ios' : 'android'),
-		'--sdk', '3.2.3.GA'
+		'--project-dir', harnessAppPath
 	];
-	if (e.tiversion) { newArgs = newArgs.concat(['--sdk',e.tiversion]); }
-	if (e.simtype) { newArgs = newArgs.concat(['--sim-type',e.simtype]); }
+	_.each(args, function(element, index, list) {
+		if(index>3) {
+			var a = element.split('=');
+			if(!a[1]) {
+				logger.error('You must specify argument values with =, for example platform=ios or tall=true');
+				process.exit(1);
+			}
+			if(a[0]==='tiversion') {
+				a[0] = 'sdk';
+			}
+			newArgs = newArgs.concat(['--'+a[0], a[1]]);
+		}
+	});
+	if(newArgs.indexOf('--platform') === -1) {
+		newArgs = newArgs.concat(['--platform', (IS_OSX ? 'ios' : 'android')]);
+	}
 
 	//run stdout/stderr back through console.log
 	var runcmd = spawn('titanium' + (IS_WIN ? '.cmd' : ''), newArgs);

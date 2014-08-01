@@ -34,14 +34,6 @@ function parse(node, state, args) {
 	// start assembling a basic view creation
 	var createFunc = 'create' + node.nodeName,
 		isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false,
-		generatedStyle = styler.generateStyleParams(
-			state.styles,
-			args.classes,
-			args.id,
-			fullname,
-			_.defaults(state.extraStyle || {}, args.createArgs || {}),
-			state
-		),
 		code = '';
 	if(node.nodeName==='Annotation' && ( (platform=='ios' && tiapp.version.gte('3.2.0')) || platform=='android' && tiapp.version.gte('3.1.0'))) {
 		// ALOY-800: on iOS & Android, using the external ti.map module, set the
@@ -64,7 +56,15 @@ function parse(node, state, args) {
 		}
 
 		// apply usual style properties
-		var argsObject = { properties: generatedStyle };
+		var argsObject = {
+			properties: styler.generateStyleParams(
+				state.styles,
+				args.classes,
+				args.id,
+				fullname,
+				_.defaults(state.extraStyle || {}, args.createArgs || {}),
+				state
+		)};
 
 		// add in any events on the ItemTemplate
 		if (args.events && args.events.length > 0) {

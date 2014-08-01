@@ -1,5 +1,5 @@
-$.index.open(); 
-  
+$.index.open();
+
 render();
-  
+
 $.destroy();

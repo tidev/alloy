@@ -215,6 +215,26 @@ var Controller = function() {
 		 */
 		resetClass: function(proxy, classes, opts) {
 			return Alloy.resetClass(getControllerParam(), proxy, classes, opts);
+		},
+
+		/**
+		 * @method updateViews
+		 * Applies a set of properties to view elements associated with this controller
+		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
+		 * @since 1.4.0
+		 */
+		updateViews: function(args) {
+			var views = this.getViews();
+			if(_.isObject(args)) {
+				_.each(_.keys(args), function(key) {
+					var elem = views[key.substring(1)];
+					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.applyProperties === 'function') {
+						// apply the properties but make sure we're applying them to a Ti.UI object (not a controller)
+						elem.applyProperties(args[key]);
+					}
+				});
+			}
+			return this;
 		}
 	});
 };

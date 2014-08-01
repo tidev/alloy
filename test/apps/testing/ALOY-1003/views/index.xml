@@ -1,0 +1,21 @@
+<Alloy>
+	<Window>
+		<ListView id="list">
+			<Templates>
+				<ItemTemplate name="template" height="25">
+					<Label bindId="type" />
+				</ItemTemplate>
+			</Templates>
+			<ListSection id="section">
+				<ListItem template="template" type:text="... Hello ..."/>
+			</ListSection>
+		</ListView>
+		<View>
+			<Picker id="picker"
+				type="Ti.UI.PICKER_TYPE_DATE"
+				minDate= "2013-02-08 09:30:26 Z"
+				maxDate="2015,11,17">
+			</Picker>
+		</View>
+	</Window>
+</Alloy>

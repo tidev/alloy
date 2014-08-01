@@ -97,6 +97,9 @@ function parse(node, state, args) {
 
 	// return an empty state if we already processed
 	if (def.children[0] === 'ALL') {
+		if(state.property === 'leftNavButtons' || state.property === 'rightNavButtons') {
+			code += (state.parent.symbol + '.' + state.property + ' = ' + state.itemsArray + ';');
+		}
 		return {
 			parent: {},
 			code: code

@@ -1,0 +1,13 @@
+<Alloy>
+	<Collection src="fruits"/>
+	<Window>
+		<ListView id="thelist" defaultItemTemplate="listTemplate" dataCollection="fruits">
+			<Templates>
+				<ItemTemplate name="listTemplate">
+					<Label bindId="name" id="name"/>
+				</ItemTemplate>
+			</Templates>
+			<ListSection id="mainsection" />
+		</ListView>
+	</Window>
+</Alloy>

@@ -1,0 +1,6 @@
+<Alloy>
+	<Window class="container">
+		<Widget id="starwidget" src="starrating" max='5' initialRating='2.5' top="20"/>
+		<Label id="label" onClick="doClick">Tap for random number</Label>
+	</Window>
+</Alloy>

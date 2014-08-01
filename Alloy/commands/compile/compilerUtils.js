@@ -9,6 +9,7 @@ var U = require('../../utils'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	styler = require('./styler'),
+	XMLSerializer = require("xmldom").XMLSerializer,
 	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
@@ -31,7 +32,9 @@ var RESERVED_ATTRIBUTES = [
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
-		'ns'
+		'ns',
+		'method',
+		'module'
 	],
 	RESERVED_ATTRIBUTES_REQ_INC = [
 		'platform',
@@ -42,7 +45,9 @@ var RESERVED_ATTRIBUTES = [
 		CONST.BIND_COLLECTION,
 		CONST.BIND_WHERE,
 		CONST.AUTOSTYLE_PROPERTY,
-		'ns'
+		'ns',
+		'method',
+		'module'
 	],
 	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
 
@@ -62,6 +67,7 @@ _.each(CONST.PLATFORMS, function(p) {
 exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
+exports.models = [];
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -94,10 +100,17 @@ exports.getNodeFullname = function(node) {
 };
 
 exports.isNodeForCurrentPlatform = function(node) {
-	return !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig ||
-		node.getAttribute('platform') === compilerConfig.alloyConfig.platform;
+	var isForCurrentPlatform =  !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig;
+	_.each(node.getAttribute('platform').split(','), function(p) {
+		// need to account for multiple platforms and negation, such as
+		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+		p = p.trim();
+		if(p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
+			isForCurrentPlatform = true;
+		}
+	});
+	return isForCurrentPlatform;
 };
-
 exports.getParserArgs = function(node, state, opts) {
 	state = state || {};
 	opts = opts || {};
@@ -190,7 +203,7 @@ exports.getParserArgs = function(node, state, opts) {
 		var attrName = attr.nodeName;
 		if (_.contains(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
-		if (matches !== null && exports.isNodeForCurrentPlatform(node) && attrName !== 'onHomeIconItemSelected') {
+		if (matches !== null && exports.isNodeForCurrentPlatform(node) && !_.contains(CONST.SPECIAL_PROPERTY_NAMES, attrName)) {
 			events.push({
 				name: U.lcfirst(matches[1]),
 				value: node.getAttribute(attrName)
@@ -198,8 +211,13 @@ exports.getParserArgs = function(node, state, opts) {
 		} else {
 			var theValue = node.getAttribute(attrName);
 			if (/^\s*(?:(?:Ti|Titanium)\.|L\(.+\)\s*$)/.test(theValue)) {
+				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
+				if (match !== null) {
+					theValue = theValue.replace(/\(/g, '("').replace(/\)/g, '")');
+				}
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
+
 
 			if (attrName === 'class') {
 				if (autoStyle) {
@@ -223,7 +241,7 @@ exports.getParserArgs = function(node, state, opts) {
 		formFactor: node.getAttribute('formFactor'),
 		symbol: exports.generateVarName(id, name),
 		classes: node.getAttribute('class').split(' ') || [],
-		tssIf: node.getAttribute('if').split(' ') || [],
+		tssIf: node.getAttribute('if').split(',') || [],
 		parent: state.parent || {},
 		platform: platformObj,
 		createArgs: createArgs,
@@ -237,6 +255,9 @@ exports.generateNodeExtended = function(node, state, newState) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
+	if(!exports.isNodeForCurrentPlatform(node)) {
+		return '';
+	}
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
 		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
@@ -290,8 +311,11 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// Execute the appropriate tag parser and append code
 	var isLocal = state.local;
+	// [ALOY-787] keeping track of widget id
+	var widgetId = state.widgetId;
 	state = require('./parsers/' + parserRequire).parse(node, state) || { parent: {} };
 	code.content += state.code;
+	state.widgetId = widgetId;
 
 	// Use local variable if given
 	if (isLocal && state.parent) { args.symbol = state.parent.symbol || args.symbol; }
@@ -533,16 +557,22 @@ exports.inspectRequireNode = function(node) {
 };
 
 exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
+
 	opts = opts || {};
 	var platform;
 	if (compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform) {
 		platform = compilerConfig.alloyConfig.platform;
 	}
+
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
+
+			// [ALOY-1002] Remove platform-specific folders
+			if (_.include(file, path.sep)) { return; }
+
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -572,6 +602,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		});
 		logger.trace(' ');
 	});
+
 	if(opts.theme) {
 		// if this widget has been themed, copy its theme assets atop the stock ones
 		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
@@ -592,6 +623,59 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
 				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
+
+			// [ALOY-1002] Remove platform-specific folders copied from theme
+			if (fs.existsSync(widgetAssetTargetDir)) {
+				var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+				_.each(files, function(file) {
+					var source = path.join(widgetAssetTargetDir, file);
+					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
+						wrench.rmdirSyncRecursive(source);
+					}
+				});
+			}
+		}
+	}
+};
+
+exports.mergeI18n = function(srcI18nDir, compileConfigDir) {
+	logger.info('  i18n:     "' + srcI18nDir + '"');
+
+	var appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
+		serializer = new XMLSerializer();
+
+	if (!fs.existsSync(appI18nDir)) {
+		wrench.mkdirSyncRecursive(appI18nDir, 0755);
+		wrench.copyDirSyncRecursive(srcI18nDir, appI18nDir, {preserve: false});
+	} else {
+		if (fs.existsSync(srcI18nDir)) {
+			var files = wrench.readdirSyncRecursive(srcI18nDir);
+			_.each(files, function(file) {
+				var source = path.join(srcI18nDir, file);
+				var outputPath = path.join(appI18nDir, file);
+
+				if (!path.existsSync(outputPath)) {
+					if (fs.statSync(source).isDirectory()) {
+						wrench.mkdirSyncRecursive(outputPath, 0755);
+					} else {
+						U.copyFileSync(source, outputPath);
+					}
+				} else {
+					if (fs.statSync(source).isFile()) {
+						var doc = U.XML.parseFromFile(outputPath);
+						var root = doc.documentElement;
+
+						var sourcexml = U.XML.parseFromFile(source);
+						_.each(sourcexml.getElementsByTagName('string'), function(node){
+							root.appendChild(doc.createTextNode('    '));
+							root.appendChild(node);
+							root.appendChild(doc.createTextNode('\n'));
+						});
+
+						fs.writeFileSync(outputPath, serializer.serializeToString(doc), 'utf8');
+					}
+				}
+			});
 		}
 	}
 };

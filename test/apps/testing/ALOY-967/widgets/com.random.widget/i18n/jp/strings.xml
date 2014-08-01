@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="random__click_button">選択したカレンダーのイベントを表示するには、ボタンをクリックしてください</string>
+	<string name="random__coupons">クーポン</string>
+	<string name="random__welcome">com.random.widgetから歓迎</string>
+</resources>

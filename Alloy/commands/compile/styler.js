@@ -7,7 +7,8 @@ var fs = require('fs'),
 	grammar = require('../../grammar/tss'),
 	logger = require('../../logger'),
 	BuildLog = require('./BuildLog'),
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	deepExtend = require('node.extend');
 
 // constants
 var GLOBAL_STYLE_CACHE = 'global_style_cache.json';
@@ -15,7 +16,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /^\s*\{\s*([^\s]+)\s*\}\s*$/;
+var BINDING_REGEX = /\{([^}]+)\}/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
@@ -274,6 +275,8 @@ exports.loadStyle = function(tssFile) {
 
 		// Add enclosing curly braces, if necessary
 		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+		// [ALOY-793] double-escape '\' in tss
+		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
 		// Process tss file then convert to JSON
 		var json;
@@ -356,13 +359,20 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && (style.type).indexOf('Ti.UI.PICKER') !== -1 && value !== 'picker') {
+					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
 						// ALOY-263, support date/time style pickers
 						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
 							if(U.isValidDate(d, sn)) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}
+						} else {
+							code += prefix + '"' + value
+								.replace(/"/g, '\\"')
+								.replace(/\n/g, '\\n')
+								.replace(/\r/g, '\\r')
+								.replace(/\u2028/g, '\\u2028')
+								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
 						}
 					} else {
 						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
@@ -447,7 +457,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var q = style.queries;
 				if (q.platform) {
 					if (platform) {
-						if (!_.contains(q.platform,platform)) {
+						var isForCurrentPlatform = false;
+						_.each(q.platform.toString().split(','), function(p) {
+							// need to account for multiple platforms and negation, such as platform=ios or
+							// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
+							if(p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
+								isForCurrentPlatform = true;
+							}
+						});
+						if (!isForCurrentPlatform) {
 							return;
 						}
 					} else {
@@ -472,7 +490,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// ALOY-871: handle custom TSS queries with if conditional
 					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
 					var ffJoinString = (ffcond) ? ' && ' : '';
-					conditional = pcond + joinString + ffcond + ffJoinString + "(true===" + q.if+")";
+					conditional = pcond + joinString + ffcond + ffJoinString + "(" + q.if.split(',').join(' || ')+")";
 				}
 
 				// push styles if we need to insert a conditional
@@ -483,10 +501,10 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						lastObj = {};
 					}
 				} else if(!q.if) {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 				}
 			} else {
-					lastObj = U.deepExtend(lastObj, style.style);
+					lastObj = deepExtend(true, lastObj, style.style);
 			}
 		}
 	});
@@ -501,11 +519,24 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
 				if (match !== null) {
-					var parts = match[1].split('.');
-					var modelVar;
-
+					var parts = match[1].split('.'),
+						partsLen = parts.length,
+						modelVar,
+						templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
+						
 					// model binding
 					if (parts.length > 1) {
+
+						if (CU.models.length !== 0) {
+							if (partsLen > 3 ||
+								(parts[0] !== '$' && !_.contains(CU.models, parts[0]))) {
+								U.die([
+									'Attempt to reference the deep object reference : "' + match[1] + '".',
+									'Instead, please map the object property to an attribute of the model.'
+								]);
+							}
+						}
+
 						// are we bound to a global or controller-specific model?
 						modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
 						var attr = parts[0] === '$' ? parts[2] : parts[1];
@@ -519,7 +550,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						var bindingObj = {
 							id: id,
 							prop: k,
-							attr: attr
+							attr: attr,
+							mname: parts[0] === '$' ? parts[1] : parts[0],
+							tplVal: templateStr
 						};
 
 						// make sure bindings are wrapped in any conditionals
@@ -539,8 +572,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// collection binding
 					else {
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
+						var bindingStr = templateStr.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
+							var v = code.replace(/\\'/g, "'");
+							return "'+" + modelVar +".get('" + v + "') + '";
+						});
 						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
-						var standard = modelVar + ".get('" + match[1] + "')";
+						var standard = "'" + bindingStr +"'";
 						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
 					}

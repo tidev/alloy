@@ -1,0 +1,30 @@
+"Window": {
+	backgroundColor: '#fff',
+	top: Alloy.Globals.winTop
+}
+
+"#listView[platform=ios]": {
+	top: 20
+}
+
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: '#000'
+}
+
+".rightButton": {
+	height: '50dp',
+	width: Ti.UI.SIZE,
+	right: 0
+}
+
+"#tf_username": {
+	width: Ti.UI.FILL,
+	bottom: 0,
+	font: {
+		fontSize: 12
+	},
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	rightButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS
+}

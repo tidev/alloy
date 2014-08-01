@@ -1,0 +1,13 @@
+"Window": {
+	backgroundColor: '#000'
+}
+
+"Label": {
+	color: '#fff',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}

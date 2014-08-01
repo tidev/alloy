@@ -1,0 +1,18 @@
+".container": {
+	backgroundColor:"white"
+},
+
+"#textArea": {
+	keyboardToolbarColor: "#999",
+	keyboardToolbarHeight: "40",
+	height: "30dp",
+	width: "80%",
+	top: 30,
+	borderWidth: "1",
+	borderRadius: "3",
+	borderColor: "#bbb",
+	font: {
+		fontSize: 12
+	},
+	value: "Focus to see keyboard with toolbar"
+}

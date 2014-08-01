@@ -43,17 +43,26 @@ function parse(node, state, args) {
 		code += CU.generateNodeExtended(child, state, {
 			parent: {},
 			post: function(node, state, args) {
-				proxy = state.parent.symbol;
+				proxy = state.parent ? state.parent.symbol : state.item.symbol;
 			}
 		});
 	});
 
-	return {
-		parent: {
-			symbol: proxy
-		},
+	var ret = {
 		isProxyProperty: true,
 		propertyName: U.lcfirst(args.fullname.match(/\.([^\.]+)$/)[1] || ''),
 		code: code
 	};
+
+	var nextObj = {
+		symbol: proxy
+	};
+
+	if (state.isViewTemplate) {
+		ret = _.extend(ret, { item: nextObj });
+	} else {
+		ret = _.extend(ret, { parent: nextObj });
+	}
+
+	return ret;
 }

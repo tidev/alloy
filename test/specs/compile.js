@@ -6,10 +6,20 @@ var fs = require('fs'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	platforms = require('../../platforms/index');
+	platforms = require('../../platforms/index'),
+	sep = process.platform !== 'win32' ? '/' : '\\';
 
-var TIMEOUT_COMPILE = 10000;
+var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
+var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
 var GEN_FOLDER = '_generated';
+var TEST_FOLDER = 'testing';
+var EXCLUDE_FOLDERS = [
+	'ui'+sep+'navwindow',
+	TEST_FOLDER+sep+'ALOY-818',
+	TEST_FOLDER+sep+'ALOY-840',
+	TEST_FOLDER+sep+'ALOY-1080',
+	TEST_FOLDER+sep+'ALOY-932'
+];
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
@@ -38,18 +48,18 @@ describe('alloy compile', function() {
 		// TODO: Stop skipping the ui/navwindow test when TiSDK 3.1.3 is in the HarnessTemplate
 		//       tiapp.xml. We skip it now because it purposely fails compilation on any SDK below
 		//       TiSDK 3.1.3, where Ti.UI.iOS.NavigationWindow was introduced.
-		if (file === 'ui/navwindow' || file === 'testing/ALOY-818' || file === 'testing/ALOY-840') { return; }
+		if (_.contains(EXCLUDE_FOLDERS, file)) { return; }
 
 		describe(file.yellow, function() {
 			var indexJs = path.join(paths.apps,file,'controllers','index.js');
 			if (!path.existsSync(indexJs) || indexJs.indexOf(GEN_FOLDER) !== -1) { return; }
 
 			it('preparing test app', function() {
-				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1', { timeout: 10000 });
+				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1', { timeout: TIMEOUT_PREP });
 			});
 
 			_.each(platforms, function(platform,k) {
-				if (platform.platform === 'tizen' || (process.platform === 'darwin' && platform.platform === 'blackberry')) {
+				if (process.platform === 'darwin' && platform.platform === 'blackberry') {
 					return;
 				}
 
@@ -60,7 +70,7 @@ describe('alloy compile', function() {
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									if (file === 'testing/ALOY-887') {
+									if (file === 'testing'+sep+'ALOY-887') {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
@@ -80,7 +90,7 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
-							if (file === 'testing/ALOY-887') {
+							if (file === 'testing'+sep+'ALOY-887') {
 								// skip this test since this app forces a compile error
 								return;
 							}
@@ -100,7 +110,7 @@ describe('alloy compile', function() {
 
 					it('has no undefined style entries', function() {
 						// skip this test, since it specifically tests undefined values in TSS
-						if (file === 'testing/ALOY-822') {
+						if (file === 'testing'+sep+'ALOY-822') {
 							return;
 						}
 
@@ -148,6 +158,16 @@ describe('alloy compile', function() {
 						it('matches known good generated code for ' + gFile.yellow, function () {
 							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
 							var newFileContents = fs.readFileSync(newFile, 'utf8');
+
+/*						if(goodFileContents !== newFileContents) {
+							// Cheat way to re-generate known-good files
+							// uncomment this block, run jake test:spec[compile.js]
+							// then re-comment this block. jake test:all should now be happy
+							console.log('>>>> writing a new goodFile');
+							fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
+							goodFileContents = fs.readFileSync(goodFile, 'utf8');
+						}
+*/
 							expect(goodFileContents === newFileContents).toBeTruthy();
 						});
 					});

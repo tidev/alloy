@@ -1,0 +1,20 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"ScrollableView[platform=ios]": {
+	top: 20,
+	showPagingControl:true,
+	pagingControlColor: 'black'
+}
+"#title" : {
+	color: 'black',
+	font: { fontFamily:'Arial', fontSize: '20dp', fontWeight:'bold' },
+	left: '10dp', top: 0
+},
+"#subtitle" : {
+	color: 'gray',
+	font: { fontFamily:'Arial', fontSize: '14dp' },
+	left: '10dp', top: '25dp'
+}

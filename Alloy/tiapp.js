@@ -27,10 +27,28 @@ tiapp.parse = function(file) {
 };
 
 // Get the Titanium SDK version as a string
+// Get the Titanium SDK version as a string
 tiapp.getSdkVersion = function() {
 	var elems = doc.documentElement.getElementsByTagName('sdk-version');
-	return elems && elems.length > 0 ? U.XML.getNodeText(elems.item(elems.length-1)) : null;
+	if(elems && elems.length > 0) {
+		return U.XML.getNodeText(elems.item(elems.length-1));
+	} else {
+		if(process.env.sdk) {
+			return process.env.sdk;
+		} else {
+			return getSdkSelectVersion();
+		}
+	}
 };
+function getSdkSelectVersion() {
+	var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
+		file = path.join(homeDir, '.titanium','config.json');
+	if (!fs.existsSync(file)) {
+		U.die('Titanium configuration file does not exist at "' + file + '"');
+	}
+	var ticonfig = JSON.parse(fs.readFileSync(file, {encoding: 'utf8'}));
+	return ticonfig.sdk.selected;
+}
 
 // Get the value of a property from the tiapp.xml
 tiapp.getProperty = function(name) {

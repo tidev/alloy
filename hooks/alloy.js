@@ -18,6 +18,10 @@ exports.init = function (logger, config, cli, appc) {
 		spawn = require('child_process').spawn,
 		parallel = appc.async.parallel;
 
+		if(!process.env.sdk) {
+			process.env.sdk = cli.sdk.name;
+		}
+
 	function run(deviceFamily, deployType, target, finished) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
 		if (!afs.exists(appDir)) {
@@ -107,11 +111,11 @@ exports.init = function (logger, config, cli, appc) {
 				};
 			}), function () {
 				var cmd = [paths.node, paths.alloy, 'compile', appDir, '--config', config];
-				if (cli.argv['no-colors']) { cmd.push('--no-colors'); }
+				if (cli.argv['no-colors'] || cli.argv['color'] === false) { cmd.push('--no-colors'); }
 				if (process.platform === 'win32') { cmd.shift(); }
 				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
-				var child = spawn(cmd.shift(), cmd);
+				var child = (process.platform === 'win32') ? spawn(cmd.shift(), cmd, { stdio: 'inherit' }) : spawn(cmd.shift(), cmd);
 
 				function checkLine(line) {
 					var re = new RegExp(
@@ -129,17 +133,17 @@ exports.init = function (logger, config, cli, appc) {
 					}
 				}
 
-				child.stdout.on('data', function (data) {
+				child.stdout !== null && child.stdout.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
 						checkLine(line);
 					});
 				});
-				child.stderr.on('data', function (data) {
+				child.stderr !== null && child.stderr.on('data', function (data) {
 					data.toString().split('\n').forEach(function (line) {
 						checkLine(line);
 					});
 				});
-				child.on('exit', function (code) {
+				child !== null && child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
 						process.exit(1);
@@ -176,5 +180,49 @@ exports.init = function (logger, config, cli, appc) {
 
 	cli.addHook('codeprocessor.pre.run', function (build, finished) {
 		run('none', 'development', undefined, finished);
+	});
+
+
+	function removeDir(target) {
+		if (fs.existsSync(target)) {
+			fs.readdirSync(target).forEach(function (file,index) {
+				var curr = path.join(target, file);
+				if (fs.lstatSync(curr).isDirectory()) {
+					removeDir(curr);
+				} else {
+					fs.unlinkSync(curr);
+				}
+			});
+			fs.rmdirSync(target);
+		}
+	}
+
+	function copyDir(src, dest) {
+		if (fs.existsSync(src) && fs.statSync(src).isDirectory()) {
+			fs.mkdirSync(dest);
+			fs.readdirSync(src).forEach(function (childName) {
+				copyDir(path.join(src, childName),
+				path.join(dest, childName));
+			});
+		} else {
+			fs.linkSync(src, dest);
+		}
+	}
+
+	cli.addHook('build.post.compile', function (build, finished) {
+
+		['i18n', 'platform'].forEach(function (folder) {
+			var dirPath = path.join(cli.argv["project-dir"], folder);
+			var buildDir = path.join(cli.argv["project-dir"], 'build', folder);
+			if (path.existsSync(dirPath)) {
+				removeDir(dirPath);
+				if (path.existsSync(buildDir)) {
+					copyDir(buildDir, dirPath);
+					removeDir(buildDir);
+				}
+			}
+		});
+
+		finished();
 	});
 };

@@ -15,8 +15,12 @@ function Controller() {
     this.__controllerPath = "window";
     if (arguments[0]) {
         var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
+        {
+            __processArg(arguments[0], "$model");
+        }
+        {
+            __processArg(arguments[0], "__itemTemplate");
+        }
     }
     var $ = this;
     var exports = {};
@@ -34,7 +38,7 @@ function Controller() {
     });
     showAlert ? $.__views.rightButton.addEventListener("click", showAlert) : __defers["$.__views.rightButton!click!showAlert"] = true;
     __parentSymbol.rightNavButton = $.__views.rightButton;
-    $.__views.__alloyId46 && $.addTopLevelView($.__views.__alloyId46);
+    $.__views.__alloyId41 && $.addTopLevelView($.__views.__alloyId41);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/window")($);

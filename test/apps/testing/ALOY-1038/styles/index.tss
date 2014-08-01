@@ -1,0 +1,79 @@
+'Window': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: 'vertical'
+}
+"#Label": {
+	color: 'black',
+	top: 10,
+	left: 5,
+	font: {
+		fontSize: '12dp'
+	}
+}
+".tsslabel": {
+	height: 0
+}
+"#ios[platform=ios]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: ios"
+}
+"#android[platform=android]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: android"
+}
+"#mobileweb[platform=mobileweb]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: mobileweb"
+}
+"#iosmobileweb[platform=ios,mobilweb]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: ios,mobilweb"
+}
+"#androidmobileweb[platform=android,mobileweb]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: android,mobileweb"
+}
+"#iosandroid[platform=ios,android]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: ios,android"
+}
+"#notios[platform=!ios]": {
+	height: Ti.UI.SIZE,
+	text: "!ios"
+}
+"#notandroid[platform=!android]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: !android"
+}
+"#notmobileweb[platform=!mobileweb]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: !mobileweb"
+}
+"#mobilewebNotios[platform=mobileweb,!ios]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: mobileweb,!ios"
+}
+"#mobilewebNotandroid[platform=mobileweb,!android]": {
+	height: Ti.UI.SIZE,
+	text: "TSS: mobileweb,!android"
+}
+
+"#explain": {
+	color: 'blue',
+	font: {
+		fontSize: '10dp',
+		fontStyle: 'italic'
+	}
+}
+"#explain[platform=ios]": {
+	top: 20,
+	text: 'You should see 6 labels above and 6 below the line'
+}
+"#explain[platform=android]": {
+	text: 'You should see 6 labels above and 6 below the line'
+}
+"#explain[platform=mobileweb]": {
+	text: 'You should see 7 labels above and 7 below the line'
+}

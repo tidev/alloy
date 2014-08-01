@@ -1,0 +1,14 @@
+<Alloy>
+	<Window>
+		<Label>Click to show OptionDialog</Label>
+	</Window>
+
+	<OptionDialog id="options">
+		<Options>
+			<Option>L('hello_world')</Option>
+			<Option>Ti.Locale.getString('hello_world')</Option>
+			<Option>Titanium.Locale.getString('hello_world')</Option>
+			<Option>Hello, World!</Option>
+		</Options>
+	</OptionDialog>
+</Alloy>

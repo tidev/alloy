@@ -1,0 +1,17 @@
+"Label": {
+	top: '5dp',
+	color: '#000',
+	font: {
+		fontSize: 13,
+		fontWeight: 'bold'
+	},
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+}
+"#header" : {
+	top: "30dp"
+}
+
+"#myLabel" : {
+	text:L("language__intro_text")
+}

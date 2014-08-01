@@ -25,29 +25,29 @@ function Controller() {
     }
     var $ = this;
     var exports = {};
-    $.__views.__alloyId8 = Ti.UI.createTableViewSection({
+    $.__views.section = Ti.UI.createTableViewSection({
         headerTitle: "Test",
-        id: "__alloyId8"
+        id: "section"
     });
-    $.__views.__alloyId9 = Ti.UI.createTableViewRow({
+    $.__views.__alloyId2 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "table row",
-        id: "__alloyId9"
+        id: "__alloyId2"
     });
-    $.__views.__alloyId8.add($.__views.__alloyId9);
-    $.__views.__alloyId10 = Ti.UI.createTableViewRow({
+    $.__views.section.add($.__views.__alloyId2);
+    $.__views.__alloyId3 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "table row",
-        id: "__alloyId10"
+        id: "__alloyId3"
     });
-    $.__views.__alloyId8.add($.__views.__alloyId10);
-    $.__views.__alloyId11 = Ti.UI.createTableViewRow({
+    $.__views.section.add($.__views.__alloyId3);
+    $.__views.__alloyId4 = Ti.UI.createTableViewRow({
         height: "50dp",
         title: "table row",
-        id: "__alloyId11"
+        id: "__alloyId4"
     });
-    $.__views.__alloyId8.add($.__views.__alloyId11);
-    $.__views.__alloyId8 && $.addTopLevelView($.__views.__alloyId8);
+    $.__views.section.add($.__views.__alloyId4);
+    $.__views.section && $.addTopLevelView($.__views.section);
     exports.destroy = function() {};
     _.extend($, $.__views);
     _.extend($, exports);

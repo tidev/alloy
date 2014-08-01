@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label text="L('hello_world')"/>		
+		<Require type="widget" src="com.language.widget" id="widget_lang"/>
+		<Require type="widget" src="com.random.widget" id="widget_random"/>
+	</Window>
+</Alloy>

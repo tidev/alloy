@@ -2,5 +2,6 @@
 	<View layout="vertical">
 		<Label id="label"/>
 		<Label id="anotherlabel"/>
+		<Require id="aRequiredView" src="aRequiredLabel"/>
 	</View>
 </Alloy>
