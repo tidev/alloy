@@ -1,6 +1,0 @@
-<Alloy>
-    <View id="drawer">
-        <Button id="pulltab" onClick="pullTabClick" />
-        <View id="buttonbar"/>
-    </View>
-</Alloy>

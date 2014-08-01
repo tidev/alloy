@@ -1,8 +1,0 @@
-<Alloy>
-	<Window onOpen="IndexOpen">
-		<View id="fill">
-			<Widget id="logo" src="com.appcelerator.bouncylogo"/>
-		</View>
-		<Widget id="buttongrid" src="com.appcelerator.buttongrid"/>
-	</Window>
-</Alloy>

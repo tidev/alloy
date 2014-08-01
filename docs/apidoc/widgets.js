@@ -26,8 +26,8 @@
  *     ...
  *     "dependencies":{
  *         "com.appcelerator.loading":"1.0"
- *     } 
- *   
+ *     }
+ *
  *
  * Next, either add the widget in the XML markup of the view or create an instance of the widget in the controller.
  *
@@ -82,11 +82,10 @@
 
 /**
  * @class Alloy.widgets
- * As of Release 1.4.0, the sample widgets are deprecated and no longer supported.  These widgets
- * will be removed in a future release of Alloy.
+ * The sample widgets are no longer supplied or supported and have been removed from Alloy.
  *
  * Maintained versions of the sample widgets are available at [http://gitt.io/](http://gitt.io/).
  *
- * List of sample widgets in the Alloy project. For information on using a widget in your project, see
+ * For information on using a widget in your project, see
  * Alloy.Widget.
  */
