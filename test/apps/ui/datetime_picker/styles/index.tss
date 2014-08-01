@@ -3,6 +3,6 @@
 	fullscreen: false,
 	exitOnClose: true
 }
-"#picker": {
+"#pickerTest": {
 	value: "December 17, 2013"
 }
