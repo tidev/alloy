@@ -27,7 +27,7 @@ var _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	CONST = require('alloy/constants');
 
-exports.version = '1.3.0';
+exports.version = '1.5.0';
 exports._ = _;
 exports.Backbone = Backbone;
 
@@ -595,9 +595,9 @@ if (OS_ANDROID) {
 
 /*
  * Adapted version of node.extend https://www.npmjs.org/package/node.extend
- * 
+ *
  * Original copyright:
- * 
+ *
  * node.extend
  * Copyright 2011, John Resig
  * Dual licensed under the MIT or GPL Version 2 licenses.
