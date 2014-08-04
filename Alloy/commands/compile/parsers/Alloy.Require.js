@@ -97,7 +97,9 @@ function parse(node, state, args) {
 		code += CU.generateNodeExtended(child, state, {
 			parent: {},
 			post: function(node, state, args) {
-				xChildren.push(state.parent.symbol);
+				if (state.parent.symbol) {
+					xChildren.push(state.parent.symbol);
+				}
 			}
 		});
 	});

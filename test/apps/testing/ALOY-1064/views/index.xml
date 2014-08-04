@@ -1,0 +1,28 @@
+<Alloy>
+	<Window>
+		<Widget src="foo">
+			<ListView>
+				<Templates>
+					<ItemTemplate name="first">
+						<Label id="title" bindId="title"/>
+					</ItemTemplate>
+
+					<ItemTemplate name="second">
+						<Label id="title" bindId="title"/>
+						<Label id="subtitle" bindId="subtitle"/>
+					</ItemTemplate>
+
+					<ItemTemplate name="third">
+						<ImageView id="leftImage" bindId="leftImage"/>
+						<Label id="title" bindId="title"/>
+						<Label id="subtitle" bindId="subtitle"/>
+					</ItemTemplate>
+				</Templates>
+
+				<ListSection>
+					<ListItem template="first" title:text="this is some text"/>
+				</ListSection>
+			</ListView>
+		</Widget>
+	</Window>
+</Alloy>
