@@ -569,10 +569,6 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = wrench.readdirSyncRecursive(dir);
 		_.each(files, function(file) {
-
-			// [ALOY-1002] Remove platform-specific folders
-			if (_.include(file, path.sep)) { return; }
-
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -599,6 +595,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
 			}
+
 		});
 		logger.trace(' ');
 	});
