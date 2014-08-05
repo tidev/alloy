@@ -135,6 +135,7 @@ function parse(node, state, args) {
 					});
 				}
 			});
+			node.removeChild(child);
 		}
 	});
 
