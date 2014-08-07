@@ -1,0 +1,11 @@
+"Window":{
+	backgroundColor:'white',
+	layout:'vertical'
+}
+
+"Label":{
+	font:{
+		fontSize:'20dp',
+		color:'black'
+	}
+}
