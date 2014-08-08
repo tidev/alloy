@@ -85,7 +85,7 @@ function parse(node, state, args) {
 						state.styles.push({
 							isId: true,
 							key: args.id,
-							queries: { formFactor: 'tablet' },
+							queries: { formFactor: _args.formFactor },
 							style: styler.createVariableStyle(_state.propertyName, _state.parent.symbol)
 						});
 					} else {

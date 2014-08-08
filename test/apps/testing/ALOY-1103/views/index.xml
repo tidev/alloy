@@ -1,0 +1,22 @@
+<Alloy>
+	<Window>
+		<TableView height="80%">
+			<HeaderView formFactor="tablet">
+				<View>
+					<Label>HeaderView Tablet</Label>
+				</View>
+			</HeaderView>
+			<HeaderView formFactor="handheld">
+				<View>
+					<Label>HeaderView Handheld</Label>
+				</View>
+			</HeaderView>
+		</TableView>
+		<View formFactor="tablet">
+			<Label>View Tablet</Label>
+		</View>
+		<View formFactor="handheld">
+			<Label>View Handheld</Label>
+		</View>
+	</Window>
+</Alloy>
