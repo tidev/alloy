@@ -227,8 +227,7 @@ exports.sortStyles = function(style, opts) {
 
 			if (match[3]) {
 				obj.queries = {};
-				var match = match[3].replace(/\s*,\s*/g, ',');
-				_.each(match.split(/\s+/), function(query) {
+				_.each(match[3].replace(/\s*,\s*/g, ',').split(/\s+/), function(query) {
 					var parts = query.split('=');
 					var q = U.trim(parts[0]);
 					var v = U.trim(parts[1]);
