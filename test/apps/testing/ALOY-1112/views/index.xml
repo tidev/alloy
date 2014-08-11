@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label>Background should be YELLOW on ios & android, WHITE on mobile web</Label>
+		<Label id='lbl1'>This should be RED on ios and android handheld, BLACK on others</Label>
+	</Window>
+</Alloy>

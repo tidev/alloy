@@ -1,0 +1,24 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true,
+	layout: "vertical"
+}
+
+'#index[platform=android, ios]': {
+	backgroundColor: 'yellow'
+}
+
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	top:30,
+	color: "#000",
+	font: {
+		fontSize: 12
+	}
+}
+
+'#lbl1[platform=android , ios formFactor=handheld]': {
+	color:'red'
+}
