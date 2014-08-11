@@ -187,48 +187,4 @@ exports.init = function (logger, config, cli, appc) {
 	cli.addHook('codeprocessor.pre.run', function (build, finished) {
 		run('none', 'development', undefined, finished, SILENT);
 	});
-
-
-	function removeDir(target) {
-		if (fs.existsSync(target)) {
-			fs.readdirSync(target).forEach(function (file,index) {
-				var curr = path.join(target, file);
-				if (fs.lstatSync(curr).isDirectory()) {
-					removeDir(curr);
-				} else {
-					fs.unlinkSync(curr);
-				}
-			});
-			fs.rmdirSync(target);
-		}
-	}
-
-	function copyDir(src, dest) {
-		if (fs.existsSync(src) && fs.statSync(src).isDirectory()) {
-			fs.mkdirSync(dest);
-			fs.readdirSync(src).forEach(function (childName) {
-				copyDir(path.join(src, childName),
-				path.join(dest, childName));
-			});
-		} else {
-			fs.linkSync(src, dest);
-		}
-	}
-
-	cli.addHook('build.post.compile', function (build, finished) {
-
-		['i18n', 'platform'].forEach(function (folder) {
-			var dirPath = path.join(cli.argv["project-dir"], folder);
-			var buildDir = path.join(cli.argv["project-dir"], 'build', folder);
-			if (path.existsSync(dirPath)) {
-				removeDir(dirPath);
-				if (path.existsSync(buildDir)) {
-					copyDir(buildDir, dirPath);
-					removeDir(buildDir);
-				}
-			}
-		});
-
-		finished();
-	});
 };
