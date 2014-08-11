@@ -227,7 +227,8 @@ exports.sortStyles = function(style, opts) {
 
 			if (match[3]) {
 				obj.queries = {};
-				_.each(match[3].split(/\s+/), function(query) {
+				var match = match[3].replace(/\s*,\s*/g, ',');
+				_.each(match.split(/\s+/), function(query) {
 					var parts = query.split('=');
 					var q = U.trim(parts[0]);
 					var v = U.trim(parts[1]);
@@ -523,7 +524,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						partsLen = parts.length,
 						modelVar,
 						templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
-						
+
 					// model binding
 					if (parts.length > 1) {
 
