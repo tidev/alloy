@@ -1,0 +1,14 @@
+{
+	"id": "com.appcelerator.loading",
+	"name": "Loading Image",
+	"description" : "Cross-platform loading image",
+	"author": "Dawson Toth (alloy port by Tony Lukasavage)",
+	"version": "1.0",
+	"copyright":"Copyright (c) 2012 by Appcelerator",
+	"license":"Public Domain",
+	"min-alloy-version": "0.1.16",
+	"min-titanium-version":"2.0",
+	"tags":"utility,loading,progress",
+	"platforms":"android,ios,mobileweb",
+	"dependencies": {}
+}
