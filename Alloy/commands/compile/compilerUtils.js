@@ -595,8 +595,13 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
 			}
-
 		});
+
+		// [ALOY-1002] Remove ios folder copied from widget
+		var iosDir = path.join(resourceDir, 'ios');
+		if (fs.existsSync(iosDir)) {
+			wrench.rmdirSyncRecursive(iosDir);
+		}
 		logger.trace(' ');
 	});
 
