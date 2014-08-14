@@ -1,0 +1,6 @@
+<Alloy>
+	<Window class="container">
+		<Widget id="starwidget" src="starrating" max='5' initialRating='2.5' top="20"/>
+		<Label id="label" top="100" onClick="doClick">Hello, World</Label>
+	</Window>
+</Alloy>

@@ -10,7 +10,7 @@ var fs = require('fs'),
 var ALLOY_ROOT = path.join(__dirname, '..', '..');
 
 var dirs, platform, titaniumFolder, theme, adapters;
-var widgets = {};
+var widgetsInUse = {};
 
 function Orphanage(projectDir, _platform, opts) {
 	opts = opts || {};
@@ -24,12 +24,12 @@ function Orphanage(projectDir, _platform, opts) {
 	dirs = {
 		app: path.join(projectDir, CONST.ALLOY_DIR),
 		resources: path.join(projectDir, CONST.RESOURCES_DIR),
-		runtime: path.join(resourcesDir, CONST.ALLOY_RUNTIME_DIR)
+		runtime: path.join(resourcesDir, platforms[platform].titaniumFolder, CONST.ALLOY_RUNTIME_DIR)
 	};
 
 	// get widgets in use
 	_.each(U.getWidgetDirectories(dirs.app) || [], function(wObj) {
-		widgets[path.basename(wObj.dir)] = wObj.dir;
+		widgetsInUse[path.basename(wObj.dir)] = wObj.dir;
 	});
 }
 module.exports = Orphanage;
@@ -48,7 +48,9 @@ Orphanage.prototype.clean = function() {
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
 	if (fs.existsSync(widgets)) {
 		_.each(fs.readdirSync(widgets), function(file) {
-			that.removeAll({ widgetId: file });
+			if(!widgetsInUse[file]) {
+				that.removeAll({ widgetId: file });
+			}
 		});
 	}
 
@@ -60,16 +62,19 @@ Orphanage.prototype.clean = function() {
 // TODO: handle specs
 Orphanage.prototype.removeAll = function(opts) {
 	opts = opts || {};
-	var suffix = opts.widgetId ? ' from widget "' + opts.widgetId + "'" : '';
 
-	logger.debug('Removing orphaned controllers' + suffix + '...');
-	this.removeControllers(opts);
+	if(!opts.widgetId) {
+		logger.debug('Removing orphaned controllers ...');
+		this.removeControllers(opts);
 
-	logger.debug('Removing orphaned models' + suffix + '...');
-	this.removeModels(opts);
+		logger.debug('Removing orphaned models ...');
+		this.removeModels(opts);
 
-	logger.debug('Removing orphaned styles' + suffix + '...');
-	this.removeStyles(opts);
+		logger.debug('Removing orphaned styles ...');
+		this.removeStyles(opts);
+	} else {
+		this.removeWidget(opts);
+	}
 };
 
 Orphanage.prototype.removeAdapters = function(opts) {
@@ -139,7 +144,7 @@ Orphanage.prototype.removeAssets = function() {
 	});
 
 	// Make sure we check the widgets paths as well
-	_.each(widgets, function(wDir, wId) {
+	_.each(widgetsInUse, function(wDir, wId) {
 		_.each(baseLocations, function(loc) {
 			var widgetLoc = path.join(wDir, loc);
 			if (fs.existsSync(widgetLoc)) {
@@ -181,6 +186,12 @@ Orphanage.prototype.removeAssets = function() {
 		locations: locations,
 		exceptions: exceptions
 	});
+};
+
+Orphanage.prototype.removeWidget = function(opts) {
+	if(opts.widgetId===".DS_Store") { return; }
+	opts.runtimePath = path.join(dirs.runtime, CONST.DIR.WIDGET, opts.widgetId);
+	remove(opts);
 };
 
 // private function
@@ -225,7 +236,7 @@ function getChecks(file, fullpath, opts) {
 		file = parts.join('/');
 
 		// Is it a widget file?
-		var keys = _.keys(widgets);
+		var keys = _.keys(widgetsInUse);
 		for (var i = 0; i < keys.length; i++) {
 			var widgetId = keys[i];
 
@@ -289,7 +300,7 @@ function remove(opts) {
 	// Set the base runtime search path
 	if (!runtimePath) {
 		if (!folder) {
-			logger.die([
+			U.die([
 				'You must specify either "runtimePath" or "folder" when calling Orphanage.remove()',
 				new Error().stack
 			]);
@@ -315,7 +326,7 @@ function remove(opts) {
 
 		// skip if file no longer exists, or if it's an exception
 		if (!fs.existsSync(runtimeFullpath) ||
-			(!opts.widgetId && isException(file, exceptions))) {
+			(/*!opts.widgetId && */ isException(file, exceptions))) {
 			return;
 		}
 
@@ -330,7 +341,7 @@ function remove(opts) {
 
 		// If we find the corresponding app folder file(s), skip this file
 		for (i = 0; i < checks.length; i++) {
-			if (fs.existsSync(checks[i])) {
+			if (!opts.widgetId && fs.existsSync(checks[i])) {
 				found = true;
 				return;
 			}
@@ -342,10 +353,15 @@ function remove(opts) {
 			if (!fs.existsSync(runtimeFullpath)) { return; }
 			logger.trace('* ' + file);
 
-			// delete the directory ot file
+			// delete the directory or file
 			var targetStat = fs.statSync(runtimeFullpath);
 			if (targetStat.isDirectory()) {
-				wrench.rmdirSyncRecursive(runtimeFullpath, true);
+				if(opts.widgetId) {
+					// remove the widget's folder
+					wrench.rmdirSyncRecursive(path.resolve(runtimeFullpath, '..'), true);
+				} else {
+					wrench.rmdirSyncRecursive(runtimeFullpath, true);
+				}
 			} else {
 				fs.unlinkSync(runtimeFullpath);
 			}
