@@ -45,7 +45,7 @@ describe('alloy info', function() {
 			});
 
 			it('"' + adapter + '" adapter has description', function() {
-				expect(json[adapter].description).toBeTruthy();
+				expect(json[adapter].Description).toBeTruthy();
 			});
 
 			it('"' + adapter + '" adapter has platforms array', function() {
