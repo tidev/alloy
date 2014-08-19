@@ -15,7 +15,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var code = '',
-		tabArray, groupState, menuDefer;
+		tabArray, groupState, menuDefer, actionBarDefer;
 
 	if (!SUPPORTS_TABS) {
 		groupState = require('./default').parse(node, state);
@@ -23,7 +23,7 @@ function parse(node, state, args) {
 	}
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-		var theNode = CU.validateNodeName(child, ['Ti.UI.Tab','Ti.Android.Menu']);
+		var theNode = CU.validateNodeName(child, ['Ti.UI.Tab','Ti.Android.Menu', 'Ti.Android.ActionBar']);
 		if (theNode) {
 			var ext = { parent: {} };
 			if (theNode === 'Ti.UI.Tab') {
@@ -44,6 +44,10 @@ function parse(node, state, args) {
 
 				// generate the tab code
 				code += CU.generateNodeExtended(child, state, ext);
+			} else if (theNode === 'Ti.Android.ActionBar') {
+				// don't create the actionbar until after the tabgroup
+				ext.parent.symbol = args.symbol;
+				actionBarDefer = [ child, _.clone(state), { parent: { symbol: args.symbol } } ];
 			} else if (theNode === 'Ti.Android.Menu') {
 				ext.parent.symbol = args.symbol;
 
@@ -53,7 +57,7 @@ function parse(node, state, args) {
 		} else {
 			U.die([
 				'Invalid <TabGroup> child type: ' + CU.getNodeFullname(child),
-				'All <TabGroup> children must be <Tab> or <Menu>'
+				'All <TabGroup> children must be <Tab> or <Menu> or <ActionBar>'
 			]);
 		}
 	});
@@ -69,6 +73,10 @@ function parse(node, state, args) {
 		code += groupState.code;
 	}
 
+	// create the actionbar, if necessary
+	if (actionBarDefer) {
+		code += CU.generateNodeExtended.apply(this, actionBarDefer);
+	}
 	// create the menu last, if necessary
 	if (menuDefer) {
 		code += CU.generateNodeExtended.apply(this, menuDefer);

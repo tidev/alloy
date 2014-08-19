@@ -1,0 +1,23 @@
+<Alloy>
+	<TabGroup>
+		<ActionBar
+			title="My App Title"
+			subtitle="App subtitle"
+			icon="/actionicon.png"
+			backgroundImage="/actionbackground.png" />
+		<Menu title="Title from menu">
+			<MenuItem title="Show alert" onClick="doClick"/>
+			<MenuItem title="Open Win2" onClick="openWin2"/>
+		</Menu>
+		<Tab title="Tab 1">
+			<Window title="Win 1">
+				<Label text="I am Window 1"/>
+			</Window>
+		</Tab>
+		<Tab title="Tab 2">
+			<Window title="Win 2">
+				<Label text="I am Window 2"/>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
