@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<!-- ActionBar/Menu code is in views/android/index.xml -->
+		<Label>ActionBar/Menu only supported on Android</Label>
+	</Window>
+</Alloy>
