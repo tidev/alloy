@@ -1,0 +1,5 @@
+<Alloy>
+	<Window backgroundColor="white">
+		<Label color="black">Sample is meant for Android only</Label>
+	</Window>
+</Alloy>
