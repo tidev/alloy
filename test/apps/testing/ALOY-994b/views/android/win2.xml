@@ -1,0 +1,18 @@
+<Alloy>
+	<Window id="win2">
+		<!-- actionbar title set in the win2.js file -->
+		<ActionBar
+			icon="/actionicon.png"
+			displayHomeAsUp="true"
+			onHomeIconItemSelected="doHomeIcon"
+			backgroundImage="/actionbackground.png" />
+		<Menu>
+			<MenuItem title="require 1" icon="/ic_menu_goto.png" onClick="doClick"/>
+			<MenuItem title="require 2" icon="/ic_menu_manage.png" onClick="doClick"/>
+		</Menu>
+
+		<!-- Build the rest of your UI as usual -->
+		<Label>Window 2</Label>
+		<Label bottom="20dp">Press the menu button</Label>
+	</Window>
+</Alloy>
