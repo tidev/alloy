@@ -4,7 +4,7 @@
 	"description" : "",
 	"author": "",
 	"version": "<%= version %>",
-	"copyright":"Copyright (c) 2012",
+	"copyright":"Copyright (c) <%= new Date().getFullYear() %>",
 	"license":"Public Domain",
 	"min-alloy-version": "1.0",
 	"min-titanium-version":"2.1",
