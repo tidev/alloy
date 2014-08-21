@@ -1,0 +1,27 @@
+".container": {
+	backgroundColor:"white"
+}
+
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000",
+	font: {
+		fontSize: '15dp'
+	}
+}
+"PickerRow": {
+	fontSize: '18dp'
+}
+"TableViewRow": {
+	color: 'black',
+	font: {
+		fontSize: '18dp'
+	}
+}
+"Picker": {
+	backgroundColor: 'black',
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE,
+	selectionIndicator: true
+}
