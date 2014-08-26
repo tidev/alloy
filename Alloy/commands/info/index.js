@@ -9,15 +9,15 @@ var info = {
 	adapters: function() {
 		var desc = {
 			properties: {
-				description: 'Local persistence adapter that uses Ti.App.Properties storage',
+				Description: 'Local persistence adapter that uses Ti.App.Properties storage',
 				platforms: ['android','ios','mobileweb','blackberry']
 			},
 			sql: {
-				description: 'Local persistence adapter that uses SQLite storage',
+				Description: 'Local persistence adapter that uses SQLite storage',
 				platforms: ['android','ios','blackberry']
 			},
 			localStorage: {
-				description: 'Local persistence adapter that uses HTML5 localStorage API',
+				Description: 'Local persistence adapter that uses HTML5 localStorage API',
 				platforms: ['mobileweb']
 			}
 		};
