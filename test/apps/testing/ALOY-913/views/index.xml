@@ -10,13 +10,8 @@
 		<View id="todoTable" dataCollection="todo" dataFilter="whereFunction" dataTransform="transformFunction">
 			<View id="row">
 				<Label id="task" text="{item}"/>
-				<TextField id="textField" value="1" color="#000" text="Quantity"  onFocus="setQuantity" />
+				<TextField id="textField" value="1" text="Quantity"  onFocus="setQuantity" />
 			</View>
-		</View>
-		<View id="footer">
-			<TabbedBar onClick="showTasks" id="tabbedbar">
-				<Label> All </Label>
-			</TabbedBar>
 		</View>
 	</Window>
 </Alloy>
