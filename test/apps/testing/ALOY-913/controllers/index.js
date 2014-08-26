@@ -32,18 +32,6 @@ function addToDoItem() {
 	Alloy.createController("add").getView().open();
 }
 
-// Show task list based on selected status type
-function showTasks(e) {
-	if ( typeof e.index !== 'undefined' && e.index !== null) {
-		whereIndex = e.index;
-		// TabbedBar
-	} else {
-		whereIndex = INDEXES[e.source.title];
-		// Android menu
-	}
-	todos.fetch();
-}
-
 function setQuantity(e) {
 	alert('setQuantity');
 }
