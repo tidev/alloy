@@ -30,6 +30,7 @@ var alloyRoot = path.join(__dirname,'..','..'),
 	titaniumFolder,
 	buildLog,
 	theme,
+	platformTheme,
 	widgetIds = [];
 
 var times = {
@@ -94,7 +95,9 @@ module.exports = function(args, program) {
 	logger.debug('----- CONFIG.JSON -----');
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig, buildLog);
 	theme = compileConfig.theme;
-	buildLog.data.themeChanged = theme !== buildLog.data.theme;
+	platformTheme = buildLog.data[buildPlatform] ? buildLog.data[buildPlatform]['theme'] : "";
+
+	buildLog.data.themeChanged = theme !== platformTheme;
 	buildLog.data.theme = theme;
 	logger.debug('');
 
@@ -190,7 +193,7 @@ module.exports = function(args, program) {
 				path.join(paths.resources, titaniumFolder),
 				{
 					rootDir: paths.project,
-					themeChanged: true,
+					themeChanged: buildLog.data.themeChanged,
 					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
 					exceptions: otherPlatforms,
 					titaniumFolder: titaniumFolder
@@ -344,6 +347,7 @@ function generateAppJs(paths, compileConfig) {
 		buildLog.data[buildPlatform][alloyJs] = hash;
 	}
 
+	buildLog.data[buildPlatform]['theme'] = theme;
 	logger.info('');
 }
 

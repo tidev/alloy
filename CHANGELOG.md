@@ -1,5 +1,68 @@
 ## Titanium Alloy Release Notes
 
+### Release 1.5.0
+
+[Full list of Issues that were addressed in Release 1.5.0](https://jira.appcelerator.org/issues/?filter=16426)
+
+#### Deprecations and Removals
+
+##### Sample Widgets
+
+The sample widgets included in the Alloy repository have been removed.
+
+To find replacements for these widgets, or to find other widgets,
+we recommend you visit [http://gitt.io](http://gitt.io).
+
+
+##### localStorage Sync Adapter
+
+As of this Release, the `localStorage` sync adapter is deprecated and will be removed in a future
+release.
+
+Use the `properties` sync adapter instead.
+
+#### New Features
+
+##### Built-in Update
+
+The moment built-in now uses version 2.7.0 of the moment.js library.
+
+##### Data Binding Enhancements
+
+  * Support data binding for a Picker. Add data binding attributes to the PickerColumn and map model
+    attributes to the PickerRow properties.
+
+  * Support mixture of text and data binding notation when binding model attributes to XML
+    attributes, for example, `<Label text="first name: {model.first_name}"/>`.
+
+  * Support mapping multiple model attributes to a single XML attribute, for example,
+    `<Label text="{model.title} by {model.author}">`.
+
+For more details, see [Alloy Data Binding](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding).
+
+##### XML Markup/TSS Enhancements
+
+  * Support setting ActionBar properties in XML and TSS using the `ActionBar` element. For XML
+    markup, add the `<ActionBar/>` tag as a child of either a `<TabGroup/>` or `<Window/>`.
+    Before this Release, you defined ActionBar properties in the `Menu` element.  Do not set the same
+    ActionBar properties in both the `ActionBar` and `Menu` elements.
+    For more details, see the "Android ActionBar" section in
+    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+
+  * Support `<KeyboardToolbar/>` as a child tag of the `<TextArea/>` object to set the `keyboardToolbar`
+    property of `Titanium.UI.TextArea`.  Only supports the iOS platform.
+
+  * Support `<AndroidView/>` or `<View/>` as a child tag of the `<AlertDialog/>` and
+    `<OptionDialog/>` objects to set the `androidView` property. Only supports the Android platform.
+
+  * Support the localization function `L()` with the Label's `text` property or as node text, for
+    example, `<Label text="L('foo')"/>` or `<Label>L('foo')</Label>`.
+
+  * Support spaces with the comma-separated values in the `platform` attribute, for example,
+    `<Label platform="ios, android"/>`.  Prior to this Release, placing spaces in the platform
+    attribute would throw an error.
+
+---
 ### Release 1.4.1 (07/28/2014)
 
 Below are the fixes included in this release.
@@ -7,6 +70,7 @@ Below are the fixes included in this release.
 * [ALOY-1091](https://jira.appcelerator.org/browse/ALOY-1091). id property of <Picker> other than 'picker' is treated as a variable
 * [ALOY-1094](https://jira.appcelerator.org/browse/ALOY-1094). Date or time pickers: cannot use Ti.UI.* type constants, must use Titanium.UI.* abbreviations
 
+---
 ### Release 1.4.0 (07/17/2014)
 
 [Full list of Issues that were addressed in Release 1.4.0](https://jira.appcelerator.org/issues/?filter=16137)
@@ -142,7 +206,7 @@ See also:
   * Support the Android Action Bar in XML and TSS using the `Menu` element.  To define an action bar in XML markup,
     add the `<Menu>` tag as a child of either a `<Window>` or `<TabGroup>`. To add action items in XML markup, add
     `<MenuItem>` tags as children of `<Menu>`.  The `ActionBar` attributes may be defined in the XML
-    markup or TSS file. For details, see the "Android ActionBar Attributes in the Menu Element" section in
+    markup or TSS file. For details, see the "Android ActionBar" section in
     [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
 
   * Support `Button` attributes in `<LeftNavButton>` and `<RightNavButton>`.  Instead of

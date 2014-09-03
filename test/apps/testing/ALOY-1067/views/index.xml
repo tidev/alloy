@@ -1,7 +1,7 @@
 <Alloy>
 	<Window>
 		<Label class="lbl">Support L() in XML as Label text</Label>
-		<Label>L('foo')</Label>
-		<Label text="L('foo')" />
+		<Label>L('hello_world')</Label>
+		<Label text="L('hello_world')" />
 	</Window>
 </Alloy>
