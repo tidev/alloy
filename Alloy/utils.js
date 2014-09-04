@@ -205,6 +205,14 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		// if this is the current platform-specific folder, adjust the dst path
 		var parts = file.split(/[\/\\]/);
 		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
+			if(opts.type && opts.type !== 'ASSETS' && parts[0] === 'iphone') {
+				// don't copy files in lib/iphone or vendor/iphone
+				return;
+			}
+			dst = path.join(dstDir, parts.slice(1).join('/'));
+			ordered.push({ src:src, dst:dst });
+		} else if(opts.titaniumFolder&& opts.titaniumFolder === 'iphone' && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
+			// copy files in lib/ios and vendor/ios
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
 		} else {
