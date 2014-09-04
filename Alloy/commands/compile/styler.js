@@ -574,9 +574,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 						var bindingStr = templateStr.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
 							var v = code.replace(/\\'/g, "'");
-							return "'+" + modelVar +".get('" + v + "') + '";
+							return "'+" + modelVar +".get('" + v.trim() + "') + '";
 						});
-						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1] + "']";
+						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1].trim() + "']";
 						var standard = "'" + bindingStr +"'";
 						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
