@@ -1,6 +1,0 @@
-<Alloy>
-	<Window>
-		<Label onClick="doClick">Click to add some numbers</Label>
-		<ImageView image="/appcelerator.png" bottom="0"/>
-	</Window>
-</Alloy>

@@ -184,16 +184,16 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
-	// don't process XML/controller files inside .svn folders (ALOY-839)
-	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+  // don't process XML/controller files inside .svn folders (ALOY-839)
+  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
 
-		if(excludeRegex.test(src)) {
-			return;
-		}
+    if(excludeRegex.test(src)) {
+      return;
+    }
 
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
@@ -205,14 +205,6 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		// if this is the current platform-specific folder, adjust the dst path
 		var parts = file.split(/[\/\\]/);
 		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
-			if(opts.type && opts.type !== 'ASSETS' && parts[0] === 'iphone') {
-				// don't copy files in lib/iphone or vendor/iphone
-				return;
-			}
-			dst = path.join(dstDir, parts.slice(1).join('/'));
-			ordered.push({ src:src, dst:dst });
-		} else if(opts.titaniumFolder && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
-			// copy files in lib/ios and vendor/ios
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
 		} else {
@@ -321,7 +313,7 @@ exports.getWidgetDirectories = function(appDir) {
 	function walkWidgetDependencies(collection) {
 		if (collection === null) { return; }
 
-				dirs.push(collection);
+        dirs.push(collection);
 		for (var dependency in collection.manifest.dependencies) {
 			walkWidgetDependencies(collections[dependency]);
 		}
@@ -329,22 +321,22 @@ exports.getWidgetDirectories = function(appDir) {
 
 	// walk the dependencies, tracking any missing widgets
 	var notFound = [];
-		for (var id in appWidgets) {
+    for (var id in appWidgets) {
 		if (!collections[id]) {
 			notFound.push(id);
 		} else {
 			walkWidgetDependencies(collections[id]);
 		}
-		}
+    }
 
-		// if there are missing widgets, abort and tell the developer which ones
-		if (!!notFound.length) {
+    // if there are missing widgets, abort and tell the developer which ones
+    if (!!notFound.length) {
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
 			'If you are using them, add them to your project\'s widget folder.'
 		]);
-		}
+    }
 
 	return dirs;
 };
@@ -354,15 +346,15 @@ exports.properCase = function(n) {
 };
 
 exports.ucfirst = function (text) {
-		if (!text)
-				return text;
-		return text[0].toUpperCase() + text.substr(1);
+    if (!text)
+        return text;
+    return text[0].toUpperCase() + text.substr(1);
 };
 
 exports.lcfirst = function (text) {
-		if (!text)
-				return text;
-		return text[0].toLowerCase() + text.substr(1);
+    if (!text)
+        return text;
+    return text[0].toLowerCase() + text.substr(1);
 };
 
 exports.trim = function(line) {
