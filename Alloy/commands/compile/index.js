@@ -169,8 +169,7 @@ module.exports = function(args, program) {
 				exceptions: otherPlatforms,
 				createSourceMap: (type==='ASSETS') ? false : compileConfig.sourcemap,
 				compileConfig: compileConfig,
-				titaniumFolder: titaniumFolder,
-				type: type
+				titaniumFolder: titaniumFolder
 			}
 		);
 	});
