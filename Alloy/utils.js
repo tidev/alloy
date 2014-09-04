@@ -211,7 +211,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			}
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
-		} else if(opts.titaniumFolder && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
+		} else if(opts.titaniumFolder&& opts.titaniumFolder === 'iphone' && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
 			// copy files in lib/ios and vendor/ios
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
