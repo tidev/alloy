@@ -1,6 +1,6 @@
 <Alloy>
 	<Window>
-	    <TableView dataCollection='collection'>
+	    <TableView dataCollection='collection' dataTransform="doUpper">
 			<TableViewRow class="row">
             	<Label class="title" text="	{	title	}"/>
             	<Label class="subtitle" text="		  {subtitle}"/>
