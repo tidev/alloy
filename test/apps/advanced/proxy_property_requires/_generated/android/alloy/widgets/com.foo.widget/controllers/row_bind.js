@@ -31,7 +31,7 @@ function Controller() {
     });
     $.__views.row_bind && $.addTopLevelView($.__views.row_bind);
     $.__views.__alloyId1 = Ti.UI.createLabel({
-        text: "undefined" != typeof $model.__transform["title"] ? $model.__transform["title"] : "" + $model.get("title"),
+        text: "undefined" != typeof $model.__transform["title"] ? $model.__transform["title"] : $model.get("title"),
         id: "__alloyId1"
     });
     $.__views.row_bind.add($.__views.__alloyId1);
