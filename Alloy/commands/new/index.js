@@ -49,6 +49,9 @@ module.exports = function(args, program) {
 	// install ti.alloy compiler plugin
 	U.installPlugin(path.join(paths.alloy,'..'), paths.project);
 
+	// add the default app.tss file
+	U.copyFileSync(path.join(paths.template,CONST.GLOBAL_STYLE), path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+
 	// copy Resources platform-specific directories to assets
 	U.copyFileSync(
 		path.join(paths.template,'gitignore.txt'),
