@@ -518,7 +518,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		_.each(style.style, function(v,k) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
-				if (match !== null) {
+				if (match !== null && match.indexOf('{recurse:') !== -1) {
 					var parts = match[1].split('.'),
 						partsLen = parts.length,
 						modelVar,
@@ -579,7 +579,8 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1].trim() + "']";
 
 						// remove the first '+ and last +'
-						var standard = bindingStr.match(/^\s*\'\+(.*)\+\'\s*$/)[1];
+						var bStr = bindingStr.match(/^\s*\'\+(.*)\+\'\s*$/),
+							standard = (bStr) ? bStr[1] : '';
 
 						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
