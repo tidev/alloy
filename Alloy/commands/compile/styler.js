@@ -16,7 +16,7 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /\{([^}]+)\}/;
+var BINDING_REGEX =  /\{([^:}]+)\}/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
@@ -518,7 +518,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		_.each(style.style, function(v,k) {
 			if (_.isString(v)) {
 				var match = v.match(bindingRegex);
-				if (match !== null && match.indexOf('{recurse:') !== -1) {
+				if (match !== null) {
 					var parts = match[1].split('.'),
 						partsLen = parts.length,
 						modelVar,
@@ -580,7 +580,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 						// remove the first '+ and last +'
 						var bStr = bindingStr.match(/^\s*\'\+(.*)\+\'\s*$/),
-							standard = (bStr) ? bStr[1] : '';
+							standard = (bStr) ? bStr[1] : bindingStr;
 
 						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
 						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
