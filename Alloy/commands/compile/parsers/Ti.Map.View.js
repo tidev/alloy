@@ -65,6 +65,11 @@ function parse(node, state, args) {
 		});
 		localModel = localModel || CU.generateUniqueId();
 
+		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+			// if this node or a parent has set the formFactor attribute
+			// we need to pass it to the data binding generator
+			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
+		}
 		// set a custom property for special handling of Annotations in CU.generateCollectionBindingTemplate()
 		args.isDataBoundMap = true;
 		code += _.template(CU.generateCollectionBindingTemplate(args), {

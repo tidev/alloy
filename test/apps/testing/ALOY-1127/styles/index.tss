@@ -1,0 +1,11 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"TableView[platform=ios]": {
+	top: 20
+}
+"Label": {
+	left: 5
+}

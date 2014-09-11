@@ -145,6 +145,11 @@ function parse(node, state, args) {
 				"	" + args.symbol + ".remove(children[d]);" +
 				"}";
 
+			if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+				// if this node or a parent has set the formFactor attribute
+				// we need to pass it to the data binding generator
+				args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
+			}
 			code += _.template(CU.generateCollectionBindingTemplate(args), {
 				localModel: localModel,
 				pre: pre,
