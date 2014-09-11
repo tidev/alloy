@@ -34,6 +34,12 @@ function parse(node, state, args) {
 		proxyProperties = {},
 		localModel, arrayName, controllerSymbol;
 
+	if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		// if this node or a parent has set the formFactor attribute
+		// we need to pass it to the data binding generator
+		args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
+	}
+
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
 		var fullname = CU.getNodeFullname(child),
