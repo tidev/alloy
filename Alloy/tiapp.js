@@ -120,6 +120,29 @@ tiapp.version = {
 	neq: function(v1, v2) { return tiapp.version.compare(v1, v2) !== 0; }
 };
 
+tiapp.getDeploymentTargets = function() {
+	var deployment = doc.documentElement.getElementsByTagName('deployment-targets'),
+		results = [];
+
+	if (deployment.length > 0) {
+		var targets = deployment.item(0).getElementsByTagName('target');
+		for (var i = 0, j = targets.length; i < j; i++) {
+			var target = targets.item(i);
+			if (U.XML.getNodeText(target) === 'true') {
+				var platform = target.getAttribute('device');
+				if (platform === 'iphone' || platform === 'ipad') {
+					platform = 'ios';
+				}
+
+				if (results.indexOf(platform) === -1) {
+					results.push(platform);
+				}
+			}
+		};
+	}
+	return results;
+};
+
 function install(type, opts) {
 	type = type || 'module';
 	opts = opts || {};
