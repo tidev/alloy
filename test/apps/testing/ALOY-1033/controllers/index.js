@@ -13,9 +13,11 @@ if (!Ti.App.Properties.hasProperty('lvsearch')) {
 }
 Alloy.Collections.rows.fetch();
 
-$.searchList.addEventListener('cancel', function(e){
-	// hide the keyboard on Cancel
-	$.searchList.blur();
-});
+if(OS_IOS) {
+	$.searchList.addEventListener('cancel', function(e){
+		// hide the keyboard on Cancel
+		$.searchList.blur();
+	});
+}
 
 $.index.open();
