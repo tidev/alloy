@@ -571,8 +571,7 @@ exports.getDeploymentTargets = function(projDir) {
 
 	if (fs.existsSync(tiappPath)) {
 		tiapp.init(tiappPath);
-		var result = tiapp.getDeploymentTargets();
-		targets = result.join(',');
+		targets = tiapp.getDeploymentTargets().join(',');
 	} else {
 		targets = CONST.PLATFORMS.join(',');
 	}
