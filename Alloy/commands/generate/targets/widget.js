@@ -41,7 +41,7 @@ module.exports = function(name, args, program) {
 			id: escapeDoubleQuotes(widgetId),
 			name: escapeDoubleQuotes(name),
 			version: VERSION_DEFAULT,
-			platforms: CONST.PLATFORMS.join(',')
+			platforms: U.getDeploymentTargets(thePaths.project)
 		})
 	);
 
