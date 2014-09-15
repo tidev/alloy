@@ -1,4 +1,5 @@
-var _ = require('alloy/underscore')._;
+var _ = require('alloy/underscore')._,
+	backbone = require('alloy/backbone');
 
 // The database name used when none is specified in the
 // model configuration.
@@ -247,7 +248,11 @@ function Sync(method, model, opts) {
 
 			// shape response based on whether it's a model or collection
 			var len = values.length;
-			model.length = len;
+
+			if (backbone.VERSION === "0.9.2") {
+				model.length = len;
+			}
+
 			resp = (len===1) ? values[0] : values;
 			break;
 
