@@ -159,34 +159,40 @@ function Sync(method, model, opts) {
 	switch (method) {
 		case 'create':
 		case 'update':
-			var attrObj = {};
+			resp = (function() {
+				var attrObj = {};
 
-			if (!model.id) {
-				model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
-				attrObj[model.idAttribute] = model.id;
-				model.set(attrObj, { silent: true });
-			}
+				if (!model.id) {
+					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
+					attrObj[model.idAttribute] = model.id;
+					model.set(attrObj, { silent: true });
+				}
 
-			// assemble columns and values
-			var names = [], values = [], q = [];
-			for (var k in columns) {
-				names.push(k);
-				values.push(model.get(k));
-				q.push("?");
-			}
+				// assemble columns and values
+				var names = [], values = [], q = [];
+				for (var k in columns) {
+					names.push(k);
+					values.push(model.get(k));
+					q.push("?");
+				}
 
-			// execute the query
-			db = Ti.Database.open(dbName);
-			db.execute("REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");", values);
+				// execute the query
+				sql = "REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
+				db = Ti.Database.open(dbName);
+				db.execute(sql, values);
 
-			if (model.id === null) {
-				model.id = db.lastInsertRowId;
-				attrObj[model.idAttribute] = model.id;
-				model.set(attrObj, { silent: true });
-			}
+				// if model.id is still null, grab the last inserted id
+				if (model.id === null) {
+					model.id = db.lastInsertRowId;
+					attrObj[model.idAttribute] = model.id;
+					model.set(attrObj, { silent: true });
+				}
 
-			db.close();
-			resp = model.toJSON();
+				// cleanup
+				db.close();
+
+				return model.toJSON();
+			})();
 			break;
 
 		case 'read':
