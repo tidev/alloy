@@ -1,0 +1,6 @@
+"TableViewRow":{
+	font:{
+		fontSize:'16dp'
+	},
+	color:'black'
+}
