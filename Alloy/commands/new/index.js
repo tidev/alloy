@@ -17,6 +17,7 @@ module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
 	var templateName = args[1] || 'default';
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
+	var REGEX_EXCLUDE = "/specs/";
 
 	// only overwrite existing app path if given the force option
 	if (path.existsSync(paths.app)) {
@@ -70,7 +71,7 @@ module.exports = function(args, program) {
 
 		var p = path.join(paths.app,'assets',dir);
 		wrench.mkdirSyncRecursive(p, 0755);
-		wrench.copyDirSyncRecursive(rDir, p);
+		wrench.copyDirSyncRecursive(rDir, p, {exclude: REGEX_EXCLUDE});
 	});
 
 	// copy in any Alloy-specific Resources files
@@ -79,7 +80,7 @@ module.exports = function(args, program) {
 		wrench.copyDirSyncRecursive(
 			path.join(platformsDir,p,'project'),
 			paths.project,
-			{preserve:true}
+			{preserve:true, exclude:REGEX_EXCLUDE}
 		);
 	});
 
