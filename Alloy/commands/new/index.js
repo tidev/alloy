@@ -17,7 +17,6 @@ module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
 	var templateName = args[1] || 'default';
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
-	var REGEX_EXCLUDE = "/specs/";
 
 	// only overwrite existing app path if given the force option
 	if (path.existsSync(paths.app)) {
@@ -71,7 +70,7 @@ module.exports = function(args, program) {
 
 		var p = path.join(paths.app,'assets',dir);
 		wrench.mkdirSyncRecursive(p, 0755);
-		wrench.copyDirSyncRecursive(rDir, p, {exclude: REGEX_EXCLUDE});
+		wrench.copyDirSyncRecursive(rDir, p);
 	});
 
 	// copy in any Alloy-specific Resources files
@@ -80,9 +79,22 @@ module.exports = function(args, program) {
 		wrench.copyDirSyncRecursive(
 			path.join(platformsDir,p,'project'),
 			paths.project,
-			{preserve:true, exclude:REGEX_EXCLUDE}
+			{preserve:true}
 		);
 	});
+
+	// if creating from one of the test apps...
+	if(program.testapp) {
+		// remove _generated folder,
+		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
+		// copyDirSynRecursive() statements above rather than deleting the folder here
+		wrench.rmdirSyncRecursive(path.join(paths.app,'_generated'), true);
+		if(path.existsSync(path.join(test_apps_folder, program.testapp, 'specs'))) {
+			// copy in the test harness
+			wrench.mkdirSyncRecursive(path.join(paths.app,'lib'), 0755);
+			wrench.copyDirSyncRecursive(path.join(path.resolve(test_apps_folder, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+		}
+	}
 
 	// delete the build folder to give us a fresh run
 	wrench.rmdirSyncRecursive(paths.build, true);
