@@ -150,7 +150,9 @@ module.exports = function(args, program) {
 	U.copyFileSync(
 		path.join(
 			alloyRoot, "lib", "alloy", "backbone",
-			(_.contains(["0.9.2", "1.1.2"], compileConfig.backbone)) ? compileConfig.backbone : "1.1.2",
+			(_.contains(CONST.SUPPORTED_BACKBONE_VERSIONS, compileConfig.backbone))
+				? compileConfig.backbone
+				: CONST.DEFAULT_BACKBONE_VERSION,
 			"backbone.js"
 		),
 		path.join(paths.resources, titaniumFolder, "alloy", "backbone.js")
