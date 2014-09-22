@@ -644,7 +644,7 @@ function deepExtend() {
 				}
 
 				// Recurse if we're merging plain objects or arrays
-				if (deep && copy && ((_.isObject(copy) && _.isObject(copy.__proto__)) || (copy_is_array = _.isArray(copy)))) {
+				if (deep && copy && ((_.isObject(copy) && typeof copy.__proto__ !== 'undefined') || (copy_is_array = _.isArray(copy)))) {
 					if (copy_is_array) {
 						copy_is_array = false;
 						clone = src && _.isArray(src) ? src : [];
