@@ -166,7 +166,7 @@ function Sync(method, model, opts) {
 				if (!model.id) {
 					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj, { silent: true });
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// assemble columns and values
@@ -186,7 +186,7 @@ function Sync(method, model, opts) {
 				if (model.id === null) {
 					model.id = db.lastInsertRowId;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj, { silent: true });
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// cleanup
