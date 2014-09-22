@@ -9,10 +9,14 @@ var path = require('path'),
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname,'..','..','..','platforms');
 
+var test_apps_folder = (process.platform === 'win32') ?
+	path.join(process.env.APPDATA, 'npm', 'node_modules', 'alloy', 'test', 'apps') :
+	path.join(process.execPath, '..', '..', 'lib', 'node_modules', 'alloy', 'test', 'apps');
+
 module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
 	var templateName = args[1] || 'default';
-	var paths = getPaths(args[0] || '.', templateName);
+	var paths = getPaths(args[0] || '.', templateName, program.testapp);
 
 	// only overwrite existing app path if given the force option
 	if (path.existsSync(paths.app)) {
@@ -43,7 +47,8 @@ module.exports = function(args, program) {
 	U.copyFileSync(path.join(paths.template,'alloy.js'), path.join(paths.app,'alloy.js'));
 
 	// add alloy project template files
-	wrench.copyDirSyncRecursive(path.join(paths.projectTemplate,'app'), paths.app, {preserve:true});
+	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate,'app') : paths.projectTemplate;
+	wrench.copyDirSyncRecursive(tplPath, paths.app, {preserve:true});
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// install ti.alloy compiler plugin
@@ -78,13 +83,26 @@ module.exports = function(args, program) {
 		);
 	});
 
+	// if creating from one of the test apps...
+	if(program.testapp) {
+		// remove _generated folder,
+		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
+		// copyDirSynRecursive() statements above rather than deleting the folder here
+		wrench.rmdirSyncRecursive(path.join(paths.app,'_generated'), true);
+		if(path.existsSync(path.join(test_apps_folder, program.testapp, 'specs'))) {
+			// copy in the test harness
+			wrench.mkdirSyncRecursive(path.join(paths.app,'lib'), 0755);
+			wrench.copyDirSyncRecursive(path.join(path.resolve(test_apps_folder, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+		}
+	}
+
 	// delete the build folder to give us a fresh run
 	wrench.rmdirSyncRecursive(paths.build, true);
 
 	logger.info('Generated new project at: ' + paths.app);
 };
 
-function getPaths(project, templateName) {
+function getPaths(project, templateName, testapp) {
 	var alloy = path.join(__dirname,'..', '..');
 	var template = path.join(alloy,'template');
 	var projectTemplates = path.join(alloy,'..','templates');
@@ -94,7 +112,8 @@ function getPaths(project, templateName) {
 		alloy: alloy,
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
-		projectTemplate: path.join(projectTemplates,templateName),
+		projectTemplate: (!testapp) ? path.join(projectTemplates,templateName) :
+		path.join(test_apps_folder, testapp),
 
 		// project paths
 		project: project,
@@ -111,7 +130,8 @@ function getPaths(project, templateName) {
 					// skip
 					return;
 				case 'projectTemplate':
-					errs.push('Project template "' + templateName + '" not found at "' + v + '"');
+					var error = (!testapp) ? 'Project template "' + templateName : 'Test app "' + testapp;
+					errs.push(error + '" not found at "' + v + '"');
 					break;
 				case 'project':
 					errs.push('Project path not found at "' + v + '"');

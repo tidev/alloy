@@ -37,6 +37,10 @@ var RUNS = [
 	{
 		cmd: 'cd "' + Harness + '" && alloy new',
 		success: true
+	},
+	{
+		cmd: 'alloy new "' + Harness + '" --testapp ui/listview',
+		success: true
 	}
 ];
 
