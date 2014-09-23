@@ -1,4 +1,5 @@
-var _ = require('alloy/underscore')._;
+var _ = require('alloy/underscore')._,
+	backbone = require('alloy/backbone');
 
 // The database name used when none is specified in the
 // model configuration.
@@ -165,7 +166,7 @@ function Sync(method, model, opts) {
 				if (!model.id) {
 					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj, { silent: true });
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// assemble columns and values
@@ -185,7 +186,7 @@ function Sync(method, model, opts) {
 				if (model.id === null) {
 					model.id = db.lastInsertRowId;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj, { silent: true });
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// cleanup
@@ -247,7 +248,11 @@ function Sync(method, model, opts) {
 
 			// shape response based on whether it's a model or collection
 			var len = values.length;
-			model.length = len;
+
+			if (backbone.VERSION === "0.9.2") {
+				model.length = len;
+			}
+
 			resp = (len===1) ? values[0] : values;
 			break;
 
