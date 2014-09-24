@@ -643,13 +643,13 @@ function deepExtend() {
 					continue;
 				}
 
-				if (_.isDate(copy)) {
-					clone = new Date(copy.valueOf());
-				} else if (deep && copy && ((_.isObject(copy) && !_.has(copy, 'apiName')) || (copy_is_array = _.isArray(copy)))) {
+				if (deep && copy && ((_.isObject(copy) && !_.has(copy, 'apiName')) || (copy_is_array = _.isArray(copy)))) {
 					// Recurse if we're merging plain objects or arrays
 					if (copy_is_array) {
 						copy_is_array = false;
 						clone = src && _.isArray(src) ? src : [];
+					} else if (_.isDate(copy)) {
+						clone = new Date(copy.valueOf());
 					} else {
 						clone = src && _.isObject(src) ? src : {};
 					}
