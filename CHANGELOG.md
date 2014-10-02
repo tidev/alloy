@@ -1,6 +1,6 @@
 ## Titanium Alloy Release Notes
 
-### Release 1.5.1 (10/3/2014)
+### Release 1.5.1 (10/2/2014)
 
 Below are the fixes included in this release.
 
