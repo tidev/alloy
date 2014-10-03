@@ -1,6 +1,12 @@
 ## Titanium Alloy Release Notes
 
-### Release 1.5.0
+### Release 1.5.1 (10/2/2014)
+
+Below are the fixes included in this release.
+
+* [ALOY-1149](https://jira.appcelerator.org/browse/ALOY-1149). iOS: Gradient array properties are converted into objects
+
+### Release 1.5.0 (09/29/2014)
 
 [Full list of Issues that were addressed in Release 1.5.0](https://jira.appcelerator.org/issues/?filter=16426)
 
