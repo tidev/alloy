@@ -10,6 +10,7 @@ function __processArg(obj, key) {
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "theRest";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
         {

@@ -1,0 +1,30 @@
+<Alloy>
+	<NavigationWindow platform="ios" id="navWin">
+		<Window title="Child window">
+			<LeftNavButton>
+				<Button id="close" title="Close" onClick="doClose"/>
+			</LeftNavButton>
+			<Label id="argLabel"/>
+			<Label id="argLabelTwo" if="$.args.someProperty" text="XML-based if condition"/>
+		</Window>
+	</NavigationWindow>
+
+	<Window platform="android">
+		<Label id="argLabel"/>
+			<Label id="argLabelTwo" if="$.args.someProperty" text="XML-based if condition"/>
+	</Window>
+
+	<Window platform="mobileweb">
+		<NavigationGroup>
+			<Window title="Child window" id="navWin">
+			<LeftNavButton>
+				<Button id="close" title="Close" onClick="doClose"/>
+			</LeftNavButton>
+			<Label id="argLabel"/>
+			<Label id="argLabelTwo" if="$.args.someProperty" text="XML-based if condition"/>
+			</Window>
+		</NavigationGroup>
+	</Window>
+
+
+</Alloy>
