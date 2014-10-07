@@ -1,0 +1,21 @@
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	color: '#000',
+	textAlign: 'center',
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	},
+	text: 'args.someProperty is falsey',
+	top: 25
+}
+
+'Window': {
+	backgroundColor: '#fff',
+	layout: 'vertical'
+}
+
+"#argLabel[if=$.args.someProperty]": {
+	text: 'args.someProperty is truthy'
+}

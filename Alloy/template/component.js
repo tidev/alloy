@@ -17,6 +17,7 @@ function Controller() {
 	<%= Widget %>
 	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	this.__controllerPath = '<%= controllerPath %>';
+	this.args = arguments[0] || {};
 
 	if (arguments[0]) {
 		var <%= parentVariable %> = __processArg(arguments[0], '<%= parentVariable %>');
