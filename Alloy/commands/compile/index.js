@@ -330,7 +330,7 @@ function generateAppJs(paths, compileConfig) {
 
 		// info needed to generate app.js
 		target = {
-			filename: 'Resources/' + titaniumFolder + '/app.js',
+			filename: 'Resources' + path.sep + titaniumFolder + path.sep + 'app.js',
 			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
 			template: path.join(alloyRoot, 'template', 'app.js')
 		},
@@ -338,7 +338,7 @@ function generateAppJs(paths, compileConfig) {
 		// additional data used for source mapping
 		data = {
 			'__MAPMARKER_ALLOY_JS__': {
-				filename: 'app/alloy.js',
+				filename: 'app' + path.sep + 'alloy.js',
 				filepath: alloyJs
 			}
 		},
