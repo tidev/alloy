@@ -590,7 +590,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			template.viewCode += CU.generateNode(node, {
 				parent:{},
 				styles:state.styles,
-				widgetId: manifest ? manifest.id : undefined
+				widgetId: manifest ? manifest.id : undefined,
+				parentFormFactor: node.hasAttribute('formFactor') ? node.getAttribute('formFactor') : undefined
 			}, defaultId, true);
 		});
 	}
@@ -616,8 +617,8 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
 		template.viewCode += 'var ' + handlerVar + '=function() {';
-		CU.destroyCode += modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," +
-			handlerVar + ");";
+		CU.destroyCode += ((state.parentFormFactor) ? 'is' + U.ucfirst(state.parentFormFactor) : '' ) +
+			modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 
 		// for each specific conditional within the bindings map....
 		_.each(_.groupBy(mapping, function(b){return b.condition;}), function(bindings,condition) {
@@ -649,6 +650,17 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 
 	// add destroy() function to view for cleaning up bindings
 	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
+
+	// add dataFunction of original name (if data-binding with form factor has been used)
+	if(!_.isEmpty(CU.dataFunctionNames)) {
+		_.each(Object.keys(CU.dataFunctionNames), function(funcName) {
+			template.viewCode += 'function ' + funcName + '() { ';
+			_.each(CU.dataFunctionNames[funcName], function(formFactor){
+				template.viewCode += '	if(Alloy.is' + U.ucfirst(formFactor) + ') { ' + funcName + U.ucfirst(formFactor) + '(); } '
+			});
+			template.viewCode += '}';
+		});
+	}
 
 	// add any postCode after the controller code
 	template.postCode += CU.postCode;

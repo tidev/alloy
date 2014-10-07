@@ -1,0 +1,17 @@
+<Alloy>
+	<Collection src="test" />
+	<Window id="index" platform="ios" formFactor="tablet">
+		<TableView dataCollection="test" dataFunction="render">
+			<TableViewRow>
+				<Label text="{username}" color="red"></Label>
+			</TableViewRow>
+		</TableView>
+	</Window>
+	<Window id="index" platform="ios" formFactor="handheld">
+		<TableView dataCollection="test" dataFunction="render">
+			<TableViewRow>
+				<Label text="{username}" color="blue"></Label>
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>

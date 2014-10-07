@@ -68,6 +68,7 @@ exports.bindingsMap = {};
 exports.destroyCode = '';
 exports.postCode = '';
 exports.models = [];
+exports.dataFunctionNames = {};
 
 //////////////////////////////////////
 ////////// public interface //////////
@@ -388,6 +389,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
 				var newState = _.defaults({ parent: p }, state);
+				if(node.hasAttribute('formFactor') || state.parentFormFactor) {
+					// propagate the form factor down through the hierarchy
+					newState.parentFormFactor = (node.getAttribute('formFactor') || state.parentFormFactor);
+				}
 				code.content += exports.generateNode(parent.childNodes.item(i), newState);
 			}
 		});
@@ -901,7 +906,14 @@ exports.generateCollectionBindingTemplate = function(args) {
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
 	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
-
+	if(args.parentFormFactor) {
+		if(!exports.dataFunctionNames[handlerFunc]) {
+			exports.dataFunctionNames[handlerFunc] = [];
+		}
+		exports.dataFunctionNames[handlerFunc].push(args.parentFormFactor);
+		// append the form factor for the code below
+		handlerFunc += U.ucfirst(args.parentFormFactor);
+	}
 	// construct code template
 	code += "var " + colVar + "=" + col + ";";
 	code += "function " + handlerFunc + "(e) {";
@@ -931,7 +943,8 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "};";
 	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
-	exports.destroyCode += colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
+	exports.destroyCode += ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
+		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
 	return code;
 };
