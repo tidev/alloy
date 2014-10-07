@@ -219,6 +219,7 @@ exports.IMPLICIT_NAMESPACES = {
 	RightButton: '_ProxyProperty',
 	LeftButton: '_ProxyProperty',
 	KeyboardToolbar: '_ProxyProperty',
+	ActionView: '_ProxyProperty'
 
 };
 
