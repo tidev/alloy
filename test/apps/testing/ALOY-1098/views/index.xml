@@ -1,0 +1,19 @@
+<Alloy>
+	<Window>
+		<Menu platform="android">
+		  <MenuItem showAsAction=Ti.Android.SHOW_AS_ACTION_IF_ROOM|Ti.Android.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW  icon=Ti.Android.R.drawable.ic_menu_search>
+			 <ActionView>
+				<TextField hintText="Use a SearchView"/>
+			 </ActionView>
+		  </MenuItem>
+		  <MenuItem showAsAction=Ti.Android.SHOW_AS_ACTION_IF_ROOM>
+			 <ActionView>
+				<Button title="Click"/>
+			 </ActionView>
+		  </MenuItem>
+		  <MenuItem title="Normal"/>
+		</Menu>
+		<Label platform="ios,mobileweb" text="This app is for Android only"/>
+		<Label platform="android" text="Tap search icon to expand ActionView"/>
+	</Window>
+</Alloy>
