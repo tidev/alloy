@@ -643,7 +643,7 @@ function deepExtend() {
 					continue;
 				}
 
-				if (deep && copy && ((_.isObject(copy) && !_.has(copy, 'apiName')) || (copy_is_array = _.isArray(copy))) && !copy.colors) {
+				if (deep && copy && _.isObject(copy) && ((copy_is_array = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
 					// Recurse if we're merging plain objects or arrays
 					if (copy_is_array) {
 						copy_is_array = false;
@@ -659,9 +659,6 @@ function deepExtend() {
 
 				// Don't bring in undefined values
 				} else if (typeof copy !== 'undefined') {
-					target[name] = copy;
-				} else if(copy.colors) {
-					// don't deep merge the colors property of backgroundGradient
 					target[name] = copy;
 				}
 			}
