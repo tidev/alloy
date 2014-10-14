@@ -46,11 +46,6 @@ module.exports = function(args, program) {
 	// add the default alloy.js file
 	U.copyFileSync(path.join(paths.template,'alloy.js'), path.join(paths.app,'alloy.js'));
 
-	// add alloy project template files
-	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate,'app') : paths.projectTemplate;
-	wrench.copyDirSyncRecursive(tplPath, paths.app, {preserve:true});
-	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
-
 	// install ti.alloy compiler plugin
 	U.installPlugin(path.join(paths.alloy,'..'), paths.project);
 
@@ -82,6 +77,11 @@ module.exports = function(args, program) {
 			{preserve:true}
 		);
 	});
+
+	// add alloy project template files
+	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate,'app') : paths.projectTemplate;
+	wrench.copyDirSyncRecursive(tplPath, paths.app, {preserve:true});
+	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// if creating from one of the test apps...
 	if(program.testapp) {
