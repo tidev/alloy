@@ -656,11 +656,9 @@ function deepExtend() {
 
 					// Never move original objects, clone them
 					target[name] = deepExtend(deep, clone, copy);
-
-				// Don't bring in undefined values
-				} else if (typeof copy !== 'undefined') {
-					target[name] = copy;
 				}
+
+				target[name] = copy;
 			}
 		}
 	}
@@ -668,4 +666,3 @@ function deepExtend() {
 	// Return the modified object
 	return target;
 };
-
