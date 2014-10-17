@@ -1,1 +1,1 @@
-Alloy.Globals.Map = OS_ANDROID ? require('ti.map') : Ti.Map;
+Alloy.Globals.Map = OS_ANDROID || OS_IOS ? require('ti.map') : Ti.Map;
