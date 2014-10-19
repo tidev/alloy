@@ -18,7 +18,8 @@ var path = require('path'),
 	sourceMapper = require('./sourceMapper'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	BuildLog = require('./BuildLog'),
-	Orphanage = require('./Orphanage');
+	Orphanage = require('./Orphanage'),
+	FileTracker = require("./FileTracker");
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -228,6 +229,10 @@ module.exports = function(args, program) {
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
+	/// start the file tracker. This will check if we need to recompile the
+	/// files
+	var fileTracker = new FileTracker(compileConfig);
+
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
 	var tracker = {};
@@ -236,7 +241,14 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir,CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
+
 				if (viewRegex.test(view) && filterRegex.test(view)) {
+
+					/// check if we need to compile
+					if( !fileTracker.hasChanged(collection.dir, view) ){
+						return;
+					}
+
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
@@ -246,6 +258,7 @@ module.exports = function(args, program) {
 					// generate runtime controller
 					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id +
 						' ' : '') + 'view processing...');
+
 					parseAlloyComponent(view, collection.dir, collection.manifest);
 					tracker[fp] = true;
 				}
@@ -258,6 +271,11 @@ module.exports = function(args, program) {
 		if (fs.existsSync(theControllerDir)) {
 			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
 				if (controllerRegex.test(controller) && filterRegex.test(controller)) {
+
+					if( !fileTracker.hasChanged(collection.dir, controller) ){
+						return;
+					}
+
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0,controller.lastIndexOf('.'));
 					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
@@ -276,6 +294,9 @@ module.exports = function(args, program) {
 	logger.info('');
 
 	generateAppJs(paths, compileConfig);
+
+	/// saves the file tracker state
+	fileTracker.save();
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
 	// in platform-specific folders, so we just copy the platform-specific one to
@@ -375,6 +396,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 			CONST.DIR.RUNTIME_STYLE,
 		state = { parent: {}, styles: [] },
 		files = {};
+
 
 	// reset the bindings map
 	styler.bindingsMap = {};
@@ -617,6 +639,7 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		path.relative(compileConfig.dir.resources, files.COMPONENT));
 	var runtimeStylePath = path.join(compileConfig.dir.resources, titaniumFolder,
 		path.relative(compileConfig.dir.resources, files.RUNTIME_STYLE));
+
 	if (manifest) {
 		wrench.mkdirSyncRecursive(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
@@ -853,6 +876,7 @@ function optimizeCompiledCode() {
 
 	while((files = _.difference(getJsFiles(),lastFiles)).length > 0) {
 		_.each(files, function(file) {
+
 			// generate AST from file
 			var fullpath = path.join(compileConfig.dir.resources,file);
 			var ast;
