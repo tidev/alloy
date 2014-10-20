@@ -16,7 +16,7 @@ function Sync(method, model, opts) {
 	var resp = null;
 
 	if (method === 'read') {
-		if (opts.parse) {
+		if (model instanceof Backbone.Collection) {
 			// is collection
 			var list = [];
 			_.each(TAP.listProperties(), function(prop) {
