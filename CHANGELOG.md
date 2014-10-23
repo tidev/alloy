@@ -7,7 +7,6 @@
 * [ALOY-1075](https://jira.appcelerator.org/browse/ALOY-1075). Confirm existing adapters support Backbone 1.x
 * [ALOY-1098](https://jira.appcelerator.org/browse/ALOY-1098). Support actionView property of MenuItem in XML markup
 * [ALOY-1104](https://jira.appcelerator.org/browse/ALOY-1104). Fail build with clear message if controllers/index.js is missing
-* [ALOY-1113](https://jira.appcelerator.org/browse/ALOY-1113). Fix case on 'alloy info adapters' command output
 * [ALOY-1121](https://jira.appcelerator.org/browse/ALOY-1121). Update extract-i18n command to extract strings from XML files in addition to TSS
 * [ALOY-1129](https://jira.appcelerator.org/browse/ALOY-1129). Delete method shouldn't reset model's id
 * [ALOY-1140](https://jira.appcelerator.org/browse/ALOY-1140). Windows: The path format for app.js is different from controller files in sourcemap
@@ -15,7 +14,11 @@
 * [ALOY-1153](https://jira.appcelerator.org/browse/ALOY-1153). MobileWeb: transform using 'Ti.UI.create2DMatrix()' and Dynamic Styling does not work
 * [ALOY-1158](https://jira.appcelerator.org/browse/ALOY-1158). Alloy Model/Collection tests need to be updated for supporting also Backbone 1.1.2
 * [ALOY-1159](https://jira.appcelerator.org/browse/ALOY-1159). Update underscore library to latest version
+* [ALOY-1161](https://jira.appcelerator.org/browse/ALOY-1161). MobileWeb: using 'backbone 1.1.2' dependency, app crashes on MobileWeb
+* [ALOY-1162](https://jira.appcelerator.org/browse/ALOY-1162). Backbone 1.1.2: model/property sample returning unexpected data for model attributes
 * [ALOY-1165](https://jira.appcelerator.org/browse/ALOY-1165). Compile error when merging backgroundGradient
+* [ALOY-1167](https://jira.appcelerator.org/browse/ALOY-1167). Update travis.yml to exit w/non-zero values on errors
+* [ALOY-1175](https://jira.appcelerator.org/browse/ALOY-1175). Cannot call methods or access properties on MenuItems declared in markup
 
 ### Release 1.5.1 (10/2/2014)
 
