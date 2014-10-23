@@ -42,6 +42,7 @@ function parse(node, state, args) {
 			parent: state.parent.symbol || CONST.PARENT_SYMBOL_VAR,
 			style: CU.generateUniqueId(),
 			styleCode: styleObjectCode,
+			argsId: args.id,
 			actionView: (actionView && actionView.parent) ? actionView.parent.symbol : false
 		})
 	};
