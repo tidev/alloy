@@ -31,7 +31,14 @@ exports.definition = {
 	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
-			// extended functions go here
+			// For Backbone v1.1.2, uncomment this to override the fetch method
+			/*
+			fetch: function(options) {
+				options = options ? _.clone(options) : {};
+				options.reset = true;
+				return Backbone.Collection.prototype.fetch.call(this, options);
+			},
+			*/
 
 		}); // end extend
 
