@@ -25,7 +25,6 @@
 Below are the fixes included in this release.
 
 * [ALOY-1149](https://jira.appcelerator.org/browse/ALOY-1149). iOS: Gradient array properties are converted into objects
-* [ALOY-1150](https://jira.appcelerator.org/browse/ALOY-1150). Release notes: there is no date for the 1.5.0 release
 
 ### Release 1.5.0 (09/29/2014)
 
