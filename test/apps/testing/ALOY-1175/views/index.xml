@@ -1,0 +1,27 @@
+<Alloy>
+    <Window id="win">
+        <Menu>
+            <MenuItem id="item1"
+            	title="Expand"
+            	onClick="expand"
+           		showAsAction="Titanium.Android.SHOW_AS_ACTION_IF_ROOM" />
+            <MenuItem
+            	title="Collapse"
+            	onClick="collapse"
+            	showAsAction="Titanium.Android.SHOW_AS_ACTION_IF_ROOM" />
+            <MenuItem id="item3"
+            	title="Item 3"
+            	showAsAction="Titanium.Android.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW"
+            	onExpand="report"
+            	onCollapse="report">
+                <ActionView>
+                    <View layout="horizontal">
+                        <Button left="0">Search</Button>
+                        <TextField right="0" hintText="Type Something"/>
+                    </View>
+                </ActionView>
+            </MenuItem>
+        </Menu>
+       <Label id="msg"/>
+    </Window>
+</Alloy>
