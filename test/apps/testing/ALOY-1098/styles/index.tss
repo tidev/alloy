@@ -1,0 +1,11 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"Label": {
+	color: 'black',
+	font: {
+		fontSize: '14dp'
+	}
+}
