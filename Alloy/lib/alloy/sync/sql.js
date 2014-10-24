@@ -1,4 +1,5 @@
 var _ = require('alloy/underscore')._;
+	backbone = require('alloy/backbone');
 
 // The database name used when none is specified in the
 // model configuration.
@@ -165,7 +166,7 @@ function Sync(method, model, opts) {
 				if (!model.id) {
 					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
 					attrObj[model.idAttribute] = model.id;
-					model.set(attrObj, { silent: true });
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// assemble columns and values
@@ -189,7 +190,7 @@ function Sync(method, model, opts) {
 					if (rs && rs.isValidRow()) {
 						model.id = rs.field(0);
 						attrObj[model.idAttribute] = model.id;
-						model.set(attrObj, { silent: true });
+						backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 					} else {
 						Ti.API.warn('Unable to get ID from database for model: ' + model.toJSON());
 					}
@@ -257,7 +258,10 @@ function Sync(method, model, opts) {
 			db.close();
 
 			// shape response based on whether it's a model or collection
-			model.length = len;
+			if (backbone.VERSION === "0.9.2") {
+				model.length = len;
+			}
+
 			if (len === 1) {
 				resp = values[0];
 			} else {
