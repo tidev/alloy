@@ -134,17 +134,30 @@ module.exports = function(args, program) {
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot,'..'), paths.project);
 
-	// copy in all lib resources from alloy module
+	// copy in all lib resources from alloy module, exclude backbone dir
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
 		{
 			rootDir: paths.project,
+			filter: new RegExp('^alloy[\\/\\\\]backbone([\\/\\\\]|$)'),
 			exceptions: _.map(_.difference(CONST.ADAPTERS, compileConfig.adapters), function(a) {
 				return path.join('alloy', 'sync', a + '.js');
 			})
 		}
 	);
+	// Copy the version of backbone that is specified in config.json
+	U.copyFileSync(
+		path.join(
+			alloyRoot, "lib", "alloy", "backbone",
+			(_.contains(CONST.SUPPORTED_BACKBONE_VERSIONS, compileConfig.backbone))
+				? compileConfig.backbone
+				: CONST.DEFAULT_BACKBONE_VERSION,
+			"backbone.js"
+		),
+		path.join(paths.resources, titaniumFolder, "alloy", "backbone.js")
+	);
+
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
