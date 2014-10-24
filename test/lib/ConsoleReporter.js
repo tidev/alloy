@@ -6,7 +6,11 @@ module.exports = function(opts) {
 	//https://github.com/mhevery/jasmine-node
 	opts = opts || {};
 
-	var doneCallback = opts.doneCallback || function() {};
+	var doneCallback = opts.doneCallback || function() {
+		if(r && r.results() && r.results().failedCount > 0 ) {
+			process.exit(1);
+		}
+	};
 	var print, showColors;
 	if (typeof Ti !== 'undefined') {
 		print = Ti.Platform.osname === 'android' ?

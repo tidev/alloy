@@ -59,7 +59,7 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
-				if (process.platform === 'darwin' && platform.platform === 'blackberry') {
+				if (process.platform !== 'win32' && platform.platform === 'blackberry') {
 					return;
 				}
 

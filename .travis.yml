@@ -4,3 +4,6 @@ node_js:
 before_script:
   - npm install -g .
   - npm install -g jake
+  - npm install -g titanium
+  - mkdir ~/.titanium
+  - cp ./cli_config.json ~/.titanium/config.json
