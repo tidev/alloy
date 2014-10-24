@@ -273,7 +273,6 @@ function Sync(method, model, opts) {
 			db.execute(sql, model.id);
 			db.close();
 
-			model.id = null;
 			resp = model.toJSON();
 			break;
 	}
