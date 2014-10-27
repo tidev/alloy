@@ -1,0 +1,16 @@
+'#index': {
+	backgroundColor: 'black',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#msg": {
+	color: 'white',
+	text: 'This example for Android only'
+}
+"#msg[platform=android]": {
+	color: 'white',
+	text: 'Tap the menu buttons',
+	font: {
+		fontSize: '16dp'
+	}
+}
