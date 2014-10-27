@@ -6,7 +6,7 @@ module.exports = function(opts) {
 	//https://github.com/mhevery/jasmine-node
 	opts = opts || {};
 
-	var doneCallback = opts.doneCallback || function() {
+	var doneCallback = opts.doneCallback || function(r) {
 		if(r && r.results() && r.results().failedCount > 0 ) {
 			process.exit(1);
 		}
