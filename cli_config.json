@@ -1,0 +1,52 @@
+{
+	"user": {
+		"locale": "en_US",
+		"name": "Travis Runner",
+		"email": "no-reply@appcelerator.com"
+	},
+	"app": {
+		"workspace": "",
+		"idprefix": "com.appcelerator",
+		"publisher": "Appcelerator Inc.",
+		"url": "http://appcelerator.com"
+	},
+	"cli": {
+		"colors": true,
+		"completion": false,
+		"logLevel": "debug",
+		"prompt": true,
+		"progressBars": true,
+		"failOnWrongSDK": false,
+		"httpProxyServer": "",
+		"rejectUnauthorized": true,
+		"width": 100,
+		"ignoreDirs": "^(\\.svn|_svn|\\.git|\\.hg|\\.?[Cc][Vv][Ss]|\\.bzr|\\$RECYCLE\\.BIN)$",
+		"ignoreFiles": "^(\\.gitignore|\\.npmignore|\\.cvsignore|\\.DS_Store|\\._.*|[Tt]humbs.db|\\.vspscc|\\.vssscc|\\.sublime-project|\\.sublime-workspace|\\.project|\\.tmproj)$"
+	},
+	"paths": {
+		"commands": [
+			"/usr/local/lib/node_modules/titanium-code-processor/commands"
+		],
+		"hooks": [],
+		"modules": [],
+		"plugins": [],
+		"sdks": [
+			"/Users/admin/Library/Application Support/Titanium"
+		],
+		"templates": [],
+		"codeProcessorPlugins": []
+	},
+	"sdk": {
+		"selected": "3.4.0.GA",
+		"defaultInstallLocation": "/Users/admin/Library/Application Support/Titanium/"
+	},
+	"android": {
+		"sdkPath": "/android-sdk",
+		"ndkPath": ""
+	},
+	"ios": {
+		"developerName": "",
+		"distributionName": "",
+		"autoSelectDevice": true
+	}
+}
