@@ -18,10 +18,12 @@ function extractStrings() {
         var files = wrench.readdirSyncRecursive(sourceDir);
         var styleSuffix = '.' + CONST.FILE_EXT.STYLE;
         var controllerSuffix = '.' + CONST.FILE_EXT.CONTROLLER;
+        var viewSuffix = '.' + CONST.FILE_EXT.VIEW;
 
-        // filter only js and style files
+        // filter only js, xml and style files
         files = _.filter(files, function(f) {
             return f.substr(-styleSuffix.length) === styleSuffix ||
+                f.substr(-viewSuffix.length) === viewSuffix ||
                 f.substr(-controllerSuffix.length) === controllerSuffix;
         });
 
