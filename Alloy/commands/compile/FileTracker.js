@@ -33,7 +33,9 @@ Internal.getAlloyFiles = function(widgetDir, file){
         var filename = file + '.' + CONST.FILE_EXT[fileType];
         var filepath = path.join(fileTypeRoot, filename);
 
-        files.push(filepath);
+        if(fs.existsSync(filepath)){
+            files.push(filepath);
+        }
 
     });
 
