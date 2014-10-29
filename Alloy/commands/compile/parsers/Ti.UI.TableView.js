@@ -2,7 +2,8 @@ var _ = require('../../../lib/alloy/underscore')._,
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
-	CONST = require('../../../common/constants');
+	CONST = require('../../../common/constants'),
+	logger = require('../../../logger');
 
 var PROXY_PROPERTIES = [
 	'_ProxyProperty._Lists.HeaderView',
@@ -42,6 +43,20 @@ function parse(node, state, args) {
 
 	// iterate through all children of the TableView
 	_.each(children, function(child) {
+		var config = CU.getCompilerConfig(),
+			platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
+		if (child.nodeName === 'SearchView' && platform !== 'android') {
+			if (node.getAttribute('platform') !== 'android') {
+				logger.warn([
+					'<SearchView> is only available in Android',
+					'To get rid of this warning, add platform="android" to your <SearchView> element'
+				]);
+			}
+			return;
+		}
+		if(child.nodeName === 'SearchView' && !child.hasAttribute('ns')) {
+			child.setAttribute('ns', 'Ti.UI.Android');
+		}
 		var fullname = CU.getNodeFullname(child),
 			theNode = CU.validateNodeName(child, ALL_VALID),
 			isSearchBar = false,
