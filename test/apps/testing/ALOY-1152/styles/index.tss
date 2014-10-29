@@ -1,0 +1,29 @@
+"Window": {
+	backgroundColor: '#fff',
+	top: '20dp',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+".row" : {
+	height: '30',
+	width: Ti.UI.FILL,
+	textAlign: 'left',
+	left: 10,
+	font: {
+		fontSize: 12,
+		fontWeight: 'bold'
+	}
+}
+
+"Label": {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.FILL,
+	textAlign: 'left',
+	color: "#000",
+	bottom:0,
+	font: {
+		fontSize: 10,
+		fontWeight: 'bold'
+	}
+}
