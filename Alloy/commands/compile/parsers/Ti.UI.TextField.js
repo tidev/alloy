@@ -109,7 +109,7 @@ function parse(node, state, args) {
 	code += nodeState.code;
 
 	// add the rows to the section
-	if (postCode) {
+	if (nodeState.parent && postCode) {
 		code += _.template(postCode, {
 			parentSymbol: nodeState.parent.symbol
 		});
