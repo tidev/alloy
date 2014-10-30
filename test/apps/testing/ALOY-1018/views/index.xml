@@ -1,0 +1,6 @@
+<Alloy module="testmod">
+	<Window>
+		<CustomButton top="100" title="I am a CustomButton"/>
+		<CustomLabel bottom="100" text="I am a CustomLabel"/>
+	</Window>
+</Alloy>
