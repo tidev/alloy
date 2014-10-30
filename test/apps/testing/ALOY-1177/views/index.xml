@@ -1,0 +1,30 @@
+<Alloy>
+	<Window>
+		<TableView filterAttribute="title">
+			<SearchView/>
+			<!-- <SearchView platform="android"/> -->
+			<!-- <SearchView ns="Ti.UI.Android" platform="android"/> -->
+			<TableViewSection>
+				<HeaderView>
+					<View backgroundColor="#a00" height="50dp"/>
+				</HeaderView>
+				<FooterView>
+					<View backgroundColor="#0a0" height="50dp"/>
+				</FooterView>
+				<TableViewRow title="Row 1"/>
+				<TableViewRow title="Row 2"/>
+				<TableViewRow title="Row 3"/>
+			</TableViewSection>
+			<TableViewSection headerTitle="Section 2">
+				<TableViewRow title="Row 1"/>
+				<TableViewRow title="Row 2"/>
+				<TableViewRow title="Row 3"/>
+			</TableViewSection>
+			<TableViewSection headerTitle="Section 3">
+				<TableViewRow title="Row 1"/>
+				<TableViewRow title="Row 2"/>
+				<TableViewRow title="Row 3"/>
+			</TableViewSection>
+		</TableView>
+	</Window>
+</Alloy>
