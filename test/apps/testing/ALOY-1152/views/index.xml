@@ -1,0 +1,23 @@
+<Alloy>
+	<Window>
+		<ListView>
+			<Templates>
+				<ItemTemplate name="tMsg">
+					<TextArea bindId="cMsg" class="row">
+						<Label bindId="lHintText" />
+					</TextArea>
+				</ItemTemplate>
+				<ItemTemplate name="fMsg">
+					<TextField bindId="cMsg" class="row">
+						<Label bindId="lHintText" />
+					</TextField>
+				</ItemTemplate>
+			</Templates>
+
+			<ListSection>
+				<ListItem itemId="liMessage" template="tMsg" cMsg:value="TEXTAREA" lHintText:text="CHILD LABEL" />
+				<ListItem itemId="liMessage" template="fMsg" cMsg:value="TEXTFIELD" lHintText:text="CHILD LABEL" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>
