@@ -72,6 +72,8 @@ var tests = [
 	["var platform = (Ti.Platform.name == '<%= name %>') ? 'true' : 'false'", "var platform=\"true\""],
 	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform=\"false\"", notPlatform('ios')],
 	["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform=\"true\"", ['android']],
+	["var platform = (Ti.Platform.osname == 'windowsphone') ? 'true' : 'false'", "var platform=\"true\"", ['windowsphone']],
+	["var platform = (Ti.Platform.osname == 'windowsstore') ? 'true' : 'false'", "var platform=\"true\"", ['windowsstore']],
 	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=0", notPlatform('ios')],
 	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform=\"iphone\"==Ti.Platform.osname?1:0", ['ios']],
 
