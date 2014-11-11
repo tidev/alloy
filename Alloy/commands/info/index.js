@@ -10,11 +10,11 @@ var info = {
 		var desc = {
 			properties: {
 				Description: 'Local persistence adapter that uses Ti.App.Properties storage',
-				platforms: ['android','ios','mobileweb','blackberry']
+				platforms: ['android','ios','mobileweb','blackberry', 'windowsphone', 'windowsstore']
 			},
 			sql: {
 				Description: 'Local persistence adapter that uses SQLite storage',
-				platforms: ['android','ios','blackberry']
+				platforms: ['android','ios','blackberry', 'windowsphone', 'windowsstore']
 			},
 			localStorage: {
 				Description: 'Local persistence adapter that uses HTML5 localStorage API',
