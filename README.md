@@ -1,6 +1,6 @@
 # Alloy
 
-**Latest stable version:** 1.5.1
+**Latest stable version:** 1.6.0
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
@@ -41,8 +41,8 @@ Beginning with Alloy 1.6, you can do the following:
 titanium create --name yourAppName
 cd yourAppName
 
-# then, convert it to an Alloy project, using the test app as a template 
-alloy new . --testapp basics/simple 
+# then, convert it to an Alloy project, using the test app as a template
+alloy new . --testapp basics/simple
 ```
 
 ### B) By cloning the repo and using the Jake test runner
@@ -106,7 +106,7 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
  active   : 589 days
  commits  : 3168
  files    : 2687
- authors  : 
+ authors  :
   2363	Tony Lukasavage        74.6%
    312	Tim Poulsen            9.8%
    106	Feon Sua               3.3%
