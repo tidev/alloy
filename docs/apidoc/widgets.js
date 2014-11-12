@@ -7,7 +7,7 @@
  * Note that to use the methods list below, the correct namespace is `Widget.create*` not
  * `Alloy.Widget.create*`.
  *
- * For more information on widgets, see [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
+ * For more information on widgets, see [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets).
  *
  * #### Creating a Widget
  *
