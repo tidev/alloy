@@ -37,6 +37,8 @@ module.exports = function($) {
 			text = 'Mobileweb';
 		} else if (OS_BLACKBERRY) {
 			text = 'Blackberry';
+		} else if (OS_WINDOWSPHONE || OS_WINDOWSSTORE) {
+			text = 'Windows';
 		}
 
 		validateUiComponent($, 'osLabel', {

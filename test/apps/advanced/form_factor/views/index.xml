@@ -3,11 +3,11 @@
 		<View id="main" formFactor="handheld">
 			<Label id="label">I'm a handheld!</Label>
 		</View>
-		
+
 		<View id="main" formFactor="tablet">
 			<Label id="label">I'm a tablet!</Label>
 		</View>
-		
+
 		<View id="container" height="50" width="200" bottom="10" backgroundColor="#cdcdcd">
 			<Label id="platformLabel" platform="android" formFactor="tablet">android tablet</Label>
 			<Label id="platformLabel" platform="android" formFactor="handheld">android handheld</Label>
@@ -17,6 +17,10 @@
 			<Label id="platformLabel" platform="blackberry" formFactor="handheld">blackberry handheld</Label>
 			<Label id="platformLabel" platform="mobileweb" formFactor="tablet">mobileweb tablet</Label>
 			<Label id="platformLabel" platform="mobileweb" formFactor="handheld">mobileweb handheld</Label>
+			<Label id="platformLabel" platform="windowsphone" formFactor="handheld">windowsphone handheld</Label>
+			<Label id="platformLabel" platform="windowsphone" formFactor="tablet">windowsphone tablet</Label>
+			<Label id="platformLabel" platform="windowsstore" formFactor="handheld">windowsstore handheld</Label>
+			<Label id="platformLabel" platform="windowsstore" formFactor="tablet">windowsstore tablet</Label>
 		</View>
 	</Window>
 </Alloy>

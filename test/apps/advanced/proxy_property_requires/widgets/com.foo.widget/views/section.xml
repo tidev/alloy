@@ -1,5 +1,5 @@
 <Alloy>
-	<TableViewSection platform="android">
+	<TableViewSection platform="android,windowsphone,windowsstore">
 		<HeaderView>
 			<Label>Test</Label>
 		</HeaderView>
