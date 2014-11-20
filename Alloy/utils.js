@@ -174,6 +174,7 @@ exports.createErrorOutput = function(msg, e) {
 exports.updateFiles = function(srcDir, dstDir, opts) {
 	opts = opts || {};
 	opts.rootDir = opts.rootDir || dstDir;
+	var copiedFiles = [];
 
 	if (!fs.existsSync(srcDir)) {
 		return;
@@ -191,14 +192,15 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		var src = path.join(srcDir,file);
 		var dst = path.join(dstDir,file);
 
-    if(excludeRegex.test(src)) {
-      return;
-    }
+		if (excludeRegex.test(src)) {
+			return;
+		}
 
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
 			(opts.filter && opts.filter.test(file)) ||
-			(opts.exceptions && _.contains(opts.exceptions, file))) {
+			(opts.exceptions && _.contains(opts.exceptions, file)) ||
+			(opts.restrictionPath && src !== opts.restrictionPath)) {
 			return;
 		}
 
@@ -236,6 +238,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 						path.join('SRC_DIR', path.relative(srcDir, src)).yellow + ' --> ' +
 						path.relative(opts.rootDir, dst).yellow);
 					exports.copyFileSync(src, dst);
+					copiedFiles.push(path.relative(path.join(opts.rootDir, 'Resources'), dst));
 				}
 			}
 		} else {
@@ -246,6 +249,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
 					' --> ' + path.relative(opts.rootDir, dst).yellow);
 				exports.copyFileSync(src, dst);
+				copiedFiles.push(path.relative(path.join(opts.rootDir, 'Resources'), dst));
 			}
 		}
 		if(!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
@@ -272,6 +276,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		}
 	});
 	logger.trace('');
+
+	return copiedFiles;
 };
 
 exports.getWidgetDirectories = function(appDir) {
