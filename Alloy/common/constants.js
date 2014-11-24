@@ -115,7 +115,7 @@ exports.DIR = {
 // folders/files to exclude when copying and processing files
 // RegEx format: must escape special chars - so use \.svn not .svn
 exports.EXCLUDED_FILES = [
-	'\\.svn'
+	'\\.svn','\\.git'
 ];
 
 // constants identifying JS reserved words
