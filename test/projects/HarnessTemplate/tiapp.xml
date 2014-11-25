@@ -6,8 +6,7 @@
         <target device="ipad">true</target>
         <target device="android">true</target>
         <target device="blackberry">true</target>
-        <target device="windowsphone">true</target>
-        <target device="windowsstore">true</target>
+        <target device="windows">true</target>
     </deployment-targets>
     <id>com.appcelerator.AlloyHarness</id>
     <name>Harness</name>
@@ -80,7 +79,6 @@
         <module version="1.2" platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
-        <module platform="windowsphone">ti.map</module>
-        <module platform="windowsstore">ti.map</module>
+        <module platform="windows">ti.map</module>
     </modules>
 </ti:app>
