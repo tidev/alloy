@@ -165,7 +165,7 @@ exports.M = function(name, modelDesc, migrations) {
 
 	// Run the post model creation code, if any
 	if (mod && _.isFunction(mod.afterModelCreate)) {
-		mod.afterModelCreate(Model, name);
+		Model = mod.afterModelCreate(Model, name);
 	}
 
 	return Model;
@@ -198,7 +198,7 @@ exports.C = function(name, modelDesc, model) {
 
 	// do any post collection creation code form the sync adapter
 	if (mod && _.isFunction(mod.afterCollectionCreate)) {
-		mod.afterCollectionCreate(Collection);
+		Collection = mod.afterCollectionCreate(Collection);
 	}
 
 	return Collection;
