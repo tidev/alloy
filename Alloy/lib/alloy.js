@@ -444,11 +444,11 @@ exports.createModel = function(name, args) {
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
- * @param {Object} [args] Arguments to pass to the collection.
+ * @param {Object} [options] options to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  */
-exports.createCollection = function(name, args) {
-	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
+exports.createCollection = function(name, options) {
+	return new (require('alloy/models/' + ucfirst(name)).Collection)(null, options);
 };
 
 function isTabletFallback() {
