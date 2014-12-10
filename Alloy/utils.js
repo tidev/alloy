@@ -487,6 +487,11 @@ exports.installPlugin = function(alloyPath, projectPath) {
 			file: CONST.HOOK_FILE,
 			src: path.join(alloyPath,'hooks'),
 			dest: path.join(projectPath,'plugins',id,'hooks')
+		},
+		cleanhook: {
+			file: CONST.HOOK_FILE_CLEAN,
+			src: path.join(alloyPath,'hooks'),
+			dest: path.join(projectPath,'plugins',id,'hooks')
 		}
 	};
 
