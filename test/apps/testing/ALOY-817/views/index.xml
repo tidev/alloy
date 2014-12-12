@@ -2,9 +2,10 @@
 	<Collection src="empty" onChange="collectionChange"/>
 	<Model src="empty" onChange="modelChange"/>
 	<Model src="empty" instance="true" id="anotherModel" onChange="anotherModelChange"/>
-
+	
 	<Window onClick="windowClick">
-		<View id="map2" ns="Alloy.Globals.Map" onClick="mapClick"/>
+		<Module id="map2" module="ti.map" method="createView" platform="ios,android" onClick="mapClick"/>
+		<View id="map2" ns="Alloy.Globals.Map" onClick="mapClick" platform="mobileweb"/>
 		<Require src="empty" onInit="emptyInit"/>
 	</Window>
 </Alloy>
