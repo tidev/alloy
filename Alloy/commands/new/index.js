@@ -1,3 +1,11 @@
+/*
+	Converts a Classic Titanium project to an Alloy project.
+	Run `alloy new [path]` for basic operation.
+
+	As of Alloy 1.7, you can create an app from one of the testing
+	apps by using:
+	`alloy new [path] --testapp ui/tableview `
+*/
 var path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
