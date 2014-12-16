@@ -4,7 +4,9 @@ var fs = require('fs'),
 	platforms = require('../platforms/index'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
 	colors = require('colors'),
-	exec = require('child_process').exec;
+	exec = require('child_process').exec,
+	TESTS_WITH_DATES = ['ALOY-263', 'ALOY-1003', 'ALOY-1058'],
+	TESTS_TO_SKIP = ['ALOY-840', 'ALOY-887', 'ALOY-932', 'ALOY-1080'];
 
 var alloyRoot = path.join(__dirname,'..'),
 	paths = {
@@ -20,6 +22,13 @@ if (!testApp) {
 	console.error('You must specify a test app');
 	console.error('  ex. node testgen.js advanced/device_query');
 	process.exit(1);
+} else if(TESTS_TO_SKIP.indexOf(testApp) !== -1) {
+	console.log((testApp + ' has code known to fail matching generated code. Canceling creation of _generated code.').yellow);
+	process.exit();
+} else if(TESTS_WITH_DATES.indexOf(testApp) !== -1) {
+	console.log((testApp + ' contains date functions, which create localized code unlikely to match on other systems.').yellow);
+	console.log(('Canceling creation of _generated code.').yellow);
+	process.exit();
 } else {
 	console.log('generating code for ' + testApp.yellow);
 }

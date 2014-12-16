@@ -16,6 +16,8 @@ Every test app should have "known good" code in the test/apps/testing/ALOY-1234/
 node tools/create_generated_code.js testing/ALOY-1234
 ```
 
+The script contains arrays of tests known to have issues with testing generated code. If your app tests a compile error, contains date functions, or should otherwise be skipped, please add the app's name to the appropriate array.
+
 ### checkmap.js
 
 Generates and outputs a source code map file that you can use for manual verification of the map.

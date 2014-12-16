@@ -31,23 +31,11 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.txt = Ti.UI.createTextField({
-        value: "July 4, 2014",
-        id: "txt",
-        top: "20"
+    $.__views.__alloyId0 = Ti.UI.createLabel({
+        text: "This app is supported only on iOS",
+        id: "__alloyId0"
     });
-    $.__views.index.add($.__views.txt);
-    $.__views.picker = Ti.UI.createPicker({
-        value: new Date("Wed Dec 17 2014 03:24:00 GMT-0500 (EST)"),
-        minDate: new Date("Fri Feb 08 2013 04:30:26 GMT-0500 (EST)"),
-        maxDate: new Date("Tue Nov 17 2015 00:00:00 GMT-0500 (EST)"),
-        format24: false,
-        calendarViewShown: false,
-        id: "picker",
-        top: "50",
-        type: Ti.UI.PICKER_TYPE_DATE
-    });
-    $.__views.index.add($.__views.picker);
+    $.__views.index.add($.__views.__alloyId0);
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
