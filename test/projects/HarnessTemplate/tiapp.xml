@@ -69,7 +69,7 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module version="1.2" platform="iphone">ti.paint</module>
+        <module platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
     </modules>
