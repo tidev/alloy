@@ -1,7 +1,7 @@
-migration.up = function(db) {
+migration.up = function(migrator) {
 <%= up %>
 };
 
-migration.down = function(db) {
+migration.down = function(migrator) {
 <%= down %>
 };
