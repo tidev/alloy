@@ -62,6 +62,9 @@ for (var i = 0; i < files.length; i++) {
 	console.log('* Created file ' + YELLOW(rel(fullpath)));
 }
 console.log(GREEN('test app ' + appName + ' successfully created.'));
+console.log('')
+console.log(YELLOW('Make sure to create _generated code when you are done with: '));
+console.log('   node tools/create_generated_code.js testing/' + appName);
 
 // helper functions
 function rel(p) {
