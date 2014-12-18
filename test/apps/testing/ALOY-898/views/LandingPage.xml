@@ -1,6 +1,6 @@
 <Alloy>
 	<Window id="landingPageWindow">
-		<Widget id="loading" src="com.appcelerator.loading" opacity="0.0"/>
+		<Widget id="loading" src="com.appcelerator.loading" opacity="1"/>
 		<Button onClick="closeWindow">CLOSE WINDOW</Button>
 	</Window>
 </Alloy>
