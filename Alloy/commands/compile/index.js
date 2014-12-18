@@ -199,21 +199,22 @@ module.exports = function(args, program) {
 
 	// check theme for assets
 	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
-
-		if (path.existsSync(themeAssetsPath)) {
-			updateFilesWithBuildLog(
-				themeAssetsPath,
-				path.join(paths.resources, titaniumFolder),
-				{
-					rootDir: paths.project,
-					themeChanged: buildLog.data.themeChanged,
-					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
-					exceptions: otherPlatforms,
-					titaniumFolder: titaniumFolder
-				}
-			);
-		}
+		_.each(['ASSETS','LIB','VENDOR'], function(type) {
+			var themeAssetsPath = path.join(paths.app,'themes',theme, CONST.DIR[type]);
+			if (path.existsSync(themeAssetsPath)) {
+				updateFilesWithBuildLog(
+					themeAssetsPath,
+					path.join(paths.resources, titaniumFolder),
+					{
+						rootDir: paths.project,
+						themeChanged: buildLog.data.themeChanged,
+						filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+						exceptions: otherPlatforms,
+						titaniumFolder: titaniumFolder
+					}
+				);
+			}
+		});
 	}
 	logger.debug('');
 
