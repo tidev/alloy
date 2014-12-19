@@ -17,10 +17,8 @@
 			<Label id="platformLabel" platform="blackberry" formFactor="handheld">blackberry handheld</Label>
 			<Label id="platformLabel" platform="mobileweb" formFactor="tablet">mobileweb tablet</Label>
 			<Label id="platformLabel" platform="mobileweb" formFactor="handheld">mobileweb handheld</Label>
-			<Label id="platformLabel" platform="windowsphone" formFactor="handheld">windowsphone handheld</Label>
-			<Label id="platformLabel" platform="windowsphone" formFactor="tablet">windowsphone tablet</Label>
-			<Label id="platformLabel" platform="windowsstore" formFactor="handheld">windowsstore handheld</Label>
-			<Label id="platformLabel" platform="windowsstore" formFactor="tablet">windowsstore tablet</Label>
+			<Label id="platformLabel" platform="windows" formFactor="handheld">windows handheld</Label>
+			<Label id="platformLabel" platform="windows" formFactor="tablet">windows tablet</Label>
 		</View>
 	</Window>
 </Alloy>

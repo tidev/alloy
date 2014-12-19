@@ -62,6 +62,10 @@ describe('alloy compile', function() {
 				if (process.platform !== 'win32' && platform.platform === 'blackberry') {
 					return;
 				}
+				if(process.platform !== 'win32' && platform.platform === 'windows') {
+					// skip windows tests on non-Windows computers
+					return;
+				}
 
 				describe(('[' + platform.platform + ']').cyan, function () {
 						it('compiles without critical error',

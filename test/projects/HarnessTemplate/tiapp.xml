@@ -69,12 +69,9 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <windowsphone>
-        <!-- Add Windows Phone specific nodes, such as orientation handling, here -->
-    </windowsphone>
-    <windowsstore>
-        <!-- Add Windows Store specific nodes, such as orientation handling, here -->
-    </windowsstore>
+    <windows>
+        <!-- Add Windows specific nodes, such as orientation handling, here -->
+    </windows>
     <modules>
         <module version="1.2" platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
