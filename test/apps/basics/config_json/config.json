@@ -4,6 +4,8 @@
     "os:blackberry": { "someValue": "Blackberry" },
     "os:ios": { "someValue": "iOS" },
     "os:mobileweb": { "someValue": "Mobileweb" },
+    "os:windowsphone": { "someValue": "Windows Phone" },
+    "os:windowsstore": { "someValue": "Windows Store" },
     "sourcemap": false,
     "adapters": []
 }
