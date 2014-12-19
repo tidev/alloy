@@ -67,6 +67,6 @@
 	text: "Blackberry"
 }
 
-"#osLabel[platform=windowsphone,windowsstore]": {
+"#osLabel[platform=windows]": {
 	text: "Windows"
 }

@@ -40,7 +40,7 @@
 "#title2[platform=mobileweb if=Alloy.Globals.someProperty]": {
 	text: "Platform: MobileWeb, Alloy.Globals.someProperty==true"
 }
-"#title2[platform=windowsphone,windowsstore if=Alloy.Globals.someProperty]": {
+"#title2[platform=windows if=Alloy.Globals.someProperty]": {
 	text: "Platform: Windows, Alloy.Globals.someProperty==true"
 }
 
