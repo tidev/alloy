@@ -66,3 +66,7 @@
 "#osLabel[platform=blackberry]": {
 	text: "Blackberry"
 }
+
+"#osLabel[platform=windows]": {
+	text: "Windows"
+}

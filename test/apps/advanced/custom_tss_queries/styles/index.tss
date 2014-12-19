@@ -40,6 +40,9 @@
 "#title2[platform=mobileweb if=Alloy.Globals.someProperty]": {
 	text: "Platform: MobileWeb, Alloy.Globals.someProperty==true"
 }
+"#title2[platform=windows if=Alloy.Globals.someProperty]": {
+	text: "Platform: Windows, Alloy.Globals.someProperty==true"
+}
 
 /* ID selector overrides other selectors if platform is iOS */
 "#title3":{

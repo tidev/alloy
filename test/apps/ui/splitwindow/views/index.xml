@@ -1,11 +1,11 @@
-<!-- 
+<!--
 	Notes about the <SplitWindow> tag:
 	- 'Ti.UI.iPad' is autmatically implied as the namespace, but can still
 	  be overriden with the 'ns' attribute, if necessary.
 	- It expects 2 Ti.UI.Window components as children. The first Window will
 	  be the 'masterView'. The second Window is the 'detailView'.
-	- You can use an explicit <Window> tag or you can use a <Require> tag to 
-	  specifiy its child elements. If a <Require> is used, it must contain 
+	- You can use an explicit <Window> tag or you can use a <Require> tag to
+	  specifiy its child elements. If a <Require> is used, it must contain
 	  only one top-level element under the <Alloy> tag and that element must
 	  be a Ti.UI.Window.
 -->
@@ -13,10 +13,16 @@
 	<SplitWindow platform="ios" formFactor="tablet">
 		<!-- The 'masterView' window, added via <Require> tag -->
 		<Require src="master"/>
-		
+
 		<!-- The 'detailView' window, using an explicit <Window> tag -->
 		<Window>
 			<Label>This is the detail</Label>
 		</Window>
 	</SplitWindow>
+	<Window platform="ios" formFactor="handheld">
+		<Label>This sample supported on iPad only.</Label>
+	</Window>
+	<Window platform="!ios">
+		<Label>This sample supported on iPad only.</Label>
+	</Window>
 </Alloy>
