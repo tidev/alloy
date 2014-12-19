@@ -1,5 +1,15 @@
 ## Titanium Alloy Release Notes
 
+### Release 1.5.1-windows (12/2014)
+
+Initial release of Windows support for Alloy, includes these changes:
+
+* [ALOY-1186](https://jira.appcelerator.org/browse/ALOY-1186). Support Windows with "alloy new"
+* [ALOY-1182](https://jira.appcelerator.org/browse/ALOY-1182). Windows Alloy compiler directives
+* [ALOY-1183](https://jira.appcelerator.org/browse/ALOY-1183). Add Windows to Alloy's internal conditional platform checks
+* [ALOY-1188](https://jira.appcelerator.org/browse/ALOY-1188). Update the HarnessTemplate to support windowsphone and windowsstore builds
+* [ALOY-1189](https://jira.appcelerator.org/browse/ALOY-1189). Update sample apps to run on windowsphone, windowsstore builds
+
 ### Release 1.5.1 (10/2/2014)
 
 Below are the fixes included in this release.
