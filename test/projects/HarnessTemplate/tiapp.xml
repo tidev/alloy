@@ -6,6 +6,7 @@
         <target device="ipad">true</target>
         <target device="android">true</target>
         <target device="blackberry">true</target>
+        <target device="windows">true</target>
     </deployment-targets>
     <id>com.appcelerator.AlloyHarness</id>
     <name>Harness</name>
@@ -68,9 +69,16 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
+    <windowsphone>
+        <!-- Add Windows Phone specific nodes, such as orientation handling, here -->
+    </windowsphone>
+    <windowsstore>
+        <!-- Add Windows Store specific nodes, such as orientation handling, here -->
+    </windowsstore>
     <modules>
         <module version="1.2" platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
+        <module platform="windows">ti.map</module>
     </modules>
 </ti:app>
