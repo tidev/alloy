@@ -1,9 +1,21 @@
 var path = require('path'),
 	colors = require('colors'),
-	fs = require('fs-extra'),
+	fs = require('fs'),
+	wrench = require('wrench'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
+
+function copy(source, destination, callback) {
+	// make sure the target folder exists
+	var fullDir = path.dirname(destination);
+	if (!fs.existsSync(fullDir)) {
+		wrench.mkdirSyncRecursive(fullDir);
+	}
+
+	var code = fs.readFileSync(source, 'utf8');
+	fs.writeFile(destination, code, callback);
+}
 
 module.exports = function(args, program) {
 	args = args || [];
@@ -66,7 +78,7 @@ module.exports = function(args, program) {
 	}
 
 	if (controller.exists.source && view.exists.source && style.exists.source) {
-		fs.copy(controller.source, controller.destination, function(err){
+		copy(controller.source, controller.destination, function(err){
 			if (err) {
 				logger.error('copy failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
 			} else {
@@ -74,7 +86,7 @@ module.exports = function(args, program) {
 			}
 		});
 
-		fs.copy(view.source, view.destination, function(err){
+		copy(view.source, view.destination, function(err){
 			if (err) {
 				logger.error('copy failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
 			} else {
@@ -82,7 +94,7 @@ module.exports = function(args, program) {
 			}
 		});
 
-		fs.copy(style.source, style.destination, function(err){
+		copy(style.source, style.destination, function(err){
 			if (err) {
 				logger.error('copy failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
 			} else {

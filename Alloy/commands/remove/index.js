@@ -1,5 +1,5 @@
 var colors = require('colors'),
-	fs = require('fs-extra'),
+	fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
 	_ = require("../../lib/alloy/underscore")._,
@@ -68,7 +68,7 @@ module.exports = function(args, program) {
 	var logs = [];
 
 	if (controller.exists.source && view.exists.source && style.exists.source) {
-		fs.remove(controller.source, function(err){
+		fs.unlink(controller.source, function(err){
 			if (err) {
 				logger.error('remove failed view-style-controller ' + controller.source.cyan);
 			} else {
@@ -80,7 +80,7 @@ module.exports = function(args, program) {
 			}
 		});
 
-		fs.remove(view.source, function(err){
+		fs.unlink(view.source, function(err){
 			if (err) {
 				logger.error('remove failed view ' + view.source.cyan);
 			} else {
@@ -92,7 +92,7 @@ module.exports = function(args, program) {
 			}
 		});
 
-		fs.remove(style.source, function(err){
+		fs.unlink(style.source, function(err){
 			if (err) {
 				logger.error('remove failed style ' + style.source.cyan);
 			} else {

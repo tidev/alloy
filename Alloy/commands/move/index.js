@@ -1,11 +1,29 @@
 var colors = require('colors'),
-	fs = require('fs-extra'),
+	fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
 	_ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
+
+function move(source, destination, callback) {
+	// make sure the target folder exists
+	var fullDir = path.dirname(destination);
+	if (!fs.existsSync(fullDir)) {
+		wrench.mkdirSyncRecursive(fullDir);
+	}
+
+	var code = fs.readFileSync(source, 'utf8');
+	fs.writeFile(destination, code, function(err){
+		if (err) {
+			callback(err);
+		}
+
+		// remove a source file
+		fs.unlink(source, callback);
+	});
+}
 
 function cleanup(args) {
 	args = args || {};
@@ -90,46 +108,40 @@ module.exports = function(args, program) {
 	}
 
 	if (controller.exists.source && view.exists.source && style.exists.source) {
-		fs.move(controller.source, controller.destination, {
-				clobber: true
-			}, function(err){
-				if (err) {
-					logger.error('move failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
-				} else {
-					logger.info('moved view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
-					cleanup({
-						root: path.join(paths.app, CONST.DIR.CONTROLLER),
-						path: _.initial(path.join(paths.app, CONST.DIR.CONTROLLER, source).split(path.sep)).join(path.sep)
-					});
-				}
+		move(controller.source, controller.destination, function(err){
+			if (err) {
+				logger.error('move failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
+			} else {
+				logger.info('moved view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
+				cleanup({
+					root: path.join(paths.app, CONST.DIR.CONTROLLER),
+					path: _.initial(path.join(paths.app, CONST.DIR.CONTROLLER, source).split(path.sep)).join(path.sep)
+				});
+			}
 		});
 
-		fs.move(view.source, view.destination, {
-				clobber: true
-			}, function(err){
-				if (err) {
-					logger.error('move failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
-				} else {
-					logger.info('moved view ' + view.source.cyan + ' -> ' + view.destination.cyan);
-					cleanup({
-						root: path.join(paths.app, CONST.DIR.VIEW),
-						path: _.initial(path.join(paths.app, CONST.DIR.VIEW, source).split(path.sep)).join(path.sep)
-					});
-				}
+		move(view.source, view.destination, function(err){
+			if (err) {
+				logger.error('move failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
+			} else {
+				logger.info('moved view ' + view.source.cyan + ' -> ' + view.destination.cyan);
+				cleanup({
+					root: path.join(paths.app, CONST.DIR.VIEW),
+					path: _.initial(path.join(paths.app, CONST.DIR.VIEW, source).split(path.sep)).join(path.sep)
+				});
+			}
 		});
 
-		fs.move(style.source, style.destination, {
-				clobber: true
-			}, function(err){
-				if (err) {
-					logger.error('move failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
-				} else {
-					logger.info('moved style ' + style.source.cyan + ' -> ' + style.destination.cyan);
-					cleanup({
-						root: path.join(paths.app, CONST.DIR.STYLE),
-						path: _.initial(path.join(paths.app, CONST.DIR.STYLE, source).split(path.sep)).join(path.sep)
-					});
-				}
+		move(style.source, style.destination, function(err){
+			if (err) {
+				logger.error('move failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
+			} else {
+				logger.info('moved style ' + style.source.cyan + ' -> ' + style.destination.cyan);
+				cleanup({
+					root: path.join(paths.app, CONST.DIR.STYLE),
+					path: _.initial(path.join(paths.app, CONST.DIR.STYLE, source).split(path.sep)).join(path.sep)
+				});
+			}
 		});
 	} else {
 		logs = [
