@@ -118,7 +118,7 @@ module.exports = function(args, program) {
 		theme: theme,
 		adapters: compileConfig.adapters
 	});
-	orphanage.clean();
+	orphanage.clean({deployType: alloyConfig.deploytype});
 	logger.debug('');
 
 	// process project makefiles
@@ -372,7 +372,7 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 
 	// is it already generated from a prior copile?
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
-	if (fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
+	if (compileConfig.alloyConfig.deploytype === 'development' && fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');
 		restrictionSkipOptimize = (restrictionPath !== null);
 
