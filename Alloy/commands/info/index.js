@@ -1,3 +1,7 @@
+/*
+	The `alloy info` command is used by Studio to discover info about supported adapters,
+	sample applications, and application templates.
+*/
 var path = require('path'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),

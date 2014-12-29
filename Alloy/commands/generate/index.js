@@ -1,3 +1,9 @@
+/*
+	Corresponds to the `alloy generate *` command.
+	http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
+
+	Actual component generators are defined in the targets folder
+*/
 var path = require('path'),
 	_ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils'),

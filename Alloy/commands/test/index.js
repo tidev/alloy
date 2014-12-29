@@ -1,3 +1,6 @@
+/*
+	Stub / incomplete file
+*/
 var fs = require('fs'),
 	path = require('path'),
 	spawn = require('child_process').spawn,
