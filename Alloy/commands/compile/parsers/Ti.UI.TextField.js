@@ -31,8 +31,21 @@ function parse(node, state, args) {
 		var fullname = CU.getNodeFullname(child),
 			isProxyProperty = false,
 			isControllerNode = false,
+			isAttributedString = false,
+			isAttributedHintText = false,
 			hasUiNodes = false,
-			controllerSymbol, parentSymbol;
+			controllerSymbol,
+			parentSymbol;
+
+		if (child.nodeName === 'AttributedString' && !child.hasAttribute('ns')) {
+			child.setAttribute('ns', 'Ti.UI.iOS');
+		}
+
+		if (child.nodeName === 'AttributedHintText' && !child.hasAttribute('ns')) {
+			child.nodeName = 'AttributedString';
+			child.setAttribute('ns', 'Ti.UI.iOS');
+			isAttributedHintText = true;
+		}
 
 		// validate the child element and determine if it's part of
 		// the textfield or a proxy property assigment
@@ -42,6 +55,10 @@ function parse(node, state, args) {
 			isControllerNode = true;
 		} else if (fullname.split('.')[0] === '_ProxyProperty') {
 			isProxyProperty = true;
+		} else if (CU.validateNodeName(child, 'Ti.UI.iOS.AttributedString')) {
+			if (!isAttributedHintText) {
+				isAttributedString = true;
+			}
 		}
 
 		// generate the node
@@ -71,6 +88,16 @@ function parse(node, state, args) {
 		// generate code for proxy property assignments
 		if (isProxyProperty) {
 			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+
+		// generate code for the attribtuedString
+		} else if (isAttributedString) {
+			proxyProperties.attributedString = parentSymbol;
+			node.removeChild(child);
+
+		// generate code for the attribtuedHintText
+		} else if (isAttributedHintText) {
+			proxyProperties.attributedHintText = parentSymbol;
+			node.removeChild(child);
 
 		// generate code for the child components
 		} else if (hasUiNodes || !isControllerNode) {
