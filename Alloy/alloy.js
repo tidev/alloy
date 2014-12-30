@@ -67,13 +67,13 @@ program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);
 
 program.command('copy'.blue+' <source> <destination>'.white)
-		.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
+		.description('    bulk copy files type such as a controller, view and style'.grey);
 
 program.command('move'.blue+' <source> <destination>'.white)
-		.description('    move the controller, view, and style files from <source> to <destination>'.grey);
+		.description('    bulk move files type such as a controller, view and style'.grey);
 
 program.command('remove'.blue+' <source>'.white)
-		.description('    remove the controller, view, and style files at <source>'.grey);
+		.description('    bulk remove files type such as a controller, view and style'.grey);
 
 program.parse(process.argv);
 

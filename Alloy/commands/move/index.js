@@ -32,7 +32,7 @@ function cleanup(args) {
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err){
 			if (err) {
-				logger.error('Failed to remove the empty directory. Please manually remove ' + args.path.cyan);
+				logger.error('failed remove a empty directory. please remove of manual ' + args.path.cyan);
 			} else {
 				var next = _.initial(args.path.split(path.sep)).join(path.sep);
 
@@ -96,20 +96,10 @@ module.exports = function(args, program) {
 
 	var logs = [];
 
-	if (!controller.exists.source && !view.exists.source && !style.exists.source) {
-		logs = [
-			'source files not found'
-		];
-		!controller.exists.source && logs.push('    controller: ' + controller.source);
-		!view.exists.source && logs.push('    view: ' + view.source);
-		!style.exists.source && logs.push('    style: ' + style.source);
-		U.die(logs.join('\n'));
-	}
-
 	if (!program.force &&
 		(controller.exists.destination || view.exists.destination || style.exists.destination)) {
 		logs = [
-			'destination files already exist'
+			'destination files already exists'
 		];
 		controller.exists.destination && logs.push('    controller: ' + controller.destination);
 		view.exists.destination && logs.push('    view: ' + view.destination);
@@ -117,7 +107,7 @@ module.exports = function(args, program) {
 		U.die(logs.join('\n'));
 	}
 
-	if (controller.exists.source) {
+	if (controller.exists.source && view.exists.source && style.exists.source) {
 		move(controller.source, controller.destination, function(err){
 			if (err) {
 				logger.error('move failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
@@ -129,9 +119,7 @@ module.exports = function(args, program) {
 				});
 			}
 		});
-	}
 
-	if (view.exists.source) {
 		move(view.source, view.destination, function(err){
 			if (err) {
 				logger.error('move failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
@@ -143,9 +131,7 @@ module.exports = function(args, program) {
 				});
 			}
 		});
-	}
 
-	if (style.exists.source) {
 		move(style.source, style.destination, function(err){
 			if (err) {
 				logger.error('move failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
@@ -157,5 +143,13 @@ module.exports = function(args, program) {
 				});
 			}
 		});
+	} else {
+		logs = [
+			'source files does not found'
+		];
+		!controller.exists.source && logs.push('    controller: ' + controller.source);
+		!view.exists.source && logs.push('    view: ' + view.source);
+		!style.exists.source && logs.push('    style: ' + style.source);
+		U.die(logs.join('\n'));
 	}
 };
