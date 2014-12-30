@@ -66,10 +66,20 @@ module.exports = function(args, program) {
 
 	var logs = [];
 
+	if (!controller.exists.source && !view.exists.source && !style.exists.source) {
+		logs = [
+			'source files not found'
+		];
+		!controller.exists.source && logs.push('    controller: ' + controller.source);
+		!view.exists.source && logs.push('    view: ' + view.source);
+		!style.exists.source && logs.push('    style: ' + style.source);
+		U.die(logs.join('\n'));
+	}
+
 	if (!program.force &&
 		(controller.exists.destination || view.exists.destination || style.exists.destination)) {
 		logs = [
-			'destination files already exists'
+			'destination files already exist'
 		];
 		controller.exists.destination && logs.push('    controller: ' + controller.destination);
 		view.exists.destination && logs.push('    view: ' + view.destination);
@@ -77,7 +87,7 @@ module.exports = function(args, program) {
 		U.die(logs.join('\n'));
 	}
 
-	if (controller.exists.source && view.exists.source && style.exists.source) {
+	if (controller.exists.source) {
 		copy(controller.source, controller.destination, function(err){
 			if (err) {
 				logger.error('copy failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
@@ -85,7 +95,9 @@ module.exports = function(args, program) {
 				logger.info('copied view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
 			}
 		});
+	}
 
+	if (view.exists.source) {
 		copy(view.source, view.destination, function(err){
 			if (err) {
 				logger.error('copy failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
@@ -93,7 +105,9 @@ module.exports = function(args, program) {
 				logger.info('copied view ' + view.source.cyan + ' -> ' + view.destination.cyan);
 			}
 		});
+	}
 
+	if (style.exists.source) {
 		copy(style.source, style.destination, function(err){
 			if (err) {
 				logger.error('copy failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
@@ -101,13 +115,5 @@ module.exports = function(args, program) {
 				logger.info('copied style ' + style.source.cyan + ' -> ' + style.destination.cyan);
 			}
 		});
-	} else {
-		logs = [
-			'source files does not found'
-		];
-		!controller.exists.source && logs.push('    controller: ' + controller.source);
-		!view.exists.source && logs.push('    view: ' + view.source);
-		!style.exists.source && logs.push('    style: ' + style.source);
-		U.die(logs.join('\n'));
 	}
 };
