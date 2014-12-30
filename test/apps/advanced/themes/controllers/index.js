@@ -11,3 +11,8 @@ $.index.open();
 if (!ENV_PROD) {
 	require('specs/index')($);
 }
+
+// test the themed lib/foo.js file, should
+// log a message noting the theme's name
+var foo = require('foo').foo;
+foo();
