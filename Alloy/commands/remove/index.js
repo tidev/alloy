@@ -14,7 +14,7 @@ function cleanup(args) {
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err){
 			if (err) {
-				logger.error('failed remove a empty directory. please remove of manual ' + args.path.cyan);
+				logger.error('Failed to remove the empty directory. Please manually remove ' + args.path.cyan);
 			} else {
 				var next = _.initial(args.path.split(path.sep)).join(path.sep);
 
@@ -67,7 +67,17 @@ module.exports = function(args, program) {
 
 	var logs = [];
 
-	if (controller.exists.source && view.exists.source && style.exists.source) {
+	if (!controller.exists.source && !view.exists.source && !style.exists.source) {
+		logs = [
+			'source files not found'
+		];
+		!controller.exists.source && logs.push('    controller: ' + controller.source);
+		!view.exists.source && logs.push('    view: ' + view.source);
+		!style.exists.source && logs.push('    style: ' + style.source);
+		U.die(logs.join('\n'));
+	}
+
+	if (controller.exists.source) {
 		fs.unlink(controller.source, function(err){
 			if (err) {
 				logger.error('remove failed view-style-controller ' + controller.source.cyan);
@@ -79,7 +89,9 @@ module.exports = function(args, program) {
 				});
 			}
 		});
+	}
 
+	if (view.exists.source) {
 		fs.unlink(view.source, function(err){
 			if (err) {
 				logger.error('remove failed view ' + view.source.cyan);
@@ -91,7 +103,9 @@ module.exports = function(args, program) {
 				});
 			}
 		});
+	}
 
+	if (style.exists.source) {
 		fs.unlink(style.source, function(err){
 			if (err) {
 				logger.error('remove failed style ' + style.source.cyan);
@@ -103,13 +117,5 @@ module.exports = function(args, program) {
 				});
 			}
 		});
-	} else {
-		logs = [
-			'source files does not found'
-		];
-		!controller.exists.source && logs.push('    controller: ' + controller.source);
-		!view.exists.source && logs.push('    view: ' + view.source);
-		!style.exists.source && logs.push('    style: ' + style.source);
-		U.die(logs.join('\n'));
 	}
 };
