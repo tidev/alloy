@@ -3,7 +3,7 @@ var fs = require('fs'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants');
 
-var TIMEOUT_DEFAULT = 1000;
+var TIMEOUT_DEFAULT = 5000;
 
 var alloyRoot = path.join(__dirname,'..','..');
 var	harnessRoot = path.join(alloyRoot,'test','projects','Harness');
