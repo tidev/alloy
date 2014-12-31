@@ -66,6 +66,15 @@ program.command('extract-i18n'.blue+' <language>'.white)
 program.command('generate'.blue+' <type> <name>'.white)
 		.description('    generate a new alloy type such as a controller'.grey);
 
+program.command('copy'.blue+' <source> <destination>'.white)
+		.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
+
+program.command('move'.blue+' <source> <destination>'.white)
+		.description('    move the controller, view, and style files from <source> to <destination>'.grey);
+
+program.command('remove'.blue+' <source>'.white)
+		.description('    remove the controller, view, and style files at <source>'.grey);
+
 program.parse(process.argv);
 
 
