@@ -4,7 +4,7 @@ var _ = require('../../../lib/alloy/underscore'),
 	CU = require('../compilerUtils'),
 	tiapp = require('../../../tiapp');
 
-var MIN_VERSION = '3.2.0';
+var MIN_VERSION = '3.6.0';
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -12,7 +12,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	if (tiapp.version.lt(tiapp.getSdkVersion(), MIN_VERSION)) {
-		U.die('Ti.UI.iOS.AttributedString (line ' + node.lineNumber + ') requires Titanium 3.2.0+');
+		U.die('Ti.UI.AttributedString (line ' + node.lineNumber + ') requires Titanium 3.6.0+');
 	}
 
 	// Get label text from node text, if present

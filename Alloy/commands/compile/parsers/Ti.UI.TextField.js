@@ -37,13 +37,8 @@ function parse(node, state, args) {
 			controllerSymbol,
 			parentSymbol;
 
-		if (child.nodeName === 'AttributedString' && !child.hasAttribute('ns')) {
-			child.setAttribute('ns', 'Ti.UI.iOS');
-		}
-
-		if (child.nodeName === 'AttributedHintText' && !child.hasAttribute('ns')) {
+		if (child.nodeName === 'AttributedHintText') {
 			child.nodeName = 'AttributedString';
-			child.setAttribute('ns', 'Ti.UI.iOS');
 			isAttributedHintText = true;
 		}
 
@@ -55,7 +50,7 @@ function parse(node, state, args) {
 			isControllerNode = true;
 		} else if (fullname.split('.')[0] === '_ProxyProperty') {
 			isProxyProperty = true;
-		} else if (CU.validateNodeName(child, 'Ti.UI.iOS.AttributedString')) {
+		} else if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
 			if (!isAttributedHintText) {
 				isAttributedString = true;
 			}

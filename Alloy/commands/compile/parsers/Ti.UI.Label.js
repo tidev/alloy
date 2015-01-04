@@ -13,11 +13,7 @@ function parse(node, state, args) {
 		code = '';
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child){
-		if (child.nodeName === 'AttributedString' && !child.hasAttribute('ns')) {
-			child.setAttribute('ns', 'Ti.UI.iOS');
-		}
-
-		if (CU.validateNodeName(child, 'Ti.UI.iOS.AttributedString')) {
+		if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {

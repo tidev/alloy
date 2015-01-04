@@ -36,10 +36,6 @@ function parse(node, state, args) {
 			controllerSymbol,
 			parentSymbol;
 
-		if (child.nodeName === 'AttributedString' && !child.hasAttribute('ns')) {
-			child.setAttribute('ns', 'Ti.UI.iOS');
-		}
-
 		// validate the child element and determine if it's part of
 		// the textarea or a proxy property assigment
 		if (!CU.isNodeForCurrentPlatform(child)) {
@@ -48,7 +44,7 @@ function parse(node, state, args) {
 			isControllerNode = true;
 		} else if (fullname.split('.')[0] === '_ProxyProperty') {
 			isProxyProperty = true;
-		} else if (CU.validateNodeName(child, 'Ti.UI.iOS.AttributedString')) {
+		} else if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
 			isAttributedString = true;
 		}
 
