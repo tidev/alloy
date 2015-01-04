@@ -26,32 +26,32 @@
 ".as": {
 	attributes: [
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_UNDERLINES_STYLE,
-			value: Ti.UI.iOS.ATTRIBUTE_UNDERLINE_STYLE_SINGLE,
+			type: Ti.UI.ATTRIBUTE_UNDERLINES_STYLE,
+			value: Ti.UI.ATTRIBUTE_UNDERLINE_STYLE_SINGLE,
 			range: [0, 107]
 		},
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_BACKGROUND_COLOR,
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
 			value: "red",
 			range: [18, 12]
 		},
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_BACKGROUND_COLOR,
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
 			value: "blue",
 			range: [31, 2]
 		},
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_BACKGROUND_COLOR,
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
 			value: "yellow",
 			range: [40, 6]
 		},
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_FOREGROUND_COLOR,
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
 			value: "orange",
 			range: [0, 107]
 		},
 		{
-			type: Ti.UI.iOS.ATTRIBUTE_FOREGROUND_COLOR,
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
 			value: "black",
 			range: [40, 6]
 		}
