@@ -6,6 +6,20 @@ if (usesNavGroup) {
 	Alloy.Globals.navgroup = OS_MOBILEWEB ? $.navgroup : $.index;
 }
 
+if(isIpad) {
+	// on iPad: show a Feeds button in the details window's
+	// title bar; when clicked, it shows the master window
+	// in a pop-up
+	$.index.addEventListener('visible',function(e){
+		if (e.view == 'detail'){
+			e.button.title = "Feeds";
+			$.detail.win.leftNavButton = e.button;
+		} else if (e.view == 'master'){
+			$.detail.win.leftNavButton = null;
+		}
+	});
+}
+
 // respond to detail event triggered on index controller
 $.master.on('detail', function(e) {
 	// get the detail controller and window references
