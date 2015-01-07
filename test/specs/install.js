@@ -24,6 +24,7 @@ describe('alloy install', function() {
 		it('is supported', function() {
 			TU.asyncExecTest('alloy install plugin "' + harness.root + '"', {
 				timeout: TIMEOUT_DEFAULT,
+				reset:true,
 				test: function() {
 					expect(this.output.error).toBeFalsy();
 				}

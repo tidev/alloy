@@ -115,6 +115,8 @@ function Controller() {
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
+    var foo = require("foo").foo;
+    foo();
     __defers["$.__views.slider!change!updateLabel"] && $.__views.slider.addEventListener("change", updateLabel);
     __defers["$.__views.testButton!click!testPatience"] && $.__views.testButton.addEventListener("click", testPatience);
     _.extend($, exports);

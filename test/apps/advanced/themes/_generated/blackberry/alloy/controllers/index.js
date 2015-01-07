@@ -16,10 +16,17 @@ function Controller() {
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
-        __processArg(arguments[0], "__parentSymbol");
-        __processArg(arguments[0], "$model");
-        __processArg(arguments[0], "__itemTemplate");
+        {
+            __processArg(arguments[0], "__parentSymbol");
+        }
+        {
+            __processArg(arguments[0], "$model");
+        }
+        {
+            __processArg(arguments[0], "__itemTemplate");
+        }
     }
     var $ = this;
     var exports = {};
@@ -105,6 +112,8 @@ function Controller() {
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
+    var foo = require("foo").foo;
+    foo();
     __defers["$.__views.slider!change!updateLabel"] && $.__views.slider.addEventListener("change", updateLabel);
     __defers["$.__views.testButton!click!testPatience"] && $.__views.testButton.addEventListener("click", testPatience);
     _.extend($, exports);
