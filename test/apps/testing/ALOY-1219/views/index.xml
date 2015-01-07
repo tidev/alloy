@@ -1,0 +1,23 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="model">
+			<Window>
+				<Label class="header" backgroundColor="{appState.color}">Model</Label>
+				<Label id="counter" text="{appState.counter}" color="{appState.color}" onClick="updateState"/>
+			</Window>
+		</Tab>
+		<Tab title="collection">
+			<Window>
+				<Label class="header" backgroundColor="{appState.color}">Collection</Label>
+				<TableView id="table" dataCollection="heroes" onClick="modifyHero">
+          <!-- Then, trying some variations in the data-bound tableview -->
+          <TableViewRow title="{name}"/>
+          <TableViewRow title="My hero is {{name}}"/>
+          <TableViewRow title="{title}, by {name}" />
+          <TableViewRow title="{title} {name}"/>
+          <TableViewRow title="{{name}}"/>
+				</TableView>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
