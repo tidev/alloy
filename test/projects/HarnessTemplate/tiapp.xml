@@ -76,6 +76,5 @@
         <module version="1.2" platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
-        <module platform="windows">ti.map</module>
     </modules>
 </ti:app>

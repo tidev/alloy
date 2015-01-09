@@ -88,7 +88,7 @@ function runApp() {
 			newArgs = newArgs.concat(['--'+a[0], a[1]]);
 		}
 	});
-	if(newArgs.indexOf('--platform') === -1) {
+	if(newArgs.indexOf('--platform') === -1 && newArgs.indexOf('--p') === -1) {
 		newArgs = newArgs.concat(['--platform', (IS_OSX ? 'ios' : 'android')]);
 	}
 
