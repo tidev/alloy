@@ -1,3 +1,7 @@
+/*
+	Sets options and wraps some functionality around the source mapping functions
+	provided by the UglifyJS library
+*/
 var SM = require('source-map'),
 	fs = require('fs'),
 	path = require('path'),

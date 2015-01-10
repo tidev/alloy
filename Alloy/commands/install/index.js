@@ -1,3 +1,10 @@
+/*
+	The `alloy install plugin` command re-installs the alloy hooks used
+	by the CLI to invoke the Alloy compiler.
+
+	This command is run automatically when you create a new Alloy project
+	and is run by Studio after each compilation.
+*/
 var path = require('path'),
 	logger = require('../../logger'),
 	U = require('../../utils'),

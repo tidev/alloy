@@ -39,6 +39,9 @@ var times = {
 	msgs: []
 };
 
+var fileRestrictionUpdatedFiles = [],
+	restrictionSkipOptimize = false;
+
 //////////////////////////////////////
 ////////// command function //////////
 //////////////////////////////////////
@@ -48,7 +51,8 @@ module.exports = function(args, program) {
 		compilerMakeFile,
 		paths = U.getAndValidateProjectPaths(
 			program.outputPath || args[0] || process.cwd()
-		);
+		),
+		restrictionPath;
 
 	// Initialize modules used throughout the compile process
 	buildLog = new BuildLog(paths.project);
@@ -90,6 +94,13 @@ module.exports = function(args, program) {
 	}
 	titaniumFolder = platforms[buildPlatform].titaniumFolder;
 	otherPlatforms = _.without(CONST.PLATFORM_FOLDERS, titaniumFolder);
+
+	// allow to filter the file to compile
+	if (!alloyConfig.file) {
+		restrictionPath = null;
+	} else {
+		restrictionPath = path.join(paths.project, alloyConfig.file);
+	}
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
@@ -143,7 +154,8 @@ module.exports = function(args, program) {
 			filter: new RegExp('^alloy[\\/\\\\]backbone([\\/\\\\]|$)'),
 			exceptions: _.map(_.difference(CONST.ADAPTERS, compileConfig.adapters), function(a) {
 				return path.join('alloy', 'sync', a + '.js');
-			})
+			}),
+			restrictionPath: restrictionPath
 		}
 	);
 	// Copy the version of backbone that is specified in config.json
@@ -161,7 +173,7 @@ module.exports = function(args, program) {
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
-		{ rootDir: paths.project }
+		{ rootDir: paths.project, restrictionPath: restrictionPath }
 	);
 
 	// create runtime folder structure for alloy
@@ -183,7 +195,8 @@ module.exports = function(args, program) {
 				createSourceMap: (type==='ASSETS') ? false : compileConfig.sourcemap,
 				compileConfig: compileConfig,
 				titaniumFolder: titaniumFolder,
-				type: type
+				type: type,
+				restrictionPath: restrictionPath
 			}
 		);
 	});
@@ -193,27 +206,29 @@ module.exports = function(args, program) {
 		updateFilesWithBuildLog(
 			path.join(paths.app,'specs'),
 			path.join(paths.resources, titaniumFolder, 'specs'),
-			{ rootDir: paths.project }
+			{ rootDir: paths.project, restrictionPath: restrictionPath }
 		);
 	}
 
 	// check theme for assets
 	if (theme) {
-		var themeAssetsPath = path.join(paths.app,'themes',theme,'assets');
-
-		if (path.existsSync(themeAssetsPath)) {
-			updateFilesWithBuildLog(
-				themeAssetsPath,
-				path.join(paths.resources, titaniumFolder),
-				{
-					rootDir: paths.project,
-					themeChanged: buildLog.data.themeChanged,
-					filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
-					exceptions: otherPlatforms,
-					titaniumFolder: titaniumFolder
-				}
-			);
-		}
+		_.each(['ASSETS','LIB','VENDOR'], function(type) {
+			var themeAssetsPath = path.join(paths.app,'themes',theme, CONST.DIR[type]);
+			if (path.existsSync(themeAssetsPath)) {
+				updateFilesWithBuildLog(
+					themeAssetsPath,
+					path.join(paths.resources, titaniumFolder),
+					{
+						rootDir: paths.project,
+						themeChanged: buildLog.data.themeChanged,
+						filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+						exceptions: otherPlatforms,
+						titaniumFolder: titaniumFolder,
+						restrictionPath: restrictionPath
+					}
+				);
+			}
+		});
 	}
 	logger.debug('');
 
@@ -247,8 +262,8 @@ module.exports = function(args, program) {
 	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
 	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
 
-  // don't process XML/controller files inside .svn folders (ALOY-839)
-  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+	// don't process XML/controller files inside .svn folders (ALOY-839)
+	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
@@ -268,7 +283,7 @@ module.exports = function(args, program) {
 					// generate runtime controller
 					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id +
 						' ' : '') + 'view processing...');
-					parseAlloyComponent(view, collection.dir, collection.manifest);
+					parseAlloyComponent(view, collection.dir, collection.manifest, null, restrictionPath);
 					tracker[fp] = true;
 				}
 			});
@@ -297,7 +312,7 @@ module.exports = function(args, program) {
 	});
 	logger.info('');
 
-	generateAppJs(paths, compileConfig);
+	generateAppJs(paths, compileConfig, restrictionPath);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
 	// in platform-specific folders, so we just copy the platform-specific one to
@@ -308,7 +323,12 @@ module.exports = function(args, program) {
 
 	// optimize code
 	logger.info('----- OPTIMIZING -----');
-	optimizeCompiledCode(alloyConfig, paths);
+
+	if (restrictionSkipOptimize) {
+		logger.info('Skipping optimize due to file restriction.');
+	} else {
+		optimizeCompiledCode(alloyConfig, paths);
+	}
 
 	// trigger our custom compiler makefile
 	if (compilerMakeFile.isActive) {
@@ -325,11 +345,16 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function generateAppJs(paths, compileConfig) {
-	var alloyJs = path.join(paths.app, 'alloy.js'),
+function generateAppJs(paths, compileConfig, restrictionPath) {
+	var alloyJs = path.join(paths.app, 'alloy.js');
 
-		// info needed to generate app.js
-		target = {
+	if (restrictionPath !== null && restrictionPath !== path.join(paths.app, 'alloy.js')) {
+		// skip alloy.js processing when filtering on another file
+		return;
+	}
+
+	// info needed to generate app.js
+	var target = {
 			filename: 'Resources' + path.sep + titaniumFolder + path.sep + 'app.js',
 			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
 			template: path.join(alloyRoot, 'template', 'app.js')
@@ -350,6 +375,7 @@ function generateAppJs(paths, compileConfig) {
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
 	if (fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');
+		restrictionSkipOptimize = (restrictionPath !== null);
 
 	// if not, generate the platform-specific app.js and save its hash
 	} else {
@@ -358,6 +384,7 @@ function generateAppJs(paths, compileConfig) {
 			target: target,
 			data: data,
 		}, compileConfig);
+		fileRestrictionUpdatedFiles.push(path.relative('Resources', target.filename));
 		buildLog.data[buildPlatform][alloyJs] = hash;
 	}
 
@@ -365,8 +392,25 @@ function generateAppJs(paths, compileConfig) {
 	logger.info('');
 }
 
-function parseAlloyComponent(view, dir, manifest, noView) {
+function matchesRestriction(files, fileRestriction) {
+	var matches = false;
+
+	_.each(files, function(file) {
+		if (typeof file === 'string') {
+			matches |= (file === fileRestriction);
+		} else if (typeof file === 'object') {
+			matches |= matchesRestriction(file, fileRestriction);
+		} else {
+			throw new Exception('unsupported file type ' + typeof file)
+		}
+	});
+
+	return matches;
+}
+
+function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	var parseType = noView ? 'controller' : 'view';
+	fileRestriction = fileRestriction || null;
 
 	// validate parameters
 	if (!view) { U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()'); }
@@ -433,6 +477,11 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 		}
 		files[fileType] = baseFile;
 	});
+
+	if (fileRestriction !== null && !matchesRestriction(files, fileRestriction)) {
+		logger.info('  Not matching the file restriction, skipping');
+		return;
+	}
 
 	_.each(['COMPONENT','RUNTIME_STYLE'], function(fileType) {
 		files[fileType] = path.join(compileConfig.dir.resources, 'alloy', CONST.DIR[fileType]);
@@ -740,6 +789,9 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 	var relativeStylePath = path.relative(compileConfig.dir.project, runtimeStylePath);
 	logger.info('  created:     "' + relativeStylePath + '"');
 
+	// skip optimize process, as the file is an alloy component
+	restrictionSkipOptimize = (fileRestriction !== null);
+
 	// pre-process runtime controllers to save runtime performance
 	var STYLE_PLACEHOLDER = '__STYLE_PLACEHOLDER__';
 	var STYLE_REGEX = new RegExp('[\'"]' + STYLE_PLACEHOLDER + '[\'"]');
@@ -886,10 +938,17 @@ function processModels(dirs) {
 }
 
 function updateFilesWithBuildLog(src, dst, opts) {
-	U.updateFiles(src, dst, _.extend({ isNew: buildLog.isNew }, opts));
+	// filter on retrictionPath
+	if (opts.restrictionPath === null || opts.restrictionPath.indexOf(src) === 0) {
+		var updatedFiles = U.updateFiles(src, dst, _.extend({ isNew: buildLog.isNew }, opts));
+
+		if (typeof updatedFiles == 'object' && updatedFiles.length > 0 && opts.restrictionPath !== null) {
+			fileRestrictionUpdatedFiles = _.union(fileRestrictionUpdatedFiles, updatedFiles);
+		}
+	}
 }
 
-function optimizeCompiledCode() {
+function optimizeCompiledCode(alloyConfig, paths) {
 	var mods = [
 			'builtins',
 			'optimizer',
@@ -903,6 +962,11 @@ function optimizeCompiledCode() {
 	// and exclude files that don't need to be optimized, or
 	// have already been optimized.
 	function getJsFiles() {
+		if (alloyConfig.file && (fileRestrictionUpdatedFiles.length > 0)) {
+			logger.info('Restricting optimize on file(s) : ' + fileRestrictionUpdatedFiles.join(', '));
+			return fileRestrictionUpdatedFiles;
+		}
+
 		var exceptions = [
 			'app.js',
 			'alloy/CFG.js',

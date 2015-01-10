@@ -1,3 +1,8 @@
+/*
+	Speeds compilation by not re-copying, re-generating, or deleting some files
+	on subsequent compiles. For example, the base client-side lib, alloy.js, is
+	not deleted and recopied after the initial compile.
+*/
 var fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
