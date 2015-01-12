@@ -34,7 +34,7 @@ function Orphanage(projectDir, _platform, opts) {
 }
 module.exports = Orphanage;
 
-Orphanage.prototype.clean = function(opts) {
+Orphanage.prototype.clean = function() {
 	var that = this;
 
 	// Clean the base app folder
@@ -56,7 +56,7 @@ Orphanage.prototype.clean = function(opts) {
 
 	// assets must be cleaned up last
 	logger.debug('Removing orphaned assets and libs...');
-	this.removeAssets(opts);
+	this.removeAssets();
 };
 
 // TODO: handle specs
@@ -126,7 +126,7 @@ Orphanage.prototype.removeStyles = function(opts) {
 	}));
 };
 
-Orphanage.prototype.removeAssets = function(opts) {
+Orphanage.prototype.removeAssets = function() {
 	var baseLocations = [
 		CONST.DIR.ASSETS,
 		path.join(CONST.DIR.ASSETS, platforms[platform].titaniumFolder),
@@ -162,7 +162,7 @@ Orphanage.prototype.removeAssets = function(opts) {
 	}
 
 	// files to skip
-	var exceptions = (opts && opts.deployType && opts.deployType !== 'development') ? [] : [
+	var exceptions = [
 		'app.js',
 		'alloy.js',
 		'alloy',
