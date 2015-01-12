@@ -12,7 +12,9 @@ function Controller() {
     this.__controllerPath = "next2";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
+        {
+            __processArg(arguments[0], "__parentSymbol");
+        }
         {
             __processArg(arguments[0], "$model");
         }
@@ -22,12 +24,6 @@ function Controller() {
     }
     var $ = this;
     var exports = {};
-    $.__views.__alloyId2 = Ti.UI.createLabel({
-        text: "hi there",
-        id: "__alloyId2"
-    });
-    __parentSymbol.titleControl = $.__views.__alloyId2;
-    $.__views.next2 && $.addTopLevelView($.__views.next2);
     exports.destroy = function() {};
     _.extend($, $.__views);
     _.extend($, exports);

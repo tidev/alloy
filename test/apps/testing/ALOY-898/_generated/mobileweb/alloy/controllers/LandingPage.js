@@ -35,7 +35,7 @@ function Controller() {
     $.__views.landingPageWindow && $.addTopLevelView($.__views.landingPageWindow);
     $.__views.loading = Alloy.createWidget("com.appcelerator.loading", "widget", {
         id: "loading",
-        opacity: "0.0",
+        opacity: "1",
         __parentSymbol: $.__views.landingPageWindow
     });
     $.__views.loading.setParent($.__views.landingPageWindow);

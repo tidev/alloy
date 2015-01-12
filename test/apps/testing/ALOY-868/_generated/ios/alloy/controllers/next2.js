@@ -23,7 +23,13 @@ function Controller() {
     var $ = this;
     var exports = {};
     $.__views.__alloyId3 = Ti.UI.createLabel({
-        text: "hi there",
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "black",
+        font: {
+            fontSize: "16dp"
+        },
+        text: "ios/mobileweb - hi there",
         id: "__alloyId3"
     });
     __parentSymbol.titleControl = $.__views.__alloyId3;
