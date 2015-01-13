@@ -1,0 +1,10 @@
+<Alloy>
+	<NavigationWindow formFactor="tablet" id="navwin">
+		<Window title="Details" id="win">
+			<WebView id="web"/>
+		</Window>
+	</NavigationWindow>
+	<Window formFactor="handheld">
+		<WebView id="web"/>
+	</Window>
+</Alloy>
