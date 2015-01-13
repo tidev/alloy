@@ -136,7 +136,7 @@ exports.M = function(name, modelDesc, migrations) {
 	if (adapter.type) {
 		mod = require('alloy/sync/' + adapter.type);
 		extendObj.sync = function(method, model, opts) {
-			mod.sync(method, model, opts);
+			return mod.sync(method, model, opts);
 		};
 	} else {
 		extendObj.sync = function(method, model, opts) {
@@ -179,7 +179,7 @@ exports.C = function(name, modelDesc, model) {
 	if (config.adapter && config.adapter.type) {
 		mod = require('alloy/sync/' + config.adapter.type);
 		extendObj.sync = function(method, model, opts) {
-			mod.sync(method,model,opts);
+			return mod.sync(method,model,opts);
 		};
 	} else {
 		extendObj.sync = function(method, model, opts) {
