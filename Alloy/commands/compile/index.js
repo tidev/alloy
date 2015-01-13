@@ -110,6 +110,9 @@ module.exports = function(args, program) {
 
 	buildLog.data.themeChanged = theme !== platformTheme;
 	buildLog.data.theme = theme;
+	// track whether deploy type has changed since previous build
+	buildLog.data.deploytypeChanged = buildLog.data.deploytype !== alloyConfig.deploytype;
+	buildLog.data.deploytype = alloyConfig.deploytype;
 	logger.debug('');
 
 	// wipe the controllers, models, and widgets
@@ -373,7 +376,7 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 
 	// is it already generated from a prior copile?
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
-	if (fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
+	if (!compileConfig.buildLog.data.deploytypeChanged && fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');
 		restrictionSkipOptimize = (restrictionPath !== null);
 
