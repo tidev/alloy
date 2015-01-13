@@ -1,6 +1,8 @@
 <Alloy>
 	<Window>
-		<!-- This will add an Android menu -->
+		<!-- On Android 3.0 devices and later, this will add items to the action bar. 
+			 On older Android devices with a physical menu button, it will add items to the
+			 menu that appears when the menu button is pressed.   -->
 		<Menu>
 			<MenuItem title="option 1" icon="/ic_menu_help.png" onClick="doClick"/>
 			<MenuItem title="option 2" icon="/ic_menu_home.png" onClick="openWin2"/>
@@ -8,6 +10,6 @@
 		
 		<!-- Build the rest of your UI as usual -->
 		<Label>Window 1</Label>
-		<Label bottom="20dp">Press the menu button</Label>
+		<Label bottom="20dp" if=Alloy.Globals.hasMenuButton>Press the menu button</Label>
 	</Window>
 </Alloy>
