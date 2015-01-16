@@ -3,9 +3,11 @@ var fs = require('fs'),
 	os = require('os'),
 	wrench = require('wrench'),
 	colors = require('colors'),
+	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
+	tiapp = require('../../Alloy/tiapp'),
 	platforms = require('../../platforms/index'),
 	sep = process.platform !== 'win32' ? '/' : '\\';
 
@@ -20,6 +22,19 @@ var EXCLUDE_FOLDERS = [
 	TEST_FOLDER+sep+'ALOY-1080',
 	TEST_FOLDER+sep+'ALOY-932'
 ];
+
+// Skip the test that depends on version of SDKs
+exec('ti sdk list --output json', function(error, stdout, stderr){
+    if (error === null) {
+        var sdkInfo = JSON.parse(stdout);
+
+        if (tiapp.version.lt(sdkInfo.activeSDK, '3.6.0')) {
+        	// Skip ALOY-961 / AttributedString when using pre-3.6.0 SDKs
+            EXCLUDE_FOLDERS.push(TEST_FOLDER+sep+'ALOY-961');
+            console.log(EXCLUDE_FOLDERS);
+        }
+    }
+});
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {

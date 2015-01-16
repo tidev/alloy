@@ -31,6 +31,7 @@ function parse(node, state, args) {
 		var fullname = CU.getNodeFullname(child),
 			isProxyProperty = false,
 			isControllerNode = false,
+			isAttributedString = false,
 			hasUiNodes = false,
 			controllerSymbol,
 			parentSymbol;
@@ -43,6 +44,8 @@ function parse(node, state, args) {
 			isControllerNode = true;
 		} else if (fullname.split('.')[0] === '_ProxyProperty') {
 			isProxyProperty = true;
+		} else if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
+			isAttributedString = true;
 		}
 
 		// generate the node
@@ -72,6 +75,11 @@ function parse(node, state, args) {
 		// generate code for proxy property assignments
 		if (isProxyProperty) {
 			proxyProperties[U.proxyPropertyNameFromFullname(fullname)] = parentSymbol;
+
+		// generate code for the attribtuedString
+		} else if (isAttributedString) {
+			proxyProperties.attributedString = parentSymbol;
+			node.removeChild(child);
 
 		// generate code for the child components
 		} else if (hasUiNodes || !isControllerNode) {
