@@ -28,10 +28,9 @@ exec('ti sdk list --output json', function(error, stdout, stderr){
     if (error === null) {
         var sdkInfo = JSON.parse(stdout);
 
-        if (tiapp.version.lt(sdkInfo.activeSDK, '3.6.0')) {
+        if (tiapp.version.lt(sdkInfo.activeSDK, '3.6.0') || !sdkInfo) {
         	// Skip ALOY-961 / AttributedString when using pre-3.6.0 SDKs
             EXCLUDE_FOLDERS.push(TEST_FOLDER+sep+'ALOY-961');
-            console.log(EXCLUDE_FOLDERS);
         }
     }
 });

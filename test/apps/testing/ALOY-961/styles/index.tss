@@ -14,7 +14,7 @@
 	right: 10,
 	left: 10,
 	width: Ti.UI.FILL,
-	height: 44
+	height: Ti.UI.SIZE
 },
 "TextArea": {
 	top: 20,
