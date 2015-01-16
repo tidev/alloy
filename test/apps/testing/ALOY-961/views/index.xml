@@ -1,0 +1,22 @@
+<Alloy>
+	<Window>
+		<Label>
+			<AttributedString class="as">
+				Bacon ipsum dolor Appcelerator Titanium rocks! sit amet fatback leberkas salami sausage tongue strip steak.
+			</AttributedString>
+		</Label>
+		<TextField>
+			<AttributedString class="as">
+				Bacon ipsum dolor Appcelerator Titanium rocks! sit amet fatback leberkas salami sausage tongue strip steak.
+			</AttributedString>
+			<AttributedHintText class="as">
+				Bacon ipsum dolor Appcelerator Titanium rocks! sit amet fatback leberkas salami sausage tongue strip steak.
+			</AttributedHintText>
+		</TextField>
+		<TextArea>
+			<AttributedString class="as">
+				Bacon ipsum dolor Appcelerator Titanium rocks! sit amet fatback leberkas salami sausage tongue strip steak.
+			</AttributedString>
+		</TextArea>
+	</Window>
+</Alloy>

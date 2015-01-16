@@ -1,0 +1,59 @@
+"Window": {
+	backgroundColor: '#fff',
+	layout: 'vertical'
+},
+"Label": {
+	top: 20,
+	right: 10,
+	left: 10,
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE
+},
+"TextField": {
+	top: 20,
+	right: 10,
+	left: 10,
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE
+},
+"TextArea": {
+	top: 20,
+	right: 10,
+	left: 10,
+	width: Ti.UI.FILL,
+	height: 200
+},
+".as": {
+	attributes: [
+		{
+			type: Ti.UI.ATTRIBUTE_UNDERLINES_STYLE,
+			value: Ti.UI.ATTRIBUTE_UNDERLINE_STYLE_SINGLE,
+			range: [0, 107]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
+			value: "red",
+			range: [18, 12]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
+			value: "blue",
+			range: [31, 2]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_BACKGROUND_COLOR,
+			value: "yellow",
+			range: [40, 6]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
+			value: "orange",
+			range: [0, 107]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
+			value: "black",
+			range: [40, 6]
+		}
+	]
+}
