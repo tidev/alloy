@@ -355,7 +355,8 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.4.0
 		 * #### Example
 		 * The following example updates the UI elements with IDs "container"
-		 * and "name", in one case assing
+		 * and "name", providing new values for the `layout` and `text`
+		 * properties of those elements, respectively.
 
 		 * View-controller file: controllers/profile.js
 
