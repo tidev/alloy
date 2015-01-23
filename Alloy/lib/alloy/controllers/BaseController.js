@@ -223,7 +223,7 @@ var Controller = function() {
 		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
 		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
 		 * #### Examples
-		 * The following creates a new style object that passed as a parameter 
+		 * The following creates a new style object that is passed as a parameter 
 		 * to the {@link Titanium.UI#method-createLabel Ti.UI.createLabel()} method.
 
 	var styleArgs = {
@@ -238,7 +238,7 @@ var Controller = function() {
 	testLabel = Ti.UI.createLabel(styleObject);	 
 
 		 * The next example uses the {@link Titanium#method-applyProperties applyProperties()} method
-		 to add apply a style object to an existing Button control (button not shown).
+		 * to apply a style object to an existing Button control (button not shown).
 
 	var style = $.createStyle({
 		classes: args.button,
@@ -351,34 +351,39 @@ The 'redbg' and 'bigger' classes are shown below:
 		/**
 		 * @method updateViews
 		 * Applies a set of properties to view elements associated with this controller.
-		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
-		 * @since 1.4.0
+		 * This method is useful for setting properties on repeated elements such as 
+		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller 
+		 * for those child controllers.
 		 * #### Example
-		 * The following example updates the UI elements with IDs "container"
-		 * and "name", providing new values for the `layout` and `text`
-		 * properties of those elements, respectively.
+		 * The following example uses this method to update a Label inside a TableViewRow object
+		 * before adding it to a TableView.
 
-		 * View-controller file: controllers/profile.js
+		 * View-controller file: controllers/index.js
 
-	var profile = Alloy.createController('profile');
-	profile.updateViews({
-	 "#container" : {
-			layout : "vertical"
-		},
-	 "#name" : {
-			text : "Mr. Jones"
-		}
-	});
-	$.index.add(profile.getView());
-	$.index.open();
+	for (var i=0; i < 10; i++) {
+	  var row = Alloy.createController("tablerow");
+	  row.updateViews({
+	  	"#theLabel": {
+	  		text: "I am row #" + i
+	  	}
+	  });  
+	  $.tableView.appendRow(row.getView());
+	};
 
-		 * XML view: views/profile.xml
+			 * XML view: views/tablerow.xml
 
 	<Alloy>
-		<View id="container">
-			<Label id="name"/>
-		</View>
-	</Alloy>		 
+		<TableViewRow>
+			<Label id="theLabel"></Label>
+		</TableViewRow>
+	</Alloy>	 
+
+			 * XML view: views/index.xml
+
+	<TableView id="tableView">
+	</TableView>			 
+		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
+		 * @since 1.4.0
 
 		 */
 		updateViews: function(args) {
