@@ -4,15 +4,16 @@
  *
  * Collections can either be created in markup or programmatically in the controller.
  *
- * To create collections in markup, see the 'Collection Element' section in the
- * [Alloy XML Markup guide](#!/guide/Alloy_XML_Markup).  
+ * To create collections in markup use a `<Collection/>` element. For 
+ * more information see [Collection Element](#!/guide/Alloy_XML_Markup-section-35621528_AlloyXMLMarkup-CollectionElement)
+ * in the Alloy developer guide.
  *
  * In the controller code:
  *
  *    - To create a local instance, use the Alloy.createCollection method.
  *    - To create a global singleton instance, use the Alloy.Collections.instance method.
  *
- * Previously created collections through markup or using the `instance` method 
+ * Previously created collections through markup or using the `{@link #instance instance()}` method 
  * are directly accessed as properties of the `Alloy.Collections` namespace,
  * using either the name of the model JavaScript file for singletons
  * or the ID name for local instances.

@@ -1,10 +1,20 @@
 /**
  * @class Alloy.Controller.UI
+ * 
+ * Provides convenience methods for working with Titanium UI objects.
  */
 
 /**
  * @method create
  * Creates a Titanium UI object with the specified styles.
+ * #### Example
+ * The following creates a new {@link Titanium.UI.View View} object and assigns the "dialog"
+ * TSS class (defined elsewhere) to the view, and finally adds it to main window.
+
+    var view = $.UI.create("View", {
+        classes: 'dialog'
+    });
+    $.index.add(view);
  * @param {String} apiName Name of the Titanium object to create. This can either be the full class
  * name, such as `Ti.UI.Button`, or the XML element, such as `Button`.
  * @param {AlloyStyleDict} opts Dictionary of styles to apply. `opts` may also contain any additional properties you would like to apply directly the created Titanium object.

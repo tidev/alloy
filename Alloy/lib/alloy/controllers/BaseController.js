@@ -60,6 +60,19 @@ var Controller = function() {
 		/**
 		 * @method getTopLevelViews
 		 * Returns a list of the root view elements associated with this controller.
+
+		 * #### Example
+		 * The following example displays the `id` of each top-level view associated with the
+		 * controller:
+
+	// index.js
+	var views = $.getTopLevelViews();
+	for (each in views) {
+		var view = views[each];
+		console.log(view.id);
+	}		 
+
+		 * 				
 		 *
 		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
 		 */
@@ -72,6 +85,13 @@ var Controller = function() {
 		 * Returns the specified view associated with this controller.
 		 *
 		 * If no `id` is specified, returns the first top-level view.
+		 *
+		 * #### Example
+		 * The following example gets a reference to a `<Window/>` object
+		 * with the `id` of "loginWin" and then calls its [open()](Titanium.UI.Window) method.
+
+	var loginWindow = $.getView('loginWin');
+	loginWindow.open();		 
 		 *
 		 * @param {String} [id] ID of the view to return.
 		 * @return {Titanium.UI.View/Alloy.Controller}
@@ -95,6 +115,42 @@ var Controller = function() {
 		 * @method getViews
 		 * Returns a list of all IDed view elements associated with this controller.
 		 *
+		 * #### Example
+		 * Given the following XML view:
+
+	<Alloy>
+		<TabGroup id="tabs">
+			<Tab title="Tab 1" icon="KS_nav_ui.png" id="tab1">
+				<Window title="Tab 1" id="win1">
+					<Label id="label1">I am Window 1</Label>
+				</Window>
+			</Tab>
+			<Tab title="Tab 2" icon="KS_nav_views.png" id="tab2">
+				<Window title="Tab 2" id="wind2">
+					<Label id="label2">I am Window 2</Label>
+				</Window>
+			</Tab>
+		</TabGroup>
+		<View id="otherview"></View>
+	</Alloy>		 
+
+		* The following view-controller outputs the id of each view in the hierarchy.
+
+	var views = $.getViews();
+	for (each in views) {
+		var view = views[each];
+		console.log(view.id);
+	}	
+
+	[INFO] :   win1
+	[INFO] :   label1
+	[INFO] :   tab1
+	[INFO] :   wind2
+	[INFO] :   label2
+	[INFO] :   tab2
+	[INFO] :   tabs
+	[INFO] :   otherview
+
 		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
 		 */
 		getViews: function() {
@@ -107,9 +163,17 @@ var Controller = function() {
 		 * UI components. It is critical that this is called when employing
 		 * model/collection binding in order to avoid potential memory leaks.
 		 * $.destroy() should be called whenever a controller's UI is to
-		 * be "closed" or removed from the app. For more details, see the
-		 * example app found here:
-		 * https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy
+		 * be "closed" or removed from the app. See the [Destroying Data Bindings](#!/guide/Destroying_Data_Bindings)
+		 * test application for an example of this approach.
+
+		 * #### Example
+		 * In the following example the view-controller for a {@link Titanium.UI.Window Window} object named `dialog`
+		 * calls its `destroy()` method in response to the Window object being closed.
+
+
+	$.dialog.addEventListener('close', function() {
+		$.destroy();
+	});		 
 		 */
 		destroy: function(){
 			// destroy() is defined during the compile process based on
@@ -154,12 +218,39 @@ var Controller = function() {
 		 * @method createStyle
 		 * Creates a dictionary of properties based on the specified styles.
 		 *
+		 *
 		 * You can use this dictionary with the view object's
 		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
 		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
+		 * #### Examples
+		 * The following creates a new style object that is passed as a parameter 
+		 * to the {@link Titanium.UI#method-createLabel Ti.UI.createLabel()} method.
+
+	var styleArgs = {
+	apiName: 'Ti.UI.Label',
+		classes: ['blue','shadow','large'],
+		id: 'tester',
+		borderWidth: 2,
+		borderRadius: 16,
+		borderColor: '#000'
+	};
+	var styleObject = $.createStyle(styleArgs);
+	testLabel = Ti.UI.createLabel(styleObject);	 
+
+		 * The next example uses the {@link Titanium#method-applyProperties applyProperties()} method
+		 * to apply a style object to an existing Button control (button not shown).
+
+	var style = $.createStyle({
+		classes: args.button,
+		apiName: 'Button',
+		color: 'blue'
+	});
+	$.button.applyProperties(style);
 		 * @param {AlloyStyleDict} opts Dictionary of styles to apply.
+		 *
 		 * @return {Dictionary}
 		 * @since 1.2.0
+
 		 */
 		createStyle: function(opts) {
 			return Alloy.createStyle(getControllerParam(), opts);
@@ -178,7 +269,29 @@ var Controller = function() {
 		 * @method addClass
 		 * Adds a TSS class to the specified view object.
 		 *
-		 * You can apply additional styles with the `opts` parameter.
+		 * You can apply additional styles with the `opts` parameter. To use this method
+		 * effectively you may need to enable autostyling
+		 * on the target XML view. See [Autostyle](#!/guide/Dynamic_Styles-section-37530415_DynamicStyles-Autostyle)
+		 * in the Alloy developer guide.
+		 * #### Example
+		 * The following adds the TSS classes ".redbg" and ".bigger" to a {@link Titanium.UI.Label}
+		 * object proxy `label1`, and also sets the label's `text` property to "Cancel".
+
+	// index.js
+	$.addClass($.label1, 'redbg bigger', {text: "Cancel"});
+
+The 'redbg' and 'bigger' classes are shown below:
+
+	// index.tss
+	".redbg" : {
+		color: 'red'
+	}
+	".bigger": {
+		font : {
+		   fontSize: '36'    
+		}
+	}	
+
 		 * @param {Object} proxy View object to which to add class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to apply.
 		 * @param {Dictionary} [opts] Dictionary of properties to apply after classes have been added.
@@ -193,6 +306,15 @@ var Controller = function() {
 		 * Removes a TSS class from the specified view object.
 		 *
 		 * You can apply additional styles after the removal with the `opts` parameter.
+		 * To use this method effectively you may need to enable autostyling
+		 * on the target XML view. See [Autostyle](#!/guide/Dynamic_Styles-section-37530415_DynamicStyles-Autostyle)
+		 * in the Alloy developer guide.
+		 * #### Example
+		 * The following removes the "redbg" and "bigger" TSS classes from a {@link Titanium.UI.Label}
+		 * object proxy `label1`, and also sets the label's `text` property to "...".
+
+	$.removeClass($.label1, 'redbg bigger', {text: "..."});
+
 		 * @param {Object} proxy View object from which to remove class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to remove.
 		 * @param {Dictionary} [opts] Dictionary of properties to apply after the class removal.
@@ -208,6 +330,15 @@ var Controller = function() {
 		 * removing any applied classes that are not specified.
 		 *
 		 * You can apply classes or styles after the reset using the `classes` or `opts` parameters.
+		 * To use this method effectively you may need to enable autostyling
+		 * on the target XML view. See [Autostyle](#!/guide/Dynamic_Styles-section-37530415_DynamicStyles-Autostyle)
+		 * in the Alloy developer guide.
+
+		 * #### Example
+		 * The following removes all previously applied styles on `label1` and then applies
+		 * the TSS class 'no-style'.
+
+	$.resetClass($.label1, 'no-style');
 		 * @param {Object} proxy View object to reset.
 		 * @param {Array<String>/String} [classes] Array or space-separated list of classes to apply after the reset.
 		 * @param {Dictionary} [opts] Dictionary of properties to apply after the reset.
@@ -219,9 +350,41 @@ var Controller = function() {
 
 		/**
 		 * @method updateViews
-		 * Applies a set of properties to view elements associated with this controller
+		 * Applies a set of properties to view elements associated with this controller.
+		 * This method is useful for setting properties on repeated elements such as 
+		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller 
+		 * for those child controllers.
+		 * #### Example
+		 * The following example uses this method to update a Label inside a TableViewRow object
+		 * before adding it to a TableView.
+
+		 * View-controller file: controllers/index.js
+
+	for (var i=0; i < 10; i++) {
+	  var row = Alloy.createController("tablerow");
+	  row.updateViews({
+	  	"#theLabel": {
+	  		text: "I am row #" + i
+	  	}
+	  });  
+	  $.tableView.appendRow(row.getView());
+	};
+
+			 * XML view: views/tablerow.xml
+
+	<Alloy>
+		<TableViewRow>
+			<Label id="theLabel"></Label>
+		</TableViewRow>
+	</Alloy>	 
+
+			 * XML view: views/index.xml
+
+	<TableView id="tableView">
+	</TableView>			 
 		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
 		 * @since 1.4.0
+
 		 */
 		updateViews: function(args) {
 			var views = this.getViews();
