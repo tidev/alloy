@@ -1,5 +1,6 @@
 /**
  * @class Alloy.builtins.moment
+ * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/moment.js 
  * Moment.js is a freely distributable, third-party JavaScript date library
  * for parsing, validating, manipulating, and formatting dates.
  *

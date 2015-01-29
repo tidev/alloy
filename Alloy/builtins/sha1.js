@@ -1,5 +1,6 @@
 /**
  * @class Alloy.builtins.sha1
+ * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/sha1.js  
  * A collection of utilities for calculating SHA-1 or HMAC-SHA-1 values.
  * To use the sha1 builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:

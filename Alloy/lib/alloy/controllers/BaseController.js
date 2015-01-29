@@ -5,6 +5,7 @@ var Alloy = require('alloy'),
 /**
  * @class Alloy.Controller
  * @extends Backbone.Events
+ * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/lib/alloy/controllers/BaseController.js
  * The base class for Alloy controllers.
  *
  * Each controller is associated with a UI hierarchy, defined in an XML file in the

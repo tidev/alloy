@@ -1,5 +1,6 @@
 /**
  * @class Alloy.Models
+ * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/model.js 
  * Class to access or create models.
  *
  * Models can either be created in markup or programmatically in the controller.
