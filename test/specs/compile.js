@@ -20,8 +20,13 @@ var EXCLUDE_FOLDERS = [
 	TEST_FOLDER+sep+'ALOY-818',
 	TEST_FOLDER+sep+'ALOY-840',
 	TEST_FOLDER+sep+'ALOY-1080',
-	TEST_FOLDER+sep+'ALOY-932'
+	TEST_FOLDER+sep+'ALOY-932',
+	TEST_FOLDER+sep+'ALOY-961'
 ];
+
+/*
+// async, so it doesn't complete by the time the tests begin.
+// once ALOY-1230 is resolved, rewrite using beforeAll()
 
 // Skip the test that depends on version of SDKs
 exec('ti sdk list --output json', function(error, stdout, stderr){
@@ -34,6 +39,7 @@ exec('ti sdk list --output json', function(error, stdout, stderr){
         }
     }
 });
+*/
 
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {

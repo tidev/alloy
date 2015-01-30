@@ -402,9 +402,13 @@ function matchesRestriction(files, fileRestriction) {
 		if (typeof file === 'string') {
 			matches |= (file === fileRestriction);
 		} else if (typeof file === 'object') {
+			// platform-specific TSS files result in an object
+			// with a property of platform === true which needs
+			// to be removed to prevent a compile error
+			delete file.platform;
 			matches |= matchesRestriction(file, fileRestriction);
 		} else {
-			throw new Exception('unsupported file type ' + typeof file)
+			throw 'Unsupported file type: ' + typeof file;
 		}
 	});
 
