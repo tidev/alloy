@@ -1,0 +1,42 @@
+"Window":{
+	layout:"vertical",
+	backgroundColor:'white'
+}
+/* Class selector applied to labels of class=label */
+".label": {
+	color: 'blue'
+}
+/* Component selector applied to all labels, though will be overridden */
+"Label":{
+	top:20,
+	left: 0,
+	font: {
+		fontSize: '14dp'
+	},
+	color: 'black'
+}
+/* Custom TSS overrides component and class selectors if global property is true */
+"Label[if=Alloy.Globals.isiPhone6]":{
+	font: {
+		fontSize: '16dp'
+	},
+	color: 'green'
+}
+
+"#label1": {
+	text: "This is a label"
+}
+"#label2": {
+	text: "This is also a label"
+}
+"#label3": {
+	text: "Tap for new Window"
+}
+/* Custom TSS for local function */
+"#label3[if=myFunction()]":{
+	font: {
+		fontSize: '18dp'
+	},
+	color: 'red'
+}
+

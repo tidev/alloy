@@ -1,16 +1,31 @@
 <Alloy>
-	<Window>
-		<NavigationGroup platform="ios">
-			<Window>
-				<RightNavButton>
-					<Widget src="alloy.button" title="ios" onClick="doSave"/>
-				</RightNavButton>
-			</Window>
-		</NavigationGroup>
+	<NavigationWindow platform="ios">
+		<Window title="NavigationWindow">
+			<RightNavButton>
+				<Widget src="alloy.button" title="ios" onClick="doSave"/>
+			</RightNavButton>
+			<Label id="info"/>
+		</Window>
+	</NavigationWindow>
+
+	<Window platform="android">
 		<Menu platform="android">
 			<Widget src="alloy.button" title="android" onClick="doSave"/>
 		</Menu>
 
 		<Label id="info"/>
 	</Window>
+
+	<Window platform="mobileweb">
+		<NavigationGroup>
+			<Window title="MobileWeb">
+			<RightNavButton>
+				<Widget src="alloy.button" title="MW" onClick="doSave"/>
+			</RightNavButton>
+			<Label id="info"/>
+			</Window>
+		</NavigationGroup>
+	</Window>
+
+
 </Alloy>

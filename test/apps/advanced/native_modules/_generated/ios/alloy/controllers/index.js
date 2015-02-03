@@ -10,6 +10,7 @@ function __processArg(obj, key) {
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         {
             __processArg(arguments[0], "__parentSymbol");
@@ -30,7 +31,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.paint = require("ti.paint").createPaintView({
+    $.__views.paint = (require("ti.paint").createPaintView || Ti.UI.createPaintView)({
         top: 0,
         right: 0,
         bottom: 0,

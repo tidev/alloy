@@ -522,6 +522,11 @@ function parseAlloyComponent(view, dir, manifest, noView) {
 				docRoot.getAttribute(CONST.AUTOSTYLE_PROPERTY) === 'true';
 		}
 
+		// see if module attribute has been set on the docRoot (<Alloy>) tag
+		if(docRoot.hasAttribute(CONST.DOCROOT_MODULE_PROPERTY)) {
+			CU[CONST.DOCROOT_MODULE_PROPERTY] = docRoot.getAttribute(CONST.DOCROOT_MODULE_PROPERTY);
+		}
+
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index' && !dirname) {

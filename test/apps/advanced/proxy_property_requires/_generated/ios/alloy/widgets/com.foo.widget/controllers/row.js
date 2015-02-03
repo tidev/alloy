@@ -18,6 +18,7 @@ function Controller() {
     this.__widgetId = "com.foo.widget";
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "row";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         __processArg(arguments[0], "__parentSymbol");
         __processArg(arguments[0], "$model");

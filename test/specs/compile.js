@@ -59,7 +59,8 @@ describe('alloy compile', function() {
 			});
 
 			_.each(platforms, function(platform,k) {
-				if (process.platform !== 'win32' && platform.platform === 'blackberry') {
+				if (process.platform !== 'win32' && (platform.platform === 'blackberry' || platform.platform === 'windows')) {
+					// skip blackberry & windows tests on non-Windows computers
 					return;
 				}
 

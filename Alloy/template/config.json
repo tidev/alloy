@@ -7,5 +7,6 @@
 	"os:blackberry": {},
 	"os:ios": {},
 	"os:mobileweb": {},
+	"os:windows": {},
 	"dependencies": {}
 }

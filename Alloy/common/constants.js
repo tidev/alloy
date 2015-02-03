@@ -50,6 +50,7 @@ exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2'];
 exports.CLASS_PROPERTY = 'classes';
 exports.APINAME_PROPERTY = 'apiName';
 exports.AUTOSTYLE_PROPERTY = 'autoStyle';
+exports.DOCROOT_MODULE_PROPERTY = "module";
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
@@ -203,6 +204,7 @@ exports.IMPLICIT_NAMESPACES = {
 	LeftNavButtons: 'Ti.UI.Window',
 	RightNavButtons: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
+	WindowToolbar: 'Ti.UI.Window',
 
 	// Ti.UI.iPad.Popover
 	ContentView: 'Ti.UI.iPad.Popover',

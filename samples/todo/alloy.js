@@ -1,4 +1,4 @@
-if (OS_IOS || OS_ANDROID) {
+if (OS_IOS || OS_ANDROID || OS_WINDOWS) {
 	Alloy.Collections.todo = Alloy.createCollection('todo');
 	Alloy.Globals.top = 0;
 	Alloy.Globals.tableTop = '50dp';

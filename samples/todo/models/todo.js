@@ -39,7 +39,6 @@ exports.definition = {
 
 	extendCollection : function(Collection) {
 		_.extend(Collection.prototype, {
-
 			// For Backbone v1.1.2, uncomment this to override the fetch method
 			/*
 			fetch: function(options) {
@@ -53,7 +52,6 @@ exports.definition = {
 				return todo.get('done');
 			}
 		});
-
 		return Collection;
 	}
 };

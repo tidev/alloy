@@ -5,5 +5,8 @@
 }
 
 "#picker":{
-	type:"Ti.UI.PICKER_TYPE_DATE"
+	type: Ti.UI.PICKER_TYPE_DATE
+}
+"#picker[platform=ios]":{
+	type: Ti.UI.PICKER_TYPE_DATE_AND_TIME
 }

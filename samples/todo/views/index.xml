@@ -1,6 +1,6 @@
 <Alloy>
   <!-- Main Window -->
-  <Window id="todoWin" title="Todo" platform="android,ios">
+  <Window id="todoWin" title="Todo" platform="android,ios,windows">
 
     <!-- header -->
     <View id="header">
@@ -46,6 +46,6 @@
 
   <!-- Main Window for unsupported platforms -->
   <Window id="todoWin" platform="blackberry,mobileweb">
-    <Label>todo app is only supported on Android and iOS</Label>
+    <Label>todo app is not supported on Blackberry or MobileWeb</Label>
   </Window>
 </Alloy>

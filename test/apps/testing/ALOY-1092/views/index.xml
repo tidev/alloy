@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label id="label1" class="label"/>
+		<Label id="label2" class="label"/>
+		<Label id="label3" class="label"/>
+	</Window>
+</Alloy>

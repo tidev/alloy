@@ -1,0 +1,19 @@
+<Alloy>
+    <NavigationWindow platform="ios">
+        <Window title="Window Toolbar">
+			<WindowToolbar platform="ios">
+				<FlexSpace/>
+				<TextField id="tf" />
+				<FlexSpace/>
+				<Button id="btn1">Btn 1</Button>
+				<FlexSpace/>
+				<Button onClick="doClick" id="btn2">Btn 2</Button>
+				<FlexSpace/>
+			</WindowToolbar>
+            <Label text="The window should have a toolbar with two buttons and a text field."/>
+        </Window>
+    </NavigationWindow>
+	<Window platform="!ios">
+		<Label>Window.toolbar supported only on iOS</Label>
+	</Window>
+</Alloy>

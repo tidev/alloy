@@ -3,13 +3,10 @@
 }
 
 "#direction": {
-	left: '0dp',
+	left: '10dp',
+	width: '36dp',
 	height: '36dp',
 	touchEnabled: false
-}
-
-"#direction[platform=android,mobileweb]": {
-	left: '10dp'
 }
 
 "#name": {

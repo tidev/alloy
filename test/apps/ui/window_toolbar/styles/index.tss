@@ -1,0 +1,9 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+"#tf": {
+	width: 150,
+	borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+}

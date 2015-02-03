@@ -51,7 +51,8 @@ program
 	.option('-x, --column <column>', 'Column for source map query', 1)
 	.option('-y, --line <line>', 'Line for source map query', 1)
 	.option('-z, --source <source>', 'Source original file for source map query')
-	.option('--widgetname <name>', 'Widget name, used with generate command');
+	.option('--widgetname <name>', 'Widget name, used with generate command')
+	.option('--testapp <name>', 'Test app name to import, used with new command');
 
 program.command('new'.blue+' <dir>'.white)
 		.description('    create a new alloy project'.grey);

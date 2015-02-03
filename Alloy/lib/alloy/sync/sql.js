@@ -1,4 +1,4 @@
-var _ = require('alloy/underscore')._;
+var _ = require('alloy/underscore')._,
 	backbone = require('alloy/backbone');
 
 // The database name used when none is specified in the
@@ -180,25 +180,16 @@ function Sync(method, model, opts) {
 				// execute the query
 				sql = "REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
 				db = Ti.Database.open(dbName);
-				db.execute('BEGIN;');
 				db.execute(sql, values);
 
 				// if model.id is still null, grab the last inserted id
 				if (model.id === null) {
-					var sqlId = "SELECT last_insert_rowid();";
-					var rs = db.execute(sqlId);
-					if (rs && rs.isValidRow()) {
-						model.id = rs.field(0);
-						attrObj[model.idAttribute] = model.id;
-						backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
-					} else {
-						Ti.API.warn('Unable to get ID from database for model: ' + model.toJSON());
-					}
-					if (rs) { rs.close(); }
+					model.id = db.lastInsertRowId;
+					attrObj[model.idAttribute] = model.id;
+					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// cleanup
-				db.execute('COMMIT;');
 				db.close();
 
 				return model.toJSON();
@@ -230,26 +221,24 @@ function Sync(method, model, opts) {
 				rs = db.execute(sql.statement, sql.params);
 			}
 
-			var len = 0;
 			var values = [];
+			var fieldNames = [];
+			var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
+			var getField = OS_ANDROID ? rs.field.bind(rs) : rs.field;
+			var i = 0;
+
+			for (; i < fieldCount; i++) {
+				fieldNames.push(rs.fieldName(i));
+			}
 
 			// iterate through all queried rows
 			while(rs.isValidRow())
 			{
 				var o = {};
-        var fc = 0;
-
-                // TODO: https://jira.appcelerator.org/browse/ALOY-459
-				fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
-
-				// create list of rows returned from query
-				_.times(fc,function(c){
-					var fn = rs.fieldName(c);
-					o[fn] = rs.fieldByName(fn);
-				});
+				for(i=0;i<fieldCount;i++) {
+					o[fieldNames[i]] = getField(i);
+				}
 				values.push(o);
-
-				len++;
 				rs.next();
 			}
 
@@ -258,15 +247,13 @@ function Sync(method, model, opts) {
 			db.close();
 
 			// shape response based on whether it's a model or collection
+			var len = values.length;
+
 			if (backbone.VERSION === "0.9.2") {
 				model.length = len;
 			}
 
-			if (len === 1) {
-				resp = values[0];
-			} else {
-				resp = values;
-			}
+			resp = (len===1) ? values[0] : values;
 			break;
 
 		case 'delete':

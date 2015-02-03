@@ -7,10 +7,10 @@
 
 (function(root, factory) {
 
-  // Set up Backbone appropriately for the environment. Start with Node.js or CommonJS.
+  // Set up Backbone appropriately for the environment. Start with Node.js or CommonJS
   if (typeof exports !== 'undefined') {
-    var _ = require('alloy/underscore');
-    factory(root, exports, _);
+      var _ = require('alloy/underscore');
+      factory(root, exports, _);
 
   // Next for AMD.
   } else if (typeof define === 'function' && define.amd) {

@@ -1,6 +1,6 @@
 ## Titanium Alloy Release Notes
 
-### Release 1.6.0 (12/10/2014)
+### Release 1.6.0 (TBD)
 
 * [ALOY-1073](https://jira.appcelerator.org/browse/ALOY-1073). Create a Backbone 1.x compatible sync adapter
 * [ALOY-1074](https://jira.appcelerator.org/browse/ALOY-1074). Enable developers to specify Backbone version in config.json
