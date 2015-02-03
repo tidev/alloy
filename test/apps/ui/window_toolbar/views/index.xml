@@ -13,7 +13,7 @@
             <Label text="The window should have a toolbar with two buttons and a text field."/>
         </Window>
     </NavigationWindow>
-	<Window platform="android,mobileweb,blackberry">
-		<Label platform="android,mobileweb">Window.toolbar supported only on iOS</Label>
+	<Window platform="!ios">
+		<Label>Window.toolbar supported only on iOS</Label>
 	</Window>
 </Alloy>
