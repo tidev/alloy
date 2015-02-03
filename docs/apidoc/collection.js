@@ -1,6 +1,7 @@
 /**
  * @class Alloy.Collections
  * Class to access or create collections.
+ * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/collection.js 
  *
  * Collections can either be created in markup or programmatically in the controller.
  *

@@ -1,5 +1,6 @@
 /**
  * @class Alloy.builtins.string
+ * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/string.js  
  * A collection of utilities for manipulating strings.
  * To use the string builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
