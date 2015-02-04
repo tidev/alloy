@@ -1,6 +1,5 @@
 /**
  * @class Alloy.Widget
- * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/widgets.js 
  * Widgets are self-contained components that can be easily dropped into an Alloy project.
  * They were conceived as a way to reuse code in multiple projects or to be used multiple
  * times in the same project.

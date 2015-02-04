@@ -1,6 +1,5 @@
 /**
  * @class Alloy.builtins.dialogs
- * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/dialogs.js  
  * A collection of utilities for generating dialog boxes.
  * To use the dialogs builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:

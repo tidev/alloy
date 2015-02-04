@@ -1,6 +1,5 @@
 /**
  * @class Alloy.Controller.UI
- * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/controller.js 
  * 
  * Provides convenience methods for working with Titanium UI objects.
  */
