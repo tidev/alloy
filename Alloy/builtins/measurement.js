@@ -1,6 +1,5 @@
 /**
  * @class Alloy.builtins.measurement
- * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/measurement.js
  * A collection of utilities for converting between different display units.
  * These functions are only useful on the Android platform to support devices with different
  * screen densities and resolutions.

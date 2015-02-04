@@ -1,6 +1,5 @@
 /**
  * @class Alloy.builtins
- * @editurl https://github.com/appcelerator/alloy/edit/master/docs/apidoc/builtins.js
  * Alloy provides some additional utility libraries that simplify certain functions,
  * such as animations, string manipultation and display unit conversion.  These libraries
  * are referred to as "builtins."

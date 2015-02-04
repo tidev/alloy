@@ -1,6 +1,5 @@
 /**
  * @class Alloy
- * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/lib/alloy.js
  * Top-level module for Alloy functions.
  *
  * Alloy is an application framework built on top of the Titanium SDK designed to help rapidly

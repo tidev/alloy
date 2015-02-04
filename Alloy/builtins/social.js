@@ -1,6 +1,5 @@
 /**
  * @class Alloy.builtins.social
- * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/social.js  
  * A collection of useful social media provider utilities. Currently, this module only supports
  * Twitter and the following features:
  *

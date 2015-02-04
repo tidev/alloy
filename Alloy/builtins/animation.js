@@ -1,6 +1,5 @@
 /**
  * @class Alloy.builtins.animation
- * @editurl https://github.com/appcelerator/alloy/edit/master/Alloy/builtins/animation.js 
  * A collection of useful animation utilities. To use the animation builtin library,
  * all you need to do is require it with the `alloy` root directory in your
  * `require` call. For example:
