@@ -645,46 +645,52 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	}
 };
 
-exports.mergeI18n = function(srcI18nDir, compileConfigDir) {
-	logger.info('  i18n:     "' + srcI18nDir + '"');
+exports.mergeI18n = function(srcI18nDir, compileConfigDir, opts) {
+	logger.info(' i18n:     "' + srcI18nDir + '"');
 
-	var appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
+	var buildI18nDir = path.join(compileConfigDir.project, CONST.DIR.BUILD_I18N),
+		appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
+		files = wrench.readdirSyncRecursive(srcI18nDir),
 		serializer = new XMLSerializer();
 
-	if (!fs.existsSync(appI18nDir)) {
-		wrench.mkdirSyncRecursive(appI18nDir, 0755);
-		wrench.copyDirSyncRecursive(srcI18nDir, appI18nDir, {preserve: false});
-	} else {
-		if (fs.existsSync(srcI18nDir)) {
-			var files = wrench.readdirSyncRecursive(srcI18nDir);
-			_.each(files, function(file) {
-				var source = path.join(srcI18nDir, file);
-				var outputPath = path.join(appI18nDir, file);
-
-				if (!path.existsSync(outputPath)) {
-					if (fs.statSync(source).isDirectory()) {
-						wrench.mkdirSyncRecursive(outputPath, 0755);
-					} else {
-						U.copyFileSync(source, outputPath);
-					}
-				} else {
-					if (fs.statSync(source).isFile()) {
-						var doc = U.XML.parseFromFile(outputPath);
-						var root = doc.documentElement;
-
-						var sourcexml = U.XML.parseFromFile(source);
-						_.each(sourcexml.getElementsByTagName('string'), function(node){
-							root.appendChild(doc.createTextNode('    '));
-							root.appendChild(node);
-							root.appendChild(doc.createTextNode('\n'));
-						});
-
-						fs.writeFileSync(outputPath, serializer.serializeToString(doc), 'utf8');
-					}
-				}
-			});
-		}
+	if (!fs.existsSync(buildI18nDir)) {
+		wrench.mkdirSyncRecursive(buildI18nDir, 0755);
+		fs.existsSync(appI18nDir) && wrench.copyDirSyncRecursive(appI18nDir, buildI18nDir, {preserve: false});
 	}
+
+	_.each(files, function(file) {
+		var source = path.join(srcI18nDir, file),
+			outputPath = path.join(buildI18nDir, file);
+
+		if (!path.existsSync(outputPath)) {
+			if (fs.statSync(source).isDirectory()) {
+				wrench.mkdirSyncRecursive(outputPath, 0755);
+			} else {
+				U.copyFileSync(source, outputPath);
+			}
+		} else {
+			if (fs.statSync(source).isFile()) {
+				var doc = U.XML.parseFromFile(outputPath),
+					root = doc.documentElement,
+					head = root.getElementsByTagName('string')[0],
+					sourcexml = U.XML.parseFromFile(source);
+
+				_.each(sourcexml.getElementsByTagName('string'), function(node){
+					if (opts.override) {
+						root.appendChild(doc.createTextNode('\t'));
+						root.appendChild(node);
+						root.appendChild(doc.createTextNode('\n'));
+					} else {
+						root.insertBefore(node, head);
+						root.insertBefore(doc.createTextNode('\n'), head);
+						root.insertBefore(doc.createTextNode('\t'), head);
+					}
+				});
+
+				fs.writeFileSync(outputPath, serializer.serializeToString(doc), 'utf8');
+			}
+		}
+	});
 };
 
 function updateImplicitNamspaces(platform) {

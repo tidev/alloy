@@ -181,6 +181,10 @@ exports.init = function (logger, config, cli, appc) {
 					break;
 			}
 		}
+
+		afs.exists(path.join(cli.argv["project-dir"], 'build', 'i18n')) && process.argv.push('--i18n-dir', 'build');
+		afs.exists(path.join(cli.argv["project-dir"], 'build', 'platform')) && (cli.argv['platform-dir'] = 'build/platform');
+
 		run(build.deviceFamily, deployType, target, finished);
 	});
 
