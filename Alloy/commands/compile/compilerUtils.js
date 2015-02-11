@@ -670,24 +670,32 @@ exports.mergeI18n = function(srcI18nDir, compileConfigDir, opts) {
 			}
 		} else {
 			if (fs.statSync(source).isFile()) {
-				var doc = U.XML.parseFromFile(outputPath),
-					root = doc.documentElement,
-					head = root.getElementsByTagName('string')[0],
-					sourcexml = U.XML.parseFromFile(source);
+				var outxml = U.XML.parseFromFile(outputPath),
+					root = outxml.documentElement,
+					sourcexml = U.XML.parseFromFile(source),
+					obj = {};
+
+				_.each(outxml.getElementsByTagName('string'), function(node) {
+					var name = node.getAttribute('name');
+					obj[name] = node;
+				});
 
 				_.each(sourcexml.getElementsByTagName('string'), function(node){
-					if (opts.override) {
-						root.appendChild(doc.createTextNode('\t'));
-						root.appendChild(node);
-						root.appendChild(doc.createTextNode('\n'));
+					var name = node.getAttribute('name'),
+						value = node.childNodes[0].nodeValue;
+
+					if (name in obj) {
+						if (opts.override) {
+							root.replaceChild(node, obj[name]);
+						}
 					} else {
-						root.insertBefore(node, head);
-						root.insertBefore(doc.createTextNode('\n'), head);
-						root.insertBefore(doc.createTextNode('\t'), head);
+						root.appendChild(outxml.createTextNode('\t'));
+						root.appendChild(node);
+						root.appendChild(outxml.createTextNode('\n'));
 					}
 				});
 
-				fs.writeFileSync(outputPath, serializer.serializeToString(doc), 'utf8');
+				fs.writeFileSync(outputPath, serializer.serializeToString(outxml), 'utf8');
 			}
 		}
 	});
