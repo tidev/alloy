@@ -315,6 +315,31 @@ module.exports = function(args, program) {
 	});
 	logger.info('');
 
+	// [ALOY-858] handle theme "i18n" and "platform" folders
+	if (theme) {
+		var themeI18nPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.I18N),
+			themePlatformPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.PLATFORM);
+
+		if (path.existsSync(themeI18nPath)) {
+			CU.mergeI18n(themeI18nPath, compileConfig.dir, { override: true });
+		}
+
+		if (path.existsSync(themePlatformPath)) {
+			logger.info(' themes platform: "' + themePlatformPath + '"');
+			var tempDir = path.join(paths.project, CONST.DIR.BUILD_PLATFORM),
+			appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
+
+			if (!fs.existsSync(tempDir)) {
+				wrench.mkdirSyncRecursive(tempDir, 0755);
+				if (fs.existsSync(appPlatformDir)) {
+					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
+				}
+			}
+			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
+		}
+	}
+	logger.info('');
+
 	generateAppJs(paths, compileConfig, restrictionPath);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
@@ -752,7 +777,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 
 		// [ALOY-967] merge "i18n" dir in widget folder
 		if (fs.existsSync(path.join(dir,CONST.DIR.I18N))) {
-			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir);
+			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir, { override: false });
 		}
 		widgetIds.push(manifest.id);
 
