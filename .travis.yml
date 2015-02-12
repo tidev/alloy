@@ -1,9 +1,19 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
+- '0.12'
+sudo: false
 before_script:
-  - npm install -g .
-  - npm install -g jake
-  - npm install -g titanium
-  - mkdir ~/.titanium
-  - cp ./cli_config.json ~/.titanium/config.json
+- npm install -g .
+- npm install -g jake
+- npm install -g titanium
+- mkdir ~/.titanium
+- cp ./cli_config.json ~/.titanium/config.json
+deploy:
+  provider: npm
+  email: npmjs@appcelerator.com
+  api_key:
+    secure: fiGmUOL5OROMrp4YdrhYLEs2por8iDONLi0tyF7DXCWDBqYdyjwgzRFWqWmv9X2JZogREnWtDv3b0yIuQ13k2/pe+FWx5NvDaveeLsNUSl+dGd703FNTmgkM3fbhcxsBigcgYdcOO8u62gZAi2Gf6NMzWzX58V1mpHNGShXk9C4=
+  on:
+    tags: true
+    repo: appcelerator/alloy
