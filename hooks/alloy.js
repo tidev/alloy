@@ -166,24 +166,8 @@ exports.init = function (logger, config, cli, appc) {
 	}
 
 	cli.addHook('build.pre.compile', function (build, finished) {
-		// TODO: Remove this workaround when the CLI reports the right deploy type for android
-		var deployType = build.deployType;
-		var target = build.target;
-
-		if (cli.argv.platform === 'android') {
-			switch(target) {
-				case 'dist-playstore':
-					deployType = 'production';
-					break;
-				case 'device':
-					deployType = 'test';
-					break;
-				case 'emulator':
-				default:
-					deployType = 'development';
-					break;
-			}
-		}
+		var deployType = build.deployType,
+			target = build.target;
 
 		run(build.deviceFamily, deployType, target, finished);
 	});
