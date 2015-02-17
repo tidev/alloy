@@ -13,7 +13,7 @@ deploy:
   provider: npm
   email: npmjs@appcelerator.com
   api_key:
-    secure: fiGmUOL5OROMrp4YdrhYLEs2por8iDONLi0tyF7DXCWDBqYdyjwgzRFWqWmv9X2JZogREnWtDv3b0yIuQ13k2/pe+FWx5NvDaveeLsNUSl+dGd703FNTmgkM3fbhcxsBigcgYdcOO8u62gZAi2Gf6NMzWzX58V1mpHNGShXk9C4=
+    secure: EPVs34QWIqcLr7Dm3vrREYfkV0T/Kt0EPuuVPf9w6Mlt8rzRGcV/s8VzYE8pzu9OQEbMp6yaQ9DELoACBg2Y8+7gqwyINddEJ9gl32kp/vVa4Ev/5td9kZdT580aPCYLJEnzT/lm2nCFbiBR4g8/pYA6tD9kGjiV89RV9S0pin4=
   on:
     tags: true
     repo: appcelerator/alloy
