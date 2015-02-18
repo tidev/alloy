@@ -110,8 +110,9 @@ exports.evaluateTemplate = function(name, o) {
 	return _.template(exports.readTemplate(name), o);
 };
 
-exports.getAndValidateProjectPaths = function(argPath) {
-	var projectPath = path.resolve(argPath);
+exports.getAndValidateProjectPaths = function(argPath, opts) {
+	var projectPath = path.resolve(argPath),
+		opts = opts || {};
 
 	// See if we got the "app" path or the project path as an argument
 	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
@@ -135,7 +136,7 @@ exports.getAndValidateProjectPaths = function(argPath) {
 		exports.die('Invalid Titanium project path (no tiapp.xml) at "' + paths.project + '"');
 	} else if (!fs.existsSync(paths.app)) {
 		exports.die('Alloy "app" directory does not exist at "' + paths.app + '"');
-	} else if (!fs.existsSync(paths.index)) {
+	} else if (!fs.existsSync(paths.index) && (opts.command !== CONST.COMMANDS.GENERATE)) {
 		exports.die('Alloy "app" directory has no "' + paths.indexBase + '" file at "' + paths.index + '".');
 	}
 

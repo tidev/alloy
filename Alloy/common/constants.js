@@ -235,3 +235,7 @@ exports.SPECIAL_PROPERTY_NAMES = [
 	'onCreateOptionsMenu',
 	'onPrepareOptionsMenu'
 ];
+
+exports.COMMANDS = {
+	GENERATE: 'generate'
+};

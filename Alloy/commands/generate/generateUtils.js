@@ -27,7 +27,7 @@ exports.generateMigrationFileName = function(t) {
 exports.generate = function(name, type, program, args) {
 	args = args || {};
 	var ext = '.'+CONST.FILE_EXT[type];
-	var paths = U.getAndValidateProjectPaths(program.outputPath);
+	var paths = U.getAndValidateProjectPaths(program.outputPath, {command : CONST.COMMANDS.GENERATE});
 	var templatePath = path.join(alloyRoot,'template',type.toLowerCase()+ext);
 	// ALOY-372 - Support 'alloy generate' command for widget components
 	var widgetPath = (program.widgetname) ? CONST.DIR['WIDGET']+path.sep+program.widgetname : '';
