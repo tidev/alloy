@@ -22,7 +22,10 @@ function generate(args, program) {
 	}
 
 	// make sure we have a valid project path
-	var paths = U.getAndValidateProjectPaths(program.projectDir || program.outputPath || process.cwd());
+	var paths = U.getAndValidateProjectPaths(
+		program.projectDir || program.outputPath || process.cwd(),
+		{command : CONST.COMMANDS.GENERATE}
+	);
 	program.projectDir = program.outputPath = paths.project;
 
 	// grab the name
