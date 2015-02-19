@@ -417,7 +417,18 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
-	return new (require('alloy/controllers/' + name))(args);
+	try {
+		return new (require('alloy/controllers/' + name.replace(/^\//, '')))(args);
+	} catch (err) {
+		if(err.indexOf('architecture:') !== -1) {
+			// Due to changes in TIMOB-18196, if a controller file can't be found, error is like this:
+			//    Couldn't find module: alloy/controllers/doesNotExist for architecture: i386
+			// Testing for that, we throw a custom error instead
+			throw "Cannot find controller: " + name.replace(/^\//, '');
+		} else {
+			throw err;
+		}
+	}
 };
 
 /**
