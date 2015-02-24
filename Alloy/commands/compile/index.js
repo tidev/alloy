@@ -307,7 +307,7 @@ module.exports = function(args, program) {
 					// generate runtime controller
 					logger.info('[' + controller + '] ' + (collection.manifest ?
 						collection.manifest.id + ' ' : '') + 'controller processing...');
-					parseAlloyComponent(controller, collection.dir, collection.manifest, true);
+					parseAlloyComponent(controller, collection.dir, collection.manifest, true, restrictionPath);
 					tracker[fp] = true;
 				}
 			});
