@@ -1,8 +1,8 @@
-# Alloy
-
-**Latest stable version:** 1.5.1
+# Alloy [![Build Status](https://travis-ci.org/appcelerator/alloy.svg?branch=travis)](https://travis-ci.org/appcelerator/alloy)
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
+
+[![NPM](https://nodei.co/npm/alloy.png?downloads=true&stars=true)](https://nodei.co/npm/alloy/)
 
 ## Getting Started
 
