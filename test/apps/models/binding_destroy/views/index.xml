@@ -20,7 +20,7 @@
 			</Window>
 		</NavigationGroup>
 
-		<!-- just use window hierarchy on android and blackberry -->
-		<Require src="main" platform="android,blackberry"/>
+		<!-- just use window hierarchy on android -->
+		<Require src="main" platform="android"/>
 	</Window>
 </Alloy>

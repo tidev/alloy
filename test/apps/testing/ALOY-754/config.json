@@ -8,11 +8,6 @@
         "bothConfig": "main:android",
         "theme": "android"
     },
-    "os:blackberry": {
-        "mainConfig": "main:blackberry",
-        "bothConfig": "main:blackberry",
-        "theme": "blackberry"
-    },
     "os:ios": {
         "mainConfig": "main:ios",
         "bothConfig": "main:ios",

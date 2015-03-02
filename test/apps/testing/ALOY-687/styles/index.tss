@@ -33,10 +33,6 @@
 	color: '#963'
 }
 
-"#label[platform=blackberry]": {
-	color: '#00f'
-}
-
 "#label[platform=mobileweb]": {
 	color: '#ff0'
 }

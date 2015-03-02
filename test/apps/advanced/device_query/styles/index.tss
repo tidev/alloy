@@ -14,10 +14,6 @@
 	backgroundColor: "#00f"
 }
 
-"#win[platform=blackberry]": {
-	backgroundColor: "#0ff"
-}
-
 "Label": {
 	color: "#fff",
 	font: {
@@ -61,10 +57,6 @@
 
 "#osLabel[platform=mobileweb]": {
 	text: "Mobileweb"
-}
-
-"#osLabel[platform=blackberry]": {
-	text: "Blackberry"
 }
 
 "#osLabel[platform=windows]": {
