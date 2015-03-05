@@ -35,7 +35,6 @@ var tests = [
 	['var a = Ti.Platform.name', 'var a="<%= name %>"'],
 	['var a = Ti.Platform.osname', 'var a="android"', ['android']],
 	['var a = Ti.Platform.osname', 'var a="mobileweb"', ['mobileweb']],
-	['var a = Ti.Platform.osname', 'var a="blackberry"', ['blackberry']],
 	['var a, b = 1, c = 2;', 'var a,b=1,c=2'],
 	['var a = 1;', 'var a=1'],
 	['var a =+1;', 'var a=1'],
@@ -209,5 +208,3 @@ function pad(string) {
 	}
 	return ret;
 }
-
-

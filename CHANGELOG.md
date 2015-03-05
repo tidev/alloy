@@ -19,6 +19,7 @@
 * [ALOY-1165](https://jira.appcelerator.org/browse/ALOY-1165). Compile error when merging backgroundGradient
 * [ALOY-1167](https://jira.appcelerator.org/browse/ALOY-1167). Update travis.yml to exit w/non-zero values on errors
 * [ALOY-1175](https://jira.appcelerator.org/browse/ALOY-1175). Cannot call methods or access properties on MenuItems declared in markup
+* [ALOY-1250](https://jira.appcelerator.org/browse/ALOY-1250). Remove Blackberry support
 
 ### Release 1.5.1 (10/2/2014)
 

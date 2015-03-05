@@ -6,8 +6,7 @@ var _ = require('../../../lib/alloy/underscore')._,
 
 // does the current TiSDK for the platform properly support the "tabs" property
 var platform = CU.getCompilerConfig().alloyConfig.platform;
-var SUPPORTS_TABS = platform === 'ios' ||
-	(platform !== 'blackberry' && tiapp.version.gte('3.1.0'));
+var SUPPORTS_TABS = platform === 'ios' || tiapp.version.gte('3.1.0');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);

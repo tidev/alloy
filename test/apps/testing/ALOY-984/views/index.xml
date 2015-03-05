@@ -14,7 +14,7 @@
             <Label text="The window should have three colored views on the left, and three buttons on the right, of the NavigationBar."/>
         </Window>
     </NavigationWindow>
-	<Window platform="android,mobileweb,blackberry">
+	<Window platform="android,mobileweb">
 		<Label text="This example is meant for iOS only"/>
 	</Window>
 </Alloy>

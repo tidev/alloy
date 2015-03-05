@@ -5,7 +5,6 @@
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
-        <target device="blackberry">true</target>
         <target device="windows">true</target>
     </deployment-targets>
     <id>com.appcelerator.AlloyHarness</id>
