@@ -1,6 +1,11 @@
 # Alloy
 
-**Latest stable version:** 1.5.1
+[![Build Status](https://travis-ci.org/appcelerator/alloy.svg?branch=master)](https://travis-ci.org/appcelerator/alloy)
+[![Dependency Status](https://david-dm.org/appcelerator/alloy.svg)](https://david-dm.org/appcelerator/alloy)
+[![devDependency Status](https://david-dm.org/appcelerator/alloy/dev-status.svg)](https://david-dm.org/appcelerator/alloy#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/alloy.svg)](http://badge.fury.io/js/grunt-appc-js)
+
+[![NPM](https://nodei.co/npm-dl/alloy.png)](https://nodei.co/npm/alloy/)
 
 Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
 
