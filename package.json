@@ -11,7 +11,8 @@
     "android",
     "blackberry",
     "html5",
-    "mobileweb"
+    "mobileweb",
+		"appc-client"
   ],
   "version": "1.7.0-dev",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
