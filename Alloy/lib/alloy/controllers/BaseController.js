@@ -27,6 +27,7 @@ var Controller = function() {
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
+		__events: [],
 		__proxyProperties: {},
 		setParent: function(parent) {
 			var len = roots.length;
@@ -398,6 +399,143 @@ The 'redbg' and 'bigger' classes are shown below:
 				});
 			}
 			return this;
+		},
+
+		/**
+		 * @method getEvent
+		 * Returns the specified events associated with this controller.
+		 *
+		 * If no `id` is specified, returns the first top-level view events.
+		 *
+		 * #### Example
+		 * The following example gets a events to a `<Label/>` object
+		 * with the `id` of "label".
+
+	<Alloy>
+		<Window>
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+		* The following outputs the view-controller id, event type
+		* and event handler of dictionary in array.
+
+	var event = $.getEvent('label');
+	console.log(event);
+
+	[INFO]  (
+	[INFO]      {
+	[INFO]          handler = "<KrollCallback: 0x00000000>";
+	[INFO]          id = label;
+	[INFO]          type = click;
+	[INFO]      }
+	[INFO]  )
+
+		 * @return {Array.<Dictionary>}
+		 */
+		getEvent: function(id) {
+			if (typeof id === 'undefined' || id === null) {
+				id = roots[0].id;
+			}
+			return _.filter(this.__events, function(event) {
+				return event.id === id;
+			});
+		},
+		/**
+		 * @method getEvents
+		 * Returns the all events associated with this controller.
+		 *
+		 * #### Example
+		 * When is opened window, get the all events.
+
+	<Alloy>
+		<Window id="window" onOpen="doOpen" onClose="doClose">
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+		* The following outputs the view-controller id, event type
+		* and event handler of dictionary in array.
+
+	function doOpen() {
+		var events = $.getEvents();
+		console.log(event);
+	}
+
+	[INFO]  (
+	[INFO]      {
+	[INFO]          handler = "<KrollCallback: 0x00000000>";
+	[INFO]          id = window;
+	[INFO]          type = open;
+	[INFO]      },
+	[INFO]      {
+	[INFO]          handler = "<KrollCallback: 0x00000001>";
+	[INFO]          id = window;
+	[INFO]          type = close;
+	[INFO]      },
+	[INFO]      {
+	[INFO]          handler = "<KrollCallback: 0x00000002>";
+	[INFO]          id = label;
+	[INFO]          type = click;
+	[INFO]      }
+	[INFO]  )
+
+		 * @return {Array.<Dictionary>}
+		 */
+		getEvents: function() {
+			return this.__events;
+		},
+		/**
+		 * @method removeEvent
+		 * Remove the specified events associated with this controller.
+		 *
+		 * If no `id` is specified, remove the first top-level view events.
+		 *
+		 * #### Example
+		 * The following example remove a events to a `<Label/>` object
+		 * with the `id` of "label".
+
+	<Alloy>
+		<Window>
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+	$.removeEvent('label');
+		 */
+		removeEvent: function(id) {
+			if (typeof id === 'undefined' || id === null) {
+				id = roots[0].id;
+			}
+			_.each(this.__events, function(event, index) {
+				if (event.id === id) {
+					self.__views[event.id].removeEventListener(event.type, event.handler);
+					delete self.__events[index];
+				}
+			});
+		},
+		/**
+		 * @method removeEvents
+		 * Remove the all events associated with this controller.
+		 *
+		 * #### Example
+		 * When is closed window, remove the all events.
+
+	<Alloy>
+		<Window onOpen="doOpen" onClose="doClose">
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+	function doClose() {
+		$.removeEvents();
+	}
+		 */
+		removeEvents: function() {
+			_.each(this.__events, function(event, index) {
+				self.__views[event.id].removeEventListener(event.type, event.handler);
+				delete self.__events[index];
+			});
 		}
 	});
 };

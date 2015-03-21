@@ -353,6 +353,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 		_.each(args.events, function(ev) {
 			var eventObj = {
+				id: args.id,
 				obj: isModelOrCollection ? state.args.symbol : args.symbol,
 				ev: ev.name,
 				cb: ev.value,
@@ -370,10 +371,15 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			} else {
 				immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
 			}
+			var theListener = '';
+			if (eventFunc === 'addEventListener') {
+				theListener = _.template("$.__events.push({id:'<%= id %>',type:'<%= ev %>',handler:<%= cb %>});", eventObj);
+			}
 
 			// add the generated code to the view code and post-controller code respectively
 			code.content += _.template(immediateTemplate, eventObj);
 			postCode = _.template(deferTemplate, eventObj);
+			postCode +=　theListener;
 			exports.postCode += state.condition ? _.template(codeTemplate, {
 				condition: state.condition,
 				content: postCode
