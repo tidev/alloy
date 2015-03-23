@@ -24,7 +24,7 @@ var Controller = function() {
 		} : self.__controllerPath;
 	}
 
-	function trackEvent(obj, type, callback) {
+	function trackListener(obj, type, callback) {
 		var id = obj.id || (obj.id = Ti.Platform.createUUID());
 		self.__events.push({id:id,type:type,handler:callback});
 		return id;
@@ -421,7 +421,7 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @param {Function} callback Callback to receive event.
 		 */
 		addListener: function(obj, type, callback) {
-			var id = trackEvent(obj, type, callback);
+			var id = trackListener(obj, type, callback);
 			obj.addEventListener(type, callback);
 			return id;
 		},
