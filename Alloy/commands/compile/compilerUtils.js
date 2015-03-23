@@ -353,7 +353,6 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 		_.each(args.events, function(ev) {
 			var eventObj = {
-				id: args.id,
 				obj: isModelOrCollection ? state.args.symbol : args.symbol,
 				ev: ev.name,
 				cb: ev.value,
@@ -373,7 +372,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			}
 			var theListener = '';
 			if (eventFunc === 'addEventListener') {
-				theListener = _.template("$.__events.push({id:'<%= id %>',type:'<%= ev %>',handler:<%= cb %>});", eventObj);
+				theListener = _.template("$.trackEvent(<%= obj %>,'<%= ev %>',<%= cb %>);", eventObj);
 			}
 
 			// add the generated code to the view code and post-controller code respectively
