@@ -90,7 +90,7 @@ exports.init = function (logger, config, cli, appc) {
 					paths[bin] = process.env[envName];
 					if (paths[bin]) {
 						done();
-					} else if (process.platform === 'win32') {
+					} else if (process.platform === 'win32' && bin === 'alloy') {
 						paths.alloy = 'alloy.cmd';
 						done();
 					} else {
@@ -116,13 +116,12 @@ exports.init = function (logger, config, cli, appc) {
 					}
 				};
 			}), function () {
+
+				// compose alloy command execution
 				var cmd = [paths.node, paths.alloy, 'compile', appDir, '--config', config];
 				if (cli.argv['no-colors'] || cli.argv['color'] === false) { cmd.push('--no-colors'); }
-				if (process.platform === 'win32') { cmd.shift(); }
-				logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
 
-				var child = (process.platform === 'win32') ? spawn(cmd.shift(), cmd, { stdio: 'inherit' }) : spawn(cmd.shift(), cmd);
-
+				// process each line of output from alloy
 				function checkLine(line) {
 					var re = new RegExp(
 						'(?:\u001b\\[\\d+m)?\\[?(' +
@@ -139,17 +138,35 @@ exports.init = function (logger, config, cli, appc) {
 					}
 				}
 
-				child.stdout !== null && child.stdout.on('data', function (data) {
-					data.toString().split('\n').forEach(function (line) {
-						checkLine(line);
+				// execute alloy in os-specific manner
+				var child;
+				if (process.platform === 'win32') {
+					cmd.shift();
+					logger.info(__('Executing Alloy compile: %s',
+						['cmd','/s','/c'].concat(cmd).join(' ').cyan));
+
+					// arg processing from https://github.com/MarcDiethelm/superspawn
+					child = spawn('cmd', [['/s', '/c', '"' +
+						cmd.map(function(a) {
+							if (/^[^"].* .*[^"]/.test(a)) return '"'+a+'"'; return a;
+						}).join(" ") + '"'].join(" ")], {
+							stdio: 'inherit',
+							windowsVerbatimArguments: true
+						}
+					);
+				} else {
+					logger.info(__('Executing Alloy compile: %s', cmd.join(' ').cyan));
+					child = spawn(cmd.shift(), cmd);
+					child.stdout.on('data', function (data) {
+						data.toString().split('\n').forEach(checkLine);
 					});
-				});
-				child.stderr !== null && child.stderr.on('data', function (data) {
-					data.toString().split('\n').forEach(function (line) {
-						checkLine(line);
+					child.stderr.on('data', function (data) {
+						data.toString().split('\n').forEach(checkLine);
 					});
-				});
-				child !== null && child.on('exit', function (code) {
+				}
+
+				// handle the completion of alloy, success or otherwise
+				child.on('exit', function (code) {
 					if (code) {
 						logger.error(__('Alloy compiler failed'));
 						process.exit(1);
@@ -161,6 +178,7 @@ exports.init = function (logger, config, cli, appc) {
 					}
 					finished();
 				});
+
 			});
 		}
 	}
