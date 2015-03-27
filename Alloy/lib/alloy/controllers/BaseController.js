@@ -24,6 +24,12 @@ var Controller = function() {
 		} : self.__controllerPath;
 	}
 
+	function trackListener(obj, type, callback) {
+		var id = obj.id || (obj.id = Ti.Platform.createUUID());
+		self.__events.push({id:id,type:type,handler:callback});
+		return id;
+	}
+
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
@@ -402,121 +408,28 @@ The 'redbg' and 'bigger' classes are shown below:
 		},
 
 		/**
-		 * @method getEvent
-		 * Returns the specified events associated with this controller.
-		 *
-		 * If no `id` is specified, returns the first top-level view events.
+		 * @method addListener
+		 * Add a tracked event listeners to a view proxy object.
 		 *
 		 * #### Example
-		 * The following example gets a events to a `<Label/>` object
-		 * with the `id` of "label".
+		 * When is closed window, remove the all events.
 
-	<Alloy>
-		<Window>
-			<Label id="label" onClick="doClick">Hello, world</Label>
-		</Window>
-	</Alloy>		 
+	$.addListener($.aView, 'click', onClick);
 
-		* The following outputs the view-controller id, event type
-		* and event handler of dictionary in array.
-
-	var event = $.getEvent('label');
-	console.log(event);
-
-	[INFO]  (
-	[INFO]      {
-	[INFO]          handler = "<KrollCallback: 0x00000000>";
-	[INFO]          id = label;
-	[INFO]          type = click;
-	[INFO]      }
-	[INFO]  )
-
-		 * @return {Array.<Dictionary>}
+		 * @param {Object} obj Proxy view object to listen to.
+		 * @param {String} type Event type to listen to.
+		 * @param {Function} callback Callback to receive event.
 		 */
-		getEvent: function(id) {
-			if (typeof id === 'undefined' || id === null) {
-				id = roots[0].id;
-			}
-			return _.filter(this.__events, function(event) {
-				return event.id === id;
-			});
+		addListener: function(obj, type, callback) {
+			var id = trackListener(obj, type, callback);
+			obj.addEventListener(type, callback);
+			return id;
 		},
+
 		/**
-		 * @method getEvents
-		 * Returns the all events associated with this controller.
-		 *
-		 * #### Example
-		 * When is opened window, get the all events.
-
-	<Alloy>
-		<Window id="window" onOpen="doOpen" onClose="doClose">
-			<Label id="label" onClick="doClick">Hello, world</Label>
-		</Window>
-	</Alloy>		 
-
-		* The following outputs the view-controller id, event type
-		* and event handler of dictionary in array.
-
-	function doOpen() {
-		var events = $.getEvents();
-		console.log(event);
-	}
-
-	[INFO]  (
-	[INFO]      {
-	[INFO]          handler = "<KrollCallback: 0x00000000>";
-	[INFO]          id = window;
-	[INFO]          type = open;
-	[INFO]      },
-	[INFO]      {
-	[INFO]          handler = "<KrollCallback: 0x00000001>";
-	[INFO]          id = window;
-	[INFO]          type = close;
-	[INFO]      },
-	[INFO]      {
-	[INFO]          handler = "<KrollCallback: 0x00000002>";
-	[INFO]          id = label;
-	[INFO]          type = click;
-	[INFO]      }
-	[INFO]  )
-
-		 * @return {Array.<Dictionary>}
-		 */
-		getEvents: function() {
-			return this.__events;
-		},
-		/**
-		 * @method removeEvent
-		 * Remove the specified events associated with this controller.
-		 *
-		 * If no `id` is specified, remove the first top-level view events.
-		 *
-		 * #### Example
-		 * The following example remove a events to a `<Label/>` object
-		 * with the `id` of "label".
-
-	<Alloy>
-		<Window>
-			<Label id="label" onClick="doClick">Hello, world</Label>
-		</Window>
-	</Alloy>		 
-
-	$.removeEvent('label');
-		 */
-		removeEvent: function(id) {
-			if (typeof id === 'undefined' || id === null) {
-				id = roots[0].id;
-			}
-			_.each(this.__events, function(event, index) {
-				if (event.id === id) {
-					self.__views[event.id].removeEventListener(event.type, event.handler);
-					delete self.__events[index];
-				}
-			});
-		},
-		/**
-		 * @method removeEvents
-		 * Remove the all events associated with this controller.
+		 * @method removeListener
+		 * Remove the event listeners associated with a combination of
+		 * view proxy object, event type and/or callback.
 		 *
 		 * #### Example
 		 * When is closed window, remove the all events.
@@ -528,14 +441,20 @@ The 'redbg' and 'bigger' classes are shown below:
 	</Alloy>		 
 
 	function doClose() {
-		$.removeEvents();
+		$.removeListener();
 	}
+		 * @param {Object} [obj] Proxy view object to remove from.
+		 * @param {String} [type] Event type to remove.
+		 * @param {Function} [callback] Callback to remove.
 		 */
-		removeEvents: function() {
+		removeListener: function(obj, type, callback) {
 			_.each(this.__events, function(event, index) {
-				self.__views[event.id].removeEventListener(event.type, event.handler);
-				delete self.__events[index];
+				if ((!obj || obj.id === event.id) && (!type || type === event.type) && (!callback || callback === event.handler)) {
+					self.__views[event.id].removeEventListener(event.type, event.handler);
+					delete self.__events[index];
+				}
 			});
+			return this;
 		}
 	});
 };
