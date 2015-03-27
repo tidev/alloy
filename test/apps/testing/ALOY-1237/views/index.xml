@@ -1,5 +1,5 @@
 <Alloy>
 	<Window onOpen="doOpen">
-		<Label id="label" onClick="doClick">Remove the all events in this controller</Label>
+		<Label onClick="doClick">Remove the all events in this controller</Label>
 	</Window>
 </Alloy>

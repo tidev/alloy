@@ -24,12 +24,6 @@ var Controller = function() {
 		} : self.__controllerPath;
 	}
 
-	function trackListener(obj, type, callback) {
-		var id = obj.id || (obj.id = Ti.Platform.createUUID());
-		self.__events.push({id:id,type:type,handler:callback});
-		return id;
-	}
-
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
@@ -412,18 +406,58 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * Add a tracked event listeners to a view proxy object.
 		 *
 		 * #### Example
-		 * When is closed window, remove the all events.
+		 * addEventListener wrapper, add an event to tracking target.
 
 	$.addListener($.aView, 'click', onClick);
 
-		 * @param {Object} obj Proxy view object to listen to.
-		 * @param {String} type Event type to listen to.
-		 * @param {Function} callback Callback to receive event.
+		 * @param {Object} [proxy] Proxy view object to listen to.
+		 * @param {String} [type] Event type to listen to.
+		 * @param {Function} [callback] Callback to receive event.
 		 */
-		addListener: function(obj, type, callback) {
-			var id = trackListener(obj, type, callback);
-			obj.addEventListener(type, callback);
-			return id;
+		addListener: function(proxy, type, callback) {
+			if (!proxy.id) {
+				proxy.id = _.uniqueId('__trackId');
+
+				if (_.has(this.__views, proxy.id)) {
+					Ti.API.error('$.addListener: ' + proxy.id + ' was conflict.');
+					return;
+				}
+				this.__views[proxy.id] = proxy;
+			}
+
+			proxy.addEventListener(type, callback);
+			this.__events.push({
+				id: proxy.id,
+				type: type,
+				handler: callback
+			});
+
+			return proxy.id;
+		},
+
+		/**
+		 * @method getListener
+		 * Get the event listeners associated with a combination of
+		 * view proxy object, event type.
+		 *
+		 * #### Example
+		 * Get the all events.
+
+	var listener = $.getListener();
+
+		 * @param {Object} [proxy] Proxy view object to remove from.
+		 * @param {String} [type] Event type to remove.
+		 */
+
+		getListener: function(proxy, type) {
+			return _.filter(this.__events, function(event, index) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type)) {
+					return true;
+				}
+
+				return false;
+			});
 		},
 
 		/**
@@ -443,13 +477,15 @@ The 'redbg' and 'bigger' classes are shown below:
 	function doClose() {
 		$.removeListener();
 	}
-		 * @param {Object} [obj] Proxy view object to remove from.
+		 * @param {Object} [proxy] Proxy view object to remove from.
 		 * @param {String} [type] Event type to remove.
 		 * @param {Function} [callback] Callback to remove.
 		 */
-		removeListener: function(obj, type, callback) {
+		removeListener: function(proxy, type, callback) {
 			_.each(this.__events, function(event, index) {
-				if ((!obj || obj.id === event.id) && (!type || type === event.type) && (!callback || callback === event.handler)) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type) &&
+					(!callback || callback === event.handler)) {
 					self.__views[event.id].removeEventListener(event.type, event.handler);
 					delete self.__events[index];
 				}
