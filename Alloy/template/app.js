@@ -7,7 +7,7 @@ var Alloy = require('alloy'),
 	_ = Alloy._,
 	Backbone = Alloy.Backbone;
 
-(function(global) {
+(function(exports) {
 	
 __MAPMARKER_ALLOY_JS__
 	
