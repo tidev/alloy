@@ -1,6 +1,6 @@
 ## Alloy Release Notes
 
-### Release 1.6.0
+### Beta Release 1.6.0 - 02 April 2015
 
 [Full list of Issues that were addressed in Release 1.6.0](https://jira.appcelerator.org/issues/?filter=16721)
 
