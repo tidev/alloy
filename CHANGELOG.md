@@ -34,7 +34,7 @@ The underscore.js library was upgraded from version 1.4.4 to version 1.6.0.
 
 ##### XML Markup Enhancements
 
-  * Support <ActionView/> as a child tag of the <MenuItem> object to set the `actionView` property
+  * Support &lt;ActionView/&gt; as a child tag of the &lt;MenuItem&gt; object to set the `actionView` property
     of `Titanium.Android.MenuItem`.  Only supports the Android platform.
 
 
