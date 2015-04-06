@@ -71,11 +71,16 @@ module.exports = function(args, program) {
 	// copy in any Alloy-specific Resources files
 	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
 	_.each(CONST.PLATFORMS, function(p) {
-		wrench.copyDirSyncRecursive(
-			path.join(platformsDir,p,'project'),
-			paths.project,
-			{preserve:true}
-		);
+		var platformInResources = (p === 'ios') ? path.join(paths.resources, 'iphone') : path.join(paths.resources, p);
+
+		// only copy the resource files for supported platforms
+		if (path.existsSync(platformInResources)) {
+			wrench.copyDirSyncRecursive(
+				path.join(platformsDir, p, 'project'),
+				paths.project,
+				{ preserve:true }
+			);
+		}
 	});
 
 	// add alloy project template files
