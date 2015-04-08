@@ -31,7 +31,7 @@ function doOpen() {
 // Once event fire, you do not fire again.
 // All events to this window have been removed.
 function doWindowClick() {
-//	$.removeListener($.index);
+	$.removeListener($.index);
 	console.log('Removed the all events on this window');
 }
 

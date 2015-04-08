@@ -422,12 +422,12 @@ The 'redbg' and 'bigger' classes are shown below:
 					Ti.API.error('$.addListener: ' + proxy.id + ' was conflict.');
 					return;
 				}
-				this.__views[proxy.id] = proxy;
 			}
 
 			proxy.addEventListener(type, callback);
 			this.__events.push({
 				id: proxy.id,
+				view: proxy,
 				type: type,
 				handler: callback
 			});
@@ -486,7 +486,7 @@ The 'redbg' and 'bigger' classes are shown below:
 				if ((!proxy || proxy.id === event.id) &&
 					(!type || type === event.type) &&
 					(!callback || callback === event.handler)) {
-					self.__views[event.id].removeEventListener(event.type, event.handler);
+					event.view.removeEventListener(event.type, event.handler);
 					delete self.__events[index];
 				}
 			});
