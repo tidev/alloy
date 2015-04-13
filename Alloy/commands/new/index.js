@@ -72,9 +72,9 @@ module.exports = function(args, program) {
 	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
 	_.each(CONST.PLATFORMS, function(p) {
 		wrench.copyDirSyncRecursive(
-			path.join(platformsDir,p,'project'),
+			path.join(platformsDir, p, 'project'),
 			paths.project,
-			{preserve:true}
+			{ preserve:true }
 		);
 	});
 
