@@ -187,12 +187,12 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.UI.iOS
 	AdView: NS_TI_UI_IOS,
 	CoverFlowView: NS_TI_UI_IOS,
+	DocumentViewer: NS_TI_UI_IOS,
 	NavigationWindow: NS_TI_UI_IOS,
 	TabbedBar: NS_TI_UI_IOS,
 	Toolbar: NS_TI_UI_IOS,
 
 	// Ti.UI.iPad
-	DocumentViewer: NS_TI_UI_IPAD,
 	Popover: NS_TI_UI_IPAD,
 	SplitWindow: NS_TI_UI_IPAD,
 
