@@ -10,5 +10,12 @@
  *     var day = moment("12-25-1995", "MM-DD-YYYY");
  *     Ti.API.info("Date:" + day.format("dddd, MMMM Do YYYY, h:mm:ss a")); // --> Monday, December 25th 1995, 12:00:00 am
  *
+ * To change the locale globally, the application calls the moment.lang() function, passing it the new language code. 
+ *
+ *     var moment = require('alloy/moment');
+ *     require('alloy/moment/lang/de');
+ *     require('alloy/moment/lang/fr');
+ *     moment.lang(Ti.Locale.currentLocale); // Set current system locale, as a combination of ISO 2-letter language and country codes.
+ * 
  * For documentation, usage examples and more information, see [http://momentjs.com/](http://momentjs.com).
  */
