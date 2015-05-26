@@ -189,12 +189,12 @@ exports.IMPLICIT_NAMESPACES = {
 	CoverFlowView: NS_TI_UI_IOS,
 	DocumentViewer: NS_TI_UI_IOS,
 	NavigationWindow: NS_TI_UI_IOS,
+	SplitWindow: NS_TI_UI_IOS,
 	TabbedBar: NS_TI_UI_IOS,
 	Toolbar: NS_TI_UI_IOS,
 
 	// Ti.UI.iPad
 	Popover: NS_TI_UI_IPAD,
-	SplitWindow: NS_TI_UI_IPAD,
 
 	// Ti.UI.iPhone
 	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ?
