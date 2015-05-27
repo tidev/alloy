@@ -615,7 +615,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 			}
 			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
 			if(!_.isEmpty(tmpStyle)) {
-				code += '_.extend(o, {';
+				code += 'Alloy.deepExtend(true, o, {';
 				code += tmpStyle;
 				code += '});\n';
 			}
