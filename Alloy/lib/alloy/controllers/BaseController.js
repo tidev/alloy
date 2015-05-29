@@ -27,6 +27,7 @@ var Controller = function() {
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
+		__events: [],
 		__proxyProperties: {},
 		setParent: function(parent) {
 			var len = roots.length;
@@ -397,6 +398,98 @@ The 'redbg' and 'bigger' classes are shown below:
 					}
 				});
 			}
+			return this;
+		},
+
+		/**
+		 * @method addListener
+		 * Add a tracked event listeners to a view proxy object.
+		 *
+		 * #### Example
+		 * addEventListener wrapper, add an event to tracking target.
+
+	$.addListener($.aView, 'click', onClick);
+
+		 * @param {Object} [proxy] Proxy view object to listen to.
+		 * @param {String} [type] Event type to listen to.
+		 * @param {Function} [callback] Callback to receive event.
+		 */
+		addListener: function(proxy, type, callback) {
+			if (!proxy.id) {
+				proxy.id = _.uniqueId('__trackId');
+
+				if (_.has(this.__views, proxy.id)) {
+					Ti.API.error('$.addListener: ' + proxy.id + ' was conflict.');
+					return;
+				}
+			}
+
+			proxy.addEventListener(type, callback);
+			this.__events.push({
+				id: proxy.id,
+				view: proxy,
+				type: type,
+				handler: callback
+			});
+
+			return proxy.id;
+		},
+
+		/**
+		 * @method getListener
+		 * Get the event listeners associated with a combination of
+		 * view proxy object, event type.
+		 *
+		 * #### Example
+		 * Get the all events.
+
+	var listener = $.getListener();
+
+		 * @param {Object} [proxy] Proxy view object to remove from.
+		 * @param {String} [type] Event type to remove.
+		 */
+
+		getListener: function(proxy, type) {
+			return _.filter(this.__events, function(event, index) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type)) {
+					return true;
+				}
+
+				return false;
+			});
+		},
+
+		/**
+		 * @method removeListener
+		 * Remove the event listeners associated with a combination of
+		 * view proxy object, event type and/or callback.
+		 *
+		 * #### Example
+		 * When is closed window, remove the all events.
+
+	<Alloy>
+		<Window onOpen="doOpen" onClose="doClose">
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+	function doClose() {
+		$.removeListener();
+	}
+		 * @param {Object} [proxy] Proxy view object to remove from.
+		 * @param {String} [type] Event type to remove.
+		 * @param {Function} [callback] Callback to remove.
+		 */
+		removeListener: function(proxy, type, callback) {
+			_.each(this.__events, function(event, index) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type) &&
+					(!callback || callback === event.handler)) {
+					event.view.removeEventListener(event.type, event.handler);
+					delete self.__events[index];
+				}
+			});
 			return this;
 		}
 	});

@@ -362,7 +362,12 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
-			var theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
+			var theEvent;
+			if (eventFunc === 'addEventListener') {
+				theEvent = _.template("$.addListener(<%= obj %>,'<%= ev %>',<%= cb %>)", eventObj);
+			} else {
+				theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
+			}
 			var deferTemplate = theDefer + " && " + theEvent + ";";
 			var immediateTemplate;
 			if (/[\.\[]/.test(eventObj.cb)) {
