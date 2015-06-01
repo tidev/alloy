@@ -417,6 +417,7 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
+	name = name.indexOf('/') === 0 ? name.substr(1) : name;
 	return new (require('alloy/controllers/' + name))(args);
 };
 
