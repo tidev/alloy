@@ -412,11 +412,12 @@ exports.createWidget = function(id, name, args) {
  * @method createController
  * Factory method for instantiating a controller. Creates and returns an instance of the
  * named controller.
- * @param {String} name Name of controller to instantiate.
+ * @param {String} name Name of controller, or relative path to controller to instantiate.
  * @param {Object} [args] Arguments to pass to the controller.
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
+	name = name.indexOf('/') === 0 ? name.substr(1) : name;
 	return new (require('alloy/controllers/' + name))(args);
 };
 
@@ -427,11 +428,12 @@ exports.createController = function(name, args) {
  *
  * See [Backbone.Model](http://docs.appcelerator.com/backbone/0.9.2/#Model) in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
- * @param {String} name Name of model to instantiate.
+ * @param {String} name Name of model, or relative path of model to instantiate.
  * @param {Object} [args] Arguments to pass to the model.
  * @return {Backbone.Model} Backbone model object.
  */
 exports.createModel = function(name, args) {
+	name = name.indexOf('/') === 0 ? name.substr(1) : name;
 	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
 };
 
@@ -443,11 +445,12 @@ exports.createModel = function(name, args) {
  * See [Backbone.Collection](http://docs.appcelerator.com/backbone/0.9.2/#Collection) in the Backbone.js
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
- * @param {String} name Name of model to hold in this collection.
+ * @param {String} name Name of model, or relative path of model to hold in this collection.
  * @param {Object} [args] Arguments to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.createCollection = function(name, args) {
+	name = name.indexOf('/') === 0 ? name.substr(1) : name;
 	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
 };
 
