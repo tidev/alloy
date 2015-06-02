@@ -651,7 +651,7 @@ function deepExtend() {
 					continue;
 				}
 
-				if (deep && copy && _.isObject(copy) && ((copy_is_array = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
+				if (deep && copy && !_.isFunction(copy) && _.isObject(copy) && ((copy_is_array = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
 					// Recurse if we're merging plain objects or arrays
 					if (copy_is_array) {
 						copy_is_array = false;
@@ -664,9 +664,9 @@ function deepExtend() {
 
 					// Never move original objects, clone them
 					target[name] = deepExtend(deep, clone, copy);
+				} else {
+					target[name] = copy;
 				}
-
-				target[name] = copy;
 			}
 		}
 	}
