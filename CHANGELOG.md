@@ -1,8 +1,24 @@
 ## Alloy Release Notes
 
-### Release 1.6.0 (5/21/2015)
+### Release 1.6.2 - (06/11/2015)
+
+Alloy 1.6.2 is a patch release addressing high-priority issues from previous releases.
+
+#### Fixed Issues
+
+  * [ALOY-1272](https://jira.appcelerator.org/browse/ALOY-1272): Building an Alloy project with
+    the Titanium CLI on Windows fails
+
+---
+### Release 1.6.0 - (05/21/2015)
 
 [Full list of Issues that were addressed in Release 1.6.0](https://jira.appcelerator.org/issues/?filter=16721)
+
+#### Behavior Changes
+
+To prepare for forthcoming Windows Phone support, Alloy and the Titaium SDK now support the
+`windows` subfolder to include assets only for Windows Phone applications.  If have existing
+`windows` subfolders, you will need to rename them and update any paths.
 
 #### New Features
 
@@ -31,6 +47,14 @@ the JavaScript and TSS files, to populate the `strings.xml` file.
 
 The underscore.js library was upgraded from version 1.4.4 to version 1.6.0.
 
+##### Windows Phone Support
+
+To prepare for forthcoming Windows Phone support, Alloy added several conditionals to support logic,
+UI elements and assets to only be included with Windows Phone applications.
+
+  * In controllers, use the `OS_WINDOWS` constant.
+  * In XML and TSS files, assign the `platform` attribute of UI elements a `windows` value.
+  * Under the component folders in the `app` folder, add `windows` subfolders to include assets only for Windows Phone.
 
 ##### XML Markup Enhancements
 
