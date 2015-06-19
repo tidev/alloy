@@ -1,6 +1,6 @@
 <Alloy>
 	<Window>
-		<View layout="vertical">
+		<View id="container" layout="vertical">
 			<Button onClick="openDialog">baseDialog</Button>
 			<Button onClick="openDialog">animatedDialog</Button>
 		</View>
