@@ -36,12 +36,6 @@ var info = {
 				icon: "app.png"
 			},
 			{
-				name: "rss",
-				label: "RSS Reader",
-				Description: "A sample Master/Detail app that creates a RSS reader. With it you can pull live RSS feeds from the internet, list them along with thumbnails, then drill down to the article itself.",
-				icon: "app.png"
-			},
-			{
 				name: "todo",
 				label: "Todo List",
 				Description: "A sample application that creates a basic todo list. With this app you can maintain a listing of tasks to be completed, add to that list, and mark tasks as done, all powered by Alloy models and collections.",
