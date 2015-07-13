@@ -18,16 +18,14 @@ exports.definition = {
             validate : function(attrs) {
                 for (var key in attrs) {
                     var value = attrs[key];
-                    if (value) {
-                        if (key === "item") {
-                            if (value.length <= 0) {
-                                return 'Error: No item!';
-                            }
+                    if (key === "item") {
+                        if ((/^\s*$/).test(value)) {
+                            return 'Error: No item!';
                         }
-                        if (key === "done") {
-                            if (value.length <= 0) {
-                                return 'Error: No completed flag!';
-                            }
+                    }
+                    if (key === "done") {
+                        if (value.length <= 0) {
+                            return 'Error: No completed flag!';
                         }
                     }
                 }

@@ -11,9 +11,13 @@ function addItem() {
     // silent so we don't fire UI updates twice
     todos.add(task, { silent: true } );
 
-    // save the model to persistent storage, which will give
-    // a "server" id (sqlite) and update the UI
-    task.save();
+    if (task.isValid()) {
+        // save the model to persistent storage, which will give
+        // a "server" id (sqlite) and update the UI
+        task.save();
+    } else {
+        task.destroy();
+    }
 
     closeWindow();
 }
