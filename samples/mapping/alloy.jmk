@@ -1,4 +1,4 @@
-var GOOGLE_API_KEY = 'ENTER_YOUR_API_KEY_HERE'; //'AIzaSyBbK9MVK9fHB2OyoP_uzE7msXJzHi60C6o';
+var GOOGLE_API_KEY = 'ENTER_YOUR_API_KEY_HERE';
 
 var fs = require('fs'),
 	path = require('path'),
