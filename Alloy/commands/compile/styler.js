@@ -148,14 +148,14 @@ exports.loadGlobalStyles = function(appPath, opts) {
 
 	// see if we can use the cached global style
 	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile)) {
-
 		// load global style object from cache
 		logger.info('[global style] loading from cache...');
 		exports.globalStyle = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
 		ret = true;
 
+		// increment the style order counter with the number of rules in the global style
+		styleOrderCounter += exports.globalStyle.length;
 	} else {
-
 		// add new hash to the buildlog
 		buildlog.data.globalStyleCacheHash = hash;
 
@@ -174,9 +174,9 @@ exports.loadGlobalStyles = function(appPath, opts) {
 		logger.info('[global style] writing to cache...');
 		fs.writeFileSync(cacheFile, JSON.stringify(exports.globalStyle));
 
+		// simply increment the style order counter
+		styleOrderCounter++;
 	}
-
-	styleOrderCounter++;
 
 	return ret;
 };
