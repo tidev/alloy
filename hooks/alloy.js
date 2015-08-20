@@ -141,7 +141,7 @@ exports.init = function (logger, config, cli, appc) {
 
 				// execute alloy in os-specific manner
 				var child;
-				if (process.platform === 'win32') {
+				if (process.platform === 'win32' && paths.alloy.indexOf('.bin') !== -1) {
 					cmd.shift();
 					logger.info(__('Executing Alloy compile: %s',
 						['cmd','/s','/c'].concat(cmd).join(' ').cyan));
