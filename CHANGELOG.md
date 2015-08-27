@@ -1,5 +1,48 @@
 ## Alloy Release Notes
 
+### Release 1.7.6 - (08/26/2015)
+
+#### Fixed
+  * [CLI-768](https://jira.appcelerator.org/browse/CLI-768): Alloy app fails to build on Windows with
+    error "Alloy compiler failed"
+
+---
+### Release 1.7.5 - (08/21/2015)
+
+#### Fixed
+  * [ALOY-1300](https://jira.appcelerator.org/browse/ALOY-1300): iOS Assets Catalog inconsistency between
+    Alloy and Classic
+
+---
+### Release 1.7.4 - (08/18/2015)
+
+#### Changed
+  * [ALOY-1239](https://jira.appcelerator.org/browse/ALOY-1239): Set Node 0.10 as minimum supported version
+
+#### Fixed
+  * [ALOY-1299](https://jira.appcelerator.org/browse/ALOY-1299): Cannot build a new project for iOS
+    due to missing appicons
+  * [ALOY-1226](https://jira.appcelerator.org/browse/ALOY-1226): To Do sample app - validate() fails
+    to prevent invalid (empty) items from being added
+
+---
+### Release 1.7.2 - (07/29/2015)
+
+#### Fixed
+  * [ALOY-1288](https://jira.appcelerator.org/browse/ALOY-1288): Windows: Label not visible when using default app.tss
+  * [ALOY-1287](https://jira.appcelerator.org/browse/ALOY-1287): Alloy styles compilation does not produce the
+    same results across successive compilations
+
+---
+### Release 1.7.1 - (07/21/2015)
+
+#### Added
+  * [ALOY-1280](https://jira.appcelerator.org/browse/ALOY-1280): Support CommandBar in XML markup on Windows
+
+#### Fixed
+  * [ALOY-1214](https://jira.appcelerator.org/browse/ALOY-1214): Button in Inheritance sample app difficult to click on iOS
+
+---
 ### Release 1.6.2 - (06/11/2015)
 
 Alloy 1.6.2 is a patch release addressing high-priority issues from previous releases.
