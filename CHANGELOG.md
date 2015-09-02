@@ -1,46 +1,72 @@
 ## Alloy Release Notes
 
-### Release 1.7.6 - (08/26/2015)
+### Release 1.7.6
 
-#### Fixed
-  * [CLI-768](https://jira.appcelerator.org/browse/CLI-768): Alloy app fails to build on Windows with
-    error "Alloy compiler failed"
+Alloy 1.7.6 is a minor release that includes new features and multiple bug fixes.  See the
+[Full list of Issues that were addressed in Release 1.7.6](https://jira.appcelerator.org/issues/?filter=16928)
 
----
-### Release 1.7.5 - (08/21/2015)
 
-#### Fixed
-  * [ALOY-1300](https://jira.appcelerator.org/browse/ALOY-1300): iOS Assets Catalog inconsistency between
-    Alloy and Classic
+#### Behavior Changes
 
----
-### Release 1.7.4 - (08/18/2015)
+##### Destroy Method
 
-#### Changed
-  * [ALOY-1239](https://jira.appcelerator.org/browse/ALOY-1239): Set Node 0.10 as minimum supported version
+The `$.destroy()` method now removes all event listeners attached to the view.  Previously, the
+method would only remove event listeners related to data-view binding.
 
-#### Fixed
-  * [ALOY-1299](https://jira.appcelerator.org/browse/ALOY-1299): Cannot build a new project for iOS
-    due to missing appicons
-  * [ALOY-1226](https://jira.appcelerator.org/browse/ALOY-1226): To Do sample app - validate() fails
-    to prevent invalid (empty) items from being added
+#### New Features
 
----
-### Release 1.7.2 - (07/29/2015)
+##### Use a Test Application to Create a New Alloy Project
 
-#### Fixed
-  * [ALOY-1288](https://jira.appcelerator.org/browse/ALOY-1288): Windows: Label not visible when using default app.tss
-  * [ALOY-1287](https://jira.appcelerator.org/browse/ALOY-1287): Alloy styles compilation does not produce the
-    same results across successive compilations
+Add the `--testapp <PATH_TO_TESTAPP>` option to the `alloy new` command to create a new project
+based off an Alloy test application.
 
----
-### Release 1.7.1 - (07/21/2015)
+Pass the option the relative path to the test application after the
+[`alloy/test/apps` path](https://github.com/appcelerator/alloy/tree/master/test/apps).
 
-#### Added
-  * [ALOY-1280](https://jira.appcelerator.org/browse/ALOY-1280): Support CommandBar in XML markup on Windows
+For example, if you want to use the picker test application, run `alloy new --testapp ui/picker`
+from a skeleton Titanium project.
 
-#### Fixed
-  * [ALOY-1214](https://jira.appcelerator.org/browse/ALOY-1214): Button in Inheritance sample app difficult to click on iOS
+##### Copy, Move or Delete View-Controllers
+
+Add CLI commands to copy, move or delete view-controllers from the project, which includes the
+controller, XML and TSS files.
+
+  * `alloy copy <controller_name> <copy_name>`: Copy a view-controller
+  * `alloy move <controller_name> <new_name>`: Rename a view-controller
+  * `alloy delete <controller_name>`: Delete a view-controller
+
+##### Themes Enhancement
+
+Themes now support `i18n`, `lib` and `platform` folders for theme-specific localized assets,
+CommonJS modules and platform-specific assets, respectively.
+
+##### TSS and XML Markup Enhancements
+
+  * Support setting XML attributes to `Alloy.CFG` and `Alloy.Globals` values.
+
+  * Support the `module` attribute in the `Alloy` element to set a default `module` attribute
+    for all elements in the XML view.
+
+  * Support &lt;CommandBar/&gt; as a child tag of the &lt;Window&gt; object to add a command bar
+    to a Window. Add an &lt;Items/&gt; tag as a child of the `CommandBar` element, then add
+    &lt;AppBarButton/&gt;, &lt;AppBarToggleButton/&gt; and &lt;AppBarSeparator/&gt; tags as children of the
+    `Items` element to add buttons to the command bar.  Only supports the Windows platform.
+
+  * Support `attributedString` attribute in the `Label`, `TextArea` and `TextField` elements, and the
+    `attributedHintText` attribute in the `TextField` element. Set the attribute to a function 
+    that returns an Ti.UI.AttributedString object.
+
+  * `SearchView` element is now implicitly assigned to the `Ti.UI.Android` namespace, that is,
+    &lt;SearchView/&gt; is the same as &lt;SearchView ns="Ti.UI.Android"/&gt;.
+
+  * Support in TSS queries to use local functions defined in the controller and the `arguments[0]`
+    variable.  To reference the controller's `arguments[0]` variable in the TSS query block, use the `args`
+    variable.  Previously, you could only reference properties and functions in the `Alloy.Globals`
+    namespace.
+
+##### Widget Enhancements
+
+Widgets now support the `i18n` directory for localized assets.
 
 ---
 ### Release 1.6.2 - (06/11/2015)
@@ -60,7 +86,7 @@ Alloy 1.6.2 is a patch release addressing high-priority issues from previous rel
 #### Behavior Changes
 
 To prepare for forthcoming Windows Phone support, Alloy and the Titaium SDK now support the
-`windows` subfolder to include assets only for Windows Phone applications.  If have existing
+`windows` subfolder to include assets only for Windows Phone applications.  If you have existing
 `windows` subfolders, you will need to rename them and update any paths.
 
 #### New Features
