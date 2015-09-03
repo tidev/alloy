@@ -59,10 +59,11 @@ CommonJS modules and platform-specific assets, respectively.
   * `SearchView` element is now implicitly assigned to the `Ti.UI.Android` namespace, that is,
     &lt;SearchView/&gt; is the same as &lt;SearchView ns="Ti.UI.Android"/&gt;.
 
-  * Support in TSS queries to use local functions defined in the controller and the `arguments[0]`
-    variable.  To reference the controller's `arguments[0]` variable in the TSS query block, use the `args`
-    variable.  Previously, you could only reference properties and functions in the `Alloy.Globals`
-    namespace.
+  * Support in custom queries to use local functions defined in the controller and arguments passed to the
+    `Alloy.createController()` method. To reference arguments passed to the controller, use the `$.args` variable.
+    Previously, you could only reference properties and functions in the `Alloy.Globals` namespace.
+    For details, see
+    [Custom Query Styles](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Styles_and_Themes-section-35621526_AlloyStylesandThemes-CustomQueryStyles).
 
 ##### Widget Enhancements
 
