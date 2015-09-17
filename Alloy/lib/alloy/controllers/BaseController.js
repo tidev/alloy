@@ -403,16 +403,19 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method addListener
-		 * Add a tracked event listeners to a view proxy object.
+		 * Adds a tracked event listeners to a view proxy object.
+		 * By default, any event listener declared in XML is tracked by Alloy.
 		 *
 		 * #### Example
-		 * addEventListener wrapper, add an event to tracking target.
+		 * Add an event to the tracking target.
 
 	$.addListener($.aView, 'click', onClick);
 
-		 * @param {Object} [proxy] Proxy view object to listen to.
-		 * @param {String} [type] Event type to listen to.
-		 * @param {Function} [callback] Callback to receive event.
+		 * @param {Object} proxy Proxy view object to listen to.
+		 * @param {String} type Name of the event.
+		 * @param {Function} callback Callback function to invoke when the event is fired.
+		 * @returns {String} ID attribute of the view object.  If one does not exist, Alloy will create a unique ID.
+		 * @since 1.7.0
 		 */
 		addListener: function(proxy, type, callback) {
 			if (!proxy.id) {
@@ -437,16 +440,20 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method getListener
-		 * Get the event listeners associated with a combination of
-		 * view proxy object, event type.
+		 * Gets all the tracked event listeners of the view-controller or
+		 * only the ones specified by the parameters.  Passing no parameters,
+		 * retrieves all tracked event listeners. Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
 		 *
 		 * #### Example
-		 * Get the all events.
+		 * Get all events bound to the view-controller.
 
 	var listener = $.getListener();
 
-		 * @param {Object} [proxy] Proxy view object to remove from.
-		 * @param {String} [type] Event type to remove.
+		 * @param {Object} [proxy] Proxy view object.
+		 * @param {String} [type] Name of the event.
+		 * @returns {Array<TrackedEventListener>} List of tracked event listeners.
+		 * @since 1.7.0
 		 */
 
 		getListener: function(proxy, type) {
@@ -462,11 +469,13 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method removeListener
-		 * Remove the event listeners associated with a combination of
-		 * view proxy object, event type and/or callback.
+		 * Removes all tracked event listeners or only the ones
+		 * specified by the parameters. Passing no parameters,
+		 * removes all tracked event listeners.  Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
 		 *
 		 * #### Example
-		 * When is closed window, remove the all events.
+		 * When the window is closed, remove all tracked event listeners.
 
 	<Alloy>
 		<Window onOpen="doOpen" onClose="doClose">
@@ -477,9 +486,11 @@ The 'redbg' and 'bigger' classes are shown below:
 	function doClose() {
 		$.removeListener();
 	}
-		 * @param {Object} [proxy] Proxy view object to remove from.
-		 * @param {String} [type] Event type to remove.
+		 * @param {Object} [proxy] Proxy view object to remove event listeners from.
+		 * @param {String} [type] Name of the event to remove.
 		 * @param {Function} [callback] Callback to remove.
+		 * @returns {Alloy.Controller} Controller instance.
+		 * @since 1.7.0
 		 */
 		removeListener: function(proxy, type, callback) {
 			_.each(this.__events, function(event, index) {

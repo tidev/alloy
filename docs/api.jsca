@@ -1,10 +1,25 @@
 {
-    "version": "1.0",
     "types": [
         {
+            "name": "Alloy.Controller",
+            "description": "<p>The base class for Alloy controllers.</p>",
+            "isInternal": false,
+            "properties": [],
             "functions": [
                 {
                     "name": "addClass",
+                    "description": "Adds a TSS class to the specified view object. ",
+                    "since": {
+                        "since": [
+                            "1.2.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -22,22 +37,61 @@
                             "name": "opts"
                         }
                     ],
-                    "isInternal": false,
+                    "returns": {
+                        "type": "void",
+                        "description": "\n"
+                    }
+                },
+                {
+                    "name": "addListener",
+                    "description": "Adds a tracked event listeners to a view proxy object. ",
                     "since": {
-                        "since": "1.2.0",
+                        "since": [
+                            "1.7.0"
+                        ],
                         "version": "Titanium Mobile SDK"
                     },
-                    "returns": {
-                        "type": "void"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
                     "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
                     "isInstanceProperty": true,
-                    "description": "Adds a TSS class to the specified view object. "
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "type"
+                        },
+                        {
+                            "usage": "required",
+                            "type": "Function",
+                            "name": "callback"
+                        }
+                    ],
+                    "returns": {
+                        "type": "String",
+                        "description": "<p>ID attribute of the view object.  If one does not exist, Alloy will create a unique ID.</p>"
+                    }
                 },
                 {
                     "name": "createStyle",
+                    "description": "Creates a dictionary of properties based on the specified styles. ",
+                    "since": {
+                        "since": [
+                            "1.2.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -45,50 +99,78 @@
                             "name": "opts"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.2.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Object",
                         "description": "\n"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Creates a dictionary of properties based on the specified styles. "
+                    }
                 },
                 {
                     "name": "destroy",
-                    "parameters": [],
-                    "isInternal": false,
-                    "isClassProperty": false,
-                    "returns": {
-                        "type": "void"
-                    },
-                    "isConstruction": false,
+                    "description": "Frees binding resources associated with this controller and its\nUI components. ",
                     "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
                     "isInstanceProperty": true,
-                    "description": "Frees binding resources associated with this controller and its\nUI components. "
+                    "isClassProperty": false,
+                    "parameters": [],
+                    "returns": {
+                        "type": "void",
+                        "description": "\n"
+                    }
+                },
+                {
+                    "name": "getListener",
+                    "description": "Gets all the tracked event listeners of the view-controller or\nonly the ones specified by the view object or event name. ",
+                    "since": {
+                        "since": [
+                            "1.7.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "type"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Array",
+                        "description": "<p>List of tracked event listeners.</p>"
+                    }
                 },
                 {
                     "name": "getTopLevelViews",
-                    "parameters": [],
+                    "description": "Returns a list of the root view elements associated with this controller. ",
+                    "isMethod": true,
+                    "isConstruction": false,
                     "isInternal": false,
+                    "isInstanceProperty": true,
                     "isClassProperty": false,
+                    "parameters": [],
                     "returns": {
                         "type": "Array",
                         "description": "\n"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Returns a list of the root view elements associated with this controller. "
+                    }
                 },
                 {
                     "name": "getView",
+                    "description": "Returns the specified view associated with this controller. ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "optional",
@@ -96,33 +178,39 @@
                             "name": "id"
                         }
                     ],
-                    "isInternal": false,
-                    "isClassProperty": false,
                     "returns": {
                         "type": "Object",
                         "description": "\n"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Returns the specified view associated with this controller. "
+                    }
                 },
                 {
                     "name": "getViews",
-                    "parameters": [],
+                    "description": "Returns a list of all IDed view elements associated with this controller. ",
+                    "isMethod": true,
+                    "isConstruction": false,
                     "isInternal": false,
+                    "isInstanceProperty": true,
                     "isClassProperty": false,
+                    "parameters": [],
                     "returns": {
                         "type": "Array",
                         "description": "\n"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Returns a list of all IDed view elements associated with this controller. "
+                    }
                 },
                 {
                     "name": "removeClass",
+                    "description": "Removes a TSS class from the specified view object. ",
+                    "since": {
+                        "since": [
+                            "1.2.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -140,22 +228,61 @@
                             "name": "opts"
                         }
                     ],
-                    "isInternal": false,
+                    "returns": {
+                        "type": "void",
+                        "description": "\n"
+                    }
+                },
+                {
+                    "name": "removeListener",
+                    "description": "Removes all tracked event listeners or only the ones\nspecified by the view object, event name or callback. ",
                     "since": {
-                        "since": "1.2.0",
+                        "since": [
+                            "1.7.0"
+                        ],
                         "version": "Titanium Mobile SDK"
                     },
-                    "returns": {
-                        "type": "void"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
                     "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
                     "isInstanceProperty": true,
-                    "description": "Removes a TSS class from the specified view object. "
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "proxy"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "type"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Function",
+                            "name": "callback"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Controller instance.</p>"
+                    }
                 },
                 {
                     "name": "resetClass",
+                    "description": "Sets the array of TSS classes for the target View object, adding the classes specified and\nremoving any applied class",
+                    "since": {
+                        "since": [
+                            "1.2.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -173,22 +300,25 @@
                             "name": "opts"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.2.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
-                        "type": "void"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Sets the array of TSS classes for the target View object, adding the classes specified and\nremoving any applied class"
+                        "type": "void",
+                        "description": "\n"
+                    }
                 },
                 {
                     "name": "updateViews",
+                    "description": "Applies a set of properties to view elements associated with this controller. ",
+                    "since": {
+                        "since": [
+                            "1.4.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -196,203 +326,191 @@
                             "name": "args"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.4.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Object",
                         "description": "<p>this</p>"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Applies a set of properties to view elements associated with this controller "
+                    }
                 }
             ],
-            "name": "Alloy.Controller",
-            "isInternal": false,
-            "properties": [],
-            "events": [],
-            "description": "<p>The base class for Alloy controllers.</p>"
+            "events": []
         },
         {
-            "functions": [
-                {
-                    "name": "createCollection",
-                    "parameters": [
-                        {
-                            "usage": "required",
-                            "type": "String",
-                            "name": "name"
-                        },
-                        {
-                            "usage": "optional",
-                            "type": "Object",
-                            "name": "args"
-                        }
-                    ],
-                    "isInternal": false,
-                    "isClassProperty": false,
-                    "returns": {
-                        "type": "Backbone.Collection",
-                        "description": "<p>Backbone collection object.</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a Backbone collection of model objects. "
-                },
-                {
-                    "name": "createController",
-                    "parameters": [
-                        {
-                            "usage": "required",
-                            "type": "String",
-                            "name": "name"
-                        },
-                        {
-                            "usage": "optional",
-                            "type": "Object",
-                            "name": "args"
-                        }
-                    ],
-                    "isInternal": false,
-                    "isClassProperty": false,
-                    "returns": {
-                        "type": "Object",
-                        "description": "<p>Alloy controller object.</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a controller. "
-                },
-                {
-                    "name": "createModel",
-                    "parameters": [
-                        {
-                            "usage": "required",
-                            "type": "String",
-                            "name": "name"
-                        },
-                        {
-                            "usage": "optional",
-                            "type": "Object",
-                            "name": "args"
-                        }
-                    ],
-                    "isInternal": false,
-                    "isClassProperty": false,
-                    "returns": {
-                        "type": "Backbone.Model",
-                        "description": "<p>Backbone model object.</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a Backbone Model object. "
-                },
-                {
-                    "name": "createWidget",
-                    "parameters": [
-                        {
-                            "usage": "required",
-                            "type": "String",
-                            "name": "id"
-                        },
-                        {
-                            "usage": "optional",
-                            "type": "String",
-                            "name": "name"
-                        },
-                        {
-                            "usage": "optional",
-                            "type": "Object",
-                            "name": "args"
-                        }
-                    ],
-                    "isInternal": false,
-                    "isClassProperty": false,
-                    "returns": {
-                        "type": "Object",
-                        "description": "<p>Alloy widget controller object.</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a widget controller. "
-                }
-            ],
             "name": "Alloy",
+            "description": "<p>Top-level module for Alloy functions.</p>",
             "isInternal": false,
             "properties": [
                 {
                     "name": "CFG",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "An object that stores Alloy configuration values as defined in your app's\napp/config.json file. ",
                     "type": "Object",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "An object that stores Alloy configuration values as defined in your app's\napp/config.json file. "
+                    "isInstanceProperty": false
                 },
                 {
                     "name": "Collections",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "An object for storing globally accessible Alloy collections. ",
                     "type": "Object",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "An object for storing globally accessible Alloy collections. "
+                    "isInstanceProperty": false
                 },
                 {
                     "name": "Globals",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "An object for storing globally accessible variables and functions. ",
                     "type": "Object",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "An object for storing globally accessible variables and functions. "
+                    "isInstanceProperty": false
                 },
                 {
                     "name": "Models",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "An object for storing globally accessible Alloy models. ",
                     "type": "Object",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "An object for storing globally accessible Alloy models. "
+                    "isInstanceProperty": false
                 },
                 {
                     "name": "isHandheld",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "<p><code>true</code> if the current device is a handheld device (not a tablet).</p>",
                     "type": "Boolean",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "<p><code>true</code> if the current device is a handheld device (not a tablet).</p>"
+                    "isInstanceProperty": false
                 },
                 {
                     "name": "isTablet",
-                    "isInternal": false,
-                    "isInstanceProperty": false,
+                    "description": "<p><code>true</code> if the current device is a tablet.</p>",
                     "type": "Boolean",
+                    "isInternal": false,
                     "isClassProperty": true,
-                    "description": "<p><code>true</code> if the current device is a tablet.</p>"
+                    "isInstanceProperty": false
                 }
             ],
-            "events": [],
-            "description": "<p>Top-level module for Alloy functions.</p>"
+            "functions": [
+                {
+                    "name": "createCollection",
+                    "description": "Factory method for instantiating a Backbone collection of model objects. ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Backbone.Collection",
+                        "description": "<p>Backbone collection object.</p>"
+                    }
+                },
+                {
+                    "name": "createController",
+                    "description": "Factory method for instantiating a controller. ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy controller object.</p>"
+                    }
+                },
+                {
+                    "name": "createModel",
+                    "description": "Factory method for instantiating a Backbone Model object. ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Backbone.Model",
+                        "description": "<p>Backbone model object.</p>"
+                    }
+                },
+                {
+                    "name": "createWidget",
+                    "description": "Factory method for instantiating a widget controller. ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
+                    "parameters": [
+                        {
+                            "usage": "required",
+                            "type": "String",
+                            "name": "id"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "String",
+                            "name": "name"
+                        },
+                        {
+                            "usage": "optional",
+                            "type": "Object",
+                            "name": "args"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Object",
+                        "description": "<p>Alloy widget controller object.</p>"
+                    }
+                }
+            ],
+            "events": []
         },
         {
-            "functions": [],
-            "name": "Alloy.builtins",
+            "name": "Alloy.Collections",
+            "description": "<p>Class to access or create collections.</p>",
             "isInternal": false,
             "properties": [],
-            "events": [],
-            "description": "<p>Alloy provides some additional utility libraries that simplify certain functions,\nsuch as animations, string manipultation and display unit conversion.  These libraries\nare referred to as \"builtins.\"</p>"
-        },
-        {
             "functions": [
                 {
                     "name": "instance",
+                    "description": "Creates a singleton instance of a Collection based on the given model, or\nreturns an existing instance if one has alr",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -400,28 +518,34 @@
                             "name": "name"
                         }
                     ],
-                    "isInternal": false,
-                    "isClassProperty": false,
                     "returns": {
                         "type": "Backbone.Collection",
                         "description": "<p>An Alloy Collection object singleton</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Creates a singleton instance of a Collection based on the given model, or\nreturns an existing instance if one has alr"
+                    }
                 }
             ],
-            "name": "Alloy.Collections",
-            "isInternal": false,
-            "properties": [],
-            "events": [],
-            "description": "<p>Class to access or create collections.</p>"
+            "events": []
         },
         {
+            "name": "Alloy.Controller.UI",
+            "description": "<p>Provides convenience methods for working with Titanium UI objects.</p>",
+            "isInternal": false,
+            "properties": [],
             "functions": [
                 {
                     "name": "create",
+                    "description": "Creates a Titanium UI object with the specified styles. ",
+                    "since": {
+                        "since": [
+                            "1.2.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -434,32 +558,114 @@
                             "name": "opts"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.2.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Object",
                         "description": "\n"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Creates a Titanium UI object with the specified styles. "
+                    }
                 }
             ],
-            "name": "Alloy.Controller.UI",
-            "isInternal": false,
-            "properties": [],
-            "events": [],
-            "description": "\n"
+            "events": []
         },
         {
+            "name": "AlloyStyleDict",
+            "description": "<p>Simple JavaScript object of properties and TSS classes to apply to a Titanium UI object.</p>",
+            "since": {
+                "since": [
+                    "1.2.0"
+                ],
+                "version": "Titanium Mobile SDK"
+            },
+            "isInternal": false,
+            "properties": [
+                {
+                    "name": "apiName",
+                    "description": "Name of the Titanium UI object. ",
+                    "type": "String",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                },
+                {
+                    "name": "classes",
+                    "description": "<p>Array of TSS classes to apply to the Titanium UI object.</p>",
+                    "type": "Array",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                },
+                {
+                    "name": "id",
+                    "description": "<p>TSS ID style to apply to the Titanium UI object.</p>",
+                    "type": "String",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                }
+            ],
+            "functions": [],
+            "events": []
+        },
+        {
+            "name": "TrackedEventListener",
+            "description": "<p>A tracked event listener.</p>",
+            "since": {
+                "since": [
+                    "1.7.0"
+                ],
+                "version": "Titanium Mobile SDK"
+            },
+            "isInternal": false,
+            "properties": [
+                {
+                    "name": "handler",
+                    "description": "<p>Callback bound to the view's event.</p>",
+                    "type": "Function",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                },
+                {
+                    "name": "id",
+                    "description": "ID attribute of the view object. ",
+                    "type": "String",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                },
+                {
+                    "name": "type",
+                    "description": "<p>Name of the event.</p>",
+                    "type": "String",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                },
+                {
+                    "name": "view",
+                    "description": "<p>View object bound to the event listener.</p>",
+                    "type": "Object",
+                    "isInternal": false,
+                    "isClassProperty": true,
+                    "isInstanceProperty": false
+                }
+            ],
+            "functions": [],
+            "events": []
+        },
+        {
+            "name": "Alloy.Models",
+            "description": "<p>Class to access or create models.</p>",
+            "isInternal": false,
+            "properties": [],
             "functions": [
                 {
                     "name": "instance",
+                    "description": "Creates a singleton instance of a Model based on the given model, or\nreturns an existing instance if one has already ",
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -467,28 +673,34 @@
                             "name": "name"
                         }
                     ],
-                    "isInternal": false,
-                    "isClassProperty": false,
                     "returns": {
                         "type": "Backbone.Model",
                         "description": "<p>An Alloy Model object singleton</p>"
-                    },
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Creates a singleton instance of a Model based on the given model, or\nreturns an existing instance if one has already "
+                    }
                 }
             ],
-            "name": "Alloy.Models",
-            "isInternal": false,
-            "properties": [],
-            "events": [],
-            "description": "<p>Class to access or create models.</p>"
+            "events": []
         },
         {
+            "name": "Widget",
+            "description": "<p>Widgets are self-contained components that can be easily dropped into an Alloy project.\nThey were conceived as a way to reuse code in multiple projects or to be used multiple\ntimes in the same project.</p>",
+            "isInternal": false,
+            "properties": [],
             "functions": [
                 {
                     "name": "createCollection",
+                    "description": "Factory method for instantiating a Backbone collection of model objects. ",
+                    "since": {
+                        "since": [
+                            "1.1.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -501,23 +713,25 @@
                             "name": "args"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.1.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Backbone.Collection",
                         "description": "<p>Backbone collection object.</p>"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a Backbone collection of model objects. "
+                    }
                 },
                 {
                     "name": "createController",
+                    "description": "Factory method for instantiating a controller. ",
+                    "since": {
+                        "since": [
+                            "1.1.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -530,23 +744,25 @@
                             "name": "args"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.1.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Object",
                         "description": "<p>Alloy controller object.</p>"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a controller. "
+                    }
                 },
                 {
                     "name": "createModel",
+                    "description": "Factory method for instantiating a Backbone Model object. ",
+                    "since": {
+                        "since": [
+                            "1.1.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -559,23 +775,25 @@
                             "name": "args"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.1.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Backbone.Model",
                         "description": "<p>Backbone model object.</p>"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a Backbone Model object. "
+                    }
                 },
                 {
                     "name": "createWidget",
+                    "description": "Factory method for instantiating a widget controller. ",
+                    "since": {
+                        "since": [
+                            "1.1.0"
+                        ],
+                        "version": "Titanium Mobile SDK"
+                    },
+                    "isMethod": true,
+                    "isConstruction": false,
+                    "isInternal": false,
+                    "isInstanceProperty": true,
+                    "isClassProperty": false,
                     "parameters": [
                         {
                             "usage": "required",
@@ -593,27 +811,14 @@
                             "name": "args"
                         }
                     ],
-                    "isInternal": false,
-                    "since": {
-                        "since": "1.1.0",
-                        "version": "Titanium Mobile SDK"
-                    },
                     "returns": {
                         "type": "Object",
                         "description": "<p>Alloy widget controller object.</p>"
-                    },
-                    "isClassProperty": false,
-                    "isConstruction": false,
-                    "isMethod": true,
-                    "isInstanceProperty": true,
-                    "description": "Factory method for instantiating a widget controller. "
+                    }
                 }
             ],
-            "name": "Widget",
-            "isInternal": false,
-            "properties": [],
-            "events": [],
-            "description": "<p>Widgets are self-contained components that can be easily dropped into an Alloy project.\nThey were conceived as a way to reuse code in multiple projects or to be used multiple\ntimes in the same project.</p>"
+            "events": []
         }
-    ]
+    ],
+    "version": "1.0"
 }
