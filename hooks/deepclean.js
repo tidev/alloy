@@ -14,7 +14,7 @@ exports.init = function (logger, config, cli, appc) {
 
 	function run() {
 		if(cli.argv['shallow'] === '') {
-			logger.info('Not cleaning the Resources directory')
+			logger.info('Not cleaning the Resources directory');
 			return;
 		}
 		var appDir = path.join(cli.argv['project-dir'], 'app');
