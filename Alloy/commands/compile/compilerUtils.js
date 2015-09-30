@@ -839,7 +839,7 @@ function generateConfig(obj) {
 }
 
 exports.parseConfig = function(file, alloyConfig, o) {
-	var j;
+	var j, distType;
 	try {
 		j = jsonlint.parse(fs.readFileSync(file,'utf8'));
 	} catch (e) {
@@ -847,7 +847,7 @@ exports.parseConfig = function(file, alloyConfig, o) {
 	}
 
 	_.each(j, function(v,k) {
-		if (!/^(?:env\:|os\:)/.test(k) && k !== 'global') {
+		if (!/^(?:env\:|os\:|dist\:)/.test(k) && k !== 'global') {
 			logger.debug(k + ' = ' + JSON.stringify(v));
 			o[k] = v;
 		}
@@ -859,6 +859,15 @@ exports.parseConfig = function(file, alloyConfig, o) {
 		o = _.extend(o, j['os:'+alloyConfig.platform]);
 		o = _.extend(o, j['env:'+alloyConfig.deploytype + ' os:'+alloyConfig.platform]);
 		o = _.extend(o, j['os:'+alloyConfig.platform + ' env:'+alloyConfig.deploytype]);
+
+		if (alloyConfig.deploytype === 'production' && alloyConfig.target) {
+			distType = _.find(CONST.DIST_TYPES, function (obj) { return obj.value.indexOf(alloyConfig.target) !== -1 });
+			if (distType) {
+				distType = distType.key.toLowerCase().replace('_', ':');
+				o = _.extend(o, j[distType]);
+				o = _.extend(o, j['os:'+alloyConfig.platform + ' ' + distType]);
+			}
+		}
 	}
 
 	return o;
