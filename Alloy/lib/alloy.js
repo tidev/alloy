@@ -296,6 +296,14 @@ exports.createStyle = function(controller, opts, defaults) {
 			continue;
 		}
 
+		// process runtime custom queries
+		if (style.queries && style.queries.if &&
+			(style.queries.if.trim().toLowerCase() === 'false' ||
+			(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
+			Alloy.Globals[style.queries.if.split('.')[2]] === false))) {
+				continue;
+		}
+
 		// Merge this style into the existing style object
 		deepExtend(true, styleFinal, style.style);
 	}
