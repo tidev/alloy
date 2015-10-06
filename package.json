@@ -14,7 +14,7 @@
     "mobileweb",
     "appc-client"
   ],
-  "version": "1.7.11",
+  "version": "1.7.12",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -22,6 +22,9 @@
       "email": "tlukasavage@appcelerator.com"
     }
   ],
+  "bugs": {
+    "url": "https://jira.appcelerator.org/browse/ALOY"
+  },
   "repository": {
     "type": "git",
     "url": "http://github.com/appcelerator/alloy.git"
