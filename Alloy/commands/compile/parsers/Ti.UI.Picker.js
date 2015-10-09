@@ -131,6 +131,7 @@ function parse(node, state, args) {
 	return {
 		parent: {},
 		styles: state.styles,
+		isViewTemplate: state.isViewTemplate,
 		code: code
 	};
 }
