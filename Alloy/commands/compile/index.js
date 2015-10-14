@@ -661,15 +661,9 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
 		// process the UI nodes
-		var hasUsedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-
 			// should we use the default id?
-			var defaultId;
-			if (!hasUsedDefaultId && CU.isNodeForCurrentPlatform(node)) {
-				hasUsedDefaultId = true;
-				defaultId = viewName;
-			}
+			var defaultId = CU.isNodeForCurrentPlatform(node) ? viewName : undefined;
 
 			// generate the code for this node
 			var fullname = CU.getNodeFullname(node);
