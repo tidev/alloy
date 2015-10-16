@@ -52,19 +52,19 @@ function Controller() {
             id: "detail_navGroup"
         });
         $.__views.__alloyId6.add($.__views.detail_navGroup);
-        $.__views.splitWin = Ti.UI.iPad.createSplitWindow({
+        $.__views.splitWin = Ti.UI.iOS.createSplitWindow({
             masterView: $.__views.__alloyId3,
             detailView: $.__views.__alloyId6,
             id: "splitWin"
         });
+        $.__views.__alloyId2 = Ti.UI.createTab({
+            window: $.__views.splitWin,
+            title: "Tab 1",
+            icon: "KS_nav_ui.png",
+            id: "__alloyId2"
+        });
+        __alloyId1.push($.__views.__alloyId2);
     }
-    $.__views.__alloyId2 = Ti.UI.createTab({
-        window: $.__views.splitWin,
-        title: "Tab 1",
-        icon: "KS_nav_ui.png",
-        id: "__alloyId2"
-    });
-    __alloyId1.push($.__views.__alloyId2);
     $.__views.__alloyId9 = Ti.UI.createWindow({
         title: "Tab 2",
         id: "__alloyId9"
