@@ -14,8 +14,8 @@ function parse(node, state, args) {
 		subParents = [],
 		code = '',
 		err = [
-			'Ti.UI.iPad.SplitWindow (line ' + node.lineNumber + ') ',
-			'Ti.UI.iPad.SplitWindow must have exactly 2 children of one of the following types:',
+			'Ti.UI.iOS.SplitWindow (line ' + node.lineNumber + ') ',
+			'Ti.UI.iOS.SplitWindow must have exactly 2 children of one of the following types:',
 			'  [' + VALID.join(',') + ']',
 			'The first child is the master, the second is the child.'
 		];

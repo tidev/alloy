@@ -613,7 +613,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		if (viewName === 'index' && !dirname) {
 			var valid = [
 				'Ti.UI.Window',
-				'Ti.UI.iPad.SplitWindow',
+				'Ti.UI.iOS.SplitWindow',
 				'Ti.UI.TabGroup',
 				'Ti.UI.iOS.NavigationWindow'
 			].concat(CONST.MODEL_ELEMENTS);
