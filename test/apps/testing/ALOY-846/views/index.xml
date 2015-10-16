@@ -1,7 +1,7 @@
 <Alloy>
 	<TabGroup>
-		<Tab title="Tab 1" icon="KS_nav_ui.png">
-			<SplitWindow id="splitWin" platform="ios" formFactor="tablet">
+		<Tab title="Tab 1" icon="KS_nav_ui.png" platform="ios" formFactor="tablet">
+			<SplitWindow id="splitWin">
 				<Window>
 					<NavigationGroup>
 						<Require src="testwindow"/>
