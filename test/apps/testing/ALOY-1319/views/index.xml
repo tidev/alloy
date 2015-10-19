@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<CardView ns="Ti.UI.Android" platform="android">
+			<Label>A long label with\na few line breaks\nand unicode (UTF8)\nsymbols such as\na white chess piece \u2655\nand the euro symbol \u20ac\nlooks like this!</Label>
+		</CardView>
+		<Label platform="!android">Ti.UI.Android.CardView is only supported on Android</Label>
+	</Window>
+</Alloy>

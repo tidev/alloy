@@ -178,6 +178,9 @@ exports.IMPLICIT_NAMESPACES = {
 	MenuItem: NS_TI_ANDROID,
 	ActionBar: NS_TI_ANDROID,
 
+	// Ti.UI.Android
+	CardView: 'Ti.UI.Android',
+
 	// Ti.Map
 	Annotation: NS_TI_MAP,
 
