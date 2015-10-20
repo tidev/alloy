@@ -5,7 +5,7 @@ here will be applied throughout your app. However, these rules
 have the lowest priority of any style settings.
 
 For more information, see the "Style Priorities" section of
-http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Styles_and_Themes
+http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Styles_and_Themes
 
 For example, the following would apply to all labels, windows,
 and text fields (depending on platform) in your app unless you

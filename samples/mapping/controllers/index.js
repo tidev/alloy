@@ -10,7 +10,7 @@
 	that has been registered to a Google account and has Play Services installed.
 
 	Additional information is in the documentation:
-	http://docs.appcelerator.com/titanium/latest/#!/guide/Google_Maps_v2_for_Android
+	http://docs.appcelerator.com/platform/latest/#!/guide/Google_Maps_v2_for_Android
 */
 
 $.addAddress.on('addAnnotation', function(e) {
