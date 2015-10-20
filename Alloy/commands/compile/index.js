@@ -340,7 +340,7 @@ module.exports = function(args, program) {
 	}
 	logger.info('');
 
-	generateAppJs(paths, compileConfig, restrictionPath);
+	generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
 	// in platform-specific folders, so we just copy the platform-specific one to
@@ -373,7 +373,7 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function generateAppJs(paths, compileConfig, restrictionPath) {
+function generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile) {
 	var alloyJs = path.join(paths.app, 'alloy.js');
 
 	if (restrictionPath !== null && restrictionPath !== path.join(paths.app, 'alloy.js')) {
@@ -383,7 +383,7 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 
 	// info needed to generate app.js
 	var target = {
-			filename: 'Resources' + path.sep + titaniumFolder + path.sep + 'app.js',
+			filename: path.join('Resources', titaniumFolder, 'app.js'),
 			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
 			template: path.join(alloyRoot, 'template', 'app.js')
 		},
@@ -408,6 +408,12 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 	// if not, generate the platform-specific app.js and save its hash
 	} else {
 		logger.info('[app.js] Titanium entry point processing...');
+
+		// trigger our custom compiler makefile
+		if (compilerMakeFile.isActive) {
+			compilerMakeFile.trigger('compile:app.js', _.clone(compileConfig));
+		}
+
 		sourceMapper.generateCodeAndSourceMap({
 			target: target,
 			data: data,

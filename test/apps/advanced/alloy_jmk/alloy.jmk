@@ -31,3 +31,7 @@ task('post:compile', function(config, logger) {
 	logger.info('***** post:compile *****');
 	logger.info(JSON.stringify(config));
 });
+
+task('compile:app.js', function(config, logger) {
+	logger.info('***** compile:app.js *****');
+});
