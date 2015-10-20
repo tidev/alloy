@@ -21,7 +21,7 @@
  * interact with the View and Model components of the application or widget.
  *
  * For guides on using Alloy, see
- * [Alloy Framework](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Framework).
+ * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
  */
 var _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
