@@ -425,7 +425,8 @@ exports.processStyle = function(_style, _state) {
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
 	var bindingRegex = BINDING_REGEX,
 		styleCollection = [],
-		lastObj = {};
+		lastObj = {},
+		elementName = apiName.split('.').pop();
 
 	// don't add an id to the generated style if we are in a local state
 	if (theState && theState.local) {
@@ -434,15 +435,9 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 	// process all style items, in order
 	_.each(styles, function(style) {
-		var styleApi = style.key;
-		if (style.isApi && styleApi.indexOf('.') === -1) {
-			var ns = (CONST.IMPLICIT_NAMESPACES[styleApi] || CONST.NAMESPACE_DEFAULT);
-			styleApi = ns + '.' + styleApi;
-		}
-
 		if ((style.isId && style.key === id) ||
 			(style.isClass && _.contains(classes, style.key)) ||
-			(style.isApi && styleApi === apiName)) {
+			(style.isApi && elementName === style.key)) {
 
 			// manage potential runtime conditions for the style
 			var conditionals = {
