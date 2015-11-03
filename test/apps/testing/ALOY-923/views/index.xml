@@ -15,6 +15,6 @@
 				<ListItem template="inputTemplate" textfield:value=""/>
 			</ListSection>
 		</ListView>
-		<Label platform="android,mobileweb,blackberry">This app is supported on iOS only.</Label>
+		<Label platform="android,mobileweb">This app is supported on iOS only.</Label>
 	</Window>
 </Alloy>
