@@ -688,6 +688,24 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			path.relative(path.join(dir, CONST.DIR.CONTROLLER), files.CONTROLLER) + '"');
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
+
+	var viewFiles = fs.existsSync(path.join(dir, CONST.DIR.VIEW)) && wrench.readdirSyncRecursive(path.join(dir, CONST.DIR.VIEW));
+	var controllerFiles = fs.existsSync(path.join(dir, CONST.DIR.CONTROLLER)) &&  wrench.readdirSyncRecursive(path.join(dir, CONST.DIR.CONTROLLER));
+
+	_.each(cCode.requiredControllerFiles, function(file) {
+		var matchedView = viewFiles.filter(function(value) {
+			return (value.indexOf(file) !== -1);
+		});
+
+		var matchedController = controllerFiles.filter(function(value) {
+			return (value.indexOf(file) !== -1);
+		});
+
+		if (matchedView.length === 0 && matchedController.length === 0) {
+			U.die('Cannot find controller: "' + file + '"');
+		}
+	});
+
 	template.parentController = (cCode.parentControllerName !== '') ?
 		cCode.parentControllerName : "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;

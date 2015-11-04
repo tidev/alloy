@@ -877,7 +877,8 @@ exports.loadController = function(file) {
 	var code = {
 		parentControllerName: '',
 		controller: '',
-		pre: ''
+		pre: '',
+		requiredControllerFiles: []
 	}, contents;
 
 	// Read the controller file
@@ -893,6 +894,9 @@ exports.loadController = function(file) {
 	// get the base controller for this controller
 	code.controller = contents;
 	code.parentControllerName = astController.getBaseController(contents, file);
+
+	// get the list of controllers that are instantiated by this controller
+	code.requiredControllerFiles = astController.getRequiredControllers(contents, file);
 
 	return code;
 };
