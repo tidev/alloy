@@ -22,3 +22,24 @@ exports.getBaseController = function(code, file) {
 
 	return baseController;
 };
+
+exports.getRequiredControllers = function (code, file) {
+	var requiredFiles = [];
+
+	try {
+		var ast = uglifyjs.parse(code);
+		ast.walk(new uglifyjs.TreeWalker(function(node) {
+			if (node instanceof uglifyjs.AST_Call) {
+				if (node.start.value === 'Alloy' &&
+					node.expression.property === 'createController' &&
+					node.args[0].value) {
+						requiredFiles.push(node.args[0].value);
+					}
+			}
+		}));
+	} catch (e) {
+		U.die('Error generating AST for "' + file + '"', e);
+	}
+
+	return requiredFiles;
+};
