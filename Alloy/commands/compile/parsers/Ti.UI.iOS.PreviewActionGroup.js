@@ -14,7 +14,7 @@ function parse(node, state, args) {
 		actionStyle = node.getAttribute('style');
 
 	if (actionStyle && actionStyle.indexOf('.UI.iOS.') === -1) {
-		node.setAttribute('style', 'Ti.UI.iOS.PREVIEW_ACTION_STYLE_.' + actionStyle.toUpperCase());
+		node.setAttribute('style', 'Ti.UI.iOS.PREVIEW_ACTION_STYLE_' + actionStyle.toUpperCase());
 	}
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
