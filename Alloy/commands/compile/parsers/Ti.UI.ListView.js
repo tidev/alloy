@@ -18,6 +18,7 @@ var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.ListSection',
 	'Alloy.Abstract.Templates',
+	'Ti.UI.iOS.PreviewContext'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 var ORDER = {

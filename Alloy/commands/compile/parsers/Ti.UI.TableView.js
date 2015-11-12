@@ -18,7 +18,8 @@ var SEARCH_PROPERTIES = [
 var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.TableViewRow',
-	'Ti.UI.TableViewSection'
+	'Ti.UI.TableViewSection',
+	'Ti.UI.iOS.PreviewContext'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 
