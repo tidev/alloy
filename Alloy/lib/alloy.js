@@ -227,7 +227,7 @@ exports.UI.create = function(controller, apiName, opts) {
 	var style = exports.createStyle(controller, opts);
 
 	// create the titanium proxy object
-	return eval(ns)['create' + baseName](style);
+	return (0,eval)(ns)['create' + baseName](style);
 };
 
 exports.createStyle = function(controller, opts, defaults) {
