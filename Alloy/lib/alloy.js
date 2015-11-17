@@ -483,10 +483,10 @@ exports.isTablet = (function() {
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
 		) >= 400;
-	} else if (OS_BLACKBERRY) {
-		// Tablets not currently supported by BB TiSDK
-		// https://jira.appcelerator.org/browse/TIMOB-13225
-		return false;
+	// } else if (OS_BLACKBERRY) {
+	// 	// Tablets not currently supported by BB TiSDK
+	// 	// https://jira.appcelerator.org/browse/TIMOB-13225
+	// 	return false;
 	} else if (OS_WINDOWS) {
 		// per http://www.extremetech.com/computing/139768-windows-8-smartphones-and-windows-phone-8-tablets
 		// tablets should be >= 1024x768 and phones could be lower, though current phones are running at
