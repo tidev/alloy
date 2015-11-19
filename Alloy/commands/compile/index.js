@@ -609,9 +609,11 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				docRoot.getAttribute(CONST.AUTOSTYLE_PROPERTY) === 'true';
 		}
 
-		// see if module attribute has been set on the docRoot (<Alloy>) tag
+		// see if module attribute has been set on the docRoot (<Alloy>) tag for the view
 		if(docRoot.hasAttribute(CONST.DOCROOT_MODULE_PROPERTY)) {
 			CU[CONST.DOCROOT_MODULE_PROPERTY] = docRoot.getAttribute(CONST.DOCROOT_MODULE_PROPERTY);
+		} else {
+			CU[CONST.DOCROOT_MODULE_PROPERTY] = null;
 		}
 
 		// make sure we have a Window, TabGroup, or SplitWindow
