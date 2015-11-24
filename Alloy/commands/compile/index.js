@@ -1,4 +1,5 @@
-var path = require('path'),
+var ejs = require('ejs'),
+	path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	vm = require('vm'),
@@ -171,6 +172,18 @@ module.exports = function(args, program) {
 			"backbone.js"
 		),
 		path.join(paths.resources, titaniumFolder, "alloy", "backbone.js")
+	);
+
+	// Generate alloy.js from template
+	var libAlloyJsDest = path.join(paths.resources, titaniumFolder, 'alloy.js');
+	var pkginfo = require('pkginfo')(module, 'version');
+	logger.trace('Generating ' + path.relative(titaniumFolder, libAlloyJsDest).yellow);
+	fs.writeFileSync(
+		libAlloyJsDest,
+		ejs.render(
+			fs.readFileSync(path.join(alloyRoot, 'template', 'lib', 'alloy.js'), 'utf8'),
+			{ version: module.exports.version }
+		)
 	);
 
 	updateFilesWithBuildLog(
