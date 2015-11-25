@@ -27,7 +27,7 @@ var _ = require('alloy/underscore')._,
 	Backbone = require('alloy/backbone'),
 	CONST = require('alloy/constants');
 
-exports.version = '1.7.0';
+exports.version = '<%= version %>';
 exports._ = _;
 exports.Backbone = Backbone;
 
