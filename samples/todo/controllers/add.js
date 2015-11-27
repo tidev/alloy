@@ -10,8 +10,12 @@ function addItem() {
     // add new model to the global collection
     todos.add(task);
 
-    // save the model to persistent storage
-    task.save();
+    if (task.isValid()) {
+        // save the model to persistent storage
+        task.save();
+    } else {
+        task.destroy();
+    }
 
     // reload the tasks
     todos.fetch();

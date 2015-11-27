@@ -1,6 +1,6 @@
 /*
 	Corresponds to the `alloy generate *` command.
-	http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
+	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
 
 	Actual component generators are defined in the targets folder
 */

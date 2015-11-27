@@ -19,7 +19,7 @@ function parse(node, state, args) {
 
 	var child = children[0],
 		childArgs = CU.getParserArgs(child),
-		theNode = CU.validateNodeName(child, ['Ti.UI.Window', 'Ti.UI.iPad.SplitWindow', 'Ti.UI.iOS.NavigationWindow']),
+		theNode = CU.validateNodeName(child, ['Ti.UI.Window', 'Ti.UI.iOS.SplitWindow', 'Ti.UI.iOS.NavigationWindow']),
 		windowSymbol;
 
 	// generate the code for the Window first

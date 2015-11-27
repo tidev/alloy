@@ -27,6 +27,7 @@ var Controller = function() {
 	this.__iamalloy = true;
 	_.extend(this, Backbone.Events, {
 		__views: {},
+		__events: [],
 		__proxyProperties: {},
 		setParent: function(parent) {
 			var len = roots.length;
@@ -397,6 +398,109 @@ The 'redbg' and 'bigger' classes are shown below:
 					}
 				});
 			}
+			return this;
+		},
+
+		/**
+		 * @method addListener
+		 * Adds a tracked event listeners to a view proxy object.
+		 * By default, any event listener declared in XML is tracked by Alloy.
+		 *
+		 * #### Example
+		 * Add an event to the tracking target.
+
+	$.addListener($.aView, 'click', onClick);
+
+		 * @param {Object} proxy Proxy view object to listen to.
+		 * @param {String} type Name of the event.
+		 * @param {Function} callback Callback function to invoke when the event is fired.
+		 * @returns {String} ID attribute of the view object.  If one does not exist, Alloy will create a unique ID.
+		 * @since 1.7.0
+		 */
+		addListener: function(proxy, type, callback) {
+			if (!proxy.id) {
+				proxy.id = _.uniqueId('__trackId');
+
+				if (_.has(this.__views, proxy.id)) {
+					Ti.API.error('$.addListener: ' + proxy.id + ' was conflict.');
+					return;
+				}
+			}
+
+			proxy.addEventListener(type, callback);
+			this.__events.push({
+				id: proxy.id,
+				view: proxy,
+				type: type,
+				handler: callback
+			});
+
+			return proxy.id;
+		},
+
+		/**
+		 * @method getListener
+		 * Gets all the tracked event listeners of the view-controller or
+		 * only the ones specified by the parameters.  Passing no parameters,
+		 * retrieves all tracked event listeners. Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
+		 *
+		 * #### Example
+		 * Get all events bound to the view-controller.
+
+	var listener = $.getListener();
+
+		 * @param {Object} [proxy] Proxy view object.
+		 * @param {String} [type] Name of the event.
+		 * @returns {Array<TrackedEventListener>} List of tracked event listeners.
+		 * @since 1.7.0
+		 */
+
+		getListener: function(proxy, type) {
+			return _.filter(this.__events, function(event, index) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type)) {
+					return true;
+				}
+
+				return false;
+			});
+		},
+
+		/**
+		 * @method removeListener
+		 * Removes all tracked event listeners or only the ones
+		 * specified by the parameters. Passing no parameters,
+		 * removes all tracked event listeners.  Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
+		 *
+		 * #### Example
+		 * When the window is closed, remove all tracked event listeners.
+
+	<Alloy>
+		<Window onOpen="doOpen" onClose="doClose">
+			<Label id="label" onClick="doClick">Hello, world</Label>
+		</Window>
+	</Alloy>		 
+
+	function doClose() {
+		$.removeListener();
+	}
+		 * @param {Object} [proxy] Proxy view object to remove event listeners from.
+		 * @param {String} [type] Name of the event to remove.
+		 * @param {Function} [callback] Callback to remove.
+		 * @returns {Alloy.Controller} Controller instance.
+		 * @since 1.7.0
+		 */
+		removeListener: function(proxy, type, callback) {
+			_.each(this.__events, function(event, index) {
+				if ((!proxy || proxy.id === event.id) &&
+					(!type || type === event.type) &&
+					(!callback || callback === event.handler)) {
+					event.view.removeEventListener(event.type, event.handler);
+					delete self.__events[index];
+				}
+			});
 			return this;
 		}
 	});

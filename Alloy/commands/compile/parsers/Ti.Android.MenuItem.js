@@ -11,7 +11,9 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var code = '',
 		actionView,
-		createArgs = args.createArgs || {};
+		createArgs = args.createArgs || {},
+		id,
+		newCode;
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		// process children, of which only ActionView is supported
@@ -24,6 +26,11 @@ function parse(node, state, args) {
 	if(actionView) {
 		// add the code to the parent
 		code += actionView.code;
+
+		// expose UI id
+		id = actionView.parent && actionView.parent.symbol;
+		newCode = id ? ('$.' + id.split('.').pop() + '=' + id + ';') : '';
+		code += newCode;
 	}
 
 	var styleObjectCode = styler.generateStyleParams(

@@ -20,7 +20,7 @@ exports.definition = {
 					var value = attrs[key];
 					if (value) {
 						if (key === "item") {
-							if (value.length <= 0) {
+							if ((/^\s*$/).test(value)) {
 								return 'Error: No item!';
 							}
 						}

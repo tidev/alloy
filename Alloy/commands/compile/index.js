@@ -1,4 +1,5 @@
-var path = require('path'),
+var ejs = require('ejs'),
+	path = require('path'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	vm = require('vm'),
@@ -173,6 +174,18 @@ module.exports = function(args, program) {
 		path.join(paths.resources, titaniumFolder, "alloy", "backbone.js")
 	);
 
+	// Generate alloy.js from template
+	var libAlloyJsDest = path.join(paths.resources, titaniumFolder, 'alloy.js');
+	var pkginfo = require('pkginfo')(module, 'version');
+	logger.trace('Generating ' + path.relative(titaniumFolder, libAlloyJsDest).yellow);
+	fs.writeFileSync(
+		libAlloyJsDest,
+		ejs.render(
+			fs.readFileSync(path.join(alloyRoot, 'template', 'lib', 'alloy.js'), 'utf8'),
+			{ version: module.exports.version }
+		)
+	);
+
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
@@ -340,7 +353,7 @@ module.exports = function(args, program) {
 	}
 	logger.info('');
 
-	generateAppJs(paths, compileConfig, restrictionPath);
+	generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
 
 	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
 	// in platform-specific folders, so we just copy the platform-specific one to
@@ -373,7 +386,7 @@ module.exports = function(args, program) {
 ///////////////////////////////////////
 ////////// private functions //////////
 ///////////////////////////////////////
-function generateAppJs(paths, compileConfig, restrictionPath) {
+function generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile) {
 	var alloyJs = path.join(paths.app, 'alloy.js');
 
 	if (restrictionPath !== null && restrictionPath !== path.join(paths.app, 'alloy.js')) {
@@ -383,7 +396,7 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 
 	// info needed to generate app.js
 	var target = {
-			filename: 'Resources' + path.sep + titaniumFolder + path.sep + 'app.js',
+			filename: path.join('Resources', titaniumFolder, 'app.js'),
 			filepath: path.join(paths.resources, titaniumFolder, 'app.js'),
 			template: path.join(alloyRoot, 'template', 'app.js')
 		},
@@ -408,6 +421,12 @@ function generateAppJs(paths, compileConfig, restrictionPath) {
 	// if not, generate the platform-specific app.js and save its hash
 	} else {
 		logger.info('[app.js] Titanium entry point processing...');
+
+		// trigger our custom compiler makefile
+		if (compilerMakeFile.isActive) {
+			compilerMakeFile.trigger('compile:app.js', _.clone(compileConfig));
+		}
+
 		sourceMapper.generateCodeAndSourceMap({
 			target: target,
 			data: data,
@@ -603,9 +622,11 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				docRoot.getAttribute(CONST.AUTOSTYLE_PROPERTY) === 'true';
 		}
 
-		// see if module attribute has been set on the docRoot (<Alloy>) tag
+		// see if module attribute has been set on the docRoot (<Alloy>) tag for the view
 		if(docRoot.hasAttribute(CONST.DOCROOT_MODULE_PROPERTY)) {
 			CU[CONST.DOCROOT_MODULE_PROPERTY] = docRoot.getAttribute(CONST.DOCROOT_MODULE_PROPERTY);
+		} else {
+			CU[CONST.DOCROOT_MODULE_PROPERTY] = null;
 		}
 
 		// make sure we have a Window, TabGroup, or SplitWindow
@@ -613,7 +634,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		if (viewName === 'index' && !dirname) {
 			var valid = [
 				'Ti.UI.Window',
-				'Ti.UI.iPad.SplitWindow',
+				'Ti.UI.iOS.SplitWindow',
 				'Ti.UI.TabGroup',
 				'Ti.UI.iOS.NavigationWindow'
 			].concat(CONST.MODEL_ELEMENTS);
@@ -661,15 +682,9 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 
 		// process the UI nodes
-		var hasUsedDefaultId = false;
 		_.each(rootChildren, function(node, i) {
-
 			// should we use the default id?
-			var defaultId;
-			if (!hasUsedDefaultId && CU.isNodeForCurrentPlatform(node)) {
-				hasUsedDefaultId = true;
-				defaultId = viewName;
-			}
+			var defaultId = CU.isNodeForCurrentPlatform(node) ? viewName : undefined;
 
 			// generate the code for this node
 			var fullname = CU.getNodeFullname(node);
@@ -1015,11 +1030,9 @@ function optimizeCompiledCode(alloyConfig, paths) {
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			// TODO: remove should.js check here once ALOY-921 is resolved
-			//		also remove check in sourceMapper.js exports.generateSourceMap()
-			return rx.test(f) && !/(?:^|[\\\/])should\.js$/.test(f) && !_.find(exceptions, function(e) {
+			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
-			});
+			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
 		});
 	}
 

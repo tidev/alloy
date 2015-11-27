@@ -144,9 +144,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 };
 
 exports.generateSourceMap = function(generator, compileConfig) {
-	if(/(?:^|[\\\/])should\.js$/.test(generator.target.filename)) {
-		// TODO: remove should.js check here once ALOY-921 is resolved
-		//		also remove from compile/index.js getJsFiles()
+	if(!fs.existsSync(generator.target.filename) || fs.statSync(generator.target.filename).isDirectory()) {
 		return;
 	}
 	var target = generator.target;

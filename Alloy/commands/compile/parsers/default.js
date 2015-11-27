@@ -15,6 +15,10 @@ function parse(node, state, args) {
 		parts = fullname.split('.'),
 		extras = [];
 
+	if (node.previewContext) {
+		extras.push(['previewContext', node.previewContext]);
+	}
+
 	if(CU[CONST.DOCROOT_MODULE_PROPERTY] && !node.hasAttribute('module')) {
 		node.setAttribute('module', CU[CONST.DOCROOT_MODULE_PROPERTY]);
 	}

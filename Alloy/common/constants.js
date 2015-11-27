@@ -144,7 +144,8 @@ var NS_ALLOY = 'Alloy',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
 	NS_TI_UI_IPAD = 'Ti.UI.iPad',
 	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
-	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb';
+	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
+	NS_TI_UI_WINDOWS = 'Ti.UI.Windows';
 
 exports.IMPLICIT_NAMESPACES = {
 	// Alloy
@@ -171,11 +172,16 @@ exports.IMPLICIT_NAMESPACES = {
 	Option: NS_ALLOY_ABSTRACT,
 	Options: NS_ALLOY_ABSTRACT,
 	Templates: NS_ALLOY_ABSTRACT,
+	Preview: NS_ALLOY_ABSTRACT,
+	Actions: NS_ALLOY_ABSTRACT,
 
 	// Ti.Android
 	Menu: NS_TI_ANDROID,
 	MenuItem: NS_TI_ANDROID,
 	ActionBar: NS_TI_ANDROID,
+
+	// Ti.UI.Android
+	CardView: 'Ti.UI.Android',
 
 	// Ti.Map
 	Annotation: NS_TI_MAP,
@@ -189,17 +195,26 @@ exports.IMPLICIT_NAMESPACES = {
 	CoverFlowView: NS_TI_UI_IOS,
 	DocumentViewer: NS_TI_UI_IOS,
 	NavigationWindow: NS_TI_UI_IOS,
+	SplitWindow: NS_TI_UI_IOS,
 	TabbedBar: NS_TI_UI_IOS,
 	Toolbar: NS_TI_UI_IOS,
+	PreviewContext: NS_TI_UI_IOS,
+	PreviewAction: NS_TI_UI_IOS,
+	PreviewActionGroup: NS_TI_UI_IOS,
 
 	// Ti.UI.iPad
 	Popover: NS_TI_UI_IPAD,
-	SplitWindow: NS_TI_UI_IPAD,
 
 	// Ti.UI.iPhone
 	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ?
 		NS_TI_UI_MOBILEWEB: NS_TI_UI_IPHONE,
 	StatusBar: NS_TI_UI_IPHONE,
+
+	// Ti.UI.Windows
+	CommandBar: NS_TI_UI_WINDOWS,
+	AppBarButton: NS_TI_UI_WINDOWS,
+	AppBarToggleButton: NS_TI_UI_WINDOWS,
+	AppBarSeparator: NS_TI_UI_WINDOWS,
 
 	// Ti.UI.Window
 	LeftNavButton: 'Ti.UI.Window',

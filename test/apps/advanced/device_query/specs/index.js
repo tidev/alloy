@@ -11,9 +11,10 @@ module.exports = function($) {
 			bgColor = '#f00';
 		} else if (OS_MOBILEWEB) {
 			bgColor = '#00f';
-		} else if (OS_BLACKBERRY) {
-			bgColor = '#0ff';
 		}
+		// else if (OS_BLACKBERRY) {
+		// 	bgColor = '#0ff';
+		// }
 
 		validateUiComponent($, 'win', {
 			api: 'Ti.UI.Window',
@@ -35,8 +36,8 @@ module.exports = function($) {
 			text = Alloy.isTablet ? 'iPad' : 'iPhone';
 		} else if (OS_MOBILEWEB) {
 			text = 'Mobileweb';
-		} else if (OS_BLACKBERRY) {
-			text = 'Blackberry';
+		// } else if (OS_BLACKBERRY) {
+		// 	text = 'Blackberry';
 		} else if (OS_WINDOWS) {
 			text = 'Windows';
 		}

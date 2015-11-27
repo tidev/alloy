@@ -1,0 +1,7 @@
+<Alloy>
+	<Window>
+		<Label>Lable</Label>
+		<Label ns="Ti.UI">Label ns=Ti.UI</Label>
+		<CustomLabel ns="require('customlbl')" />
+	</Window>
+</Alloy>

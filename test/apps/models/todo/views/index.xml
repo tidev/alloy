@@ -1,27 +1,27 @@
 <Alloy>
     <!-- Main Window -->
     <Window id="todoWin" title="Todo">
-  	
+
         <!-- header -->
-        <View id="header" platform="ios,mobileweb,blackberry">
+        <View id="header" platform="ios,mobileweb">
             <Label id="title">Alloy Todo</Label>
             <View class="divider"/>
             <View id="addView" onClick="addToDoItem">
                 <ImageView id="addImage"/>
             </View>
         </View>
-    
-        <!-- Main table for tasks 
+
+        <!-- Main table for tasks
         		 Use model-view binding to render the rows fo this table
         		 based on the models in the given collection. "dataCollection"
-        		 represents the collection used to populate this table. 
-        		 "dataWhere" is a function used to filter the list of 
+        		 represents the collection used to populate this table.
+        		 "dataWhere" is a function used to filter the list of
         		 models processed within the collection. "dataTransform"
         		 is a function that will be executed on each model as it
         		 is rendered as a row. It gives the opportunity to modify
         		 the model's values before they are applied to each row.
         -->
-        <TableView id="todoTable" dataCollection="todo" 
+        <TableView id="todoTable" dataCollection="todo"
         	           dataFilter="whereFunction" dataTransform="transformFunction">
         		<Require src="row"/>
         </TableView>
@@ -36,7 +36,7 @@
                 </Labels>
             </TabbedBar>
         </View>
-    
+
         <!-- Android: menu -->
         <Menu platform="android">
             <MenuItem icon="Ti.Android.R.drawable.ic_input_add" onClick="addToDoItem" showAsAction="Ti.Android.SHOW_AS_ACTION_ALWAYS"/>

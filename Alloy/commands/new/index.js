@@ -16,6 +16,7 @@ var path = require('path'),
 
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname,'..','..','..','platforms');
+var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 
 var test_apps_folder = (process.platform === 'win32') ?
 	path.join(process.env.APPDATA, 'npm', 'node_modules', 'alloy', 'test', 'apps') :
@@ -59,6 +60,13 @@ module.exports = function(args, program) {
 
 	// add the default app.tss file
 	U.copyFileSync(path.join(paths.template,CONST.GLOBAL_STYLE), path.join(paths.app,CONST.DIR.STYLE,CONST.GLOBAL_STYLE));
+
+	// copy DefaultIcon.png to project root
+	fs.readdirSync(templatesDir).forEach(function (name) {
+		if (/^DefaultIcon(\-\w+)?\.png$/.test(name)) {
+			U.copyFileSync(path.join(templatesDir, name), path.join(paths.project, name));
+		}
+	});
 
 	// copy Resources platform-specific directories to assets
 	U.copyFileSync(

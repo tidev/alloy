@@ -1,0 +1,23 @@
+<Alloy>
+	<Window>
+		<ListView>
+			<PreviewContext onPeek="fn" platform="ios">
+				<Preview>
+					<View>
+						<Label>Hello Preview</Label>
+					</View>
+				</Preview>
+				<Actions>
+					<PreviewAction title="Email" onClick="fn" style='DESTRUCTIVE' />
+					<PreviewActionGroup title="Delete">
+						<PreviewAction title="Confirm" onClick="fn" style="Ti.UI.iOS.PREVIEW_ACTION_STYLE_SELECTED" />
+						<PreviewAction title="Cancel" onClick="fn" style="SELECTED"/>
+					</PreviewActionGroup>
+				</Actions>
+			</PreviewContext>
+			<ListSection>
+				<ListItem title="Hello" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

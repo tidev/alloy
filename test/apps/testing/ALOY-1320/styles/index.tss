@@ -1,0 +1,15 @@
+'#index': {
+	backgroundColor: '#fff',
+	layout: 'vertical',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'Label': {
+	color: 'blue',
+	top: 20
+}
+
+'CustomLabel' : {
+	color: 'red'
+}
