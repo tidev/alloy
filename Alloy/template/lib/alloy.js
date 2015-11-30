@@ -305,7 +305,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		}
 
 		// Merge this style into the existing style object
-		deepExtend(true, styleFinal, style.style);
+		exports.deepExtend(true, styleFinal, style.style);
 	}
 
 	// TODO: cache the style based on the opts and controller
@@ -315,7 +315,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		CONST.CLASS_PROPERTY,
 		CONST.APINAME_PROPERTY
 	]);
-	deepExtend(true, styleFinal, extraStyle);
+	exports.deepExtend(true, styleFinal, extraStyle);
 	styleFinal[CONST.CLASS_PROPERTY] = classes;
 	styleFinal[CONST.APINAME_PROPERTY] = apiName;
 
@@ -622,7 +622,7 @@ if (OS_ANDROID) {
  * @fileoverview
  * Port of jQuery.extend that actually works on node.js
  */
-function deepExtend() {
+exports.deepExtend = function() {
 	var target = arguments[0] || {};
 	var i = 1;
 	var length = arguments.length;
@@ -671,7 +671,7 @@ function deepExtend() {
 					}
 
 					// Never move original objects, clone them
-					target[name] = deepExtend(deep, clone, copy);
+					target[name] = exports.deepExtend(deep, clone, copy);
 				} else {
 					target[name] = copy;
 				}
