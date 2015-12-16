@@ -14,7 +14,7 @@
     "mobileweb",
     "appc-client"
   ],
-  "version": "1.7.29",
+  "version": "1.7.30",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -41,7 +41,7 @@
     "uglify-js": "2.4.15",
     "source-map": "0.1.9",
     "xml2tss": "0.0.5",
-    "moment": "2.7.0",
+    "moment": "2.10.6",
     "node.extend": "1.0.10"
   },
   "license": "Apache-2.0",
