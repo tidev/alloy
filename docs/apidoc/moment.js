@@ -15,7 +15,7 @@
  *     var moment = require('alloy/moment');
  *     require('alloy/moment/lang/de');
  *     require('alloy/moment/lang/fr');
- *     moment.lang(Ti.Locale.currentLocale); // Set current system locale, as a combination of ISO 2-letter language and country codes.
+ *     moment.lang(Ti.Locale.currentLanguage); // Set current system locale, as a combination of ISO 2-letter language.
  * 
  * For documentation, usage examples and more information, see [http://momentjs.com/](http://momentjs.com).
  */
