@@ -2796,7 +2796,7 @@
         return list(format, index, 'weekdaysMin', 7, 'day');
     }
 
-    locale_locales__getSetGlobalLocale(Ti.Locale.currentLanguage, {
+    locale_locales__getSetGlobalLocale('en', {
         ordinalParse: /\d{1,2}(th|st|nd|rd)/,
         ordinal : function (number) {
             var b = number % 10,
