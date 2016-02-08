@@ -25,7 +25,11 @@ exports.dpToPX = function (val) {
     if (OS_ANDROID) {
         return val * dpi / 160;
     } else if (OS_IOS) {
-        return val * (density === 'high' ? 2 : 1);
+        switch(density){
+          case 'xhigh': return val * 3;
+          case 'high': return val * 2;
+          default: return val;
+        }
     } else {
         return val;
     }
@@ -41,7 +45,11 @@ exports.pxToDP = function (val) {
     if (OS_ANDROID) {
         return val / dpi * 160;
     } else if (OS_IOS) {
-        return val / (density === 'high' ? 2 : 1);
+        switch(density){
+          case 'xhigh': return val / 3;
+          case 'high': return val / 2;
+          default: return val;
+        }
     } else {
         return val;
     }
