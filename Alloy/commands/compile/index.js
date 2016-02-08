@@ -174,7 +174,7 @@ module.exports = function(args, program) {
 		path.join(paths.resources, titaniumFolder, "alloy", "backbone.js")
 	);
 
-	if (restrictionPath === null || restrictionPath === path.join(paths.app, 'alloy.js')) {
+	if (restrictionPath === null) {
 		// Generate alloy.js from template
 		var libAlloyJsDest = path.join(paths.resources, titaniumFolder, 'alloy.js');
 		var pkginfo = require('pkginfo')(module, 'version');
