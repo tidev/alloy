@@ -8,6 +8,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	resolve = require('resolve'),
+	paths = require('global-paths'),
 	logger = require('./logger'),
 	tiapp = require('./tiapp'),
 	XMLSerializer = require("xmldom").XMLSerializer,
@@ -332,7 +333,7 @@ exports.getWidgetDirectories = function(appDir) {
 	function findWidgetAsNodeModule(id) {
 		var wFile;
 		try {
-			wFile = resolve.sync(path.join(id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ] });
+			wFile = resolve.sync(path.join(id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ], paths: paths() });
 		} catch (err) {
 			return;
 		}
