@@ -373,7 +373,7 @@ exports.getWidgetDirectories = function(appDir) {
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
-			'If you are using them, add them to your project\'s widget folder.'
+			'If you are using them, add them to your project\'s widget folder or as NPM package.'
 		]);
   }
 
