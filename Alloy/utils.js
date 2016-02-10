@@ -7,6 +7,7 @@ var path = require('path'),
 	util = require('util'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
+	resolve = require('resolve'),
 	logger = require('./logger'),
 	tiapp = require('./tiapp'),
 	XMLSerializer = require("xmldom").XMLSerializer,
@@ -306,52 +307,74 @@ exports.getWidgetDirectories = function(appDir) {
 				var wDir = path.join(widgetPath,wFiles[i]);
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-
-					var manifest;
-					try {
-						manifest = jsonlint.parse(fs.readFileSync(
-							path.join(wDir, 'widget.json'), 'utf8'));
-					} catch (e) {
-						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) +
-							'"', e);
-					}
-
-					collections[manifest.id] = {
-						dir: wDir,
-						manifest: manifest
-					};
+					 var collection = parseManifestAsCollection(path.join(wDir, 'widget.json'));
+					 collections[collection.manifest.id] = collection;
 				}
 			}
 		}
 	});
 
-	function walkWidgetDependencies(collection) {
-		if (collection === null) { return; }
+	function parseManifestAsCollection(wFile) {
+		var wDir = path.dirname(wFile);
+		var manifest;
+		try {
+			manifest = jsonlint.parse(fs.readFileSync(wFile, 'utf8'));
+		} catch (e) {
+			exports.die('Error parsing "' + wFile + '" for "' + path.basename(wDir) + '"', e);
+		}
 
-        dirs.push(collection);
+		return {
+			dir: wDir,
+			manifest: manifest
+		};
+	}
+
+	function findWidgetAsNodeModule(id) {
+		var wFile;
+		try {
+			wFile = resolve.sync(path.join(id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ] });
+		} catch (err) {
+			return;
+		}
+		var collection = parseManifestAsCollection(wFile);
+		if (collection.manifest.id !== id) {
+			return;
+		}
+		return collection;
+	}
+
+	function walkWidgetDependencies(id) {
+		var collection = collections[id];
+
+		if (!collection) {
+			collection = findWidgetAsNodeModule(id);
+
+			if (!collection) {
+				notFound.push(id);
+				return;
+			}
+		}
+
+    dirs.push(collection);
 		for (var dependency in collection.manifest.dependencies) {
-			walkWidgetDependencies(collections[dependency]);
+			walkWidgetDependencies(dependency);
 		}
 	}
 
 	// walk the dependencies, tracking any missing widgets
 	var notFound = [];
-    for (var id in appWidgets) {
-		if (!collections[id]) {
-			notFound.push(id);
-		} else {
-			walkWidgetDependencies(collections[id]);
-		}
-    }
+  for (var id in appWidgets) {
+		walkWidgetDependencies(id);
+	}
 
     // if there are missing widgets, abort and tell the developer which ones
-    if (!!notFound.length) {
+  if (!!notFound.length) {
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
 			'If you are using them, add them to your project\'s widget folder.'
 		]);
-    }
+  }
 
 	return dirs;
 };
