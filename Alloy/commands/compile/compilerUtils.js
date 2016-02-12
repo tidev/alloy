@@ -229,6 +229,16 @@ exports.getParserArgs = function(node, state, opts) {
 					theValue = true;
 				} else if (theValue === 'false') {
 					theValue = false;
+				} else {
+					var n = parseInt(theValue);
+					if (!isNaN(n) && String(n) === theValue.trim()) {
+						theValue = n;
+					} else {
+						n = parseFloat(theValue);
+						if (!isNaN(n) && String(n) === theValue.trim()) {
+							theValue = n;
+						}
+					}
 				}
 				createArgs[attrName] = theValue;
 			}
