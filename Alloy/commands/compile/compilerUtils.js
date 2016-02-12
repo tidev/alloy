@@ -225,6 +225,11 @@ exports.getParserArgs = function(node, state, opts) {
 					createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
 				}
 			} else {
+				if (theValue === 'true') {
+					theValue = true;
+				} else if (theValue === 'false') {
+					theValue = false;
+				}
 				createArgs[attrName] = theValue;
 			}
 		}
