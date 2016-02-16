@@ -225,6 +225,21 @@ exports.getParserArgs = function(node, state, opts) {
 					createArgs[CONST.CLASS_PROPERTY] = theValue.split(/\s+/) || [];
 				}
 			} else {
+				if (theValue === 'true') {
+					theValue = true;
+				} else if (theValue === 'false') {
+					theValue = false;
+				} else {
+					var n = parseInt(theValue);
+					if (!isNaN(n) && String(n) === theValue.trim()) {
+						theValue = n;
+					} else {
+						n = parseFloat(theValue);
+						if (!isNaN(n) && String(n) === theValue.trim()) {
+							theValue = n;
+						}
+					}
+				}
 				createArgs[attrName] = theValue;
 			}
 		}
