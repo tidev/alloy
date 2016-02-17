@@ -44,14 +44,14 @@ function parse(node, state, args) {
 		case 'widget':
 			method = 'createWidget';
 			extraArgs = "'" + name + "',";
-			if (platform) {
-				paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,platform,name));
-			}
-			paths.push(path.join(appPath,CONST.DIR.WIDGET,src,CONST.DIR.VIEW,name));
-			if (platform) {
-				paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,platform,name));
-			}
-			paths.push(path.join(moduleRoot,'widgets',src,CONST.DIR.VIEW,name));
+			U.getWidgetDirectories(appPath).forEach(function(wDir) {
+				if (wDir.manifest.id === src) {
+					if (platform) {
+						paths.push(path.join(wDir.dir,CONST.DIR.VIEW,platform,name));
+					}
+					paths.push(path.join(wDir.dir,CONST.DIR.VIEW,name));
+				}
+			});
 			break;
 		default:
 			U.die('Invalid <Require> type "' + type + '"');
