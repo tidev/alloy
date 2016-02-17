@@ -113,8 +113,8 @@ exports.evaluateTemplate = function(name, o) {
 };
 
 exports.getAndValidateProjectPaths = function(argPath, opts) {
-	var projectPath = path.resolve(argPath),
-		opts = opts || {};
+	opts = opts || {};
+	var projectPath = path.resolve(argPath);
 
 	// See if we got the "app" path or the project path as an argument
 	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
@@ -188,8 +188,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
-  // don't process XML/controller files inside .svn folders (ALOY-839)
-  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+	// don't process XML/controller files inside .svn folders (ALOY-839)
+	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
@@ -372,7 +372,7 @@ exports.getWidgetDirectories = function(appDir) {
 			}
 		}
 
-    dirs.push(collection);
+		dirs.push(collection);
 		for (var dependency in collection.manifest.dependencies) {
 			walkWidgetDependencies(dependency);
 		}
@@ -380,18 +380,18 @@ exports.getWidgetDirectories = function(appDir) {
 
 	// walk the dependencies, tracking any missing widgets
 	var notFound = [];
-  for (var id in appWidgets) {
+	for (var id in appWidgets) {
 		walkWidgetDependencies(id);
 	}
 
-    // if there are missing widgets, abort and tell the developer which ones
-  if (!!notFound.length) {
+	// if there are missing widgets, abort and tell the developer which ones
+	if (!!notFound.length) {
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
 			'If you are using them, add them to your project\'s widget folder or as NPM package.'
 		]);
-  }
+	}
 
 	return dirs;
 };
@@ -401,15 +401,15 @@ exports.properCase = function(n) {
 };
 
 exports.ucfirst = function (text) {
-    if (!text)
-        return text;
-    return text[0].toUpperCase() + text.substr(1);
+	if (!text)
+		return text;
+	return text[0].toUpperCase() + text.substr(1);
 };
 
 exports.lcfirst = function (text) {
-    if (!text)
-        return text;
-    return text[0].toLowerCase() + text.substr(1);
+	if (!text)
+		return text;
+	return text[0].toLowerCase() + text.substr(1);
 };
 
 exports.trim = function(line) {
