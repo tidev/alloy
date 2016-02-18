@@ -194,6 +194,7 @@ exports.IMPLICIT_NAMESPACES = {
 
 	// Ti.UI.iOS
 	AdView: NS_TI_UI_IOS,
+	BlurView: NS_TI_UI_IOS,
 	CoverFlowView: NS_TI_UI_IOS,
 	DocumentViewer: NS_TI_UI_IOS,
 	NavigationWindow: NS_TI_UI_IOS,
