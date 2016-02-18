@@ -174,6 +174,8 @@ exports.IMPLICIT_NAMESPACES = {
 	Templates: NS_ALLOY_ABSTRACT,
 	Preview: NS_ALLOY_ABSTRACT,
 	Actions: NS_ALLOY_ABSTRACT,
+	Item: NS_ALLOY_ABSTRACT,
+
 
 	// Ti.Android
 	Menu: NS_TI_ANDROID,
@@ -201,6 +203,7 @@ exports.IMPLICIT_NAMESPACES = {
 	PreviewContext: NS_TI_UI_IOS,
 	PreviewAction: NS_TI_UI_IOS,
 	PreviewActionGroup: NS_TI_UI_IOS,
+	MenuPopup: NS_TI_UI_IOS,
 
 	// Ti.UI.iPad
 	Popover: NS_TI_UI_IPAD,
