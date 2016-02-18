@@ -197,6 +197,7 @@ exports.IMPLICIT_NAMESPACES = {
 	BlurView: NS_TI_UI_IOS,
 	CoverFlowView: NS_TI_UI_IOS,
 	DocumentViewer: NS_TI_UI_IOS,
+	LivePhotoView: NS_TI_UI_IOS,
 	NavigationWindow: NS_TI_UI_IOS,
 	SplitWindow: NS_TI_UI_IOS,
 	TabbedBar: NS_TI_UI_IOS,
