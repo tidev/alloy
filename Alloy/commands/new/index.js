@@ -17,10 +17,7 @@ var path = require('path'),
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname,'..','..','..','platforms');
 var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
-
-var test_apps_folder = (process.platform === 'win32') ?
-	path.join(process.env.APPDATA, 'npm', 'node_modules', 'alloy', 'test', 'apps') :
-	path.join(process.execPath, '..', '..', 'lib', 'node_modules', 'alloy', 'test', 'apps');
+var sampleAppsDir = path.join(__dirname, '..', '..', '..', 'samples', 'apps');
 
 module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
@@ -100,15 +97,15 @@ module.exports = function(args, program) {
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// if creating from one of the test apps...
-	if(program.testapp) {
+	if (program.testapp) {
 		// remove _generated folder,
 		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
 		// copyDirSynRecursive() statements above rather than deleting the folder here
 		wrench.rmdirSyncRecursive(path.join(paths.app,'_generated'), true);
-		if(path.existsSync(path.join(test_apps_folder, program.testapp, 'specs'))) {
+		if (path.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
 			wrench.mkdirSyncRecursive(path.join(paths.app,'lib'), 0755);
-			wrench.copyDirSyncRecursive(path.join(path.resolve(test_apps_folder, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+			wrench.copyDirSyncRecursive(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
 		}
 	}
 
@@ -129,7 +126,7 @@ function getPaths(project, templateName, testapp) {
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
 		projectTemplate: (!testapp) ? path.join(projectTemplates,templateName) :
-		path.join(test_apps_folder, testapp),
+		path.join(sampleAppsDir, testapp),
 
 		// project paths
 		project: project,
