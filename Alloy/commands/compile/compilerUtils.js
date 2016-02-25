@@ -986,7 +986,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "};";
 	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
-	exports.destroyCode += ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
+	exports.destroyCode += colVar + " && " + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
 		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
 
 	return code;

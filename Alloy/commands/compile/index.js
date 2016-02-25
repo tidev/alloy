@@ -720,7 +720,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
 		template.viewCode += 'var ' + handlerVar + '=function() {';
-		CU.destroyCode += ((state.parentFormFactor) ? 'is' + U.ucfirst(state.parentFormFactor) : '' ) +
+		CU.destroyCode += modelVar + " && " + ((state.parentFormFactor) ? 'is' + U.ucfirst(state.parentFormFactor) : '' ) +
 			modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 
 		// for each specific conditional within the bindings map....
