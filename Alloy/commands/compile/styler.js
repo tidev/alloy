@@ -505,7 +505,8 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	});
 
 	// add in any final styles
-	_.extend(lastObj, extraStyle || {});
+    // deep merge necessary to properly merge fonts
+    lastObj = deepExtend(true, lastObj, extraStyle || {});
 	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
 
 	// substitutions for binding

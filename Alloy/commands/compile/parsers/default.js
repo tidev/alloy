@@ -53,6 +53,20 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
+    // find any font attributes and create proper font object
+    if (args.createArgs && (args.createArgs.fontSize || args.createArgs.fontStyle || args.createArgs.fontFamily || args.createArgs.fontWeight || args.createArgs.textStyle)) {
+        args.createArgs.font = args.createArgs.font || {};
+        _.defaults(args.createArgs.font, {
+            fontSize: args.createArgs.fontSize || args.createArgs.font.fontSize
+        });
+
+        delete args.createArgs['fontSize'];
+        delete args.createArgs['fontStyle'];
+        delete args.createArgs['fontFamily'];
+        delete args.createArgs['fontWeight'];
+        delete args.createArgs['textStyle'];
+    }
+
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
