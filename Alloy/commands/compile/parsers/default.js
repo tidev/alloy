@@ -57,7 +57,11 @@ function parse(node, state, args) {
     if (args.createArgs && (args.createArgs.fontSize || args.createArgs.fontStyle || args.createArgs.fontFamily || args.createArgs.fontWeight || args.createArgs.textStyle)) {
         args.createArgs.font = args.createArgs.font || {};
         _.defaults(args.createArgs.font, {
-            fontSize: args.createArgs.font.fontSize || args.createArgs.fontSize
+            fontSize: args.createArgs.font.fontSize || args.createArgs.fontSize,
+            fontStyle: args.createArgs.font.fontStyle || args.createArgs.fontStyle,
+            fontFamily: args.createArgs.font.fontFamily || args.createArgs.fontFamily,
+            fontWeight: args.createArgs.font.fontWeight || args.createArgs.fontWeight,
+            textStyle: args.createArgs.font.textStyle || args.createArgs.textStyle
         });
 
         delete args.createArgs['fontSize'];
