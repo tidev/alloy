@@ -57,7 +57,7 @@ function parse(node, state, args) {
     if (args.createArgs && (args.createArgs.fontSize || args.createArgs.fontStyle || args.createArgs.fontFamily || args.createArgs.fontWeight || args.createArgs.textStyle)) {
         args.createArgs.font = args.createArgs.font || {};
         _.defaults(args.createArgs.font, {
-            fontSize: args.createArgs.fontSize || args.createArgs.font.fontSize
+            fontSize: args.createArgs.font.fontSize || args.createArgs.fontSize
         });
 
         delete args.createArgs['fontSize'];
