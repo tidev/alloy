@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<TableView>
+			<Widget src="classic" />
+			<Widget src="npm" />
+		</TableView>
+	</Window>
+</Alloy>

@@ -452,14 +452,14 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			fullpaths.push(path.join(compilerConfig.dir.views,src));
 		} else if (fullname === 'Alloy.Widget' ||
 			(fullname === 'Alloy.Require' && type === 'widget')) {
-			if (platform) {
-				fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',platform,name));
-			}
-			fullpaths.push(path.join(compilerConfig.dir.widgets,src,'views',name));
-			if (platform) {
-				fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',platform,name));
-			}
-			fullpaths.push(path.join(alloyRoot,'..','widgets',src,'views',name));
+			U.getWidgetDirectories(compilerConfig.dir.home).forEach(function(wDir) {
+				if (wDir.manifest.id === src) {
+					if (platform) {
+						fullpaths.push(path.join(wDir.dir,CONST.DIR.VIEW,platform,name));
+					}
+					fullpaths.push(path.join(wDir.dir,CONST.DIR.VIEW,name));
+				}
+			});
 		} else {
 			return null;
 		}

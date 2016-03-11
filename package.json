@@ -39,6 +39,8 @@
     "xmldom": "0.1.19",
     "jsonlint": "1.5.1",
     "uglify-js": "2.4.15",
+    "resolve": "^1.1.7",
+    "global-paths": "^0.1.2",
     "source-map": "0.1.9",
     "xml2tss": "0.0.5",
     "moment": "2.10.6",
