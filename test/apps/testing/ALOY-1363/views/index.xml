@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Label font:fontSize="50sp" text="Big Text" color="black" />
+	</Window>
+</Alloy>
