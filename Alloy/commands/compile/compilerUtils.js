@@ -683,6 +683,10 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 				return walk(srcFile, destFile);
 			}
 
+			if (!/\.xml$/.test(srcFile)) {
+				return;
+			}
+
 			if (!fs.existsSync(destFile)) {
 				logger.debug('Writing ' + destFile.yellow);
 				return U.copyFileSync(srcFile, destFile);
@@ -694,6 +698,14 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 			var destDoc = destXml.documentElement;
 			var srcXml = U.XML.parseFromFile(srcFile);
 			var srcDoc = srcXml.documentElement;
+
+			if (!destDoc) {
+				U.die('Error processing "' + destFile + '"');
+			}
+
+			if (!srcDoc) {
+				U.die('Error processing "' + srcFile + '"');
+			}
 
 			_.each(destDoc.getElementsByTagName('string'), function (node) {
 				var name = node.getAttribute('name');

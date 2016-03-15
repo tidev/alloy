@@ -1,5 +1,12 @@
 ## Alloy Release Notes
 
+### Release 1.8.0
+
+#### Fixed
+  * [ALOY-1365](https://jira.appcelerator.org/browse/ALOY-1365): Added support
+    for Alloy-specific i18n and platform folders for both the whole Alloy app
+    and overridable at the theme level. Improved widget i18n support.
+
 ### Release 1.7.6 - (08/26/2015)
 
 #### Fixed
