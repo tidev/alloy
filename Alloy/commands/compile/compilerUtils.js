@@ -665,60 +665,56 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	}
 };
 
-exports.mergeI18n = function(srcI18nDir, compileConfigDir, opts) {
-	logger.info(' i18n:     "' + srcI18nDir + '"');
+exports.mergeI18N = function mergeI18N(src, dest, opts) {
+	var serializer = new XMLSerializer();
+	opts || (opts = {});
 
-	var buildI18nDir = path.join(compileConfigDir.project, CONST.DIR.BUILD_I18N),
-		appI18nDir = path.join(compileConfigDir.project, CONST.DIR.I18N),
-		files = wrench.readdirSyncRecursive(srcI18nDir),
-		serializer = new XMLSerializer();
+	(function walk(src, dest) {
+		if (!fs.existsSync(src)) return;
 
-	if (!fs.existsSync(buildI18nDir)) {
-		wrench.mkdirSyncRecursive(buildI18nDir, 0755);
-		fs.existsSync(appI18nDir) && wrench.copyDirSyncRecursive(appI18nDir, buildI18nDir, {preserve: false});
-	}
+		fs.readdirSync(src).forEach(function (name) {
+			var srcFile = path.join(src, name);
+			var destFile = path.join(dest, name);
 
-	_.each(files, function(file) {
-		var source = path.join(srcI18nDir, file),
-			outputPath = path.join(buildI18nDir, file);
+			if (!fs.existsSync(srcFile)) return;
 
-		if (!path.existsSync(outputPath)) {
-			if (fs.statSync(source).isDirectory()) {
-				wrench.mkdirSyncRecursive(outputPath, 0755);
-			} else {
-				U.copyFileSync(source, outputPath);
+			if (fs.statSync(srcFile).isDirectory()) {
+				fs.existsSync(destFile) || wrench.mkdirSyncRecursive(destFile, 0755);
+				return walk(srcFile, destFile);
 			}
-		} else {
-			if (fs.statSync(source).isFile()) {
-				var outxml = U.XML.parseFromFile(outputPath),
-					root = outxml.documentElement,
-					sourcexml = U.XML.parseFromFile(source),
-					obj = {};
 
-				_.each(outxml.getElementsByTagName('string'), function(node) {
-					var name = node.getAttribute('name');
-					obj[name] = node;
-				});
-
-				_.each(sourcexml.getElementsByTagName('string'), function(node){
-					var name = node.getAttribute('name'),
-						value = node.childNodes[0].nodeValue;
-
-					if (name in obj) {
-						if (opts.override) {
-							root.replaceChild(node, obj[name]);
-						}
-					} else {
-						root.appendChild(outxml.createTextNode('\t'));
-						root.appendChild(node);
-						root.appendChild(outxml.createTextNode('\n'));
-					}
-				});
-
-				fs.writeFileSync(outputPath, serializer.serializeToString(outxml), 'utf8');
+			if (!fs.existsSync(destFile)) {
+				logger.debug('Writing ' + destFile.yellow);
+				return U.copyFileSync(srcFile, destFile);
 			}
-		}
-	});
+
+			// merge!
+			var existing = {};
+			var destXml = U.XML.parseFromFile(destFile);
+			var destDoc = destXml.documentElement;
+			var srcXml = U.XML.parseFromFile(srcFile);
+			var srcDoc = srcXml.documentElement;
+
+			_.each(destDoc.getElementsByTagName('string'), function (node) {
+				var name = node.getAttribute('name');
+				existing[name] = node;
+			});
+
+			_.each(srcDoc.getElementsByTagName('string'), function (node) {
+				var name = node.getAttribute('name');
+				if (!existing.hasOwnProperty(name)) {
+					destDoc.appendChild(destXml.createTextNode('\t'));
+					destDoc.appendChild(node);
+					destDoc.appendChild(destXml.createTextNode('\n'));
+				} else if (opts.override) {
+					destDoc.replaceChild(node, existing[name]);
+				}
+			});
+
+			logger.debug('Merging ' + srcFile.yellow + ' --> ' + destFile.yellow);
+			fs.writeFileSync(destFile, serializer.serializeToString(destXml), 'utf8');
+		});
+	}(src, dest));
 };
 
 function updateImplicitNamspaces(platform) {

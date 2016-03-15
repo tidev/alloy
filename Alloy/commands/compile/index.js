@@ -50,10 +50,12 @@ module.exports = function(args, program) {
 	BENCHMARK();
 	var alloyConfig = {},
 		compilerMakeFile,
+		restrictionPath,
+
+		// NOTE: the following line creates the empty Resources/app.js file
 		paths = U.getAndValidateProjectPaths(
 			program.outputPath || args[0] || process.cwd()
-		),
-		restrictionPath;
+		);
 
 	// Initialize modules used throughout the compile process
 	buildLog = new BuildLog(paths.project);
@@ -105,6 +107,7 @@ module.exports = function(args, program) {
 
 	// create compile config from paths and various alloy config files
 	logger.debug('----- CONFIG.JSON -----');
+	// NOTE: the following line creates the Resources/alloy/CFG.js and Resources/<platform-name>/alloy/CFG.js
 	compileConfig = CU.createCompileConfig(paths.app, paths.project, alloyConfig, buildLog);
 	theme = compileConfig.theme;
 	platformTheme = buildLog.data[buildPlatform] ? buildLog.data[buildPlatform]['theme'] : "";
@@ -128,7 +131,7 @@ module.exports = function(args, program) {
 	// process project makefiles
 	compilerMakeFile = new CompilerMakeFile();
 	var alloyJMK = path.resolve(path.join(paths.app, 'alloy.jmk'));
-	if (path.existsSync(alloyJMK)) {
+	if (fs.existsSync(alloyJMK)) {
 		logger.debug('Loading "alloy.jmk" compiler hooks...');
 		var script = vm.createScript(fs.readFileSync(alloyJMK), 'alloy.jmk');
 
@@ -162,6 +165,7 @@ module.exports = function(args, program) {
 			restrictionPath: restrictionPath
 		}
 	);
+
 	// Copy the version of backbone that is specified in config.json
 	U.copyFileSync(
 		path.join(
@@ -188,6 +192,7 @@ module.exports = function(args, program) {
 		);
 	}
 
+	// NOTE: copies `common/constants.js` from Alloy into `<project-dir>/Resources/<platform>/alloy`
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'common'),
 		path.join(paths.resources, titaniumFolder, 'alloy'),
@@ -232,7 +237,7 @@ module.exports = function(args, program) {
 	if (theme) {
 		_.each(['ASSETS','LIB','VENDOR'], function(type) {
 			var themeAssetsPath = path.join(paths.app,'themes',theme, CONST.DIR[type]);
-			if (path.existsSync(themeAssetsPath)) {
+			if (fs.existsSync(themeAssetsPath)) {
 				updateFilesWithBuildLog(
 					themeAssetsPath,
 					path.join(paths.resources, titaniumFolder),
@@ -248,6 +253,59 @@ module.exports = function(args, program) {
 			}
 		});
 	}
+
+	// copy the platform and theme platform directories
+	var sourcePlatformDirs;
+	var destPlatformDir = path.join(paths.project, 'platform', buildPlatform);
+	if (buildPlatform === 'ios' || buildPlatform === 'iphone') {
+		destPlatformDir = path.join(paths.project, 'platform', 'ios');
+		sourcePlatformDirs = [ 'platform/iphone', 'platform/ios' ];
+		var iPhonePlatformDir = path.join(paths.project, 'platform', 'iphone');
+		if (fs.existsSync(iPhonePlatformDir)) {
+			logger.trace('Deleting ' + iPhonePlatformDir.yellow);
+			wrench.rmdirSyncRecursive(iPhonePlatformDir);
+		}
+	} else {
+		sourcePlatformDirs = [ 'platform/' + buildPlatform ];
+	}
+	if (fs.existsSync(destPlatformDir)) {
+		logger.debug('Resetting ' + destPlatformDir.yellow);
+		wrench.rmdirSyncRecursive(destPlatformDir);
+	}
+	sourcePlatformDirs.forEach(function (dir) {
+		var dirs = [ dir ];
+		theme && dirs.push('themes/' + theme + '/' + dir);
+		dirs.forEach(function (dir) {
+			dir = path.join(paths.app, dir);
+			if (fs.existsSync(dir)) {
+				fs.existsSync(destPlatformDir) || wrench.mkdirSyncRecursive(destPlatformDir, 0755);
+				logger.debug('Copying ' + dir.yellow + ' --> ' + destPlatformDir.yellow);
+				wrench.copyDirSyncRecursive(dir, destPlatformDir);
+			}
+		});
+	});
+	logger.debug('');
+
+	// copy the i18n and i18n platform directories
+	// init i18n search paths
+	var sourceI18NPaths = [ path.join(paths.app, 'i18n') ];
+	if (theme) {
+		sourceI18NPaths.push(path.join(paths.app, 'themes', theme, 'i18n'));
+	}
+	// widgetDirs.forEach(function (widget) {
+	// 	sourceI18NPaths.push(path.join(widget.dir, 'i18n'));
+	// });
+	var destI18NDir = path.join(paths.project, 'i18n');
+	if (fs.existsSync(destI18NDir)) {
+		logger.debug('Resetting ' + destI18NDir.yellow);
+		wrench.rmdirSyncRecursive(destI18NDir);
+	}
+	sourceI18NPaths.forEach(function (dir) {
+		if (fs.existsSync(dir)) {
+			fs.existsSync(destI18NDir) || wrench.mkdirSyncRecursive(destI18NDir, 0755);
+			CU.mergeI18N(dir, destI18NDir, { override: true });
+		}
+	});
 	logger.debug('');
 
 	// trigger our custom compiler makefile
@@ -263,11 +321,10 @@ module.exports = function(args, program) {
 
 	// Create collection of all widget and app paths
 	var widgetDirs = U.getWidgetDirectories(paths.app);
-	var viewCollection = widgetDirs;
-	viewCollection.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
+	widgetDirs.push({ dir: path.join(paths.project,CONST.ALLOY_DIR) });
 
 	// Process all models
-	var models = processModels(viewCollection);
+	var models = processModels(widgetDirs);
 	_.each(models, function(m) {
 		CU.models.push(m.charAt(0).toLowerCase() + m.slice(1));
 	});
@@ -286,7 +343,7 @@ module.exports = function(args, program) {
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
 	var tracker = {};
-	_.each(viewCollection, function(collection) {
+	_.each(widgetDirs, function(collection) {
 		// generate runtime controllers from views
 		var theViewDir = path.join(collection.dir,CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
@@ -328,31 +385,6 @@ module.exports = function(args, program) {
 			});
 		}
 	});
-	logger.info('');
-
-	// [ALOY-858] handle theme "i18n" and "platform" folders
-	if (theme) {
-		var themeI18nPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.I18N),
-			themePlatformPath = path.join(paths.app, CONST.DIR.THEME, theme, CONST.DIR.PLATFORM);
-
-		if (path.existsSync(themeI18nPath)) {
-			CU.mergeI18n(themeI18nPath, compileConfig.dir, { override: true });
-		}
-
-		if (path.existsSync(themePlatformPath)) {
-			logger.info(' themes platform: "' + themePlatformPath + '"');
-			var tempDir = path.join(paths.project, CONST.DIR.BUILD_PLATFORM),
-			appPlatformDir = path.join(paths.project, CONST.DIR.PLATFORM);
-
-			if (!fs.existsSync(tempDir)) {
-				wrench.mkdirSyncRecursive(tempDir, 0755);
-				if (fs.existsSync(appPlatformDir)) {
-					wrench.copyDirSyncRecursive(appPlatformDir, tempDir, {preserve: true});
-				}
-			}
-			wrench.copyDirSyncRecursive(themePlatformPath, tempDir, {preserve: true});
-		}
-	}
 	logger.info('');
 
 	generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
@@ -516,7 +548,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		var baseFile = path.join(fileTypeRoot,filepath);
 		if (buildPlatform) {
 			var platformSpecificFile = path.join(fileTypeRoot,buildPlatform,filepath);
-			if (path.existsSync(platformSpecificFile)) {
+			if (fs.existsSync(platformSpecificFile)) {
 				if (fileType === 'STYLE') {
 					files[fileType] = [
 						{ file:baseFile },
@@ -545,7 +577,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	// we are processing a view, not just a controller
 	if (!noView) {
 		// validate view
-		if (!path.existsSync(files.VIEW)) {
+		if (!fs.existsSync(files.VIEW)) {
 			logger.warn('No ' + CONST.FILE_EXT.VIEW + ' view file found for view ' + files.VIEW);
 			return;
 		}
@@ -585,7 +617,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				psThemeStylesFile = path.join(themeStylesDir,buildPlatform,theStyle);
 			}
 
-			if (path.existsSync(themeStylesFile)) {
+			if (fs.existsSync(themeStylesFile)) {
 				// load theme-specific styles, overriding default definitions
 				logger.info('  theme:      "' + path.join(theme.toUpperCase(),theStyle) + '"');
 				state.styles = styler.loadAndSortStyle(themeStylesFile, {
@@ -593,7 +625,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 					theme: true
 				});
 			}
-			if (path.existsSync(psThemeStylesFile)) {
+			if (fs.existsSync(psThemeStylesFile)) {
 				// load theme- and platform-specific styles, overriding default definitions
 				logger.info('  theme:      "' +
 					path.join(theme.toUpperCase(), buildPlatform, theStyle) + '"');
@@ -700,7 +732,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	}
 
 	// process the controller code
-	if (path.existsSync(files.CONTROLLER)) {
+	if (fs.existsSync(files.CONTROLLER)) {
 		logger.info('  controller: "' +
 			path.relative(path.join(dir, CONST.DIR.CONTROLLER), files.CONTROLLER) + '"');
 	}
@@ -793,9 +825,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		);
 
 		// [ALOY-967] merge "i18n" dir in widget folder
-		if (fs.existsSync(path.join(dir,CONST.DIR.I18N))) {
-			CU.mergeI18n(path.join(dir,CONST.DIR.I18N), compileConfig.dir, { override: false });
-		}
+		CU.mergeI18N(path.join(dir, 'i18n'), path.join(compileConfig.dir.project, 'i18n'), { override: false });
 		widgetIds.push(manifest.id);
 
 		CU.copyWidgetResources(
