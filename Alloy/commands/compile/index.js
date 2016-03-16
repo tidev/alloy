@@ -708,6 +708,13 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			CU[CONST.DOCROOT_MODULE_PROPERTY] = null;
 		}
 
+        // see if baseController attribute has been set on the docRoot (<Alloy>) tag for the view
+        if(docRoot.hasAttribute(CONST.DOCROOT_BASECONTROLLER_PROPERTY)) {
+			CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] = '"' + docRoot.getAttribute(CONST.DOCROOT_BASECONTROLLER_PROPERTY) + '"';
+		} else {
+			CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] = null;
+		}
+        
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index' && !dirname) {
@@ -783,7 +790,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName !== '') ?
-		cCode.parentControllerName : "'BaseController'";
+		cCode.parentControllerName : CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] || "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 

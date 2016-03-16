@@ -54,6 +54,7 @@ exports.CLASS_PROPERTY = 'classes';
 exports.APINAME_PROPERTY = 'apiName';
 exports.AUTOSTYLE_PROPERTY = 'autoStyle';
 exports.DOCROOT_MODULE_PROPERTY = "module";
+exports.DOCROOT_BASECONTROLLER_PROPERTY = "baseController";
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];

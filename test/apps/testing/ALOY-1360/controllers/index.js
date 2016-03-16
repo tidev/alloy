@@ -1,0 +1,1 @@
+$.myWindow.open();
