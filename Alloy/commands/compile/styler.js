@@ -567,18 +567,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// collection binding
 					else {
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var bindingStr = templateStr.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
-							var v = code.replace(/\\'/g, "'");
-							return "'+" + modelVar +".get('" + v.trim() + "') +'";
+						var bindingStr = _.template("_.template('<%= templateStr %>', <%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + ")", {
+							templateStr: templateStr,
+							modelVar: modelVar
 						});
-						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1].trim() + "']";
-
-						// remove the first '+ and last +'
-						var bStr = bindingStr.match(/^\s*\'\+(.*)\+\'\s*$/),
-							standard = (bStr) ? bStr[1] : bindingStr;
-
-						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
-						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
+						style.style[k] = STYLE_EXPR_PREFIX + bindingStr;
 					}
 				}
 			}
