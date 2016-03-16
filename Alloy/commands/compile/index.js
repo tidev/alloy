@@ -713,7 +713,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	}
 	var cCode = CU.loadController(files.CONTROLLER);
 	template.parentController = (cCode.parentControllerName !== '') ?
-    	cCode.parentControllerName : CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] || "'BaseController'";
+		cCode.parentControllerName : CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] || "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 
