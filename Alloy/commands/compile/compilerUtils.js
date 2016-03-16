@@ -968,7 +968,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "	for (var i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
 	if(!args.isDataBoundMap) {
-		code += "		<%= localModel %>.__transform = " + transformCode + ";";
+		code += "		<%= localModel %>." + CONST.BIND_TRANSFORM_VAR + " = " + transformCode + ";";
 	} else {
 		// because (ti.map).annotations[] doesn't accept an array of anonymous objects
 		// we convert them to actual Annotations before pushing them to the array
