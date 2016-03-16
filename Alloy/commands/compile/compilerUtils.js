@@ -947,7 +947,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():{}";
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
 	if(args.parentFormFactor) {
 		if(!exports.dataFunctionNames[handlerFunc]) {
