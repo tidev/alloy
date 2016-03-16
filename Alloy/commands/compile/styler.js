@@ -517,7 +517,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					var parts = match[1].split('.'),
 						partsLen = parts.length,
 						modelVar,
-						templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
+						templateStr = v;
 
 					// model binding
 					if (parts.length > 1) {
@@ -567,7 +567,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// collection binding
 					else {
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var bindingStr = _.template("_.template('<%= templateStr %>', <%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + ")", {
+						var bindingStr = _.template("_.template('<%= templateStr %>', <%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + ", { interpolate: /\\{([\\s\\S]+?)\\}/g })", {
 							templateStr: templateStr,
 							modelVar: modelVar
 						});

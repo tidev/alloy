@@ -16,9 +16,9 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId2 = models[i];
-            __alloyId2.__transform = {};
+            __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = Ti.UI.createTableViewRow({
-                height: "200"
+                height: 200
             });
             rows.push(__alloyId4);
             var __alloyId6 = Ti.UI.createLabel({
@@ -27,7 +27,7 @@ function Controller() {
                 color: "#000",
                 text: "first",
                 align: "left",
-                left: "10"
+                left: 10
             });
             __alloyId4.add(__alloyId6);
             var __alloyId9 = [];
@@ -36,7 +36,9 @@ function Controller() {
             };
             __alloyId9.push(__alloyId13);
             var __alloyId14 = {
-                title: "undefined" != typeof __alloyId2.__transform["fourth"] ? __alloyId2.__transform["fourth"] : __alloyId2.get("fourth")
+                title: _.template("{fourth}", __alloyId2.__transform, {
+                    interpolate: /\{([\s\S]+?)\}/g
+                })
             };
             __alloyId9.push(__alloyId14);
             var __alloyId15 = {
@@ -45,8 +47,8 @@ function Controller() {
             __alloyId9.push(__alloyId15);
             var __alloyId16 = Ti.UI.iOS.createTabbedBar({
                 labels: __alloyId9,
-                left: "50",
-                top: "10"
+                left: 50,
+                top: 10
             });
             __alloyId4.add(__alloyId16);
             var __alloyId18 = Ti.UI.createTableViewRow({});
@@ -107,16 +109,16 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId0);
     $.__views.__alloyId1 = Ti.UI.createTableView({
-        top: "10",
+        top: 10,
         separatorColor: "#ffffff",
-        height: "600",
+        height: 600,
         id: "__alloyId1"
     });
     $.__views.__alloyId0.add($.__views.__alloyId1);
     var __alloyId29 = Alloy.Collections["feed"] || feed;
     __alloyId29.on("fetch destroy change add remove reset", __alloyId30);
     exports.destroy = function() {
-        __alloyId29.off("fetch destroy change add remove reset", __alloyId30);
+        __alloyId29 && __alloyId29.off("fetch destroy change add remove reset", __alloyId30);
     };
     _.extend($, $.__views);
     $.index.open();
