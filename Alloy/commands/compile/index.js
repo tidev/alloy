@@ -711,8 +711,8 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
-	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
-	bTemplate += "<%= model %>.transform()['<%= attr %>']: _.template('<%= tplVal %>', {<%= mname %>: <%= model %>.toJSON()});";
+	var bTemplate = "$.<%= id %>.<%= prop %>=_.template('<%= tplVal %>', {<%= mname %>:";
+	bTemplate += "_.isFunction(<%= model %>.transform)?<%= model %>.transform():<%= model %>.toJSON()});";
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping,modelVar) {
