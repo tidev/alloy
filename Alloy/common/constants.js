@@ -113,9 +113,7 @@ exports.DIR = {
 	THEME: 'themes',
 	BUILD: 'build/alloy',
 	I18N: 'i18n',
-	PLATFORM: 'platform',
-	BUILD_I18N: 'build/i18n',
-	BUILD_PLATFORM: 'build/platform'
+	PLATFORM: 'platform'
 };
 // folders/files to exclude when copying and processing files
 // RegEx format: must escape special chars - so use \.svn not .svn
