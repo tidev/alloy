@@ -955,7 +955,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():{}";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():<%= localModel %>.toJSON()";
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
 	if(args.parentFormFactor) {
 		if(!exports.dataFunctionNames[handlerFunc]) {
@@ -980,13 +980,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	} else {
 		// because (ti.map).annotations[] doesn't accept an array of anonymous objects
 		// we convert them to actual Annotations before pushing them to the array
-		if(transform) {
-			// createAnnotation() requires JSON. While localModel is a Model,
-			// transformed models are JSON
-			code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation(" + transformCode + "));";
-		} else {
-			code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation((<%= localModel %>).toJSON()));";
-		}
+		code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation(" + transformCode + "));";
 	}
 	code += "<%= items %>";
 	code += "	}";
