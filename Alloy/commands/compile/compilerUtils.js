@@ -955,7 +955,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
 	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "{}";
+	var transformCode = transform ? transform + "(<%= localModel %>)" : "_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():{}";
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
 	if(args.parentFormFactor) {
 		if(!exports.dataFunctionNames[handlerFunc]) {
@@ -976,7 +976,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += "	for (var i = 0; i < len; i++) {";
 	code += "		var <%= localModel %> = models[i];";
 	if(!args.isDataBoundMap) {
-		code += "		<%= localModel %>.__transform = " + transformCode + ";";
+		code += "		<%= localModel %>." + CONST.BIND_TRANSFORM_VAR + " = " + transformCode + ";";
 	} else {
 		// because (ti.map).annotations[] doesn't accept an array of anonymous objects
 		// we convert them to actual Annotations before pushing them to the array
