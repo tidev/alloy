@@ -360,9 +360,10 @@ exports.processStyle = function(_style, _state) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
 					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
-						// ALOY-263, support date/time style pickers
-						var d = U.createDate(value);
 						if(DATEFIELDS.indexOf(sn) !== -1) {
+							// ALOY-263, support date/time style pickers
+							var d = U.createDate(value);
+
 							if(U.isValidDate(d, sn)) {
 								code += prefix + 'new Date("'+d.toString()+'"),';
 							}

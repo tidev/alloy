@@ -54,6 +54,7 @@ exports.CLASS_PROPERTY = 'classes';
 exports.APINAME_PROPERTY = 'apiName';
 exports.AUTOSTYLE_PROPERTY = 'autoStyle';
 exports.DOCROOT_MODULE_PROPERTY = "module";
+exports.DOCROOT_BASECONTROLLER_PROPERTY = "baseController";
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
@@ -113,9 +114,7 @@ exports.DIR = {
 	THEME: 'themes',
 	BUILD: 'build/alloy',
 	I18N: 'i18n',
-	PLATFORM: 'platform',
-	BUILD_I18N: 'build/i18n',
-	BUILD_PLATFORM: 'build/platform'
+	PLATFORM: 'platform'
 };
 // folders/files to exclude when copying and processing files
 // RegEx format: must escape special chars - so use \.svn not .svn

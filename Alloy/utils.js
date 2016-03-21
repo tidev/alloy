@@ -331,7 +331,6 @@ exports.getWidgetDirectories = function(appDir) {
 	}
 
 	function findWidgetAsNodeModule(id) {
-
 		var wFile;
 		try {
 			wFile = resolve.sync(path.join(CONST.NPM_WIDGET_PREFIX + id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ], paths: paths() });

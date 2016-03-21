@@ -2,7 +2,7 @@ var U = require('../../../utils'),
 	uglifyjs = require('uglify-js');
 
 exports.getBaseController = function(code, file) {
-	var baseController = '"BaseController"';
+	var baseController = '';
 
 	try {
 		var ast = uglifyjs.parse(code);
