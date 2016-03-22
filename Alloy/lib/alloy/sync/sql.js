@@ -224,7 +224,7 @@ function Sync(method, model, opts) {
 			var values = [];
 			var fieldNames = [];
 			var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
-			var getField = OS_ANDROID ? rs.field.bind(rs) : rs.field;
+			var getField = OS_ANDROID || OS_WINDOWS ? rs.field.bind(rs) : rs.field;
 			var i = 0;
 
 			for (; i < fieldCount; i++) {
