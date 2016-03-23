@@ -135,7 +135,7 @@ module.exports = function(args, program) {
 		var warned = false;
 		Object.keys(folders).some(function (dir) {
 			if (!folders[dir]) {
-				logger.warn('Generated "' + dir + '" directory is not in ignored by Git, please add it to your .gitignore');
+				logger.warn('Generated "' + dir + '" directory is not ignored by Git, please add it to your .gitignore');
 				warned = true;
 			}
 		});
