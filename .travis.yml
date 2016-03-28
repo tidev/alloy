@@ -5,17 +5,21 @@ env:
 os:
   - linux
   - osx
+matrix:
+  fast_finish: true
 before_install:
   - git clone https://github.com/creationix/nvm.git /tmp/.nvm;
   - source /tmp/.nvm/nvm.sh;
   - nvm install $NODE_VERSION;
   - nvm use --delete-prefix $NODE_VERSION;
-before_script:
+install:
   - npm install -g .
   - npm install -g jake
   - npm install -g titanium
   - mkdir ~/.titanium
   - cp ./cli_config.json ~/.titanium/config.json
+script:
+  - npm test
 deploy:
   provider: npm
   email: npmjs@appcelerator.com
