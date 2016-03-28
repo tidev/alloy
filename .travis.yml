@@ -13,6 +13,7 @@ before_install:
   - nvm install $NODE_VERSION;
   - nvm use --delete-prefix $NODE_VERSION;
 install:
+  - npm install
   - npm install -g .
   - npm install -g jake
   - npm install -g titanium
