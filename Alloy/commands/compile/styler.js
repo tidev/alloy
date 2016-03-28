@@ -568,7 +568,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					// collection binding
 					else {
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var bindingStr = _.template("_.template('<%= templateStr %>', <%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + ", { interpolate: /\\{([\\s\\S]+?)\\}/g })", {
+						var bindingStr = _.template("_.template('<%= templateStr %>', <%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + ", { interpolate: " + CONST.BIND_INTERPOLATE + " })", {
 							templateStr: templateStr,
 							modelVar: modelVar
 						});

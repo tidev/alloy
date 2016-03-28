@@ -64,6 +64,7 @@ exports.BIND_TRANSFORM = 'dataTransform';
 exports.BIND_FUNCTION = 'dataFunction';
 exports.BIND_TRANSFORM_VAR = '__transform';
 exports.BIND_MODEL_VAR = '$model';
+exports.BIND_INTERPOLATE = '/\\{([\\s\\S]+?)\\}/g';
 exports.MODEL_ELEMENTS = ['Alloy.Collection','Alloy.Model'];
 exports.MODEL_BINDING_EVENTS = 'fetch change destroy';
 exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
