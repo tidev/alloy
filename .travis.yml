@@ -5,12 +5,11 @@ env:
 os:
   - linux
   - osx
-before_install:
-  - git clone https://github.com/creationix/nvm.git /tmp/.nvm;
-    source /tmp/.nvm/nvm.sh;
-    nvm install $NODE_VERSION;
-    nvm use --delete-prefix $NODE_VERSION;
 before_script:
+  - git clone https://github.com/creationix/nvm.git /tmp/.nvm;
+  - source /tmp/.nvm/nvm.sh;
+  - nvm install $NODE_VERSION;
+  - nvm use --delete-prefix $NODE_VERSION;
   - npm install -g .
   - npm install -g jake
   - npm install -g titanium
