@@ -15,7 +15,7 @@ function Controller() {
         var len = models.length;
         for (var i = 0; len > i; i++) {
             var __alloyId4 = models[i];
-            __alloyId2.push(require("ti.map").createAnnotation(__alloyId4.toJSON()));
+            __alloyId2.push(require("ti.map").createAnnotation(_.isFunction(__alloyId4.transform) ? __alloyId4.transform() : __alloyId4.toJSON()));
         }
         $.__views.map.annotations = __alloyId2;
     }
@@ -67,7 +67,7 @@ function Controller() {
     var __alloyId5 = Alloy.Collections["pins"] || pins;
     __alloyId5.on("fetch destroy change add remove reset", __alloyId6);
     exports.destroy = function() {
-        __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
+        __alloyId5 && __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
     };
     _.extend($, $.__views);
     if (!Ti.App.Properties.hasProperty("seeded")) {

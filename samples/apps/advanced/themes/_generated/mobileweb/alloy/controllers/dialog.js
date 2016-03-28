@@ -92,7 +92,7 @@ function Controller() {
         id: "button"
     });
     $.__views.mainView.add($.__views.button);
-    closeDialog ? $.__views.button.addEventListener("click", closeDialog) : __defers["$.__views.button!click!closeDialog"] = true;
+    closeDialog ? $.addListener($.__views.button, "click", closeDialog) : __defers["$.__views.button!click!closeDialog"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var anim;
@@ -109,7 +109,7 @@ function Controller() {
         $.progressFront.animate(anim);
         require("specs/dialog")($);
     };
-    __defers["$.__views.button!click!closeDialog"] && $.__views.button.addEventListener("click", closeDialog);
+    __defers["$.__views.button!click!closeDialog"] && $.addListener($.__views.button, "click", closeDialog);
     _.extend($, exports);
 }
 

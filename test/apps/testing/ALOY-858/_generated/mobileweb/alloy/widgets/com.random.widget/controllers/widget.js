@@ -40,7 +40,7 @@ function Controller() {
         id: "header"
     });
     $.__views.header && $.addTopLevelView($.__views.header);
-    $.__views.__alloyId0 = Ti.UI.createLabel({
+    $.__views.widget = Ti.UI.createLabel({
         top: "5dp",
         color: "gray",
         font: {
@@ -51,9 +51,9 @@ function Controller() {
         width: Ti.UI.SIZE,
         right: 20,
         text: L("random__welcome"),
-        id: "__alloyId0"
+        id: "widget"
     });
-    $.__views.__alloyId0 && $.addTopLevelView($.__views.__alloyId0);
+    $.__views.widget && $.addTopLevelView($.__views.widget);
     exports.destroy = function() {};
     _.extend($, $.__views);
     _.extend($, exports);

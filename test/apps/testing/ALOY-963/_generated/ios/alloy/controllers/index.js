@@ -37,7 +37,7 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
-    doClick ? $.__views.__alloyId0.addEventListener("click", doClick) : __defers["$.__views.__alloyId0!click!doClick"] = true;
+    doClick ? $.addListener($.__views.__alloyId0, "click", doClick) : __defers["$.__views.__alloyId0!click!doClick"] = true;
     $.__views.__alloyId1 = Ti.UI.createLabel({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -50,7 +50,7 @@ function Controller() {
     _.extend($, $.__views);
     var vendorLib = require("greeting");
     $.index.open();
-    __defers["$.__views.__alloyId0!click!doClick"] && $.__views.__alloyId0.addEventListener("click", doClick);
+    __defers["$.__views.__alloyId0!click!doClick"] && $.addListener($.__views.__alloyId0, "click", doClick);
     _.extend($, exports);
 }
 

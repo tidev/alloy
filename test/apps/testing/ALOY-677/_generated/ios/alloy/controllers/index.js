@@ -39,7 +39,7 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId0);
     $.__views.__alloyId1 = Ti.UI.createButton({
         title: "'Hello foo & bar\"",
-        bottom: "50",
+        bottom: 50,
         id: "__alloyId1"
     });
     $.__views.index.add($.__views.__alloyId1);
@@ -52,8 +52,8 @@ function Controller() {
         options: __alloyId3,
         id: "options",
         title: "App Options",
-        destructive: "3",
-        cancel: "2"
+        destructive: 3,
+        cancel: 2
     });
     exports.destroy = function() {};
     _.extend($, $.__views);

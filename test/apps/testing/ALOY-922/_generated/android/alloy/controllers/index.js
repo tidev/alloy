@@ -31,7 +31,7 @@ function Controller() {
         exitOnClose: true,
         id: "settingsWin",
         title: "Settings",
-        tabBarHidden: "true"
+        tabBarHidden: true
     });
     $.__views.settingsWin && $.addTopLevelView($.__views.settingsWin);
     var __alloyId0 = {};
@@ -41,7 +41,7 @@ function Controller() {
         bindId: "textfield",
         properties: {
             bindId: "textfield",
-            autocorrect: "false",
+            autocorrect: false,
             hintText: "User name / e-mail address"
         },
         events: {
@@ -79,7 +79,7 @@ function Controller() {
         templates: __alloyId0,
         id: "listView",
         defaultItemTemplate: "template",
-        allowsSelection: "false"
+        allowsSelection: false
     });
     $.__views.settingsWin.add($.__views.listView);
     exports.destroy = function() {};

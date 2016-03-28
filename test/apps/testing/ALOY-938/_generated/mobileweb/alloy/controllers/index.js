@@ -26,13 +26,13 @@ function Controller() {
     var exports = {};
     $.__views.index = Ti.UI.createWindow(function() {
         var o = {};
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             title: "Handheld"
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             title: "Handheld"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             backgroundColor: "#fff",
             fullscreen: false,
             exitOnClose: true,

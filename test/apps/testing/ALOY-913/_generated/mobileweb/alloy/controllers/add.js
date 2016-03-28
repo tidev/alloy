@@ -51,10 +51,10 @@ function Controller() {
         barColor: "#a00",
         id: "addWin",
         title: "Add Item",
-        modal: "true"
+        modal: true
     });
     $.__views.addWin && $.addTopLevelView($.__views.addWin);
-    focusTextField ? $.__views.addWin.addEventListener("open", focusTextField) : __defers["$.__views.addWin!open!focusTextField"] = true;
+    focusTextField ? $.addListener($.__views.addWin, "open", focusTextField) : __defers["$.__views.addWin!open!focusTextField"] = true;
     $.__views.itemField = Ti.UI.createTextField({
         width: "90%",
         top: "25dp",
@@ -64,7 +64,7 @@ function Controller() {
         hintText: "What do you need to do?"
     });
     $.__views.addWin.add($.__views.itemField);
-    closeKeyboard ? $.__views.itemField.addEventListener("return", closeKeyboard) : __defers["$.__views.itemField!return!closeKeyboard"] = true;
+    closeKeyboard ? $.addListener($.__views.itemField, "return", closeKeyboard) : __defers["$.__views.itemField!return!closeKeyboard"] = true;
     $.__views.__alloyId0 = Ti.UI.createButton({
         width: "50%",
         top: "20dp",
@@ -72,7 +72,7 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.addWin.add($.__views.__alloyId0);
-    addItem ? $.__views.__alloyId0.addEventListener("click", addItem) : __defers["$.__views.__alloyId0!click!addItem"] = true;
+    addItem ? $.addListener($.__views.__alloyId0, "click", addItem) : __defers["$.__views.__alloyId0!click!addItem"] = true;
     $.__views.__alloyId1 = Ti.UI.createButton({
         width: "50%",
         top: "20dp",
@@ -80,13 +80,13 @@ function Controller() {
         id: "__alloyId1"
     });
     $.__views.addWin.add($.__views.__alloyId1);
-    closeWindow ? $.__views.__alloyId1.addEventListener("click", closeWindow) : __defers["$.__views.__alloyId1!click!closeWindow"] = true;
+    closeWindow ? $.addListener($.__views.__alloyId1, "click", closeWindow) : __defers["$.__views.__alloyId1!click!closeWindow"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    __defers["$.__views.addWin!open!focusTextField"] && $.__views.addWin.addEventListener("open", focusTextField);
-    __defers["$.__views.itemField!return!closeKeyboard"] && $.__views.itemField.addEventListener("return", closeKeyboard);
-    __defers["$.__views.__alloyId0!click!addItem"] && $.__views.__alloyId0.addEventListener("click", addItem);
-    __defers["$.__views.__alloyId1!click!closeWindow"] && $.__views.__alloyId1.addEventListener("click", closeWindow);
+    __defers["$.__views.addWin!open!focusTextField"] && $.addListener($.__views.addWin, "open", focusTextField);
+    __defers["$.__views.itemField!return!closeKeyboard"] && $.addListener($.__views.itemField, "return", closeKeyboard);
+    __defers["$.__views.__alloyId0!click!addItem"] && $.addListener($.__views.__alloyId0, "click", addItem);
+    __defers["$.__views.__alloyId1!click!closeWindow"] && $.addListener($.__views.__alloyId1, "click", closeWindow);
     _.extend($, exports);
 }
 

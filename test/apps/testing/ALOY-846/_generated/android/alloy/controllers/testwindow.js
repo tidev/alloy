@@ -28,12 +28,12 @@ function Controller() {
         id: "testwin"
     });
     $.__views.testwin && $.addTopLevelView($.__views.testwin);
-    $.__views.__alloyId6 = Ti.UI.createLabel({
+    $.__views.__alloyId5 = Ti.UI.createLabel({
         color: "#000",
         text: "Label",
-        id: "__alloyId6"
+        id: "__alloyId5"
     });
-    $.__views.testwin.add($.__views.__alloyId6);
+    $.__views.testwin.add($.__views.__alloyId5);
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.testwin.addEventListener("click", function() {

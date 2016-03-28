@@ -35,7 +35,7 @@ function Controller() {
     $.__views.landingPageWindow && $.addTopLevelView($.__views.landingPageWindow);
     $.__views.loading = Alloy.createWidget("com.appcelerator.loading", "widget", {
         id: "loading",
-        opacity: "1",
+        opacity: 1,
         __parentSymbol: $.__views.landingPageWindow
     });
     $.__views.loading.setParent($.__views.landingPageWindow);
@@ -47,10 +47,10 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.landingPageWindow.add($.__views.__alloyId0);
-    closeWindow ? $.__views.__alloyId0.addEventListener("click", closeWindow) : __defers["$.__views.__alloyId0!click!closeWindow"] = true;
+    closeWindow ? $.addListener($.__views.__alloyId0, "click", closeWindow) : __defers["$.__views.__alloyId0!click!closeWindow"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    __defers["$.__views.__alloyId0!click!closeWindow"] && $.__views.__alloyId0.addEventListener("click", closeWindow);
+    __defers["$.__views.__alloyId0!click!closeWindow"] && $.addListener($.__views.__alloyId0, "click", closeWindow);
     _.extend($, exports);
 }
 

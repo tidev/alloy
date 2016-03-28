@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isClass: true,
-    priority: 10000.0002,
+    priority: 10000.0001,
     key: "star",
     style: {
         height: "24dp",

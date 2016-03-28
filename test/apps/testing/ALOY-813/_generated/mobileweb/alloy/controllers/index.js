@@ -27,26 +27,26 @@ function Controller() {
     $.__views.index = Ti.UI.createWindow({
         backgroundColor: "#fff",
         layout: "vertical",
-        modal: "false",
-        exitOnClose: "true",
+        modal: false,
+        exitOnClose: true,
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.__alloyId0 = Ti.UI.createLabel({
-        top: "20",
+        top: 20,
         text: "❤☺\nnext line",
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
     $.__views.__alloyId1 = Ti.UI.createLabel({
         text: "❤☺\nnext line",
-        top: "20",
+        top: 20,
         id: "__alloyId1"
     });
     $.__views.index.add($.__views.__alloyId1);
     $.__views.code = Ti.UI.createLabel({
         text: "❤☺\nnext line",
-        top: "20",
+        top: 20,
         id: "code"
     });
     $.__views.index.add($.__views.code);

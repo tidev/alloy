@@ -27,10 +27,12 @@ function Controller() {
         });
         for (var i = 0; len > i; i++) {
             var __alloyId7 = models[i];
-            __alloyId7.__transform = {};
+            __alloyId7.__transform = _.isFunction(__alloyId7.transform) ? __alloyId7.transform() : __alloyId7.toJSON();
             $.__views.__alloyId8 = Ti.UI.createPickerRow({
                 fontSize: "18dp",
-                title: "undefined" != typeof __alloyId7.__transform["title"] ? __alloyId7.__transform["title"] : __alloyId7.get("title"),
+                title: _.template("{title}", __alloyId7.__transform, {
+                    interpolate: /\{([\s\S]+?)\}/g
+                }),
                 id: "__alloyId8"
             });
             rows.push($.__views.__alloyId8);
@@ -47,13 +49,15 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId12 = models[i];
-            __alloyId12.__transform = {};
+            __alloyId12.__transform = _.isFunction(__alloyId12.transform) ? __alloyId12.transform() : __alloyId12.toJSON();
             var __alloyId14 = Ti.UI.createTableViewRow({
                 color: "black",
                 font: {
                     fontSize: "18dp"
                 },
-                title: "undefined" != typeof __alloyId12.__transform["title"] ? __alloyId12.__transform["title"] : __alloyId12.get("title")
+                title: _.template("{title}", __alloyId12.__transform, {
+                    interpolate: /\{([\s\S]+?)\}/g
+                })
             });
             rows.push(__alloyId14);
         }
@@ -86,7 +90,7 @@ function Controller() {
     Alloy.Collections.instance("book");
     $.__views.index = Ti.UI.createWindow({
         backgroundColor: "white",
-        exitOnClose: "true",
+        exitOnClose: true,
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
@@ -96,7 +100,7 @@ function Controller() {
         width: Ti.UI.FILL,
         height: Ti.UI.SIZE,
         selectionIndicator: true,
-        top: "0",
+        top: 0,
         id: "__alloyId4"
     });
     $.__views.index.add($.__views.__alloyId4);
@@ -109,7 +113,7 @@ function Controller() {
     __alloyId9.on("fetch destroy change add remove reset", __alloyId10);
     $.__views.__alloyId4.add(__alloyId5);
     $.__views.__alloyId11 = Ti.UI.createTableView({
-        top: "100",
+        top: 100,
         id: "__alloyId11"
     });
     $.__views.index.add($.__views.__alloyId11);
@@ -127,8 +131,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId17);
     exports.destroy = function() {
-        __alloyId9.off("fetch destroy change add remove reset", __alloyId10);
-        __alloyId15.off("fetch destroy change add remove reset", __alloyId16);
+        __alloyId9 && __alloyId9.off("fetch destroy change add remove reset", __alloyId10);
+        __alloyId15 && __alloyId15.off("fetch destroy change add remove reset", __alloyId16);
     };
     _.extend($, $.__views);
     Alloy.Collections.book.fetch();

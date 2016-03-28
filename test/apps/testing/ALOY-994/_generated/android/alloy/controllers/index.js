@@ -32,7 +32,7 @@ function Controller() {
             $.__views.__alloyId3 = e.menu.add(_.pick(__alloyId4, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId3.applyProperties(_.omit(__alloyId4, Alloy.Android.menuItemCreateArgs));
             $.__alloyId3 = $.__views.__alloyId3;
-            doClick ? $.__views.__alloyId3.addEventListener("click", doClick) : __defers["$.__views.__alloyId3!click!doClick"] = true;
+            doClick ? $.addListener($.__views.__alloyId3, "click", doClick) : __defers["$.__views.__alloyId3!click!doClick"] = true;
             var __alloyId6 = {
                 title: "option 2",
                 icon: "/ic_menu_home.png",
@@ -41,7 +41,7 @@ function Controller() {
             $.__views.__alloyId5 = e.menu.add(_.pick(__alloyId6, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId5.applyProperties(_.omit(__alloyId6, Alloy.Android.menuItemCreateArgs));
             $.__alloyId5 = $.__views.__alloyId5;
-            openWin2 ? $.__views.__alloyId5.addEventListener("click", openWin2) : __defers["$.__views.__alloyId5!click!openWin2"] = true;
+            openWin2 ? $.addListener($.__views.__alloyId5, "click", openWin2) : __defers["$.__views.__alloyId5!click!openWin2"] = true;
             $.__views.index.activity.actionBar && ($.__views.index.activity.actionBar.title = "Title from menu");
         }; else {
             Ti.API.warn("You attempted to attach an Android Menu to a lightweight Window");
@@ -109,8 +109,8 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId3!click!doClick"] && $.__views.__alloyId3.addEventListener("click", doClick);
-    __defers["$.__views.__alloyId5!click!openWin2"] && $.__views.__alloyId5.addEventListener("click", openWin2);
+    __defers["$.__views.__alloyId3!click!doClick"] && $.addListener($.__views.__alloyId3, "click", doClick);
+    __defers["$.__views.__alloyId5!click!openWin2"] && $.addListener($.__views.__alloyId5, "click", openWin2);
     _.extend($, exports);
 }
 

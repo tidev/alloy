@@ -31,7 +31,7 @@ function Controller() {
         $.__views.detail = Alloy.createController("detail", {
             id: "detail"
         });
-        $.__views.index = Ti.UI.iPad.createSplitWindow({
+        $.__views.index = Ti.UI.iOS.createSplitWindow({
             masterView: $.__views.master.getViewEx({
                 recurse: true
             }),

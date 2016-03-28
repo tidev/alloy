@@ -32,7 +32,7 @@ function Controller() {
     var __defers = {};
     $.__views.CustomView = Ti.UI.createView({
         layout: "vertical",
-        height: "300",
+        height: 300,
         backgroundColor: "blue",
         id: "CustomView"
     });
@@ -40,24 +40,24 @@ function Controller() {
     $.__views.text = Ti.UI.createTextField({
         borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
         id: "text",
-        top: "10",
-        height: "44",
-        width: "250"
+        top: 10,
+        height: 44,
+        width: 250
     });
     $.__views.CustomView.add($.__views.text);
     $.__views.btn = Ti.UI.createButton({
         title: "Fire Event",
         id: "btn",
-        top: "10",
-        height: "44",
-        width: "250"
+        top: 10,
+        height: 44,
+        width: 250
     });
     $.__views.CustomView.add($.__views.btn);
-    fireEvent ? $.__views.btn.addEventListener("click", fireEvent) : __defers["$.__views.btn!click!fireEvent"] = true;
+    fireEvent ? $.addListener($.__views.btn, "click", fireEvent) : __defers["$.__views.btn!click!fireEvent"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/CustomView")($);
-    __defers["$.__views.btn!click!fireEvent"] && $.__views.btn.addEventListener("click", fireEvent);
+    __defers["$.__views.btn!click!fireEvent"] && $.addListener($.__views.btn, "click", fireEvent);
     _.extend($, exports);
 }
 

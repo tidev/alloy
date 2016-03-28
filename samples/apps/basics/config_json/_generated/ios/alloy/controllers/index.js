@@ -41,12 +41,12 @@ function Controller() {
         id: "b"
     });
     $.__views.index.add($.__views.b);
-    showAlert ? $.__views.b.addEventListener("click", showAlert) : __defers["$.__views.b!click!showAlert"] = true;
+    showAlert ? $.addListener($.__views.b, "click", showAlert) : __defers["$.__views.b!click!showAlert"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.b!click!showAlert"] && $.__views.b.addEventListener("click", showAlert);
+    __defers["$.__views.b!click!showAlert"] && $.addListener($.__views.b, "click", showAlert);
     _.extend($, exports);
 }
 

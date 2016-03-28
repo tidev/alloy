@@ -39,8 +39,8 @@ function Controller() {
                 bindId: "image",
                 properties: {
                     bindId: "image",
-                    width: "60",
-                    left: "10"
+                    width: 60,
+                    left: 10
                 }
             };
             __alloyId7.push(__alloyId9);
@@ -63,8 +63,8 @@ function Controller() {
                 }(),
                 properties: {
                     backgroundColor: "#a00",
-                    height: "50",
-                    width: "130"
+                    height: 50,
+                    width: 130
                 }
             };
             __alloyId7.push(__alloyId11);
@@ -81,8 +81,8 @@ function Controller() {
                                 bindId: "button",
                                 properties: {
                                     bindId: "button",
-                                    height: "40",
-                                    width: "50"
+                                    height: 40,
+                                    width: 50
                                 }
                             };
                             __alloyId20.push(__alloyId22);
@@ -90,8 +90,8 @@ function Controller() {
                         }(),
                         properties: {
                             backgroundColor: "#0f0",
-                            height: "50",
-                            width: "60"
+                            height: 50,
+                            width: 60
                         }
                     };
                     __alloyId17.push(__alloyId19);
@@ -99,9 +99,9 @@ function Controller() {
                 }(),
                 properties: {
                     backgroundColor: "#00f",
-                    height: "60",
-                    width: "80",
-                    right: "10"
+                    height: 60,
+                    width: 80,
+                    right: 10
                 }
             };
             __alloyId7.push(__alloyId16);
@@ -115,7 +115,7 @@ function Controller() {
     var __alloyId3 = {
         properties: {
             name: "template1",
-            height: "70"
+            height: 70
         },
         childTemplates: __alloyId4
     };

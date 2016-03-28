@@ -16,9 +16,11 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId7 = models[i];
-            __alloyId7.__transform = {};
+            __alloyId7.__transform = _.isFunction(__alloyId7.transform) ? __alloyId7.transform() : __alloyId7.toJSON();
             var __alloyId9 = Ti.UI.createTableViewRow({
-                title: "undefined" != typeof __alloyId7.__transform["name"] ? __alloyId7.__transform["name"] : __alloyId7.get("name")
+                title: _.template("{name}", __alloyId7.__transform, {
+                    interpolate: /\{([\s\S]+?)\}/g
+                })
             });
             rows.push(__alloyId9);
         }
@@ -87,7 +89,7 @@ function Controller() {
         id: "counter"
     });
     $.__views.__alloyId2.add($.__views.counter);
-    updateState ? $.__views.counter.addEventListener("click", updateState) : __defers["$.__views.counter!click!updateState"] = true;
+    updateState ? $.addListener($.__views.counter, "click", updateState) : __defers["$.__views.counter!click!updateState"] = true;
     $.__views.__alloyId1 = Ti.UI.createTab({
         window: $.__views.__alloyId2,
         title: "model",
@@ -121,7 +123,7 @@ function Controller() {
     $.__views.__alloyId5.add($.__views.table);
     var __alloyId10 = Alloy.Collections["heroes"] || heroes;
     __alloyId10.on("fetch destroy change add remove reset", __alloyId11);
-    modifyHero ? $.__views.table.addEventListener("click", modifyHero) : __defers["$.__views.table!click!modifyHero"] = true;
+    modifyHero ? $.addListener($.__views.table, "click", modifyHero) : __defers["$.__views.table!click!modifyHero"] = true;
     $.__views.__alloyId4 = Ti.UI.createTab({
         window: $.__views.__alloyId5,
         title: "collection",
@@ -134,23 +136,23 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId12 = function() {
-        $.__alloyId3.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("<%=appState.color%>", {
+        $.__alloyId3.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
             appState: Alloy.Models.appState.toJSON()
         });
-        $.counter.text = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["counter"] : _.template("<%=appState.counter%>", {
+        $.counter.text = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["counter"] : _.template("{appState.counter}", {
             appState: Alloy.Models.appState.toJSON()
         });
-        $.counter.color = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("<%=appState.color%>", {
+        $.counter.color = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
             appState: Alloy.Models.appState.toJSON()
         });
-        $.__alloyId6.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("<%=appState.color%>", {
+        $.__alloyId6.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
             appState: Alloy.Models.appState.toJSON()
         });
     };
     Alloy.Models.appState.on("fetch change destroy", __alloyId12);
     exports.destroy = function() {
-        __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
-        Alloy.Models.appState.off("fetch change destroy", __alloyId12);
+        __alloyId10 && __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
+        Alloy.Models.appState && Alloy.Models.appState.off("fetch change destroy", __alloyId12);
     };
     _.extend($, $.__views);
     var appState = Alloy.Models.appState;
@@ -159,8 +161,8 @@ function Controller() {
     heroes.trigger("change");
     appState.fetch();
     $.index.open();
-    __defers["$.__views.counter!click!updateState"] && $.__views.counter.addEventListener("click", updateState);
-    __defers["$.__views.table!click!modifyHero"] && $.__views.table.addEventListener("click", modifyHero);
+    __defers["$.__views.counter!click!updateState"] && $.addListener($.__views.counter, "click", updateState);
+    __defers["$.__views.table!click!modifyHero"] && $.addListener($.__views.table, "click", modifyHero);
     _.extend($, exports);
 }
 

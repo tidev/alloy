@@ -1,13 +1,27 @@
-language: node_js
-node_js:
-- '0.10'
-- '0.12'
-before_script:
-- npm install -g .
-- npm install -g jake
-- npm install -g titanium
-- mkdir ~/.titanium
-- cp ./cli_config.json ~/.titanium/config.json
+language: cpp
+env:
+  - NODE_VERSION="0.10"
+  - NODE_VERSION="0.12"
+  - NODE_VERSION="4.4"
+  - NODE_VERSION="5.9"
+os:
+  - osx
+matrix:
+  fast_finish: true
+before_install:
+  - git clone https://github.com/creationix/nvm.git /tmp/.nvm;
+  - source /tmp/.nvm/nvm.sh;
+  - nvm install $NODE_VERSION;
+  - nvm use --delete-prefix $NODE_VERSION;
+install:
+  - npm install
+  - npm install -g .
+  - npm install -g jake
+  - npm install -g titanium
+  - mkdir ~/.titanium
+  - cp ./cli_config.json ~/.titanium/config.json
+script:
+  - npm test
 deploy:
   provider: npm
   email: npmjs@appcelerator.com

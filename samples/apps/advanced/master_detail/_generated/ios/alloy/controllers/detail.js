@@ -31,6 +31,9 @@ function Controller() {
     });
     $.__views.detail && $.addTopLevelView($.__views.detail);
     $.__views.height = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
         left: 15,
         top: 10,
         font: {
@@ -38,13 +41,13 @@ function Controller() {
             fontWeight: "normal"
         },
         textAlign: "left",
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
         id: "height"
     });
     $.__views.detail.add($.__views.height);
     $.__views.weight = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
         left: 15,
         top: 10,
         font: {
@@ -52,13 +55,13 @@ function Controller() {
             fontWeight: "normal"
         },
         textAlign: "left",
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
         id: "weight"
     });
     $.__views.detail.add($.__views.weight);
     $.__views.age = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
         left: 15,
         top: 10,
         font: {
@@ -66,13 +69,13 @@ function Controller() {
             fontWeight: "normal"
         },
         textAlign: "left",
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
         id: "age"
     });
     $.__views.detail.add($.__views.age);
     $.__views.record = Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: Ti.UI.SIZE,
+        color: "#000",
         left: 15,
         top: 10,
         font: {
@@ -80,9 +83,6 @@ function Controller() {
             fontWeight: "normal"
         },
         textAlign: "left",
-        width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
-        color: "#000",
         id: "record"
     });
     $.__views.detail.add($.__views.record);

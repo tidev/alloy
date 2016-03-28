@@ -37,12 +37,12 @@ function Controller() {
     $.__views.button.applyProperties(_.omit(__alloyId0, Alloy.Android.menuItemCreateArgs));
     $.button = $.__views.button;
     $.__views.button && $.addTopLevelView($.__views.button);
-    doClick ? $.__views.button.addEventListener("click", doClick) : __defers["$.__views.button!click!doClick"] = true;
+    doClick ? $.addListener($.__views.button, "click", doClick) : __defers["$.__views.button!click!doClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
     $.button.title = args.title || "click me";
-    __defers["$.__views.button!click!doClick"] && $.__views.button.addEventListener("click", doClick);
+    __defers["$.__views.button!click!doClick"] && $.addListener($.__views.button, "click", doClick);
     _.extend($, exports);
 }
 

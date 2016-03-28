@@ -21,7 +21,7 @@ module.exports = [ {
     }
 }, {
     isClass: true,
-    priority: 10000.0002,
+    priority: 10000.0003,
     key: "star",
     style: {
         height: "24dp",
@@ -30,7 +30,7 @@ module.exports = [ {
     }
 }, {
     isClass: true,
-    priority: 10000.9003,
+    priority: 10000.9004,
     key: "star",
     style: {
         height: "32dp",
@@ -39,7 +39,7 @@ module.exports = [ {
     }
 }, {
     isClass: true,
-    priority: 10100.9004,
+    priority: 10100.9005,
     key: "star",
     style: {
         backgroundColor: "#ffffcc"

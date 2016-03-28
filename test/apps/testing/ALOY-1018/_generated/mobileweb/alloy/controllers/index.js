@@ -32,13 +32,13 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.__alloyId0 = (require("testmod").createCustomButton || Ti.UI.createCustomButton)({
-        top: "100",
+        top: 100,
         title: "I am a CustomButton",
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
     $.__views.__alloyId1 = (require("testmod").createCustomLabel || Ti.UI.createCustomLabel)({
-        bottom: "100",
+        bottom: 100,
         text: "I am a CustomLabel",
         id: "__alloyId1"
     });

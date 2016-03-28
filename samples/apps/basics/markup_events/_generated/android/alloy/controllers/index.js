@@ -41,12 +41,12 @@ function Controller() {
         text: "CLICK ME"
     });
     $.__views.index.add($.__views.t);
-    doClick ? $.__views.t.addEventListener("click", doClick) : __defers["$.__views.t!click!doClick"] = true;
+    doClick ? $.addListener($.__views.t, "click", doClick) : __defers["$.__views.t!click!doClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.t!click!doClick"] && $.__views.t.addEventListener("click", doClick);
+    __defers["$.__views.t!click!doClick"] && $.addListener($.__views.t, "click", doClick);
     _.extend($, exports);
 }
 

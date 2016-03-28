@@ -34,7 +34,7 @@ function Controller() {
         id: "pullText",
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        bottom: "10"
+        bottom: 10
     });
     $.__views.pullView.add($.__views.pullText);
     $.__views.pullView && $.addProxyProperty("headerPullView", $.__views.pullView);

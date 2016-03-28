@@ -64,7 +64,7 @@ function Controller() {
     });
     $.__views.dialog.add($.__views.closeButton);
     try {
-        $.__views.closeButton.addEventListener("click", exports.closeDialog);
+        $.addListener($.__views.closeButton, "click", exports.closeDialog);
     } catch (e) {
         __defers["$.__views.closeButton!click!exports.closeDialog"] = true;
     }
@@ -85,7 +85,7 @@ function Controller() {
     require("specs/baseDialog")($, {
         message: $.message.text
     });
-    __defers["$.__views.closeButton!click!exports.closeDialog"] && $.__views.closeButton.addEventListener("click", exports.closeDialog);
+    __defers["$.__views.closeButton!click!exports.closeDialog"] && $.addListener($.__views.closeButton, "click", exports.closeDialog);
     _.extend($, exports);
 }
 

@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isId: true,
-    priority: 100000.0003,
+    priority: 100000.0002,
     key: "starrating",
     style: {
         layout: "horizontal",

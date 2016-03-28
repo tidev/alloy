@@ -81,13 +81,13 @@ function Controller() {
         classes: []
     });
     $.__views.index.add($.__views.changer);
-    changeClasses ? $.__views.changer.addEventListener("click", changeClasses) : __defers["$.__views.changer!click!changeClasses"] = true;
+    changeClasses ? $.addListener($.__views.changer, "click", changeClasses) : __defers["$.__views.changer!click!changeClasses"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var classes = [ "transform", "opacity", "bgGradient", "greenBg", "red", "shadow", "huge", "right", "zIndex" ];
     changeClasses();
     $.index.open();
-    __defers["$.__views.changer!click!changeClasses"] && $.__views.changer.addEventListener("click", changeClasses);
+    __defers["$.__views.changer!click!changeClasses"] && $.addListener($.__views.changer, "click", changeClasses);
     _.extend($, exports);
 }
 
