@@ -157,6 +157,7 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.__alloyId8 = Ti.UI.createLabel({
+        top: 30,
         id: "__alloyId8"
     });
     $.__views.index.add($.__views.__alloyId8);
