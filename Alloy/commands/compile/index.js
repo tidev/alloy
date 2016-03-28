@@ -795,8 +795,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
-	var bTemplate = "$.<%= id %>.<%= prop %>=_.isFunction(<%= model %>.transform)?";
-	bTemplate += "<%= model %>.transform()['<%= attr %>']: _.template('<%= tplVal %>', {<%= mname %>: <%= model %>.toJSON()});";
+	var bTemplate = "$.<%= id %>.<%= prop %>=_.template('<%= tplVal %>', {<%= mname %>:transformed}, { interpolate: " + CONST.BIND_INTERPOLATE + " });";
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping,modelVar) {
@@ -804,6 +803,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
 		template.viewCode += 'var ' + handlerVar + '=function() {';
+		template.viewCode += 'var transformed=_.isFunction(' + modelVar + '.transform)?' + modelVar + '.transform():' + modelVar + '.toJSON();';
 		CU.destroyCode += modelVar + " && " + ((state.parentFormFactor) ? 'is' + U.ucfirst(state.parentFormFactor) : '' ) +
 			modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 
@@ -816,8 +816,6 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				bCode += _.template(bTemplate, {
 					id: binding.id,
 					prop: binding.prop,
-					model: modelVar,
-					attr: binding.attr,
 					mname: binding.mname,
 					tplVal: binding.tplVal
 				});
