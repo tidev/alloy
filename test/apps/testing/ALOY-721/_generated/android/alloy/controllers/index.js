@@ -76,7 +76,7 @@ function Controller() {
         classes: []
     });
     $.__views.index.add($.__views.tester);
-    resetClasses ? $.__views.tester.addEventListener("click", resetClasses) : __defers["$.__views.tester!click!resetClasses"] = true;
+    resetClasses ? $.addListener($.__views.tester, "click", resetClasses) : __defers["$.__views.tester!click!resetClasses"] = true;
     $.__views.currentClassesHeader = Ti.UI.createLabel({
         textAlign: "center",
         left: null,
@@ -125,7 +125,7 @@ function Controller() {
     var classes = [ [ "darkblue", "medium" ], [ "darkblue", "medium", "red" ], [ "lightblue", "huge" ], "red small", [ "darkblue", "medium", "left" ], "lightblue small right", "red huge crazyshadow" ];
     resetClasses();
     $.index.open();
-    __defers["$.__views.tester!click!resetClasses"] && $.__views.tester.addEventListener("click", resetClasses);
+    __defers["$.__views.tester!click!resetClasses"] && $.addListener($.__views.tester, "click", resetClasses);
     _.extend($, exports);
 }
 

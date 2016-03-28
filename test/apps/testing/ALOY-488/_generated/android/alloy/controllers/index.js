@@ -38,9 +38,9 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.starwidget = Alloy.createWidget("starrating", "widget", {
         id: "starwidget",
-        max: "5",
-        initialRating: "2.5",
-        top: "20",
+        max: 5,
+        initialRating: 2.5,
+        top: 20,
         __parentSymbol: $.__views.index
     });
     $.__views.starwidget.setParent($.__views.index);
@@ -53,15 +53,15 @@ function Controller() {
         },
         text: "Hello, World",
         id: "label",
-        top: "100"
+        top: 100
     });
     $.__views.index.add($.__views.label);
-    doClick ? $.__views.label.addEventListener("click", doClick) : __defers["$.__views.label!click!doClick"] = true;
+    doClick ? $.addListener($.__views.label, "click", doClick) : __defers["$.__views.label!click!doClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.starwidget.init(doAlert);
     $.index.open();
-    __defers["$.__views.label!click!doClick"] && $.__views.label.addEventListener("click", doClick);
+    __defers["$.__views.label!click!doClick"] && $.addListener($.__views.label, "click", doClick);
     _.extend($, exports);
 }
 

@@ -49,7 +49,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    addLabels ? $.__views.index.addEventListener("click", addLabels) : __defers["$.__views.index!click!addLabels"] = true;
+    addLabels ? $.addListener($.__views.index, "click", addLabels) : __defers["$.__views.index!click!addLabels"] = true;
     $.__views.scroller = Ti.UI.createScrollView({
         layout: "vertical",
         height: Ti.UI.FILL,
@@ -60,7 +60,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.index!click!addLabels"] && $.__views.index.addEventListener("click", addLabels);
+    __defers["$.__views.index!click!addLabels"] && $.addListener($.__views.index, "click", addLabels);
     _.extend($, exports);
 }
 

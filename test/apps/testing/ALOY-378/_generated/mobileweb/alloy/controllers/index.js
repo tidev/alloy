@@ -35,15 +35,15 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.starwidget = Alloy.createWidget("starrating", "widget", {
         id: "starwidget",
-        max: "5",
-        initialRating: "2.5",
-        top: "20",
+        max: 5,
+        initialRating: 2.5,
+        top: 20,
         __parentSymbol: $.__views.index
     });
     $.__views.starwidget.setParent($.__views.index);
     $.__views.table = Ti.UI.createTableView({
         id: "table",
-        top: "50"
+        top: 50
     });
     $.__views.index.add($.__views.table);
     exports.destroy = function() {};

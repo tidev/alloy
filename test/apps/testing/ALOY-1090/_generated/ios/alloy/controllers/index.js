@@ -27,13 +27,13 @@ function Controller() {
     $.__views.index = Ti.UI.createWindow({
         backgroundColor: "#fff",
         fullscreen: false,
-        exitOnClose: "true",
+        exitOnClose: true,
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.__alloyId0 = Ti.UI.createButton({
         title: "Click",
-        bottom: "5",
+        bottom: 5,
         width: Ti.UI.FILL,
         id: "__alloyId0"
     });

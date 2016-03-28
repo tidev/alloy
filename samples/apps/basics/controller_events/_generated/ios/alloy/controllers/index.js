@@ -45,16 +45,16 @@ function Controller() {
     $.__views.remove = Ti.UI.createButton({
         title: "Remove Listener",
         id: "remove",
-        top: "10"
+        top: 10
     });
     $.__views.index.add($.__views.remove);
-    removeListener ? $.__views.remove.addEventListener("click", removeListener) : __defers["$.__views.remove!click!removeListener"] = true;
+    removeListener ? $.addListener($.__views.remove, "click", removeListener) : __defers["$.__views.remove!click!removeListener"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.requiredController.on("someEvent", handler);
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.remove!click!removeListener"] && $.__views.remove.addEventListener("click", removeListener);
+    __defers["$.__views.remove!click!removeListener"] && $.addListener($.__views.remove, "click", removeListener);
     _.extend($, exports);
 }
 

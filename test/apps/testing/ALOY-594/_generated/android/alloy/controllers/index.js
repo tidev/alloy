@@ -30,7 +30,9 @@ function Controller() {
                     fontWeight: "bold"
                 },
                 touchEnabled: false,
-                text: "undefined" != typeof __alloyId1.__transform["text"] ? __alloyId1.__transform["text"] : __alloyId1.get("text")
+                text: _.template("{text}", __alloyId1.__transform, {
+                    interpolate: /\{([\s\S]+?)\}/g
+                })
             });
             __alloyId3.add(__alloyId5);
         }
@@ -76,7 +78,7 @@ function Controller() {
     var __alloyId6 = Alloy.Collections["collection"] || collection;
     __alloyId6.on("fetch destroy change add remove reset", __alloyId7);
     exports.destroy = function() {
-        __alloyId6.off("fetch destroy change add remove reset", __alloyId7);
+        __alloyId6 && __alloyId6.off("fetch destroy change add remove reset", __alloyId7);
     };
     _.extend($, $.__views);
     Alloy.Collections.collection.trigger("change");

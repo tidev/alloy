@@ -32,7 +32,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.__alloyId1 = Ti.UI.createLabel({
+    $.__views.__alloyId0 = Ti.UI.createLabel({
         top: "30dp",
         color: "#222",
         font: {
@@ -43,9 +43,9 @@ function Controller() {
         width: Ti.UI.SIZE,
         left: 20,
         text: L("hello_world"),
-        id: "__alloyId1"
+        id: "__alloyId0"
     });
-    $.__views.index.add($.__views.__alloyId1);
+    $.__views.index.add($.__views.__alloyId0);
     $.__views.widget_lang = Alloy.createWidget("com.language.widget", "widget", {
         id: "widget_lang",
         __parentSymbol: $.__views.index

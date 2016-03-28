@@ -54,7 +54,7 @@ function Controller() {
         id: "table"
     });
     $.__views.master.add($.__views.table);
-    openDetail ? $.__views.table.addEventListener("click", openDetail) : __defers["$.__views.table!click!openDetail"] = true;
+    openDetail ? $.addListener($.__views.table, "click", openDetail) : __defers["$.__views.table!click!openDetail"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var data = [];
@@ -66,7 +66,7 @@ function Controller() {
     });
     $.table.setData(data);
     require("specs/master")($);
-    __defers["$.__views.table!click!openDetail"] && $.__views.table.addEventListener("click", openDetail);
+    __defers["$.__views.table!click!openDetail"] && $.addListener($.__views.table, "click", openDetail);
     _.extend($, exports);
 }
 

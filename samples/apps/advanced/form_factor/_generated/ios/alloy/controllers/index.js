@@ -32,13 +32,13 @@ function Controller() {
     if (!Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            Alloy.isHandheld && _.extend(o, {
+            Alloy.isHandheld && Alloy.deepExtend(true, o, {
                 backgroundColor: "blue"
             });
-            Alloy.isTablet && _.extend(o, {
+            Alloy.isTablet && Alloy.deepExtend(true, o, {
                 backgroundColor: "red"
             });
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 id: "main"
             });
             return o;
@@ -56,13 +56,13 @@ function Controller() {
     if (Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            Alloy.isHandheld && _.extend(o, {
+            Alloy.isHandheld && Alloy.deepExtend(true, o, {
                 backgroundColor: "blue"
             });
-            Alloy.isTablet && _.extend(o, {
+            Alloy.isTablet && Alloy.deepExtend(true, o, {
                 backgroundColor: "red"
             });
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 id: "main"
             });
             return o;
@@ -79,17 +79,17 @@ function Controller() {
     }
     $.__views.container = Ti.UI.createView(function() {
         var o = {};
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             backgroundColor: "blue"
         });
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             backgroundColor: "red"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "container",
-            height: "50",
-            width: "200",
-            bottom: "10",
+            height: 50,
+            width: 200,
+            bottom: 10,
             backgroundColor: "#cdcdcd"
         });
         return o;

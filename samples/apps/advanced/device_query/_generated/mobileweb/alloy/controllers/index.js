@@ -31,7 +31,7 @@ function Controller() {
     $.__views.win && $.addTopLevelView($.__views.win);
     $.__views.osLabel = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "#fff",
             height: Ti.UI.SIZE,
             width: Ti.UI.SIZE,
@@ -41,13 +41,13 @@ function Controller() {
                 fontWeight: "bold"
             }
         });
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             font: {
                 fontSize: 96,
                 fontWeight: "bold"
             }
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             text: "Mobileweb",
             id: "osLabel"
         });

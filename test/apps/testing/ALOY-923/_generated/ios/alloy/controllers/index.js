@@ -77,7 +77,7 @@ function Controller() {
             rightButtonMode: Ti.UI.INPUT_BUTTONMODE_ALWAYS,
             rightButton: __alloyId5,
             bindId: "textfield",
-            autocorrect: "false",
+            autocorrect: false,
             hintText: "User name / e-mail address"
         }
     };

@@ -171,18 +171,10 @@ exports.addMatchers = function() {
 			toBeObject: function(expected) {
 				return _.isObject(this.actual);
 			},
-			toNotDiff: function(expected) {
+			toNotDiff: function(expected, filename) {
 				var pass = this.actual === expected;
 				this.message = function() {
-		      return ["Expected to have no diff, but it does: \n\n" + JsDiff.diffLines(expected, this.actual).map(function(part) {
-						if (part.added) {
-							return part.value.green;
-						} else if (part.removed) {
-							return part.value.red;
-						} else {
-							return part.value;
-						}
-					}).join('')];
+					return ["Expected to have no diff, but it does: \n\n" + JsDiff.createPatch(filename, expected, this.actual)];
 				};
 	      return pass;
 			}

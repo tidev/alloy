@@ -71,7 +71,7 @@ function Controller() {
         id: "shake"
     });
     $.__views.index.add($.__views.shake);
-    shake ? $.__views.shake.addEventListener("click", shake) : __defers["$.__views.shake!click!shake"] = true;
+    shake ? $.addListener($.__views.shake, "click", shake) : __defers["$.__views.shake!click!shake"] = true;
     $.__views.flash = Ti.UI.createButton({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -81,7 +81,7 @@ function Controller() {
         id: "flash"
     });
     $.__views.index.add($.__views.flash);
-    flash ? $.__views.flash.addEventListener("click", flash) : __defers["$.__views.flash!click!flash"] = true;
+    flash ? $.addListener($.__views.flash, "click", flash) : __defers["$.__views.flash!click!flash"] = true;
     $.__views.trim = Ti.UI.createButton({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -91,15 +91,15 @@ function Controller() {
         id: "trim"
     });
     $.__views.index.add($.__views.trim);
-    trim ? $.__views.trim.addEventListener("click", trim) : __defers["$.__views.trim!click!trim"] = true;
+    trim ? $.addListener($.__views.trim, "click", trim) : __defers["$.__views.trim!click!trim"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var animation = require("alloy/animation"), string = require("alloy/string");
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.shake!click!shake"] && $.__views.shake.addEventListener("click", shake);
-    __defers["$.__views.flash!click!flash"] && $.__views.flash.addEventListener("click", flash);
-    __defers["$.__views.trim!click!trim"] && $.__views.trim.addEventListener("click", trim);
+    __defers["$.__views.shake!click!shake"] && $.addListener($.__views.shake, "click", shake);
+    __defers["$.__views.flash!click!flash"] && $.addListener($.__views.flash, "click", flash);
+    __defers["$.__views.trim!click!trim"] && $.addListener($.__views.trim, "click", trim);
     _.extend($, exports);
 }
 

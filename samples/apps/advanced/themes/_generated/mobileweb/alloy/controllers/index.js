@@ -96,7 +96,7 @@ function Controller() {
         id: "slider"
     });
     $.__views.index.add($.__views.slider);
-    updateLabel ? $.__views.slider.addEventListener("change", updateLabel) : __defers["$.__views.slider!change!updateLabel"] = true;
+    updateLabel ? $.addListener($.__views.slider, "change", updateLabel) : __defers["$.__views.slider!change!updateLabel"] = true;
     $.__views.testButton = Ti.UI.createButton({
         color: "#fff",
         backgroundImage: "/button_blue.png",
@@ -107,15 +107,15 @@ function Controller() {
         id: "testButton"
     });
     $.__views.index.add($.__views.testButton);
-    testPatience ? $.__views.testButton.addEventListener("click", testPatience) : __defers["$.__views.testButton!click!testPatience"] = true;
+    testPatience ? $.addListener($.__views.testButton, "click", testPatience) : __defers["$.__views.testButton!click!testPatience"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
     var foo = require("foo").foo;
     foo();
-    __defers["$.__views.slider!change!updateLabel"] && $.__views.slider.addEventListener("change", updateLabel);
-    __defers["$.__views.testButton!click!testPatience"] && $.__views.testButton.addEventListener("click", testPatience);
+    __defers["$.__views.slider!change!updateLabel"] && $.addListener($.__views.slider, "change", updateLabel);
+    __defers["$.__views.testButton!click!testPatience"] && $.addListener($.__views.testButton, "click", testPatience);
     _.extend($, exports);
 }
 

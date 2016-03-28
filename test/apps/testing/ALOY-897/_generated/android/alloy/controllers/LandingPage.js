@@ -46,10 +46,10 @@ function Controller() {
         id: "__alloyId1"
     });
     $.__views.landingPageWindow.add($.__views.__alloyId1);
-    closeWindow ? $.__views.__alloyId1.addEventListener("click", closeWindow) : __defers["$.__views.__alloyId1!click!closeWindow"] = true;
+    closeWindow ? $.addListener($.__views.__alloyId1, "click", closeWindow) : __defers["$.__views.__alloyId1!click!closeWindow"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    __defers["$.__views.__alloyId1!click!closeWindow"] && $.__views.__alloyId1.addEventListener("click", closeWindow);
+    __defers["$.__views.__alloyId1!click!closeWindow"] && $.addListener($.__views.__alloyId1, "click", closeWindow);
     _.extend($, exports);
 }
 

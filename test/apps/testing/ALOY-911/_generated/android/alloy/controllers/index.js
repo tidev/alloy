@@ -123,7 +123,7 @@ function Controller() {
         id: "table"
     });
     $.__views.index.add($.__views.table);
-    doClick ? $.__views.table.addEventListener("click", doClick) : __defers["$.__views.table!click!doClick"] = true;
+    doClick ? $.addListener($.__views.table, "click", doClick) : __defers["$.__views.table!click!doClick"] = true;
     $.__views.untouchable = Ti.UI.createView({
         height: "100dp",
         backgroundColor: "red",
@@ -132,7 +132,7 @@ function Controller() {
         id: "untouchable"
     });
     $.__views.index.add($.__views.untouchable);
-    doClick ? $.__views.untouchable.addEventListener("click", doClick) : __defers["$.__views.untouchable!click!doClick"] = true;
+    doClick ? $.addListener($.__views.untouchable, "click", doClick) : __defers["$.__views.untouchable!click!doClick"] = true;
     $.__views.untouchableLabel = Ti.UI.createLabel({
         font: {
             fontSize: "24dp",
@@ -148,8 +148,8 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.table!click!doClick"] && $.__views.table.addEventListener("click", doClick);
-    __defers["$.__views.untouchable!click!doClick"] && $.__views.untouchable.addEventListener("click", doClick);
+    __defers["$.__views.table!click!doClick"] && $.addListener($.__views.table, "click", doClick);
+    __defers["$.__views.untouchable!click!doClick"] && $.addListener($.__views.untouchable, "click", doClick);
     _.extend($, exports);
 }
 

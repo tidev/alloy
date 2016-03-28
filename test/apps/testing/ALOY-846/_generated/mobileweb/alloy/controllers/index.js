@@ -25,30 +25,23 @@ function Controller() {
     var $ = this;
     var exports = {};
     var __alloyId1 = [];
+    $.__views.__alloyId3 = Ti.UI.createWindow({
+        title: "Tab 2",
+        id: "__alloyId3"
+    });
+    $.__views.__alloyId4 = Ti.UI.createLabel({
+        color: "#000",
+        text: "I am Window 2",
+        id: "__alloyId4"
+    });
+    $.__views.__alloyId3.add($.__views.__alloyId4);
     $.__views.__alloyId2 = Ti.UI.createTab({
-        window: void 0,
-        title: "Tab 1",
-        icon: "KS_nav_ui.png",
+        window: $.__views.__alloyId3,
+        title: "Tab 2",
+        icon: "KS_nav_views.png",
         id: "__alloyId2"
     });
     __alloyId1.push($.__views.__alloyId2);
-    $.__views.__alloyId4 = Ti.UI.createWindow({
-        title: "Tab 2",
-        id: "__alloyId4"
-    });
-    $.__views.__alloyId5 = Ti.UI.createLabel({
-        color: "#000",
-        text: "I am Window 2",
-        id: "__alloyId5"
-    });
-    $.__views.__alloyId4.add($.__views.__alloyId5);
-    $.__views.__alloyId3 = Ti.UI.createTab({
-        window: $.__views.__alloyId4,
-        title: "Tab 2",
-        icon: "KS_nav_views.png",
-        id: "__alloyId3"
-    });
-    __alloyId1.push($.__views.__alloyId3);
     $.__views.index = Ti.UI.createTabGroup({
         backgroundColor: "#fff",
         fullscreen: false,

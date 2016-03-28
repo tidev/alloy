@@ -58,8 +58,8 @@ function Controller() {
         androidView: $.__views.androidView,
         id: "options",
         title: "App Options",
-        destructive: "3",
-        cancel: "2"
+        destructive: 3,
+        cancel: 2
     });
     $.__views.__alloyId4 = Ti.UI.createButton({
         height: Ti.UI.SIZE,
@@ -68,12 +68,12 @@ function Controller() {
         id: "__alloyId4"
     });
     $.__views.index.add($.__views.__alloyId4);
-    showOptions ? $.__views.__alloyId4.addEventListener("click", showOptions) : __defers["$.__views.__alloyId4!click!showOptions"] = true;
+    showOptions ? $.addListener($.__views.__alloyId4, "click", showOptions) : __defers["$.__views.__alloyId4!click!showOptions"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.avLabel.text = "This is an androidView";
     $.index.open();
-    __defers["$.__views.__alloyId4!click!showOptions"] && $.__views.__alloyId4.addEventListener("click", showOptions);
+    __defers["$.__views.__alloyId4!click!showOptions"] && $.addListener($.__views.__alloyId4, "click", showOptions);
     _.extend($, exports);
 }
 

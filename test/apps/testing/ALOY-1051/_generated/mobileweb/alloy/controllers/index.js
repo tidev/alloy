@@ -36,7 +36,7 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.label = Ti.UI.createLabel({
-        top: "100",
+        top: 100,
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
         color: "#000",
@@ -48,11 +48,11 @@ function Controller() {
         id: "label"
     });
     $.__views.index.add($.__views.label);
-    doClick ? $.__views.label.addEventListener("click", doClick) : __defers["$.__views.label!click!doClick"] = true;
+    doClick ? $.addListener($.__views.label, "click", doClick) : __defers["$.__views.label!click!doClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.label!click!doClick"] && $.__views.label.addEventListener("click", doClick);
+    __defers["$.__views.label!click!doClick"] && $.addListener($.__views.label, "click", doClick);
     _.extend($, exports);
 }
 

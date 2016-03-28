@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isId: true,
-    priority: 100000.0002,
+    priority: 100000.0001,
     key: "theView",
     style: {
         height: 200,

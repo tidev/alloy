@@ -30,22 +30,22 @@ function Controller() {
     });
     var leftNavButtons = [];
     $.__views.__alloyId2 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "red",
         id: "__alloyId2"
     });
     leftNavButtons.push($.__views.__alloyId2);
     $.__views.__alloyId3 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "green",
         id: "__alloyId3"
     });
     leftNavButtons.push($.__views.__alloyId3);
     $.__views.__alloyId4 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "blue",
         id: "__alloyId4"
     });

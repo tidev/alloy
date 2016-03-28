@@ -16,7 +16,7 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId19 = models[i];
-            __alloyId19.__transform = {};
+            __alloyId19.__transform = _.isFunction(__alloyId19.transform) ? __alloyId19.transform() : __alloyId19.toJSON();
             var __alloyId21 = Alloy.createWidget("com.foo.widget", "row_bind", {
                 $model: __alloyId19
             });
@@ -52,13 +52,13 @@ function Controller() {
     $.__views.staticRow1 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow1",
-        title: "1"
+        title: 1
     });
     __alloyId6.push($.__views.staticRow1);
     $.__views.staticRow2 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow2",
-        title: "2"
+        title: 2
     });
     __alloyId6.push($.__views.staticRow2);
     $.__views.staticWidgetSection = Alloy.createWidget("com.foo.widget", "section", {
@@ -88,7 +88,7 @@ function Controller() {
     $.__views.staticRow3 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow3",
-        title: "3"
+        title: 3
     });
     __alloyId6.push($.__views.staticRow3);
     $.__views.staticTable = Ti.UI.createTableView({
@@ -199,7 +199,7 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     exports.destroy = function() {
-        __alloyId22.off("fetch destroy change add remove reset", __alloyId23);
+        __alloyId22 && __alloyId22.off("fetch destroy change add remove reset", __alloyId23);
     };
     _.extend($, $.__views);
     $.index.open();

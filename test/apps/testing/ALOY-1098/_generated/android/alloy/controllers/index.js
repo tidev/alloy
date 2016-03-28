@@ -15,6 +15,7 @@ function Controller() {
                 hintText: "Use a SearchView",
                 id: "__alloyId3"
             });
+            $.__alloyId3 = $.__views.__alloyId3;
             var __alloyId4 = {
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM | Ti.Android.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW,
                 icon: Ti.Android.R.drawable.ic_menu_search,
@@ -28,6 +29,7 @@ function Controller() {
                 title: "Click",
                 id: "__alloyId7"
             });
+            $.__alloyId7 = $.__views.__alloyId7;
             var __alloyId8 = {
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM,
                 id: "__alloyId5"

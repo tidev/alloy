@@ -52,7 +52,7 @@ function Controller() {
     $.__views.container = Ti.UI.createTableView({
         data: __alloyId0,
         id: "container",
-        top: "30"
+        top: 30
     });
     $.__views.index.add($.__views.container);
     exports.destroy = function() {};

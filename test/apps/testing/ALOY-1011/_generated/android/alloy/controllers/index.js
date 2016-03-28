@@ -19,7 +19,7 @@ function Controller() {
             $.__views.item1 = e.menu.add(_.pick(__alloyId0, Alloy.Android.menuItemCreateArgs));
             $.__views.item1.applyProperties(_.omit(__alloyId0, Alloy.Android.menuItemCreateArgs));
             $.item1 = $.__views.item1;
-            doMenuClick1 ? $.__views.item1.addEventListener("click", doMenuClick1) : __defers["$.__views.item1!click!doMenuClick1"] = true;
+            doMenuClick1 ? $.addListener($.__views.item1, "click", doMenuClick1) : __defers["$.__views.item1!click!doMenuClick1"] = true;
             var __alloyId1 = {
                 showAsAction: Ti.Android.SHOW_AS_ACTION_ALWAYS,
                 title: "Two",
@@ -29,7 +29,7 @@ function Controller() {
             $.__views.item2 = e.menu.add(_.pick(__alloyId1, Alloy.Android.menuItemCreateArgs));
             $.__views.item2.applyProperties(_.omit(__alloyId1, Alloy.Android.menuItemCreateArgs));
             $.item2 = $.__views.item2;
-            doMenuClick2 ? $.__views.item2.addEventListener("click", doMenuClick2) : __defers["$.__views.item2!click!doMenuClick2"] = true;
+            doMenuClick2 ? $.addListener($.__views.item2, "click", doMenuClick2) : __defers["$.__views.item2!click!doMenuClick2"] = true;
             if ($.__views.index.activity.actionBar) {
                 $.__views.index.activity.actionBar.title = "index ID Menu Title ";
                 $.__views.index.activity.actionBar.subtitle = "index ID subtitle";
@@ -83,7 +83,7 @@ function Controller() {
         id: "label"
     });
     $.__views.index.add($.__views.label);
-    doClick ? $.__views.label.addEventListener("click", doClick) : __defers["$.__views.label!click!doClick"] = true;
+    doClick ? $.addListener($.__views.label, "click", doClick) : __defers["$.__views.label!click!doClick"] = true;
     $.__views.bottomview = Ti.UI.createView({
         bottom: 10,
         height: 200,
@@ -105,9 +105,9 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.item1!click!doMenuClick1"] && $.__views.item1.addEventListener("click", doMenuClick1);
-    __defers["$.__views.item2!click!doMenuClick2"] && $.__views.item2.addEventListener("click", doMenuClick2);
-    __defers["$.__views.label!click!doClick"] && $.__views.label.addEventListener("click", doClick);
+    __defers["$.__views.item1!click!doMenuClick1"] && $.addListener($.__views.item1, "click", doMenuClick1);
+    __defers["$.__views.item2!click!doMenuClick2"] && $.addListener($.__views.item2, "click", doMenuClick2);
+    __defers["$.__views.label!click!doClick"] && $.addListener($.__views.label, "click", doClick);
     _.extend($, exports);
 }
 

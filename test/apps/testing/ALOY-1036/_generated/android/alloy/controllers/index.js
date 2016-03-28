@@ -33,17 +33,17 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.testLabel = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "22dp"
             },
             color: "purple",
             text: "Simple class label applied"
         });
-        (Alloy.Globals.custom1 || Alloy.Globals.custom2) && _.extend(o, {
+        (Alloy.Globals.custom1 || Alloy.Globals.custom2) && Alloy.deepExtend(true, o, {
             text: "iOS or Android! Styles conditionals correctly applied"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "testLabel"
         });
         return o;
@@ -57,7 +57,7 @@ function Controller() {
             color: "purple",
             text: "Added in XML",
             id: "testLabel2",
-            bottom: "100"
+            bottom: 100
         });
         $.__views.index.add($.__views.testLabel2);
     }

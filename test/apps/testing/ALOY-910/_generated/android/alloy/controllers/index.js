@@ -55,7 +55,7 @@ function Controller() {
         id: "__alloyId3"
     });
     __alloyId0.push($.__views.__alloyId3);
-    openList ? $.__views.__alloyId3.addEventListener("click", openList) : __defers["$.__views.__alloyId3!click!openList"] = true;
+    openList ? $.addListener($.__views.__alloyId3, "click", openList) : __defers["$.__views.__alloyId3!click!openList"] = true;
     $.__views.jobList = Ti.UI.createTableView({
         data: __alloyId0,
         refreshControl: $.__views.ptr,
@@ -97,12 +97,12 @@ function Controller() {
         id: "jobList"
     });
     $.__views.listWin.add($.__views.jobList);
-    openList ? $.__views.jobList.addEventListener("click", openList) : __defers["$.__views.jobList!click!openList"] = true;
+    openList ? $.addListener($.__views.jobList, "click", openList) : __defers["$.__views.jobList!click!openList"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId3!click!openList"] && $.__views.__alloyId3.addEventListener("click", openList);
-    __defers["$.__views.jobList!click!openList"] && $.__views.jobList.addEventListener("click", openList);
+    __defers["$.__views.__alloyId3!click!openList"] && $.addListener($.__views.__alloyId3, "click", openList);
+    __defers["$.__views.jobList!click!openList"] && $.addListener($.__views.jobList, "click", openList);
     _.extend($, exports);
 }
 

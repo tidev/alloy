@@ -43,11 +43,11 @@ function Controller() {
         id: "bar"
     });
     $.__views.bar && $.addTopLevelView($.__views.bar);
-    addNewLabel ? $.__views.bar.addEventListener("click", addNewLabel) : __defers["$.__views.bar!click!addNewLabel"] = true;
+    addNewLabel ? $.addListener($.__views.bar, "click", addNewLabel) : __defers["$.__views.bar!click!addNewLabel"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var ctr = 0;
-    __defers["$.__views.bar!click!addNewLabel"] && $.__views.bar.addEventListener("click", addNewLabel);
+    __defers["$.__views.bar!click!addNewLabel"] && $.addListener($.__views.bar, "click", addNewLabel);
     _.extend($, exports);
 }
 

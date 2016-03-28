@@ -182,17 +182,17 @@ describe('alloy compile', function() {
 						it('matches known good generated code for ' + gFile.yellow, function () {
 							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
 							var newFileContents = fs.readFileSync(newFile, 'utf8');
-
-/*						if(goodFileContents !== newFileContents) {
-							// Cheat way to re-generate known-good files
-							// uncomment this block, run jake test:spec[compile.js]
-							// then re-comment this block. jake test:all should now be happy
-							console.log('>>>> writing a new goodFile');
-							fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
-							goodFileContents = fs.readFileSync(goodFile, 'utf8');
-						}
+/*
+							if(goodFileContents !== newFileContents) {
+								// Cheat way to re-generate known-good files
+								// uncomment this block, run jake test:spec[compile.js]
+								// then re-comment this block. jake test:all should now be happy
+								console.log('>>>> writing a new goodFile');
+								fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
+								goodFileContents = fs.readFileSync(goodFile, 'utf8');
+							}
 */
-							expect(newFileContents).toNotDiff(goodFileContents);
+							expect(newFileContents).toNotDiff(goodFileContents, gFile);
 						});
 					});
 				});

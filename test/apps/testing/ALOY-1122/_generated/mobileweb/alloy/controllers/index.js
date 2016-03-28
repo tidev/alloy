@@ -40,10 +40,10 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
-    doClick ? $.__views.__alloyId0.addEventListener("click", doClick) : __defers["$.__views.__alloyId0!click!doClick"] = true;
+    doClick ? $.addListener($.__views.__alloyId0, "click", doClick) : __defers["$.__views.__alloyId0!click!doClick"] = true;
     $.__views.__alloyId1 = Ti.UI.createImageView({
         image: "/appcelerator.png",
-        bottom: "0",
+        bottom: 0,
         id: "__alloyId1"
     });
     $.__views.index.add($.__views.__alloyId1);
@@ -51,7 +51,7 @@ function Controller() {
     _.extend($, $.__views);
     var util = require("util");
     $.index.open();
-    __defers["$.__views.__alloyId0!click!doClick"] && $.__views.__alloyId0.addEventListener("click", doClick);
+    __defers["$.__views.__alloyId0!click!doClick"] && $.addListener($.__views.__alloyId0, "click", doClick);
     _.extend($, exports);
 }
 
