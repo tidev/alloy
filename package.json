@@ -58,6 +58,7 @@
     "node": ">=0.10"
   },
   "devDependencies": {
+    "diff": "^2.2.2",
     "jake": "^8.0.12"
   }
 }

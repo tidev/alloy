@@ -192,7 +192,7 @@ describe('alloy compile', function() {
 							goodFileContents = fs.readFileSync(goodFile, 'utf8');
 						}
 */
-							expect(goodFileContents === newFileContents).toBeTruthy();
+							expect(newFileContents).toNotDiff(goodFileContents);
 						});
 					});
 				});
