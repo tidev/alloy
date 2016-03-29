@@ -18,7 +18,9 @@ function Controller() {
             var __alloyId7 = models[i];
             __alloyId7.__transform = _.isFunction(__alloyId7.transform) ? __alloyId7.transform() : __alloyId7.toJSON();
             var __alloyId9 = Ti.UI.createTableViewRow({
-                title: _.template("{name}", __alloyId7.__transform, {
+                title: _.template('{m["name"]}', {
+                    m: __alloyId7.__transform
+                }, {
                     interpolate: /\{([\s\S]+?)\}/g
                 })
             });

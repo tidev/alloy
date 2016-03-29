@@ -1,0 +1,13 @@
+<Alloy>
+	<Model src="mymodel" />
+	<Collection src="mymodel" />
+	<Window layout="vertical">
+		<Label top="30" text="{mymodel.id} - {mymodel.title}" />
+		<Button onClick="createModel">Create Model Should Not Error</Button>
+		<ListView>
+			<ListSection dataCollection="mymodel">
+				<ListItem title="{id} - {title}" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

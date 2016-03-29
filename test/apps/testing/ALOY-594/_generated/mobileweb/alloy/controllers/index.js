@@ -30,7 +30,9 @@ function Controller() {
                     fontWeight: "bold"
                 },
                 touchEnabled: false,
-                text: _.template("{text}", __alloyId1.__transform, {
+                text: _.template('{m["text"]}', {
+                    m: __alloyId1.__transform
+                }, {
                     interpolate: /\{([\s\S]+?)\}/g
                 })
             });

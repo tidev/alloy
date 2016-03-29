@@ -18,21 +18,29 @@ function Controller() {
             var __alloyId23 = models[i];
             __alloyId23.__transform = doTransform(__alloyId23);
             var __alloyId25 = {
-                template: _.template("{template}", __alloyId23.__transform, {
+                template: _.template('{m["template"]}', {
+                    m: __alloyId23.__transform
+                }, {
                     interpolate: /\{([\s\S]+?)\}/g
                 }),
                 title: {
-                    text: _.template("{title}", __alloyId23.__transform, {
+                    text: _.template('{m["title"]}', {
+                        m: __alloyId23.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 },
                 subtitle: {
-                    text: _.template("{subtitle}", __alloyId23.__transform, {
+                    text: _.template('{m["subtitle"]}', {
+                        m: __alloyId23.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 },
                 image: {
-                    image: _.template("{image}", __alloyId23.__transform, {
+                    image: _.template('{m["image"]}', {
+                        m: __alloyId23.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 }
