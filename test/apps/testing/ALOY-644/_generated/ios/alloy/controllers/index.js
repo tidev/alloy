@@ -136,17 +136,26 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId12 = function() {
-        $.__alloyId3.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
-            appState: Alloy.Models.appState.toJSON()
+        var transformed = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform() : Alloy.Models.appState.toJSON();
+        $.__alloyId3.backgroundColor = _.template("{appState.color}", {
+            appState: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.counter.text = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["counter"] : _.template("{appState.counter}", {
-            appState: Alloy.Models.appState.toJSON()
+        $.counter.text = _.template("{appState.counter}", {
+            appState: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.counter.color = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
-            appState: Alloy.Models.appState.toJSON()
+        $.counter.color = _.template("{appState.color}", {
+            appState: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId6.backgroundColor = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform()["color"] : _.template("{appState.color}", {
-            appState: Alloy.Models.appState.toJSON()
+        $.__alloyId6.backgroundColor = _.template("{appState.color}", {
+            appState: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
     };
     Alloy.Models.appState.on("fetch change destroy", __alloyId12);
