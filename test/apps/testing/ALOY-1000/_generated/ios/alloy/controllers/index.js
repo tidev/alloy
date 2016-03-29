@@ -77,14 +77,21 @@ function Controller() {
     $.__views.theView.add($.__views.genre);
     doClick ? $.addListener($.__views.genre, "click", doClick) : __defers["$.__views.genre!click!doClick"] = true;
     var __alloyId2 = function() {
-        $.title.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("{book.title}", {
-            book: Alloy.Models.book.toJSON()
+        var transformed = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform() : Alloy.Models.book.toJSON();
+        $.title.text = _.template("{book.title}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.author.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("{book.author}", {
-            book: Alloy.Models.book.toJSON()
+        $.author.text = _.template("{book.author}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.genre.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["genre"] : _.template("{book.genre}", {
-            book: Alloy.Models.book.toJSON()
+        $.genre.text = _.template("{book.genre}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
     };
     Alloy.Models.book.on("fetch change destroy", __alloyId2);

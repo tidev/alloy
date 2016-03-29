@@ -106,20 +106,31 @@ function Controller() {
     var __alloyId12 = Alloy.Collections["book"] || book;
     __alloyId12.on("fetch destroy change add remove reset", __alloyId13);
     var __alloyId14 = function() {
-        $.__alloyId2.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("{book.title}", {
-            book: Alloy.Models.book.toJSON()
+        var transformed = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform() : Alloy.Models.book.toJSON();
+        $.__alloyId2.text = _.template("{book.title}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId3.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("Written by {book.author}", {
-            book: Alloy.Models.book.toJSON()
+        $.__alloyId3.text = _.template("Written by {book.author}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId5.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("{book.title}", {
-            book: Alloy.Models.book.toJSON()
+        $.__alloyId5.text = _.template("{book.title}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId6.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("Written by {book.author}", {
-            book: Alloy.Models.book.toJSON()
+        $.__alloyId6.text = _.template("Written by {book.author}", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId7.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("Title: {book.title}, by {book.author} :)", {
-            book: Alloy.Models.book.toJSON()
+        $.__alloyId7.text = _.template("Title: {book.title}, by {book.author} :)", {
+            book: transformed
+        }, {
+            interpolate: /\{([\s\S]+?)\}/g
         });
     };
     Alloy.Models.book.on("fetch change destroy", __alloyId14);
