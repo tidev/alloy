@@ -33,7 +33,7 @@ function Controller() {
                     fontSize: "28dp",
                     fontWeight: "bold"
                 },
-                text: _.template('	{m["	title	"]}', {
+                text: _.template("	{m.	title	}", {
                     m: __alloyId1.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -51,7 +51,7 @@ function Controller() {
                     fontSize: "16dp",
                     fontWeight: "normal"
                 },
-                text: _.template('		  {m["subtitle"]}', {
+                text: _.template("		  {m.subtitle}", {
                     m: __alloyId1.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -62,7 +62,7 @@ function Controller() {
                 right: "10dp",
                 height: "48dp",
                 width: "48dp",
-                image: _.template('{m[" image "]}', {
+                image: _.template("{m. image }", {
                     m: __alloyId1.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g

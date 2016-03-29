@@ -32,7 +32,7 @@ function Controller() {
     });
     $.__views.row_bind && $.addTopLevelView($.__views.row_bind);
     $.__views.__alloyId1 = Ti.UI.createLabel({
-        text: _.template('{m["title"]}', {
+        text: _.template("{m.title}", {
             m: $model.__transform
         }, {
             interpolate: /\{([\s\S]+?)\}/g

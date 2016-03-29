@@ -570,7 +570,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 						// wrap in object to not error over missing attributes
 						// https://jira.appcelerator.org/browse/ALOY-1477
-						templateStr = templateStr.replace(/\{([\s\S]+?)\}/g, '{m["$1"]}');
+						templateStr = templateStr.replace(/\{([\s\S]+?)\}/g, '{m.$1}');
 
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 						var bindingStr = _.template("_.template('<%= templateStr %>', {m:<%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + "}, { interpolate: " + CONST.BIND_INTERPOLATE + " })", {

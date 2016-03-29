@@ -20,12 +20,16 @@ function Controller() {
             var __alloyId10 = {
                 template: "template",
                 title: {
-                    text: _.template("{title}", __alloyId8.__transform, {
+                    text: _.template("{m.title}", {
+                        m: __alloyId8.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 },
                 properties: {
-                    searchableText: _.template("{title}", __alloyId8.__transform, {
+                    searchableText: _.template("{m.title}", {
+                        m: __alloyId8.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 }

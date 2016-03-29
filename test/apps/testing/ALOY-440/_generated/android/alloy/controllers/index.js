@@ -21,7 +21,7 @@ function Controller() {
             var __alloyId5 = models[i];
             __alloyId5.__transform = _.isFunction(__alloyId5.transform) ? __alloyId5.transform() : __alloyId5.toJSON();
             $.__views.__alloyId6 = Ti.UI.createPickerRow({
-                title: _.template('{m["name"]}', {
+                title: _.template("{m.name}", {
                     m: __alloyId5.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -47,7 +47,7 @@ function Controller() {
             var __alloyId9 = models[i];
             __alloyId9.__transform = doTransform(__alloyId9);
             $.__views.__alloyId10 = Ti.UI.createPickerRow({
-                title: _.template('{m["color"]}', {
+                title: _.template("{m.color}", {
                     m: __alloyId9.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g

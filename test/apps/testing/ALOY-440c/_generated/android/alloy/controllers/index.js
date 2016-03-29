@@ -30,7 +30,7 @@ function Controller() {
             __alloyId7.__transform = _.isFunction(__alloyId7.transform) ? __alloyId7.transform() : __alloyId7.toJSON();
             $.__views.__alloyId8 = Ti.UI.createPickerRow({
                 fontSize: "18dp",
-                title: _.template('{m["title"]}', {
+                title: _.template("{m.title}", {
                     m: __alloyId7.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -57,7 +57,7 @@ function Controller() {
                 font: {
                     fontSize: "18dp"
                 },
-                title: _.template('{m["title"]}', {
+                title: _.template("{m.title}", {
                     m: __alloyId12.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g

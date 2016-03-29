@@ -18,7 +18,7 @@ function Controller() {
             var __alloyId16 = models[i];
             __alloyId16.__transform = _.isFunction(__alloyId16.transform) ? __alloyId16.transform() : __alloyId16.toJSON();
             var __alloyId18 = {
-                title: _.template('{m["foo"]}', {
+                title: _.template("{m.foo}", {
                     m: __alloyId16.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -39,7 +39,7 @@ function Controller() {
             var __alloyId25 = models[i];
             __alloyId25.__transform = _.isFunction(__alloyId25.transform) ? __alloyId25.transform() : __alloyId25.toJSON();
             var __alloyId27 = {
-                title: _.template('{m["foo"]} and {m["bar"]}', {
+                title: _.template("{m.foo} and {m.bar}", {
                     m: __alloyId25.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -60,7 +60,7 @@ function Controller() {
             var __alloyId34 = models[i];
             __alloyId34.__transform = myTransformer(__alloyId34);
             var __alloyId36 = {
-                title: _.template('{m["foo"]} and {m["bar"]}', {
+                title: _.template("{m.foo} and {m.bar}", {
                     m: __alloyId34.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -81,7 +81,7 @@ function Controller() {
             var __alloyId43 = models[i];
             __alloyId43.__transform = _.isFunction(__alloyId43.transform) ? __alloyId43.transform() : __alloyId43.toJSON();
             var __alloyId45 = {
-                title: _.template('{m["foo"]}', {
+                title: _.template("{m.foo}", {
                     m: __alloyId43.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -102,7 +102,7 @@ function Controller() {
             var __alloyId52 = models[i];
             __alloyId52.__transform = _.isFunction(__alloyId52.transform) ? __alloyId52.transform() : __alloyId52.toJSON();
             var __alloyId54 = {
-                title: _.template('{m["foo"]} and {m["bar"]}', {
+                title: _.template("{m.foo} and {m.bar}", {
                     m: __alloyId52.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -123,7 +123,7 @@ function Controller() {
             var __alloyId61 = models[i];
             __alloyId61.__transform = myTransformer(__alloyId61);
             var __alloyId63 = {
-                title: _.template('{m["foo"]} and {m["bar"]}', {
+                title: _.template("{m.foo} and {m.bar}", {
                     m: __alloyId61.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g

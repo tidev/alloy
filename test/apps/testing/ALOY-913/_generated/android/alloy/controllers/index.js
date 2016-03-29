@@ -32,7 +32,7 @@ function Controller() {
                 font: {
                     fontSize: "18dp"
                 },
-                text: _.template('{m["item"]}', {
+                text: _.template("{m.item}", {
                     m: __alloyId3.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g

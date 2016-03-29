@@ -25,7 +25,7 @@ function Controller() {
                     fontSize: "18px"
                 },
                 color: "black",
-                text: _.template('{m["name"]}', {
+                text: _.template("{m.name}", {
                     m: __alloyId3.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -34,7 +34,7 @@ function Controller() {
             __alloyId5.add(__alloyId7);
             var __alloyId9 = Ti.UI.createSwitch({
                 right: 5,
-                value: _.template('{m["status"]}', {
+                value: _.template("{m.status}", {
                     m: __alloyId3.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
