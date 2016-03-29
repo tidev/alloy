@@ -19,10 +19,14 @@ function Controller() {
             __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = {
                 properties: {
-                    title: _.template("{name}", __alloyId2.__transform, {
+                    title: _.template("{m.name}", {
+                        m: __alloyId2.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     }),
-                    modelId: _.template("{id}", __alloyId2.__transform, {
+                    modelId: _.template("{m.id}", {
+                        m: __alloyId2.__transform
+                    }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     })
                 }

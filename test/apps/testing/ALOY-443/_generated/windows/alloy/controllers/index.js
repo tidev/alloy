@@ -23,7 +23,9 @@ function Controller() {
                 width: Ti.UI.SIZE,
                 height: Ti.UI.SIZE,
                 color: "#000",
-                text: _.template("{title}, by {author}", __alloyId8.__transform, {
+                text: _.template('{m["title"]}, by {m["author"]}', {
+                    m: __alloyId8.__transform
+                }, {
                     interpolate: /\{([\s\S]+?)\}/g
                 })
             });
