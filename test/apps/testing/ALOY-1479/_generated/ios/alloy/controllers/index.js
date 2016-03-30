@@ -24,7 +24,7 @@ function Controller() {
                     }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     }),
-                    subtitle: _.template("{m.foo} {m.bar}", {
+                    subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
                         m: __alloyId11.__transform
                     }, {
                         interpolate: /\{([\s\S]+?)\}/g
@@ -51,7 +51,7 @@ function Controller() {
                     }, {
                         interpolate: /\{([\s\S]+?)\}/g
                     }),
-                    subtitle: _.template("{m.foo} {m.bar}", {
+                    subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
                         m: __alloyId20.__transform
                     }, {
                         interpolate: /\{([\s\S]+?)\}/g
@@ -230,7 +230,7 @@ function Controller() {
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId5.text = _.template("{m.foo} {m.bar}", {
+        $.__alloyId5.text = _.template("{m.foo} {m.bar} {m.missing}", {
             m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
@@ -244,7 +244,7 @@ function Controller() {
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId7.text = _.template("{m.foo} {m.bar}", {
+        $.__alloyId7.text = _.template("{m.foo} {m.bar} {m.missing}", {
             m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
