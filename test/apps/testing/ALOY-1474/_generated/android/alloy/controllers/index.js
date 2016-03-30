@@ -235,13 +235,13 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId57);
     var __alloyId66 = function() {
         var transformed = _.isFunction(Alloy.Models.transformless.transform) ? Alloy.Models.transformless.transform() : Alloy.Models.transformless.toJSON();
-        $.__alloyId8.text = _.template("{transformless.foo}", {
-            transformless: transformed
+        $.__alloyId8.text = _.template("{m.foo}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId9.text = _.template("{transformless.foo} and {transformless.bar}", {
-            transformless: transformed
+        $.__alloyId9.text = _.template("{m.foo} and {m.bar}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
@@ -249,13 +249,13 @@ function Controller() {
     Alloy.Models.transformless.on("fetch change destroy", __alloyId66);
     var __alloyId67 = function() {
         var transformed = _.isFunction(Alloy.Models.transformer.transform) ? Alloy.Models.transformer.transform() : Alloy.Models.transformer.toJSON();
-        $.__alloyId10.text = _.template("{transformer.foo}", {
-            transformer: transformed
+        $.__alloyId10.text = _.template("{m.foo}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId11.text = _.template("{transformer.foo} and {transformer.bar}", {
-            transformer: transformed
+        $.__alloyId11.text = _.template("{m.foo} and {m.bar}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });

@@ -518,7 +518,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					var parts = match[1].split('.'),
 						partsLen = parts.length,
 						modelVar,
-						templateStr = v;
+
+						// unwrap $ and/or name of the model
+						// https://jira.appcelerator.org/browse/ALOY-1479
+						// wrap in object to not error over missing attributes
+						// https://jira.appcelerator.org/browse/ALOY-1477
+						templateStr = v.replace(/\{(?:[^\}]+?\.)*([^\.\}]+?)\}/g, '{m.$1}');
 
 					// model binding
 					if (parts.length > 1) {
@@ -567,11 +572,6 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					}
 					// collection binding
 					else {
-
-						// wrap in object to not error over missing attributes
-						// https://jira.appcelerator.org/browse/ALOY-1477
-						templateStr = templateStr.replace(/\{([\s\S]+?)\}/g, '{m.$1}');
-
 						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 						var bindingStr = _.template("_.template('<%= templateStr %>', {m:<%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + "}, { interpolate: " + CONST.BIND_INTERPOLATE + " })", {
 							templateStr: templateStr,

@@ -139,23 +139,23 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId12 = function() {
         var transformed = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform() : Alloy.Models.appState.toJSON();
-        $.__alloyId3.backgroundColor = _.template("{appState.color}", {
-            appState: transformed
+        $.__alloyId3.backgroundColor = _.template("{m.color}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.counter.text = _.template("{appState.counter}", {
-            appState: transformed
+        $.counter.text = _.template("{m.counter}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.counter.color = _.template("{appState.color}", {
-            appState: transformed
+        $.counter.color = _.template("{m.color}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId6.backgroundColor = _.template("{appState.color}", {
-            appState: transformed
+        $.__alloyId6.backgroundColor = _.template("{m.color}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
