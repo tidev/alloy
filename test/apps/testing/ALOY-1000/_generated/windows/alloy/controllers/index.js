@@ -78,18 +78,18 @@ function Controller() {
     doClick ? $.addListener($.__views.genre, "click", doClick) : __defers["$.__views.genre!click!doClick"] = true;
     var __alloyId2 = function() {
         var transformed = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform() : Alloy.Models.book.toJSON();
-        $.title.text = _.template("{book.title}", {
-            book: transformed
+        $.title.text = _.template("{m.title}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.author.text = _.template("{book.author}", {
-            book: transformed
+        $.author.text = _.template("{m.author}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.genre.text = _.template("{book.genre}", {
-            book: transformed
+        $.genre.text = _.template("{m.genre}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });

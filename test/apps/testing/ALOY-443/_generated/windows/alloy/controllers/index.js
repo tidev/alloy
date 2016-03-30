@@ -23,7 +23,7 @@ function Controller() {
                 width: Ti.UI.SIZE,
                 height: Ti.UI.SIZE,
                 color: "#000",
-                text: _.template('{m["title"]}, by {m["author"]}', {
+                text: _.template("{m.title}, by {m.author}", {
                     m: __alloyId8.__transform
                 }, {
                     interpolate: /\{([\s\S]+?)\}/g
@@ -109,28 +109,28 @@ function Controller() {
     __alloyId12.on("fetch destroy change add remove reset", __alloyId13);
     var __alloyId14 = function() {
         var transformed = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform() : Alloy.Models.book.toJSON();
-        $.__alloyId2.text = _.template("{book.title}", {
-            book: transformed
+        $.__alloyId2.text = _.template("{m.title}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId3.text = _.template("Written by {book.author}", {
-            book: transformed
+        $.__alloyId3.text = _.template("Written by {m.author}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId5.text = _.template("{book.title}", {
-            book: transformed
+        $.__alloyId5.text = _.template("{m.title}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId6.text = _.template("Written by {book.author}", {
-            book: transformed
+        $.__alloyId6.text = _.template("Written by {m.author}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });
-        $.__alloyId7.text = _.template("Title: {book.title}, by {book.author} :)", {
-            book: transformed
+        $.__alloyId7.text = _.template("Title: {m.title}, by {m.author} :)", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });

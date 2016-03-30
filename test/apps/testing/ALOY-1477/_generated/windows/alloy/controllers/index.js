@@ -19,7 +19,7 @@ function Controller() {
             __alloyId9.__transform = _.isFunction(__alloyId9.transform) ? __alloyId9.transform() : __alloyId9.toJSON();
             var __alloyId11 = {
                 properties: {
-                    title: _.template('{m["id"]} - {m["title"]}', {
+                    title: _.template("{m.id} - {m.title}", {
                         m: __alloyId9.__transform
                     }, {
                         interpolate: /\{([\s\S]+?)\}/g
@@ -85,8 +85,8 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId6);
     var __alloyId15 = function() {
         var transformed = _.isFunction(Alloy.Models.mymodel.transform) ? Alloy.Models.mymodel.transform() : Alloy.Models.mymodel.toJSON();
-        $.__alloyId4.text = _.template("{mymodel.id} - {mymodel.title}", {
-            mymodel: transformed
+        $.__alloyId4.text = _.template("{m.id} - {m.title}", {
+            m: transformed
         }, {
             interpolate: /\{([\s\S]+?)\}/g
         });

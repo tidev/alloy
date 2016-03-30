@@ -29,7 +29,7 @@ function Controller() {
             }, {
                 interpolate: /\{([\s\S]+?)\}/g
             }),
-            subtitle: _.template("{m.foo} {m.bar}", {
+            subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
                 m: $model.__transform
             }, {
                 interpolate: /\{([\s\S]+?)\}/g
