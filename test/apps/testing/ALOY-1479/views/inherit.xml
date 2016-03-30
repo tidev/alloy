@@ -1,0 +1,3 @@
+<Alloy>
+  <ListItem title="{foo}" subtitle="{foo} {bar}" />
+</Alloy>

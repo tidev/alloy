@@ -795,7 +795,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	template.preCode += cCode.pre;
 
 	// process the bindingsMap, if it contains any data bindings
-	var bTemplate = "$.<%= id %>.<%= prop %>=_.template('<%= tplVal %>', {<%= mname %>:transformed}, { interpolate: " + CONST.BIND_INTERPOLATE + " });";
+	var bTemplate = "$.<%= id %>.<%= prop %>=_.template('<%= tplVal %>', {m:transformed}, { interpolate: " + CONST.BIND_INTERPOLATE + " });";
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping,modelVar) {
@@ -816,7 +816,6 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				bCode += _.template(bTemplate, {
 					id: binding.id,
 					prop: binding.prop,
-					mname: binding.mname,
 					tplVal: binding.tplVal
 				});
 			});
