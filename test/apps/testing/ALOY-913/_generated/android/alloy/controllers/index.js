@@ -32,11 +32,7 @@ function Controller() {
                 font: {
                     fontSize: "18dp"
                 },
-                text: _.template("{m.item}", {
-                    m: __alloyId3.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                text: __alloyId3.__transform.item
             });
             __alloyId4.add(__alloyId5);
             var __alloyId6 = Ti.UI.createTextField({

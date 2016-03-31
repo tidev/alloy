@@ -19,11 +19,7 @@ function Controller() {
             __alloyId9.__transform = _.isFunction(__alloyId9.transform) ? __alloyId9.transform() : __alloyId9.toJSON();
             var __alloyId11 = {
                 properties: {
-                    title: _.template("{m.id} - {m.title}", {
-                        m: __alloyId9.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    })
+                    title: __alloyId9.__transform.id + " - " + __alloyId9.__transform.title
                 }
             };
             __alloyId8.push(__alloyId11);
@@ -84,17 +80,13 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId6);
     var __alloyId15 = function() {
-        var transformed = _.isFunction(Alloy.Models.mymodel.transform) ? Alloy.Models.mymodel.transform() : Alloy.Models.mymodel.toJSON();
-        $.__alloyId4.text = _.template("{m.id} - {m.title}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["mymodel"].__transform = _.isFunction(Alloy["Models"]["mymodel"].transform) ? Alloy["Models"]["mymodel"].transform() : Alloy["Models"]["mymodel"].toJSON();
+        $.__alloyId4.text = Alloy["Models"]["mymodel"]["__transform"]["id"] + " - " + Alloy["Models"]["mymodel"]["__transform"]["title"];
     };
-    Alloy.Models.mymodel.on("fetch change destroy", __alloyId15);
+    Alloy["Models"]["mymodel"].on("fetch change destroy", __alloyId15);
     exports.destroy = function() {
         __alloyId12 && __alloyId12.off("fetch destroy change add remove reset", __alloyId13);
-        Alloy.Models.mymodel && Alloy.Models.mymodel.off("fetch change destroy", __alloyId15);
+        Alloy["Models"]["mymodel"] && Alloy["Models"]["mymodel"].off("fetch change destroy", __alloyId15);
     };
     _.extend($, $.__views);
     Alloy.Models.mymodel.set({

@@ -21,11 +21,7 @@ function Controller() {
             rows.push(__alloyId5);
             var __alloyId7 = Ti.UI.createLabel({
                 left: 5,
-                text: _.template("{m.username}", {
-                    m: __alloyId3.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                }),
+                text: __alloyId3.__transform.username,
                 color: "red"
             });
             __alloyId5.add(__alloyId7);
@@ -45,11 +41,7 @@ function Controller() {
             rows.push(__alloyId12);
             var __alloyId14 = Ti.UI.createLabel({
                 left: 5,
-                text: _.template("{m.username}", {
-                    m: __alloyId10.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                }),
+                text: __alloyId10.__transform.username,
                 color: "blue"
             });
             __alloyId12.add(__alloyId14);

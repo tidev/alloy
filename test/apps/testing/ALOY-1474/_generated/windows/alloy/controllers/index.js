@@ -18,11 +18,7 @@ function Controller() {
             var __alloyId16 = models[i];
             __alloyId16.__transform = _.isFunction(__alloyId16.transform) ? __alloyId16.transform() : __alloyId16.toJSON();
             var __alloyId18 = {
-                title: _.template("{m.foo}", {
-                    m: __alloyId16.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId16.__transform.foo
             };
             __alloyId17.push(__alloyId18);
             __alloyId14.push(__alloyId18);
@@ -39,11 +35,7 @@ function Controller() {
             var __alloyId25 = models[i];
             __alloyId25.__transform = _.isFunction(__alloyId25.transform) ? __alloyId25.transform() : __alloyId25.toJSON();
             var __alloyId27 = {
-                title: _.template("{m.foo} and {m.bar}", {
-                    m: __alloyId25.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId25.__transform.foo + " and " + __alloyId25.__transform.bar
             };
             __alloyId26.push(__alloyId27);
             __alloyId23.push(__alloyId27);
@@ -60,11 +52,7 @@ function Controller() {
             var __alloyId34 = models[i];
             __alloyId34.__transform = myTransformer(__alloyId34);
             var __alloyId36 = {
-                title: _.template("{m.foo} and {m.bar}", {
-                    m: __alloyId34.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId34.__transform.foo + " and " + __alloyId34.__transform.bar
             };
             __alloyId35.push(__alloyId36);
             __alloyId32.push(__alloyId36);
@@ -81,11 +69,7 @@ function Controller() {
             var __alloyId43 = models[i];
             __alloyId43.__transform = _.isFunction(__alloyId43.transform) ? __alloyId43.transform() : __alloyId43.toJSON();
             var __alloyId45 = {
-                title: _.template("{m.foo}", {
-                    m: __alloyId43.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId43.__transform.foo
             };
             __alloyId44.push(__alloyId45);
             __alloyId41.push(__alloyId45);
@@ -102,11 +86,7 @@ function Controller() {
             var __alloyId52 = models[i];
             __alloyId52.__transform = _.isFunction(__alloyId52.transform) ? __alloyId52.transform() : __alloyId52.toJSON();
             var __alloyId54 = {
-                title: _.template("{m.foo} and {m.bar}", {
-                    m: __alloyId52.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId52.__transform.foo + " and " + __alloyId52.__transform.bar
             };
             __alloyId53.push(__alloyId54);
             __alloyId50.push(__alloyId54);
@@ -123,11 +103,7 @@ function Controller() {
             var __alloyId61 = models[i];
             __alloyId61.__transform = myTransformer(__alloyId61);
             var __alloyId63 = {
-                title: _.template("{m.foo} and {m.bar}", {
-                    m: __alloyId61.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId61.__transform.foo + " and " + __alloyId61.__transform.bar
             };
             __alloyId62.push(__alloyId63);
             __alloyId59.push(__alloyId63);
@@ -234,33 +210,17 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId57);
     var __alloyId66 = function() {
-        var transformed = _.isFunction(Alloy.Models.transformless.transform) ? Alloy.Models.transformless.transform() : Alloy.Models.transformless.toJSON();
-        $.__alloyId8.text = _.template("{m.foo}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.__alloyId9.text = _.template("{m.foo} and {m.bar}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["transformless"].__transform = _.isFunction(Alloy["Models"]["transformless"].transform) ? Alloy["Models"]["transformless"].transform() : Alloy["Models"]["transformless"].toJSON();
+        $.__alloyId8.text = Alloy["Models"]["transformless"]["__transform"]["foo"];
+        $.__alloyId9.text = Alloy["Models"]["transformless"]["__transform"]["foo"] + " and " + Alloy["Models"]["transformless"]["__transform"]["bar"];
     };
-    Alloy.Models.transformless.on("fetch change destroy", __alloyId66);
+    Alloy["Models"]["transformless"].on("fetch change destroy", __alloyId66);
     var __alloyId67 = function() {
-        var transformed = _.isFunction(Alloy.Models.transformer.transform) ? Alloy.Models.transformer.transform() : Alloy.Models.transformer.toJSON();
-        $.__alloyId10.text = _.template("{m.foo}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.__alloyId11.text = _.template("{m.foo} and {m.bar}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["transformer"].__transform = _.isFunction(Alloy["Models"]["transformer"].transform) ? Alloy["Models"]["transformer"].transform() : Alloy["Models"]["transformer"].toJSON();
+        $.__alloyId10.text = Alloy["Models"]["transformer"]["__transform"]["foo"];
+        $.__alloyId11.text = Alloy["Models"]["transformer"]["__transform"]["foo"] + " and " + Alloy["Models"]["transformer"]["__transform"]["bar"];
     };
-    Alloy.Models.transformer.on("fetch change destroy", __alloyId67);
+    Alloy["Models"]["transformer"].on("fetch change destroy", __alloyId67);
     exports.destroy = function() {
         __alloyId19 && __alloyId19.off("fetch destroy change add remove reset", __alloyId20);
         __alloyId28 && __alloyId28.off("fetch destroy change add remove reset", __alloyId29);
@@ -268,8 +228,8 @@ function Controller() {
         __alloyId46 && __alloyId46.off("fetch destroy change add remove reset", __alloyId47);
         __alloyId55 && __alloyId55.off("fetch destroy change add remove reset", __alloyId56);
         __alloyId64 && __alloyId64.off("fetch destroy change add remove reset", __alloyId65);
-        Alloy.Models.transformless && Alloy.Models.transformless.off("fetch change destroy", __alloyId66);
-        Alloy.Models.transformer && Alloy.Models.transformer.off("fetch change destroy", __alloyId67);
+        Alloy["Models"]["transformless"] && Alloy["Models"]["transformless"].off("fetch change destroy", __alloyId66);
+        Alloy["Models"]["transformer"] && Alloy["Models"]["transformer"].off("fetch change destroy", __alloyId67);
     };
     _.extend($, $.__views);
     Alloy.Models.transformless.set({

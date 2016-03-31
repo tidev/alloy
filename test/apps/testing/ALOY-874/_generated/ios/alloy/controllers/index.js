@@ -18,11 +18,7 @@ function Controller() {
             var __alloyId10 = models[i];
             __alloyId10.__transform = _.isFunction(__alloyId10.transform) ? __alloyId10.transform() : __alloyId10.toJSON();
             var __alloyId12 = Ti.UI.createTableViewRow({
-                title: _.template("{m.title}", {
-                    m: __alloyId10.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId10.__transform.title
             });
             rows.push(__alloyId12);
         }
@@ -39,11 +35,7 @@ function Controller() {
             __alloyId26.__transform = _.isFunction(__alloyId26.transform) ? __alloyId26.transform() : __alloyId26.toJSON();
             var __alloyId28 = {
                 properties: {
-                    title: _.template("{m.title}", {
-                        m: __alloyId26.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    })
+                    title: __alloyId26.__transform.title
                 }
             };
             __alloyId19.push(__alloyId28);

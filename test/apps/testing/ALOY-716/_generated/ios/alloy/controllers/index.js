@@ -33,11 +33,7 @@ function Controller() {
                     fontSize: "28dp",
                     fontWeight: "bold"
                 },
-                text: _.template("	{m.	title	}", {
-                    m: __alloyId1.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                text: "	" + __alloyId1.__transform.title
             });
             __alloyId3.add(__alloyId5);
             var __alloyId7 = Ti.UI.createLabel({
@@ -51,22 +47,14 @@ function Controller() {
                     fontSize: "16dp",
                     fontWeight: "normal"
                 },
-                text: _.template("		  {m.subtitle}", {
-                    m: __alloyId1.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                text: "		  " + __alloyId1.__transform.subtitle
             });
             __alloyId3.add(__alloyId7);
             var __alloyId9 = Ti.UI.createImageView({
                 right: "10dp",
                 height: "48dp",
                 width: "48dp",
-                image: _.template("{m. image }", {
-                    m: __alloyId1.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                image: __alloyId1.__transform.image
             });
             __alloyId3.add(__alloyId9);
         }

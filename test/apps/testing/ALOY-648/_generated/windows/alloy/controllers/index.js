@@ -19,11 +19,7 @@ function Controller() {
             __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = {
                 properties: {
-                    title: _.template('{m["title"]}', {
-                        m: __alloyId2.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    })
+                    title: __alloyId2.__transform.title
                 }
             };
             __alloyId1.push(__alloyId4);

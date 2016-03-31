@@ -23,7 +23,7 @@ module.exports = function($) {
 					id: "pullText",
 					height: Ti.UI.SIZE,
 					width: Ti.UI.SIZE,
-					bottom: "10"
+					bottom: 10
 				}
 			});
 		}
