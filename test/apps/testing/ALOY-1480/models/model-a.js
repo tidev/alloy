@@ -4,7 +4,7 @@ exports.definition = {
       transform: function() {
         var transformed = this.toJSON();
 
-        transformed.subject = transformed.subject.toUpperCase();
+        transformed.subject && (transformed.subject = transformed.subject.toUpperCase());
         transformed.font = {
           fontSize: 20,
           fontWeight: 'bold'
