@@ -714,7 +714,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		} else {
 			CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] = null;
 		}
-        
+
 		// make sure we have a Window, TabGroup, or SplitWindow
 		var rootChildren = U.XML.getElementsFromNodes(docRoot.childNodes);
 		if (viewName === 'index' && !dirname) {
@@ -794,30 +794,27 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
 
-	// process the bindingsMap, if it contains any data bindings
-	var bTemplate = "$.<%= id %>.<%= prop %>=_.template('<%= tplVal %>', {m:transformed}, { interpolate: " + CONST.BIND_INTERPOLATE + " });";
-
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping,modelVar) {
 
 		// open the model binding handler
 		var handlerVar = CU.generateUniqueId();
-		template.viewCode += 'var ' + handlerVar + '=function() {';
-		template.viewCode += 'var transformed=_.isFunction(' + modelVar + '.transform)?' + modelVar + '.transform():' + modelVar + '.toJSON();';
+		template.viewCode += 'var ' + handlerVar + ' = function() {';
+
+		_.each(mapping.models, function(modelVar) {
+			template.viewCode += modelVar + '.__transform = _.isFunction(' + modelVar + '.transform) ? ' + modelVar + '.transform() : ' + modelVar + '.toJSON();';
+		});
+
 		CU.destroyCode += modelVar + " && " + ((state.parentFormFactor) ? 'is' + U.ucfirst(state.parentFormFactor) : '' ) +
 			modelVar + ".off('" + CONST.MODEL_BINDING_EVENTS + "'," + handlerVar + ");";
 
 		// for each specific conditional within the bindings map....
-		_.each(_.groupBy(mapping, function(b){return b.condition;}), function(bindings,condition) {
+		_.each(_.groupBy(mapping.bindings, function(b){return b.condition;}), function(bindings,condition) {
 			var bCode = '';
 
 			// for each binding belonging to this model/conditional pair...
 			_.each(bindings, function(binding) {
-				bCode += _.template(bTemplate, {
-					id: binding.id,
-					prop: binding.prop,
-					tplVal: binding.tplVal
-				});
+				bCode += "$." + binding.id + "." + binding.prop + " = " + binding.val + ";";
 			});
 
 			// if this is a legit conditional, wrap the binding code in it

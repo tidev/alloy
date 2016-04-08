@@ -30,11 +30,7 @@ function Controller() {
                     fontWeight: "bold"
                 },
                 touchEnabled: false,
-                text: _.template("{m.text}", {
-                    m: __alloyId1.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                text: __alloyId1.__transform.text
             });
             __alloyId3.add(__alloyId5);
         }

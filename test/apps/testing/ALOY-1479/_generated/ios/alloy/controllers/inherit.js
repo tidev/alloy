@@ -24,16 +24,8 @@ function Controller() {
     var exports = {};
     $.__views.inherit = {
         properties: {
-            title: _.template("{m.foo}", {
-                m: $model.__transform
-            }, {
-                interpolate: /\{([\s\S]+?)\}/g
-            }),
-            subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
-                m: $model.__transform
-            }, {
-                interpolate: /\{([\s\S]+?)\}/g
-            }),
+            title: $model.__transform.foo,
+            subtitle: $model.__transform.foo + " " + $model.__transform.bar + " " + $model.__transform.missing,
             id: "inherit"
         }
     };

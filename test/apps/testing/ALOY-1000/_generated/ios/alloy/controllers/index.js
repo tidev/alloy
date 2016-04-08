@@ -77,26 +77,14 @@ function Controller() {
     $.__views.theView.add($.__views.genre);
     doClick ? $.addListener($.__views.genre, "click", doClick) : __defers["$.__views.genre!click!doClick"] = true;
     var __alloyId2 = function() {
-        var transformed = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform() : Alloy.Models.book.toJSON();
-        $.title.text = _.template("{m.title}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.author.text = _.template("{m.author}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.genre.text = _.template("{m.genre}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["book"].__transform = _.isFunction(Alloy["Models"]["book"].transform) ? Alloy["Models"]["book"].transform() : Alloy["Models"]["book"].toJSON();
+        $.title.text = Alloy["Models"]["book"]["__transform"]["title"];
+        $.author.text = Alloy["Models"]["book"]["__transform"]["author"];
+        $.genre.text = Alloy["Models"]["book"]["__transform"]["genre"];
     };
-    Alloy.Models.book.on("fetch change destroy", __alloyId2);
+    Alloy["Models"]["book"].on("fetch change destroy", __alloyId2);
     exports.destroy = function() {
-        Alloy.Models.book && Alloy.Models.book.off("fetch change destroy", __alloyId2);
+        Alloy["Models"]["book"] && Alloy["Models"]["book"].off("fetch change destroy", __alloyId2);
     };
     _.extend($, $.__views);
     var model = Alloy.Models.book;

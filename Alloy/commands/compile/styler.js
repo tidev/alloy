@@ -16,7 +16,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /\{([^:}]+)\}(?!\})/;
+var BINDING_SPLIT_REGEX = /(\{[^:}]+\}(?!\}))/;
+var BINDING_REFERENCE_REGEX = /^\{([^:}]+)\}$/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
@@ -424,8 +425,7 @@ exports.processStyle = function(_style, _state) {
 };
 
 exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
-	var bindingRegex = BINDING_REGEX,
-		styleCollection = [],
+	var styleCollection = [],
 		lastObj = {},
 		elementName = apiName.split('.').pop();
 
@@ -512,74 +512,139 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	// substitutions for binding
 	_.each(styleCollection, function(style) {
 		_.each(style.style, function(v,k) {
-			if (_.isString(v)) {
-				var match = v.match(bindingRegex);
-				if (match !== null) {
-					var parts = match[1].split('.'),
-						partsLen = parts.length,
-						modelVar,
 
-						// unwrap $ and/or name of the model
-						// https://jira.appcelerator.org/browse/ALOY-1479
-						// wrap in object to not error over missing attributes
-						// https://jira.appcelerator.org/browse/ALOY-1477
-						templateStr = v.replace(/\{(?:[^\}]+?\.)*([^\.\}]+?)\}/g, '{m.$1}');
+			if (!_.isString(v)) {
+				return;
+			}
 
-					// model binding
-					if (parts.length > 1) {
+			var bindingStrParts = v.split(BINDING_SPLIT_REGEX);
 
-						if (CU.models.length !== 0) {
-							if (partsLen > 3 ||
-								(parts[0] !== '$' && !_.contains(CU.models, parts[0]))) {
-								U.die([
-									'Attempt to reference the deep object reference : "' + match[1] + '".',
-									'Instead, please map the object property to an attribute of the model.'
-								]);
-							}
-						}
+			if (bindingStrParts.length <= 1) {
+				return;
+			}
 
-						// are we bound to a global or controller-specific model?
-						modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
-						var attr = parts[0] === '$' ? parts[2] : parts[1];
+			var collectionModelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 
-						// ensure that the bindings for this model have been initialized
-						if (!_.isArray(exports.bindingsMap[modelVar])) {
-							exports.bindingsMap[modelVar] = [];
-						}
+			var bindsModels = [];
+			var bindsCollection = false;
 
-						// create the binding object
-						var bindingObj = {
-							id: id,
-							prop: k,
-							attr: attr,
-							mname: parts[0] === '$' ? parts[1] : parts[0],
-							tplVal: templateStr
-						};
+			var bindingExpParts = [];
 
-						// make sure bindings are wrapped in any conditionals
-						// relevant to the curent style
-						if (theState.condition) {
-							bindingObj.condition = theState.condition;
-						}
+			bindingStrParts.forEach(function(part, i) {
 
-						// add this property to the global bindings map for the
-						// current controller component
-						exports.bindingsMap[modelVar].push(bindingObj);
+				// empty string
+				if (part === '') {
+					return;
+				}
 
-						// since this property is data bound, don't include it in
-						// the style statically
-						delete style.style[k];
-					}
-					// collection binding
-					else {
-						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var bindingStr = _.template("_.template('<%= templateStr %>', {m:<%= modelVar %>." + CONST.BIND_TRANSFORM_VAR + "}, { interpolate: " + CONST.BIND_INTERPOLATE + " })", {
-							templateStr: templateStr,
-							modelVar: modelVar
-						});
-						style.style[k] = STYLE_EXPR_PREFIX + bindingStr;
+				var partMatch = part.match(BINDING_REFERENCE_REGEX);
+
+				// regular string
+				if (!partMatch) {
+
+					// escape single quote: ALOY-1478
+					bindingExpParts.push("'" + part.replace(/'/g, "\\'") + "'");
+
+					return;
+				}
+
+				var reference = partMatch[1].trim(); // trim: ALOY-716
+				var referencePath = toPath(reference);
+
+				var attribute, modelVar;
+
+				// collection binding
+				if (referencePath.length === 1) {
+					bindsCollection = true;
+				}
+
+				// instance model binding
+				else if (referencePath[0] === '$') {
+					attribute = referencePath.splice(2, referencePath.length);
+				}
+
+				// global model binding
+				else if (_.contains(CU.models, referencePath[0])) {
+					attribute = referencePath.splice(1, referencePath.length);
+					referencePath.unshift('Alloy', 'Models');
+				}
+
+				// collection binding (deep)
+				else {
+					bindsCollection = true;
+				}
+
+				// model binding
+				if (attribute !== undefined) {
+					modelVar = fromPath(referencePath);
+					reference = fromPath(referencePath.concat(CONST.BIND_TRANSFORM_VAR, attribute));
+
+					if (!_.contains(bindsModels, modelVar)) {
+						bindsModels.push(modelVar);
 					}
 				}
+
+				// collection binding
+				else {
+					reference = collectionModelVar + '.' + CONST.BIND_TRANSFORM_VAR + (reference[0] === '[' ? '' : '.') + reference;
+				}
+
+				bindingExpParts.push(reference);
+
+			});
+
+			if (!bindsCollection && bindsModels.length === 0) {
+				return;
+			}
+
+			if (bindsCollection && bindsModels.length > 0) {
+				U.die('Attempt to mix model (' + bindsModels.join(', ') + ') and collection (' + collectionModelVar + ') binding in: ' + v);
+			}
+
+			var bindingExp = bindingExpParts.join(' + ');
+
+			if (bindsCollection) {
+				style.style[k] = STYLE_EXPR_PREFIX + bindingExp;
+			}
+
+			if (bindsModels.length > 0) {
+
+				bindsModels.forEach(function(modelVar) {
+
+					// ensure that the bindings for this model have been initialized
+					if (!exports.bindingsMap[modelVar]) {
+						exports.bindingsMap[modelVar] = {
+							models: bindsModels,
+							bindings: []
+						};
+					}
+
+					// ensure that mix use of models contains all
+					else {
+						exports.bindingsMap[modelVar].models = _.union(exports.bindingsMap[modelVar].models, bindsModels);
+					}
+
+					// create the binding object
+					var bindingObj = {
+						id: id,
+						prop: k,
+						val: bindingExp
+					};
+
+					// make sure bindings are wrapped in any conditionals
+					// relevant to the curent style
+					if (theState.condition) {
+						bindingObj.condition = theState.condition;
+					}
+
+					// add this property to the global bindings map for the
+					// current controller component
+					exports.bindingsMap[modelVar].bindings.push(bindingObj);
+				});
+
+				// since this property is data bound, don't include it in
+				// the style statically
+				delete style.style[k];
 			}
 		});
 	});
@@ -623,4 +688,25 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 function getCacheFilePath(appPath, hash) {
 	return path.join(appPath, '..', CONST.DIR.BUILD, 'global_style_cache_' + hash + '.json');
+}
+
+// source: https://github.com/lodash/lodash/blob/3.8.1-npm-packages/lodash._topath/index.js
+function toPath(value) {
+	var result = [];
+	value.replace(/[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g, function(match, number, quote, string) {
+		result.push(quote ? string.replace(/\\(\\)?/g, '$1') : (number || match));
+	});
+	return result;
+}
+
+function fromPath(path) {
+	var result = path[0];
+
+	if (path.length > 1) {
+		result += '[' + path.slice(1).map(function(string) {
+			return "'" + string.replace(/'/g, "\\'") + "'";
+		}).join('][') + ']';
+	}
+
+	return result;
 }

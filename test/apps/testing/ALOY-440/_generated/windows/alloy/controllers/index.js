@@ -21,11 +21,7 @@ function Controller() {
             var __alloyId5 = models[i];
             __alloyId5.__transform = _.isFunction(__alloyId5.transform) ? __alloyId5.transform() : __alloyId5.toJSON();
             $.__views.__alloyId6 = Ti.UI.createPickerRow({
-                title: _.template('{m["name"]}', {
-                    m: __alloyId5.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                }),
+                title: __alloyId5.__transform.name,
                 id: "__alloyId6"
             });
             rows.push($.__views.__alloyId6);
@@ -47,11 +43,7 @@ function Controller() {
             var __alloyId9 = models[i];
             __alloyId9.__transform = doTransform(__alloyId9);
             $.__views.__alloyId10 = Ti.UI.createPickerRow({
-                title: _.template('{m["color"]}', {
-                    m: __alloyId9.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                }),
+                title: __alloyId9.__transform.color,
                 id: "__alloyId10"
             });
             rows.push($.__views.__alloyId10);
@@ -115,19 +107,15 @@ function Controller() {
         __alloyId11 && __alloyId11.off("fetch destroy change add remove reset", __alloyId12);
     };
     _.extend($, $.__views);
-    Ti.API.info("seeded: " + Ti.App.Properties.hasProperty("seeded"));
-    if (!Ti.App.Properties.hasProperty("seeded")) {
-        var fruits = [ "apple", "banana", "cherry", "blueberry", "orange", "pear" ];
-        var colors = [ "red", "yellow", "blue", "orange", "green", "white" ];
-        for (var i = 1, j = fruits.length; j > i; i++) {
-            Alloy.createModel("fruits", {
-                name: fruits[i]
-            }).save();
-            Alloy.createModel("colors", {
-                color: colors[i]
-            }).save();
-        }
-        Ti.App.Properties.setString("seeded", "yes");
+    var fruits = [ "apple", "banana", "cherry", "blueberry", "orange", "pear" ];
+    var colors = [ "red", "yellow", "blue", "orange", "green", "white" ];
+    for (var i = 1, j = fruits.length; j > i; i++) {
+        Alloy.createModel("fruits", {
+            name: fruits[i]
+        }).save();
+        Alloy.createModel("colors", {
+            color: colors[i]
+        }).save();
     }
     Alloy.Collections.fruits.fetch();
     Alloy.Collections.colors.fetch();

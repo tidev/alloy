@@ -19,16 +19,8 @@ function Controller() {
             __alloyId11.__transform = _.isFunction(__alloyId11.transform) ? __alloyId11.transform() : __alloyId11.toJSON();
             var __alloyId13 = {
                 properties: {
-                    title: _.template("{m.foo}", {
-                        m: __alloyId11.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    }),
-                    subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
-                        m: __alloyId11.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    })
+                    title: __alloyId11.__transform.foo,
+                    subtitle: __alloyId11.__transform.foo + " " + __alloyId11.__transform.bar + " " + __alloyId11.__transform.missing
                 }
             };
             __alloyId10.push(__alloyId13);
@@ -46,16 +38,8 @@ function Controller() {
             __alloyId20.__transform = _.isFunction(__alloyId20.transform) ? __alloyId20.transform() : __alloyId20.toJSON();
             var __alloyId22 = {
                 properties: {
-                    title: _.template("{m.foo}", {
-                        m: __alloyId20.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    }),
-                    subtitle: _.template("{m.foo} {m.bar} {m.missing}", {
-                        m: __alloyId20.__transform
-                    }, {
-                        interpolate: /\{([\s\S]+?)\}/g
-                    })
+                    title: __alloyId20.__transform.foo,
+                    subtitle: __alloyId20.__transform.foo + " " + __alloyId20.__transform.bar + " " + __alloyId20.__transform.missing
                 }
             };
             __alloyId19.push(__alloyId22);
@@ -224,40 +208,24 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId37);
     var __alloyId48 = function() {
-        var transformed = _.isFunction($.modelinstance.transform) ? $.modelinstance.transform() : $.modelinstance.toJSON();
-        $.__alloyId4.text = _.template("{m.foo}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.__alloyId5.text = _.template("{m.foo} {m.bar} {m.missing}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        $["modelinstance"].__transform = _.isFunction($["modelinstance"].transform) ? $["modelinstance"].transform() : $["modelinstance"].toJSON();
+        $.__alloyId4.text = $["modelinstance"]["__transform"]["foo"];
+        $.__alloyId5.text = $["modelinstance"]["__transform"]["foo"] + " " + $["modelinstance"]["__transform"]["bar"] + " " + $["modelinstance"]["__transform"]["missing"];
     };
-    $.modelinstance.on("fetch change destroy", __alloyId48);
+    $["modelinstance"].on("fetch change destroy", __alloyId48);
     var __alloyId49 = function() {
-        var transformed = _.isFunction(Alloy.Models.mymodel.transform) ? Alloy.Models.mymodel.transform() : Alloy.Models.mymodel.toJSON();
-        $.__alloyId6.text = _.template("{m.foo}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.__alloyId7.text = _.template("{m.foo} {m.bar} {m.missing}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["mymodel"].__transform = _.isFunction(Alloy["Models"]["mymodel"].transform) ? Alloy["Models"]["mymodel"].transform() : Alloy["Models"]["mymodel"].toJSON();
+        $.__alloyId6.text = Alloy["Models"]["mymodel"]["__transform"]["foo"];
+        $.__alloyId7.text = Alloy["Models"]["mymodel"]["__transform"]["foo"] + " " + Alloy["Models"]["mymodel"]["__transform"]["bar"] + " " + Alloy["Models"]["mymodel"]["__transform"]["missing"];
     };
-    Alloy.Models.mymodel.on("fetch change destroy", __alloyId49);
+    Alloy["Models"]["mymodel"].on("fetch change destroy", __alloyId49);
     exports.destroy = function() {
         __alloyId14 && __alloyId14.off("fetch destroy change add remove reset", __alloyId15);
         __alloyId23 && __alloyId23.off("fetch destroy change add remove reset", __alloyId24);
         __alloyId34 && __alloyId34.off("fetch destroy change add remove reset", __alloyId35);
         __alloyId45 && __alloyId45.off("fetch destroy change add remove reset", __alloyId46);
-        $.modelinstance && $.modelinstance.off("fetch change destroy", __alloyId48);
-        Alloy.Models.mymodel && Alloy.Models.mymodel.off("fetch change destroy", __alloyId49);
+        $["modelinstance"] && $["modelinstance"].off("fetch change destroy", __alloyId48);
+        Alloy["Models"]["mymodel"] && Alloy["Models"]["mymodel"].off("fetch change destroy", __alloyId49);
     };
     _.extend($, $.__views);
     $.index.open();

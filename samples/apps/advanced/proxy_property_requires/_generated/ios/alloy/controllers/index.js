@@ -52,13 +52,13 @@ function Controller() {
     $.__views.staticRow1 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow1",
-        title: 1
+        title: "one"
     });
     __alloyId6.push($.__views.staticRow1);
     $.__views.staticRow2 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow2",
-        title: 2
+        title: "two"
     });
     __alloyId6.push($.__views.staticRow2);
     $.__views.staticWidgetSection = Alloy.createWidget("com.foo.widget", "section", {
@@ -88,7 +88,7 @@ function Controller() {
     $.__views.staticRow3 = Ti.UI.createTableViewRow({
         height: "50dp",
         id: "staticRow3",
-        title: 3
+        title: "three"
     });
     __alloyId6.push($.__views.staticRow3);
     $.__views.staticTable = Ti.UI.createTableView({

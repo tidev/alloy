@@ -18,11 +18,7 @@ function Controller() {
             var __alloyId7 = models[i];
             __alloyId7.__transform = _.isFunction(__alloyId7.transform) ? __alloyId7.transform() : __alloyId7.toJSON();
             var __alloyId9 = Ti.UI.createTableViewRow({
-                title: _.template("{m.name}", {
-                    m: __alloyId7.__transform
-                }, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId7.__transform.name
             });
             rows.push(__alloyId9);
         }
@@ -138,32 +134,16 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId12 = function() {
-        var transformed = _.isFunction(Alloy.Models.appState.transform) ? Alloy.Models.appState.transform() : Alloy.Models.appState.toJSON();
-        $.__alloyId3.backgroundColor = _.template("{m.color}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.counter.text = _.template("{m.counter}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.counter.color = _.template("{m.color}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
-        $.__alloyId6.backgroundColor = _.template("{m.color}", {
-            m: transformed
-        }, {
-            interpolate: /\{([\s\S]+?)\}/g
-        });
+        Alloy["Models"]["appState"].__transform = _.isFunction(Alloy["Models"]["appState"].transform) ? Alloy["Models"]["appState"].transform() : Alloy["Models"]["appState"].toJSON();
+        $.__alloyId3.backgroundColor = Alloy["Models"]["appState"]["__transform"]["color"];
+        $.counter.text = Alloy["Models"]["appState"]["__transform"]["counter"];
+        $.counter.color = Alloy["Models"]["appState"]["__transform"]["color"];
+        $.__alloyId6.backgroundColor = Alloy["Models"]["appState"]["__transform"]["color"];
     };
-    Alloy.Models.appState.on("fetch change destroy", __alloyId12);
+    Alloy["Models"]["appState"].on("fetch change destroy", __alloyId12);
     exports.destroy = function() {
         __alloyId10 && __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
-        Alloy.Models.appState && Alloy.Models.appState.off("fetch change destroy", __alloyId12);
+        Alloy["Models"]["appState"] && Alloy["Models"]["appState"].off("fetch change destroy", __alloyId12);
     };
     _.extend($, $.__views);
     var appState = Alloy.Models.appState;
