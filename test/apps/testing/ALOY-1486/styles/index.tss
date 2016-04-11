@@ -1,0 +1,8 @@
+'#index': {
+	fullscreen: false,
+	exitOnClose: true
+}
+"Window": {
+	orientationModes: [Titanium.UI.PORTRAIT],
+	backgroundColor: "blue"
+}
