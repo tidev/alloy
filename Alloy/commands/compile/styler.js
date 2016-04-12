@@ -446,6 +446,12 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				formFactor: ''
 			};
 
+			_.each(style.style, function(val, key) {
+				if (_.isArray(val) && lastObj.hasOwnProperty(key)) {
+					delete lastObj[key];
+				}
+			});
+
 			if (style.queries) {
 				// handle platform device query
 				// - Make compile time comparison if possible
