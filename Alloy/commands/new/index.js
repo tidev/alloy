@@ -92,8 +92,13 @@ module.exports = function(args, program) {
 	// copy in any Alloy-specific Resources files
 	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
 	_.each(CONST.PLATFORMS, function(p) {
+		var pDir = path.join(platformsDir, p, 'project');
+		if (!fs.existsSync(pDir)) {
+			return;
+		}
+
 		wrench.copyDirSyncRecursive(
-			path.join(platformsDir,p,'project'),
+			pDir,
 			paths.project,
 			{preserve:true}
 		);
