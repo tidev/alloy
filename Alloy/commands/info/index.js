@@ -30,12 +30,6 @@ var info = {
 	samples: function() {
 		var desc = [
 			{
-				name: "mapping",
-				label: "Geocoder",
-				Description: "A sample app that uses native maps to plot locations. With it you can forward geocode addresses and add them as annotations to the map.",
-				icon: "app.png"
-			},
-			{
 				name: "todo",
 				label: "Todo List",
 				Description: "A sample application that creates a basic todo list. With this app you can maintain a listing of tasks to be completed, add to that list, and mark tasks as done, all powered by Alloy models and collections.",
