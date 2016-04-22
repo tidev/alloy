@@ -207,6 +207,7 @@ exports.IMPLICIT_NAMESPACES = {
 	PreviewAction: NS_TI_UI_IOS,
 	PreviewActionGroup: NS_TI_UI_IOS,
 	MenuPopup: NS_TI_UI_IOS,
+	Stepper: NS_TI_UI_IOS,
 
 	// Ti.UI.iPad
 	Popover: NS_TI_UI_IPAD,
