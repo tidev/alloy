@@ -35,7 +35,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.stepper = Ti.UI.createStepper({
+    $.__views.stepper = Ti.UI.iOS.createStepper({
         id: "stepper"
     });
     $.__views.index.add($.__views.stepper);
