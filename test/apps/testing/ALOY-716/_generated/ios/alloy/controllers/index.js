@@ -33,7 +33,7 @@ function Controller() {
                     fontSize: "28dp",
                     fontWeight: "bold"
                 },
-                text: "undefined" != typeof __alloyId1.__transform["title"] ? __alloyId1.__transform["title"] : __alloyId1.get("title")
+                text: "	" + __alloyId1.__transform.title
             });
             __alloyId3.add(__alloyId5);
             var __alloyId7 = Ti.UI.createLabel({
@@ -47,14 +47,14 @@ function Controller() {
                     fontSize: "16dp",
                     fontWeight: "normal"
                 },
-                text: "undefined" != typeof __alloyId1.__transform["subtitle"] ? __alloyId1.__transform["subtitle"] : __alloyId1.get("subtitle")
+                text: "		  " + __alloyId1.__transform.subtitle
             });
             __alloyId3.add(__alloyId7);
             var __alloyId9 = Ti.UI.createImageView({
                 right: "10dp",
                 height: "48dp",
                 width: "48dp",
-                image: "undefined" != typeof __alloyId1.__transform["image"] ? __alloyId1.__transform["image"] : __alloyId1.get("image")
+                image: __alloyId1.__transform.image
             });
             __alloyId3.add(__alloyId9);
         }
@@ -96,7 +96,7 @@ function Controller() {
     var __alloyId10 = Alloy.Collections["collection"] || collection;
     __alloyId10.on("fetch destroy change add remove reset", __alloyId11);
     exports.destroy = function() {
-        __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
+        __alloyId10 && __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
     };
     _.extend($, $.__views);
     Alloy.Collections.collection.trigger("change");

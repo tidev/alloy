@@ -32,7 +32,7 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.label = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             height: Ti.UI.SIZE,
             width: "90%",
             font: {
@@ -42,13 +42,13 @@ function Controller() {
             textAlign: "center",
             color: "#0f0"
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             color: "#0ff"
         });
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             color: "#963"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             text: 'Check the console output and make sure that only styles relevant to the current build platform are listed in the printed array. Note also that the "platform" key has been removed entirely from the "queries" object in conditional styles.',
             id: "label"
         });

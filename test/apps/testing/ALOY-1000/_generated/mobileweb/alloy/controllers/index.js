@@ -43,7 +43,7 @@ function Controller() {
         id: "theButton"
     });
     $.__views.index.add($.__views.theButton);
-    doClick ? $.__views.theButton.addEventListener("click", doClick) : __defers["$.__views.theButton!click!doClick"] = true;
+    doClick ? $.addListener($.__views.theButton, "click", doClick) : __defers["$.__views.theButton!click!doClick"] = true;
     $.__views.theView = Ti.UI.createView({
         layout: "vertical",
         id: "theView"
@@ -57,7 +57,7 @@ function Controller() {
         id: "title"
     });
     $.__views.theView.add($.__views.title);
-    doClick ? $.__views.title.addEventListener("click", doClick) : __defers["$.__views.title!click!doClick"] = true;
+    doClick ? $.addListener($.__views.title, "click", doClick) : __defers["$.__views.title!click!doClick"] = true;
     $.__views.author = Ti.UI.createLabel({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -66,7 +66,7 @@ function Controller() {
         id: "author"
     });
     $.__views.theView.add($.__views.author);
-    doClick ? $.__views.author.addEventListener("click", doClick) : __defers["$.__views.author!click!doClick"] = true;
+    doClick ? $.addListener($.__views.author, "click", doClick) : __defers["$.__views.author!click!doClick"] = true;
     $.__views.genre = Ti.UI.createLabel({
         width: Ti.UI.SIZE,
         height: Ti.UI.SIZE,
@@ -75,29 +75,24 @@ function Controller() {
         id: "genre"
     });
     $.__views.theView.add($.__views.genre);
-    doClick ? $.__views.genre.addEventListener("click", doClick) : __defers["$.__views.genre!click!doClick"] = true;
+    doClick ? $.addListener($.__views.genre, "click", doClick) : __defers["$.__views.genre!click!doClick"] = true;
     var __alloyId2 = function() {
-        $.title.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("<%=book.title%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.author.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("<%=book.author%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.genre.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["genre"] : _.template("<%=book.genre%>", {
-            book: Alloy.Models.book.toJSON()
-        });
+        Alloy["Models"]["book"].__transform = _.isFunction(Alloy["Models"]["book"].transform) ? Alloy["Models"]["book"].transform() : Alloy["Models"]["book"].toJSON();
+        $.title.text = Alloy["Models"]["book"]["__transform"]["title"];
+        $.author.text = Alloy["Models"]["book"]["__transform"]["author"];
+        $.genre.text = Alloy["Models"]["book"]["__transform"]["genre"];
     };
-    Alloy.Models.book.on("fetch change destroy", __alloyId2);
+    Alloy["Models"]["book"].on("fetch change destroy", __alloyId2);
     exports.destroy = function() {
-        Alloy.Models.book.off("fetch change destroy", __alloyId2);
+        Alloy["Models"]["book"] && Alloy["Models"]["book"].off("fetch change destroy", __alloyId2);
     };
     _.extend($, $.__views);
     var model = Alloy.Models.book;
     $.index.open();
-    __defers["$.__views.theButton!click!doClick"] && $.__views.theButton.addEventListener("click", doClick);
-    __defers["$.__views.title!click!doClick"] && $.__views.title.addEventListener("click", doClick);
-    __defers["$.__views.author!click!doClick"] && $.__views.author.addEventListener("click", doClick);
-    __defers["$.__views.genre!click!doClick"] && $.__views.genre.addEventListener("click", doClick);
+    __defers["$.__views.theButton!click!doClick"] && $.addListener($.__views.theButton, "click", doClick);
+    __defers["$.__views.title!click!doClick"] && $.addListener($.__views.title, "click", doClick);
+    __defers["$.__views.author!click!doClick"] && $.addListener($.__views.author, "click", doClick);
+    __defers["$.__views.genre!click!doClick"] && $.addListener($.__views.genre, "click", doClick);
     _.extend($, exports);
 }
 

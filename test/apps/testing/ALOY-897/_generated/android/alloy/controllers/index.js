@@ -44,11 +44,11 @@ function Controller() {
         id: "__alloyId2"
     });
     $.__views.index.add($.__views.__alloyId2);
-    openWindow ? $.__views.__alloyId2.addEventListener("click", openWindow) : __defers["$.__views.__alloyId2!click!openWindow"] = true;
+    openWindow ? $.addListener($.__views.__alloyId2, "click", openWindow) : __defers["$.__views.__alloyId2!click!openWindow"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId2!click!openWindow"] && $.__views.__alloyId2.addEventListener("click", openWindow);
+    __defers["$.__views.__alloyId2!click!openWindow"] && $.addListener($.__views.__alloyId2, "click", openWindow);
     _.extend($, exports);
 }
 

@@ -44,7 +44,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    addNewLabel ? $.__views.index.addEventListener("click", addNewLabel) : __defers["$.__views.index!click!addNewLabel"] = true;
+    addNewLabel ? $.addListener($.__views.index, "click", addNewLabel) : __defers["$.__views.index!click!addNewLabel"] = true;
     $.__views.staticLabel = Ti.UI.createLabel({
         color: "#a00",
         font: {
@@ -67,7 +67,7 @@ function Controller() {
     var ctr = 0;
     var classes = [ [], [ "big" ], [ "blue" ], "shadow", [ "shadow" ], [ "shadow", "big" ], [ "big", "shadow" ], [ "big", "blue", "shadow" ], "big blue shadow" ];
     $.index.open();
-    __defers["$.__views.index!click!addNewLabel"] && $.__views.index.addEventListener("click", addNewLabel);
+    __defers["$.__views.index!click!addNewLabel"] && $.addListener($.__views.index, "click", addNewLabel);
     _.extend($, exports);
 }
 

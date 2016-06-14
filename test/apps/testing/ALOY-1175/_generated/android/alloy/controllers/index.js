@@ -19,7 +19,7 @@ function Controller() {
             $.__views.item1 = e.menu.add(_.pick(__alloyId1, Alloy.Android.menuItemCreateArgs));
             $.__views.item1.applyProperties(_.omit(__alloyId1, Alloy.Android.menuItemCreateArgs));
             $.item1 = $.__views.item1;
-            expand ? $.__views.item1.addEventListener("click", expand) : __defers["$.__views.item1!click!expand"] = true;
+            expand ? $.addListener($.__views.item1, "click", expand) : __defers["$.__views.item1!click!expand"] = true;
             var __alloyId3 = {
                 title: "Collapse",
                 showAsAction: Titanium.Android.SHOW_AS_ACTION_IF_ROOM,
@@ -28,23 +28,24 @@ function Controller() {
             $.__views.__alloyId2 = e.menu.add(_.pick(__alloyId3, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId2.applyProperties(_.omit(__alloyId3, Alloy.Android.menuItemCreateArgs));
             $.__alloyId2 = $.__views.__alloyId2;
-            collapse ? $.__views.__alloyId2.addEventListener("click", collapse) : __defers["$.__views.__alloyId2!click!collapse"] = true;
+            collapse ? $.addListener($.__views.__alloyId2, "click", collapse) : __defers["$.__views.__alloyId2!click!collapse"] = true;
             $.__views.__alloyId5 = Ti.UI.createView({
                 layout: "horizontal",
                 id: "__alloyId5"
             });
             $.__views.__alloyId6 = Ti.UI.createButton({
                 title: "Search",
-                left: "0",
+                left: 0,
                 id: "__alloyId6"
             });
             $.__views.__alloyId5.add($.__views.__alloyId6);
             $.__views.__alloyId7 = Ti.UI.createTextField({
-                right: "0",
+                right: 0,
                 hintText: "Type Something",
                 id: "__alloyId7"
             });
             $.__views.__alloyId5.add($.__views.__alloyId7);
+            $.__alloyId5 = $.__views.__alloyId5;
             var __alloyId8 = {
                 id: "item3",
                 title: "Item 3",
@@ -54,8 +55,8 @@ function Controller() {
             $.__views.item3 = e.menu.add(_.pick(__alloyId8, Alloy.Android.menuItemCreateArgs));
             $.__views.item3.applyProperties(_.omit(__alloyId8, Alloy.Android.menuItemCreateArgs));
             $.item3 = $.__views.item3;
-            report ? $.__views.item3.addEventListener("expand", report) : __defers["$.__views.item3!expand!report"] = true;
-            report ? $.__views.item3.addEventListener("collapse", report) : __defers["$.__views.item3!collapse!report"] = true;
+            report ? $.addListener($.__views.item3, "expand", report) : __defers["$.__views.item3!expand!report"] = true;
+            report ? $.addListener($.__views.item3, "collapse", report) : __defers["$.__views.item3!collapse!report"] = true;
         }; else {
             Ti.API.warn("You attempted to attach an Android Menu to a lightweight Window");
             Ti.API.warn("or other UI component which does not have an Android activity.");
@@ -106,10 +107,10 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.win.open();
-    __defers["$.__views.item1!click!expand"] && $.__views.item1.addEventListener("click", expand);
-    __defers["$.__views.__alloyId2!click!collapse"] && $.__views.__alloyId2.addEventListener("click", collapse);
-    __defers["$.__views.item3!expand!report"] && $.__views.item3.addEventListener("expand", report);
-    __defers["$.__views.item3!collapse!report"] && $.__views.item3.addEventListener("collapse", report);
+    __defers["$.__views.item1!click!expand"] && $.addListener($.__views.item1, "click", expand);
+    __defers["$.__views.__alloyId2!click!collapse"] && $.addListener($.__views.__alloyId2, "click", collapse);
+    __defers["$.__views.item3!expand!report"] && $.addListener($.__views.item3, "expand", report);
+    __defers["$.__views.item3!collapse!report"] && $.addListener($.__views.item3, "collapse", report);
     _.extend($, exports);
 }
 

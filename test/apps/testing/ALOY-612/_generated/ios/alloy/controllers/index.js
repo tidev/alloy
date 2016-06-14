@@ -46,8 +46,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.info);
     $.__views.button1 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         height: "70dp",
         width: "250dp",
         borderRadius: 8,
@@ -58,8 +58,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.button1);
     $.__views.button2 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         width: "100dp",
         height: Ti.UI.SIZE,
         title: "button2",
@@ -67,8 +67,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.button2);
     $.__views.button3 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         height: "40dp",
         width: "200dp",
         borderRadius: 32,

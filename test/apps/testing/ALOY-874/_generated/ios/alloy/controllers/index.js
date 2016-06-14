@@ -16,9 +16,9 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId10 = models[i];
-            __alloyId10.__transform = {};
+            __alloyId10.__transform = _.isFunction(__alloyId10.transform) ? __alloyId10.transform() : __alloyId10.toJSON();
             var __alloyId12 = Ti.UI.createTableViewRow({
-                title: "undefined" != typeof __alloyId10.__transform["title"] ? __alloyId10.__transform["title"] : __alloyId10.get("title")
+                title: __alloyId10.__transform.title
             });
             rows.push(__alloyId12);
         }
@@ -32,10 +32,10 @@ function Controller() {
         var __alloyId19 = [];
         for (var i = 0; len > i; i++) {
             var __alloyId26 = models[i];
-            __alloyId26.__transform = {};
+            __alloyId26.__transform = _.isFunction(__alloyId26.transform) ? __alloyId26.transform() : __alloyId26.toJSON();
             var __alloyId28 = {
                 properties: {
-                    title: "undefined" != typeof __alloyId26.__transform["title"] ? __alloyId26.__transform["title"] : __alloyId26.get("title")
+                    title: __alloyId26.__transform.title
                 }
             };
             __alloyId19.push(__alloyId28);
@@ -67,7 +67,7 @@ function Controller() {
         id: "__alloyId2"
     });
     $.__views.__alloyId5 = Ti.UI.createView({
-        height: "60",
+        height: 60,
         id: "__alloyId5"
     });
     $.__views.__alloyId6 = Ti.UI.createLabel({
@@ -76,7 +76,7 @@ function Controller() {
     });
     $.__views.__alloyId5.add($.__views.__alloyId6);
     $.__views.__alloyId8 = Ti.UI.createView({
-        height: "60",
+        height: 60,
         id: "__alloyId8"
     });
     $.__views.__alloyId9 = Ti.UI.createLabel({
@@ -105,7 +105,7 @@ function Controller() {
         id: "__alloyId16"
     });
     $.__views.__alloyId21 = Ti.UI.createView({
-        height: "60",
+        height: 60,
         id: "__alloyId21"
     });
     $.__views.__alloyId22 = Ti.UI.createLabel({
@@ -114,7 +114,7 @@ function Controller() {
     });
     $.__views.__alloyId21.add($.__views.__alloyId22);
     $.__views.__alloyId24 = Ti.UI.createView({
-        height: "60",
+        height: 60,
         id: "__alloyId24"
     });
     $.__views.__alloyId25 = Ti.UI.createLabel({
@@ -151,8 +151,8 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     exports.destroy = function() {
-        __alloyId13.off("fetch destroy change add remove reset", __alloyId14);
-        __alloyId29.off("fetch destroy change add remove reset", __alloyId30);
+        __alloyId13 && __alloyId13.off("fetch destroy change add remove reset", __alloyId14);
+        __alloyId29 && __alloyId29.off("fetch destroy change add remove reset", __alloyId30);
     };
     _.extend($, $.__views);
     $.index.open();

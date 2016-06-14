@@ -1,0 +1,42 @@
+<Alloy>
+	<Model src="transformless" />
+	<Model src="transformer" />
+	<Collection src="transformless" />
+	<Collection src="transformer" />
+	<Window layout="vertical">
+		<Label top="30" text="{transformless.foo}" />
+		<Label text="{transformless.foo} and {transformless.bar}" />
+		<Label text="{transformer.foo}" />
+		<Label text="{transformer.foo} and {transformer.bar}" />
+		<ButtonBar>
+			<Labels dataCollection="transformless">
+				<Label title="{foo}" />
+			</Labels>
+		</ButtonBar>
+		<ButtonBar>
+			<Labels dataCollection="transformless">
+				<Label title="{foo} and {bar}" />
+			</Labels>
+		</ButtonBar>
+		<ButtonBar>
+			<Labels dataCollection="transformless" dataTransform="myTransformer">
+				<Label title="{foo} and {bar}" />
+			</Labels>
+		</ButtonBar>
+		<ButtonBar>
+			<Labels dataCollection="transformer">
+				<Label title="{foo}" />
+			</Labels>
+		</ButtonBar>
+		<ButtonBar>
+			<Labels dataCollection="transformer">
+				<Label title="{foo} and {bar}" />
+			</Labels>
+		</ButtonBar>
+		<ButtonBar>
+			<Labels dataCollection="transformer" dataTransform="myTransformer">
+				<Label title="{foo} and {bar}" />
+			</Labels>
+		</ButtonBar>
+	</Window>
+</Alloy>

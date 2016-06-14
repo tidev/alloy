@@ -61,13 +61,13 @@ function Controller() {
         tabsBackgroundSelectedColor: "yellow"
     });
     $.__views.ScheduleGroup && $.addTopLevelView($.__views.ScheduleGroup);
-    doOnOpen ? $.__views.ScheduleGroup.addEventListener("open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
-    doOnFocus ? $.__views.ScheduleGroup.addEventListener("focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
+    doOnOpen ? $.addListener($.__views.ScheduleGroup, "open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
+    doOnFocus ? $.addListener($.__views.ScheduleGroup, "focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.ScheduleGroup.open();
-    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.__views.ScheduleGroup.addEventListener("open", doOnOpen);
-    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.__views.ScheduleGroup.addEventListener("focus", doOnFocus);
+    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.addListener($.__views.ScheduleGroup, "open", doOnOpen);
+    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.addListener($.__views.ScheduleGroup, "focus", doOnFocus);
     _.extend($, exports);
 }
 

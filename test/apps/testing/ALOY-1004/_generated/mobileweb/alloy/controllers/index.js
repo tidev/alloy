@@ -33,23 +33,23 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.title1 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 10,
             text: "Default label text",
             font: {
                 fontSize: "14dp"
             }
         });
-        Alloy.Globals.someProperty && _.extend(o, {
+        Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
             text: "Custom TSS: Alloy.Globals.someProperty==true"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue"
         });
-        Alloy.Globals.someProperty && _.extend(o, {
+        Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
             text: "Overriding platform with custom TSS"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "title1"
         });
         return o;
@@ -57,17 +57,17 @@ function Controller() {
     $.__views.index.add($.__views.title1);
     $.__views.title2 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 10,
             text: "Default label text",
             font: {
                 fontSize: "14dp"
             }
         });
-        Alloy.Globals.someProperty && _.extend(o, {
+        Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
             text: "Custom TSS: Alloy.Globals.someProperty==true"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue",
             id: "title2"
         });
@@ -76,17 +76,17 @@ function Controller() {
     $.__views.index.add($.__views.title2);
     $.__views.title3 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 10,
             text: "Default label text",
             font: {
                 fontSize: "14dp"
             }
         });
-        Alloy.Globals.someProperty && _.extend(o, {
+        Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
             text: "Custom TSS: Alloy.Globals.someProperty==true"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue",
             text: "You should see this for label 3",
             id: "title3"
@@ -96,17 +96,17 @@ function Controller() {
     $.__views.index.add($.__views.title3);
     $.__views.title4 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 10,
             text: "Default label text",
             font: {
                 fontSize: "14dp"
             }
         });
-        Alloy.Globals.someProperty && _.extend(o, {
+        Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
             text: "Custom TSS: Alloy.Globals.someProperty==true"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "title4"
         });
         return o;
@@ -115,17 +115,17 @@ function Controller() {
     if (Alloy.Globals.someProperty) {
         $.__views.title5 = Ti.UI.createLabel(function() {
             var o = {};
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 top: 10,
                 text: "Default label text",
                 font: {
                     fontSize: "14dp"
                 }
             });
-            Alloy.Globals.someProperty && _.extend(o, {
+            Alloy.Globals.someProperty && Alloy.deepExtend(true, o, {
                 text: "Custom TSS: Alloy.Globals.someProperty==true"
             });
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 color: "blue",
                 id: "title5"
             });

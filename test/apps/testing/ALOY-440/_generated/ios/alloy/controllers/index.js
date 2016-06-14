@@ -19,9 +19,9 @@ function Controller() {
         });
         for (var i = 0; len > i; i++) {
             var __alloyId5 = models[i];
-            __alloyId5.__transform = {};
+            __alloyId5.__transform = _.isFunction(__alloyId5.transform) ? __alloyId5.transform() : __alloyId5.toJSON();
             $.__views.__alloyId6 = Ti.UI.createPickerRow({
-                title: "undefined" != typeof __alloyId5.__transform["name"] ? __alloyId5.__transform["name"] : __alloyId5.get("name"),
+                title: __alloyId5.__transform.name,
                 id: "__alloyId6"
             });
             rows.push($.__views.__alloyId6);
@@ -43,7 +43,7 @@ function Controller() {
             var __alloyId9 = models[i];
             __alloyId9.__transform = doTransform(__alloyId9);
             $.__views.__alloyId10 = Ti.UI.createPickerRow({
-                title: "undefined" != typeof __alloyId9.__transform["color"] ? __alloyId9.__transform["color"] : __alloyId9.get("color"),
+                title: __alloyId9.__transform.color,
                 id: "__alloyId10"
             });
             rows.push($.__views.__alloyId10);
@@ -84,8 +84,8 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.picker = Ti.UI.createPicker({
         id: "picker",
-        top: "50",
-        useSpinner: "true"
+        top: 50,
+        useSpinner: true
     });
     $.__views.index.add($.__views.picker);
     var __alloyId4 = [];
@@ -103,23 +103,19 @@ function Controller() {
     __alloyId11.on("fetch destroy change add remove reset", __alloyId12);
     $.__views.picker.add(__alloyId4);
     exports.destroy = function() {
-        __alloyId7.off("fetch destroy change add remove reset", __alloyId8);
-        __alloyId11.off("fetch destroy change add remove reset", __alloyId12);
+        __alloyId7 && __alloyId7.off("fetch destroy change add remove reset", __alloyId8);
+        __alloyId11 && __alloyId11.off("fetch destroy change add remove reset", __alloyId12);
     };
     _.extend($, $.__views);
-    Ti.API.info("seeded: " + Ti.App.Properties.hasProperty("seeded"));
-    if (!Ti.App.Properties.hasProperty("seeded")) {
-        var fruits = [ "apple", "banana", "cherry", "blueberry", "orange", "pear" ];
-        var colors = [ "red", "yellow", "blue", "orange", "green", "white" ];
-        for (var i = 1, j = fruits.length; j > i; i++) {
-            Alloy.createModel("fruits", {
-                name: fruits[i]
-            }).save();
-            Alloy.createModel("colors", {
-                color: colors[i]
-            }).save();
-        }
-        Ti.App.Properties.setString("seeded", "yes");
+    var fruits = [ "apple", "banana", "cherry", "blueberry", "orange", "pear" ];
+    var colors = [ "red", "yellow", "blue", "orange", "green", "white" ];
+    for (var i = 1, j = fruits.length; j > i; i++) {
+        Alloy.createModel("fruits", {
+            name: fruits[i]
+        }).save();
+        Alloy.createModel("colors", {
+            color: colors[i]
+        }).save();
     }
     Alloy.Collections.fruits.fetch();
     Alloy.Collections.colors.fetch();

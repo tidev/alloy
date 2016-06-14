@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isApi: true,
-    priority: 1000.0003,
+    priority: 1000.0002,
     key: "Label",
     style: {
         top: "10dp",
@@ -21,7 +21,7 @@ module.exports = [ {
     }
 }, {
     isClass: true,
-    priority: 10000.0002,
+    priority: 10000.0001,
     key: "container",
     style: {
         height: Ti.UI.SIZE,

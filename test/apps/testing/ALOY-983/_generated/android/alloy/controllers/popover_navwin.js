@@ -26,8 +26,8 @@ function Controller() {
     var exports = {};
     $.__views.popover = Ti.UI.iPad.createPopover({
         id: "popover",
-        height: "100",
-        width: "250"
+        height: 100,
+        width: 250
     });
     $.__views.popover && $.addTopLevelView($.__views.popover);
     $.__views.__alloyId3 = Ti.UI.createWindow({
@@ -43,8 +43,8 @@ function Controller() {
         window: $.__views.__alloyId3,
         id: "popViewNavWin",
         backgroundColor: "green",
-        height: "300",
-        width: "250"
+        height: 300,
+        width: 250
     });
     $.__views.popover.contentView = $.__views.popViewNavWin;
     exports.destroy = function() {};

@@ -24,7 +24,7 @@ function Controller() {
     var exports = {};
     $.__views.loading = Alloy.createWidget("test", "widget", {
         id: "loading",
-        opacity: "0.5",
+        opacity: .5,
         __parentSymbol: __parentSymbol
     });
     $.__views.loading && $.addTopLevelView($.__views.loading);

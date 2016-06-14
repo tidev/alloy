@@ -32,7 +32,7 @@ function Controller() {
     $.__views.childWindow && $.addTopLevelView($.__views.childWindow);
     $.__views.argLabel = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             height: Ti.UI.SIZE,
             width: Ti.UI.SIZE,
             color: "#000",
@@ -44,10 +44,10 @@ function Controller() {
             text: "args.someProperty is falsey",
             top: 25
         });
-        $.args.someProperty && _.extend(o, {
+        $.args.someProperty && Alloy.deepExtend(true, o, {
             text: "args.someProperty is truthy"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "argLabel"
         });
         return o;

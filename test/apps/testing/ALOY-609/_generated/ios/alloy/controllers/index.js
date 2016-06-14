@@ -18,15 +18,15 @@ function Controller() {
             var __alloyId23 = models[i];
             __alloyId23.__transform = doTransform(__alloyId23);
             var __alloyId25 = {
-                template: "undefined" != typeof __alloyId23.__transform["template"] ? __alloyId23.__transform["template"] : __alloyId23.get("template"),
+                template: __alloyId23.__transform.template,
                 title: {
-                    text: "undefined" != typeof __alloyId23.__transform["title"] ? __alloyId23.__transform["title"] : __alloyId23.get("title")
+                    text: __alloyId23.__transform.title
                 },
                 subtitle: {
-                    text: "undefined" != typeof __alloyId23.__transform["subtitle"] ? __alloyId23.__transform["subtitle"] : __alloyId23.get("subtitle")
+                    text: __alloyId23.__transform.subtitle
                 },
                 image: {
-                    image: "undefined" != typeof __alloyId23.__transform["image"] ? __alloyId23.__transform["image"] : __alloyId23.get("image")
+                    image: __alloyId23.__transform.image
                 }
             };
             __alloyId22.push(__alloyId25);
@@ -125,7 +125,7 @@ function Controller() {
     var __alloyId2 = {
         properties: {
             name: "fullItem",
-            height: "70"
+            height: 70
         },
         childTemplates: __alloyId3
     };
@@ -170,7 +170,7 @@ function Controller() {
     var __alloyId11 = {
         properties: {
             name: "titleAndSub",
-            height: "70"
+            height: 70
         },
         childTemplates: __alloyId12
     };
@@ -197,7 +197,7 @@ function Controller() {
     var __alloyId18 = {
         properties: {
             name: "title",
-            height: "50"
+            height: 50
         },
         childTemplates: __alloyId19
     };
@@ -255,7 +255,7 @@ function Controller() {
     $.__views.__alloyId32.setParent($.__views.toolbar);
     doButtonClick ? $.__views.__alloyId32.on("buttonClick", doButtonClick) : __defers["$.__views.__alloyId32!buttonClick!doButtonClick"] = true;
     exports.destroy = function() {
-        __alloyId26.off("fetch destroy change add remove reset", __alloyId27);
+        __alloyId26 && __alloyId26.off("fetch destroy change add remove reset", __alloyId27);
     };
     _.extend($, $.__views);
     var info = Alloy.Collections.info;

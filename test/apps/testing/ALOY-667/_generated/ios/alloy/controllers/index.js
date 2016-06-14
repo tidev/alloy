@@ -35,7 +35,7 @@ function Controller() {
     });
     $.__views.__alloyId0.add($.__views.btnFoo);
     try {
-        $.__views.btnFoo.addEventListener("click", exports.showContacts);
+        $.addListener($.__views.btnFoo, "click", exports.showContacts);
     } catch (e) {
         __defers["$.__views.btnFoo!click!exports.showContacts"] = true;
     }
@@ -53,7 +53,7 @@ function Controller() {
         Ti.API.info("showContacts: " + e.source.title);
     };
     $.welcomeNav.open();
-    __defers["$.__views.btnFoo!click!exports.showContacts"] && $.__views.btnFoo.addEventListener("click", exports.showContacts);
+    __defers["$.__views.btnFoo!click!exports.showContacts"] && $.addListener($.__views.btnFoo, "click", exports.showContacts);
     _.extend($, exports);
 }
 

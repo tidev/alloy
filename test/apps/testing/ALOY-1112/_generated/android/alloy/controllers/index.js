@@ -46,7 +46,7 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId0);
     $.__views.lbl1 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             width: Ti.UI.SIZE,
             height: Ti.UI.SIZE,
             top: 30,
@@ -55,10 +55,10 @@ function Controller() {
                 fontSize: 12
             }
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             color: "red"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             text: "This should be RED on ios and android handheld, BLACK on others",
             id: "lbl1"
         });

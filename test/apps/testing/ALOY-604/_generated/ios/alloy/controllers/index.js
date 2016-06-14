@@ -16,7 +16,7 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId1 = models[i];
-            __alloyId1.__transform = {};
+            __alloyId1.__transform = _.isFunction(__alloyId1.transform) ? __alloyId1.transform() : __alloyId1.toJSON();
             var __alloyId3 = Ti.UI.createTableViewRow({});
             rows.push(__alloyId3);
             var __alloyId5 = Ti.UI.createView({
@@ -24,7 +24,7 @@ function Controller() {
                 height: "60dp"
             });
             __alloyId3.add(__alloyId5);
-            test ? __alloyId5.addEventListener("click", test) : __defers["__alloyId5!click!test"] = true;
+            test ? $.addListener(__alloyId5, "click", test) : __defers["__alloyId5!click!test"] = true;
             var __alloyId7 = Ti.UI.createLabel({
                 left: "100dp",
                 right: "10dp",
@@ -76,12 +76,12 @@ function Controller() {
     var __alloyId8 = Alloy.Collections["data"] || data;
     __alloyId8.on("fetch destroy change add remove reset", __alloyId9);
     exports.destroy = function() {
-        __alloyId8.off("fetch destroy change add remove reset", __alloyId9);
+        __alloyId8 && __alloyId8.off("fetch destroy change add remove reset", __alloyId9);
     };
     _.extend($, $.__views);
     Alloy.Collections.data.trigger("change");
     $.index.open();
-    __defers["__alloyId5!click!test"] && __alloyId5.addEventListener("click", test);
+    __defers["__alloyId5!click!test"] && $.addListener(__alloyId5, "click", test);
     _.extend($, exports);
 }
 

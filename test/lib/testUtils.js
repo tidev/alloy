@@ -3,6 +3,7 @@ var exec = require('child_process').exec,
 	os = require('os'),
 	wrench = require('wrench'),
 	path = require('path'),
+	JsDiff = require('diff'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	uglifyjs = require('uglify-js'),
 	U = require('../../Alloy/utils'),
@@ -169,6 +170,13 @@ exports.addMatchers = function() {
 			},
 			toBeObject: function(expected) {
 				return _.isObject(this.actual);
+			},
+			toNotDiff: function(expected, filename) {
+				var pass = this.actual === expected;
+				this.message = function() {
+					return ["Expected to have no diff, but it does: \n\n" + JsDiff.createPatch(filename, expected, this.actual)];
+				};
+	      return pass;
 			}
 		});
 	});

@@ -37,10 +37,10 @@ function Controller() {
         id: "helloButton"
     });
     $.__views.helloButton && $.addTopLevelView($.__views.helloButton);
-    sayHello ? $.__views.helloButton.addEventListener("click", sayHello) : __defers["$.__views.helloButton!click!sayHello"] = true;
+    sayHello ? $.addListener($.__views.helloButton, "click", sayHello) : __defers["$.__views.helloButton!click!sayHello"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    __defers["$.__views.helloButton!click!sayHello"] && $.__views.helloButton.addEventListener("click", sayHello);
+    __defers["$.__views.helloButton!click!sayHello"] && $.addListener($.__views.helloButton, "click", sayHello);
     _.extend($, exports);
 }
 

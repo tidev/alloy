@@ -37,10 +37,10 @@ function Controller() {
     }));
     $.__views.__alloyId0 = Ti.UI.createTableView(function() {
         var o = {};
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             headerView: $.__views.__alloyId2
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "__alloyId0"
         });
         return o;

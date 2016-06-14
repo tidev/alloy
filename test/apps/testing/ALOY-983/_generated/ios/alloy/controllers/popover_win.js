@@ -26,15 +26,15 @@ function Controller() {
     var exports = {};
     $.__views.popover = Ti.UI.iPad.createPopover({
         id: "popover",
-        height: "100",
-        width: "250"
+        height: 100,
+        width: 250
     });
     $.__views.popover && $.addTopLevelView($.__views.popover);
     $.__views.popViewWin = Ti.UI.createWindow({
         id: "popViewWin",
         backgroundColor: "green",
-        height: "100",
-        width: "250"
+        height: 100,
+        width: 250
     });
     $.__views.__alloyId6 = Ti.UI.createLabel({
         text: "Popover with a Window",

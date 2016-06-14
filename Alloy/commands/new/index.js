@@ -17,10 +17,7 @@ var path = require('path'),
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname,'..','..','..','platforms');
 var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
-
-var test_apps_folder = (process.platform === 'win32') ?
-	path.join(process.env.APPDATA, 'npm', 'node_modules', 'alloy', 'test', 'apps') :
-	path.join(process.execPath, '..', '..', 'lib', 'node_modules', 'alloy', 'test', 'apps');
+var sampleAppsDir = path.join(__dirname, '..', '..', '..', 'samples', 'apps');
 
 module.exports = function(args, program) {
 	var appDirs = ['controllers','styles','views','models','assets'];
@@ -28,7 +25,7 @@ module.exports = function(args, program) {
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
 
 	// only overwrite existing app path if given the force option
-	if (path.existsSync(paths.app)) {
+	if (fs.existsSync(paths.app)) {
 		if (!program.force) {
 			U.die(BASE_ERR + '"app" directory already exists at "' + paths.app + '"');
 		} else {
@@ -40,7 +37,7 @@ module.exports = function(args, program) {
 	// copy platform-specific folders from Resources to app/assets
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		var rPath = path.join(paths.resources,platform);
-		if (path.existsSync(rPath)) {
+		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app,CONST.DIR.ASSETS,platform);
 			wrench.mkdirSyncRecursive(aPath, 0755);
 			wrench.copyDirSyncRecursive(rPath,aPath,{preserve:true});
@@ -50,6 +47,14 @@ module.exports = function(args, program) {
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
 		wrench.mkdirSyncRecursive(path.join(paths.app,dir), 0755);
+	});
+
+	// move existing i18n and platform directories into app directory
+	['i18n', 'platform'].forEach(function (name) {
+		var src = path.join(paths.project, name);
+		if (fs.existsSync(src)) {
+			fs.renameSync(src, path.join(paths.app, name));
+		}
 	});
 
 	// add the default alloy.js file
@@ -75,7 +80,7 @@ module.exports = function(args, program) {
 	);
 	_.each(CONST.PLATFORM_FOLDERS, function(dir) {
 		var rDir = path.join(paths.resources,dir);
-		if (!path.existsSync(rDir)) {
+		if (!fs.existsSync(rDir)) {
 			return;
 		}
 
@@ -87,8 +92,13 @@ module.exports = function(args, program) {
 	// copy in any Alloy-specific Resources files
 	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
 	_.each(CONST.PLATFORMS, function(p) {
+		var pDir = path.join(platformsDir, p, 'project');
+		if (!fs.existsSync(pDir)) {
+			return;
+		}
+
 		wrench.copyDirSyncRecursive(
-			path.join(platformsDir,p,'project'),
+			pDir,
 			paths.project,
 			{preserve:true}
 		);
@@ -100,15 +110,15 @@ module.exports = function(args, program) {
 	fs.writeFileSync(path.join(paths.app,'README'), fs.readFileSync(paths.readme,'utf8'));
 
 	// if creating from one of the test apps...
-	if(program.testapp) {
+	if (program.testapp) {
 		// remove _generated folder,
 		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
 		// copyDirSynRecursive() statements above rather than deleting the folder here
 		wrench.rmdirSyncRecursive(path.join(paths.app,'_generated'), true);
-		if(path.existsSync(path.join(test_apps_folder, program.testapp, 'specs'))) {
+		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
 			wrench.mkdirSyncRecursive(path.join(paths.app,'lib'), 0755);
-			wrench.copyDirSyncRecursive(path.join(path.resolve(test_apps_folder, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+			wrench.copyDirSyncRecursive(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
 		}
 	}
 
@@ -129,7 +139,7 @@ function getPaths(project, templateName, testapp) {
 		template: path.join(alloy,'template'),
 		readme: path.join(template, 'README'),
 		projectTemplate: (!testapp) ? path.join(projectTemplates,templateName) :
-		path.join(test_apps_folder, testapp),
+		path.join(sampleAppsDir, testapp),
 
 		// project paths
 		project: project,
@@ -139,7 +149,7 @@ function getPaths(project, templateName, testapp) {
 
 	// validate the existence of the paths
 	_.each(paths, function(v,k) {
-		if (!path.existsSync(v)) {
+		if (!fs.existsSync(v)) {
 			var errs = [BASE_ERR];
 			switch(k) {
 				case 'build':

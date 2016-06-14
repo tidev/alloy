@@ -34,7 +34,7 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.label = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "#222",
             font: {
                 fontSize: "28dp",
@@ -45,10 +45,10 @@ function Controller() {
             width: Ti.UI.SIZE,
             top: "15dp"
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             color: "#a00"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             text: "static label",
             id: "label"
         });

@@ -32,7 +32,7 @@ function parse(node, state, args) {
 	// Get label text from node text, if present
 	var nodeText = U.XML.getNodeText(node),
 		textObj = {};
-	if (nodeText) {
+	if (nodeText && nodeText.trim() !== '') {
 		if (U.isLocaleAlias(nodeText)) {
 			textObj = {'text': styler.STYLE_EXPR_PREFIX + nodeText};
 		} else {

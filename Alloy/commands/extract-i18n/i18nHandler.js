@@ -19,7 +19,7 @@ function check(strings) {
 }
 
 module.exports = function(projectRoot, language) {
-    var i18nDir = path.join(projectRoot, 'i18n', language);
+    var i18nDir = path.join(projectRoot, 'app', 'i18n', language);
     var i18nFile = path.join(i18nDir, 'strings.xml');
     var shortPath = path.relative(projectRoot, i18nFile);
 

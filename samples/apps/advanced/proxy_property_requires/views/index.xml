@@ -1,0 +1,41 @@
+<Alloy>
+	<TabGroup>
+		<Tab id="staticTab" title="static">
+			<Window id="staticWindow" title="static">
+				<TableView id="staticTable">
+					<TableViewRow id="staticRow1" title="one"/>
+					<TableViewRow id="staticRow2" title="two"/>
+					<Widget id="staticWidgetSection" src="com.foo.widget" name="section" />
+					<Widget id="staticWidgetRow1" src="com.foo.widget" name="row" />
+					<Widget id="staticWidgetRow2" src="com.foo.widget" name="row" />
+					<Widget id="staticWidgetRow3" src="com.foo.widget" name="row" />
+					<TableViewRow id="staticRow3" title="three"/>
+				</TableView>
+			</Window>
+		</Tab>
+		<Tab id="bindingTab" title="binding">
+			<Window id="bindingWindow" title="binding">
+				<TableView id="bindingTable" dataCollection="dummy">
+					<Widget src="com.foo.widget" name="row_bind"/>
+				</TableView>
+			</Window>
+		</Tab>
+		<Tab id="proxiesTab" title="proxies">
+			<Window id="proxiesWindow" title="proxy properties">
+				<TableView id="proxiesTable">
+					<Require src="proxy"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+					<TableViewRow title="stuff"/>
+				</TableView>
+			</Window>
+		</Tab>
+		<Tab id="windowTab" title="window">
+			<Window id="windowWindow" title="window">
+				<Require src="window"/>
+				<Label>This is a window</Label>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>

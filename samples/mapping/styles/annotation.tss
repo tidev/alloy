@@ -1,5 +1,0 @@
-"Annotation": {
-    animate: true,
-    pincolor: Ti.Map.ANNOTATION_RED,
-    leftButton: '/delete.png'
-}

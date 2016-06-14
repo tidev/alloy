@@ -110,12 +110,12 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    setCurrentTab ? $.__views.index.addEventListener("focus", setCurrentTab) : __defers["$.__views.index!focus!setCurrentTab"] = true;
+    setCurrentTab ? $.addListener($.__views.index, "focus", setCurrentTab) : __defers["$.__views.index!focus!setCurrentTab"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var currentTab;
     $.index.open();
-    __defers["$.__views.index!focus!setCurrentTab"] && $.__views.index.addEventListener("focus", setCurrentTab);
+    __defers["$.__views.index!focus!setCurrentTab"] && $.addListener($.__views.index, "focus", setCurrentTab);
     _.extend($, exports);
 }
 

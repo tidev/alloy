@@ -16,14 +16,14 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId8 = models[i];
-            __alloyId8.__transform = {};
+            __alloyId8.__transform = _.isFunction(__alloyId8.transform) ? __alloyId8.transform() : __alloyId8.toJSON();
             var __alloyId9 = Ti.UI.createTableViewRow({});
             rows.push(__alloyId9);
             var __alloyId11 = Ti.UI.createLabel({
                 width: Ti.UI.SIZE,
                 height: Ti.UI.SIZE,
                 color: "#000",
-                text: "undefined" != typeof __alloyId8.__transform["title"] ? __alloyId8.__transform["title"] : __alloyId8.get("title") + ", by " + __alloyId8.get("author")
+                text: __alloyId8.__transform.title + ", by " + __alloyId8.__transform.author
             });
             __alloyId9.add(__alloyId11);
         }
@@ -49,7 +49,7 @@ function Controller() {
     $.__views.index = Ti.UI.createWindow({
         backgroundColor: "white",
         layout: "vertical",
-        top: "20",
+        top: 20,
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
@@ -98,32 +98,23 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId7);
     $.__views.tableview = Ti.UI.createTableView({
         id: "tableview",
-        top: "30"
+        top: 30
     });
     $.__views.index.add($.__views.tableview);
     var __alloyId12 = Alloy.Collections["book"] || book;
     __alloyId12.on("fetch destroy change add remove reset", __alloyId13);
     var __alloyId14 = function() {
-        $.__alloyId2.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("<%=book.title%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.__alloyId3.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("Written by <%=book.author%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.__alloyId5.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("<%=book.title%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.__alloyId6.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["author"] : _.template("Written by <%=book.author%>", {
-            book: Alloy.Models.book.toJSON()
-        });
-        $.__alloyId7.text = _.isFunction(Alloy.Models.book.transform) ? Alloy.Models.book.transform()["title"] : _.template("Title: <%=book.title%>, by <%=book.author%> :)", {
-            book: Alloy.Models.book.toJSON()
-        });
+        Alloy["Models"]["book"].__transform = _.isFunction(Alloy["Models"]["book"].transform) ? Alloy["Models"]["book"].transform() : Alloy["Models"]["book"].toJSON();
+        $.__alloyId2.text = Alloy["Models"]["book"]["__transform"]["title"];
+        $.__alloyId3.text = "Written by " + Alloy["Models"]["book"]["__transform"]["author"];
+        $.__alloyId5.text = Alloy["Models"]["book"]["__transform"]["title"];
+        $.__alloyId6.text = "Written by " + Alloy["Models"]["book"]["__transform"]["author"];
+        $.__alloyId7.text = "Title: " + Alloy["Models"]["book"]["__transform"]["title"] + ", by " + Alloy["Models"]["book"]["__transform"]["author"] + " :)";
     };
-    Alloy.Models.book.on("fetch change destroy", __alloyId14);
+    Alloy["Models"]["book"].on("fetch change destroy", __alloyId14);
     exports.destroy = function() {
-        __alloyId12.off("fetch destroy change add remove reset", __alloyId13);
-        Alloy.Models.book.off("fetch change destroy", __alloyId14);
+        __alloyId12 && __alloyId12.off("fetch destroy change add remove reset", __alloyId13);
+        Alloy["Models"]["book"] && Alloy["Models"]["book"].off("fetch change destroy", __alloyId14);
     };
     _.extend($, $.__views);
     Alloy.Models.book.set({

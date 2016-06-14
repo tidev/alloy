@@ -52,11 +52,11 @@ function Controller() {
         id: "__alloyId9"
     });
     $.__views.index.add($.__views.__alloyId9);
-    showOptions ? $.__views.__alloyId9.addEventListener("click", showOptions) : __defers["$.__views.__alloyId9!click!showOptions"] = true;
+    showOptions ? $.addListener($.__views.__alloyId9, "click", showOptions) : __defers["$.__views.__alloyId9!click!showOptions"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId9!click!showOptions"] && $.__views.__alloyId9.addEventListener("click", showOptions);
+    __defers["$.__views.__alloyId9!click!showOptions"] && $.addListener($.__views.__alloyId9, "click", showOptions);
     _.extend($, exports);
 }
 

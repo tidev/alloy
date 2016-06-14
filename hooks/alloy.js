@@ -126,7 +126,7 @@ exports.init = function (logger, config, cli, appc) {
 				// process each line of output from alloy
 				function checkLine(line) {
 					var re = new RegExp(
-						'(?:\u001b\\[\\d+m)?\\[?(' +
+						'^(?:\u001b\\[\\d+m)?\\[?(' +
 						logger.getLevels().join('|') +
 						')\\]?\s*(?:\u001b\\[\\d+m)?(.*)', 'i'
 					);

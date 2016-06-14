@@ -78,10 +78,10 @@ function Controller() {
     });
     $.__views.index.add($.__views.__alloyId6);
     $.__views.__alloyId7 = Ti.UI.createView({
-        height: "1",
+        height: 1,
         width: Ti.UI.FILL,
         backgroundColor: "black",
-        top: "10",
+        top: 10,
         id: "__alloyId7"
     });
     $.__views.index.add($.__views.__alloyId7);

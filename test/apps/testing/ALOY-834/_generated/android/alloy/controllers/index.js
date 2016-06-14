@@ -15,22 +15,22 @@ function Controller() {
                 id: "refreshMenuItem",
                 title: "Refresh",
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM,
-                itemId: "1"
+                itemId: 1
             };
             $.__views.refreshMenuItem = e.menu.add(_.pick(__alloyId5, Alloy.Android.menuItemCreateArgs));
             $.__views.refreshMenuItem.applyProperties(_.omit(__alloyId5, Alloy.Android.menuItemCreateArgs));
             $.refreshMenuItem = $.__views.refreshMenuItem;
-            doRefresh ? $.__views.refreshMenuItem.addEventListener("click", doRefresh) : __defers["$.__views.refreshMenuItem!click!doRefresh"] = true;
+            doRefresh ? $.addListener($.__views.refreshMenuItem, "click", doRefresh) : __defers["$.__views.refreshMenuItem!click!doRefresh"] = true;
             var __alloyId6 = {
                 id: "settingsMenuItem",
                 title: "Settings",
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM,
-                itemId: "0"
+                itemId: 0
             };
             $.__views.settingsMenuItem = e.menu.add(_.pick(__alloyId6, Alloy.Android.menuItemCreateArgs));
             $.__views.settingsMenuItem.applyProperties(_.omit(__alloyId6, Alloy.Android.menuItemCreateArgs));
             $.settingsMenuItem = $.__views.settingsMenuItem;
-            doSettingsMenuItem ? $.__views.settingsMenuItem.addEventListener("click", doSettingsMenuItem) : __defers["$.__views.settingsMenuItem!click!doSettingsMenuItem"] = true;
+            doSettingsMenuItem ? $.addListener($.__views.settingsMenuItem, "click", doSettingsMenuItem) : __defers["$.__views.settingsMenuItem!click!doSettingsMenuItem"] = true;
         }; else {
             Ti.API.warn("You attempted to attach an Android Menu to a lightweight Window");
             Ti.API.warn("or other UI component which does not have an Android activity.");
@@ -97,15 +97,15 @@ function Controller() {
     });
     $.__views.ScheduleGroup.addEventListener("open", __alloyId7);
     $.__views.ScheduleGroup && $.addTopLevelView($.__views.ScheduleGroup);
-    doOnOpen ? $.__views.ScheduleGroup.addEventListener("open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
-    doOnFocus ? $.__views.ScheduleGroup.addEventListener("focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
+    doOnOpen ? $.addListener($.__views.ScheduleGroup, "open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
+    doOnFocus ? $.addListener($.__views.ScheduleGroup, "focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.ScheduleGroup.open();
-    __defers["$.__views.refreshMenuItem!click!doRefresh"] && $.__views.refreshMenuItem.addEventListener("click", doRefresh);
-    __defers["$.__views.settingsMenuItem!click!doSettingsMenuItem"] && $.__views.settingsMenuItem.addEventListener("click", doSettingsMenuItem);
-    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.__views.ScheduleGroup.addEventListener("open", doOnOpen);
-    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.__views.ScheduleGroup.addEventListener("focus", doOnFocus);
+    __defers["$.__views.refreshMenuItem!click!doRefresh"] && $.addListener($.__views.refreshMenuItem, "click", doRefresh);
+    __defers["$.__views.settingsMenuItem!click!doSettingsMenuItem"] && $.addListener($.__views.settingsMenuItem, "click", doSettingsMenuItem);
+    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.addListener($.__views.ScheduleGroup, "open", doOnOpen);
+    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.addListener($.__views.ScheduleGroup, "focus", doOnFocus);
     _.extend($, exports);
 }
 

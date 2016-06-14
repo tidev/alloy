@@ -33,6 +33,10 @@ function parse(node, state, args) {
 	var isCollectionBound = args[CONST.BIND_COLLECTION] ? true : false;
 	var code = children.length ? 'var ' + state.itemsArray + ' = [];' : '';
 
+	if (node.parentNode.nodeName === 'MenuPopup') {
+		def.children[0] = 'Alloy.Abstract.Item';
+	}
+
 	// Run the translations and/or validations
 	_.each(children, function(child) {
 		var childArgs = CU.getParserArgs(child, state);

@@ -22,7 +22,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0002,
+    priority: 100000.0003,
     key: "loading",
     style: {
         height: 20,

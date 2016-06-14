@@ -7,6 +7,8 @@ var path = require('path'),
 	util = require('util'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
+	resolve = require('resolve'),
+	paths = require('global-paths'),
 	logger = require('./logger'),
 	tiapp = require('./tiapp'),
 	XMLSerializer = require("xmldom").XMLSerializer,
@@ -111,8 +113,8 @@ exports.evaluateTemplate = function(name, o) {
 };
 
 exports.getAndValidateProjectPaths = function(argPath, opts) {
-	var projectPath = path.resolve(argPath),
-		opts = opts || {};
+	opts = opts || {};
+	var projectPath = path.resolve(argPath);
 
 	// See if we got the "app" path or the project path as an argument
 	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
@@ -186,8 +188,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		wrench.mkdirSyncRecursive(dstDir, 0755);
 	}
 
-  // don't process XML/controller files inside .svn folders (ALOY-839)
-  var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
+	// don't process XML/controller files inside .svn folders (ALOY-839)
+	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
 		var src = path.join(srcDir,file);
@@ -306,52 +308,89 @@ exports.getWidgetDirectories = function(appDir) {
 				var wDir = path.join(widgetPath,wFiles[i]);
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-
-					var manifest;
-					try {
-						manifest = jsonlint.parse(fs.readFileSync(
-							path.join(wDir, 'widget.json'), 'utf8'));
-					} catch (e) {
-						exports.die('Error parsing "widget.json" for "' + path.basename(wDir) +
-							'"', e);
-					}
-
-					collections[manifest.id] = {
-						dir: wDir,
-						manifest: manifest
-					};
+					 var collection = parseManifestAsCollection(path.join(wDir, 'widget.json'));
+					 collections[collection.manifest.id] = collection;
 				}
 			}
 		}
 	});
 
-	function walkWidgetDependencies(collection) {
-		if (collection === null) { return; }
+	function parseManifestAsCollection(wFile) {
+		var wDir = path.dirname(wFile);
+		var manifest;
+		try {
+			manifest = jsonlint.parse(fs.readFileSync(wFile, 'utf8'));
+		} catch (e) {
+			exports.die('Error parsing "' + wFile + '"', e);
+		}
 
-        dirs.push(collection);
+		return {
+			dir: wDir,
+			manifest: manifest
+		};
+	}
+
+	function findWidgetAsNodeModule(id) {
+		var wFile;
+		try {
+			wFile = resolve.sync(path.join(CONST.NPM_WIDGET_PREFIX + id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ], paths: paths() });
+		} catch (err) {
+			return;
+		}
+
+		var collection = parseManifestAsCollection(wFile);
+		if (collection.manifest.id !== id) {
+			return logger.warn('Expected "' + wFile + '" to have id "' + id + '" instead of "' + collection.manifest.id + '"');
+		}
+
+		var pFile = path.join(path.dirname(wFile), 'package.json');
+		var pkg;
+		try {
+			pkg = jsonlint.parse(fs.readFileSync(pFile, 'utf8'));
+		} catch (e) {
+			exports.die('Error parsing "' + pFile + '"', e);
+		}
+
+		var missingKeywords = _.difference(CONST.NPM_WIDGET_KEYWORDS, pkg.keywords || []);
+		if (missingKeywords.length > 0) {
+			return logger.warn('Expected "' + pFile + '" to have missing keywords "' + missingKeywords.join('", "') + '"');
+		}
+
+		return collection;
+	}
+
+	function walkWidgetDependencies(id) {
+		var collection = collections[id];
+
+		if (!collection) {
+			collection = findWidgetAsNodeModule(id);
+
+			if (!collection) {
+				notFound.push(id);
+				return;
+			}
+		}
+
+		dirs.push(collection);
 		for (var dependency in collection.manifest.dependencies) {
-			walkWidgetDependencies(collections[dependency]);
+			walkWidgetDependencies(dependency);
 		}
 	}
 
 	// walk the dependencies, tracking any missing widgets
 	var notFound = [];
-    for (var id in appWidgets) {
-		if (!collections[id]) {
-			notFound.push(id);
-		} else {
-			walkWidgetDependencies(collections[id]);
-		}
-    }
+	for (var id in appWidgets) {
+		walkWidgetDependencies(id);
+	}
 
-    // if there are missing widgets, abort and tell the developer which ones
-    if (!!notFound.length) {
+	// if there are missing widgets, abort and tell the developer which ones
+	if (!!notFound.length) {
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
-			'If you are using them, add them to your project\'s widget folder.'
+			'If you are using them, add them to your project\'s widget folder or as NPM package.'
 		]);
-    }
+	}
 
 	return dirs;
 };
@@ -361,15 +400,15 @@ exports.properCase = function(n) {
 };
 
 exports.ucfirst = function (text) {
-    if (!text)
-        return text;
-    return text[0].toUpperCase() + text.substr(1);
+	if (!text)
+		return text;
+	return text[0].toUpperCase() + text.substr(1);
 };
 
 exports.lcfirst = function (text) {
-    if (!text)
-        return text;
-    return text[0].toLowerCase() + text.substr(1);
+	if (!text)
+		return text;
+	return text[0].toLowerCase() + text.substr(1);
 };
 
 exports.trim = function(line) {

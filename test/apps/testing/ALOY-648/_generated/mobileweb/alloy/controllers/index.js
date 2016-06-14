@@ -16,10 +16,10 @@ function Controller() {
         var __alloyId1 = [];
         for (var i = 0; len > i; i++) {
             var __alloyId2 = models[i];
-            __alloyId2.__transform = {};
+            __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = {
                 properties: {
-                    title: "undefined" != typeof __alloyId2.__transform["title"] ? __alloyId2.__transform["title"] : __alloyId2.get("title")
+                    title: __alloyId2.__transform.title
                 }
             };
             __alloyId1.push(__alloyId4);
@@ -65,9 +65,9 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
-    doClick ? $.__views.__alloyId0.addEventListener("itemclick", doClick) : __defers["$.__views.__alloyId0!itemclick!doClick"] = true;
+    doClick ? $.addListener($.__views.__alloyId0, "itemclick", doClick) : __defers["$.__views.__alloyId0!itemclick!doClick"] = true;
     exports.destroy = function() {
-        __alloyId5.off("fetch destroy change add remove reset", loadData);
+        __alloyId5 && __alloyId5.off("fetch destroy change add remove reset", loadData);
     };
     _.extend($, $.__views);
     var TEXT = "Click me to add more items";
@@ -79,7 +79,7 @@ function Controller() {
         }
     } ];
     $.index.open();
-    __defers["$.__views.__alloyId0!itemclick!doClick"] && $.__views.__alloyId0.addEventListener("itemclick", doClick);
+    __defers["$.__views.__alloyId0!itemclick!doClick"] && $.addListener($.__views.__alloyId0, "itemclick", doClick);
     _.extend($, exports);
 }
 

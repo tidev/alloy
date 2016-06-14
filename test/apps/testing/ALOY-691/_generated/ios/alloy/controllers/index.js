@@ -16,7 +16,7 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId2 = models[i];
-            __alloyId2.__transform = {};
+            __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = Ti.UI.createTableViewRow({});
             rows.push(__alloyId4);
             var __alloyId6 = Ti.UI.createView({});
@@ -55,7 +55,7 @@ function Controller() {
     var __alloyId7 = Alloy.Collections["test"] || test;
     __alloyId7.on("fetch destroy change add remove reset", render);
     exports.destroy = function() {
-        __alloyId7.off("fetch destroy change add remove reset", render);
+        __alloyId7 && __alloyId7.off("fetch destroy change add remove reset", render);
     };
     _.extend($, $.__views);
     $.index.open();

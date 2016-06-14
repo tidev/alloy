@@ -32,7 +32,7 @@ function Controller() {
                 font: {
                     fontSize: "18dp"
                 },
-                text: "undefined" != typeof __alloyId3.__transform["item"] ? __alloyId3.__transform["item"] : __alloyId3.get("item")
+                text: __alloyId3.__transform.item
             });
             __alloyId4.add(__alloyId5);
             var __alloyId6 = Ti.UI.createTextField({
@@ -41,11 +41,11 @@ function Controller() {
                 width: "100dp",
                 borderColor: "#ccc",
                 borderWidth: 1,
-                value: "1",
+                value: 1,
                 text: "Quantity"
             });
             __alloyId4.add(__alloyId6);
-            setQuantity ? __alloyId6.addEventListener("focus", setQuantity) : __defers["__alloyId6!focus!setQuantity"] = true;
+            setQuantity ? $.addListener(__alloyId6, "focus", setQuantity) : __defers["__alloyId6!focus!setQuantity"] = true;
         }
     }
     function whereFunction(collection) {
@@ -163,7 +163,7 @@ function Controller() {
         id: "addView"
     });
     $.__views.header.add($.__views.addView);
-    addToDoItem ? $.__views.addView.addEventListener("click", addToDoItem) : __defers["$.__views.addView!click!addToDoItem"] = true;
+    addToDoItem ? $.addListener($.__views.addView, "click", addToDoItem) : __defers["$.__views.addView!click!addToDoItem"] = true;
     $.__views.addImage = Ti.UI.createImageView({
         height: Ti.UI.FILL,
         width: Ti.UI.FILL,
@@ -185,7 +185,7 @@ function Controller() {
     var __alloyId7 = Alloy.Collections["todo"] || todo;
     __alloyId7.on("fetch destroy change add remove reset", __alloyId8);
     exports.destroy = function() {
-        __alloyId7.off("fetch destroy change add remove reset", __alloyId8);
+        __alloyId7 && __alloyId7.off("fetch destroy change add remove reset", __alloyId8);
     };
     _.extend($, $.__views);
     var todos = Alloy.Collections.todo;
@@ -197,8 +197,8 @@ function Controller() {
     var whereIndex = INDEXES["All"];
     $.todoWin.open();
     todos && todos.fetch();
-    __defers["$.__views.addView!click!addToDoItem"] && $.__views.addView.addEventListener("click", addToDoItem);
-    __defers["__alloyId6!focus!setQuantity"] && __alloyId6.addEventListener("focus", setQuantity);
+    __defers["$.__views.addView!click!addToDoItem"] && $.addListener($.__views.addView, "click", addToDoItem);
+    __defers["__alloyId6!focus!setQuantity"] && $.addListener(__alloyId6, "focus", setQuantity);
     _.extend($, exports);
 }
 

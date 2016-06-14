@@ -36,16 +36,16 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     try {
-        $.__views.index.addEventListener("touchstart", touch.start);
+        $.addListener($.__views.index, "touchstart", touch.start);
     } catch (e) {
         __defers["$.__views.index!touchstart!touch.start"] = true;
     }
     try {
-        $.__views.index.addEventListener("touchend", touch["end"].func);
+        $.addListener($.__views.index, "touchend", touch["end"].func);
     } catch (e) {
         __defers["$.__views.index!touchend!touch['end'].func"] = true;
     }
-    doSwipe ? $.__views.index.addEventListener("swipe", doSwipe) : __defers["$.__views.index!swipe!doSwipe"] = true;
+    doSwipe ? $.addListener($.__views.index, "swipe", doSwipe) : __defers["$.__views.index!swipe!doSwipe"] = true;
     $.__views.label = Ti.UI.createLabel({
         touchEnabled: false,
         color: "#000",
@@ -72,9 +72,9 @@ function Controller() {
         }
     };
     $.index.open();
-    __defers["$.__views.index!touchstart!touch.start"] && $.__views.index.addEventListener("touchstart", touch.start);
-    __defers["$.__views.index!touchend!touch['end'].func"] && $.__views.index.addEventListener("touchend", touch["end"].func);
-    __defers["$.__views.index!swipe!doSwipe"] && $.__views.index.addEventListener("swipe", doSwipe);
+    __defers["$.__views.index!touchstart!touch.start"] && $.addListener($.__views.index, "touchstart", touch.start);
+    __defers["$.__views.index!touchend!touch['end'].func"] && $.addListener($.__views.index, "touchend", touch["end"].func);
+    __defers["$.__views.index!swipe!doSwipe"] && $.addListener($.__views.index, "swipe", doSwipe);
     _.extend($, exports);
 }
 
