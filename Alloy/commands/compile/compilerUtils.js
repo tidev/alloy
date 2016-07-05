@@ -683,13 +683,13 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 				return walk(srcFile, destFile);
 			}
 
-			if (!/\.xml$/.test(srcFile)) {
-				return;
-			}
-
 			if (!fs.existsSync(destFile)) {
 				logger.debug('Writing ' + destFile.yellow);
 				return U.copyFileSync(srcFile, destFile);
+			}
+
+			if (!/\.xml$/.test(srcFile)) {
+				return;
 			}
 
 			// merge!
