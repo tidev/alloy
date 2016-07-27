@@ -47,7 +47,7 @@ function parse(node, state, args) {
 		var config = CU.getCompilerConfig(),
 			platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
 		if (child.nodeName === 'SearchView' && platform !== 'android') {
-			if (node.getAttribute('platform') !== 'android') {
+			if (child.getAttribute('platform') !== 'android') {
 				logger.warn([
 					'<SearchView> is only available in Android',
 					'To get rid of this warning, add platform="android" to your <SearchView> element'
