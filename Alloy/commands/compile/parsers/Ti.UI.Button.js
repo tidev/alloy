@@ -23,7 +23,7 @@ function parse(node, state, args) {
 
 	var systemButton = node.getAttribute('systemButton');
 	if (_.contains(systemButtons, systemButton)) {
-		node.setAttribute('systemButton', 'Ti.UI.iPhone.SystemButton.' + systemButton);
+		node.setAttribute('systemButton', 'Ti.UI.iOS.SystemButton.' + systemButton);
 	}
 
 	// Generate runtime code using default
