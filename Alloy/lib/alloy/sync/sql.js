@@ -384,7 +384,7 @@ function Migrate(Model) {
 
 function installDatabase(config) {
 	// get the database name from the db file path
-	var dbFile = config.adapter.db_file;
+	var dbFile = _.isFunction(config.adapter.db_file) ? config.adapter.db_file(config) : config.adapter.db_file;
 	var table = config.adapter.collection_name;
 
 	var rx = /(^|.*\/)([^\/]+)\.[^\/]+$/;
