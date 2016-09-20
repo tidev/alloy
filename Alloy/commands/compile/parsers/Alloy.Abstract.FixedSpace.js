@@ -15,6 +15,6 @@ function parse(node, state, args) {
 			symbol: args.symbol
 		},
 		styles: state.styles,
-		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.iPhone.SystemButton.FIXED_SPACE'+width+'});'
+		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.iOS.SystemButton.FIXED_SPACE'+width+'});'
 	};
 }

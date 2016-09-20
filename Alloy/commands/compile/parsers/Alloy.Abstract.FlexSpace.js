@@ -13,6 +13,6 @@ function parse(node, state, args) {
 			symbol: args.symbol
 		},
 		styles: state.styles,
-		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE});'
+		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE});'
 	};
 }
