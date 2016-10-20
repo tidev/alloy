@@ -11,13 +11,6 @@ var U = require('../../utils'),
 var FILE_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>' + os.EOL + '<resources>' +
     os.EOL + '</resources>';
 
-function check(strings) {
-    if (!strings || strings.length === 0) {
-        logger.warn('No new i18n strings found. Nothing to do.');
-        process.exit(0);
-    }
-}
-
 module.exports = function(projectRoot, language) {
     var i18nDir = path.join(projectRoot, 'app', 'i18n', language);
     var i18nFile = path.join(i18nDir, 'strings.xml');
@@ -38,35 +31,59 @@ module.exports = function(projectRoot, language) {
             var doc = U.XML.parseFromFile(i18nFile);
             var root = doc.documentElement;
 
-            // create a <string> node for each new string key
-            _.each(strings, function(str) {
-                var node = doc.createElement('string');
-                var value = doc.createTextNode(str);
-                node.setAttribute('name', str);
-                root.appendChild(doc.createTextNode('  '));
-                node.appendChild(value);
-                root.appendChild(node);
-                root.appendChild(doc.createTextNode('\n'));
-            });
+            // extracted strings given
+            if (_.isArray(strings)) {
+                var add = 0,
+                    remove = 0;
+
+                // loop existing strings
+                _.each(doc.getElementsByTagName('string'), function (node) {
+                    var i = strings.indexOf(node.getAttribute('name'));
+
+                    // in code > don't add
+                    if (-1 !== i) {
+                        delete strings[i];
+
+                    // not in code > remove
+                    } else if (clean) {
+                        
+                        // Leave as comment
+                        root.appendChild(doc.createTextNode('  '));
+                        root.appendChild(doc.createComment(U.XML.toString(node)));
+                        root.appendChild(doc.createTextNode('\n'));
+
+                        doc.documentElement.removeChild(node);
+
+                        remove++;
+                    }
+                });
+
+                if (clean) {
+                    logger.info(('Removing ' + remove + ' string' + (remove !== 1 ? 's' : '')).yellow);
+                }
+                
+                logger.info(('Adding ' + add + ' string' + (add !== 1 ? 's' : '')).yellow);
+
+                // create a <string> node for each new string key
+                _.each(strings, function(str) {
+                    var node = doc.createElement('string');
+                    var value = doc.createTextNode(str);
+                    node.setAttribute('name', str);
+                    root.appendChild(doc.createTextNode('  '));
+                    node.appendChild(value);
+                    root.appendChild(node);
+                    root.appendChild(doc.createTextNode('\n'));
+                });
+            }
 
             // serialize the document and write it back to the strings.xml file
             var serializer = new XMLSerializer();
             return serializer.serializeToString(doc);
         },
 
-        // Get an array of all localization string keys not already in the strings.xml file
-        merge: function(strings) {
-            var doc = U.XML.parseFromFile(i18nFile);
-            var oldStrings = _.map(doc.getElementsByTagName('string'), function(node) {
-                return node.attributes.getNamedItem('name').nodeValue;
-            });
-            return _.difference(strings, oldStrings);
-        },
-
         // Print the XML that would be written to your strings.xml file with --apply
         print: function(strings) {
-            check(strings);
-            logger.info('######## BEFORE ########' + os.EOL + api.process([]));
+            logger.info('######## BEFORE ########' + os.EOL + api.process());
             logger.info('######## AFTER  ########' + os.EOL + api.process(strings));
             logger.info(' ');
             logger.warn('Did not write the "' + shortPath + '" file - use "--apply" option to write.');
@@ -74,7 +91,6 @@ module.exports = function(projectRoot, language) {
 
         // Append any new localization strings to the existing strings.xml file
         write: function(strings) {
-            check(strings);
             fs.writeFileSync(i18nFile, api.process(strings), 'utf8');
             logger.info(('Wrote strings in the "' + path.relative(projectRoot, i18nFile) + '" file.').green);
         }

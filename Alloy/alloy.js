@@ -40,6 +40,7 @@ program
 	.option('-A, --apply', 'Applies command changes [extract-i18n]')
 	.option('-b, --noBanner', 'Disable the banner')
 	.option('-c, --config <config>','Pass in compiler configuration')
+	.option('-C, --clean', 'Removes unused strings [extract-i18n]')
 	.option('-f, --force','Force the command to execute')
 	.option('-l, --logLevel <logLevel>', 'Log level (default: 3 [DEBUG])')
 	.option('-n, --no-colors','Turn off colors')
