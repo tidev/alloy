@@ -266,7 +266,7 @@
                 module && module.exports) {
             try {
                 oldLocale = globalLocale._abbr;
-                require('alloy/moment/lang/' + name);
+                require('/alloy/moment/lang/' + name);
                 // because defineLocale currently also sets the global locale, we
                 // want to undo that for lazy loaded locales
                 locale_locales__getSetGlobalLocale(oldLocale);

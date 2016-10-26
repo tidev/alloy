@@ -4,7 +4,7 @@
  * all you need to do is require it with the `alloy` root directory in your
  * `require` call. For example:
  *
- *     var animation = require('alloy/animation');
+ *     var animation = require('/alloy/animation');
  *     animation.crossFade(view1, view2, 500, finishCallback);
  */
 

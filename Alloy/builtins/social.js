@@ -9,7 +9,7 @@
  * To use the social builtin library, require it with the `alloy` root
  * directory in your `require` call. For example:
  *
- *     var social = require('alloy/social').create({
+ *     var social = require('/alloy/social').create({
  *         consumerSecret: 'consumer-secret',
  *         consumerKey: 'consumer-key'
  *     });
@@ -450,7 +450,7 @@ var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
         }
     }, firstLoad = !0, loading = !1, estimates = JSON.parse(Ti.App.Properties.getString("Social-LoadingEstimates", "{}")), estimateID, startTime, intervalID = 0;
     this.showLoadingUI = function() {
-        var animation = require('alloy/animation');
+        var animation = require('/alloy/animation');
         var isIOS7 = OS_IOS && parseInt(Ti.Platform.version, 10) > 6 ? true : false
         window = Ti.UI.createWindow({
             backgroundColor: "transparent",

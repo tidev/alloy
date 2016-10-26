@@ -11,7 +11,7 @@ function Controller() {
     function btnClick(e) {
         alert(e.source.title + " is clicked");
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
@@ -42,7 +42,7 @@ function Controller() {
     __alloyId3.push($.__views.__alloyId4);
     btnClick ? $.addListener($.__views.__alloyId4, "click", btnClick) : __defers["$.__views.__alloyId4!click!btnClick"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
@@ -53,7 +53,7 @@ function Controller() {
     __alloyId3.push($.__views.__alloyId6);
     btnClick ? $.addListener($.__views.__alloyId6, "click", btnClick) : __defers["$.__views.__alloyId6!click!btnClick"] = true;
     $.__views.__alloyId7 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
@@ -97,6 +97,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

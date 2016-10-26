@@ -92,7 +92,7 @@
  * Alloy.Globals can be accessed in other non-controller Javascript files
  * like this:
  *
- *     var theObject = require('alloy').Globals.someGlobalObject;
+ *     var theObject = require('/alloy').Globals.someGlobalObject;
  *
  */
 
@@ -164,6 +164,6 @@
  * Alloy.CFG is accessible in any controller in your app, and can be accessed
  * in other non-controller Javascript files like this:
  *
- *     var theKey = require('alloy').CFG.key;
+ *     var theKey = require('/alloy').CFG.key;
  *
  */
