@@ -66,7 +66,9 @@ function parse(node, state, args) {
 				local: true,
 				isViewTemplate: true,
 				post: function(node, state, args) {
-					return childTemplates + '.push(' + state.item.symbol + ');';
+					if (state.item) {
+						return childTemplates + '.push(' + state.item.symbol + ');';
+					}
 				}
 			});
 		});
