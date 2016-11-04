@@ -1102,6 +1102,13 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/underscore.js',
 			'alloy/widget.js'
 		];
+		
+		// widget controllers and widget styles are already optimized. It should be listed in exceptions.
+		_.each(compileConfig.dependencies,function (version, widgetName) {
+			exceptions.push('alloy/widgets/'+widgetName+'/controllers/');
+			exceptions.push('alloy/widgets/'+widgetName+'/styles/');
+		});
+		
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
