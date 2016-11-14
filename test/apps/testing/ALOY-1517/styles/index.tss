@@ -1,0 +1,19 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+}
+
+"NavigationWindow[platform=ios formFactor=tablet]":{
+	backgroundColor: "lime",
+}
+
+"Label[platform=ios formFactor=tablet]":{
+	color: "red"
+}

@@ -674,12 +674,13 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		// construct self-executing function to merge styles based on runtime conditionals
 		code += '(function(){\n';
 		code += 'var o = {};\n';
+
 		for (var i = 0, l = styleCollection.length; i < l; i++) {
-			if (styleCollection[i].condition) {
-				code += 'if (' + styleCollection[i].condition + ') ';
-			}
 			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
 			if(!_.isEmpty(tmpStyle)) {
+				if (styleCollection[i].condition) {
+					code += 'if (' + styleCollection[i].condition + ') ';
+				}
 				code += 'Alloy.deepExtend(true, o, {';
 				code += tmpStyle;
 				code += '});\n';
