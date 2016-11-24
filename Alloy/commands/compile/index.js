@@ -71,7 +71,11 @@ module.exports = function(args, program) {
 		logger.debug('raw config = "' + program.config + '"');
 		_.each(program.config.split(','), function(v) {
 			var parts = v.split('=');
-			alloyConfig[parts[0]] = parts[1];
+			if(alloyConfig[parts[0]]){
+				alloyConfig[parts[0]] = [].concat(alloyConfig[parts[0]],parts[1]);
+			}else{
+				alloyConfig[parts[0]] = parts[1];
+			}
 			logger.debug(parts[0] + ' = ' + parts[1]);
 		});
 	}
@@ -146,7 +150,9 @@ module.exports = function(args, program) {
 	if (!alloyConfig.file) {
 		restrictionPath = null;
 	} else {
-		restrictionPath = path.join(paths.project, alloyConfig.file);
+		restrictionPath = _.map([].concat(alloyConfig.file),function (file) {
+			return path.join(paths.project, file);
+		});
 	}
 
 	// create compile config from paths and various alloy config files
@@ -468,7 +474,7 @@ module.exports = function(args, program) {
 function generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile) {
 	var alloyJs = path.join(paths.app, 'alloy.js');
 
-	if (restrictionPath !== null && restrictionPath !== path.join(paths.app, 'alloy.js')) {
+	if (restrictionPath !== null && !_.contains(restrictionPath, path.join(paths.app, 'alloy.js')) ) {
 		// skip alloy.js processing when filtering on another file
 		return;
 	}
@@ -523,7 +529,7 @@ function matchesRestriction(files, fileRestriction) {
 
 	_.each(files, function(file) {
 		if (typeof file === 'string') {
-			matches |= (file === fileRestriction);
+			matches |= _.contains(fileRestriction,file);
 		} else if (typeof file === 'object') {
 			// platform-specific TSS files result in an object
 			// with a property of platform === true which needs
@@ -1064,7 +1070,7 @@ function processModels(dirs) {
 
 function updateFilesWithBuildLog(src, dst, opts) {
 	// filter on retrictionPath
-	if (opts.restrictionPath === null || opts.restrictionPath.indexOf(src) === 0) {
+	if (opts.restrictionPath === null || _.find(opts.restrictionPath,function(f){return f.indexOf(src) === 0})) {
 		var updatedFiles = U.updateFiles(src, dst, _.extend({ isNew: buildLog.isNew }, opts));
 
 		if (typeof updatedFiles == 'object' && updatedFiles.length > 0 && opts.restrictionPath !== null) {

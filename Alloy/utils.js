@@ -203,7 +203,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		if (!fs.existsSync(src) ||
 			(opts.filter && opts.filter.test(file)) ||
 			(opts.exceptions && _.contains(opts.exceptions, file)) ||
-			(opts.restrictionPath && src !== opts.restrictionPath)) {
+			(opts.restrictionPath &&  !_.contains(opts.restrictionPath,src)) ) {
 			return;
 		}
 
