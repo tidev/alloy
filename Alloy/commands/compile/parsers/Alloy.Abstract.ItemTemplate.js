@@ -39,7 +39,7 @@ function parse(node, state, args) {
 
 	// add in any events on the ItemTemplate
 	if (args.events && args.events.length > 0) {
-		argsObject.events = '{' + _.reduce(args.events, function(memo,o) {
+		argsObject.events = '{' + _.reduce(args.events, function(memo, o) {
 			return memo + o.name + ':' + o.value + ',';
 		}, '') + '}';
 	}
@@ -77,8 +77,8 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = {";
-	code += _.reduce(argsObject, function(memo,v,k) {
+	code += (state.local ? 'var ' : '') + args.symbol + ' = {';
+	code += _.reduce(argsObject, function(memo, v, k) {
 		return memo + k + ':' + v + ',';
 	}, '');
 	code += '};';

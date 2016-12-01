@@ -2,7 +2,7 @@ var colors = require('colors'),
 	fs = require('fs'),
 	path = require('path'),
 	wrench = require('wrench'),
-	_ = require("../../lib/alloy/underscore")._,
+	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
@@ -12,7 +12,7 @@ function cleanup(args) {
 
 	files = wrench.readdirSyncRecursive(args.path);
 	if (files.length === 0) {
-		fs.rmdir(args.path, function(err){
+		fs.rmdir(args.path, function(err) {
 			if (err) {
 				logger.error('Failed to remove the empty directory. Please manually remove ' + args.path.cyan);
 			} else {
@@ -78,7 +78,7 @@ module.exports = function(args, program) {
 	}
 
 	if (controller.exists.source) {
-		fs.unlink(controller.source, function(err){
+		fs.unlink(controller.source, function(err) {
 			if (err) {
 				logger.error('remove failed view-style-controller ' + controller.source.cyan);
 			} else {
@@ -92,7 +92,7 @@ module.exports = function(args, program) {
 	}
 
 	if (view.exists.source) {
-		fs.unlink(view.source, function(err){
+		fs.unlink(view.source, function(err) {
 			if (err) {
 				logger.error('remove failed view ' + view.source.cyan);
 			} else {
@@ -106,7 +106,7 @@ module.exports = function(args, program) {
 	}
 
 	if (style.exists.source) {
-		fs.unlink(style.source, function(err){
+		fs.unlink(style.source, function(err) {
 			if (err) {
 				logger.error('remove failed style ' + style.source.cyan);
 			} else {

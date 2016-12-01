@@ -11,9 +11,9 @@ var path = require('path'),
 	paths = require('global-paths'),
 	logger = require('./logger'),
 	tiapp = require('./tiapp'),
-	XMLSerializer = require("xmldom").XMLSerializer,
-	DOMParser = require("xmldom").DOMParser,
-	_ = require("./lib/alloy/underscore")._,
+	XMLSerializer = require('xmldom').XMLSerializer,
+	DOMParser = require('xmldom').DOMParser,
+	_ = require('./lib/alloy/underscore')._,
 	CONST = require('./common/constants'),
 	sourceMapper = require('./commands/compile/sourceMapper');
 
@@ -29,7 +29,7 @@ exports.XML = {
 				str += serializer.serializeToString(node.childNodes[c]);
 			}
 		}
-		return str.replace(/\&amp;/g,'&');
+		return str.replace(/\&amp;/g, '&');
 	},
 	getElementsFromNodes: function(nodeList) {
 		var elems = [];
@@ -54,14 +54,14 @@ exports.XML = {
 				// ALOY-840: die on unclosed XML tags
 				// xmldom hardcodes this as a warning with the string message 'unclosed xml attribute'
 				// even when it's a tag that's unclosed
-				if(m.indexOf('unclosed xml attribute') === -1) {
+				if (m.indexOf('unclosed xml attribute') === -1) {
 					logger.warn((m || '').split(/[\r\n]/));
 				} else {
 					m = m.replace('unclosed xml attribute', 'Unclosed XML tag or attribute');
 					exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
 				}
 			};
-			doc = new DOMParser({errorHandler:errorHandler,locator:{}}).parseFromString(string);
+			doc = new DOMParser({errorHandler:errorHandler, locator:{}}).parseFromString(string);
 		} catch (e) {
 			exports.die('Error parsing XML file.', e);
 		}
@@ -69,7 +69,7 @@ exports.XML = {
 		return doc;
 	},
 	parseFromFile: function(filename) {
-		var xml = fs.readFileSync(filename,'utf8');
+		var xml = fs.readFileSync(filename, 'utf8');
 		return exports.XML.parseFromString(xml);
 	},
 	createEmptyNode: function(name, ns) {
@@ -105,7 +105,7 @@ exports.XML = {
 };
 
 exports.readTemplate = function(name) {
-	return fs.readFileSync(path.join(__dirname,'template',name),'utf8');
+	return fs.readFileSync(path.join(__dirname, 'template', name), 'utf8');
 };
 
 exports.evaluateTemplate = function(name, o) {
@@ -117,24 +117,24 @@ exports.getAndValidateProjectPaths = function(argPath, opts) {
 	var projectPath = path.resolve(argPath);
 
 	// See if we got the "app" path or the project path as an argument
-	projectPath = fs.existsSync(path.join(projectPath,'..','tiapp.xml')) ?
-		path.join(projectPath,'..') : projectPath;
+	projectPath = fs.existsSync(path.join(projectPath, '..', 'tiapp.xml')) ?
+		path.join(projectPath, '..') : projectPath;
 
 	// Assign paths objects
 	var paths = {
 		project: projectPath,
-		app: path.join(projectPath,'app'),
-		indexBase: path.join(CONST.DIR.CONTROLLER,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.CONTROLLER)
+		app: path.join(projectPath, 'app'),
+		indexBase: path.join(CONST.DIR.CONTROLLER, CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.CONTROLLER)
 	};
-	paths.index = path.join(paths.app,paths.indexBase);
-	paths.assets = path.join(paths.app,'assets');
-	paths.resources = path.join(paths.project,'Resources');
-	paths.resourcesAlloy = path.join(paths.resources,'alloy');
+	paths.index = path.join(paths.app, paths.indexBase);
+	paths.assets = path.join(paths.app, 'assets');
+	paths.resources = path.join(paths.project, 'Resources');
+	paths.resourcesAlloy = path.join(paths.resources, 'alloy');
 
 	// validate project and "app" paths
 	if (!fs.existsSync(paths.project)) {
 		exports.die('Titanium project path does not exist at "' + paths.project + '".');
-	} else if (!fs.existsSync(path.join(paths.project,'tiapp.xml'))) {
+	} else if (!fs.existsSync(path.join(paths.project, 'tiapp.xml'))) {
 		exports.die('Invalid Titanium project path (no tiapp.xml) at "' + paths.project + '"');
 	} else if (!fs.existsSync(paths.app)) {
 		exports.die('Alloy "app" directory does not exist at "' + paths.app + '"');
@@ -192,8 +192,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
 	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
-		var src = path.join(srcDir,file);
-		var dst = path.join(dstDir,file);
+		var src = path.join(srcDir, file);
+		var dst = path.join(dstDir, file);
 
 		if (excludeRegex.test(src)) {
 			return;
@@ -203,20 +203,20 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		if (!fs.existsSync(src) ||
 			(opts.filter && opts.filter.test(file)) ||
 			(opts.exceptions && _.contains(opts.exceptions, file)) ||
-			(opts.restrictionPath &&  !_.contains(opts.restrictionPath,src)) ) {
+			(opts.restrictionPath && !_.contains(opts.restrictionPath, src)) ) {
 			return;
 		}
 
 		// if this is the current platform-specific folder, adjust the dst path
 		var parts = file.split(/[\/\\]/);
 		if (opts.titaniumFolder && parts[0] === opts.titaniumFolder) {
-			if(opts.type && opts.type !== 'ASSETS' && parts[0] === 'iphone') {
+			if (opts.type && opts.type !== 'ASSETS' && parts[0] === 'iphone') {
 				// don't copy files in lib/iphone or vendor/iphone
 				return;
 			}
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
-		} else if(opts.titaniumFolder&& opts.titaniumFolder === 'iphone' && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
+		} else if (opts.titaniumFolder && opts.titaniumFolder === 'iphone' && opts.type && opts.type !== 'ASSETS' && parts[0] === 'ios') {
 			// copy files in lib/ios and vendor/ios
 			dst = path.join(dstDir, parts.slice(1).join('/'));
 			ordered.push({ src:src, dst:dst });
@@ -255,19 +255,19 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				copiedFiles.push(path.relative(path.join(opts.rootDir, 'Resources'), dst));
 			}
 		}
-		if(!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
-			var tpath = path.join(opts.rootDir,'build','map','Resources',(opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform),'alloy');
+		if (!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
+			var tpath = path.join(opts.rootDir, 'build', 'map', 'Resources', (opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform), 'alloy');
 			var target = {
-				filename: path.join(tpath, path.basename(src)),
-				filepath: path.dirname(dst),
-				template: dst
-			},
-			data = {
-				'__MAPMARKER_NONCONTROLLER__': {
-					filename: src,
-					filepath: path.dirname(src),
-				}
-			};
+					filename: path.join(tpath, path.basename(src)),
+					filepath: path.dirname(dst),
+					template: dst
+				},
+				data = {
+					'__MAPMARKER_NONCONTROLLER__': {
+						filename: src,
+						filepath: path.dirname(src),
+					}
+				};
 			sourceMapper.generateSourceMap({
 				target: target,
 				data: data,
@@ -288,7 +288,7 @@ exports.getWidgetDirectories = function(appDir) {
 	var appWidgets = [];
 	if (fs.existsSync(configPath)) {
 		try {
-			var content = fs.readFileSync(configPath,'utf8');
+			var content = fs.readFileSync(configPath, 'utf8');
 			appWidgets = jsonlint.parse(content).dependencies;
 		} catch (e) {
 			exports.die('Error parsing "config.json"', e);
@@ -298,18 +298,18 @@ exports.getWidgetDirectories = function(appDir) {
 	var dirs = [];
 	var collections = [];
 	var widgetPaths = [];
-	widgetPaths.push(path.join(__dirname,'..','widgets'));
-	widgetPaths.push(path.join(appDir,'widgets'));
+	widgetPaths.push(path.join(__dirname, '..', 'widgets'));
+	widgetPaths.push(path.join(appDir, 'widgets'));
 
 	_.each(widgetPaths, function(widgetPath) {
 		if (fs.existsSync(widgetPath)) {
 			var wFiles = fs.readdirSync(widgetPath);
 			for (var i = 0; i < wFiles.length; i++) {
-				var wDir = path.join(widgetPath,wFiles[i]);
+				var wDir = path.join(widgetPath, wFiles[i]);
 				if (fs.statSync(wDir).isDirectory() &&
 					_.indexOf(fs.readdirSync(wDir), 'widget.json') !== -1) {
-					 var collection = parseManifestAsCollection(path.join(wDir, 'widget.json'));
-					 collections[collection.manifest.id] = collection;
+					var collection = parseManifestAsCollection(path.join(wDir, 'widget.json'));
+					collections[collection.manifest.id] = collection;
 				}
 			}
 		}
@@ -333,7 +333,7 @@ exports.getWidgetDirectories = function(appDir) {
 	function findWidgetAsNodeModule(id) {
 		var wFile;
 		try {
-			wFile = resolve.sync(path.join(CONST.NPM_WIDGET_PREFIX + id, 'widget'), { basedir: path.join(appDir,'..'), extensions: [ '.json' ], paths: paths() });
+			wFile = resolve.sync(path.join(CONST.NPM_WIDGET_PREFIX + id, 'widget'), { basedir: path.join(appDir, '..'), extensions: [ '.json' ], paths: paths() });
 		} catch (err) {
 			return;
 		}
@@ -384,7 +384,7 @@ exports.getWidgetDirectories = function(appDir) {
 	}
 
 	// if there are missing widgets, abort and tell the developer which ones
-	if (!!notFound.length) {
+	if (!!notFound.length) { // eslint-disable-line no-extra-boolean-cast
 		exports.die([
 			'config.json references non-existent widgets: ' + JSON.stringify(notFound),
 			'If you are not using these widgets, remove them from your config.json dependencies.',
@@ -424,7 +424,7 @@ exports.rmdirContents = function(dir, exceptions) {
 	}
 
 	for (var i = 0, l = files.length; i < l; i++) {
-		var currFile = path.join(dir,files[i]);
+		var currFile = path.join(dir, files[i]);
 		var stat = fs.lstatSync(currFile);
 
 		// process the exceptions
@@ -450,13 +450,13 @@ exports.rmdirContents = function(dir, exceptions) {
 };
 
 exports.resolveAppHome = function() {
-	var indexView = path.join(CONST.DIR.VIEW,CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW);
-	var paths = [ path.join('.','app'), path.join('.') ];
+	var indexView = path.join(CONST.DIR.VIEW, CONST.NAME_DEFAULT + '.' + CONST.FILE_EXT.VIEW);
+	var paths = [ path.join('.', 'app'), path.join('.') ];
 
 	// Do we have an Alloy project? Find views/index.xml.
 	for (var i = 0; i < paths.length; i++) {
 		paths[i] = path.resolve(paths[i]);
-		var testPath = path.join(paths[i],indexView);
+		var testPath = path.join(paths[i], indexView);
 		if (fs.existsSync(testPath)) {
 			return paths[i];
 		}
@@ -514,7 +514,7 @@ exports.dieWithNode = function(node, msg) {
 exports.changeTime = function(file) {
 	if (!fs.existsSync(file)) { return -1; }
 	var stat = fs.statSync(file);
-	return Math.max(stat.mtime.getTime(),stat.ctime.getTime());
+	return Math.max(stat.mtime.getTime(), stat.ctime.getTime());
 };
 
 exports.stripColors = function(str) {
@@ -526,28 +526,28 @@ exports.installPlugin = function(alloyPath, projectPath) {
 	var plugins = {
 		plugin: {
 			file: CONST.PLUGIN_FILE,
-			src: path.join(alloyPath,'Alloy','plugin'),
-			dest: path.join(projectPath,'plugins',id)
+			src: path.join(alloyPath, 'Alloy', 'plugin'),
+			dest: path.join(projectPath, 'plugins', id)
 		},
 		hook: {
 			file: CONST.HOOK_FILE,
-			src: path.join(alloyPath,'hooks'),
-			dest: path.join(projectPath,'plugins',id,'hooks')
+			src: path.join(alloyPath, 'hooks'),
+			dest: path.join(projectPath, 'plugins', id, 'hooks')
 		},
 		cleanhook: {
 			file: CONST.HOOK_FILE_CLEAN,
-			src: path.join(alloyPath,'hooks'),
-			dest: path.join(projectPath,'plugins',id,'hooks')
+			src: path.join(alloyPath, 'hooks'),
+			dest: path.join(projectPath, 'plugins', id, 'hooks')
 		}
 	};
 
 	_.each(plugins, function(o, type) {
-		var srcFile = path.join(o.src,o.file);
-		var destFile = path.join(o.dest,o.file);
+		var srcFile = path.join(o.src, o.file);
+		var destFile = path.join(o.dest, o.file);
 
 		// skip if the src and dest are the same file
 		if (fs.existsSync(destFile) &&
-			fs.readFileSync(srcFile,'utf8') === fs.readFileSync(destFile,'utf8')) {
+			fs.readFileSync(srcFile, 'utf8') === fs.readFileSync(destFile, 'utf8')) {
 			return;
 		}
 		exports.ensureDir(o.dest);
@@ -592,7 +592,7 @@ exports.createHashFromString = function(string) {
 
 exports.proxyPropertyNameFromFullname = function(fullname) {
 	var nameParts = fullname.split('.');
-	return exports.lcfirst(nameParts[nameParts.length-1]);
+	return exports.lcfirst(nameParts[nameParts.length - 1]);
 };
 
 /*
@@ -601,8 +601,8 @@ Two date-related functions for ALOY-263
 */
 exports.isValidDate = function(d, dateField) {
 	// not using _.isDate() because it accepts some invalid date strings
-	if(!require('moment')(d).isValid()) {
-		exports.die("Invalid date string. " + dateField + " must be a string that can be parsed by MomentJS's `moment()` constructor.");
+	if (!require('moment')(d).isValid()) {
+		exports.die('Invalid date string. ' + dateField + " must be a string that can be parsed by MomentJS's `moment()` constructor.");
 	} else {
 		return true;
 	}
@@ -616,7 +616,7 @@ exports.isLocaleAlias = function(string) {
 };
 
 exports.getDeploymentTargets = function(projDir) {
-	var tiappPath = path.join(projDir,'tiapp.xml'),
+	var tiappPath = path.join(projDir, 'tiapp.xml'),
 		tiappDoc,
 		targets;
 

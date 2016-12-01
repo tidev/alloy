@@ -16,3 +16,7 @@ docs/
 **/underscore.js
 **/backbone.js
 Alloy/grammar
+Alloy/builtins/social.js
+Alloy/builtins/moment
+Alloy/builtins/moment.js
+Alloy/template

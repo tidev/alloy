@@ -11,19 +11,19 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	
+
 	if (tiapp.version.gte(tiapp.getSdkVersion(), MIN_VERSION)) {
-		iOSProxy = "iOS";
+		iOSProxy = 'iOS';
 	} else {
-		iOSProxy = "iPhone";
+		iOSProxy = 'iPhone';
 	}
-	
+
 	return {
 		parent: {
 			node: node,
 			symbol: args.symbol
 		},
 		styles: state.styles,
-		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.'+iOSProxy+'.SystemButton.FLEXIBLE_SPACE});'
+		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.' + iOSProxy + '.SystemButton.FLEXIBLE_SPACE});'
 	};
 }

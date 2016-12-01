@@ -88,7 +88,7 @@ module.exports = function(args, program) {
 	}
 
 	if (controller.exists.source) {
-		copy(controller.source, controller.destination, function(err){
+		copy(controller.source, controller.destination, function(err) {
 			if (err) {
 				logger.error('copy failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
 			} else {
@@ -98,7 +98,7 @@ module.exports = function(args, program) {
 	}
 
 	if (view.exists.source) {
-		copy(view.source, view.destination, function(err){
+		copy(view.source, view.destination, function(err) {
 			if (err) {
 				logger.error('copy failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
 			} else {
@@ -108,7 +108,7 @@ module.exports = function(args, program) {
 	}
 
 	if (style.exists.source) {
-		copy(style.source, style.destination, function(err){
+		copy(style.source, style.destination, function(err) {
 			if (err) {
 				logger.error('copy failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
 			} else {

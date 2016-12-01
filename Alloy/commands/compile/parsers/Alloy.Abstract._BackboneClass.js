@@ -28,7 +28,7 @@ function parse(node, state, args) {
 	// only perform compile time checks on nodes in non-widget markup
 	if (!manifest) {
 		// Make sure there's models to be used as the "src" of the Backbone class
-		var modelsPath = path.join(CU.getCompilerConfig().dir.home,CONST.DIR.MODEL);
+		var modelsPath = path.join(CU.getCompilerConfig().dir.home, CONST.DIR.MODEL);
 		var validModels;
 		if (!path.existsSync(modelsPath) || !(validModels = wrench.readdirSyncRecursive(modelsPath)).length) {
 			U.dieWithNode(node, [
@@ -41,7 +41,7 @@ function parse(node, state, args) {
 		}
 
 		// Make sure we have a valid model src
-		var validModelsPrint = '[' + _.map(validModels, function(s) { return s.replace(/\.js$/,''); }).join(',') + ']';
+		var validModelsPrint = '[' + _.map(validModels, function(s) { return s.replace(/\.js$/, ''); }).join(',') + ']';
 		if (!src) {
 			U.dieWithNode(node, [
 				'All ' + U.lcfirst(nodeName) + 's must have a "src" attribute which identifies its base model',
@@ -49,7 +49,7 @@ function parse(node, state, args) {
 				'Valid models: ' + validModelsPrint
 			]);
 		} else {
-			var modelPath = path.join(modelsPath,src + '.' + CONST.FILE_EXT.MODEL);
+			var modelPath = path.join(modelsPath, src + '.' + CONST.FILE_EXT.MODEL);
 			if (!path.existsSync(modelPath)) {
 				U.dieWithNode(node, [
 					'"src" attribute\'s model "' + src + '" does not exist in app/' + CONST.DIR.MODEL,

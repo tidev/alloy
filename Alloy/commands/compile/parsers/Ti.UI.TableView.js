@@ -36,7 +36,7 @@ function parse(node, state, args) {
 		proxyProperties = {},
 		localModel, arrayName, controllerSymbol;
 
-	if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+	if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 		// if this node or a parent has set the formFactor attribute
 		// we need to pass it to the data binding generator
 		args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
@@ -55,7 +55,7 @@ function parse(node, state, args) {
 			}
 			return;
 		}
-		if(child.nodeName === 'SearchView' && !child.hasAttribute('ns')) {
+		if (child.nodeName === 'SearchView' && !child.hasAttribute('ns')) {
 			child.setAttribute('ns', 'Ti.UI.Android');
 		}
 		var fullname = CU.getNodeFullname(child),
@@ -177,7 +177,7 @@ function parse(node, state, args) {
 
 		// fill in proxy property templates, if present
 		if (isControllerNode) {
-			_.each(proxyProperties, function(v,k) {
+			_.each(proxyProperties, function(v, k) {
 				proxyProperties[k] = _.template(v, {
 					controllerSymbol: controllerSymbol
 				});
@@ -211,9 +211,9 @@ function parse(node, state, args) {
 		localModel = localModel || CU.generateUniqueId();
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: "var rows=[];",
+			pre: 'var rows=[];',
 			items: itemCode,
-			post: tableState.parent.symbol + ".setData(rows);"
+			post: tableState.parent.symbol + '.setData(rows);'
 		});
 	}
 
