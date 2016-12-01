@@ -7,9 +7,9 @@ module.exports = function($, opts) {
 		validateUiComponent($, 'row', {
 			api: 'Ti.UI.TableViewRow',
 			style: {
-				backgroundColor: "#fff",
-				height: "60dp",
-				id: "row"
+				backgroundColor: '#fff',
+				height: '60dp',
+				id: 'row'
 			}
 		});
 
@@ -18,14 +18,14 @@ module.exports = function($, opts) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#000",
-				top: "5dp",
-				left: "10dp",
+				color: '#000',
+				top: '5dp',
+				left: '10dp',
 				font: {
-					fontSize: OS_MOBILEWEB ? "24px" : "24dp",
-					fontWeight: "bold"
+					fontSize: OS_MOBILEWEB ? '24px' : '24dp',
+					fontWeight: 'bold'
 				},
-				id: "name"
+				id: 'name'
 			}
 		});
 
@@ -34,14 +34,14 @@ module.exports = function($, opts) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#000",
-				bottom: "5dp",
-				left: "20dp",
+				color: '#000',
+				bottom: '5dp',
+				left: '20dp',
 				font: {
-					fontSize: OS_MOBILEWEB ? "16px" : "16dp",
-					fontWeight: "normal"
+					fontSize: OS_MOBILEWEB ? '16px' : '16dp',
+					fontWeight: 'normal'
 				},
-				id: "nickname"
+				id: 'nickname'
 			}
 		});
 

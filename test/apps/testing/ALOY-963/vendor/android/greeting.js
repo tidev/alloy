@@ -1,3 +1,3 @@
 exports.popup = function() {
-	alert("clicked android");
+	alert('clicked android');
 };

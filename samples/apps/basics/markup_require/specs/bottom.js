@@ -7,7 +7,7 @@ module.exports = function($) {
 		validateUiComponent($, 'bottom', {
 			api: 'Ti.UI.View',
 			style: {
-				id: "bottom"
+				id: 'bottom'
 			}
 		});
 	});
@@ -18,9 +18,9 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				title: "Click me",
+				title: 'Click me',
 				bottom: 20,
-				id: "b"
+				id: 'b'
 			}
 		});
 	});

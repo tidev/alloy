@@ -7,9 +7,9 @@ module.exports = function($) {
 		validateUiComponent($, 'master', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "#fff",
-				title: "Boxers",
-				id: "master"
+				backgroundColor: '#fff',
+				title: 'Boxers',
+				id: 'master'
 			}
 		});
 

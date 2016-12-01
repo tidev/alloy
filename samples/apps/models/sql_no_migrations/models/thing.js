@@ -1,28 +1,28 @@
 exports.definition = {
 	config: {
-		"columns": {
+		'columns': {
 			name: 'TEXT',
 
 			// column values can have types with keywords
 			thingId: 'INTEGER PRIMARY KEY AUTOINCREMENT'
 		},
 
-		"adapter": {
-			"type": "sql",
+		'adapter': {
+			'type': 'sql',
 
 			// The table name inside the sqlite database to use for
 			// models and collections based on this definition.
-			"collection_name": "things",
+			'collection_name': 'things',
 
 			// idAttribute tells Alloy/Backbone to use this column in
 			// my table as its unique identifier field. Without
 			// specifying this, Alloy's default behavior is to create
-			// and "alloy_id" field which will uniquely identify your
+			// and 'alloy_id' field which will uniquely identify your
 			// rows in the table with a text GUID.
-			"idAttribute": "thingId"
+			'idAttribute': 'thingId'
 		}
 	},
-	extendCollection : function(Collection) {
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

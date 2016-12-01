@@ -37,43 +37,43 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId0);
     var __alloyId3 = [];
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.ACTION,
+        systemButton: Ti.UI.iOS.SystemButton.ACTION,
         id: "__alloyId4"
     });
     __alloyId3.push($.__views.__alloyId4);
     $.__views.__alloyId5 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.TRASH,
+        systemButton: Ti.UI.iOS.SystemButton.TRASH,
         id: "__alloyId6"
     });
     __alloyId3.push($.__views.__alloyId6);
     $.__views.__alloyId7 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.ADD,
+        systemButton: Ti.UI.iOS.SystemButton.ADD,
         id: "__alloyId8"
     });
     __alloyId3.push($.__views.__alloyId8);
     $.__views.__alloyId9 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId9);
     $.__views.__alloyId10 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CAMERA,
+        systemButton: Ti.UI.iOS.SystemButton.CAMERA,
         id: "__alloyId10"
     });
     __alloyId3.push($.__views.__alloyId10);
     $.__views.__alloyId11 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId11);
     $.__views.__alloyId12 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CANCEL,
+        systemButton: Ti.UI.iOS.SystemButton.CANCEL,
         id: "__alloyId12"
     });
     __alloyId3.push($.__views.__alloyId12);

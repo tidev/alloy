@@ -10,17 +10,17 @@ module.exports = function($) {
 			validateUiComponent($, 'pullView', {
 				api: 'Ti.UI.View',
 				style: {
-					height: "60dp",
-					backgroundColor: "#aaa",
-					id: "pullView"
+					height: '60dp',
+					backgroundColor: '#aaa',
+					id: 'pullView'
 				}
 			});
 
 			validateUiComponent($, 'pullText', {
 				api: 'Ti.UI.Label',
 				style: {
-					text: "Something about refreshing would be here",
-					id: "pullText",
+					text: 'Something about refreshing would be here',
+					id: 'pullText',
 					height: Ti.UI.SIZE,
 					width: Ti.UI.SIZE,
 					bottom: 10
@@ -31,9 +31,9 @@ module.exports = function($) {
 		validateUiComponent($, 'headerView', {
 			api: 'Ti.UI.View',
 			style: {
-				height: "60dp",
-				backgroundColor: "#0f0",
-				id: "headerView"
+				height: '60dp',
+				backgroundColor: '#0f0',
+				id: 'headerView'
 			}
 		});
 
@@ -41,16 +41,16 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				text: "I'm an ugly headerView",
-				id: "headerText"
+				id: 'headerText'
 			}
 		});
 
 		validateUiComponent($, 'footerView', {
 			api: 'Ti.UI.View',
 			style: {
-				height: "60dp",
-				backgroundColor: "#0f0",
-				id: "footerView"
+				height: '60dp',
+				backgroundColor: '#0f0',
+				id: 'footerView'
 			}
 		});
 
@@ -58,7 +58,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Label',
 			style: {
 				text: "I'm an equally ugly footerView",
-				id: "footerText"
+				id: 'footerText'
 			}
 		});
 	});

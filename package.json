@@ -51,6 +51,7 @@
     "alloy": "./bin/alloy"
   },
   "scripts": {
+    "pretest": "eslint .",
     "test": "jake test:all"
   },
   "main": "./Alloy/alloy",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "diff": "^2.2.2",
+    "eslint": "^3.11.1",
     "jake": "^8.0.12"
   }
 }

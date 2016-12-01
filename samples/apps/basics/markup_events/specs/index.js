@@ -7,8 +7,8 @@ module.exports = function($) {
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "white",
-				id: "index"
+				backgroundColor: 'white',
+				id: 'index'
 			}
 		});
 	});
@@ -19,9 +19,9 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#900",
-				id: "t",
-				text: "CLICK ME"
+				color: '#900',
+				id: 't',
+				text: 'CLICK ME'
 			}
 		});
 	});

@@ -7,22 +7,22 @@ module.exports = function($) {
 		validateUiComponent($, 'item', {
 			api: 'Ti.UI.View',
 			style: {
-				backgroundColor: "#00f",
-				id: "item"
+				backgroundColor: '#00f',
+				id: 'item'
 			}
 		});
 
 		validateUiComponent($, 'label', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#f00",
+				color: '#f00',
 				font: {
 					fontSize: OS_MOBILEWEB ? '24px' : 24,
-					fontWeight: "bold"
+					fontWeight: 'bold'
 				},
-				textAlign: "center",
-				text: "should be bold, red text on blue background",
-				id: "label"
+				textAlign: 'center',
+				text: 'should be bold, red text on blue background',
+				id: 'label'
 			}
 		});
 	});

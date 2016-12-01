@@ -1,6 +1,6 @@
 
 function stepperChanged(e) {
-	alert("Value: " + e.value);
+	alert('Value: ' + e.value);
 }
 
 $.index.open();

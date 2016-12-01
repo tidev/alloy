@@ -7,7 +7,7 @@ module.exports = function(opts) {
 	opts = opts || {};
 
 	var doneCallback = opts.doneCallback || function(r) {
-		if(r && r.results() && r.results().failedCount > 0 ) {
+		if (r && r.results() && r.results().failedCount > 0 ) {
 			process.exit(1);
 		}
 	};

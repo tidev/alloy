@@ -9,5 +9,5 @@ migration.up = function(migrator) {
 };
 
 migration.down = function(migrator) {
-	migrator.dropTable("users");
+	migrator.dropTable('users');
 };

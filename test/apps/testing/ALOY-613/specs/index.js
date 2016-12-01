@@ -13,7 +13,7 @@ var labelStyle = {
 	bottom: OS_MOBILEWEB ? undefined : null
 };
 
-// TODO: Mobileweb represents null values differently. Remove mobileweb-specific 
+// TODO: Mobileweb represents null values differently. Remove mobileweb-specific
 // code when this is resolved: https://jira.appcelerator.org/browse/TIMOB-14295
 module.exports = function($) {
 	addMatchers();
@@ -26,7 +26,7 @@ module.exports = function($) {
 
 		it('adds classes ["tiny","right"] to $.tester', function() {
 			var t = function() {
-				$.addClass($.tester, ['tiny','right']);
+				$.addClass($.tester, ['tiny', 'right']);
 			};
 			expect(t).not.toThrow();
 		});
@@ -41,9 +41,9 @@ module.exports = function($) {
 				},
 				right: 0,
 				apiName: 'Ti.UI.Label',
-				classes: ['tiny','right']
+				classes: ['tiny', 'right']
 			})
-		}); 
+		});
 
 		it('removes class "right" from $.tester', function() {
 			var t = function() {
@@ -97,9 +97,9 @@ module.exports = function($) {
 				},
 				right: 0,
 				apiName: 'Ti.UI.Label',
-				classes: ['tiny','right']
+				classes: ['tiny', 'right']
 			})
-		}); 
+		});
 
 		it('removes classes "tiny right" via string to $.tester', function() {
 			var t = function() {

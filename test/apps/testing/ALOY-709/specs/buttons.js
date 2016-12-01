@@ -5,15 +5,15 @@ module.exports = function($) {
 
 	describe('buttons controller', function() {
 		for (var i = 0; i < 3; i++) {
-			var id = 'button' + (i+1);
+			var id = 'button' + (i + 1);
 			validateUiComponent($, id, {
 				api: 'Ti.UI.Button',
 				style: _.extend({
-					title: 'button ' + (i+1),
-			        id: id
+					title: 'button ' + (i + 1),
+					id: id
 				}, i !== 2 ? {
-					apiName: "Ti.UI.Button",
-					classes: [ "bob", "lou" ]
+					apiName: 'Ti.UI.Button',
+					classes: [ 'bob', 'lou' ]
 				} : {})
 			});
 		}

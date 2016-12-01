@@ -1,8 +1,8 @@
 function doLeftClick() {
-  alert('Left button clicked');
+	alert('Left button clicked');
 }
 function doRightClick() {
-  alert('Right button clicked');
+	alert('Right button clicked');
 }
 
 $.index.open();
