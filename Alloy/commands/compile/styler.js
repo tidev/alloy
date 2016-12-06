@@ -102,10 +102,10 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	var ret = false;
 	var theme = opts.theme;
 	var apptss = CONST.GLOBAL_STYLE;
-	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
+	var stylesDir = path.join(appPath, CONST.DIR.STYLE);
 	var themesDir;
 	if (theme) {
-		themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
+		themesDir = path.join(appPath, 'themes', theme, CONST.DIR.STYLE);
 	}
 	var buildlog = BuildLog();
 	var cacheFile = path.join(appPath, '..', CONST.DIR.BUILD, GLOBAL_STYLE_CACHE);
@@ -113,24 +113,24 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	// create array of global styles to load based on arguments
 	var loadArray = [];
 	loadArray.push({
-		path: path.join(stylesDir,apptss),
+		path: path.join(stylesDir, apptss),
 		msg: apptss
 	});
 	if (theme) {
 		loadArray.push({
-			path: path.join(themesDir,apptss),
+			path: path.join(themesDir, apptss),
 			msg: apptss + '(theme:' + theme + ')',
 			obj: { theme: true }
 		});
 	}
 	loadArray.push({
-		path: path.join(stylesDir,platform,apptss),
+		path: path.join(stylesDir, platform, apptss),
 		msg: apptss + '(platform:' + platform + ')',
 		obj: { platform: true }
 	});
 	if (theme) {
 		loadArray.push({
-			path: path.join(themesDir,platform,apptss),
+			path: path.join(themesDir, platform, apptss),
 			msg: apptss + '(theme:' + theme + ' platform:' + platform + ')',
 			obj: { platform: true, theme: true }
 		});
@@ -209,7 +209,7 @@ exports.sortStyles = function(style, opts) {
 			if (newKey === 'undefined' && !match[1]) { continue; }
 
 			// get the style key type
-			switch(match[1]) {
+			switch (match[1]) {
 				case '#':
 					obj.isId = true;
 					priority += VALUES.ID;
@@ -360,13 +360,13 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
-						if(DATEFIELDS.indexOf(sn) !== -1) {
+					if (typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
+						if (DATEFIELDS.indexOf(sn) !== -1) {
 							// ALOY-263, support date/time style pickers
 							var d = U.createDate(value);
 
-							if(U.isValidDate(d, sn)) {
-								code += prefix + 'new Date("'+d.toString()+'"),';
+							if (U.isValidDate(d, sn)) {
+								code += prefix + 'new Date("' + d.toString() + '"),';
 							}
 						} else {
 							code += prefix + '"' + value
@@ -377,7 +377,7 @@ exports.processStyle = function(_style, _state) {
 								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
 						}
 					} else {
-						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
+						if (KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
 							code += prefix + '"' + value
 								.replace(/"/g, '\\"')
 								.replace(/\n/g, '\\n')
@@ -387,13 +387,13 @@ exports.processStyle = function(_style, _state) {
 						} else {
 							// keyboard type shortcuts for TextField, TextArea
 							// support shortcuts for keyboard type, return key type, and autocapitalization
-							if (sn===KEYBOARD_PROPERTIES[0] && _.contains(KEYBOARD_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[0] && _.contains(KEYBOARD_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.KEYBOARD_' + value.toUpperCase() + ',';
 							}
-							if (sn===KEYBOARD_PROPERTIES[1] && _.contains(RETURN_KEY_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[1] && _.contains(RETURN_KEY_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.RETURNKEY_' + value.toUpperCase() + ',';
 							}
-							if (sn===KEYBOARD_PROPERTIES[2] && _.contains(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[2] && _.contains(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + value.toUpperCase() + ',';
 							}
 						}
@@ -424,7 +424,7 @@ exports.processStyle = function(_style, _state) {
 	return code;
 };
 
-exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
+exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle, theState) {
 	var styleCollection = [],
 		lastObj = {},
 		elementName = apiName.split('.').pop();
@@ -457,7 +457,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						_.each(q.platform.toString().split(','), function(p) {
 							// need to account for multiple platforms and negation, such as platform=ios or
 							// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
-							if(p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
+							if (p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
 								isForCurrentPlatform = true;
 							}
 						});
@@ -482,11 +482,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
 				var joinString = (pcond && conditionals.formFactor) ? ' && ' : '';
 				var conditional = pcond + joinString + conditionals.formFactor;
-				if(q.if) {
+				if (q.if) {
 					// ALOY-871: handle custom TSS queries with if conditional
 					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
 					var ffJoinString = (ffcond) ? ' && ' : '';
-					conditional = pcond + joinString + ffcond + ffJoinString + "(" + q.if.split(',').join(' || ')+")";
+					conditional = pcond + joinString + ffcond + ffJoinString + '(' + q.if.split(',').join(' || ') + ')';
 				}
 
 				// push styles if we need to insert a conditional
@@ -496,7 +496,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						styleCollection.push({style:style.style, condition:conditional});
 						lastObj = {};
 					}
-				} else if(!q.if) {
+				} else if (!q.if) {
 					lastObj = deepExtend(true, lastObj, style.style);
 				}
 			} else {
@@ -517,7 +517,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 	// substitutions for binding
 	_.each(styleCollection, function(style) {
-		_.each(style.style, function(v,k) {
+		_.each(style.style, function(v, k) {
 
 			if (!_.isString(v)) {
 				return;
@@ -562,21 +562,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				// collection binding
 				if (referencePath.length === 1) {
 					bindsCollection = true;
-				}
-
-				// instance model binding
-				else if (referencePath[0] === '$') {
+				} else if (referencePath[0] === '$') {
+					// instance model binding
 					attribute = referencePath.splice(2, referencePath.length);
-				}
-
-				// global model binding
-				else if (_.contains(CU.models, referencePath[0])) {
+				} else if (_.contains(CU.models, referencePath[0])) {
+					// global model binding
 					attribute = referencePath.splice(1, referencePath.length);
 					referencePath.unshift('Alloy', 'Models');
-				}
-
-				// collection binding (deep)
-				else {
+				} else {
+					// collection binding (deep)
 					bindsCollection = true;
 				}
 
@@ -588,10 +582,8 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 					if (!_.contains(bindsModels, modelVar)) {
 						bindsModels.push(modelVar);
 					}
-				}
-
-				// collection binding
-				else {
+				} else {
+					// collection binding
 					reference = collectionModelVar + '.' + CONST.BIND_TRANSFORM_VAR + (reference[0] === '[' ? '' : '.') + reference;
 				}
 
@@ -623,10 +615,8 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 							models: bindsModels,
 							bindings: []
 						};
-					}
-
-					// ensure that mix use of models contains all
-					else {
+					} else {
+						// ensure that mix use of models contains all
 						exports.bindingsMap[modelVar].models = _.union(exports.bindingsMap[modelVar].models, bindsModels);
 					}
 
@@ -677,7 +667,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 		for (var i = 0, l = styleCollection.length; i < l; i++) {
 			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
-			if(!_.isEmpty(tmpStyle)) {
+			if (!_.isEmpty(tmpStyle)) {
 				if (styleCollection[i].condition) {
 					code += 'if (' + styleCollection[i].condition + ') ';
 				}

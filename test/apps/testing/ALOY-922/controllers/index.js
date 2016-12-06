@@ -1,3 +1,3 @@
 $.settingsWin.open();
 
-function TFUpdate(){}
+function TFUpdate() {}

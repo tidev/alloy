@@ -117,8 +117,8 @@ if (OS_IOS) {
 }
 
 function ucfirst(text) {
-		if (!text) { return text; }
-		return text[0].toUpperCase() + text.substr(1);
+	if (!text) { return text; }
+	return text[0].toUpperCase() + text.substr(1);
 }
 
 function addNamespace(apiName) {
@@ -150,9 +150,9 @@ exports.M = function(name, modelDesc, migrations) {
 	if (migrations) { extendClass.migrations = migrations; }
 
 	// Run the pre model creation code, if any
-		if (mod && _.isFunction(mod.beforeModelCreate)) {
+	if (mod && _.isFunction(mod.beforeModelCreate)) {
 		config = mod.beforeModelCreate(config, name) || config;
-		}
+	}
 
 	// Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass);
@@ -179,7 +179,7 @@ exports.C = function(name, modelDesc, model) {
 	if (config.adapter && config.adapter.type) {
 		mod = require('alloy/sync/' + config.adapter.type);
 		extendObj.sync = function(method, model, opts) {
-			return mod.sync(method,model,opts);
+			return mod.sync(method, model, opts);
 		};
 	} else {
 		extendObj.sync = function(method, model, opts) {
@@ -215,10 +215,10 @@ exports.UI.create = function(controller, apiName, opts) {
 		baseName = apiName;
 		ns = opts.ns || CONST.IMPLICIT_NAMESPACES[baseName] || CONST.NAMESPACE_DEFAULT;
 	} else if (parts.length > 1) {
-		baseName = parts[parts.length-1];
-		ns = parts.slice(0,parts.length-1).join('.');
+		baseName = parts[parts.length - 1];
+		ns = parts.slice(0,parts.length - 1).join('.');
 	} else {
-		throw('Alloy.UI.create() failed: No API name was given in the second parameter');
+		throw ('Alloy.UI.create() failed: No API name was given in the second parameter');
 	}
 	opts.apiName = ns + '.' + baseName;
 	baseName = baseName[0].toUpperCase() + baseName.substr(1);
@@ -301,7 +301,7 @@ exports.createStyle = function(controller, opts, defaults) {
 			(style.queries.if.trim().toLowerCase() === 'false' ||
 			(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
 			Alloy.Globals[style.queries.if.split('.')[2]] === false))) {
-				continue;
+			continue;
 		}
 
 		// Merge this style into the existing style object
@@ -321,7 +321,7 @@ exports.createStyle = function(controller, opts, defaults) {
 
 	if (MW320_CHECK) { delete styleFinal[CONST.APINAME_PROPERTY]; }
 
-	return defaults ? _.defaults(styleFinal,defaults) : styleFinal;
+	return defaults ? _.defaults(styleFinal, defaults) : styleFinal;
 };
 
 function processStyle(controller, proxy, classes, opts, defaults) {
@@ -644,10 +644,10 @@ exports.deepExtend = function() {
 
 	for (; i < length; i++) {
 		// Only deal with non-null/undefined values
-		options = arguments[i]
+		options = arguments[i];
 		if (options != null) {
 			if (typeof options === 'string') {
-					options = options.split('');
+				options = options.split('');
 			}
 			// Extend the base object
 			for (name in options) {

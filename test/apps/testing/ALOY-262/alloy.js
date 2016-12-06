@@ -5,7 +5,3 @@ if (OS_IOS) {
 		supported = true;
 	}
 }
-
-if (supported) {
-
-}

@@ -1,16 +1,16 @@
 exports.definition = {
-  extendModel: function(Model) {
-    _.extend(Model.prototype, {
-      transform: function() {
-        var transformed = this.toJSON();
+	extendModel: function(Model) {
+		_.extend(Model.prototype, {
+			transform: function() {
+				var transformed = this.toJSON();
 
-        transformed.foo = transformed.foo + 'D!';
-        transformed.bar = transformed.bar + 'T!';
+				transformed.foo = transformed.foo + 'D!';
+				transformed.bar = transformed.bar + 'T!';
 
-        return transformed;
-      }
-    });
+				return transformed;
+			}
+		});
 
-    return Model;
-  }
+		return Model;
+	}
 };

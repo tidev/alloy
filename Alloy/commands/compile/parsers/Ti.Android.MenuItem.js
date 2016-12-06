@@ -23,7 +23,7 @@ function parse(node, state, args) {
 			actionView = require('./_ProxyProperty.' + parts[1]).parse(node, state);
 		}
 	});
-	if(actionView) {
+	if (actionView) {
 		// add the code to the parent
 		code += actionView.code;
 

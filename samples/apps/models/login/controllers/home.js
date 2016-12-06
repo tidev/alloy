@@ -11,7 +11,7 @@ function setTheme(e) {
 	currentRow.hasCheck = false;
 	currentRow = e.row;
 	currentRow.hasCheck = true;
-	user.set({theme:e.index-1});
+	user.set({theme:e.index - 1});
 	user.save();
 }
 

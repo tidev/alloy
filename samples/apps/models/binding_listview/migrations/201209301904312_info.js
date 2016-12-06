@@ -10,5 +10,5 @@ migration.up = function(migrator) {
 };
 
 migration.down = function(migrator) {
-	migrator.dropTable("info");
+	migrator.dropTable('info');
 };

@@ -18,10 +18,10 @@ module.exports = function($) {
 		validateUiComponent($, 'button', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "os:" + os + ' env:' + env,
+				title: 'os:' + os + ' env:' + env,
 				osOnly: os,
 				envOnly: env,
-				id: "button"
+				id: 'button'
 			}
 		});
 	});

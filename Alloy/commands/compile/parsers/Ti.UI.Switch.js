@@ -15,7 +15,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	if (node.hasAttribute('value')) {
 		var value = node.getAttribute('value');
-		if(!value.match(BINDING_REGEX)) {
+		if (!value.match(BINDING_REGEX)) {
 			// coerce value attribute to boolean if the switch is not bound to a collection
 			state.extraStyle = styler.createVariableStyle('value', value === 'true');
 		}

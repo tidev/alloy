@@ -7,11 +7,11 @@ var ALLOY_DB_DEFAULT = '_alloy_';
 var ALLOY_ID_DEFAULT = 'alloy_id';
 
 function S4() {
-	return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+	return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 
 function guid() {
-	return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+	return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4());
 }
 
 var cache = {
@@ -42,7 +42,7 @@ function Migrator(config, transactionDb) {
 		// autoincrement, primary key, etc...
 		var parts = name.split(/\s+/);
 		var type = parts[0];
-		switch(type.toLowerCase()) {
+		switch (type.toLowerCase()) {
 			case 'string':
 			case 'varchar':
 			case 'date':
@@ -88,7 +88,7 @@ function Migrator(config, transactionDb) {
 		var found = false;
 		for (var k in config.columns) {
 			if (k === this.idAttribute) { found = true; }
-			columns.push(k + " " + this.column(config.columns[k]));
+			columns.push(k + ' ' + this.column(config.columns[k]));
 		}
 
 		// add the id field if it wasn't specified
@@ -166,7 +166,7 @@ function Sync(method, model, opts) {
 				if (!model.id) {
 					model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
 					attrObj[model.idAttribute] = model.id;
-					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
+					backbone.VERSION === '0.9.2' ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// assemble columns and values
@@ -174,11 +174,11 @@ function Sync(method, model, opts) {
 				for (var k in columns) {
 					names.push(k);
 					values.push(model.get(k));
-					q.push("?");
+					q.push('?');
 				}
 
 				// execute the query
-				sql = "REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
+				sql = 'REPLACE INTO ' + table + ' (' + names.join(',') + ') VALUES (' + q.join(',') + ');';
 				db = Ti.Database.open(dbName);
 				db.execute(sql, values);
 
@@ -186,7 +186,7 @@ function Sync(method, model, opts) {
 				if (model.id === null) {
 					model.id = db.lastInsertRowId;
 					attrObj[model.idAttribute] = model.id;
-					backbone.VERSION === "0.9.2" ? model.set(attrObj, { silent: true }) : model.set(attrObj);
+					backbone.VERSION === '0.9.2' ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
 
 				// cleanup
@@ -232,10 +232,9 @@ function Sync(method, model, opts) {
 			}
 
 			// iterate through all queried rows
-			while(rs.isValidRow())
-			{
+			while (rs.isValidRow()) {
 				var o = {};
-				for(i=0;i<fieldCount;i++) {
+				for (i = 0; i < fieldCount; i++) {
 					o[fieldNames[i]] = getField(i);
 				}
 				values.push(o);
@@ -249,15 +248,15 @@ function Sync(method, model, opts) {
 			// shape response based on whether it's a model or collection
 			var len = values.length;
 
-			if (backbone.VERSION === "0.9.2") {
+			if (backbone.VERSION === '0.9.2') {
 				model.length = len;
 			}
 
-			resp = (len===1) ? values[0] : values;
+			resp = (len === 1) ? values[0] : values;
 			break;
 
 		case 'delete':
-			sql = 'DELETE FROM '+table+' WHERE ' + model.idAttribute + '=?';
+			sql = 'DELETE FROM ' + table + ' WHERE ' + model.idAttribute + '=?';
 
 			// execute the delete
 			db = Ti.Database.open(dbName);
@@ -271,10 +270,10 @@ function Sync(method, model, opts) {
   // process success/error handlers, if present
 	if (resp) {
 		if (_.isFunction(opts.success)) { opts.success(resp); }
-		if (method === "read" && !opts.silent) { model.trigger("fetch", { fromAdapter: true }); }
-  } else {
+		if (method === 'read' && !opts.silent) { model.trigger('fetch', { fromAdapter: true }); }
+	} else {
 		if (_.isFunction(opts.error)) { opts.error(resp); }
-  }
+	}
 
 }
 
@@ -298,7 +297,7 @@ function Migrate(Model) {
 
 	// get a reference to the last migration
 	var lastMigration = {};
-	if (migrations.length) { migrations[migrations.length-1](lastMigration); }
+	if (migrations.length) { migrations[migrations.length - 1](lastMigration); }
 
 	// Get config reference
 	var config = Model.prototype.config;
@@ -402,14 +401,14 @@ function installDatabase(config) {
 
 	// set remoteBackup status for iOS
 	if (config.adapter.remoteBackup === false && OS_IOS) {
-		Ti.API.debug('iCloud "do not backup" flag set for database "'+ dbFile + '"');
+		Ti.API.debug('iCloud "do not backup" flag set for database "' + dbFile + '"');
 		db.file.setRemoteBackup(false);
 	}
 
 	// compose config.columns from table definition in database
 	var rs = db.execute('pragma table_info("' + table + '");');
 	var columns = {}, cName, cType;
-	if(rs) {
+	if (rs) {
 		while (rs.isValidRow()) {
 			cName = rs.fieldByName('name');
 			cType = rs.fieldByName('type');
@@ -432,8 +431,8 @@ function installDatabase(config) {
 			// see if it already has the ALLOY_ID_DEFAULT
 			if (cName === ALLOY_ID_DEFAULT && !config.adapter.idAttribute) {
 				config.adapter.idAttribute = ALLOY_ID_DEFAULT;
-			} else if(k === config.adapter.idAttribute) {
-				cType += " UNIQUE";
+			} else if (k === config.adapter.idAttribute) {
+				cType += ' UNIQUE';
 			}
 			columns[cName] = cType;
 		}

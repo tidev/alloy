@@ -8,7 +8,7 @@ module.exports = function($) {
 			api: 'Ti.UI.Window',
 			style: {
 				backgroundColor: '#fff',
-				id: "index"
+				id: 'index'
 			}
 		});
 
@@ -16,7 +16,7 @@ module.exports = function($) {
 			api: 'Ti.UI.View',
 			style: {
 				backgroundColor: Alloy.isTablet ? 'red' : 'blue',
-				id: "main"
+				id: 'main'
 			}
 		});
 
@@ -25,20 +25,20 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#fff",
+				color: '#fff',
 				text: Alloy.isTablet ? "I'm a tablet!" : "I'm a handheld!",
-				id: "label"
+				id: 'label'
 			}
 		});
 
 		validateUiComponent($, 'container', {
 			api: 'Ti.UI.View',
 			style: {
-				id: "container",
-				height: "50",
-				width: "200",
-				bottom: "10",
-				backgroundColor: "#cdcdcd"
+				id: 'container',
+				height: '50',
+				width: '200',
+				bottom: '10',
+				backgroundColor: '#cdcdcd'
 			}
 		});
 
@@ -47,9 +47,9 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#fff",
+				color: '#fff',
 				text: Ti.Platform.osname + (OS_IOS ? '' : ' ' + (Alloy.isTablet ? 'tablet' : 'handheld')),
-				id: "platformLabel"
+				id: 'platformLabel'
 			}
 		});
 	});

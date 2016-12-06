@@ -20,9 +20,9 @@ exports.init = function (logger, config, cli, appc) {
 		spawn = require('child_process').spawn,
 		parallel = appc.async.parallel;
 
-		if(!process.env.sdk) {
-			process.env.sdk = cli.sdk.name;
-		}
+	if (!process.env.sdk) {
+		process.env.sdk = cli.sdk.name;
+	}
 
 	function run(deviceFamily, deployType, target, finished, silent) {
 		var appDir = path.join(cli.argv['project-dir'], 'app');
@@ -50,7 +50,7 @@ exports.init = function (logger, config, cli, appc) {
 				deploytype: deployType || cli.argv['deploy-type'] || 'development',
 				target: target
 			};
-		if(silent) {
+		if (silent) {
 			// turn off all logging output for code analyzer build hook
 			config.noBanner = 'true';
 			config.logLevel = '-1';
@@ -145,13 +145,13 @@ exports.init = function (logger, config, cli, appc) {
 				if (process.platform === 'win32' && paths.alloy === 'alloy.cmd') {
 					cmd.shift();
 					logger.info(__('Executing Alloy compile: %s',
-						['cmd','/s','/c'].concat(cmd).join(' ').cyan));
+						['cmd', '/s', '/c'].concat(cmd).join(' ').cyan));
 
 					// arg processing from https://github.com/MarcDiethelm/superspawn
 					child = spawn('cmd', [['/s', '/c', '"' +
 						cmd.map(function(a) {
-							if (/^[^"].* .*[^"]/.test(a)) return '"'+a+'"'; return a;
-						}).join(" ") + '"'].join(" ")], {
+							if (/^[^"].* .*[^"]/.test(a)) return '"' + a + '"'; return a;
+						}).join(' ') + '"'].join(' ')], {
 							stdio: 'inherit',
 							windowsVerbatimArguments: true
 						}
@@ -175,8 +175,8 @@ exports.init = function (logger, config, cli, appc) {
 					} else {
 						logger.info(__('Alloy compiler completed successfully'));
 
-						afs.exists(path.join(cli.argv["project-dir"], 'build', 'i18n')) && process.argv.push('--i18n-dir', 'build');
-						afs.exists(path.join(cli.argv["project-dir"], 'build', 'platform')) && (cli.argv['platform-dir'] = 'build/platform');
+						afs.exists(path.join(cli.argv['project-dir'], 'build', 'i18n')) && process.argv.push('--i18n-dir', 'build');
+						afs.exists(path.join(cli.argv['project-dir'], 'build', 'platform')) && (cli.argv['platform-dir'] = 'build/platform');
 					}
 					finished();
 				});

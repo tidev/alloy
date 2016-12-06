@@ -55,7 +55,7 @@ function getTextFromGenerator(content, template) {
 		return content;
 	} else {
 		if (template && fs.existsSync(template)) {
-			return fs.readFileSync(template,'utf8');
+			return fs.readFileSync(template, 'utf8');
 		} else {
 			return '';
 		}
@@ -65,7 +65,7 @@ function getTextFromGenerator(content, template) {
 exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var target = generator.target;
 	var data = generator.data;
-	var markers = _.map(data, function(v,k) { return k; });
+	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({ file: target.filename });
 	var genMap = {
 		file: target.filename,
@@ -75,11 +75,11 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// initialize the rest of the generator properties
 	target.count = 1;
-	target.lines = getTextFromGenerator(target.templateContent,target.template).split(lineSplitter);
+	target.lines = getTextFromGenerator(target.templateContent, target.template).split(lineSplitter);
 	_.each(markers, function(m) {
 		var marker = data[m];
 		marker.count = 1;
-		marker.lines = getTextFromGenerator(marker.fileContent,marker.filepath).split(lineSplitter);
+		marker.lines = getTextFromGenerator(marker.fileContent, marker.filepath).split(lineSplitter);
 	});
 
 	// generate the source map and composite code
@@ -107,7 +107,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	_.each(mods, function(mod) {
 		logger.trace('- Processing "' + mod + '" module...');
 		ast.figure_out_scope();
-		ast = require(modLocation+mod).process(ast, compileConfig) || ast;
+		ast = require(modLocation + mod).process(ast, compileConfig) || ast;
 	});
 
 	// create uglify-js source map and stream it out
@@ -127,16 +127,16 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// write the generated controller code
 	var outfile = target.filepath;
-	var relativeOutfile = path.relative(compileConfig.dir.project,outfile);
+	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 	wrench.mkdirSyncRecursive(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, stream.toString());
 	logger.info('  created:    "' + relativeOutfile + '"');
 
 	// write source map for the generated file
 	if (compileConfig.sourcemap !== false) {
-		var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
-		outfile = path.join(mapDir,relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
-		relativeOutfile = path.relative(compileConfig.dir.project,outfile);
+		var mapDir = path.join(compileConfig.dir.project, CONST.DIR.MAP);
+		outfile = path.join(mapDir, relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
+		relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 		wrench.mkdirSyncRecursive(path.dirname(outfile), 0755);
 		fs.writeFileSync(outfile, sourceMap.toString());
 		logger.debug('  map:        "' + relativeOutfile + '"');
@@ -144,12 +144,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 };
 
 exports.generateSourceMap = function(generator, compileConfig) {
-	if(!fs.existsSync(generator.target.filename) || fs.statSync(generator.target.filename).isDirectory()) {
+	if (!fs.existsSync(generator.target.filename) || fs.statSync(generator.target.filename).isDirectory()) {
 		return;
 	}
 	var target = generator.target;
 	var data = generator.data;
-	var markers = _.map(data, function(v,k) { return k; });
+	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({ file: target.filename });
 	var genMap = {
 		file: target.filename,
@@ -159,11 +159,11 @@ exports.generateSourceMap = function(generator, compileConfig) {
 
 	// initialize the rest of the generator properties
 	target.count = 1;
-	target.lines = getTextFromGenerator(target.templateContent,target.template).split(lineSplitter);
+	target.lines = getTextFromGenerator(target.templateContent, target.template).split(lineSplitter);
 	_.each(markers, function(m) {
 		var marker = data[m];
 		marker.count = 1;
-		marker.lines = getTextFromGenerator(marker.fileContent,marker.filename).split(lineSplitter);
+		marker.lines = getTextFromGenerator(marker.fileContent, marker.filename).split(lineSplitter);
 	});
 
 	// generate the source map and composite code
@@ -191,27 +191,27 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	_.each(mods, function(mod) {
 		logger.trace('- Processing "' + mod + '" module...');
 		ast.figure_out_scope();
-		ast = require(modLocation+mod).process(ast, compileConfig) || ast;
+		ast = require(modLocation + mod).process(ast, compileConfig) || ast;
 	});
 
 	// create uglify-js source map and stream it out
-	var origFileName = path.relative(compileConfig.dir.project,generator.origFile.filename),
-		compiledFileName = path.join('Resources',path.basename(generator.origFile.filename));
+	var origFileName = path.relative(compileConfig.dir.project, generator.origFile.filename),
+		compiledFileName = path.join('Resources', path.basename(generator.origFile.filename));
 	var sourceMap = uglifyjs.SourceMap({
-			file: compiledFileName,
-			orig: mapper.toString()
-		});
+		file: compiledFileName,
+		orig: mapper.toString()
+	});
 	var stream = uglifyjs.OutputStream(_.extend(_.clone(exports.OPTIONS_OUTPUT), {
-			source_map: sourceMap
-		}));
+		source_map: sourceMap
+	}));
 	ast.print(stream);
 
 	// write source map for the generated file
-	var relativeOutfile = path.relative(compileConfig.dir.project,target.filepath);
-	var mapDir = path.join(compileConfig.dir.project,CONST.DIR.MAP);
-	var outfile = path.join(mapDir,relativeOutfile,path.basename(target.filename)) + '.' + CONST.FILE_EXT.MAP;
+	var relativeOutfile = path.relative(compileConfig.dir.project, target.filepath);
+	var mapDir = path.join(compileConfig.dir.project, CONST.DIR.MAP);
+	var outfile = path.join(mapDir, relativeOutfile, path.basename(target.filename)) + '.' + CONST.FILE_EXT.MAP;
 	wrench.mkdirSyncRecursive(path.dirname(outfile), 0755);
-	var tmp = JSON.parse(sourceMap.toString())
+	var tmp = JSON.parse(sourceMap.toString());
 	tmp.sources[0] = compiledFileName;
 	tmp.sources[1] = origFileName;
 	fs.writeFileSync(outfile, JSON.stringify(tmp));
