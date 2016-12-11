@@ -71,7 +71,7 @@ function parse(node, state, args) {
 						}
 					});
 					code += androidView;
-				} else {
+				} else if (theNode) {
 					logger.warn('Additional views in ' + theNode + ' only supported on Android');
 				}
 			} else {
