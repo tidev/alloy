@@ -48,7 +48,7 @@ function Controller() {
             Ti.API.warn("Android Menus can only be opened on TabGroups and heavyweight Windows.");
         }
     }
-    function doHomeIcon() {
+    function doHomeIcon(e) {
         $.win2.close();
     }
     function doClick(e) {
@@ -58,15 +58,9 @@ function Controller() {
     this.__controllerPath = "win2";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

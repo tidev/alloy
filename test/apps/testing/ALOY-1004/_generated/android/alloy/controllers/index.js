@@ -12,15 +12,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -138,7 +132,7 @@ function Controller() {
         }());
         $.__views.index.add($.__views.title5);
     }
-    if (true && Alloy.Globals.someProperty) {
+    if (Alloy.Globals.someProperty) {
         $.__views.title6 = Ti.UI.createLabel(function() {
             var o = {};
             Alloy.deepExtend(true, o, {

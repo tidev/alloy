@@ -12,15 +12,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -105,7 +99,7 @@ function Controller() {
     } ];
     _.each(labels, function(o, index) {
         var label = o.label, classes = o.classes;
-        label.addEventListener("click", function() {
+        label.addEventListener("click", function(e) {
             label._wasClicked = "undefined" == typeof label._wasClicked ? false : !label._wasClicked;
             if (label._wasClicked) {
                 Ti.API.info("remove: " + JSON.stringify(classes) + " from " + JSON.stringify(label.classes));

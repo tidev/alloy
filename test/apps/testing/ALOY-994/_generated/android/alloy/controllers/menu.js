@@ -43,12 +43,8 @@ function Controller() {
     this.args = arguments[0] || {};
     if (arguments[0]) {
         var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

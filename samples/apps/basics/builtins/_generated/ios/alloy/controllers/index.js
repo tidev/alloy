@@ -8,15 +8,15 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function shake() {
+    function shake(e) {
         animation.shake($.mover, 0, function() {
             alert("Shake ended.");
         });
     }
-    function flash() {
+    function flash(e) {
         animation.flash($.mover);
     }
-    function trim() {
+    function trim(e) {
         $.label.text = string.trim($.label.text);
     }
     function flip(e) {
@@ -29,7 +29,7 @@ function Controller() {
             front = $.front;
             back = $.back;
         }
-        animation.flipHorizontal(front, back, 500, function() {
+        animation.flipHorizontal(front, back, 500, function(e) {
             Ti.API.info("flipped");
         });
     }
@@ -37,15 +37,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
