@@ -1106,7 +1106,8 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/backbone.js',
 			'alloy/constants.js',
 			'alloy/underscore.js',
-			'alloy/widget.js'
+			'alloy/widget.js',
+			'node_modules'
 		];
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
@@ -1115,7 +1116,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
 			return rx.test(f) && !_.find(exceptions, function(e) {
-				return f.indexOf(e) === 0;
+				return f.indexOf(e) !== -1;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
 		});
 	}
