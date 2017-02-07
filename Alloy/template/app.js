@@ -8,4 +8,3 @@ var Alloy = require('alloy'),
 	Backbone = Alloy.Backbone;
 
 __MAPMARKER_ALLOY_JS__
-Alloy.createController('index');
