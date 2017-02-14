@@ -10,21 +10,21 @@ module.exports = function($) {
 				backgroundImage: '/bg_blue.png'
 			},
 			title: {
-				color: "#fff",
-				backgroundImage: "/title_gray.png"
+				color: '#fff',
+				backgroundImage: '/title_gray.png'
 			},
 			container: {
 				backgroundGradient: {
-					type: "linear",
+					type: 'linear',
 					startPoint: {
-						x: "0%",
-						y: "0%"
+						x: '0%',
+						y: '0%'
 					},
 					endPoint: {
-						x: "0%",
-						y: "100%"
+						x: '0%',
+						y: '100%'
 					},
-					colors: [ "#5d5d5d", "#2c2c2c" ]
+					colors: [ '#5d5d5d', '#2c2c2c' ]
 				}
 			},
 			label: {
@@ -47,8 +47,8 @@ module.exports = function($) {
 				backgroundImage: '/bg_tan.png'
 			},
 			title: {
-				color: "#000",
-				backgroundImage: "/title_green.png"
+				color: '#000',
+				backgroundImage: '/title_green.png'
 			},
 			// TODO: Titanium does not properly return back the
 			//       backgroundGradient on iOS. (TIMOB-13915)
@@ -56,14 +56,14 @@ module.exports = function($) {
 				right: 10
 			},
 			slider: {
-				leftTrackImage: "/title_green.png",
+				leftTrackImage: '/title_green.png',
 				top: 228,
 				left: -145,
 				width: 350,
 				transform: Alloy.CFG.sliderTransform
 			},
 			testButton: {
-				backgroundImage: "/button_green.png",
+				backgroundImage: '/button_green.png',
 				right: 15
 			}
 		};
@@ -73,42 +73,42 @@ module.exports = function($) {
 				backgroundImage: '/bg_gray.png'
 			},
 			title: {
-				color: "#fff",
-				backgroundImage: "/title_blue.png",
+				color: '#fff',
+				backgroundImage: '/title_blue.png',
 				font: {
 					fontSize: '24px',
-					fontWeight: "bold"
+					fontWeight: 'bold'
 				}
 			},
 			container: {
 				backgroundGradient: {
-					type: "linear",
+					type: 'linear',
 					startPoint: {
-						x: "0%",
-						y: "0%"
+						x: '0%',
+						y: '0%'
 					},
 					endPoint: {
-						x: "0%",
-						y: "100%"
+						x: '0%',
+						y: '100%'
 					},
-					colors: [ "#39abfb", "#0285ff" ]
+					colors: [ '#39abfb', '#0285ff' ]
 				}
 			},
 			label: {
 				color: '#fff',
 				font: {
 					fontSize: '140px',
-					fontWeight: "bold"
+					fontWeight: 'bold'
 				}
 			},
 			slider: {
-				leftTrackImage: "/title_blue.png",
+				leftTrackImage: '/title_blue.png',
 				bottom: 100,
 				width: 250
 			},
 			testButton: {
-				color: "#fff",
-				backgroundImage: "/button_blue.png"
+				color: '#fff',
+				backgroundImage: '/button_blue.png'
 			}
 		};
 	}
@@ -121,25 +121,25 @@ module.exports = function($) {
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "#fff",
-				id: "index"
+				backgroundColor: '#fff',
+				id: 'index'
 			}
 		});
 
 		validateUiComponent($, 'title', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#000",
+				color: '#000',
 				top: 0,
 				height: 46,
 				width: Ti.UI.FILL,
-				textAlign: "center",
+				textAlign: 'center',
 				font: {
 					fontSize: 24,
-					fontWeight: "bold"
+					fontWeight: 'bold'
 				},
-				text: "Patience Tester",
-				id: "title"
+				text: 'Patience Tester',
+				id: 'title'
 			}
 		});
 
@@ -149,25 +149,25 @@ module.exports = function($) {
 				height: 170,
 				width: 250,
 				top: 80,
-				borderColor: "#000",
+				borderColor: '#000',
 				borderWidth: 2,
 				borderRadius: 16,
-				id: "container"
+				id: 'container'
 			}
 		});
 
 		validateUiComponent($, 'label', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#000",
-				text: "5s",
+				color: '#000',
+				text: '5s',
 				top: 10,
 				font: {
 					fontSize: 140,
-					fontWeight: "bold"
+					fontWeight: 'bold'
 				},
-				textAlign: "center",
-				id: "label"
+				textAlign: 'center',
+				id: 'label'
 			}
 		});
 
@@ -177,7 +177,7 @@ module.exports = function($) {
 				min: 1,
 				max: 10,
 				value: 5,
-				id: "slider"
+				id: 'slider'
 			}
 		});
 
@@ -187,8 +187,8 @@ module.exports = function($) {
 				bottom: 30,
 				height: 50,
 				width: 180,
-				title: "Test Patience",
-				id: "testButton"
+				title: 'Test Patience',
+				id: 'testButton'
 			}
 		});
 	});

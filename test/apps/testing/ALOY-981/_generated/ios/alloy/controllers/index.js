@@ -35,7 +35,7 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId3 = [];
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CANCEL,
+        systemButton: Ti.UI.iOS.SystemButton.CANCEL,
         title: "Cancel",
         id: "__alloyId4"
     });
@@ -46,7 +46,7 @@ function Controller() {
     });
     __alloyId3.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CAMERA,
+        systemButton: Ti.UI.iOS.SystemButton.CAMERA,
         title: "Camera",
         id: "__alloyId6"
     });
@@ -58,7 +58,7 @@ function Controller() {
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
         title: "Send",
-        style: Ti.UI.iPhone.SystemButtonStyle.DONE,
+        style: Ti.UI.iOS.SystemButtonStyle.DONE,
         id: "__alloyId8"
     });
     __alloyId3.push($.__views.__alloyId8);

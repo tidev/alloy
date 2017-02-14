@@ -1,19 +1,19 @@
 exports.definition = {
 
 	config: {
-		"columns": {
-			"name":"text",
-			"email":"text",
-			"twitter":"text"
+		'columns': {
+			'name':'text',
+			'email':'text',
+			'twitter':'text'
 		},
-		"defaults": {
-			"name":"Tony Lukasavage",
-			"email":"tlukasavage@appcelerator.com",
-			"twitter":"@tonylukasavage"
+		'defaults': {
+			'name':'Tony Lukasavage',
+			'email':'tlukasavage@appcelerator.com',
+			'twitter':'@tonylukasavage'
 		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "info"
+		'adapter': {
+			'type': 'sql',
+			'collection_name': 'info'
 		}
 	},
 

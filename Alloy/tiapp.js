@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	XMLSerializer = require("xmldom").XMLSerializer,
+	XMLSerializer = require('xmldom').XMLSerializer,
 	pkg = require('../package'),
 	U = require('./utils'),
 	CONST = require('./common/constants'),
@@ -30,10 +30,10 @@ tiapp.parse = function(file) {
 // Get the Titanium SDK version as a string
 tiapp.getSdkVersion = function() {
 	var elems = doc.documentElement.getElementsByTagName('sdk-version');
-	if(elems && elems.length > 0) {
-		return U.XML.getNodeText(elems.item(elems.length-1));
+	if (elems && elems.length > 0) {
+		return U.XML.getNodeText(elems.item(elems.length - 1));
 	} else {
-		if(process.env.sdk) {
+		if (process.env.sdk) {
 			return process.env.sdk;
 		} else {
 			return getSdkSelectVersion();
@@ -42,7 +42,7 @@ tiapp.getSdkVersion = function() {
 };
 function getSdkSelectVersion() {
 	var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
-		file = path.join(homeDir, '.titanium','config.json');
+		file = path.join(homeDir, '.titanium', 'config.json');
 	if (!fs.existsSync(file)) {
 		U.die('Titanium configuration file does not exist at "' + file + '"');
 	}
@@ -138,7 +138,7 @@ tiapp.getDeploymentTargets = function() {
 					results.push(platform);
 				}
 			}
-		};
+		}
 	}
 	return results;
 };
@@ -175,10 +175,10 @@ function install(type, opts) {
 		var node = doc.createElement(type);
 		var text = doc.createTextNode(opts.id);
 		if (opts.platform) {
-			node.setAttribute('platform',opts.platform);
+			node.setAttribute('platform', opts.platform);
 		}
 		if (opts.version) {
-			node.setAttribute('version',opts.version);
+			node.setAttribute('version', opts.version);
 		}
 		node.appendChild(text);
 
@@ -187,13 +187,13 @@ function install(type, opts) {
 		if (collection.length === 0) {
 			var pn = doc.createElement(type + 's');
 			doc.documentElement.appendChild(pn);
-			doc.documentElement.appendChild(doc.createTextNode("\n"));
+			doc.documentElement.appendChild(doc.createTextNode('\n'));
 			pna = pn;
 		} else {
 			pna = collection.item(0);
 		}
 		pna.appendChild(node);
-		pna.appendChild(doc.createTextNode("\n"));
+		pna.appendChild(doc.createTextNode('\n'));
 
 		// serialize the xml and write to tiapp.xml
 		var serializer = new XMLSerializer();

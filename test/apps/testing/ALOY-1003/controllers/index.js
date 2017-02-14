@@ -3,7 +3,7 @@ for (var i = 0; i < 5; i++) {
 	moreItems.push({
 		template: 'template',
 		type:{
-			text: "row " + i
+			text: 'row ' + i
 		}
 	});
 }

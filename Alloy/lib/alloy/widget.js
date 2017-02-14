@@ -7,8 +7,8 @@ var Alloy = require('/alloy');
 var widgets = {};
 
 function ucfirst(text) {
-    if (!text) { return text; }
-    return text[0].toUpperCase() + text.substr(1);
+	if (!text) { return text; }
+	return text[0].toUpperCase() + text.substr(1);
 }
 
 module.exports = function(widgetId) {

@@ -52,7 +52,7 @@ var apiChecks = {
 };
 
 function sortAndStringify(obj) {
-	return JSON.stringify(obj, function(k,v) {
+	return JSON.stringify(obj, function(k, v) {
 		if (_.isObject(v) && !_.isArray(v) && !_.isFunction(v)) {
 			return sortObject(v);
 		}
@@ -61,21 +61,21 @@ function sortAndStringify(obj) {
 }
 
 function sortObject(o) {
-    var sorted = {},
-    key, a = [];
+	var sorted = {},
+		key, a = [];
 
-    for (key in o) {
-        if (o.hasOwnProperty(key)) {
-            a.push(key);
-        }
-    }
+	for (key in o) {
+		if (o.hasOwnProperty(key)) {
+			a.push(key);
+		}
+	}
 
-    a.sort();
+	a.sort();
 
-    for (key = 0; key < a.length; key++) {
-        sorted[a[key]] = o[a[key]];
-    }
-    return sorted;
+	for (key = 0; key < a.length; key++) {
+		sorted[a[key]] = o[a[key]];
+	}
+	return sorted;
 }
 
 function addMatchers() {
@@ -102,7 +102,7 @@ function addMatchers() {
 			toHaveStyle: function(style) {
 				var component = this.actual;
 				var obj = {};
-				_.each(style, function(v,k) {
+				_.each(style, function(v, k) {
 					obj[k] = component[k];
 				});
 
@@ -117,16 +117,16 @@ function addMatchers() {
 			toHaveFunction: function(func) {
 				return _.isFunction(this.actual[func]);
 			},
-            toBeFile: function() {
-                var file = _.isString(this.actual) ? Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, this.actual) : this.actual;
-                return file.exists() && file.isFile();
-            }
+			toBeFile: function() {
+				var file = _.isString(this.actual) ? Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, this.actual) : this.actual;
+				return file.exists() && file.isFile();
+			}
 		});
 	});
 }
 
 function validateUiComponent($, id, opts) {
-	if (!id) { throw('validateUiComponent exception: No id given'); }
+	if (!id) { throw 'validateUiComponent exception: No id given'; }
 
 	var comp = $[id];
 	it('#' + id + ' is defined', function() {

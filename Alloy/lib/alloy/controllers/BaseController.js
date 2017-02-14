@@ -176,7 +176,7 @@ var Controller = function() {
 		$.destroy();
 	});
 		 */
-		destroy: function(){
+		destroy: function() {
 			// destroy() is defined during the compile process based on
 			// the UI components and binding contained within the controller.
 		},
@@ -389,7 +389,7 @@ The 'redbg' and 'bigger' classes are shown below:
 		 */
 		updateViews: function(args) {
 			var views = this.getViews();
-			if(_.isObject(args)) {
+			if (_.isObject(args)) {
 				_.each(_.keys(args), function(key) {
 					var elem = views[key.substring(1)];
 					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.applyProperties === 'function') {

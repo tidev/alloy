@@ -14,7 +14,7 @@ function parse(node, state, args) {
 
 	var string = U.trim(U.XML.getNodeText(node) || '');
 	if (!LOCALE_REGEX.test(string)) {
-		string = '"' + string.replace(/"/g,'\\"') + '"';
+		string = '"' + string.replace(/"/g, '\\"') + '"';
 	}
 
 	return {

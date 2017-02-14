@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label text="#js:dtgL('report46')"></Label>
+		<Label text="'#js:dtg' + L('report46')"></Label>
+	</Window>
+</Alloy>

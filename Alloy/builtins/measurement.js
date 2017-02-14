@@ -13,7 +13,7 @@
  */
 
 var dpi = Ti.Platform.displayCaps.dpi,
-    density = Ti.Platform.displayCaps.density;
+	density = Ti.Platform.displayCaps.density;
 
 /**
  * @method dpToPX
@@ -22,17 +22,17 @@ var dpi = Ti.Platform.displayCaps.dpi,
  * @return {Number} Converted value in screen pixels.
  */
 exports.dpToPX = function (val) {
-    if (OS_ANDROID) {
-        return val * dpi / 160;
-    } else if (OS_IOS) {
-        switch(density){
-          case 'xhigh': return val * 3;
-          case 'high': return val * 2;
-          default: return val;
-        }
-    } else {
-        return val;
-    }
+	if (OS_ANDROID) {
+		return val * dpi / 160;
+	} else if (OS_IOS) {
+		switch (density) {
+			case 'xhigh': return val * 3;
+			case 'high': return val * 2;
+			default: return val;
+		}
+	} else {
+		return val;
+	}
 };
 
 /**
@@ -42,17 +42,17 @@ exports.dpToPX = function (val) {
  * @return {Number} Converted value in density-independent pixels.
  */
 exports.pxToDP = function (val) {
-    if (OS_ANDROID) {
-        return val / dpi * 160;
-    } else if (OS_IOS) {
-        switch(density){
-          case 'xhigh': return val / 3;
-          case 'high': return val / 2;
-          default: return val;
-        }
-    } else {
-        return val;
-    }
+	if (OS_ANDROID) {
+		return val / dpi * 160;
+	} else if (OS_IOS) {
+		switch (density) {
+			case 'xhigh': return val / 3;
+			case 'high': return val / 2;
+			default: return val;
+		}
+	} else {
+		return val;
+	}
 };
 
 /**
@@ -62,9 +62,9 @@ exports.pxToDP = function (val) {
  * @return {Number} Converted coordinate in density-independent pixels.
  */
 exports.pointPXToDP = function (pt) {
-    if (OS_ANDROID || OS_IOS) {
-        return { x: exports.pxToDP(pt.x), y: exports.pxToDP(pt.y) };
-    } else {
-        return pt;
-    }
+	if (OS_ANDROID || OS_IOS) {
+		return { x: exports.pxToDP(pt.x), y: exports.pxToDP(pt.y) };
+	} else {
+		return pt;
+	}
 };

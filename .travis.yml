@@ -1,6 +1,5 @@
 language: cpp
 env:
-  - NODE_VERSION="0.12"
   - NODE_VERSION="4.4"
   - NODE_VERSION="5.9"
 os:

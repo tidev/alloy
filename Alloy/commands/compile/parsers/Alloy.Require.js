@@ -5,8 +5,8 @@ var path = require('path'),
 	U = require('../../../utils'),
 	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
-	moduleRoot = path.join(__dirname,'..','..','..','..'),
-	TYPES = ['view','widget'];
+	moduleRoot = path.join(__dirname, '..', '..', '..', '..'),
+	TYPES = ['view', 'widget'];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -35,11 +35,11 @@ function parse(node, state, args) {
 		platform = config.alloyConfig.platform;
 	}
 
-	switch(type) {
+	switch (type) {
 		case 'view':
 			method = 'createController';
-			if (platform) { paths.push(path.join(appPath,CONST.DIR.VIEW,platform,src)); }
-			paths.push(path.join(appPath,CONST.DIR.VIEW,src));
+			if (platform) { paths.push(path.join(appPath, CONST.DIR.VIEW, platform, src)); }
+			paths.push(path.join(appPath, CONST.DIR.VIEW, src));
 			break;
 		case 'widget':
 			method = 'createWidget';
@@ -47,9 +47,9 @@ function parse(node, state, args) {
 			U.getWidgetDirectories(appPath).forEach(function(wDir) {
 				if (wDir.manifest.id === src) {
 					if (platform) {
-						paths.push(path.join(wDir.dir,CONST.DIR.VIEW,platform,name));
+						paths.push(path.join(wDir.dir, CONST.DIR.VIEW, platform, name));
 					}
-					paths.push(path.join(wDir.dir,CONST.DIR.VIEW,name));
+					paths.push(path.join(wDir.dir, CONST.DIR.VIEW, name));
 				}
 			});
 			break;
@@ -120,7 +120,7 @@ function parse(node, state, args) {
 	args.createArgs = _.extend(args.createArgs || {}, xArgs);
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = Alloy." + method + "('" + src +
+	code += (state.local ? 'var ' : '') + args.symbol + ' = Alloy.' + method + "('" + src +
 		"'," + extraArgs + styler.generateStyleParams(
 			state.styles,
 			args.classes,
@@ -128,7 +128,7 @@ function parse(node, state, args) {
 			type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
 			args.createArgs,
 			state
-		) + ");\n";
+		) + ');\n';
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
 	}

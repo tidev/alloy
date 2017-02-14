@@ -86,7 +86,7 @@ function parse(node, state, args) {
 			});
 		});
 
-		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 			// if this node or a parent has set the formFactor attribute
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
@@ -106,7 +106,7 @@ function parse(node, state, args) {
 
 	// return an empty state if we already processed
 	if (def.children[0] === 'ALL') {
-		if(state.property === 'leftNavButtons' || state.property === 'rightNavButtons' || state.property === 'toolbar') {
+		if (state.property === 'leftNavButtons' || state.property === 'rightNavButtons' || state.property === 'toolbar') {
 			code += (state.parent.symbol + '.' + state.property + ' = ' + state.itemsArray + ';');
 		}
 		return {

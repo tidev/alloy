@@ -1,14 +1,14 @@
 exports.definition = {
-    config: {
-        columns: {
-            title: 'String'
-        },
-        adapter: {
-            type: "properties",
-            collection_name: "test"
-        }
-    },
-	extendCollection : function(Collection) {
+	config: {
+		columns: {
+			title: 'String'
+		},
+		adapter: {
+			type: 'properties',
+			collection_name: 'test'
+		}
+	},
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

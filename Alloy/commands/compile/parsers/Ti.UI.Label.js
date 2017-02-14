@@ -12,7 +12,7 @@ function parse(node, state, args) {
 		attributedStringObj = {},
 		code = '';
 
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child){
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
@@ -40,7 +40,7 @@ function parse(node, state, args) {
 		}
 
 		if (nodeText.match(/\{([^}]+)\}/) !== null) {
-			textObj["text"] = nodeText;
+			textObj['text'] = nodeText;
 		}
 	}
 

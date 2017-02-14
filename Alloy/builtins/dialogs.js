@@ -40,7 +40,7 @@ exports.buttonNames = ['No', 'Yes'];
  */
 exports.confirm = function (args) {
 	args = args || {};
-	if(args.buttonNames) {
+	if (args.buttonNames) {
 		args.no = args.no || args.buttonNames[0];
 		args.yes = args.yes || args.buttonNames[1];
 	}

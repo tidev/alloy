@@ -1,10 +1,10 @@
 var index = 0;
 var classes = [
-	['darkblue','medium'],
-	['darkblue','medium','red'], // red will take precedence due to TSS ordering
-	['lightblue','huge'],
+	['darkblue', 'medium'],
+	['darkblue', 'medium', 'red'], // red will take precedence due to TSS ordering
+	['lightblue', 'huge'],
 	'red small',
-	['darkblue','medium','left'],
+	['darkblue', 'medium', 'left'],
 	'lightblue small right',
 	'red huge crazyshadow'
 ];
