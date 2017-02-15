@@ -35,7 +35,7 @@ function Controller() {
     }
     function doTransform(model) {
         var o = model.toJSON();
-        o.template = o.subtitle ? o.image ? "fullItem" : "titleAndSub" : "title";
+        o.subtitle ? o.image ? o.template = "fullItem" : o.template = "titleAndSub" : o.template = "title";
         return o;
     }
     function doButtonClick(e) {
@@ -54,15 +54,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

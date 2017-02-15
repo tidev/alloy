@@ -8,37 +8,31 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function mapClick() {
+    function mapClick(e) {
         Ti.API.info("map clicked");
     }
-    function windowClick() {
+    function windowClick(e) {
         Ti.API.info("window clicked");
     }
-    function modelChange() {
+    function modelChange(e) {
         Ti.API.info("model change");
     }
-    function anotherModelChange() {
+    function anotherModelChange(e) {
         Ti.API.info("another model change");
     }
-    function collectionChange() {
+    function collectionChange(e) {
         Ti.API.info("collection change");
     }
-    function emptyInit() {
+    function emptyInit(e) {
         Ti.API.info("empty controller init");
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

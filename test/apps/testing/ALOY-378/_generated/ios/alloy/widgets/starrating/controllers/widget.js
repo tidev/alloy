@@ -39,7 +39,7 @@ function Controller() {
     var setRating = function(newRating) {
         newRating > max && (newRating = max);
         rating = newRating;
-        for (var i = 0, l = stars.length; l > i; i++) stars[i].image = WPATH(i >= rating ? "star_off.png" : rating > i && i + 1 > rating ? "star_half.png" : "star.png");
+        for (var i = 0, l = stars.length; l > i; i++) i >= rating ? stars[i].image = WPATH("star_off.png") : rating > i && i + 1 > rating ? stars[i].image = WPATH("star_half.png") : stars[i].image = WPATH("star.png");
     };
     exports.setRating = setRating;
     exports.getRating = function() {

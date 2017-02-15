@@ -35,7 +35,7 @@ function Controller() {
     $.__views.theView && $.addTopLevelView($.__views.theView);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    require("alloy/animation").popIn($.theView, function() {});
+    require("alloy/animation").popIn($.theView, function(e) {});
     _.extend($, exports);
 }
 
