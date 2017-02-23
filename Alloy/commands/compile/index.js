@@ -1109,10 +1109,9 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/widget.js'
 		];
 		
-		// widget controllers and widget styles are already optimized. It should be listed in exceptions.
-		_.each(compileConfig.dependencies,function (version, widgetName) {
-			exceptions.push('alloy/widgets/'+widgetName+'/controllers/');
-			exceptions.push('alloy/widgets/'+widgetName+'/styles/');
+		// widget controllers are already optimized. It should be listed in exceptions.
+		_.each(compileConfig.dependencies, function (version, widgetName) {
+			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
 		});
 		
 		_.each(exceptions.slice(0), function(ex) {
