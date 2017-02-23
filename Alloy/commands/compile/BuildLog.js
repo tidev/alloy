@@ -10,7 +10,7 @@ function BuildLog(_projectPath) {
 	// make/reference singleton instance
 	if (BuildLog.instance) {
 		return BuildLog.instance;
-  }
+	}
 	BuildLog.instance = this;
 
 	// set "private" variables

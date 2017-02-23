@@ -12,15 +12,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -95,7 +89,7 @@ function Controller() {
         return o;
     }());
     $.__views.index.add($.__views.container);
-    if (true && Alloy.isTablet) {
+    if (Alloy.isTablet) {
         $.__views.platformLabel = Ti.UI.createLabel({
             width: Ti.UI.SIZE,
             height: Ti.UI.SIZE,
@@ -105,7 +99,7 @@ function Controller() {
         });
         $.__views.container.add($.__views.platformLabel);
     }
-    if (true && !Alloy.isTablet) {
+    if (!Alloy.isTablet) {
         $.__views.platformLabel = Ti.UI.createLabel({
             width: Ti.UI.SIZE,
             height: Ti.UI.SIZE,

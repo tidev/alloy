@@ -9,7 +9,7 @@ function transformData(model) {
 
 function doChanges(e) {
 	// grab a random model by index
-	var index = Math.round((locations.length-1)*Math.random());
+	var index = Math.round((locations.length - 1) * Math.random());
 	var model = locations.at(index);
 
 	// modify the model...

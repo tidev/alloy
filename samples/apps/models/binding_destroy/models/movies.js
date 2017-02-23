@@ -1,12 +1,12 @@
 exports.definition = {
 
 	config: {
-		"columns": {
-			"title":"text"
+		'columns': {
+			'title':'text'
 		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "movies"
+		'adapter': {
+			'type': 'sql',
+			'collection_name': 'movies'
 		}
 	},
 

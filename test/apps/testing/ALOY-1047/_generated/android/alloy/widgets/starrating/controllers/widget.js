@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "starrating/" + s : s.substring(0, index) + "/starrating/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
 function __processArg(obj, key) {
@@ -39,7 +39,7 @@ function Controller() {
     var setRating = function(newRating) {
         newRating > max && (newRating = max);
         rating = newRating;
-        for (var i = 0, l = stars.length; l > i; i++) stars[i].image = WPATH(i >= rating ? "star_off.png" : rating > i && i + 1 > rating ? "star_half.png" : "star.png");
+        for (var i = 0, l = stars.length; l > i; i++) i >= rating ? stars[i].image = WPATH("star_off.png") : rating > i && i + 1 > rating ? stars[i].image = WPATH("star_half.png") : stars[i].image = WPATH("star.png");
     };
     exports.setRating = setRating;
     exports.getRating = function() {

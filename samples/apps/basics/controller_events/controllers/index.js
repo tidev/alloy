@@ -1,5 +1,5 @@
 function handler(e) {
-	alert('got this from custom event: '+e.message);
+	alert('got this from custom event: ' + e.message);
 }
 
 function removeListener() {

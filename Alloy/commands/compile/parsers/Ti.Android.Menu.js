@@ -54,10 +54,10 @@ function parse(node, state, args) {
 
 	// ALOY-784, support Activity properties as attributes of <Menu>
 	var menuTssStyles = _.filter(state.styles, function(elem) {
-			// generates a sorted array of styles filtered to include only elements
-			// associated with the menu (by ID, class, or API name)
-			return elem.key === node.getAttribute('id') || elem.key === node.getAttribute('class') || elem.key === node.nodeName;
-		});
+		// generates a sorted array of styles filtered to include only elements
+		// associated with the menu (by ID, class, or API name)
+		return elem.key === node.getAttribute('id') || elem.key === node.getAttribute('class') || elem.key === node.nodeName;
+	});
 	var xmlStyles = {
 		title: node.getAttribute('title') ? node.getAttribute('title') : undefined,
 		subtitle: node.getAttribute('subtitle') ? node.getAttribute('subtitle') : undefined,
@@ -69,22 +69,22 @@ function parse(node, state, args) {
 		onHomeIconItemSelected: node.getAttribute('onHomeIconItemSelected') ? node.getAttribute('onHomeIconItemSelected') : undefined
 	};
 	// to respect proper style hierarchy, take the last element in the array (which will be the highest priority)
-	var menuTssKey = _.isArray(menuTssStyles) ? menuTssStyles.length-1 : 0;
-	if(menuTssStyles[menuTssKey] && menuTssStyles[menuTssKey].style) {
+	var menuTssKey = _.isArray(menuTssStyles) ? menuTssStyles.length - 1 : 0;
+	if (menuTssStyles[menuTssKey] && menuTssStyles[menuTssKey].style) {
 		_.defaults(xmlStyles, menuTssStyles[menuTssKey].style);
 	}
-	if((_.filter(_.values(xmlStyles), function(val) { return val !== undefined; })).length > 0) {
+	if ((_.filter(_.values(xmlStyles), function(val) { return val !== undefined; })).length > 0) {
 		// TODO: once Android 2.x support is deprecated, remove the if(actionBar) test from the following
 		// to speed up execution of the resulting code
 		code += 'if(' + state.parent.symbol + '.activity.actionBar) {\n';
-			if(xmlStyles.title)  { code += state.parent.symbol + '.activity.actionBar.title = "' + xmlStyles.title + '";'; }
-			if(xmlStyles.subtitle)  { code += state.parent.symbol + '.activity.actionBar.subtitle = "' + xmlStyles.subtitle + '";'; }
-			if(xmlStyles.backgroundImage)  { code += state.parent.symbol + '.activity.actionBar.backgroundImage = "' + xmlStyles.backgroundImage + '";'; }
-			if(xmlStyles.displayHomeAsUp)  { code += state.parent.symbol + '.activity.actionBar.displayHomeAsUp = ' + xmlStyles.displayHomeAsUp + ';'; }
-			if(xmlStyles.icon)  { code += state.parent.symbol + '.activity.actionBar.icon = "' + xmlStyles.icon + '";'; }
-			if(xmlStyles.logo)  { code += state.parent.symbol + '.activity.actionBar.logo = "' + xmlStyles.logo + '";'; }
-			if(xmlStyles.navigationMode)  { code += state.parent.symbol + '.activity.actionBar.navigationMode = ' + xmlStyles.navigationMode + ';'; }
-			if(xmlStyles.onHomeIconItemSelected)  { code += state.parent.symbol + '.activity.actionBar.onHomeIconItemSelected = ' + xmlStyles.onHomeIconItemSelected + ';'; }
+		if (xmlStyles.title)  { code += state.parent.symbol + '.activity.actionBar.title = "' + xmlStyles.title + '";'; }
+		if (xmlStyles.subtitle)  { code += state.parent.symbol + '.activity.actionBar.subtitle = "' + xmlStyles.subtitle + '";'; }
+		if (xmlStyles.backgroundImage)  { code += state.parent.symbol + '.activity.actionBar.backgroundImage = "' + xmlStyles.backgroundImage + '";'; }
+		if (xmlStyles.displayHomeAsUp)  { code += state.parent.symbol + '.activity.actionBar.displayHomeAsUp = ' + xmlStyles.displayHomeAsUp + ';'; }
+		if (xmlStyles.icon)  { code += state.parent.symbol + '.activity.actionBar.icon = "' + xmlStyles.icon + '";'; }
+		if (xmlStyles.logo)  { code += state.parent.symbol + '.activity.actionBar.logo = "' + xmlStyles.logo + '";'; }
+		if (xmlStyles.navigationMode)  { code += state.parent.symbol + '.activity.actionBar.navigationMode = ' + xmlStyles.navigationMode + ';'; }
+		if (xmlStyles.onHomeIconItemSelected)  { code += state.parent.symbol + '.activity.actionBar.onHomeIconItemSelected = ' + xmlStyles.onHomeIconItemSelected + ';'; }
 		code += '}\n';
 	}
 	// Update the parsing state

@@ -1,19 +1,19 @@
 exports.definition = {
 	config: {
-		"columns": {
-			"id": "String",
-			"count": "Int"
+		'columns': {
+			'id': 'String',
+			'count': 'Int'
 		},
-		"defaults": {
-			"id": "instance",
-			"count": 0
+		'defaults': {
+			'id': 'instance',
+			'count': 0
 		},
-		"adapter": {
-			"type": "properties",
-			"collection_name": "singleModel"
+		'adapter': {
+			'type': 'properties',
+			'collection_name': 'singleModel'
 		}
 	},
-	extendCollection : function(Collection) {
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

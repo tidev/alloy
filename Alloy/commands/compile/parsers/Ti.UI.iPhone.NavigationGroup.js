@@ -20,7 +20,7 @@ function parse(node, state, args) {
 	}
 
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		err = ['NavigationGroup must have only one child element, which must be a Window'];
+		err = ['NavigationGroup must have only one child element, which must be a Window'],
 		code = '';
 
 	// NavigationGroup must have 1 window as a child

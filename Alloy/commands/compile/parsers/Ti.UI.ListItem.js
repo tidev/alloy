@@ -17,7 +17,7 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = ";
+	code += (state.local ? 'var ' : '') + args.symbol + ' = ';
 	code += styler.generateStyleParams(
 		state.styles,
 		args.classes,

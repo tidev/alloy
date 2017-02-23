@@ -32,7 +32,7 @@ function parse(node, state, args) {
 	}
 
 	// standard proxy property handling
-	if(node.hasChildNodes()) {
+	if (node.hasChildNodes()) {
 
 		// process children
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {

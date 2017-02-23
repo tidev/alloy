@@ -13,5 +13,5 @@ migration.up = function(migrator) {
 };
 
 migration.down = function(migrator) {
-	migrator.dropTable("colors");
+	migrator.dropTable('colors');
 };

@@ -3,8 +3,8 @@ var moment = require('alloy/moment');
 function doTransform(model) {
 	var transform = model.toJSON();
 
-	transform.dateSince = moment(transform.dateCreated,'YYYYMMDDHHmmss').fromNow();
-	switch(transform.mood) {
+	transform.dateSince = moment(transform.dateCreated, 'YYYYMMDDHHmmss').fromNow();
+	switch (transform.mood) {
 		case 'mad':
 			transform.moodColor = '#a00';
 			break;

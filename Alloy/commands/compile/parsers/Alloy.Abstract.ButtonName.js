@@ -17,7 +17,7 @@ function parse(node, state, args) {
 	if (U.isLocaleAlias(nodeText)) {
 		returnCode = '.push(' + nodeText + ');';
 	} else {
-		returnCode = '.push("' + nodeText.replace(/"/g,'\\"') + '");'
+		returnCode = '.push("' + nodeText.replace(/"/g, '\\"') + '");';
 	}
 
 	return {

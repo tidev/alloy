@@ -34,7 +34,7 @@ exports.optimize = function(ast, defines, fn) {
 
 	// make sure the platform require includes
 	var platformString = theKey.substring(3).toLowerCase();
-	var platformPath = path.join(__dirname,'..','..','..','platforms',platformString,'index');
+	var platformPath = path.join(__dirname, '..', '..', '..', 'platforms', platformString, 'index');
 	if (!fs.existsSync(platformPath + '.js')) { return ast; }
 
 	// create, transform, and validate the platform object
@@ -46,7 +46,7 @@ exports.optimize = function(ast, defines, fn) {
 	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
 	// into static strings where possible. This will allow the following
 	// compression step to reduce the code further.
-	var transformer = new uglifyjs.TreeTransformer(function(node, descend){
+	var transformer = new uglifyjs.TreeTransformer(function(node, descend) {
 		var convert = false;
 		if (dotSubCheck(node, 'name') || dotSubCheck(node, 'osname')) {
 			descend(node, new uglifyjs.TreeTransformer(function(node, descend) {

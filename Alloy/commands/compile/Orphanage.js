@@ -53,7 +53,7 @@ Orphanage.prototype.clean = function() {
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
 	if (fs.existsSync(widgets)) {
 		_.each(fs.readdirSync(widgets), function(file) {
-			if(!widgetsInUse[file]) {
+			if (!widgetsInUse[file]) {
 				that.removeAll({ widgetId: file });
 			}
 		});
@@ -68,7 +68,7 @@ Orphanage.prototype.clean = function() {
 Orphanage.prototype.removeAll = function(opts) {
 	opts = opts || {};
 
-	if(!opts.widgetId) {
+	if (!opts.widgetId) {
 		logger.debug('Removing orphaned controllers ...');
 		this.removeControllers(opts);
 
@@ -110,7 +110,7 @@ Orphanage.prototype.removeControllers = function(opts) {
 	opts = _.clone(opts || {});
 	remove(_.extend(opts, {
 		folder: CONST.DIR.CONTROLLER,
-		types: ['CONTROLLER','VIEW'],
+		types: ['CONTROLLER', 'VIEW'],
 		exceptions: ['BaseController.js']
 	}));
 };
@@ -127,7 +127,7 @@ Orphanage.prototype.removeStyles = function(opts) {
 	opts = _.clone(opts || {});
 	remove(_.extend(opts, {
 		folder: CONST.DIR.STYLE,
-		types: ['CONTROLLER','VIEW']
+		types: ['CONTROLLER', 'VIEW']
 	}));
 };
 
@@ -194,7 +194,7 @@ Orphanage.prototype.removeAssets = function() {
 };
 
 Orphanage.prototype.removeWidget = function(opts) {
-	if(opts.widgetId===".DS_Store") { return; }
+	if (opts.widgetId === '.DS_Store') { return; }
 	opts.runtimePath = path.join(dirs.runtime, CONST.DIR.WIDGET, opts.widgetId);
 	remove(opts);
 };
@@ -275,9 +275,9 @@ function isException(file, exceptions) {
 		exs.push(ex);
 
 		// handle folder wildcards
-		if (ex.charAt(ex.length-1) === '*') {
+		if (ex.charAt(ex.length - 1) === '*') {
 			for (var j = 0; j < exs.length; j++) {
-				var newEx = exs[i].substr(0, exs[i].length-2);
+				var newEx = exs[i].substr(0, exs[i].length - 2);
 
 				// see if the file starts with the wildcard
 				if (file.length >= newEx.length && file.substr(0, newEx.length) === newEx) {
@@ -361,7 +361,7 @@ function remove(opts) {
 			// delete the directory or file
 			var targetStat = fs.statSync(runtimeFullpath);
 			if (targetStat.isDirectory()) {
-				if(opts.widgetId) {
+				if (opts.widgetId) {
 					// remove the widget's folder
 					wrench.rmdirSyncRecursive(path.resolve(runtimeFullpath, '..'), true);
 				} else {

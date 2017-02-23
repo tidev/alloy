@@ -4,11 +4,11 @@
 var _ = require('alloy/underscore')._;
 
 function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+	return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 
 function guid() {
-   return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+	return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4());
 }
 
 function InitAdapter() {
@@ -42,19 +42,19 @@ function Sync(method, model, opts) {
 			var store = localStorage.getItem(name);
 			var store_data = (store && JSON.parse(store)) || {};
 
-            var len = 0;
-            for (var key in store_data) {
+			var len = 0;
+			for (var key in store_data) {
 				var m = new model.config.Model(store_data[key]);
 				model.models.push(m);
 				len++;
-            }
+			}
 
-            model.length = len;
-            if (len === 1) {
+			model.length = len;
+			if (len === 1) {
 				resp = model.models[0];
-            } else {
+			} else {
 				resp = model.models;
-            }
+			}
 			break;
 
 		case 'update':
@@ -72,11 +72,11 @@ function Sync(method, model, opts) {
 
 	// process success/error handlers, if present
 	if (resp) {
-        if (_.isFunction(opts.success)) { opts.success(resp); }
-        if (method === "read") { model.trigger("fetch"); }
-    } else {
+		if (_.isFunction(opts.success)) { opts.success(resp); }
+		if (method === 'read') { model.trigger('fetch'); }
+	} else {
 		if (_.isFunction(opts.error)) { opts.error(resp); }
-    }
+	}
 }
 
 module.exports.sync = Sync;
