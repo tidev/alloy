@@ -1107,7 +1107,8 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/constants.js',
 			'alloy/underscore.js',
 			'alloy/widget.js'
-		];
+		].concat(compileConfig.optimizingExceptions || []);
+
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
