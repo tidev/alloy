@@ -292,7 +292,7 @@ exports.createStyle = function(controller, opts, defaults) {
 
 		// can we clear out any form factor queries?
 		if (style.queries && style.queries.formFactor &&
-			!Alloy[style.queries.formFactor]) {
+			!exports[style.queries.formFactor]) {
 			continue;
 		}
 
@@ -300,7 +300,7 @@ exports.createStyle = function(controller, opts, defaults) {
 		if (style.queries && style.queries.if &&
 			(style.queries.if.trim().toLowerCase() === 'false' ||
 			(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
-			Alloy.Globals[style.queries.if.split('.')[2]] === false))) {
+			exports.Globals[style.queries.if.split('.')[2]] === false))) {
 			continue;
 		}
 
