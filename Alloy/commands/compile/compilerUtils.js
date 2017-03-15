@@ -376,6 +376,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 				},
 				postCode;
 
+			if (args.fullname === 'Alloy.Widget') {
+				eventObj.obj = state.controller;
+			}
+
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
 			var theEvent;
