@@ -7,7 +7,6 @@
 	`alloy new [path] --testapp ui/tableview `
 */
 var path = require('path'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),

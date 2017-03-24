@@ -2,8 +2,7 @@
 	Corresponds to `alloy extract-i18n` command.
 	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-Extractinglocalizationstrings
 */
-var fs = require('fs'),
-	path = require('path'),
+var path = require('path'),
 	fs = require('fs-extra'),
 	CONST = require('../../common/constants'),
 	U = require('../../utils'),

@@ -11,7 +11,7 @@ var program = require('commander'),
 	_ = require('./lib/alloy/underscore')._,
 	pkginfo = require('pkginfo')(module, 'version'),
 	path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	CONST = require('./common/constants');
 
 // patch to remove the warning in node >=0.8

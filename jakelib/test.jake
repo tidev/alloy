@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	jlib = require('../test/lib/jasmine'),
 	ConsoleReporter = require('../test/lib/ConsoleReporter'),

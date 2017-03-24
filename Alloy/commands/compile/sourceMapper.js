@@ -3,7 +3,6 @@
 	provided by the UglifyJS library
 */
 var SM = require('source-map'),
-	fs = require('fs'),
 	path = require('path'),
 	fs = require('fs-extra'),
 	U = require('../../utils'),

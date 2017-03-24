@@ -9,7 +9,7 @@ var SILENT = true;
 
 exports.init = function (logger, config, cli, appc) {
 	var path = require('path'),
-		fs = require('fs'),
+		fs = require('fs-extra'),
 		afs = appc.fs;
 
 	function run(finished) {

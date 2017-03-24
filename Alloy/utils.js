@@ -1,7 +1,6 @@
 // The island of misfit toys... for functions
 
 var path = require('path'),
-	fs = require('fs'),
 	colors = require('colors'),
 	crypto = require('crypto'),
 	util = require('util'),

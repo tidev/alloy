@@ -1,6 +1,5 @@
 var path = require('path'),
 	colors = require('colors'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),

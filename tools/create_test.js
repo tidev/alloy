@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	os = require('os');
 
 var EOL = os.EOL;

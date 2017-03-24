@@ -1,5 +1,4 @@
 var exec = require('child_process').exec,
-	fs = require('fs'),
 	os = require('os'),
 	fs = require('fs-extra'),
 	path = require('path'),

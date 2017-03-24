@@ -3,8 +3,7 @@
 	on subsequent compiles. For example, the base client-side lib, alloy.js, is
 	not deleted and recopied after the initial compile.
 */
-var fs = require('fs'),
-	path = require('path'),
+var path = require('path'),
 	fs = require('fs-extra'),
 	platforms = require('../../../platforms/index'),
 	logger = require('../../logger'),

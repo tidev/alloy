@@ -1,5 +1,4 @@
-var fs = require('fs'),
-	fs = require('fs-extra'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),

@@ -1,5 +1,4 @@
 var path = require('path'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),

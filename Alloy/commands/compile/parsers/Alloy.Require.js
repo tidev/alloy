@@ -1,5 +1,5 @@
 var path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	_ = require('../../../lib/alloy/underscore')._,
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),

@@ -3,7 +3,6 @@ var U = require('../../utils'),
 	path = require('path'),
 	_ = require('../../lib/alloy/underscore')._,
 	XMLSerializer = require('xmldom').XMLSerializer,
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	os = require('os');
 

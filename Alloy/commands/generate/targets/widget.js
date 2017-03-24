@@ -1,5 +1,4 @@
 var path = require('path'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),

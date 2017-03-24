@@ -1,6 +1,5 @@
 var ejs = require('ejs'),
 	path = require('path'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),

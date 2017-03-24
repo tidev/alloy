@@ -1,6 +1,5 @@
 var basePath = '../../';
 var path = require('path'),
-	fs = require('fs'),
 	fs = require('fs-extra'),
 	xml2tss = require('xml2tss'),
 	alloyRoot = path.join(__dirname, '..', '..'),

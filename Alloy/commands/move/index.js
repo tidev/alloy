@@ -1,5 +1,4 @@
 var colors = require('colors'),
-	fs = require('fs'),
 	path = require('path'),
 	fs = require('fs-extra'),
 	_ = require('../../lib/alloy/underscore')._,

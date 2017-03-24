@@ -1,5 +1,4 @@
-var fs = require('fs'),
-	path = require('path'),
+var path = require('path'),
 	os = require('os'),
 	fs = require('fs-extra'),
 	colors = require('colors'),
