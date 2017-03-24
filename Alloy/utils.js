@@ -146,7 +146,7 @@ exports.getAndValidateProjectPaths = function(argPath, opts) {
 	// Resources/app.js must be present, even if not used
 	var appjs = path.join(paths.resources, 'app.js');
 	if (!fs.existsSync(appjs)) {
-		fs.mkdirpSync(paths.resources, 0755);
+		fs.mkdirpSync(paths.resources);
 		fs.writeFileSync(appjs, '');
 	}
 
@@ -185,7 +185,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	logger.trace('SRC_DIR=' + srcDir);
 
 	if (!fs.existsSync(dstDir)) {
-		fs.mkdirpSync(dstDir, 0755);
+		fs.mkdirpSync(dstDir);
 	}
 
 	// don't process XML/controller files inside .svn folders (ALOY-839)
@@ -247,7 +247,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		} else {
 			if (srcStat.isDirectory()) {
 				logger.trace('Creating directory ' + path.relative(opts.rootDir, dst).yellow);
-				fs.mkdirpSync(dst, 0755);
+				fs.mkdirpSync(dst);
 			} else {
 				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
 					' --> ' + path.relative(opts.rootDir, dst).yellow);
@@ -492,7 +492,7 @@ exports.copyFileSync = function(srcFile, destFile) {
 
 exports.ensureDir = function(p) {
 	if (!fs.existsSync(p)) {
-		fs.mkdirpSync(p, 0755);
+		fs.mkdirpSync(p);
 	}
 };
 

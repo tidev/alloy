@@ -24,7 +24,7 @@ function BuildLog(_projectPath) {
 
 	// make sure the alloy build folder exists
 	if (!fs.existsSync(dir)) {
-		fs.mkdirpSync(dir, 0755);
+		fs.mkdirpSync(dir);
 	}
 
 	// load it up

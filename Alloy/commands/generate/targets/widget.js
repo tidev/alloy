@@ -26,13 +26,13 @@ module.exports = function(name, args, program) {
 		var typeTemplate = path.join(paths.template, 'widget', type.toLowerCase() + '.' +
 			CONST.FILE_EXT[type]);
 
-		fs.mkdirpSync(typeFolder, 0755);
+		fs.mkdirpSync(typeFolder);
 		fs.writeFileSync(
 			path.join(typeFolder, CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
 			fs.readFileSync(typeTemplate, 'utf8')
 		);
 	});
-	fs.mkdirpSync(path.join(paths.widget, CONST.DIR.ASSETS), 0755);
+	fs.mkdirpSync(path.join(paths.widget, CONST.DIR.ASSETS));
 
 	// create widget.json manifest file
 	fs.writeFileSync(

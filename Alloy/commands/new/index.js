@@ -32,21 +32,21 @@ module.exports = function(args, program) {
 			fs.removeSync(paths.app);
 		}
 	}
-	fs.mkdirpSync(paths.app, 0755);
+	fs.mkdirpSync(paths.app);
 
 	// copy platform-specific folders from Resources to app/assets
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		var rPath = path.join(paths.resources, platform);
 		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
-			fs.mkdirpSync(aPath, 0755);
+			fs.mkdirpSync(aPath);
 			fs.copySync(rPath, aPath, {preserve:true});
 		}
 	});
 
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
-		fs.mkdirpSync(path.join(paths.app, dir), 0755);
+		fs.mkdirpSync(path.join(paths.app, dir));
 	});
 
 	// move existing i18n and platform directories into app directory
@@ -85,7 +85,7 @@ module.exports = function(args, program) {
 		}
 
 		var p = path.join(paths.app, 'assets', dir);
-		fs.mkdirpSync(p, 0755);
+		fs.mkdirpSync(p);
 		fs.copySync(rDir, p);
 	});
 
@@ -117,7 +117,7 @@ module.exports = function(args, program) {
 		fs.removeSync(path.join(paths.app, '_generated'));
 		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
-			fs.mkdirpSync(path.join(paths.app, 'lib'), 0755);
+			fs.mkdirpSync(path.join(paths.app, 'lib'));
 			fs.copySync(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
 		}
 	}

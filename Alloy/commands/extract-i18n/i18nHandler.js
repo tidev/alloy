@@ -24,7 +24,7 @@ module.exports = function(projectRoot, language) {
 
 	// create 18n folder if it doesn't exist
 	if (!fs.existsSync(i18nDir)) {
-		fs.mkdirpSync(i18nDir, 0755);
+		fs.mkdirpSync(i18nDir);
 	}
 
 	// create i18n file if it doesn't exist

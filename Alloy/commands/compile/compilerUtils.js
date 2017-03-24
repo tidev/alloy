@@ -614,7 +614,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var destDir = path.join(resourceDir, dirname, widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
-					fs.mkdirpSync(destDir, 0755);
+					fs.mkdirpSync(destDir);
 				}
 
 				logger.trace('Copying ' + file.yellow + ' --> ' +
@@ -680,7 +680,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 			if (!fs.existsSync(srcFile)) return;
 
 			if (fs.statSync(srcFile).isDirectory()) {
-				fs.existsSync(destFile) || fs.mkdirpSync(destFile, 0755);
+				fs.existsSync(destFile) || fs.mkdirpSync(destFile);
 				return walk(srcFile, destFile);
 			}
 
@@ -845,7 +845,7 @@ function generateConfig(obj) {
 		logger.info(' [config.json] regenerating CFG.js from config.json...');
 		buildLog.data.cfgHash = hash;
 		// write out the config runtime module
-		fs.mkdirpSync(resourcesBase, 0755);
+		fs.mkdirpSync(resourcesBase);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 		var output = 'module.exports=' + JSON.stringify(o) + ';';
@@ -854,7 +854,7 @@ function generateConfig(obj) {
 		// TODO: deal with TIMOB-14884
 		var baseFolder = path.join(obj.dir.resources, 'alloy');
 		if (!fs.existsSync(baseFolder)) {
-			fs.mkdirpSync(baseFolder, 0755);
+			fs.mkdirpSync(baseFolder);
 		}
 		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}

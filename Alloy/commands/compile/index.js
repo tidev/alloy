@@ -252,7 +252,7 @@ module.exports = function(args, program) {
 	// create runtime folder structure for alloy
 	_.each(['COMPONENT', 'WIDGET', 'RUNTIME_STYLE'], function(type) {
 		var p = path.join(paths.resources, titaniumFolder, 'alloy', CONST.DIR[type]);
-		fs.mkdirpSync(p, 0755);
+		fs.mkdirpSync(p);
 	});
 
 	// Copy in all developer assets, libs, and additional resources
@@ -326,7 +326,7 @@ module.exports = function(args, program) {
 		logger.debug('Resetting ' + destPlatformDir.yellow);
 		fs.removeSync(destPlatformDir);
 	}
-	fs.mkdirpSync(destPlatformDir, 0755);
+	fs.mkdirpSync(destPlatformDir);
 	fs.writeFileSync(path.join(destPlatformDir, 'alloy_generated'), generateMessage('platform'));
 	sourcePlatformDirs.forEach(function (dir) {
 		var dirs = [ dir ];
@@ -350,7 +350,7 @@ module.exports = function(args, program) {
 		logger.debug('Resetting ' + destI18NDir.yellow);
 		fs.removeSync(destI18NDir);
 	}
-	fs.mkdirpSync(destI18NDir, 0755);
+	fs.mkdirpSync(destI18NDir);
 	fs.writeFileSync(path.join(destI18NDir, 'alloy_generated'), generateMessage('i18n'));
 	sourceI18NPaths.forEach(function (dir) {
 		if (fs.existsSync(dir)) {
@@ -867,13 +867,11 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	if (manifest) {
 		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetDir),
-			0755
+				manifest.id, widgetDir)
 		);
 		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetStyleDir),
-			0755
+				manifest.id, widgetStyleDir)
 		);
 
 		// [ALOY-967] merge "i18n" dir in widget folder
@@ -980,7 +978,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			{ WIDGETID: manifest.id }
 		);
 	}
-	fs.mkdirpSync(path.dirname(runtimeStylePath), 0755);
+	fs.mkdirpSync(path.dirname(runtimeStylePath));
 	fs.writeFileSync(runtimeStylePath, styleCode);
 }
 
@@ -1059,7 +1057,7 @@ function processModels(dirs) {
 				modelRuntimeDir = path.join(compileConfig.dir.resources,
 					titaniumFolder, 'alloy', 'widgets', manifest.id, 'models');
 			}
-			fs.mkdirpSync(modelRuntimeDir, 0755);
+			fs.mkdirpSync(modelRuntimeDir);
 			fs.writeFileSync(path.join(modelRuntimeDir, casedBasename + '.js'), code);
 			models.push(casedBasename);
 		});
