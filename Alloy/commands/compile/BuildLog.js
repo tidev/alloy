@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
 
@@ -24,7 +24,7 @@ function BuildLog(_projectPath) {
 
 	// make sure the alloy build folder exists
 	if (!fs.existsSync(dir)) {
-		wrench.mkdirSyncRecursive(dir, 0755);
+		fs.mkdirpSync(dir, 0755);
 	}
 
 	// load it up

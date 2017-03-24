@@ -1,7 +1,7 @@
 var colors = require('colors'),
 	fs = require('fs'),
 	path = require('path'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
@@ -10,7 +10,7 @@ var colors = require('colors'),
 function cleanup(args) {
 	args = args || {};
 
-	files = wrench.readdirSyncRecursive(args.path);
+	files = fs.readdirSync(args.path);
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err) {
 			if (err) {

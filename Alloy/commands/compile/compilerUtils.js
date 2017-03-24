@@ -3,7 +3,7 @@ var U = require('../../utils'),
 	path = require('path'),
 	os = require('os'),
 	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../logger'),
 	astController = require('./ast/controller'),
@@ -593,7 +593,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
-		var files = wrench.readdirSyncRecursive(dir);
+		var files = fs.readdirSync(dir);
 		_.each(files, function(file) {
 			var source = path.join(dir, file);
 
@@ -614,7 +614,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var destDir = path.join(resourceDir, dirname, widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
-					wrench.mkdirSyncRecursive(destDir, 0755);
+					fs.mkdirpSync(destDir, 0755);
 				}
 
 				logger.trace('Copying ' + file.yellow + ' --> ' +
@@ -626,7 +626,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		// [ALOY-1002] Remove ios folder copied from widget
 		var iosDir = path.join(resourceDir, 'ios');
 		if (fs.existsSync(iosDir)) {
-			wrench.rmdirSyncRecursive(iosDir);
+			fs.removeSync(iosDir);
 		}
 		logger.trace(' ');
 	});
@@ -639,26 +639,26 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
 			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
 			if (fs.existsSync(widgetAssetSourceDir)) {
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
 			// platform-specific assets from the widget must override those of the theme
 			if (platform && path.existsSync(path.join(resources[0], platform))) {
-				wrench.copyDirSyncRecursive(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
+				fs.copySync(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
 			}
 			// however platform-specific theme assets must override the platform assets from the widget
 			if (platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
 				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
 
 			// [ALOY-1002] Remove platform-specific folders copied from theme
 			if (fs.existsSync(widgetAssetTargetDir)) {
-				var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+				var files = fs.readdirSync(widgetAssetTargetDir);
 				_.each(files, function(file) {
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
-						wrench.rmdirSyncRecursive(source);
+						fs.removeSync(source);
 					}
 				});
 			}
@@ -680,7 +680,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 			if (!fs.existsSync(srcFile)) return;
 
 			if (fs.statSync(srcFile).isDirectory()) {
-				fs.existsSync(destFile) || wrench.mkdirSyncRecursive(destFile, 0755);
+				fs.existsSync(destFile) || fs.mkdirpSync(destFile, 0755);
 				return walk(srcFile, destFile);
 			}
 
@@ -845,7 +845,7 @@ function generateConfig(obj) {
 		logger.info(' [config.json] regenerating CFG.js from config.json...');
 		buildLog.data.cfgHash = hash;
 		// write out the config runtime module
-		wrench.mkdirSyncRecursive(resourcesBase, 0755);
+		fs.mkdirpSync(resourcesBase, 0755);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 		var output = 'module.exports=' + JSON.stringify(o) + ';';
@@ -854,7 +854,7 @@ function generateConfig(obj) {
 		// TODO: deal with TIMOB-14884
 		var baseFolder = path.join(obj.dir.resources, 'alloy');
 		if (!fs.existsSync(baseFolder)) {
-			wrench.mkdirSyncRecursive(baseFolder, 0755);
+			fs.mkdirpSync(baseFolder, 0755);
 		}
 		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}

@@ -1,5 +1,5 @@
 var fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
@@ -22,9 +22,9 @@ describe('alloy selective compile', function() {
 	it('preparing test app', function() {
 
 		// Create a copy of Harness to work with
-		wrench.rmdirSyncRecursive(Harness, true);
-		wrench.mkdirSyncRecursive(Harness, 0777);
-		wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
+		fs.removeSync(Harness);
+		fs.mkdirpSync(Harness, 0777);
+		fs.copySync(HarnessTemplate, Harness, {
 			forceDelete: true
 		});
 		TU.asyncExecTest('alloy new "' + Harness + '"', {

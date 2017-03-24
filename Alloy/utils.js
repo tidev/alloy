@@ -5,7 +5,7 @@ var path = require('path'),
 	colors = require('colors'),
 	crypto = require('crypto'),
 	util = require('util'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	jsonlint = require('jsonlint'),
 	resolve = require('resolve'),
 	paths = require('global-paths'),
@@ -146,7 +146,7 @@ exports.getAndValidateProjectPaths = function(argPath, opts) {
 	// Resources/app.js must be present, even if not used
 	var appjs = path.join(paths.resources, 'app.js');
 	if (!fs.existsSync(appjs)) {
-		wrench.mkdirSyncRecursive(paths.resources, 0755);
+		fs.mkdirpSync(paths.resources, 0755);
 		fs.writeFileSync(appjs, '');
 	}
 
@@ -185,13 +185,13 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	logger.trace('SRC_DIR=' + srcDir);
 
 	if (!fs.existsSync(dstDir)) {
-		wrench.mkdirSyncRecursive(dstDir, 0755);
+		fs.mkdirpSync(dstDir, 0755);
 	}
 
 	// don't process XML/controller files inside .svn folders (ALOY-839)
 	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
-	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
+	_.each(fs.readdirSync(srcDir), function(file) {
 		var src = path.join(srcDir, file);
 		var dst = path.join(dstDir, file);
 
@@ -247,7 +247,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		} else {
 			if (srcStat.isDirectory()) {
 				logger.trace('Creating directory ' + path.relative(opts.rootDir, dst).yellow);
-				wrench.mkdirSyncRecursive(dst, 0755);
+				fs.mkdirpSync(dst, 0755);
 			} else {
 				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
 					' --> ' + path.relative(opts.rootDir, dst).yellow);
@@ -441,7 +441,7 @@ exports.rmdirContents = function(dir, exceptions) {
 			continue;
 		// use wrench to delete directories
 		} else if (stat.isDirectory()) {
-			wrench.rmdirSyncRecursive(currFile, true);
+			fs.removeSync(currFile);
 		// unlink any files or links
 		} else {
 			fs.unlinkSync(currFile);
@@ -492,7 +492,7 @@ exports.copyFileSync = function(srcFile, destFile) {
 
 exports.ensureDir = function(p) {
 	if (!fs.existsSync(p)) {
-		wrench.mkdirSyncRecursive(p, 0755);
+		fs.mkdirpSync(p, 0755);
 	}
 };
 

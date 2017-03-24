@@ -9,7 +9,7 @@ var fs = require('fs'),
 // Fix node warning
 path.existsSync = fs.existsSync || path.existsSync;
 
-var	wrench = require('wrench'),
+var	fs = require('fs-extra'),
 	spawn = require('child_process').spawn,
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
@@ -107,16 +107,16 @@ namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
 		log('Reseting the Harness app from template...');
-		wrench.rmdirSyncRecursive(harnessAppPath, true);
-		wrench.mkdirSyncRecursive(harnessAppPath, 0777);
-		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
+		fs.removeSync(harnessAppPath);
+		fs.mkdirpSync(harnessAppPath, 0777);
+		fs.copySync(harnessTemplatePath, harnessAppPath);
 	});
 
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
 	task('setup', ['app:clobber'], function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
-			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+			fs.mkdirpSync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -126,9 +126,9 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
-				wrench.copyDirSyncRecursive(
+				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
+				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
 					{preserve:true}
@@ -147,7 +147,7 @@ namespace('app', function() {
 	task('quickrun', function() {
 		log('Quick-running sample app "' + appDir + '"...');
 		log('Staging sample app "' + appDir + '" for launch...');
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+		fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
 		runApp();
 	});
 
@@ -155,7 +155,7 @@ namespace('app', function() {
 	task('setupNoXML', ['app:clobber'], function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
-			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+			fs.mkdirpSync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -165,9 +165,9 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
-				wrench.copyDirSyncRecursive(
+				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
+				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
 					{preserve:true}

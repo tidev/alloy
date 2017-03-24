@@ -1,6 +1,6 @@
 var path = require('path'),
 	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),
 	_ = require('../../../lib/alloy/underscore')._,
@@ -26,13 +26,13 @@ module.exports = function(name, args, program) {
 		var typeTemplate = path.join(paths.template, 'widget', type.toLowerCase() + '.' +
 			CONST.FILE_EXT[type]);
 
-		wrench.mkdirSyncRecursive(typeFolder, 0755);
+		fs.mkdirpSync(typeFolder, 0755);
 		fs.writeFileSync(
 			path.join(typeFolder, CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
 			fs.readFileSync(typeTemplate, 'utf8')
 		);
 	});
-	wrench.mkdirSyncRecursive(path.join(paths.widget, CONST.DIR.ASSETS), 0755);
+	fs.mkdirpSync(path.join(paths.widget, CONST.DIR.ASSETS), 0755);
 
 	// create widget.json manifest file
 	fs.writeFileSync(
