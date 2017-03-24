@@ -1,5 +1,4 @@
-var fs = require('fs-extra'),
-	path = require('path'),
+var path = require('path'),
 	fs = require('fs-extra'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
