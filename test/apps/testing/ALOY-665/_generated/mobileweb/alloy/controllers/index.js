@@ -15,15 +15,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -62,11 +56,11 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var touch = {
-        start: function() {
+        start: function(e) {
             Ti.API.info("touchstart");
         },
         end: {
-            func: function() {
+            func: function(e) {
                 Ti.API.info("touchend");
             }
         }

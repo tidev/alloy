@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function fireEvent() {
+    function fireEvent(e) {
         $.trigger("someEvent", {
             message: $.text.value
         });
@@ -17,15 +17,9 @@ function Controller() {
     this.__controllerPath = "CustomView";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

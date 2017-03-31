@@ -40,14 +40,14 @@ model = Alloy.M("info", exports.definition, [ function(migration) {
     migration.name = "info";
     migration.id = "201301161234567";
     var info = [];
-    for (var i = 0; 500 > i; i++) info.push(i % 7 === 0 ? {
+    for (var i = 0; 500 > i; i++) i % 7 === 0 ? info.push({
         title: "This is the title",
         subtitle: "This is the slightly more verbose subtitle",
         image: i % 2 ? "/appc.png" : "/alloy.png"
-    } : i % 2 ? {
+    }) : i % 2 ? info.push({
         title: "This is the title with subtitle",
         subtitle: "This is the slightly more verbose subtitle"
-    } : {
+    }) : info.push({
         title: "This is the lonely title"
     });
     migration.up = function(migrator) {

@@ -1,0 +1,8 @@
+<Alloy>
+	<NavigationWindow>
+		<Window class="container">
+			<Require src="navbar" />
+			<Label id="label">Hello, World</Label>
+		</Window>
+	</NavigationWindow>
+</Alloy>

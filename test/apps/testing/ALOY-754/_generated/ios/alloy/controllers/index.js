@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function showAlert() {
+    function showAlert(e) {
         Ti.API.debug(JSON.stringify(Alloy.CFG, null, "	"));
         alert("Alloy.CFG.mainConfig = " + Alloy.CFG.mainConfig);
         alert("Alloy.CFG.bothConfig = " + Alloy.CFG.bothConfig);
@@ -18,15 +18,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

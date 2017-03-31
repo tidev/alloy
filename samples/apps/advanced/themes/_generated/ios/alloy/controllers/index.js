@@ -8,25 +8,19 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function updateLabel() {
+    function updateLabel(e) {
         $.label.text = Math.round($.slider.value) + "s";
     }
-    function testPatience() {
+    function testPatience(e) {
         Alloy.createController("dialog").show(1e3 * $.slider.value);
     }
     require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

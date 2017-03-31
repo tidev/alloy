@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "optionDialog/" + s : s.substring(0, index) + "/optionDialog/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
 function __processArg(obj, key) {
@@ -35,7 +35,7 @@ function Controller() {
     $.__views.theView && $.addTopLevelView($.__views.theView);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    require("alloy/animation").popIn($.theView, function() {});
+    require("alloy/animation").popIn($.theView, function(e) {});
     _.extend($, exports);
 }
 

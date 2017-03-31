@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function resetClasses() {
+    function resetClasses(e) {
         var theClass = classes[index++];
         $.resetClass($.tester, theClass);
         $.currentClasses.text = JSON.stringify(theClass);
@@ -18,15 +18,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};

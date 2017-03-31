@@ -12,15 +12,9 @@ function Controller() {
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -49,7 +43,7 @@ function Controller() {
         width: 300,
         height: 300,
         backgroundColor: "red"
-    }), function() {});
+    }), function(e) {});
     _.extend($, exports);
 }
 

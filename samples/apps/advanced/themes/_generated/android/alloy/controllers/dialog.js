@@ -8,11 +8,11 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function handleAnimation() {
+    function handleAnimation(e) {
         anim.removeEventListener("complete", handleAnimation);
         $.button.title = "You made it!";
     }
-    function closeDialog() {
+    function closeDialog(e) {
         anim.removeEventListener("complete", handleAnimation);
         $.dialog.close();
     }
@@ -20,15 +20,9 @@ function Controller() {
     this.__controllerPath = "dialog";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
