@@ -55,7 +55,7 @@ function loadMomentLanguages(config) {
 }
 
 exports.process = function(ast, config) {
-	var rx = /^(alloy)\/(.+)$/;
+	var rx = /^(\/?alloy)\/(.+)$/;
 	var match;
 
 	ast.walk(new uglifyjs.TreeWalker(function(node) {
