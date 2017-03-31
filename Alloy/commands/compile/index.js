@@ -3,6 +3,7 @@ var ejs = require('ejs'),
 	fs = require('fs-extra'),
 	vm = require('vm'),
 	uglifyjs = require('uglify-js'),
+	walkSync = require('walk-sync'),
 
 	// alloy requires
 	_ = require('../../lib/alloy/underscore'),
@@ -397,7 +398,7 @@ module.exports = function(args, program) {
 		// generate runtime controllers from views
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
-			_.each(fs.readdirSync(theViewDir), function(view) {
+			_.each(walkSync(theViewDir), function(view) {
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -418,7 +419,7 @@ module.exports = function(args, program) {
 		// corresponding view markup
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
-			_.each(fs.readdirSync(theControllerDir), function(controller) {
+			_.each(walkSync(theControllerDir), function(controller) {
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));
@@ -984,7 +985,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 function findModelMigrations(name, inDir) {
 	try {
 		var migrationsDir = inDir || compileConfig.dir.migrations;
-		var files = fs.readdirSync(migrationsDir);
+		var files = walkSync(migrationsDir);
 		var part = '_' + name + '.' + CONST.FILE_EXT.MIGRATION;
 
 		// look for our model
@@ -1031,7 +1032,7 @@ function processModels(dirs) {
 		var manifest = dirObj.manifest;
 		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
 		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/' : '';
-		_.each(fs.readdirSync(modelDir), function(file) {
+		_.each(walkSync(modelDir), function(file) {
 			if (!modelRegex.test(file)) {
 				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
 				return;
@@ -1116,7 +1117,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
-		return _.filter(fs.readdirSync(compileConfig.dir.resources), function(f) {
+		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();

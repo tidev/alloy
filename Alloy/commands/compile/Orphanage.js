@@ -5,6 +5,7 @@
 */
 var path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	platforms = require('../../../platforms/index'),
 	logger = require('../../logger'),
 	CONST = require('../../common/constants'),
@@ -323,7 +324,7 @@ function remove(opts) {
 	}
 
 	// Let's see if we need to delete any orphan files...
-	_.each(fs.readdirSync(runtimePath), function(file) {
+	_.each(walkSync(runtimePath), function(file) {
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;
 		var checks, i;

@@ -4,6 +4,7 @@
 */
 var path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	CONST = require('../../common/constants'),
 	U = require('../../utils'),
 	_ = require('../../lib/alloy/underscore')._,
@@ -18,7 +19,7 @@ var valueRegex = new RegExp(searchString);
 function extractStrings() {
 	try {
 		var sourceDir = paths.app;
-		var files = fs.readdirSync(sourceDir);
+		var files = walkSync(sourceDir);
 		var styleSuffix = '.' + CONST.FILE_EXT.STYLE;
 		var controllerSuffix = '.' + CONST.FILE_EXT.CONTROLLER;
 		var viewSuffix = '.' + CONST.FILE_EXT.VIEW;

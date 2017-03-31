@@ -1,6 +1,7 @@
 var colors = require('colors'),
 	path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
@@ -9,7 +10,7 @@ var colors = require('colors'),
 function cleanup(args) {
 	args = args || {};
 
-	files = fs.readdirSync(args.path);
+	files = walkSync(args.path);
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err) {
 			if (err) {

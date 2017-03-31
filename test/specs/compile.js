@@ -1,6 +1,7 @@
 var path = require('path'),
 	os = require('os'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	colors = require('colors'),
 	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
@@ -60,7 +61,7 @@ describe('alloy compile', function() {
 	TU.addMatchers();
 
 	// Iterate through each test app and make sure it compiles for all platforms
-	_.each(fs.readdirSync(paths.apps), function(file) {
+	_.each(walkSync(paths.apps), function(file) {
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
@@ -118,7 +119,7 @@ describe('alloy compile', function() {
 								return;
 							}
 							if (!fs.existsSync(cPath)) { return; }
-							var files = fs.readdirSync(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -145,7 +146,7 @@ describe('alloy compile', function() {
 
 						_.each(cPaths, function(cPath) {
 							if (!fs.existsSync(cPath)) { return; }
-							var files = fs.readdirSync(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -167,7 +168,7 @@ describe('alloy compile', function() {
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
 					if (!fs.existsSync(genFolder)) { return; }
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
-					var files = fs.readdirSync(genFolder);
+					var files = walkSync(genFolder);
 
 					os.platform() === 'darwin' && _.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);

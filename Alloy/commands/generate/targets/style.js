@@ -1,6 +1,7 @@
 var basePath = '../../../';
 var path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	xml2tss = require('xml2tss'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	GU = require('../generateUtils'),
@@ -37,7 +38,7 @@ module.exports = function(name, args, program) {
 			logger.info('Generated style named ' + name);
 		}
 	} else if (program.all) {
-		fs.readdirSync(view_root).forEach(function(view) {
+		walkSync(view_root).forEach(function(view) {
 			if (view.match('.xml$')) {
 				var style = view.replace(/\.xml/, '.tss'),
 					style_path = path.join(style_root, style),
