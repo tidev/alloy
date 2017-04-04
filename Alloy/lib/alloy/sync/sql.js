@@ -1,5 +1,5 @@
-var _ = require('alloy/underscore')._,
-	backbone = require('alloy/backbone');
+var _ = require('/alloy/underscore')._,
+	backbone = require('/alloy/backbone');
 
 // The database name used when none is specified in the
 // model configuration.

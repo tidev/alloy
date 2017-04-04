@@ -565,7 +565,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : 'var ' + CONST.WIDGET_OBJECT +
-				" = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
+				" = new (require('/alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
 				manifest.id + "';",
 			WPATH: !manifest ? '' : _.template(
 				fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'),

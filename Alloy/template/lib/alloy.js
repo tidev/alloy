@@ -23,9 +23,9 @@
  * For guides on using Alloy, see
  * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
  */
-var _ = require('alloy/underscore')._,
-	Backbone = require('alloy/backbone'),
-	CONST = require('alloy/constants');
+var _ = require('/alloy/underscore')._,
+	Backbone = require('/alloy/backbone'),
+	CONST = require('/alloy/constants');
 
 exports.version = '<%= version %>';
 exports._ = _;
@@ -134,7 +134,7 @@ exports.M = function(name, modelDesc, migrations) {
 	var mod;
 
 	if (adapter.type) {
-		mod = require('alloy/sync/' + adapter.type);
+		mod = require('/alloy/sync/' + adapter.type);
 		extendObj.sync = function(method, model, opts) {
 			return mod.sync(method, model, opts);
 		};
@@ -177,7 +177,7 @@ exports.C = function(name, modelDesc, model) {
 	var mod;
 
 	if (config.adapter && config.adapter.type) {
-		mod = require('alloy/sync/' + config.adapter.type);
+		mod = require('/alloy/sync/' + config.adapter.type);
 		extendObj.sync = function(method, model, opts) {
 			return mod.sync(method, model, opts);
 		};
@@ -257,10 +257,10 @@ exports.createStyle = function(controller, opts, defaults) {
 	// Load the runtime style for the given controller
 	var styleArray;
 	if (controller && _.isObject(controller)) {
-		styleArray = require('alloy/widgets/' + controller.widgetId +
+		styleArray = require('/alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
-		styleArray = require('alloy/styles/' + controller);
+		styleArray = require('/alloy/styles/' + controller);
 	}
 	var styleFinal = {};
 
@@ -413,7 +413,7 @@ exports.createWidget = function(id, name, args) {
 		args = name;
 		name = DEFAULT_WIDGET;
 	}
-	return new (require('alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
+	return new (require('/alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
 };
 
 /**
@@ -425,7 +425,7 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
-	return new (require('alloy/controllers/' + name))(args);
+	return new (require('/alloy/controllers/' + name))(args);
 };
 
 /**
@@ -440,7 +440,7 @@ exports.createController = function(name, args) {
  * @return {Backbone.Model} Backbone model object.
  */
 exports.createModel = function(name, args) {
-	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
+	return new (require('/alloy/models/' + ucfirst(name)).Model)(args);
 };
 
 /**
@@ -456,7 +456,7 @@ exports.createModel = function(name, args) {
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.createCollection = function(name, args) {
-	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
+	return new (require('/alloy/models/' + ucfirst(name)).Collection)(args);
 };
 
 function isTabletFallback() {
@@ -602,7 +602,7 @@ exports.Collections.instance = function(name) {
  *     var theKey = require('alloy').CFG.key;
  *
  */
-exports.CFG = require('alloy/CFG');
+exports.CFG = require('/alloy/CFG');
 
 if (OS_ANDROID) {
 	exports.Android = {};

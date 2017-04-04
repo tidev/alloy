@@ -4,8 +4,8 @@
  * To use the dialogs builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
- *	 var dialogs = require('alloy/dialogs');
- *	 dialogs.confirm({});
+ *     var dialogs = require('/alloy/dialogs');
+ *     dialogs.confirm({});
  */
 
 /**

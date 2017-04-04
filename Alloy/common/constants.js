@@ -2,7 +2,7 @@ var isTitanium = typeof Titanium !== 'undefined';
 var _, generatePlatformArray;
 
 if (isTitanium) {
-	_ = require('alloy/underscore')._;
+	_ = require('/alloy/underscore')._;
 } else {
 	var platforms = require('../../platforms/index');
 	_ = require('../lib/alloy/underscore')._;
