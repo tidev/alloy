@@ -8,15 +8,15 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function shake() {
+    function shake(e) {
         animation.shake($.mover, 0, function() {
             alert("Shake ended.");
         });
     }
-    function flash() {
+    function flash(e) {
         animation.flash($.mover);
     }
-    function trim() {
+    function trim(e) {
         $.label.text = string.trim($.label.text);
     }
     function flip(e) {
@@ -29,23 +29,17 @@ function Controller() {
             front = $.front;
             back = $.back;
         }
-        animation.flipHorizontal(front, back, 500, function() {
+        animation.flipHorizontal(front, back, 500, function(e) {
             Ti.API.info("flipped");
         });
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -150,6 +144,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -4,8 +4,8 @@
  * To use the string builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
- *		var string = require('alloy/string');
- *		var text = '	 hola, mundo   ';
+ *		var string = require('/alloy/string');
+ *		var text = '     hola, mundo   ';
  *		Ti.API.info(string.ucfirst(string.trim(text))); // --> 'Hola, mundo'
  */
 

@@ -1,4 +1,4 @@
-var Alloy = require('alloy'),
+var Alloy = require('/alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 

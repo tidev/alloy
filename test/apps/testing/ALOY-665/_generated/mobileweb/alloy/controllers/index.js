@@ -11,19 +11,13 @@ function Controller() {
     function doSwipe(e) {
         Ti.API.info("swipe: " + e.direction);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -62,11 +56,11 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var touch = {
-        start: function() {
+        start: function(e) {
             Ti.API.info("touchstart");
         },
         end: {
-            func: function() {
+            func: function(e) {
                 Ti.API.info("touchend");
             }
         }
@@ -78,6 +72,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

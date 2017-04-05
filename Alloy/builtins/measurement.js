@@ -7,9 +7,9 @@
  * To use the measurement builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
- *	 var measurement = require('alloy/measurement');
- *	 var pointPX = {x:42, y:7};
- *	 var pointDP = measurement.pointPXToDP(pointPX);
+ *     var measurement = require('/alloy/measurement');
+ *     var pointPX = {x:42, y:7};
+ *     var pointDP = measurement.pointPXToDP(pointPX);
  */
 
 var dpi = Ti.Platform.displayCaps.dpi,

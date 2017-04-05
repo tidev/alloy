@@ -4,8 +4,8 @@
  * To use the sha1 builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
- *	 var sha1 = require('alloy/sha1');
- *	 var sha1_digest = sha1.hex_sha1('The quick brown fox jumps over the lazy dog.');
+ *     var sha1 = require('/alloy/sha1');
+ *     var sha1_digest = sha1.hex_sha1('The quick brown fox jumps over the lazy dog.');
  */
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined

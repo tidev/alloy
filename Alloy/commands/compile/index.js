@@ -565,7 +565,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			preCode: '',
 			postCode: '',
 			Widget: !manifest ? '' : 'var ' + CONST.WIDGET_OBJECT +
-				" = new (require('alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
+				" = new (require('/alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
 				manifest.id + "';",
 			WPATH: !manifest ? '' : _.template(
 				fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'),
@@ -1108,7 +1108,13 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/underscore.js',
 			'alloy/widget.js',
 			'node_modules'
-		];
+		].concat(compileConfig.optimizingExceptions || []);
+		
+		// widget controllers are already optimized. It should be listed in exceptions.
+		_.each(compileConfig.dependencies, function (version, widgetName) {
+			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
+		});
+		
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
