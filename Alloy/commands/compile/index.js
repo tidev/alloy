@@ -1106,7 +1106,8 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/backbone.js',
 			'alloy/constants.js',
 			'alloy/underscore.js',
-			'alloy/widget.js'
+			'alloy/widget.js',
+			'node_modules'
 		].concat(compileConfig.optimizingExceptions || []);
 		
 		// widget controllers are already optimized. It should be listed in exceptions.
@@ -1121,7 +1122,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
 			return rx.test(f) && !_.find(exceptions, function(e) {
-				return f.indexOf(e) === 0;
+				return f.indexOf(e) !== -1;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
 		});
 	}
