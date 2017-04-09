@@ -1,0 +1,3 @@
+<Alloy>
+	<Label onClick="onClick">Click Me!</Label>
+</Alloy>
