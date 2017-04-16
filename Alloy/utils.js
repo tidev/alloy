@@ -563,3 +563,18 @@ exports.createDate = function(val) {
 exports.isLocaleAlias = function(string) {
 	return /^\s*L\((['\"])(.+)\1\)\s*$/.test(string);
 };
+
+exports.getDeploymentTargets = function(projDir) {
+	var tiappPath = path.join(projDir,'tiapp.xml'),
+		tiappDoc,
+		targets;
+
+	if (fs.existsSync(tiappPath)) {
+		tiapp.init(tiappPath);
+		targets = tiapp.getDeploymentTargets().join(',');
+	} else {
+		targets = CONST.PLATFORMS.join(',');
+	}
+
+	return targets;
+};
