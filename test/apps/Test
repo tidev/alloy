@@ -1,0 +1,5 @@
+ti create --name ProjectName
+cd ProjectName
+alloy new
+cp -r <path_to_alloy_git_repo>/test/apps/<path_to_app>/* apps/.
+ti build
