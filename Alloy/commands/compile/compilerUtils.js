@@ -85,7 +85,7 @@ exports.generateVarName = function(id, name) {
 			'Reserved words: [' + CONST.JS_RESERVED_ALL.sort().join(',') + ']'
 		]);
 	}
-	return '$.__views.' + id;
+	return '$.__views["' + id + '"]';
 };
 
 exports.generateUniqueId = function() {
