@@ -32,6 +32,7 @@ function resetTestApp(callback) {
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);
+			console.error(stderr);
 			process.exit();
 		}
 		callback();
@@ -126,7 +127,7 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return babylon.parse(this.actual);
+		return babylon.parse(this.actual).ast;
 	} catch (e) {
 		return false;
 	}

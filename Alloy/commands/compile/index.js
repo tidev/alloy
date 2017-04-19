@@ -1081,13 +1081,7 @@ function updateFilesWithBuildLog(src, dst, opts) {
 }
 
 function optimizeCompiledCode(alloyConfig, paths) {
-	var mods = [
-			'builtins',
-			'optimizer',
-			'compress'
-		],
-		modLocation = './ast/',
-		lastFiles = [],
+	var lastFiles = [],
 		files;
 
 	// Get the list of JS files from the Resources directory
@@ -1143,15 +1137,18 @@ function optimizeCompiledCode(alloyConfig, paths) {
 				U.die('Error generating AST for "' + fullpath + '"', e);
 			}
 
-			// process all AST operations
-			_.each(mods, function(mod) {
-				logger.trace('  processing "' + mod + '" module...');
-				ast = require(modLocation + mod).process(ast, compileConfig) || ast;
-			});
+			// TODO Can this be a plugin? Copies builtins over when used...
+			require('./ast/builtins').process(ast, compileConfig);
 
 			// Write out the optimized file, TODO use babili!
 			// TODO Source maps!
-			var options = {minified: true, compact: true, comments: false, presets: ['babili']};
+			var options = {
+				minified: true,
+				compact: true,
+				comments: false,
+				presets: ['babili'],
+				plugins: ['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
+			};
 			var minified = babel.transformFromAst(ast, contents, options);
 			fs.writeFileSync(fullpath, minified.code);
 		});

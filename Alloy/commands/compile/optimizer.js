@@ -2,14 +2,8 @@
  * Code in this file will attempt to optimize generated code so it's more compact
  * and executes faster, better, etc.
  */
-var babylon = require('babylon'),
-	types = require('babel-types'),
-	traverse = require('babel-traverse').default,
-	path = require('path'),
-	fs = require('fs'),
-	_ = require('../../lib/alloy/underscore')._;
-
 var JSON_NULL = JSON.parse('null');
+
 var isTiPlatformOsnameExpression = types.buildMatchMemberExpression('Ti.Platform.osname');
 var isTiPlatformNameExpression = types.buildMatchMemberExpression('Ti.Platform.name');
 var isTitaniumPlatformOsnameExpression = types.buildMatchMemberExpression('Titanium.Platform.osname');
