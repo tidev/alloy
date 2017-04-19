@@ -2,24 +2,18 @@
  * Code in this file will attempt to optimize generated code so it's more compact
  * and executes faster, better, etc.
  */
-var uglifyjs = require('uglify-js'),
+var babylon = require('babylon'),
+	types = require('babel-types'),
+	traverse = require('babel-traverse').default,
 	path = require('path'),
 	fs = require('fs'),
 	_ = require('../../lib/alloy/underscore')._;
 
 var JSON_NULL = JSON.parse('null');
-
-function dotCheck(node, name) {
-	return node instanceof uglifyjs.AST_Dot && node.property === name;
-}
-
-function subCheck(node, name) {
-	return node instanceof uglifyjs.AST_Sub && node.property.value === name;
-}
-
-function dotSubCheck(node, name) {
-	return dotCheck(node, name) || subCheck(node, name);
-}
+var isTiPlatformOsnameExpression = types.buildMatchMemberExpression('Ti.Platform.osname');
+var isTiPlatformNameExpression = types.buildMatchMemberExpression('Ti.Platform.name');
+var isTitaniumPlatformOsnameExpression = types.buildMatchMemberExpression('Titanium.Platform.osname');
+var isTitaniumPlatformNameExpression = types.buildMatchMemberExpression('Titanium.Platform.name');
 
 // Optimize Titanium namespaces with static strings where possible
 exports.optimize = function(ast, defines, fn) {
@@ -46,37 +40,16 @@ exports.optimize = function(ast, defines, fn) {
 	// Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
 	// into static strings where possible. This will allow the following
 	// compression step to reduce the code further.
-	var transformer = new uglifyjs.TreeTransformer(function(node, descend) {
-		var convert = false;
-		if (dotSubCheck(node, 'name') || dotSubCheck(node, 'osname')) {
-			descend(node, new uglifyjs.TreeTransformer(function(node, descend) {
-				if (dotSubCheck(node, 'Platform')) {
-					descend(node, new uglifyjs.TreeTransformer(function(node) {
-						if (node instanceof uglifyjs.AST_SymbolRef &&
-							(node.name === 'Titanium' || node.name === 'Ti')) {
-							convert = true;
-						}
-						return node;
-					}));
-				}
-				return node;
-			}));
-			if (convert) {
-				var value = node instanceof uglifyjs.AST_Dot ? node.property : node.property.value;
-				if (platform[value]) {
-					return new uglifyjs.AST_String({
-						start: node.start,
-						end: node.end,
-						value: platform[value]
-					});
-				} else {
-					return node;
-				}
+	traverse(ast, {
+		enter(path) {
+			if (platform.osname && (isTiPlatformOsnameExpression(path.node) || isTitaniumPlatformOsnameExpression(path.node))) {
+				path.replaceWith(types.stringLiteral(platform.osname));
+			} else if (platform.name && (isTiPlatformNameExpression(path.node) || isTitaniumPlatformNameExpression(path.node))) {
+				path.replaceWith(types.stringLiteral(platform.name));
 			}
-			return node;
 		}
 	});
-	return ast.transform(transformer);
+	return ast;
 };
 
 // strips null and undefined values out of Alloy styles

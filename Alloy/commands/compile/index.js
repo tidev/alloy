@@ -3,7 +3,8 @@ var ejs = require('ejs'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	vm = require('vm'),
-	uglifyjs = require('uglify-js'),
+	babel = require('babel-core'),
+	babylon = require('babylon'),
 
 	// alloy requires
 	_ = require('../../lib/alloy/underscore'),
@@ -1109,12 +1110,12 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/widget.js',
 			'node_modules'
 		].concat(compileConfig.optimizingExceptions || []);
-		
+
 		// widget controllers are already optimized. It should be listed in exceptions.
 		_.each(compileConfig.dependencies, function (version, widgetName) {
 			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
 		});
-		
+
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
@@ -1130,12 +1131,13 @@ function optimizeCompiledCode(alloyConfig, paths) {
 	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
 		_.each(files, function(file) {
 			// generate AST from file
-			var fullpath = path.join(compileConfig.dir.resources, file);
-			var ast;
+			var fullpath = path.join(compileConfig.dir.resources, file),
+				ast,
+				contents = fs.readFileSync(fullpath, 'utf8');
 			logger.info('- ' + file);
 			try {
-				ast = uglifyjs.parse(fs.readFileSync(fullpath, 'utf8'), {
-					filename: file
+				ast = babylon.parse(contents, {
+					sourceFilename: file
 				});
 			} catch (e) {
 				U.die('Error generating AST for "' + fullpath + '"', e);
@@ -1144,14 +1146,14 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			// process all AST operations
 			_.each(mods, function(mod) {
 				logger.trace('  processing "' + mod + '" module...');
-				ast.figure_out_scope();
 				ast = require(modLocation + mod).process(ast, compileConfig) || ast;
 			});
 
-			// Write out the optimized file
-			var stream = uglifyjs.OutputStream(sourceMapper.OPTIONS_OUTPUT);
-			ast.print(stream);
-			fs.writeFileSync(fullpath, stream.toString());
+			// Write out the optimized file, TODO use babili!
+			// TODO Source maps!
+			var options = {minified: true, compact: true, comments: false, presets: ['babili']};
+			var minified = babel.transformFromAst(ast, contents, options);
+			fs.writeFileSync(fullpath, minified.code);
 		});
 
 		// Combine lastFiles and files, so on the next iteration we can make sure that the

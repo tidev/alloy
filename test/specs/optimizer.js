@@ -4,6 +4,7 @@ var fs = require('fs'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
+	babylon = require('babylon'),
 	uglifyjs = require('uglify-js'),
 	optimizer = require('../../Alloy/commands/compile/optimizer');
 
@@ -120,16 +121,15 @@ describe('optimizer.js', function() {
 						expect(true).toBe(true);
 					});
 
-					it(prefix + 'parses AST with uglifyjs', function() {
+					it(prefix + 'parses AST with babylon', function() {
 						var parseFunction = function() {
-							ast = uglifyjs.parse(testContent);
+							ast = babylon.parse(testContent);
 						};
 						expect(parseFunction).not.toThrow();
 					});
 
 					it(prefix + 'optimizes AST via optimizer.js', function() {
 						var optimizeFunction = function() {
-							ast.figure_out_scope();
 							ast = optimizer.optimize(ast, defines);
 						};
 						expect(optimizeFunction).not.toThrow();
@@ -140,30 +140,8 @@ describe('optimizer.js', function() {
 						// as the last step of JS file processing. The unit testing here
 						// uses the same settings as the Alloy compile process.
 						var squeezeFunction = function() {
-							var options = {
-								sequences     : true,  // join consecutive statemets with the “comma operator”
-								properties    : false,   // optimize property access: a["foo"] → a.foo
-								dead_code     : true,   // discard unreachable code
-								drop_debugger : false,   // discard “debugger” statements
-								unsafe        : false,   // some unsafe optimizations (see below)
-								conditionals  : true,   // optimize if-s and conditional expressions
-								comparisons   : true,   // optimize comparisons
-								evaluate      : true,   // evaluate constant expressions
-								booleans      : false,   // optimize boolean expressions
-								loops         : false,   // optimize loops
-								unused        : true,   // drop unused variables/functions
-								hoist_funs    : true,   // hoist function declarations
-								hoist_vars    : false,  // hoist variable declarations
-								if_return     : true,   // optimize if-s followed by return/continue
-								join_vars     : true,   // join var declarations
-								cascade       : true,   // try to cascade `right` into `left` in sequences
-								side_effects  : true,   // drop side-effect-free statements
-								warnings      : false,   // warn about potentially dangerous optimizations/code
-								global_defs   : defines      // global definitions
-							};
-
-							ast.figure_out_scope();
-							ast = ast.transform(uglifyjs.Compressor(options));
+							var options = {minified: true, compact: true, comments: false, presets: ['babili']};
+							ast = babel.transformFromAst(ast, null, options).ast;
 						};
 						expect(squeezeFunction).not.toThrow();
 					});
@@ -209,5 +187,3 @@ function pad(string) {
 	}
 	return ret;
 }
-
-

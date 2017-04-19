@@ -1,21 +1,23 @@
 var U = require('../../../utils'),
-	uglifyjs = require('uglify-js');
+	babylon = require('babylon'),
+	types = require('babel-types'),
+	traverse = require('babel-traverse').default;
+
+var isBaseControllerExportExpression = types.buildMatchMemberExpression('export.baseController');
 
 exports.getBaseController = function(code, file) {
 	var baseController = '';
 
 	try {
-		var ast = uglifyjs.parse(code);
-		ast.walk(new uglifyjs.TreeWalker(function(node) {
-			if (node instanceof uglifyjs.AST_Assign) {
-				var left = node.left.print_to_string();
-				if (left === 'exports.baseController' ||
-					left === 'exports["baseController"]' ||
-					left === "exports['baseController']") {
-					baseController = node.right.print_to_string();
+		var ast = babylon.parse(code, { sourceFilename: file });
+		traverse(ast, {
+			enter(path) {
+				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
+					// what's equivalent of print_to_string()? I replaced with simple value property assuming it's a string literal
+					baseController = path.node.right.value;
 				}
 			}
-		}));
+		});
 	} catch (e) {
 		U.die('Error generating AST for "' + file + '"', e);
 	}
