@@ -28,7 +28,8 @@
             .replace(/\>/g, "&gt;")
             .replace(/\"/g, "&quot;")
             .replace(/\'/g, "&apos;")
-            .replace(/\&/g, "&amp;");
+            .replace(/\&/g, "&amp;")
+            .replace(/[\x1b]/g, ""); //Remove control character from Jasmine default output
     }
 
     /**
