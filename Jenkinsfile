@@ -2,7 +2,7 @@
 library 'pipeline-library'
 
 timestamps() {
-	node('(osx || linux) && git && npm-publish') {
+	node('(osx || linux) && git && npm-publish && curl') {
 		def packageVersion = ''
 		def isPR = false
 
@@ -25,10 +25,14 @@ timestamps() {
 			ansiColor('xterm') {
 				timeout(25) {
 					stage('Build') {
-						sh 'npm install'
+						// Install yarn if not installed
+						if (sh(returnStatus: true, script: 'which yarn') != 0) {
+							sh 'curl -o- -L https://yarnpkg.com/install.sh | bash'
+						}
+						sh 'yarn install'
 						if (sh(returnStatus: true, script: 'which ti') != 0) {
 							// Install titanium
-							sh 'npm install -g titanium'
+							sh 'yarn global add titanium'
 						}
 						if (sh(returnStatus: true, script: 'ti config sdk.selected') != 0) {
 							// Install titanium SDK and select it
@@ -36,7 +40,7 @@ timestamps() {
 						}
 						try {
 							withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
-								sh 'npm test'
+								sh 'yarn test'
 							}
 						} finally {
 							junit 'TEST-*.xml'
@@ -52,18 +56,14 @@ timestamps() {
 				stage('Security') {
 					// Clean up and install only production dependencies
 					sh 'rm -rf node_modules/'
-					sh 'npm install --production'
+					sh 'yarn install --production'
 
 					// Scan for NSP and RetireJS warnings
-					sh 'npm install nsp'
-					sh 'node ./node_modules/.bin/nsp check --output summary --warn-only'
-					sh 'npm uninstall nsp'
-					sh 'npm prune'
+					sh 'yarn global add nsp'
+					sh 'nsp check --output summary --warn-only'
 
-					sh 'npm install retire'
-					sh 'node ./node_modules/.bin/retire --exitwith 0'
-					sh 'npm uninstall retire'
-					sh 'npm prune'
+					sh 'yarn global add retire'
+					sh 'retire --exitwith 0'
 
 					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
 				} // stage
