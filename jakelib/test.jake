@@ -16,6 +16,9 @@ jasmine.getEnv().addReporter(new ConsoleReporter({
 	showColors: true
 }));
 
+require('../test/lib/JunitReporter');
+jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
+
 //run list of specs
 function runSpecs(names) {
 	_.each(names, function(name) {

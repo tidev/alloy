@@ -5,3 +5,4 @@ node_modules
 .project
 TODO
 npm-debug.log
+TEST-*.xml
