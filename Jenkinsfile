@@ -7,7 +7,14 @@ timestamps() {
 		def isPR = false
 
 		stage('Checkout') {
-			checkout scm
+			// checkout scm
+			// Hack for JENKINS-37658 - see https://support.cloudbees.com/hc/en-us/articles/226122247-How-to-Customize-Checkout-for-Pipeline-Multibranch
+			checkout([
+				$class: 'GitSCM',
+				branches: scm.branches,
+				extensions: scm.extensions + [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', honorRefspec: true, noTags: true, reference: '', shallow: true, depth: 30, timeout: 30]],
+				userRemoteConfigs: scm.userRemoteConfigs
+			])
 
 			isPR = env.BRANCH_NAME.startsWith('PR-')
 			packageVersion = jsonParse(readFile('package.json'))['version']
@@ -16,7 +23,7 @@ timestamps() {
 
 		nodejs(nodeJSInstallationName: 'node 4.7.3') {
 			ansiColor('xterm') {
-				timeout(10) {
+				timeout(25) {
 					stage('Build') {
 						sh 'npm install'
 						// TODO: Set up using mocha and spit out junit test report XML!
