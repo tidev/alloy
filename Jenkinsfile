@@ -20,7 +20,10 @@ timestamps() {
 					stage('Build') {
 						sh 'npm install'
 						// TODO: Set up using mocha and spit out junit test report XML!
-						sh 'npm test'
+						// FIXME: If the tests fail, the build doesn't fail or anything!
+						withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
+							sh 'npm test'
+						}
 						fingerprint 'package.json'
 						// Don't tag PRs
 						if (!isPR) {
