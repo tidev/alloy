@@ -94,3 +94,4 @@ function Controller() {
 var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;
+

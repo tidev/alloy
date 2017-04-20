@@ -31,7 +31,7 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId0);
     var __alloyId3 = [];
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Ti.UI.iOS.SystemButton.ACTION,
+        systemButton: Ti.UI.iPhone.SystemButton.ACTION,
         id: "__alloyId4"
     });
     __alloyId3.push($.__views.__alloyId4);
@@ -49,7 +49,7 @@ function Controller() {
     });
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
-        systemButton: Ti.UI.iOS.SystemButton.ADD,
+        systemButton: Ti.UI.iPhone.SystemButton.ADD,
         id: "__alloyId8"
     });
     __alloyId3.push($.__views.__alloyId8);
@@ -85,3 +85,4 @@ function Controller() {
 var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;
+

@@ -31,7 +31,7 @@ function Controller() {
     });
     __alloyId2.push($.__views.__alloyId3);
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iOS.SystemButton.EDIT,
+        systemButton: Titanium.UI.iPhone.SystemButton.EDIT,
         id: "__alloyId4"
     });
     __alloyId2.push($.__views.__alloyId4);
@@ -40,7 +40,7 @@ function Controller() {
     });
     __alloyId2.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iOS.SystemButton.ADD,
+        systemButton: Titanium.UI.iPhone.SystemButton.ADD,
         id: "__alloyId6"
     });
     __alloyId2.push($.__views.__alloyId6);
@@ -50,7 +50,7 @@ function Controller() {
     });
     __alloyId2.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iOS.SystemButton.DONE,
+        systemButton: Titanium.UI.iPhone.SystemButton.DONE,
         id: "__alloyId8"
     });
     __alloyId2.push($.__views.__alloyId8);
@@ -68,3 +68,4 @@ function Controller() {
 var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;
+
