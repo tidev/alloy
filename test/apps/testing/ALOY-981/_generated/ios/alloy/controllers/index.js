@@ -36,7 +36,7 @@ function Controller() {
     __alloyId3.push($.__views.__alloyId4);
     btnClick ? $.addListener($.__views.__alloyId4, "click", btnClick) : __defers["$.__views.__alloyId4!click!btnClick"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
@@ -47,7 +47,7 @@ function Controller() {
     __alloyId3.push($.__views.__alloyId6);
     btnClick ? $.addListener($.__views.__alloyId6, "click", btnClick) : __defers["$.__views.__alloyId6!click!btnClick"] = true;
     $.__views.__alloyId7 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({

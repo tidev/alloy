@@ -7,3 +7,5 @@ test/projects/TiAppCopy
 TODO
 test/apps/testing
 npm-debug.log
+Jenkinsfile
+TEST-*.xml

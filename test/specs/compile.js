@@ -98,6 +98,11 @@ describe('alloy compile', function() {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
+										// Spit out stderr/stdout, so we can see *why* it failed
+										if (this.output.error) {
+											console.error(this.output.stderr);
+											console.log(this.output.stdout);
+										}
 										expect(this.output.error).toBeFalsy();
 									}
 								},
