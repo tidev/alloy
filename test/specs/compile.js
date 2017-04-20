@@ -62,6 +62,8 @@ describe('alloy compile', function() {
 
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(walkSync(paths.apps), function(file) {
+		// remove trailing slash
+		file = file.replace(/\/$/, "");
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
