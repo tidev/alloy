@@ -27,30 +27,30 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId2 = [];
     $.__views.__alloyId3 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FIXED_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FIXED_SPACE
     });
     __alloyId2.push($.__views.__alloyId3);
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iPhone.SystemButton.EDIT,
+        systemButton: Titanium.UI.iOS.SystemButton.EDIT,
         id: "__alloyId4"
     });
     __alloyId2.push($.__views.__alloyId4);
     $.__views.__alloyId5 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FIXED_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FIXED_SPACE
     });
     __alloyId2.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iPhone.SystemButton.ADD,
+        systemButton: Titanium.UI.iOS.SystemButton.ADD,
         id: "__alloyId6"
     });
     __alloyId2.push($.__views.__alloyId6);
     $.__views.__alloyId7 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FIXED_SPACE,
+        systemButton: Ti.UI.iOS.SystemButton.FIXED_SPACE,
         width: "100"
     });
     __alloyId2.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
-        systemButton: Titanium.UI.iPhone.SystemButton.DONE,
+        systemButton: Titanium.UI.iOS.SystemButton.DONE,
         id: "__alloyId8"
     });
     __alloyId2.push($.__views.__alloyId8);
