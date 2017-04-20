@@ -28,6 +28,7 @@ timestamps() {
 						// Install yarn if not installed
 						if (sh(returnStatus: true, script: 'which yarn') != 0) {
 							sh 'curl -o- -L https://yarnpkg.com/install.sh | bash'
+							sh 'export PATH="$HOME/.yarn/bin:$PATH"'
 						}
 						sh 'yarn install'
 						if (sh(returnStatus: true, script: 'which ti') != 0) {
