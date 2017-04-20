@@ -26,10 +26,13 @@ timestamps() {
 				timeout(25) {
 					stage('Build') {
 						sh 'npm install'
-						// Alloy assumes there's a $HOME/.titanium/config.json as SDK version fallback, and dies otherwise
-						if (sh(returnStatus: true, script: 'test -e $HOME/.titanium/config.json') != 0) {
-							sh 'mkdir -p $HOME/.titanium'
-							sh 'cp cli_config.json $HOME/.titanium/config.json'
+						if (sh(returnStatus: true, script: 'which ti') != 0) {
+							// Install titanium
+							sh 'npm install -g titanium'
+						}
+						if (sh(returnStatus: true, script: 'ti config sdk.selected') != 0) {
+							// Install titanium SDK and select it
+							sh 'ti sdk install -d'
 						}
 						try {
 							withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
