@@ -173,6 +173,8 @@ describe('alloy compile', function() {
 					var files = walkSync(genFolder);
 
 					os.platform() === 'darwin' && _.each(files, function(gFile) {
+						// remove trailing slash
+						gFile = gFile.replace(/\/$/, "");
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);
