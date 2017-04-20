@@ -26,6 +26,11 @@ timestamps() {
 				timeout(25) {
 					stage('Build') {
 						sh 'npm install'
+						// Alloy assumes there's a $HOME/.titanium/config.json as SDK version fallback, and dies otherwise
+						if (sh(returnStatus: true, script: 'test -e $HOME/.titanium/config.json') != 0) {
+							sh 'mkdir -p $HOME/.titanium'
+							sh 'cp cli_config.json $HOME/.titanium/config.json'
+						}
 						try {
 							withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
 								sh 'npm test'
