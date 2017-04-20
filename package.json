@@ -61,6 +61,7 @@
   "devDependencies": {
     "diff": "^2.2.2",
     "eslint": "^3.11.1",
-    "jake": "^8.0.12"
+    "jake": "^8.0.12",
+    "mkdirp": "^0.5.1"
   }
 }
