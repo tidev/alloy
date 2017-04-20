@@ -10,14 +10,16 @@ path.existsSync = fs.existsSync || path.existsSync;
 //globalize the Jasmine functions
 _.extend(global, jlib);
 
+// MUST ADD JUNIT REPORTER FIRST, OR ELSE ANY FAILURES CAUSE
+// CONSOLE REPORTER TO CALL process.exit(1) first
+require('../test/lib/JunitReporter');
+jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
+
 //Set up Jasmine to print to the console with our custom printer
 jasmine.getEnv().addReporter(new ConsoleReporter({
 	print: console.log,
 	showColors: true
 }));
-
-require('../test/lib/JunitReporter');
-jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
 
 //run list of specs
 function runSpecs(names) {
