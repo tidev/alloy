@@ -59,7 +59,7 @@ exports.process = function(ast, config) {
 	var rx = /^(\/?alloy)\/(.+)$/;
 	var match;
 	traverse(ast, {
-		enter(path) {
+		enter: function(path) {
 			if (types.isCallExpression(path.node)) {
 				var theString = path.node.arguments[0];
 				if (path.node.callee.name === 'require' &&         // Is this a require call?
@@ -70,13 +70,13 @@ exports.process = function(ast, config) {
 				) {
 					// Make sure it hasn't already been copied to Resources
 					var name = appendExtension(match[2], 'js');
-					if (fs.existsSync(path.join(config.dir.resources,match[1],name))) {
+					if (fs.existsSync(path.join(config.dir.resources, match[1], name))) {
 						return;
 					}
 
 					// make sure the builtin exists
-					var source = path.join(BUILTINS_PATH,name);
-					var dest = path.join(config.dir.resources,'alloy',name);
+					var source = path.join(BUILTINS_PATH, name);
+					var dest = path.join(config.dir.resources, 'alloy', name);
 					loadBuiltin(source, name, dest);
 
 					if ('moment.js' === name) {

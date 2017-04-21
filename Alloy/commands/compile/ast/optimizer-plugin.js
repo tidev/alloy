@@ -1,5 +1,5 @@
 var CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._;
+	_ = require('../../../lib/alloy/underscore')._,
 	path = require('path'),
 	fs = require('fs');
 
@@ -13,7 +13,7 @@ module.exports = function (_ref) {
 	var isTitaniumPlatform = types.buildMatchMemberExpression('Titanium.Platform');
 
 	return {
-		pre(state) {
+		pre: function(state) {
 			var config = this.opts || {};
 			config.deploytype = config.deploytype || 'development';
 
@@ -32,7 +32,7 @@ module.exports = function (_ref) {
 
 			// make sure the platform require includes
 			var platformString = config.platform.toLowerCase();
-			var platformPath = path.join(__dirname,'..','..','..','..','platforms',platformString,'index');
+			var platformPath = path.join(__dirname, '..', '..', '..', '..', 'platforms', platformString, 'index');
 			if (!fs.existsSync(platformPath + '.js')) {
 				this.platform = {name: undefined, osname: undefined };
 			} else {
@@ -43,7 +43,7 @@ module.exports = function (_ref) {
 			}
 		},
 		visitor: {
-			MemberExpression(path, state) {
+			MemberExpression: function(path, state) {
 				// console.log(JSON.stringify(path.node));
 				var name = '';
 				if (types.isStringLiteral(path.node.property)) {
@@ -60,7 +60,7 @@ module.exports = function (_ref) {
 					}
 				}
 			},
-			Identifier(path) {
+			Identifier: function(path) {
 				if (this.defines.hasOwnProperty(path.node.name)) {
 					path.replaceWith(types.booleanLiteral(this.defines[path.node.name]));
 				}

@@ -11,7 +11,7 @@ exports.getBaseController = function(code, file) {
 	try {
 		var ast = babylon.parse(code, { sourceFilename: file });
 		traverse(ast, {
-			enter(path) {
+			enter: function(path) {
 				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
 					// what's equivalent of print_to_string()? I replaced with simple value property assuming it's a string literal
 					baseController = path.node.right.value;
