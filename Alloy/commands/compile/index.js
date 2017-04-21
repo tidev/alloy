@@ -1138,11 +1138,10 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			}
 
 			// Write out the optimized file
-			// TODO Source maps?
 			var options = {
 				ast: false,
 				minified: true,
-				compact: true,
+				compact: false,
 				comments: false,
 				presets: ['babili'],
 				plugins: [

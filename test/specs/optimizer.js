@@ -127,7 +127,7 @@ describe('optimizer.js', function() {
 						// as the last step of JS file processing. The unit testing here
 						// uses the same settings as the Alloy compile process.
 						var squeezeFunction = function() {
-							var options = {minified: true, compact: true, comments: false, presets: ['babili'], plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]};
+							var options = {minified: true, compact: false, comments: false, presets: ['babili'], plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]};
 							var result = babel.transformFromAst(ast, null, options);
 							ast = result.ast;
 							code = result.code.replace(/\s*$/,'');
