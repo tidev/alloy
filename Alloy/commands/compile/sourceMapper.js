@@ -103,6 +103,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// create source map and generated code
 	var options = {
+		ast: false,
 		minified: true,
 		compact: true,
 		comments: false,
@@ -187,6 +188,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var origFileName = path.relative(compileConfig.dir.project, generator.origFile.filename),
 		compiledFileName = path.join('Resources', path.basename(generator.origFile.filename));
 	var options = {
+		ast: false,
 		minified: true,
 		compact: true,
 		comments: false,
