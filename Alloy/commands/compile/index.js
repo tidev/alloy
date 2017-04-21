@@ -1137,19 +1137,20 @@ function optimizeCompiledCode(alloyConfig, paths) {
 				U.die('Error generating AST for "' + fullpath + '"', e);
 			}
 
-			// TODO Can this be a plugin? Copies builtins over when used...
-			require('./ast/builtins').process(ast, compileConfig);
-
-			// Write out the optimized file, TODO use babili!
-			// TODO Source maps!
+			// Write out the optimized file
+			// TODO Source maps?
 			var options = {
+				ast: false,
 				minified: true,
 				compact: true,
 				comments: false,
 				presets: ['babili'],
-				plugins: ['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
+				plugins: [
+					['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
+					['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
+				]
 			};
-			var minified = babel.transformFromAst(ast, contents, options);
+			var minified = babel.transformFromAst(ast, null, options);
 			fs.writeFileSync(fullpath, minified.code);
 		});
 
