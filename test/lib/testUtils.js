@@ -127,18 +127,20 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return babylon.parse(this.actual).ast;
+		babylon.parse(this.actual);
+		return true;
 	} catch (e) {
+		console.error(e);
 		return false;
 	}
 }
 
 function toBeJavascriptFile(expected) {
 	var actual = this.actual;
-    var notText = this.isNot ? " not" : "";
+	var notText = this.isNot ? " not" : "";
 	this.message = function () {
-        return "Expected " + actual + notText + " to be a Javascript file";
-    };
+		return "Expected " + actual + notText + " to be a Javascript file";
+	};
 
 	try {
 		var js = fs.readFileSync(this.actual,'utf8');
@@ -177,7 +179,7 @@ exports.addMatchers = function() {
 				this.message = function() {
 					return ["Expected to have no diff, but it does: \n\n" + JsDiff.createPatch(filename, expected, this.actual)];
 				};
-	      return pass;
+				return pass;
 			}
 		});
 	});
