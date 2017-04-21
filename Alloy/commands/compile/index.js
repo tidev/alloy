@@ -837,7 +837,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	});
 
 	// add destroy() function to view for cleaning up bindings
-	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
+	template.viewCode += 'exports.destroy = function () {' + CU.destroyCode + '};';
 
 	// add dataFunction of original name (if data-binding with form factor has been used)
 	if (!_.isEmpty(CU.dataFunctionNames)) {
@@ -1138,17 +1138,12 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			}
 
 			// Write out the optimized file
-			var options = {
-				ast: false,
-				minified: true,
-				compact: false,
-				comments: false,
-				presets: ['babili'],
+			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 				plugins: [
 					['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
 					['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
 				]
-			};
+			});
 			var minified = babel.transformFromAst(ast, null, options);
 			fs.writeFileSync(fullpath, minified.code);
 		});

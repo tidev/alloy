@@ -16,6 +16,19 @@ var SM = require('source-map'),
 var lineSplitter = /(?:\r\n|\r|\n)/;
 
 // Try to match this in our babel.transformFromAst calls?
+exports.OPTIONS_OUTPUT = {
+	ast: false,
+	minified: false,
+	compact: false,
+	comments: false,
+	presets: [['babili', {
+		mangle: false,
+		booleans: false,
+		simplify: false,
+		mergeVars: false,
+		consecutiveAdds: false
+	}]]
+};
 // exports.OPTIONS_OUTPUT = {
 // 	indent_start  : 0,     // start indentation on every line (only when `beautify`)
 // 	indent_level  : 4,     // indentation level (only when `beautify`)
@@ -102,17 +115,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	}
 
 	// create source map and generated code
-	var options = {
-		ast: false,
-		minified: true,
-		compact: true,
-		comments: false,
-		presets: ['babili'],
+	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
 		plugins: [
 			['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
 			['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
 		]
-	};
+	});
 	if (compileConfig.sourcemap) {
 		options.sourceMaps = true;
 		options.sourceMapTarget = target.filename;
@@ -187,12 +195,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	// create source map
 	var origFileName = path.relative(compileConfig.dir.project, generator.origFile.filename),
 		compiledFileName = path.join('Resources', path.basename(generator.origFile.filename));
-	var options = {
-		ast: false,
-		minified: true,
-		compact: false,
-		comments: false,
-		presets: ['babili'],
+	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
 		plugins: [
 			['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
 			['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
@@ -200,7 +203,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 		sourceMaps: true,
 		sourceMapTarget: compiledFileName,
 		inputSourceMap: mapper.toJSON()
-	};
+	});
 	var outputResult = babel.transformFromAst(ast, genMap.code, options);
 
 	// write source map for the generated file
