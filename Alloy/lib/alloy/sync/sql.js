@@ -364,7 +364,7 @@ function Migrate(Model) {
 			// execute the appropriate migration function
 			var funcName = direction ? 'up' : 'down';
 			if (_.isFunction(context[funcName])) {
-				context[funcName](migrator);
+				context[funcName](migrator, config);
 			}
 		}
 	} else {
