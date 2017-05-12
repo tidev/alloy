@@ -4,7 +4,8 @@ var ejs = require('ejs'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	babel = require('babel-core'),
-	babylon = require('babylon'),
+	async = require('async'),
+	deasync = require('deasync'),
 
 	// alloy requires
 	_ = require('../../lib/alloy/underscore'),
@@ -1122,36 +1123,49 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
-	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
-		_.each(files, function(file) {
-			// generate AST from file
-			var fullpath = path.join(compileConfig.dir.resources, file),
-				ast,
-				contents = fs.readFileSync(fullpath, 'utf8');
-			logger.info('- ' + file);
-			try {
-				ast = babylon.parse(contents, {
-					sourceFilename: file
+	function transformFiles(alldone) {
+		async.whilst(
+			function() { return (files = _.difference(getJsFiles(), lastFiles)).length > 0; },
+			function(next) {
+				async.each(files, function(file, callback) {
+					var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
+							plugins: [
+								[require('./ast/builtins-plugin'), compileConfig],
+								[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
+							]
+						}),
+						fullpath = path.join(compileConfig.dir.resources, file);
+
+					logger.info('- ' + file);
+					try {
+						babel.transformFile(fullpath, options, function (err, result) {
+							if (err) {
+								return callback(err);
+							}
+							fs.writeFile(fullpath, result.code, callback);
+						});
+					} catch (e) {
+						callback(e);
+					}
+				}, function(err) {
+					// if any of the file processing produced an error, err would equal that error
+					if (err) {
+						U.die('Error transforming JS file', err);
+					} else {
+						// Combine lastFiles and files, so on the next iteration we can make sure that the
+						// list of files to be processed has not grown, like in the case of builtins.
+						lastFiles = _.union(lastFiles, files);
+						next();
+					}
 				});
-			} catch (e) {
-				U.die('Error generating AST for "' + fullpath + '"', e);
-			}
-
-			// Write out the optimized file
-			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-				plugins: [
-					['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
-					['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
-				]
-			});
-			var minified = babel.transformFromAst(ast, null, options);
-			fs.writeFileSync(fullpath, minified.code);
-		});
-
-		// Combine lastFiles and files, so on the next iteration we can make sure that the
-		// list of files to be processed has not grown, like in the case of builtins.
-		lastFiles = _.union(lastFiles, files);
+			},
+			alldone
+		);
 	}
+
+	// We transform files in an async way, but need to 'block' here because this function was written to be sync
+	var desyncdified = deasync(transformFiles);
+	desyncdified();
 }
 
 function BENCHMARK(desc, isFinished) {

@@ -21,28 +21,32 @@ exports.OPTIONS_OUTPUT = {
 	minified: false,
 	compact: false,
 	comments: false,
+	babelrc: false,
 	presets: [['babili', {
-		mangle: false,
-		booleans: false,
-		simplify: false,
-		mergeVars: false,
-		consecutiveAdds: false
+		booleans: false, // true is default
+		builtIns: false, // true is default
+		consecutiveAdds: false, // true is default
+		deadcode: true, // true is default // adds .2s to optimizing, required to match
+		evaluate: true, // true is default, required, adss about .06s
+		flipComparisons: false, // true is default, not required
+		guards: false, // true is default, not required
+		infinity: false, // true is default
+		mangle: false, // true is default
+		memberExpressions: false, // true is default, not required
+		mergeVars: false, // true is default
+		numericLiterals: true, // true is default, .03s, required
+		propertyLiterals: false, // true is default, not required
+		regexpConstructors: false, // true is default, not required
+		removeConsole: false, // false is default
+		removeDebugger: false, // false is default
+		removeUndefined: false, // true is default, not required
+		replace: false, // true is default
+		simplify: false, // true is default
+		simplifyComparisons: false, // true is default, not required
+		typeConstructors: false, // true is default, not required
+		undefinedToVoid: false, // true is default, not required
 	}]]
 };
-// exports.OPTIONS_OUTPUT = {
-// 	indent_start  : 0,     // start indentation on every line (only when `beautify`)
-// 	indent_level  : 4,     // indentation level (only when `beautify`)
-// 	quote_keys    : false, // quote all keys in object literals?
-// 	space_colon   : true,  // add a space after colon signs?
-// 	ascii_only    : false, // output ASCII-safe? (encodes Unicode characters as ASCII)
-// 	inline_script : false, // escape "</script"?
-// 	width         : 80,    // informative maximum line width (for beautified output)
-// 	max_line_len  : 32000, // maximum line length (for non-beautified output)
-// 	beautify      : true, // beautify output?
-// 	bracketize    : false, // use brackets every time?
-// 	comments      : false, // output comments?
-// 	semicolons    : true  // use semicolons to separate statements?
-// };
 
 function mapLine(mapper, theMap, genMap, line) {
 	mapper.addMapping({
@@ -107,7 +111,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
-			sourceFilename: genMap.file
+			filename: genMap.file
 		});
 	} catch (e) {
 		logger.trace(genMap.code);
@@ -117,8 +121,8 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// create source map and generated code
 	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
 		plugins: [
-			['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
-			['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
+			[require('./ast/builtins-plugin'), compileConfig],
+			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
 		]
 	});
 	if (compileConfig.sourcemap) {
@@ -185,7 +189,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
-			sourceFilename: genMap.file
+			filename: genMap.file
 		});
 	} catch (e) {
 		logger.trace(genMap.code);
@@ -197,8 +201,8 @@ exports.generateSourceMap = function(generator, compileConfig) {
 		compiledFileName = path.join('Resources', path.basename(generator.origFile.filename));
 	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
 		plugins: [
-			['./Alloy/commands/compile/ast/builtins-plugin', compileConfig],
-			['./Alloy/commands/compile/ast/optimizer-plugin', compileConfig.alloyConfig]
+			[require('./ast/builtins-plugin'), compileConfig],
+			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
 		],
 		sourceMaps: true,
 		sourceMapTarget: compiledFileName,
