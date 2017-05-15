@@ -22,7 +22,7 @@ exports.OPTIONS_OUTPUT = {
 	compact: false,
 	comments: false,
 	babelrc: false,
-	presets: [['babili', {
+	presets: [[require('babel-preset-babili'), {
 		booleans: false, // true is default
 		builtIns: false, // true is default
 		consecutiveAdds: false, // true is default
