@@ -21,7 +21,7 @@ function parse(node, state, args) {
 		if (U.isLocaleAlias(nodeText)) {
 			state.extraStyle = {'text': styler.STYLE_EXPR_PREFIX + nodeText};
 		} else {
-			state.extraStyle = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+			state.extraStyle = styler.createVariableStyle('text', U.possibleMultilineString(U.trim(nodeText.replace(/'/g, "\\'"))));
 		}
 
 		if (nodeText.match(/\{([^}]+)\}/) !== null) {

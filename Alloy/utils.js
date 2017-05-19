@@ -415,6 +415,17 @@ exports.trim = function(line) {
 	return String(line).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 };
 
+/**
+ * Converts a raw text value (from XML) into a JS string. If the value is
+ * multline, we will concatenate the lines together to avoid broken JS srting syntax.
+ * @param  {String} string The raw (or slightly modified/trimmed) XML content
+ * @return {String}        JS source string, possibly multiple concatenations to handle multiple lines
+ */
+exports.possibleMultilineString = function(string) {
+	var parts = string.split(/\r?\n/);
+	return "'" + parts.join("\\n' + '") + "'";
+};
+
 exports.rmdirContents = function(dir, exceptions) {
 	var files;
 	try {

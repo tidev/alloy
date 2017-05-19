@@ -5,7 +5,7 @@ var exec = require('child_process').exec,
 	path = require('path'),
 	JsDiff = require('diff'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	uglifyjs = require('uglify-js'),
+	babylon = require('babylon'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
@@ -32,6 +32,7 @@ function resetTestApp(callback) {
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);
+			console.error(stderr);
 			process.exit();
 		}
 		callback();
@@ -126,18 +127,20 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return uglifyjs.parse(this.actual);
+		babylon.parse(this.actual);
+		return true;
 	} catch (e) {
+		console.error(e);
 		return false;
 	}
 }
 
 function toBeJavascriptFile(expected) {
 	var actual = this.actual;
-    var notText = this.isNot ? " not" : "";
+	var notText = this.isNot ? " not" : "";
 	this.message = function () {
-        return "Expected " + actual + notText + " to be a Javascript file";
-    };
+		return "Expected " + actual + notText + " to be a Javascript file";
+	};
 
 	try {
 		var js = fs.readFileSync(this.actual,'utf8');
@@ -176,7 +179,7 @@ exports.addMatchers = function() {
 				this.message = function() {
 					return ["Expected to have no diff, but it does: \n\n" + JsDiff.createPatch(filename, expected, this.actual)];
 				};
-	      return pass;
+				return pass;
 			}
 		});
 	});
