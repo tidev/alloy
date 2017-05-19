@@ -9,7 +9,7 @@ exports.getBaseController = function(code, file) {
 	var baseController = '';
 
 	try {
-		var ast = babylon.parse(code, { sourceFilename: file });
+		var ast = babylon.parse(code, { sourceFilename: file, sourceType: 'module' });
 		traverse(ast, {
 			enter: function(path) {
 				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {

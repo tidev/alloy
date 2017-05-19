@@ -111,7 +111,8 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
-			filename: genMap.file
+			sourceFilename: genMap.file,
+			sourceType: 'module'
 		});
 	} catch (e) {
 		logger.trace(genMap.code);
@@ -189,7 +190,8 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
-			filename: genMap.file
+			sourceFilename: genMap.file,
+			sourceType: 'module'
 		});
 	} catch (e) {
 		logger.trace(genMap.code);
