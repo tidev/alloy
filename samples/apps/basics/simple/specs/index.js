@@ -17,15 +17,15 @@ module.exports = function($) {
 		validateUiComponent($, 'label', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#000",
+				color: '#000',
 				font: {
-					fontSize: OS_MOBILEWEB ? "18px" : "18dp",
-					fontWeight: "bold"
+					fontSize: OS_MOBILEWEB ? '18px' : '18dp',
+					fontWeight: 'bold'
 				},
 				height: Ti.UI.SIZE,
 				width: Ti.UI.SIZE,
-				text: "Hello, World!",
-				id: "label"
+				text: 'Hello, World!',
+				id: 'label'
 			}
 		});
 

@@ -65,7 +65,7 @@ function parse(node, state, args) {
 		});
 		localModel = localModel || CU.generateUniqueId();
 
-		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 			// if this node or a parent has set the formFactor attribute
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
@@ -77,7 +77,7 @@ function parse(node, state, args) {
 			pre: '',
 			items: itemCode,
 			annotationArray: arrayName,
-			post: args.symbol + ".annotations=" + arrayName + ";"
+			post: args.symbol + '.annotations=' + arrayName + ';'
 		});
 	}
 

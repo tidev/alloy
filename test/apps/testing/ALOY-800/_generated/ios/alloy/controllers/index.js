@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -62,7 +56,7 @@ function Controller() {
     $.__views.index.add($.__views.map);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    if (true && parseInt(Ti.Platform.version, 10) >= 7) {
+    if (parseInt(Ti.Platform.version, 10) >= 7) {
         var cam = Alloy.Globals.Map.createCamera({
             altitude: 300,
             centerCoordinate: {
@@ -87,6 +81,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

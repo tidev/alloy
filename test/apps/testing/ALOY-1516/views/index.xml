@@ -1,0 +1,6 @@
+<Alloy>
+	<Window>
+		<Label id="appVersion" textAlign="centerAlign" text="Ti.App.getVersion() + 'test'"  height="Ti.UI.SIZE" top='50'></Label>
+		<Label id="appVersion" textAlign="centerAlign" text="'test' + Ti.App.getVersion()"  height="Ti.UI.SIZE" top='100'></Label>
+	</Window>
+</Alloy>

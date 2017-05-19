@@ -98,6 +98,11 @@ describe('alloy compile', function() {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
+										// Spit out stderr/stdout, so we can see *why* it failed
+										if (this.output.error) {
+											console.error(this.output.stderr);
+											console.log(this.output.stdout);
+										}
 										expect(this.output.error).toBeFalsy();
 									}
 								},
@@ -182,17 +187,17 @@ describe('alloy compile', function() {
 						it('matches known good generated code for ' + gFile.yellow, function () {
 							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
 							var newFileContents = fs.readFileSync(newFile, 'utf8');
-
-/*						if(goodFileContents !== newFileContents) {
-							// Cheat way to re-generate known-good files
-							// uncomment this block, run jake test:spec[compile.js]
-							// then re-comment this block. jake test:all should now be happy
-							console.log('>>>> writing a new goodFile');
-							fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
-							goodFileContents = fs.readFileSync(goodFile, 'utf8');
-						}
+/*
+							if(goodFileContents !== newFileContents) {
+								// Cheat way to re-generate known-good files
+								// uncomment this block, run jake test:spec[compile.js]
+								// then re-comment this block. jake test:all should now be happy
+								console.log('>>>> writing a new goodFile');
+								fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
+								goodFileContents = fs.readFileSync(goodFile, 'utf8');
+							}
 */
-							expect(goodFileContents === newFileContents).toBeTruthy();
+							expect(newFileContents).toNotDiff(goodFileContents, gFile);
 						});
 					});
 				});

@@ -6,7 +6,7 @@ var path = require('path'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	alloyRoot = path.join(__dirname,'..','..','..');
+	alloyRoot = path.join(__dirname, '..', '..', '..');
 
 var info = {
 	// TODO: reorganize and dynamically list data for adapters
@@ -14,11 +14,11 @@ var info = {
 		var desc = {
 			properties: {
 				Description: 'Local persistence adapter that uses Ti.App.Properties storage',
-				platforms: ['android','ios','mobileweb','blackberry', 'windows']
+				platforms: ['android', 'ios', 'mobileweb', 'blackberry', 'windows']
 			},
 			sql: {
 				Description: 'Local persistence adapter that uses SQLite storage',
-				platforms: ['android','ios','blackberry', 'windows']
+				platforms: ['android', 'ios', 'blackberry', 'windows']
 			},
 			localStorage: {
 				Description: 'Local persistence adapter that uses HTML5 localStorage API',
@@ -30,22 +30,10 @@ var info = {
 	samples: function() {
 		var desc = [
 			{
-				name: "mapping",
-				label: "Geocoder",
-				Description: "A sample app that uses native maps to plot locations. With it you can forward geocode addresses and add them as annotations to the map.",
-				icon: "app.png"
-			},
-			{
-				name: "rss",
-				label: "RSS Reader",
-				Description: "A sample Master/Detail app that creates a RSS reader. With it you can pull live RSS feeds from the internet, list them along with thumbnails, then drill down to the article itself.",
-				icon: "app.png"
-			},
-			{
-				name: "todo",
-				label: "Todo List",
-				Description: "A sample application that creates a basic todo list. With this app you can maintain a listing of tasks to be completed, add to that list, and mark tasks as done, all powered by Alloy models and collections.",
-				icon: "app.png"
+				name: 'todo',
+				label: 'Todo List',
+				Description: 'A sample application that creates a basic todo list. With this app you can maintain a listing of tasks to be completed, add to that list, and mark tasks as done, all powered by Alloy models and collections.',
+				icon: 'app.png'
 			}
 		];
 		console.log(JSON.stringify(desc, null, 4));
@@ -53,16 +41,16 @@ var info = {
 	templates: function() {
 		var desc = [
 			{
-				name: "default",
-				label: "Default Alloy Project",
-				Description: "Basic \"Hello, World!\" application using the Alloy MVC framework.",
-				icon: "app.png"
+				name: 'default',
+				label: 'Default Alloy Project',
+				Description: 'Basic "Hello, World!" application using the Alloy MVC framework.',
+				icon: 'app.png'
 			},
 			{
-				name: "two_tabbed",
-				label: "Two-tabbed Alloy Application",
+				name: 'two_tabbed',
+				label: 'Two-tabbed Alloy Application',
 				Description: "Titanium's traditional two-tabbed application created using the Alloy MVC framework.",
-				icon: "app.png"
+				icon: 'app.png'
 			}
 		];
 		console.log(JSON.stringify(desc, null, 4));

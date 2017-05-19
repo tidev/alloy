@@ -6,16 +6,16 @@ var path = require('path'),
 	_ = require('../../../lib/alloy/underscore')._,
 	logger = require('../../../logger');
 
-var ALLOY_ROOT = path.join(__dirname,'..','..','..'),
+var ALLOY_ROOT = path.join(__dirname, '..', '..', '..'),
 	MODEL_TEMPLATE = path.join(ALLOY_ROOT, 'template', 'modelcode.js'),
-	VALID_ADAPTERS = ['sql','properties','localStorage'],
+	VALID_ADAPTERS = ['sql', 'properties', 'localStorage'],
 	USAGE = [
 		'Usage:',
-        '    alloy generate model NAME TYPE COLUMN1:TYPE COLUMN2:TYPE ...',
-        'Examples:',
-        '    alloy generate model people sql name:text age:integer',
-        '    alloy generate model appState properties loggedIn:Bool items:List'
-    ];
+		'	alloy generate model NAME TYPE COLUMN1:TYPE COLUMN2:TYPE ...',
+		'Examples:',
+		'	alloy generate model people sql name:text age:integer',
+		'	alloy generate model appState properties loggedIn:Bool items:List'
+	];
 
 module.exports = function(name, args, program) {
 	// validate project
@@ -57,10 +57,10 @@ module.exports = function(name, args, program) {
 	});
 
 	// write out the model file
-	var modelDir = path.join(paths.app,'models');
+	var modelDir = path.join(paths.app, 'models');
 	var modelFile = path.join(modelDir, name + '.' + CONST.FILE_EXT.MODEL);
 	wrench.mkdirSyncRecursive(modelDir);
-    fs.writeFileSync(modelFile, code);
+	fs.writeFileSync(modelFile, code);
 
 	logger.info('Generated model description named "' + name + '" to file "' + modelFile + '"');
 };

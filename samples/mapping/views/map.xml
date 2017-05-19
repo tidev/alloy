@@ -1,8 +1,0 @@
-<Alloy>
-	<Module id="map" module="ti.map" method="createView" platform="ios,android">
-		<Require src="annotation" title="Appcelerator" />
-	</Module>
-	<View id="map" ns="Ti.Map" method="createView" platform="mobileweb">
-		<Require src="annotation" title="Appcelerator" />
-	</View>
-</Alloy>

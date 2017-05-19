@@ -36,9 +36,7 @@ function Controller() {
             };
             __alloyId9.push(__alloyId13);
             var __alloyId14 = {
-                title: _.template("{fourth}", __alloyId2.__transform, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId2.__transform.fourth
             };
             __alloyId9.push(__alloyId14);
             var __alloyId15 = {
@@ -81,19 +79,13 @@ function Controller() {
         }
         $.__views.__alloyId1.setData(rows);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -126,6 +118,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

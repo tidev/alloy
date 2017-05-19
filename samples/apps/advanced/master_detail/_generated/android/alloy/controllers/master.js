@@ -11,19 +11,13 @@ function Controller() {
     function openDetail(e) {
         $.trigger("detail", e);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "master";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -54,7 +48,7 @@ function Controller() {
         id: "table"
     });
     $.__views.master.add($.__views.table);
-    openDetail ? $.__views.table.addEventListener("click", openDetail) : __defers["$.__views.table!click!openDetail"] = true;
+    openDetail ? $.addListener($.__views.table, "click", openDetail) : __defers["$.__views.table!click!openDetail"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var data = [];
@@ -66,10 +60,10 @@ function Controller() {
     });
     $.table.setData(data);
     require("specs/master")($);
-    __defers["$.__views.table!click!openDetail"] && $.__views.table.addEventListener("click", openDetail);
+    __defers["$.__views.table!click!openDetail"] && $.addListener($.__views.table, "click", openDetail);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

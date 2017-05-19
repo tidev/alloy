@@ -14,19 +14,13 @@ function Controller() {
     function doRightClick() {
         alert("Right button clicked");
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -39,14 +33,14 @@ function Controller() {
         title: "Left",
         id: "__alloyId2"
     });
-    doLeftClick ? $.__views.__alloyId2.addEventListener("click", doLeftClick) : __defers["$.__views.__alloyId2!click!doLeftClick"] = true;
+    doLeftClick ? $.addListener($.__views.__alloyId2, "click", doLeftClick) : __defers["$.__views.__alloyId2!click!doLeftClick"] = true;
     $.__views.__alloyId0.leftNavButton = $.__views.__alloyId2;
     $.__views.__alloyId3 = Ti.UI.createButton({
         title: "Right",
         id: "__alloyId3"
     });
     $.__views.__alloyId0.rightNavButton = $.__views.__alloyId3;
-    doRightClick ? $.__views.__alloyId3.addEventListener("click", doRightClick) : __defers["$.__views.__alloyId3!click!doRightClick"] = true;
+    doRightClick ? $.addListener($.__views.__alloyId3, "click", doRightClick) : __defers["$.__views.__alloyId3!click!doRightClick"] = true;
     $.__views.index = Ti.UI.iOS.createNavigationWindow({
         backgroundColor: "#fff",
         fullscreen: false,
@@ -58,11 +52,11 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId2!click!doLeftClick"] && $.__views.__alloyId2.addEventListener("click", doLeftClick);
-    __defers["$.__views.__alloyId3!click!doRightClick"] && $.__views.__alloyId3.addEventListener("click", doRightClick);
+    __defers["$.__views.__alloyId2!click!doLeftClick"] && $.addListener($.__views.__alloyId2, "click", doLeftClick);
+    __defers["$.__views.__alloyId3!click!doRightClick"] && $.addListener($.__views.__alloyId3, "click", doRightClick);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

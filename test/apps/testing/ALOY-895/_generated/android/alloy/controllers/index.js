@@ -16,7 +16,7 @@ function Controller() {
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId3 = models[i];
-            __alloyId3.__transform = {};
+            __alloyId3.__transform = _.isFunction(__alloyId3.transform) ? __alloyId3.transform() : __alloyId3.toJSON();
             var __alloyId5 = Ti.UI.createTableViewRow({});
             rows.push(__alloyId5);
             var __alloyId7 = Ti.UI.createLabel({
@@ -25,12 +25,12 @@ function Controller() {
                     fontSize: "18px"
                 },
                 color: "black",
-                text: "undefined" != typeof __alloyId3.__transform["name"] ? __alloyId3.__transform["name"] : __alloyId3.get("name")
+                text: __alloyId3.__transform.name
             });
             __alloyId5.add(__alloyId7);
             var __alloyId9 = Ti.UI.createSwitch({
                 right: 5,
-                value: "undefined" != typeof __alloyId3.__transform["status"] ? __alloyId3.__transform["status"] : __alloyId3.get("status")
+                value: __alloyId3.__transform.status
             });
             __alloyId5.add(__alloyId9);
         }
@@ -41,19 +41,13 @@ function Controller() {
             model.set("status", Math.random() > .5);
         });
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -69,20 +63,20 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.__alloyId2 = Ti.UI.createButton({
         title: "toggle",
-        top: "5",
+        top: 5,
         id: "__alloyId2"
     });
     $.__views.index.add($.__views.__alloyId2);
-    toggleState ? $.__views.__alloyId2.addEventListener("click", toggleState) : __defers["$.__views.__alloyId2!click!toggleState"] = true;
+    toggleState ? $.addListener($.__views.__alloyId2, "click", toggleState) : __defers["$.__views.__alloyId2!click!toggleState"] = true;
     $.__views.table = Ti.UI.createTableView({
         id: "table",
-        top: "40"
+        top: 40
     });
     $.__views.index.add($.__views.table);
     var __alloyId10 = Alloy.Collections["heroes"] || heroes;
     __alloyId10.on("fetch destroy change add remove reset", __alloyId11);
     exports.destroy = function() {
-        __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
+        __alloyId10 && __alloyId10.off("fetch destroy change add remove reset", __alloyId11);
     };
     _.extend($, $.__views);
     if (!Ti.App.Properties.hasProperty("seeded")) {
@@ -110,10 +104,10 @@ function Controller() {
     }
     Alloy.Collections.heroes.fetch();
     $.index.open();
-    __defers["$.__views.__alloyId2!click!toggleState"] && $.__views.__alloyId2.addEventListener("click", toggleState);
+    __defers["$.__views.__alloyId2!click!toggleState"] && $.addListener($.__views.__alloyId2, "click", toggleState);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

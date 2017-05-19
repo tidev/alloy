@@ -7,10 +7,10 @@ module.exports = function($) {
 		validateUiComponent($, 'middle', {
 			api: 'Ti.UI.View',
 			style: {
-				backgroundColor: "red",
+				backgroundColor: 'red',
 				height: Ti.UI.SIZE,
 				width: Ti.UI.FILL,
-				id: "middle"
+				id: 'middle'
 			}
 		});
 	});
@@ -19,12 +19,12 @@ module.exports = function($) {
 		validateUiComponent($, 't', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "yellow",
+				color: 'yellow',
 				textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 				height: Ti.UI.SIZE,
 				width: Ti.UI.SIZE,
-				text: "Middle",
-				id: "t"
+				text: 'Middle',
+				id: 't'
 			}
 		});
 	});

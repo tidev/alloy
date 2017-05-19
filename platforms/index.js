@@ -5,7 +5,7 @@ var fs = require('fs'),
 module.exports = (function() {
 	var obj = {};
 	_.each(fs.readdirSync(__dirname), function(file) {
-		if (fs.existsSync(path.join(__dirname,file,'index.js'))) {
+		if (fs.existsSync(path.join(__dirname, file, 'index.js'))) {
 			obj[file] = require('./' + file + '/index');
 		}
 	});

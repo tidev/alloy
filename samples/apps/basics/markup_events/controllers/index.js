@@ -1,5 +1,5 @@
 function doClick(e) {
-    alert($.t.text);
+	alert($.t.text);
 }
 
 $.index.open();

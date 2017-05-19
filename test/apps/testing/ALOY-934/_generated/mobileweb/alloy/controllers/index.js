@@ -11,19 +11,13 @@ function Controller() {
     function showOptions() {
         $.dialog.show();
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -51,14 +45,14 @@ function Controller() {
         id: "__alloyId9"
     });
     $.__views.index.add($.__views.__alloyId9);
-    showOptions ? $.__views.__alloyId9.addEventListener("click", showOptions) : __defers["$.__views.__alloyId9!click!showOptions"] = true;
+    showOptions ? $.addListener($.__views.__alloyId9, "click", showOptions) : __defers["$.__views.__alloyId9!click!showOptions"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId9!click!showOptions"] && $.__views.__alloyId9.addEventListener("click", showOptions);
+    __defers["$.__views.__alloyId9!click!showOptions"] && $.addListener($.__views.__alloyId9, "click", showOptions);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

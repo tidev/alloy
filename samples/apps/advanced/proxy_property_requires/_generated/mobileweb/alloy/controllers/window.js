@@ -11,17 +11,13 @@ function Controller() {
     function showAlert(e) {
         alert(e.source.title);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "window";
     this.args = arguments[0] || {};
     if (arguments[0]) {
         var __parentSymbol = __processArg(arguments[0], "__parentSymbol");
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -30,24 +26,24 @@ function Controller() {
         id: "leftButton",
         title: "left"
     });
-    showAlert ? $.__views.leftButton.addEventListener("click", showAlert) : __defers["$.__views.leftButton!click!showAlert"] = true;
+    showAlert ? $.addListener($.__views.leftButton, "click", showAlert) : __defers["$.__views.leftButton!click!showAlert"] = true;
     __parentSymbol.leftNavButton = $.__views.leftButton;
     $.__views.window && $.addTopLevelView($.__views.window);
     $.__views.rightButton = Ti.UI.createButton({
         id: "rightButton",
         title: "right"
     });
-    showAlert ? $.__views.rightButton.addEventListener("click", showAlert) : __defers["$.__views.rightButton!click!showAlert"] = true;
+    showAlert ? $.addListener($.__views.rightButton, "click", showAlert) : __defers["$.__views.rightButton!click!showAlert"] = true;
     __parentSymbol.rightNavButton = $.__views.rightButton;
-    $.__views.__alloyId39 && $.addTopLevelView($.__views.__alloyId39);
+    $.__views.window && $.addTopLevelView($.__views.window);
     exports.destroy = function() {};
     _.extend($, $.__views);
     require("specs/window")($);
-    __defers["$.__views.leftButton!click!showAlert"] && $.__views.leftButton.addEventListener("click", showAlert);
-    __defers["$.__views.rightButton!click!showAlert"] && $.__views.rightButton.addEventListener("click", showAlert);
+    __defers["$.__views.leftButton!click!showAlert"] && $.addListener($.__views.leftButton, "click", showAlert);
+    __defers["$.__views.rightButton!click!showAlert"] && $.addListener($.__views.rightButton, "click", showAlert);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

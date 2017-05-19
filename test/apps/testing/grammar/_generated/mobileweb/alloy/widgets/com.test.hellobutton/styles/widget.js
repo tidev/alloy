@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isId: true,
-    priority: 100000.0002,
+    priority: 100000.0001,
     key: "helloButton",
     style: {
         backgroundImage: WPATH("hello.png"),

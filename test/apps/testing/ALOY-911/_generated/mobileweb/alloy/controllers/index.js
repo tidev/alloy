@@ -11,19 +11,13 @@ function Controller() {
     function doClick() {
         alert("I was clicked");
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -123,7 +117,7 @@ function Controller() {
         id: "table"
     });
     $.__views.index.add($.__views.table);
-    doClick ? $.__views.table.addEventListener("click", doClick) : __defers["$.__views.table!click!doClick"] = true;
+    doClick ? $.addListener($.__views.table, "click", doClick) : __defers["$.__views.table!click!doClick"] = true;
     $.__views.untouchable = Ti.UI.createView({
         height: "100dp",
         backgroundColor: "red",
@@ -132,7 +126,7 @@ function Controller() {
         id: "untouchable"
     });
     $.__views.index.add($.__views.untouchable);
-    doClick ? $.__views.untouchable.addEventListener("click", doClick) : __defers["$.__views.untouchable!click!doClick"] = true;
+    doClick ? $.addListener($.__views.untouchable, "click", doClick) : __defers["$.__views.untouchable!click!doClick"] = true;
     $.__views.untouchableLabel = Ti.UI.createLabel({
         font: {
             fontSize: "24dp",
@@ -148,11 +142,11 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.table!click!doClick"] && $.__views.table.addEventListener("click", doClick);
-    __defers["$.__views.untouchable!click!doClick"] && $.__views.untouchable.addEventListener("click", doClick);
+    __defers["$.__views.table!click!doClick"] && $.addListener($.__views.table, "click", doClick);
+    __defers["$.__views.untouchable!click!doClick"] && $.addListener($.__views.untouchable, "click", doClick);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

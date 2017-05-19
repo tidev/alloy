@@ -1,7 +1,11 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	styler = require('../styler'),
 	CU = require('../compilerUtils'),
-	U = require('../../../utils');
+	U = require('../../../utils'),
+	tiapp = require('../../../tiapp'),
+	iOSProxy;
+
+var MIN_VERSION = '5.4.0';
 
 var systemButtons = [
 	'ACTION', 'ACTIVITY', 'ADD', 'BOOKMARKS', 'CAMERA', 'CANCEL', 'COMPOSE', 'CONTACT_ADD',
@@ -21,9 +25,15 @@ function parse(node, state, args) {
 		state.extraStyle = styler.createVariableStyle('title', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
 	}
 
+	if (tiapp.version.gte(tiapp.getSdkVersion(), MIN_VERSION)) {
+		iOSProxy = 'iOS';
+	} else {
+		iOSProxy = 'iPhone';
+	}
+
 	var systemButton = node.getAttribute('systemButton');
 	if (_.contains(systemButtons, systemButton)) {
-		node.setAttribute('systemButton', 'Ti.UI.iPhone.SystemButton.' + systemButton);
+		node.setAttribute('systemButton', 'Ti.UI.' + iOSProxy + '.SystemButton.' + systemButton);
 	}
 
 	// Generate runtime code using default

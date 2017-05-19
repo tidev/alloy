@@ -29,7 +29,7 @@ function transformFunction(model) {
 
 // open the "add item" window
 function addToDoItem() {
-	Alloy.createController("add").getView().open();
+	Alloy.createController('add').getView().open();
 }
 
 function setQuantity(e) {

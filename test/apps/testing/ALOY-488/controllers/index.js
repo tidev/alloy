@@ -1,8 +1,8 @@
 function doClick(e) {
-    alert($.label.text);
+	alert($.label.text);
 }
 
-function doAlert(num){
+function doAlert(num) {
 	alert('Your rating = ' + num);
 }
 $.starwidget.init(doAlert);

@@ -32,7 +32,7 @@ function Controller() {
             $.__views.__alloyId18 = e.menu.add(_.pick(__alloyId19, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId18.applyProperties(_.omit(__alloyId19, Alloy.Android.menuItemCreateArgs));
             $.__alloyId18 = $.__views.__alloyId18;
-            doClick ? $.__views.__alloyId18.addEventListener("click", doClick) : __defers["$.__views.__alloyId18!click!doClick"] = true;
+            doClick ? $.addListener($.__views.__alloyId18, "click", doClick) : __defers["$.__views.__alloyId18!click!doClick"] = true;
             var __alloyId21 = {
                 title: "require 2",
                 icon: "/ic_menu_manage.png",
@@ -41,32 +41,26 @@ function Controller() {
             $.__views.__alloyId20 = e.menu.add(_.pick(__alloyId21, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId20.applyProperties(_.omit(__alloyId21, Alloy.Android.menuItemCreateArgs));
             $.__alloyId20 = $.__views.__alloyId20;
-            doClick ? $.__views.__alloyId20.addEventListener("click", doClick) : __defers["$.__views.__alloyId20!click!doClick"] = true;
+            doClick ? $.addListener($.__views.__alloyId20, "click", doClick) : __defers["$.__views.__alloyId20!click!doClick"] = true;
         }; else {
             Ti.API.warn("You attempted to attach an Android Menu to a lightweight Window");
             Ti.API.warn("or other UI component which does not have an Android activity.");
             Ti.API.warn("Android Menus can only be opened on TabGroups and heavyweight Windows.");
         }
     }
-    function doHomeIcon() {
+    function doHomeIcon(e) {
         $.win2.close();
     }
     function doClick(e) {
         alert(e.source.title);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "win2";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -108,11 +102,11 @@ function Controller() {
     $.win2.addEventListener("open", function() {
         $.win2.activity && ($.win2.activity.actionBar.title = "Child window");
     });
-    __defers["$.__views.__alloyId18!click!doClick"] && $.__views.__alloyId18.addEventListener("click", doClick);
-    __defers["$.__views.__alloyId20!click!doClick"] && $.__views.__alloyId20.addEventListener("click", doClick);
+    __defers["$.__views.__alloyId18!click!doClick"] && $.addListener($.__views.__alloyId18, "click", doClick);
+    __defers["$.__views.__alloyId20!click!doClick"] && $.addListener($.__views.__alloyId20, "click", doClick);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

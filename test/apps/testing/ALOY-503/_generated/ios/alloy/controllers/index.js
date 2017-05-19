@@ -15,23 +15,17 @@ function Controller() {
         var len = models.length;
         for (var i = 0; len > i; i++) {
             var __alloyId4 = models[i];
-            __alloyId2.push(require("ti.map").createAnnotation(__alloyId4.toJSON()));
+            __alloyId2.push(require("ti.map").createAnnotation(_.isFunction(__alloyId4.transform) ? __alloyId4.transform() : __alloyId4.toJSON()));
         }
         $.__views.map.annotations = __alloyId2;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -67,7 +61,7 @@ function Controller() {
     var __alloyId5 = Alloy.Collections["pins"] || pins;
     __alloyId5.on("fetch destroy change add remove reset", __alloyId6);
     exports.destroy = function() {
-        __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
+        __alloyId5 && __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
     };
     _.extend($, $.__views);
     if (!Ti.App.Properties.hasProperty("seeded")) {
@@ -96,6 +90,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -1,0 +1,21 @@
+<Alloy>
+	<Window>
+		<ListView>
+			<Templates>
+				<ItemTemplate name="TabbedItem">
+					<Label class="title" bindid="title"/>
+					<TabbedBar platform="ios" bindId="tabs">
+						<Labels>
+							<Label class="test1">Label 1</Label>
+							<Label class="test2">Label 2</Label>
+						</Labels>
+					</TabbedBar>
+				</ItemTemplate>
+			</Templates>
+			<ListSection>
+				<ListItem template="TabbedItem" tabs:index="0" />
+				<ListItem template="TabbedItem" tabs:index="1" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

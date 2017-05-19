@@ -1,0 +1,7 @@
+{
+	"dependencies": {
+		"foo": "1.0"
+	},
+	"sourcemap": false,
+	"adapters": ["sql"]
+}

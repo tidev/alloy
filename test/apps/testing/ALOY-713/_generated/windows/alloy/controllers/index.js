@@ -36,9 +36,7 @@ function Controller() {
             };
             __alloyId9.push(__alloyId13);
             var __alloyId14 = {
-                title: _.template("{fourth}", __alloyId2.__transform, {
-                    interpolate: /\{([\s\S]+?)\}/g
-                })
+                title: __alloyId2.__transform.fourth
             };
             __alloyId9.push(__alloyId14);
             var __alloyId15 = {

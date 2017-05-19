@@ -33,9 +33,9 @@ function transformFunction(model) {
 	return transform;
 }
 
-// open the "add item" window
+// open the 'add item' window
 function addToDoItem() {
-	Alloy.createController("add").getView().open();
+	Alloy.createController('add').getView().open();
 }
 
 // Show task list based on selected status type

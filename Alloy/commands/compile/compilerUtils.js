@@ -9,14 +9,14 @@ var U = require('../../utils'),
 	astController = require('./ast/controller'),
 	_ = require('../../lib/alloy/underscore')._,
 	styler = require('./styler'),
-	XMLSerializer = require("xmldom").XMLSerializer,
+	XMLSerializer = require('xmldom').XMLSerializer,
 	CONST = require('../../common/constants');
 
 ///////////////////////////////////////
 ////////// private variables //////////
 ///////////////////////////////////////
-var alloyRoot = path.join(__dirname,'..','..'),
-	platformsDir = path.join(alloyRoot,'..','platforms'),
+var alloyRoot = path.join(__dirname, '..', '..'),
+	platformsDir = path.join(alloyRoot, '..', 'platforms'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
@@ -54,14 +54,14 @@ var RESERVED_ATTRIBUTES = [
 // load CONDITION_MAP with platforms
 exports.CONDITION_MAP = {
 	handheld: {
-		runtime: "!Alloy.isTablet"
+		runtime: '!Alloy.isTablet'
 	},
 	tablet: {
-		runtime: "Alloy.isTablet"
+		runtime: 'Alloy.isTablet'
 	}
 };
 _.each(CONST.PLATFORMS, function(p) {
-	exports.CONDITION_MAP[p] = require(path.join(platformsDir,p,'index'))['condition'];
+	exports.CONDITION_MAP[p] = require(path.join(platformsDir, p, 'index'))['condition'];
 });
 
 exports.bindingsMap = {};
@@ -78,7 +78,7 @@ exports.getCompilerConfig = function() {
 };
 
 exports.generateVarName = function(id, name) {
-	if (_.contains(CONST.JS_RESERVED_ALL,id)) {
+	if (_.contains(CONST.JS_RESERVED_ALL, id)) {
 		U.die([
 			'Invalid ID "' + id + '" for <' + name + '>.',
 			'Can\'t use reserved Javascript words as IDs.',
@@ -106,7 +106,7 @@ exports.isNodeForCurrentPlatform = function(node) {
 		// need to account for multiple platforms and negation, such as
 		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
 		p = p.trim();
-		if(p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
+		if (p === compilerConfig.alloyConfig.platform || (p.indexOf('!') === 0 && p.slice(1) !== compilerConfig.alloyConfig.platform)) {
 			isForCurrentPlatform = true;
 		}
 	});
@@ -211,7 +211,7 @@ exports.getParserArgs = function(node, state, opts) {
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			if (/^\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG)\.|L\(.+\)\s*$)/.test(theValue)) {
+			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG)\.|L\(.+\)\s*$)/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
 				if (match !== null) {
 					theValue = theValue.replace(/\(/g, '("').replace(/\)/g, '")');
@@ -271,12 +271,12 @@ exports.generateNodeExtended = function(node, state, newState) {
 
 exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
-	if(!exports.isNodeForCurrentPlatform(node)) {
+	if (!exports.isNodeForCurrentPlatform(node)) {
 		return '';
 	}
 
 	var args = exports.getParserArgs(node, state, { defaultId: defaultId }),
-		codeTemplate = "if (<%= condition %>) {\n<%= content %>}\n",
+		codeTemplate = 'if (<%= condition %>) {\n<%= content %>}\n',
 		code = {
 			content: '',
 			pre: ''
@@ -286,7 +286,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
 	if (args.platform) {
 		var conditionArray = [];
-		_.each(args.platform, function(v,k) {
+		_.each(args.platform, function(v, k) {
 			conditionArray.push(exports.CONDITION_MAP[k][conditionType]);
 		});
 
@@ -301,8 +301,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 	// ALOY-871: add the if condition check
 	args.tssIf = _.compact(args.tssIf);
-	if(args.tssIf.length >0) {
-		if(code.condition) {
+	if (args.tssIf.length > 0) {
+		if (code.condition) {
 			code.condition += (' && (' + args.tssIf.join(' || ') + ')');
 		} else {
 			code.condition = args.tssIf.join(' || ');
@@ -319,10 +319,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// Determine which parser to use for this node
-	var parsersDir = path.join(alloyRoot,'commands','compile','parsers');
+	var parsersDir = path.join(alloyRoot, 'commands', 'compile', 'parsers');
 	var parserRequire = 'default';
-	if (_.contains(fs.readdirSync(parsersDir), args.fullname+'.js')) {
-		parserRequire = args.fullname+'.js';
+	if (_.contains(fs.readdirSync(parsersDir), args.fullname + '.js')) {
+		parserRequire = args.fullname + '.js';
 	}
 
 	// Execute the appropriate tag parser and append code
@@ -368,12 +368,17 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 
 		_.each(args.events, function(ev) {
 			var eventObj = {
-				obj: isModelOrCollection ? state.args.symbol : args.symbol,
-				ev: ev.name,
-				cb: ev.value,
-				escapedCb: ev.value.replace(/'/g, "\\'"),
-				func: eventFunc
-			}, postCode;
+					obj: isModelOrCollection ? state.args.symbol : args.symbol,
+					ev: ev.name,
+					cb: ev.value,
+					escapedCb: ev.value.replace(/'/g, "\\'"),
+					func: eventFunc
+				},
+				postCode;
+
+			if (args.fullname === 'Alloy.Widget') {
+				eventObj.obj = state.controller;
+			}
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
@@ -383,12 +388,12 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			} else {
 				theEvent = _.template("<%= obj %>.<%= func %>('<%= ev %>',<%= cb %>)", eventObj);
 			}
-			var deferTemplate = theDefer + " && " + theEvent + ";";
+			var deferTemplate = theDefer + ' && ' + theEvent + ';';
 			var immediateTemplate;
 			if (/[\.\[]/.test(eventObj.cb)) {
-				immediateTemplate = "try{" + theEvent + ";}catch(e){" + theDefer + "=true;}";
+				immediateTemplate = 'try{' + theEvent + ';}catch(e){' + theDefer + '=true;}';
 			} else {
-				immediateTemplate = "<%= cb %>?" + theEvent + ":" + theDefer + "=true;";
+				immediateTemplate = '<%= cb %>?' + theEvent + ':' + theDefer + '=true;';
 			}
 
 			// add the generated code to the view code and post-controller code respectively
@@ -409,7 +414,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
 				var newState = _.defaults({ parent: p }, state);
-				if(node.hasAttribute('formFactor') || state.parentFormFactor) {
+				if (node.hasAttribute('formFactor') || state.parentFormFactor) {
 					// propagate the form factor down through the hierarchy
 					newState.parentFormFactor = (node.getAttribute('formFactor') || state.parentFormFactor);
 				}
@@ -448,16 +453,16 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		if (!src) {
 			return null;
 		} else if (fullname === 'Alloy.Require' && type === 'view') {
-			if (platform) { fullpaths.push(path.join(compilerConfig.dir.views,platform,src)); }
-			fullpaths.push(path.join(compilerConfig.dir.views,src));
+			if (platform) { fullpaths.push(path.join(compilerConfig.dir.views, platform, src)); }
+			fullpaths.push(path.join(compilerConfig.dir.views, src));
 		} else if (fullname === 'Alloy.Widget' ||
 			(fullname === 'Alloy.Require' && type === 'widget')) {
 			U.getWidgetDirectories(compilerConfig.dir.home).forEach(function(wDir) {
 				if (wDir.manifest.id === src) {
 					if (platform) {
-						fullpaths.push(path.join(wDir.dir,CONST.DIR.VIEW,platform,name));
+						fullpaths.push(path.join(wDir.dir, CONST.DIR.VIEW, platform, name));
 					}
-					fullpaths.push(path.join(wDir.dir,CONST.DIR.VIEW,name));
+					fullpaths.push(path.join(wDir.dir, CONST.DIR.VIEW, name));
 				}
 			});
 		} else {
@@ -489,12 +494,12 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	}
 
 	//create function, it expects 2 values.
-	function insertAfter(newElement,targetElement) {
+	function insertAfter(newElement, targetElement) {
 		//target is what you want it to go after. Look for this elements parent.
 		var parent = targetElement.parentNode;
 
 		//if the parents lastchild is the targetElement...
-		if(parent.lastchild == targetElement) {
+		if (parent.lastchild == targetElement) {
 			//add the newElement after the target element.
 			parent.appendChild(newElement);
 		} else {
@@ -630,22 +635,22 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace(' ');
 	});
 
-	if(opts.theme) {
+	if (opts.theme) {
 		// if this widget has been themed, copy its theme assets atop the stock ones
 		var widgetThemeDir = path.join(compilerConfig.dir.project, 'app', 'themes', opts.theme, 'widgets', widgetId);
-		if(fs.existsSync(widgetThemeDir)) {
+		if (fs.existsSync(widgetThemeDir)) {
 			logger.trace('Processing themed widgets');
 			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
 			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
-			if(fs.existsSync(widgetAssetSourceDir)) {
+			if (fs.existsSync(widgetAssetSourceDir)) {
 				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
 			}
 			// platform-specific assets from the widget must override those of the theme
-			if(platform && path.existsSync(path.join(resources[0], platform))) {
+			if (platform && path.existsSync(path.join(resources[0], platform))) {
 				wrench.copyDirSyncRecursive(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
 			}
 			// however platform-specific theme assets must override the platform assets from the widget
-			if(platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
+			if (platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
 				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
 				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
@@ -683,13 +688,13 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 				return walk(srcFile, destFile);
 			}
 
-			if (!/\.xml$/.test(srcFile)) {
-				return;
-			}
-
 			if (!fs.existsSync(destFile)) {
 				logger.debug('Writing ' + destFile.yellow);
 				return U.copyFileSync(srcFile, destFile);
+			}
+
+			if (!/\.xml$/.test(srcFile)) {
+				return;
 			}
 
 			// merge!
@@ -730,7 +735,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 };
 
 function updateImplicitNamspaces(platform) {
-	switch(platform) {
+	switch (platform) {
 		case 'android':
 			break;
 		case 'ios':
@@ -742,9 +747,9 @@ function updateImplicitNamspaces(platform) {
 }
 
 exports.createCompileConfig = function(inputPath, outputPath, alloyConfig, buildLog) {
-	var dirs = ['assets','config','controllers','lib','migrations','models','styles','themes','vendor','views','widgets'];
-	var libDirs = ['builtins','template'];
-	var resources = path.resolve(path.join(outputPath,'Resources'));
+	var dirs = ['assets', 'config', 'controllers', 'lib', 'migrations', 'models', 'styles', 'themes', 'vendor', 'views', 'widgets'];
+	var libDirs = ['builtins', 'template'];
+	var resources = path.resolve(path.join(outputPath, 'Resources'));
 
 	var obj = {
 		alloyConfig: alloyConfig,
@@ -752,17 +757,17 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig, build
 			home: path.resolve(inputPath),
 			project: path.resolve(outputPath),
 			resources: resources,
-			resourcesAlloy: path.join(resources,'alloy')
+			resourcesAlloy: path.join(resources, 'alloy')
 		},
 		buildLog: buildLog
 	};
 
 	// create list of dirs
 	_.each(dirs, function(dir) {
-		obj.dir[dir] = path.resolve(path.join(inputPath,dir));
+		obj.dir[dir] = path.resolve(path.join(inputPath, dir));
 	});
 	_.each(libDirs, function(dir) {
-		obj.dir[dir] = path.resolve(path.join(alloyRoot,dir));
+		obj.dir[dir] = path.resolve(path.join(alloyRoot, dir));
 	});
 
 	// ensure the generated directories exist
@@ -808,24 +813,24 @@ function generateConfig(obj) {
 	var buildLog = obj.buildLog;
 	var o = {};
 	var alloyConfig = obj.alloyConfig;
-	var platform = require('../../../platforms/'+alloyConfig.platform+'/index').titaniumFolder;
+	var platform = require('../../../platforms/' + alloyConfig.platform + '/index').titaniumFolder;
 	//var defaultCfg = 'module.exports=' + JSON.stringify(o) + ';';
 
 	// get the app and resources locations
-	var appCfg = path.join(obj.dir.home,'config.'+CONST.FILE_EXT.CONFIG);
+	var appCfg = path.join(obj.dir.home, 'config.' + CONST.FILE_EXT.CONFIG);
 	var resourcesBase = (function() {
 		var base = obj.dir.resources;
-		if (platform) { base = path.join(base,platform); }
-		return path.join(base,'alloy');
+		if (platform) { base = path.join(base, platform); }
+		return path.join(base, 'alloy');
 	})();
-	var resourcesCfg = path.join(resourcesBase,'CFG.js');
+	var resourcesCfg = path.join(resourcesBase, 'CFG.js');
 
 	// parse config.json, if it exists
 	if (path.existsSync(appCfg)) {
 		o = exports.parseConfig(appCfg, alloyConfig, o);
 
 		if (o.theme) {
-			var themeCfg = path.join(obj.dir.home,'themes',o.theme,'config.'+CONST.FILE_EXT.CONFIG);
+			var themeCfg = path.join(obj.dir.home, 'themes', o.theme, 'config.' + CONST.FILE_EXT.CONFIG);
 
 			// parse theme config.json, if it exists
 			if (path.existsSync(themeCfg)) {
@@ -836,7 +841,7 @@ function generateConfig(obj) {
 
 	// only regenerate the CFG.js when necessary
 	var hash = U.createHashFromString(JSON.stringify(o));
-	if(buildLog.data.cfgHash && buildLog.data.cfgHash === hash && fs.existsSync(path.join(obj.dir.resources, 'alloy', 'CFG.js'))) {
+	if (buildLog.data.cfgHash && buildLog.data.cfgHash === hash && fs.existsSync(path.join(obj.dir.resources, 'alloy', 'CFG.js'))) {
 		// use cached CFG.js file
 		logger.info(' [config.json] config.json unchanged, using cached config.json...');
 	} else {
@@ -847,7 +852,7 @@ function generateConfig(obj) {
 		wrench.mkdirSyncRecursive(resourcesBase, 0755);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
-		var output = "module.exports=" + JSON.stringify(o) + ";";
+		var output = 'module.exports=' + JSON.stringify(o) + ';';
 		fs.writeFileSync(resourcesCfg, output);
 
 		// TODO: deal with TIMOB-14884
@@ -864,12 +869,12 @@ function generateConfig(obj) {
 exports.parseConfig = function(file, alloyConfig, o) {
 	var j, distType;
 	try {
-		j = jsonlint.parse(fs.readFileSync(file,'utf8'));
+		j = jsonlint.parse(fs.readFileSync(file, 'utf8'));
 	} catch (e) {
 		U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 	}
 
-	_.each(j, function(v,k) {
+	_.each(j, function(v, k) {
 		if (!/^(?:env\:|os\:|dist\:)/.test(k) && k !== 'global') {
 			logger.debug(k + ' = ' + JSON.stringify(v));
 			o[k] = v;
@@ -878,17 +883,17 @@ exports.parseConfig = function(file, alloyConfig, o) {
 
 	if (alloyConfig) {
 		o = _.extend(o, j['global']);
-		o = _.extend(o, j['env:'+alloyConfig.deploytype]);
-		o = _.extend(o, j['os:'+alloyConfig.platform]);
-		o = _.extend(o, j['env:'+alloyConfig.deploytype + ' os:'+alloyConfig.platform]);
-		o = _.extend(o, j['os:'+alloyConfig.platform + ' env:'+alloyConfig.deploytype]);
+		o = _.extend(o, j['env:' + alloyConfig.deploytype]);
+		o = _.extend(o, j['os:' + alloyConfig.platform]);
+		o = _.extend(o, j['env:' + alloyConfig.deploytype + ' os:' + alloyConfig.platform]);
+		o = _.extend(o, j['os:' + alloyConfig.platform + ' env:' + alloyConfig.deploytype]);
 
 		if (alloyConfig.deploytype === 'production' && alloyConfig.target) {
-			distType = _.find(CONST.DIST_TYPES, function (obj) { return obj.value.indexOf(alloyConfig.target) !== -1 });
+			distType = _.find(CONST.DIST_TYPES, function (obj) { return obj.value.indexOf(alloyConfig.target) !== -1; });
 			if (distType) {
 				distType = distType.key.toLowerCase().replace('_', ':');
 				o = _.extend(o, j[distType]);
-				o = _.extend(o, j['os:'+alloyConfig.platform + ' ' + distType]);
+				o = _.extend(o, j['os:' + alloyConfig.platform + ' ' + distType]);
 			}
 		}
 	}
@@ -898,17 +903,18 @@ exports.parseConfig = function(file, alloyConfig, o) {
 
 exports.loadController = function(file) {
 	var code = {
-		parentControllerName: '',
-		controller: '',
-		pre: ''
-	}, contents;
+			parentControllerName: '',
+			controller: '',
+			pre: ''
+		},
+		contents;
 
 	// Read the controller file
 	try {
 		if (!path.existsSync(file)) {
 			return code;
 		}
-		contents = fs.readFileSync(file,'utf8');
+		contents = fs.readFileSync(file, 'utf8');
 	} catch (e) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
@@ -954,11 +960,11 @@ exports.generateCollectionBindingTemplate = function(args) {
 	// Create the code for the filter and transform functions
 	var where = args[CONST.BIND_WHERE];
 	var transform = args[CONST.BIND_TRANSFORM];
-	var whereCode = where ? where + "(" + colVar + ")" : colVar + ".models";
-	var transformCode = transform ? transform + "(<%= localModel %>)" : "_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():<%= localModel %>.toJSON()";
+	var whereCode = where ? where + '(' + colVar + ')' : colVar + '.models';
+	var transformCode = transform ? transform + '(<%= localModel %>)' : '_.isFunction(<%= localModel %>.transform)?<%= localModel %>.transform():<%= localModel %>.toJSON()';
 	var handlerFunc = args[CONST.BIND_FUNCTION] || exports.generateUniqueId();
-	if(args.parentFormFactor) {
-		if(!exports.dataFunctionNames[handlerFunc]) {
+	if (args.parentFormFactor) {
+		if (!exports.dataFunctionNames[handlerFunc]) {
 			exports.dataFunctionNames[handlerFunc] = [];
 		}
 		exports.dataFunctionNames[handlerFunc].push(args.parentFormFactor);
@@ -966,30 +972,30 @@ exports.generateCollectionBindingTemplate = function(args) {
 		handlerFunc += U.ucfirst(args.parentFormFactor);
 	}
 	// construct code template
-	code += "var " + colVar + "=" + col + ";";
-	code += "function " + handlerFunc + "(e) {";
-	code += "   if (e && e.fromAdapter) { return; }";
-	code += "   var opts = " + handlerFunc + ".opts || {};";
-	code += "	var models = " + whereCode + ";";
-	code += "	var len = models.length;";
-	code += "<%= pre %>";
-	code += "	for (var i = 0; i < len; i++) {";
-	code += "		var <%= localModel %> = models[i];";
-	if(!args.isDataBoundMap) {
-		code += "		<%= localModel %>." + CONST.BIND_TRANSFORM_VAR + " = " + transformCode + ";";
+	code += 'var ' + colVar + '=' + col + ';';
+	code += 'function ' + handlerFunc + '(e) {';
+	code += '   if (e && e.fromAdapter) { return; }';
+	code += '   var opts = ' + handlerFunc + '.opts || {};';
+	code += '	var models = ' + whereCode + ';';
+	code += '	var len = models.length;';
+	code += '<%= pre %>';
+	code += '	for (var i = 0; i < len; i++) {';
+	code += '		var <%= localModel %> = models[i];';
+	if (!args.isDataBoundMap) {
+		code += '		<%= localModel %>.' + CONST.BIND_TRANSFORM_VAR + ' = ' + transformCode + ';';
 	} else {
 		// because (ti.map).annotations[] doesn't accept an array of anonymous objects
 		// we convert them to actual Annotations before pushing them to the array
-		code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation(" + transformCode + "));";
+		code += "		<%= annotationArray %>.push(require('ti.map').createAnnotation(" + transformCode + '));';
 	}
-	code += "<%= items %>";
-	code += "	}";
-	code += "<%= post %>";
-	code += "};";
-	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
+	code += '<%= items %>';
+	code += '	}';
+	code += '<%= post %>';
+	code += '};';
+	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
-	exports.destroyCode += colVar + " && " + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
-		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ");";
+	exports.destroyCode += colVar + ' && ' + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
+		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	return code;
 };

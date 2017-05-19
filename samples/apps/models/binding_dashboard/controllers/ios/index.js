@@ -34,7 +34,7 @@ function handleCommit(e) {
 	isEditable = false;
 	// rearrange the items by setting their weights equal to their new order in the data e.source.array
 	var itemsArray = e.source.data;
-	for(var i=0,j=itemsArray.length;i<j;i++) {
+	for (var i = 0, j = itemsArray.length; i < j; i++) {
 		var model = icons.get(itemsArray[i].modelId);
 		if (model) {
 			model.set('weight', i);
