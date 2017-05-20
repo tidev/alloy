@@ -186,6 +186,7 @@ exports.IMPLICIT_NAMESPACES = {
 
 	// Ti.Map
 	Annotation: NS_TI_MAP,
+	Snapshotter: NS_TI_MAP,
 
 	// Ti.Media
 	VideoPlayer: NS_TI_MEDIA,
