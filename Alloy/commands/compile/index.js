@@ -3,7 +3,9 @@ var ejs = require('ejs'),
 	fs = require('fs'),
 	wrench = require('wrench'),
 	vm = require('vm'),
-	uglifyjs = require('uglify-js'),
+	babel = require('babel-core'),
+	async = require('async'),
+	deasync = require('deasync'),
 
 	// alloy requires
 	_ = require('../../lib/alloy/underscore'),
@@ -836,7 +838,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	});
 
 	// add destroy() function to view for cleaning up bindings
-	template.viewCode += 'exports.destroy=function(){' + CU.destroyCode + '};';
+	template.viewCode += 'exports.destroy = function () {' + CU.destroyCode + '};';
 
 	// add dataFunction of original name (if data-binding with form factor has been used)
 	if (!_.isEmpty(CU.dataFunctionNames)) {
@@ -1080,13 +1082,7 @@ function updateFilesWithBuildLog(src, dst, opts) {
 }
 
 function optimizeCompiledCode(alloyConfig, paths) {
-	var mods = [
-			'builtins',
-			'optimizer',
-			'compress'
-		],
-		modLocation = './ast/',
-		lastFiles = [],
+	var lastFiles = [],
 		files;
 
 	// Get the list of JS files from the Resources directory
@@ -1109,12 +1105,12 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/widget.js',
 			'node_modules'
 		].concat(compileConfig.optimizingExceptions || []);
-		
+
 		// widget controllers are already optimized. It should be listed in exceptions.
 		_.each(compileConfig.dependencies, function (version, widgetName) {
 			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
 		});
-		
+
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
@@ -1127,37 +1123,49 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
-	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
-		_.each(files, function(file) {
-			// generate AST from file
-			var fullpath = path.join(compileConfig.dir.resources, file);
-			var ast;
-			logger.info('- ' + file);
-			try {
-				ast = uglifyjs.parse(fs.readFileSync(fullpath, 'utf8'), {
-					filename: file
+	function transformFiles(alldone) {
+		async.whilst(
+			function() { return (files = _.difference(getJsFiles(), lastFiles)).length > 0; },
+			function(next) {
+				async.each(files, function(file, callback) {
+					var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
+							plugins: [
+								[require('./ast/builtins-plugin'), compileConfig],
+								[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
+							]
+						}),
+						fullpath = path.join(compileConfig.dir.resources, file);
+
+					logger.info('- ' + file);
+					try {
+						babel.transformFile(fullpath, options, function (err, result) {
+							if (err) {
+								return callback(err);
+							}
+							fs.writeFile(fullpath, result.code, callback);
+						});
+					} catch (e) {
+						callback(e);
+					}
+				}, function(err) {
+					// if any of the file processing produced an error, err would equal that error
+					if (err) {
+						U.die('Error transforming JS file', err);
+					} else {
+						// Combine lastFiles and files, so on the next iteration we can make sure that the
+						// list of files to be processed has not grown, like in the case of builtins.
+						lastFiles = _.union(lastFiles, files);
+						next();
+					}
 				});
-			} catch (e) {
-				U.die('Error generating AST for "' + fullpath + '"', e);
-			}
-
-			// process all AST operations
-			_.each(mods, function(mod) {
-				logger.trace('  processing "' + mod + '" module...');
-				ast.figure_out_scope();
-				ast = require(modLocation + mod).process(ast, compileConfig) || ast;
-			});
-
-			// Write out the optimized file
-			var stream = uglifyjs.OutputStream(sourceMapper.OPTIONS_OUTPUT);
-			ast.print(stream);
-			fs.writeFileSync(fullpath, stream.toString());
-		});
-
-		// Combine lastFiles and files, so on the next iteration we can make sure that the
-		// list of files to be processed has not grown, like in the case of builtins.
-		lastFiles = _.union(lastFiles, files);
+			},
+			alldone
+		);
 	}
+
+	// We transform files in an async way, but need to 'block' here because this function was written to be sync
+	var desyncdified = deasync(transformFiles);
+	desyncdified();
 }
 
 function BENCHMARK(desc, isFinished) {

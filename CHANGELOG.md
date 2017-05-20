@@ -1,5 +1,11 @@
 ## Alloy Release Notes
 
+### Release 1.10.0
+
+#### Fixed
+  * [ALOY-1312](https://jira.appcelerator.org/browse/ALOY-1312): Upgrade Alloy to support ES6
+    * Migrates from using uglifyjs to parse and transform user and library code to using babel and babili
+
 ### Release 1.8.0
 
 #### Fixed
