@@ -10,6 +10,7 @@ var fs = require('fs'),
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
+	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = { a: 0, b: 0, c: 0 };test.b = 1;'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Titanium.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.name=="<%= name %>" ? 1 : 0', 'var a = 1;'],
@@ -31,8 +32,8 @@ var tests = [
 	['var a = 1', 'var a = 1;'],
 	['var a', 'var a;'],
 	['var a = {}', 'var a = {};'],
-	['var a = new Object', 'var a = {};'],
-	['var a = new Object()', 'var a = {};'],
+	['var a = new Object', 'var a = new Object();'],
+	['var a = new Object()', 'var a = new Object();'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.osname', 'var a = "android";', ['android']],
 	['var a = Ti.Platform.osname', 'var a = "mobileweb";', ['mobileweb']],
@@ -46,7 +47,7 @@ var tests = [
 	['var a = -1.02;', 'var a = -1.02;'],
 	['var a = false', 'var a = false;'],
 	['var a = true ? 1 : 0;', 'var a = 1;'],
-	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num = isNaN(amount) || \'\' === amount || null === amount ? 0 : amount;'],
+	["var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;", 'var num = isNaN(amount) || amount === \'\' || amount === null ? 0 : amount;'],
 
 	// TODO: Revisit all "var a,a=2;" expecteds once ALOY-540 is resolved
 
@@ -74,7 +75,7 @@ var tests = [
 	["var platform = (Ti.Platform.name == 'iPhone OS') ? 'true' : 'false'", "var platform = 'false';", notPlatform('ios')],
 	["var platform = (Ti.Platform.osname == 'android') ? 'true' : 'false'", "var platform = 'true';", ['android']],
 	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform = 0;", notPlatform('ios')],
-	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform = \"iphone\" == Ti.Platform.osname ? 1 : 0;", ['ios']],
+	["var platform = (Ti.Platform.osname == \"iphone\") ? 1 : 0", "var platform = Ti.Platform.osname == \"iphone\" ? 1 : 0;", ['ios']],
 
 	// check identities
 	["var a = Ti.Platform.name === Titanium.Platform.name","var a = true;"],
