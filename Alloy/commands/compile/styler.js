@@ -269,35 +269,40 @@ exports.loadStyle = function(tssFile) {
 			U.die('Failed to read style file "' + tssFile + '"', e);
 		}
 
-		// skip if the file is empty
-		if (/^\s*$/gi.test(contents)) {
-			return {};
-		}
-
-		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
-		// [ALOY-793] double-escape '\' in tss
-		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
-
-		// Process tss file then convert to JSON
-		var json;
-		try {
-			json = grammar.parse(contents);
-			optimizer.optimizeStyle(json);
-		} catch (e) {
-			U.die([
-				'Error processing style "' + tssFile + '"',
-				e.message,
-				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
-				'- line:    ' + e.line,
-				'- column:  ' + e.column,
-				'- offset:  ' + e.offset
-			]);
-		}
-
-		return json;
+		return exports.loadStyleFromString(contents, tssFile);
 	}
 	return {};
+};
+
+exports.loadStyleFromString = function(contents, tssFile) {
+	// skip if the file is empty
+	if (/^\s*$/gi.test(contents)) {
+		return {};
+	}
+
+	// Add enclosing curly braces, if necessary
+	contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+	// [ALOY-793] double-escape '\' in tss
+	contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
+
+	// Process tss file then convert to JSON
+	var json;
+
+	try {
+		json = grammar.parse(contents);
+		optimizer.optimizeStyle(json);
+	} catch (e) {
+		U.die([
+			tssFile ? 'Error processing style "' + tssFile + '"' : 'Error processing style',
+			e.message,
+			/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
+			'- line:    ' + e.line,
+			'- column:  ' + e.column,
+			'- offset:  ' + e.offset
+		]);
+	}
+
+	return json;
 };
 
 exports.loadAndSortStyle = function(tssFile, opts) {
