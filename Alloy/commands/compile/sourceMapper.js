@@ -22,30 +22,14 @@ exports.OPTIONS_OUTPUT = {
 	compact: false,
 	comments: false,
 	babelrc: false,
-	presets: [[require('babel-preset-babili'), {
-		booleans: false, // true is default
-		builtIns: false, // true is default
-		consecutiveAdds: false, // true is default
-		deadcode: true, // true is default // adds .2s to optimizing, required to match
-		evaluate: true, // true is default, required, adss about .06s
-		flipComparisons: false, // true is default, not required
-		guards: false, // true is default, not required
-		infinity: false, // true is default
-		mangle: false, // true is default
-		memberExpressions: false, // true is default, not required
-		mergeVars: false, // true is default
-		numericLiterals: true, // true is default, .03s, required
-		propertyLiterals: false, // true is default, not required
-		regexpConstructors: false, // true is default, not required
-		removeConsole: false, // false is default
-		removeDebugger: false, // false is default
-		removeUndefined: false, // true is default, not required
-		replace: false, // true is default
-		simplify: false, // true is default
-		simplifyComparisons: false, // true is default, not required
-		typeConstructors: false, // true is default, not required
-		undefinedToVoid: false, // true is default, not required
-	}]]
+	passPerPreset: true,
+	presets: [{
+		plugins: [
+			require('babel-plugin-minify-numeric-literals'),
+			require('babel-plugin-minify-constant-folding'),
+			require('babel-plugin-minify-dead-code-elimination'),
+		]
+	}],
 };
 
 function mapLine(mapper, theMap, genMap, line) {

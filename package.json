@@ -14,7 +14,7 @@
     "mobileweb",
     "appc-client"
   ],
-  "version": "1.10.0",
+  "version": "1.10.1",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -33,7 +33,9 @@
   "dependencies": {
     "async": "^2.4.0",
     "babel-core": "^6.24.1",
-    "babel-preset-babili": "^0.0.12",
+    "babel-plugin-minify-constant-folding": "^0.1.1",
+    "babel-plugin-minify-dead-code-elimination": "^0.1.6",
+    "babel-plugin-minify-numeric-literals": "^0.1.1",
     "babel-traverse": "^6.23.1",
     "babel-types": "^6.23.0",
     "babylon": "^6.16.1",
