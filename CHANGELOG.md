@@ -1,5 +1,11 @@
 ## Alloy Release Notes
 
+### Release 1.10.1
+
+#### Fixed
+  * [ALOY-1565](https://jira.appcelerator.org/browse/ALOY-1565): KitchenSink v2 errors out on iOS
+    * Fix to use only 3 of babili's plugins to 'optimize' code and avoid modifying code in a way our old TiCore on iOS chokes on.
+
 ### Release 1.10.0
 
 #### Fixed
