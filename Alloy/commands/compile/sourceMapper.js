@@ -18,18 +18,12 @@ var lineSplitter = /(?:\r\n|\r|\n)/;
 // Try to match this in our babel.transformFromAst calls?
 exports.OPTIONS_OUTPUT = {
 	ast: false,
+	// do NOT minify Alloy code because Titanium will do it!
 	minified: false,
 	compact: false,
 	comments: false,
 	babelrc: false,
-	passPerPreset: true,
-	presets: [{
-		plugins: [
-			require('babel-plugin-minify-numeric-literals'),
-			require('babel-plugin-minify-constant-folding'),
-			require('babel-plugin-minify-dead-code-elimination'),
-		]
-	}],
+	passPerPreset: false
 };
 
 function mapLine(mapper, theMap, genMap, line) {
