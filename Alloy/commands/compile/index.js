@@ -454,6 +454,8 @@ module.exports = function(args, program) {
 
 	if (restrictionSkipOptimize) {
 		logger.info('Skipping optimize due to file restriction.');
+	} else if (alloyConfig.skipOptimize){
+		logger.info('Skipping optimize due to alloy config setting.');
 	} else {
 		optimizeCompiledCode(alloyConfig, paths);
 	}
