@@ -1,3 +1,5 @@
+'use strict';
+
 var isTitanium = typeof Titanium !== 'undefined';
 var _, generatePlatformArray;
 

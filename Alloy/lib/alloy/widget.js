@@ -1,3 +1,5 @@
+'use strict';
+
 var Alloy = require('/alloy');
 
 // Hold a collection of widget objects instances. These

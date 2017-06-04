@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('/alloy/underscore')._,
 	backbone = require('/alloy/backbone');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var Alloy = require('/alloy'),
 	_ = require('/alloy/underscore')._,
 	TAP = Ti.App.Properties;

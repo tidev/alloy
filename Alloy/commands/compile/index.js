@@ -573,7 +573,8 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'),
 				{ WIDGETID: manifest.id }
 			),
-			__MAPMARKER_CONTROLLER_CODE__: ''
+			__MAPMARKER_CONTROLLER_CODE__: '',
+			useStrict: compileConfig.strict ? '"use strict";' : ''
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT, dirname) : CONST.DIR.COMPONENT,
 		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE, dirname) :
@@ -1050,7 +1051,8 @@ function processModels(dirs) {
 			var code = _.template(fs.readFileSync(modelTemplateFile, 'utf8'), {
 				basename: basename,
 				modelJs: fs.readFileSync(fullpath, 'utf8'),
-				migrations: findModelMigrations(basename, migrationDir)
+				migrations: findModelMigrations(basename, migrationDir),
+				useStrict: compileConfig.strict ? '"use strict";' : ''
 			});
 
 			// write the model to the runtime file

@@ -23,6 +23,9 @@
  * For guides on using Alloy, see
  * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
  */
+
+'use strict';
+
 var _ = require('/alloy/underscore')._,
 	Backbone = require('/alloy/backbone'),
 	CONST = require('/alloy/constants');

@@ -1,3 +1,5 @@
+<%= useStrict %>
+
 var Alloy = require('/alloy'),
     _ = require("/alloy/underscore")._,
 	model, collection;
