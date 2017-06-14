@@ -4,6 +4,5 @@ function WPATH(s) {
 		'<%= WIDGETID %>/' + s :
 		s.substring(0, index) + '/<%= WIDGETID %>/' + s.substring(index + 1);
 
-	// TODO: http://jira.appcelerator.org/browse/ALOY-296
-	return OS_ANDROID && path.indexOf('/') !== 0 ? '/' + path : path;
+	return path.indexOf('/') !== 0 ? '/' + path : path;
 }
