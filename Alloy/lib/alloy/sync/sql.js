@@ -1,5 +1,5 @@
-var _ = require('alloy/underscore')._,
-	backbone = require('alloy/backbone');
+var _ = require('/alloy/underscore')._,
+	backbone = require('/alloy/backbone');
 
 // The database name used when none is specified in the
 // model configuration.
@@ -364,7 +364,7 @@ function Migrate(Model) {
 			// execute the appropriate migration function
 			var funcName = direction ? 'up' : 'down';
 			if (_.isFunction(context[funcName])) {
-				context[funcName](migrator);
+				context[funcName](migrator, config);
 			}
 		}
 	} else {

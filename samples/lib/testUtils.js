@@ -3,7 +3,7 @@ var exec = require('child_process').exec,
 	fs = require('fs-extra'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	uglifyjs = require('uglify-js'),
+	babylon = require('babylon'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
@@ -124,7 +124,7 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return uglifyjs.parse(this.actual);
+		return babylon.parse(this.actual);
 	} catch (e) {
 		return false;
 	}

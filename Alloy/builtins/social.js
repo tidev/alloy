@@ -9,10 +9,10 @@
  * To use the social builtin library, require it with the `alloy` root
  * directory in your `require` call. For example:
  *
- *	 var social = require('alloy/social').create({
- *		 consumerSecret: 'consumer-secret',
- *		 consumerKey: 'consumer-key'
- *	 });
+ *     var social = require('/alloy/social').create({
+ *         consumerSecret: 'consumer-secret',
+ *         consumerKey: 'consumer-key'
+ *     });
  *
  * ## Login and Authorization
  *
@@ -380,152 +380,152 @@ try {
 }
 
 var OAuthAdapter = function(pConsumerSecret, pConsumerKey, pSignatureMethod) {
-	function showLoading() {
-		if (loading) return;
-		loading = !0, loadingView && (loadingView.value = 0), estimateID = firstLoad ? 'tokenRequest' : 'pageLoad', estimates[estimateID] || (estimates[estimateID] = firstLoad ? 2e3 : 1e3), firstLoad = !1, startTime = (new Date).getTime(), intervalID = setInterval(updateProgress, 30), webView && webView.hide(), loadingView && loadingView.show(), loadingContainer && loadingContainer.show();
-	}
-	function updateProgress() {
-		loadingView && (loadingView.value = ((new Date).getTime() - startTime) / estimates[estimateID]);
-	}
-	function authorizeUICallback(e) {
-		var response = e.source.evalJS('(p = document.getElementById("oauth_pin")) && p.innerHTML;');
-		response ? (pin = response.split('<code>')[1].split('</code>')[0], destroyAuthorizeUI(), receivePinCallback()) : (loadingView && loadingView.hide(), loadingContainer && loadingContainer.hide(), webView && webView.show()), loading = !1, clearInterval(intervalID), estimates[estimateID] = (new Date).getTime() - startTime, Ti.App.Properties.setString('Social-LoadingEstimates', JSON.stringify(estimates));
-	}
-	var  consumerSecret = pConsumerSecret, consumerKey = pConsumerKey, signatureMethod = pSignatureMethod, pin = null, requestToken = null, requestTokenSecret = null, accessToken = null, accessTokenSecret = null, accessor = {
-		consumerSecret: consumerSecret,
-		tokenSecret: ''
-	}, window = null, view = null, webView = null, loadingView = null, loadingContainer = null, receivePinCallback = null, accessTokenStore = {};
-	this.loadAccessToken = function(pService) {
-		var token;
-		if (accessTokenStore[pService]) token = accessTokenStore[pService]; else {
-			var raw = Ti.App.Properties.getString('Social.js-AccessToken-' + pService, '');
-			if (!raw) return;
-			try {
-				token = accessTokenStore[pService] = JSON.parse(raw);
-			} catch (err) {
-				Ti.API.error('Failed to parse stored access token for ' + pService + '!'), Ti.API.error(err);
-				return;
-			}
-		}
-		token.accessToken && (accessToken = token.accessToken), token.accessTokenSecret && (accessTokenSecret = token.accessTokenSecret);
-	}, this.saveAccessToken = function(pService) {
-		accessTokenStore[pService] = {
-			accessToken: accessToken,
-			accessTokenSecret: accessTokenSecret
-		}, Ti.App.Properties.setString('Social.js-AccessToken-' + pService, JSON.stringify(accessTokenStore[pService]));
-	}, this.clearAccessToken = function(pService) {
-		delete accessTokenStore[pService], Ti.App.Properties.setString('Social.js-AccessToken-' + pService, null), accessToken = null, accessTokenSecret = null;
-	}, this.isAuthorized = function() {
-		return accessToken != null && accessTokenSecret != null;
-	};
-	var createMessage = function(pUrl) {
-		var message = {
-			action: pUrl,
-			method: 'POST',
-			parameters: []
-		};
-		return message.parameters.push([ 'oauth_consumer_key', consumerKey ]), message.parameters.push([ 'oauth_signature_method', signatureMethod ]), message;
-	};
-	this.getPin = function() {
-		return pin;
-	}, this.getRequestToken = function(pUrl, callback) {
-		accessor.tokenSecret = '';
-		var message = createMessage(pUrl);
-		OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
-		var done = !1, client = Ti.Network.createHTTPClient({
-			onload: function() {
-				var responseParams = OAuth.getParameterMap(this.responseText);
-				requestToken = responseParams.oauth_token, requestTokenSecret = responseParams.oauth_token_secret, callback({
-					success: !0,
-					token: this.responseText
-				}), done = !0;
-			},
-			onerror: function() {
-				Ti.API.error('Social.js: FAILED to getRequestToken!'), Ti.API.error(this.responseText), callback({
-					success: !1
-				}), done = !0;
-			}
-		});
-		client.open('POST', pUrl), client.send(OAuth.getParameterMap(message.parameters));
-	};
-	var destroyAuthorizeUI = function() {
-		if (window == null) return;
-		try {
-			webView.removeEventListener('load', authorizeUICallback), webView.removeEventListener('beforeload', showLoading), loadingView.hide(), window.close(), loading = null, webView = null, loadingView = null, loading = !1, firstLoad = !0, view = null, window = null;
-		} catch (ex) {
-			Ti.API.debug('Cannot destroy the authorize UI. Ignoring.');
-		}
-	}, firstLoad = !0, loading = !1, estimates = JSON.parse(Ti.App.Properties.getString('Social-LoadingEstimates', '{}')), estimateID, startTime, intervalID = 0;
-	this.showLoadingUI = function() {
-		var animation = require('alloy/animation');
-		var isIOS7 = OS_IOS && parseInt(Ti.Platform.version, 10) > 6 ? true : false;
-		window = Ti.UI.createWindow({
-			backgroundColor: 'transparent',
-			zIndex: 1e3,
-			opacity: 0,
-			navBarHidden: true
-		}), view = Ti.UI.createView({
-			top: isIOS7 ? '30dp' : '10dp',
-			right: '10dp',
-			bottom: '10dp',
-			left: '10dp',
-			backgroundColor: '#52D3FE',
-			border: 10,
-			borderColor: '#52D3FE',
-			borderRadius: 10,
-			borderWidth: 4,
-			zIndex: -1
-		});
-		var closeLabelContainer = Ti.UI.createView({
-			top: isIOS7 ? '20dp' : '0dp',
-			right: 0,
-			height: '30dp',
-			width: '32dp'
-		}), closeLabel = Ti.UI.createButton({
-			font: {
-				fontSize: '12sp',
-				fontWeight: 'bold'
-			},
-			backgroundColor: '#52D3FE',
-			borderColor: '#52D3FE',
-			color: '#fff',
-			style: 0,
-			borderRadius: 6,
-			title: 'X',
-			top: '3dp',
-			right: '3dp',
-			width: '25dp',
-			height: '25dp'
-		});
-		closeLabelContainer.addEventListener('click', destroyAuthorizeUI), window.open();
-		loadingContainer = Ti.UI.createView({
-			backgroundColor: '#fff'
-		}), loadingView = Ti.UI.createProgressBar({
-			min: 0,
-			max: 1,
-			value: .5,
-			message: 'Loading, please wait.',
-			backgroundColor: '#fff',
-			font: {
-				fontSize: '14sp',
-				fontWeight: 'bold'
-			},
-			style: 0
-		}), view.add(loadingContainer), loadingContainer.add(loadingView), loadingView.show(), closeLabelContainer.add(closeLabel), window.add(view), window.add(closeLabelContainer);
-		animation.popIn(window);
-		showLoading();
-	}, this.showAuthorizeUI = function(pUrl, pReceivePinCallback) {
-		receivePinCallback = pReceivePinCallback;
-		webView = Ti.UI.createWebView({
-			url: pUrl,
-			autoDetect: [ Ti.UI.AUTODETECT_NONE ]
-		}), webView.addEventListener('beforeload', showLoading), webView.addEventListener('load', authorizeUICallback), view.add(webView);
-	}, this.getAccessToken = function(pUrl, callback) {
-		accessor.tokenSecret = requestTokenSecret;
-		var message = createMessage(pUrl);
-		message.parameters.push([ 'oauth_token', requestToken ]), message.parameters.push([ 'oauth_verifier', pin ]), OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
-		var parameterMap = OAuth.getParameterMap(message.parameters), client = Ti.Network.createHTTPClient({
-			onload: function() {
+    function showLoading() {
+        if (loading) return;
+        loading = !0, loadingView && (loadingView.value = 0), estimateID = firstLoad ? "tokenRequest" : "pageLoad", estimates[estimateID] || (estimates[estimateID] = firstLoad ? 2e3 : 1e3), firstLoad = !1, startTime = (new Date).getTime(), intervalID = setInterval(updateProgress, 30), webView && webView.hide(), loadingView && loadingView.show(), loadingContainer && loadingContainer.show();
+    }
+    function updateProgress() {
+        loadingView && (loadingView.value = ((new Date).getTime() - startTime) / estimates[estimateID]);
+    }
+    function authorizeUICallback(e) {
+        var response = e.source.evalJS('(p = document.getElementById("oauth_pin")) && p.innerHTML;');
+        response ? (pin = response.split("<code>")[1].split("</code>")[0], destroyAuthorizeUI(), receivePinCallback()) : (loadingView && loadingView.hide(), loadingContainer && loadingContainer.hide(), webView && webView.show()), loading = !1, clearInterval(intervalID), estimates[estimateID] = (new Date).getTime() - startTime, Ti.App.Properties.setString("Social-LoadingEstimates", JSON.stringify(estimates));
+    }
+    var  consumerSecret = pConsumerSecret, consumerKey = pConsumerKey, signatureMethod = pSignatureMethod, pin = null, requestToken = null, requestTokenSecret = null, accessToken = null, accessTokenSecret = null, accessor = {
+        consumerSecret: consumerSecret,
+        tokenSecret: ""
+    }, window = null, view = null, webView = null, loadingView = null, loadingContainer = null, receivePinCallback = null, accessTokenStore = {};
+    this.loadAccessToken = function(pService) {
+        var token;
+        if (accessTokenStore[pService]) token = accessTokenStore[pService]; else {
+            var raw = Ti.App.Properties.getString("Social.js-AccessToken-" + pService, "");
+            if (!raw) return;
+            try {
+                token = accessTokenStore[pService] = JSON.parse(raw);
+            } catch (err) {
+                Ti.API.error("Failed to parse stored access token for " + pService + "!"), Ti.API.error(err);
+                return;
+            }
+        }
+        token.accessToken && (accessToken = token.accessToken), token.accessTokenSecret && (accessTokenSecret = token.accessTokenSecret);
+    }, this.saveAccessToken = function(pService) {
+        accessTokenStore[pService] = {
+            accessToken: accessToken,
+            accessTokenSecret: accessTokenSecret
+        }, Ti.App.Properties.setString("Social.js-AccessToken-" + pService, JSON.stringify(accessTokenStore[pService]));
+    }, this.clearAccessToken = function(pService) {
+        delete accessTokenStore[pService], Ti.App.Properties.setString("Social.js-AccessToken-" + pService, null), accessToken = null, accessTokenSecret = null;
+    }, this.isAuthorized = function() {
+        return accessToken != null && accessTokenSecret != null;
+    };
+    var createMessage = function(pUrl) {
+        var message = {
+            action: pUrl,
+            method: "POST",
+            parameters: []
+        };
+        return message.parameters.push([ "oauth_consumer_key", consumerKey ]), message.parameters.push([ "oauth_signature_method", signatureMethod ]), message;
+    };
+    this.getPin = function() {
+        return pin;
+    }, this.getRequestToken = function(pUrl, callback) {
+        accessor.tokenSecret = "";
+        var message = createMessage(pUrl);
+        OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
+        var done = !1, client = Ti.Network.createHTTPClient({
+            onload: function() {
+                var responseParams = OAuth.getParameterMap(this.responseText);
+                requestToken = responseParams.oauth_token, requestTokenSecret = responseParams.oauth_token_secret, callback({
+                    success: !0,
+                    token: this.responseText
+                }), done = !0;
+            },
+            onerror: function() {
+                Ti.API.error("Social.js: FAILED to getRequestToken!"), Ti.API.error(this.responseText), callback({
+                    success: !1
+                }), done = !0;
+            }
+        });
+        client.open("POST", pUrl), client.send(OAuth.getParameterMap(message.parameters));
+    };
+    var destroyAuthorizeUI = function() {
+        if (window == null) return;
+        try {
+            webView.removeEventListener("load", authorizeUICallback), webView.removeEventListener("beforeload", showLoading), loadingView.hide(), window.close(), loading = null, webView = null, loadingView = null, loading = !1, firstLoad = !0, view = null, window = null;
+        } catch (ex) {
+            Ti.API.debug("Cannot destroy the authorize UI. Ignoring.");
+        }
+    }, firstLoad = !0, loading = !1, estimates = JSON.parse(Ti.App.Properties.getString("Social-LoadingEstimates", "{}")), estimateID, startTime, intervalID = 0;
+    this.showLoadingUI = function() {
+        var animation = require('/alloy/animation');
+        var isIOS7 = OS_IOS && parseInt(Ti.Platform.version, 10) > 6 ? true : false
+        window = Ti.UI.createWindow({
+            backgroundColor: "transparent",
+            zIndex: 1e3,
+            opacity: 0,
+            navBarHidden: true
+        }), view = Ti.UI.createView({
+            top: isIOS7 ? "30dp" : "10dp",
+            right: "10dp",
+            bottom: "10dp",
+            left: "10dp",
+            backgroundColor: "#52D3FE",
+            border: 10,
+            borderColor: "#52D3FE",
+            borderRadius: 10,
+            borderWidth: 4,
+            zIndex: -1
+        });
+        var closeLabelContainer = Ti.UI.createView({
+            top: isIOS7 ? "20dp" : "0dp",
+            right: 0,
+            height: "30dp",
+            width: "32dp"
+        }), closeLabel = Ti.UI.createButton({
+            font: {
+                fontSize: "12sp",
+                fontWeight: "bold"
+            },
+            backgroundColor: "#52D3FE",
+            borderColor: "#52D3FE",
+            color: "#fff",
+            style: 0,
+            borderRadius: 6,
+            title: "X",
+            top: "3dp",
+            right: "3dp",
+            width: "25dp",
+            height: "25dp"
+        });
+        closeLabelContainer.addEventListener("click", destroyAuthorizeUI), window.open();
+        loadingContainer = Ti.UI.createView({
+            backgroundColor: "#fff"
+        }), loadingView = Ti.UI.createProgressBar({
+            min: 0,
+            max: 1,
+            value: .5,
+            message: "Loading, please wait.",
+            backgroundColor: "#fff",
+            font: {
+                fontSize: "14sp",
+                fontWeight: "bold"
+            },
+            style: 0
+        }), view.add(loadingContainer), loadingContainer.add(loadingView), loadingView.show(), closeLabelContainer.add(closeLabel), window.add(view), window.add(closeLabelContainer);
+        animation.popIn(window);
+        showLoading();
+    }, this.showAuthorizeUI = function(pUrl, pReceivePinCallback) {
+        receivePinCallback = pReceivePinCallback;
+        webView = Ti.UI.createWebView({
+            url: pUrl,
+            autoDetect: [ Ti.UI.AUTODETECT_NONE ]
+        }), webView.addEventListener("beforeload", showLoading), webView.addEventListener("load", authorizeUICallback), view.add(webView);
+    }, this.getAccessToken = function(pUrl, callback) {
+        accessor.tokenSecret = requestTokenSecret;
+        var message = createMessage(pUrl);
+        message.parameters.push([ "oauth_token", requestToken ]), message.parameters.push([ "oauth_verifier", pin ]), OAuth.setTimestampAndNonce(message), OAuth.SignatureMethod.sign(message, accessor);
+        var parameterMap = OAuth.getParameterMap(message.parameters), client = Ti.Network.createHTTPClient({
+            onload: function() {
 		var responseParams = OAuth.getParameterMap(this.responseText);
 		var userid = responseParams.user_id;
 		var username = responseParams.screen_name;

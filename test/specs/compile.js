@@ -100,6 +100,11 @@ describe('alloy compile', function() {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
+										// Spit out stderr/stdout, so we can see *why* it failed
+										if (this.output.error) {
+											console.error(this.output.stderr);
+											console.log(this.output.stdout);
+										}
 										expect(this.output.error).toBeFalsy();
 									}
 								},
@@ -172,9 +177,8 @@ describe('alloy compile', function() {
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
 					var files = walkSync(genFolder);
 
-					os.platform() === 'darwin' && _.each(files, function(gFile) {
-						// remove trailing slash
-						gFile = gFile.replace(/\/$/, "");
+					// FIXME: Run these comparisons on *every* OS? I assume this was due to windows newline difference?
+					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);

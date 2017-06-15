@@ -344,9 +344,9 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		if (state.isProxyProperty) {
 			delete state.isProxyProperty;
 			code.content += state.parent.symbol + ' && $.addProxyProperty("' + state.propertyName +
-				'", ' + state.parent.symbol + ');';
+				'", ' + state.parent.symbol + ');\n';
 		} else {
-			code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');';
+			code.content += args.symbol + ' && $.addTopLevelView(' + args.symbol + ');\n';
 		}
 	}
 
@@ -375,6 +375,10 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 					func: eventFunc
 				},
 				postCode;
+
+			if (args.fullname === 'Alloy.Widget') {
+				eventObj.obj = state.controller;
+			}
 
 			// create templates for immediate and deferred event handler creation
 			var theDefer = _.template("__defers['<%= obj %>!<%= ev %>!<%= escapedCb %>']", eventObj);
