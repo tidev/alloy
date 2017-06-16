@@ -23,7 +23,8 @@ exports.OPTIONS_OUTPUT = {
 	compact: false,
 	comments: false,
 	babelrc: false,
-	passPerPreset: false
+	passPerPreset: false,
+	presets: [require('babel-preset-es2015')]
 };
 
 function mapLine(mapper, theMap, genMap, line) {
