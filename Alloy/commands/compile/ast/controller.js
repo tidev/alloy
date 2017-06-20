@@ -3,7 +3,7 @@ var U = require('../../../utils'),
 	types = require('babel-types'),
 	traverse = require('babel-traverse').default;
 
-var isBaseControllerExportExpression = types.buildMatchMemberExpression('export.baseController');
+var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
 exports.getBaseController = function(code, file) {
 	var baseController = '';
