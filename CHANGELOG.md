@@ -4,7 +4,7 @@
 
 #### Fixed
   * [ALOY-1567](https://jira.appcelerator.org/browse/ALOY-1567): Minification produces invalid code
-    * Fixes the Titanium minification process inside Alloy
+    * Remove the minification process from Alloy and handle it from the SDK instead.
 
 ### Release 1.10.1
 
