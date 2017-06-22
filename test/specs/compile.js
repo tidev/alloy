@@ -128,6 +128,9 @@ describe('alloy compile', function() {
 							if (!fs.existsSync(cPath)) { return; }
 							var files = walkSync(cPath);
 							_.each(files, function(file) {
+								// remove trailing slash
+								file = file.replace(/\/$/, "");
+
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
@@ -155,6 +158,9 @@ describe('alloy compile', function() {
 							if (!fs.existsSync(cPath)) { return; }
 							var files = walkSync(cPath);
 							_.each(files, function(file) {
+								// remove trailing slash
+								file = file.replace(/\/$/, "");
+
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
@@ -179,6 +185,10 @@ describe('alloy compile', function() {
 
 					// FIXME: Run these comparisons on *every* OS? I assume this was due to windows newline difference?
 					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
+					
+						// remove trailing slash
+						gFile = gFile.replace(/\/$/, "");
+
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);
