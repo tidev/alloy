@@ -599,6 +599,9 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
 		_.each(files, function(file) {
+			// remove trailing slash
+			file = file.replace(/\/$/, "");
+
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -660,6 +663,9 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 			if (fs.existsSync(widgetAssetTargetDir)) {
 				var files = walkSync(widgetAssetTargetDir);
 				_.each(files, function(file) {
+					// remove trailing slash
+					file = file.replace(/\/$/, "");
+
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
 						fs.removeSync(source);

@@ -401,6 +401,9 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(walkSync(theViewDir), function(view) {
+				// remove trailing slash
+				view = view.replace(/\/$/, "");
+
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -422,6 +425,9 @@ module.exports = function(args, program) {
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
 			_.each(walkSync(theControllerDir), function(controller) {
+				// remove trailing slash
+				controller = controller.replace(/\/$/, "");
+
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));
@@ -1004,6 +1010,9 @@ function findModelMigrations(name, inDir) {
 
 		var codes = [];
 		_.each(files, function(f) {
+			// remove trailing slash
+			f = f.replace(/\/$/, "");
+
 			var mf = path.join(migrationsDir, f);
 			var m = fs.readFileSync(mf, 'utf8');
 			var code = '(function(migration){\n ' +
@@ -1035,6 +1044,9 @@ function processModels(dirs) {
 		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
 		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/' : '';
 		_.each(walkSync(modelDir), function(file) {
+			// remove trailing slash
+			file = file.replace(/\/$/, "");
+
 			if (!modelRegex.test(file)) {
 				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
 				return;
@@ -1115,6 +1127,9 @@ function optimizeCompiledCode(alloyConfig, paths) {
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
+			// remove trailing slash
+			f = f.replace(/\/$/, "");
+
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) !== -1;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
