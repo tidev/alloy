@@ -1,5 +1,10 @@
 ## Alloy Release Notes
 
+### Release 1.10.3
+
+#### Fixed
+  * [ALOY-1570](https://jira.appcelerator.org/browse/ALOY-1570): exports.baseController does not work since 1.10.0
+
 ### Release 1.10.2
 
 #### Fixed
