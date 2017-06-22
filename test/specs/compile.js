@@ -63,7 +63,7 @@ describe('alloy compile', function() {
 	// Iterate through each test app and make sure it compiles for all platforms
 	_.each(walkSync(paths.apps), function(file) {
 		// remove trailing slash
-		file = file.replace(/\/$/, "");
+		file = file.replace(/\/$/, '');
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
@@ -129,7 +129,7 @@ describe('alloy compile', function() {
 							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								// remove trailing slash
-								file = file.replace(/\/$/, "");
+								file = file.replace(/\/$/, '');
 
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -159,7 +159,7 @@ describe('alloy compile', function() {
 							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								// remove trailing slash
-								file = file.replace(/\/$/, "");
+								file = file.replace(/\/$/, '');
 
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -187,7 +187,7 @@ describe('alloy compile', function() {
 					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
 					
 						// remove trailing slash
-						gFile = gFile.replace(/\/$/, "");
+						gFile = gFile.replace(/\/$/, '');
 
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }

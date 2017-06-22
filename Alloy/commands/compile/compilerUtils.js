@@ -600,7 +600,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		var files = walkSync(dir);
 		_.each(files, function(file) {
 			// remove trailing slash
-			file = file.replace(/\/$/, "");
+			file = file.replace(/\/$/, '');
 
 			var source = path.join(dir, file);
 
@@ -664,7 +664,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var files = walkSync(widgetAssetTargetDir);
 				_.each(files, function(file) {
 					// remove trailing slash
-					file = file.replace(/\/$/, "");
+					file = file.replace(/\/$/, '');
 
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {

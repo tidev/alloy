@@ -193,7 +193,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	var ordered = [];
 	_.each(walkSync(srcDir), function(file) {
 		// remove trailing slash
-		file = file.replace(/\/$/, "");
+		file = file.replace(/\/$/, '');
 		
 		var src = path.join(srcDir, file);
 		var dst = path.join(dstDir, file);

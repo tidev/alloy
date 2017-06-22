@@ -326,7 +326,7 @@ function remove(opts) {
 	// Let's see if we need to delete any orphan files...
 	_.each(walkSync(runtimePath), function(file) {
 		// remove trailing slash
-		file = file.replace(/\/$/, "");
+		file = file.replace(/\/$/, '');
 
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;

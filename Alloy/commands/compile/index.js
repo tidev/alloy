@@ -402,7 +402,7 @@ module.exports = function(args, program) {
 		if (fs.existsSync(theViewDir)) {
 			_.each(walkSync(theViewDir), function(view) {
 				// remove trailing slash
-				view = view.replace(/\/$/, "");
+				view = view.replace(/\/$/, '');
 
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
@@ -426,7 +426,7 @@ module.exports = function(args, program) {
 		if (fs.existsSync(theControllerDir)) {
 			_.each(walkSync(theControllerDir), function(controller) {
 				// remove trailing slash
-				controller = controller.replace(/\/$/, "");
+				controller = controller.replace(/\/$/, '');
 
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
@@ -1011,7 +1011,7 @@ function findModelMigrations(name, inDir) {
 		var codes = [];
 		_.each(files, function(f) {
 			// remove trailing slash
-			f = f.replace(/\/$/, "");
+			f = f.replace(/\/$/, '');
 
 			var mf = path.join(migrationsDir, f);
 			var m = fs.readFileSync(mf, 'utf8');
@@ -1045,7 +1045,7 @@ function processModels(dirs) {
 		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/' : '';
 		_.each(walkSync(modelDir), function(file) {
 			// remove trailing slash
-			file = file.replace(/\/$/, "");
+			file = file.replace(/\/$/, '');
 
 			if (!modelRegex.test(file)) {
 				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
@@ -1128,7 +1128,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
 		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
 			// remove trailing slash
-			f = f.replace(/\/$/, "");
+			f = f.replace(/\/$/, '');
 
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) !== -1;
