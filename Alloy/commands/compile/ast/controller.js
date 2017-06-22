@@ -3,7 +3,7 @@ var U = require('../../../utils'),
 	types = require('babel-types'),
 	traverse = require('babel-traverse').default;
 
-var isBaseControllerExportExpression = types.buildMatchMemberExpression('export.baseController');
+var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
 exports.getBaseController = function(code, file) {
 	var baseController = '';
@@ -14,7 +14,7 @@ exports.getBaseController = function(code, file) {
 			enter: function(path) {
 				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
 					// what's equivalent of print_to_string()? I replaced with simple value property assuming it's a string literal
-					baseController = path.node.right.value;
+					baseController = '\'' + path.node.right.value + '\'';
 				}
 			}
 		});
