@@ -1,7 +1,7 @@
-var fs = require('fs'),
-	path = require('path'),
+var path = require('path'),
 	os = require('os'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	colors = require('colors'),
 	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
@@ -61,7 +61,9 @@ describe('alloy compile', function() {
 	TU.addMatchers();
 
 	// Iterate through each test app and make sure it compiles for all platforms
-	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+	_.each(walkSync(paths.apps), function(file) {
+		// remove trailing slash
+		file = file.replace(/\/$/, '');
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
@@ -124,8 +126,11 @@ describe('alloy compile', function() {
 								return;
 							}
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
+								// remove trailing slash
+								file = file.replace(/\/$/, '');
+
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
@@ -151,8 +156,11 @@ describe('alloy compile', function() {
 
 						_.each(cPaths, function(cPath) {
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
+								// remove trailing slash
+								file = file.replace(/\/$/, '');
+
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
 									!/\.js$/.test(fullpath)) {
@@ -173,10 +181,14 @@ describe('alloy compile', function() {
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
 					if (!fs.existsSync(genFolder)) { return; }
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
-					var files = wrench.readdirSyncRecursive(genFolder);
+					var files = walkSync(genFolder);
 
 					// FIXME: Run these comparisons on *every* OS? I assume this was due to windows newline difference?
 					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
+					
+						// remove trailing slash
+						gFile = gFile.replace(/\/$/, '');
+
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);

@@ -1,7 +1,6 @@
 var basePath = '../../';
 var path = require('path'),
-	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	xml2tss = require('xml2tss'),
 	alloyRoot = path.join(__dirname, '..', '..'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
@@ -60,7 +59,7 @@ exports.generate = function(name, type, program, args) {
 	// make sure the target folder exists
 	var fullDir = path.dirname(file);
 	if (!fs.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+		fs.mkdirpSync(fullDir);
 	}
 
 	// only use xml2tss to generate style if the partner view exists

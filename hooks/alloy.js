@@ -10,7 +10,7 @@ var SILENT = true;
 
 exports.init = function (logger, config, cli, appc) {
 	var path = require('path'),
-		fs = require('fs'),
+		fs = require('fs-extra'),
 		afs = appc.fs,
 		i18n = appc.i18n(__dirname),
 		__ = i18n.__,

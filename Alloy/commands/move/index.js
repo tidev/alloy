@@ -1,7 +1,7 @@
 var colors = require('colors'),
-	fs = require('fs'),
 	path = require('path'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
@@ -11,7 +11,7 @@ function move(source, destination, callback) {
 	// make sure the target folder exists
 	var fullDir = path.dirname(destination);
 	if (!fs.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+		fs.mkdirpSync(fullDir);
 	}
 
 	var code = fs.readFileSync(source, 'utf8');
@@ -28,7 +28,7 @@ function move(source, destination, callback) {
 function cleanup(args) {
 	args = args || {};
 
-	files = wrench.readdirSyncRecursive(args.path);
+	files = walkSync(args.path);
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err) {
 			if (err) {

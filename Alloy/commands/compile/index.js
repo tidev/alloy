@@ -1,8 +1,8 @@
 var ejs = require('ejs'),
 	path = require('path'),
-	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	vm = require('vm'),
+	walkSync = require('walk-sync'),
 	babel = require('babel-core'),
 	async = require('async'),
 	deasync = require('deasync'),
@@ -254,7 +254,7 @@ module.exports = function(args, program) {
 	// create runtime folder structure for alloy
 	_.each(['COMPONENT', 'WIDGET', 'RUNTIME_STYLE'], function(type) {
 		var p = path.join(paths.resources, titaniumFolder, 'alloy', CONST.DIR[type]);
-		wrench.mkdirSyncRecursive(p, 0755);
+		fs.mkdirpSync(p);
 	});
 
 	// Copy in all developer assets, libs, and additional resources
@@ -319,16 +319,16 @@ module.exports = function(args, program) {
 		var iPhonePlatformDir = path.join(paths.project, 'platform', 'iphone');
 		if (fs.existsSync(iPhonePlatformDir)) {
 			logger.trace('Deleting ' + iPhonePlatformDir.yellow);
-			wrench.rmdirSyncRecursive(iPhonePlatformDir);
+			fs.removeSync(iPhonePlatformDir);
 		}
 	} else {
 		sourcePlatformDirs = [ 'platform/' + buildPlatform ];
 	}
 	if (fs.existsSync(destPlatformDir)) {
 		logger.debug('Resetting ' + destPlatformDir.yellow);
-		wrench.rmdirSyncRecursive(destPlatformDir);
+		fs.removeSync(destPlatformDir);
 	}
-	wrench.mkdirSyncRecursive(destPlatformDir, 0755);
+	fs.mkdirpSync(destPlatformDir);
 	fs.writeFileSync(path.join(destPlatformDir, 'alloy_generated'), generateMessage('platform'));
 	sourcePlatformDirs.forEach(function (dir) {
 		var dirs = [ dir ];
@@ -337,7 +337,7 @@ module.exports = function(args, program) {
 			dir = path.join(paths.app, dir);
 			if (fs.existsSync(dir)) {
 				logger.debug('Copying ' + dir.yellow + ' --> ' + destPlatformDir.yellow);
-				wrench.copyDirSyncRecursive(dir, destPlatformDir, { preserve: true });
+				fs.copySync(dir, destPlatformDir, { preserve: true });
 			}
 		});
 	});
@@ -350,9 +350,9 @@ module.exports = function(args, program) {
 	}
 	if (fs.existsSync(destI18NDir)) {
 		logger.debug('Resetting ' + destI18NDir.yellow);
-		wrench.rmdirSyncRecursive(destI18NDir);
+		fs.removeSync(destI18NDir);
 	}
-	wrench.mkdirSyncRecursive(destI18NDir, 0755);
+	fs.mkdirpSync(destI18NDir);
 	fs.writeFileSync(path.join(destI18NDir, 'alloy_generated'), generateMessage('i18n'));
 	sourceI18NPaths.forEach(function (dir) {
 		if (fs.existsSync(dir)) {
@@ -400,7 +400,10 @@ module.exports = function(args, program) {
 		// generate runtime controllers from views
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
-			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
+			_.each(walkSync(theViewDir), function(view) {
+				// remove trailing slash
+				view = view.replace(/\/$/, '');
+
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -421,7 +424,10 @@ module.exports = function(args, program) {
 		// corresponding view markup
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
-			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
+			_.each(walkSync(theControllerDir), function(controller) {
+				// remove trailing slash
+				controller = controller.replace(/\/$/, '');
+
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));
@@ -867,15 +873,13 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	var runtimeStylePath = path.join(compileConfig.dir.resources, titaniumFolder,
 		path.relative(compileConfig.dir.resources, files.RUNTIME_STYLE));
 	if (manifest) {
-		wrench.mkdirSyncRecursive(
+		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetDir),
-			0755
+				manifest.id, widgetDir)
 		);
-		wrench.mkdirSyncRecursive(
+		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetStyleDir),
-			0755
+				manifest.id, widgetStyleDir)
 		);
 
 		// [ALOY-967] merge "i18n" dir in widget folder
@@ -982,14 +986,14 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			{ WIDGETID: manifest.id }
 		);
 	}
-	wrench.mkdirSyncRecursive(path.dirname(runtimeStylePath), 0755);
+	fs.mkdirpSync(path.dirname(runtimeStylePath));
 	fs.writeFileSync(runtimeStylePath, styleCode);
 }
 
 function findModelMigrations(name, inDir) {
 	try {
 		var migrationsDir = inDir || compileConfig.dir.migrations;
-		var files = fs.readdirSync(migrationsDir);
+		var files = walkSync(migrationsDir);
 		var part = '_' + name + '.' + CONST.FILE_EXT.MIGRATION;
 
 		// look for our model
@@ -1006,6 +1010,9 @@ function findModelMigrations(name, inDir) {
 
 		var codes = [];
 		_.each(files, function(f) {
+			// remove trailing slash
+			f = f.replace(/\/$/, '');
+
 			var mf = path.join(migrationsDir, f);
 			var m = fs.readFileSync(mf, 'utf8');
 			var code = '(function(migration){\n ' +
@@ -1036,7 +1043,10 @@ function processModels(dirs) {
 		var manifest = dirObj.manifest;
 		var isWidget = typeof manifest !== 'undefined' && manifest !== null;
 		var pathPrefix = isWidget ? 'widgets/' + manifest.id + '/' : '';
-		_.each(fs.readdirSync(modelDir), function(file) {
+		_.each(walkSync(modelDir), function(file) {
+			// remove trailing slash
+			file = file.replace(/\/$/, '');
+
 			if (!modelRegex.test(file)) {
 				logger.warn('Non-model file "' + file + '" in ' + pathPrefix + 'models directory');
 				return;
@@ -1061,7 +1071,7 @@ function processModels(dirs) {
 				modelRuntimeDir = path.join(compileConfig.dir.resources,
 					titaniumFolder, 'alloy', 'widgets', manifest.id, 'models');
 			}
-			wrench.mkdirSyncRecursive(modelRuntimeDir, 0755);
+			fs.mkdirpSync(modelRuntimeDir);
 			fs.writeFileSync(path.join(modelRuntimeDir, casedBasename + '.js'), code);
 			models.push(casedBasename);
 		});
@@ -1116,7 +1126,10 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
-		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
+		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
+			// remove trailing slash
+			f = f.replace(/\/$/, '');
+
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) !== -1;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();

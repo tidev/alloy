@@ -1,7 +1,6 @@
 var exec = require('child_process').exec,
-	fs = require('fs'),
 	os = require('os'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	babylon = require('babylon'),
@@ -25,9 +24,9 @@ exports.paths = {
 //			 is successfully recreated.
 function resetTestApp(callback) {
 	var paths = exports.paths;
-	wrench.rmdirSyncRecursive(paths.harness, true);
-	wrench.mkdirSyncRecursive(paths.harness, 0777);
-	wrench.copyDirSyncRecursive(paths.harnessTemplate, paths.harness);
+	fs.removeSync(paths.harness);
+	fs.mkdirpSync(paths.harness);
+	fs.copySync(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);

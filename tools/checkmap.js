@@ -9,7 +9,7 @@
 var async = require('async'),
 	path = require('path'),
 	platforms = require('../platforms'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	os = require('os'),
 	SM = require('source-map'),
 	_ = require('../Alloy/lib/alloy/underscore');

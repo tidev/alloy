@@ -1,6 +1,7 @@
 var basePath = '../../../';
 var path = require('path'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	xml2tss = require('xml2tss'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	GU = require('../generateUtils'),
@@ -37,7 +38,7 @@ module.exports = function(name, args, program) {
 			logger.info('Generated style named ' + name);
 		}
 	} else if (program.all) {
-		wrench.readdirSyncRecursive(view_root).forEach(function(view) {
+		walkSync(view_root).forEach(function(view) {
 			if (view.match('.xml$')) {
 				var style = view.replace(/\.xml/, '.tss'),
 					style_path = path.join(style_root, style),
@@ -46,7 +47,7 @@ module.exports = function(name, args, program) {
 				// make sure the target folder exists
 				var fullDir = path.dirname(style_path);
 				if (!path.existsSync(fullDir)) {
-					wrench.mkdirSyncRecursive(fullDir);
+					fs.mkdirpSync(fullDir);
 				}
 				targets.push({
 					style:style,

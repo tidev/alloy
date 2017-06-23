@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	colors = require('colors'),
 	TU = require('../lib/testUtils'),

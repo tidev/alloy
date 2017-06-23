@@ -1,7 +1,7 @@
 /*
 	Stub / incomplete file
 */
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	spawn = require('child_process').spawn,
 	_ = require('../../lib/alloy/underscore')._,

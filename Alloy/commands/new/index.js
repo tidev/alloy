@@ -7,8 +7,7 @@
 	`alloy new [path] --testapp ui/tableview `
 */
 var path = require('path'),
-	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
@@ -29,24 +28,24 @@ module.exports = function(args, program) {
 		if (!program.force) {
 			U.die(BASE_ERR + '"app" directory already exists at "' + paths.app + '"');
 		} else {
-			wrench.rmdirSyncRecursive(paths.app, true);
+			fs.removeSync(paths.app);
 		}
 	}
-	wrench.mkdirSyncRecursive(paths.app, 0755);
+	fs.mkdirpSync(paths.app);
 
 	// copy platform-specific folders from Resources to app/assets
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		var rPath = path.join(paths.resources, platform);
 		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
-			wrench.mkdirSyncRecursive(aPath, 0755);
-			wrench.copyDirSyncRecursive(rPath, aPath, {preserve:true});
+			fs.mkdirpSync(aPath);
+			fs.copySync(rPath, aPath, {preserve:true});
 		}
 	});
 
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
-		wrench.mkdirSyncRecursive(path.join(paths.app, dir), 0755);
+		fs.mkdirpSync(path.join(paths.app, dir));
 	});
 
 	// move existing i18n and platform directories into app directory
@@ -85,19 +84,19 @@ module.exports = function(args, program) {
 		}
 
 		var p = path.join(paths.app, 'assets', dir);
-		wrench.mkdirSyncRecursive(p, 0755);
-		wrench.copyDirSyncRecursive(rDir, p);
+		fs.mkdirpSync(p);
+		fs.copySync(rDir, p);
 	});
 
 	// copy in any Alloy-specific Resources files
-	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+	// fs.copySync(paths.alloyResources,paths.assets,{preserve:true});
 	_.each(CONST.PLATFORMS, function(p) {
 		var pDir = path.join(platformsDir, p, 'project');
 		if (!fs.existsSync(pDir)) {
 			return;
 		}
 
-		wrench.copyDirSyncRecursive(
+		fs.copySync(
 			pDir,
 			paths.project,
 			{preserve:true}
@@ -106,7 +105,7 @@ module.exports = function(args, program) {
 
 	// add alloy project template files
 	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate, 'app') : paths.projectTemplate;
-	wrench.copyDirSyncRecursive(tplPath, paths.app, {preserve:true});
+	fs.copySync(tplPath, paths.app, {preserve:true});
 	fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
 
 	// if creating from one of the test apps...
@@ -114,16 +113,16 @@ module.exports = function(args, program) {
 		// remove _generated folder,
 		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
 		// copyDirSynRecursive() statements above rather than deleting the folder here
-		wrench.rmdirSyncRecursive(path.join(paths.app, '_generated'), true);
+		fs.removeSync(path.join(paths.app, '_generated'));
 		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
-			wrench.mkdirSyncRecursive(path.join(paths.app, 'lib'), 0755);
-			wrench.copyDirSyncRecursive(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+			fs.mkdirpSync(path.join(paths.app, 'lib'));
+			fs.copySync(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
 		}
 	}
 
 	// delete the build folder to give us a fresh run
-	wrench.rmdirSyncRecursive(paths.build, true);
+	fs.removeSync(paths.build);
 
 	logger.info('Generated new project at: ' + paths.app);
 };
