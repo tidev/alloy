@@ -1094,32 +1094,42 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			return fileRestrictionUpdatedFiles;
 		}
 
-		var exceptions = [
+		var singleFileExceptions = [
 			'app.js',
 			'alloy/CFG.js',
-			'alloy/controllers/',
-			'alloy/styles/',
 			'alloy/backbone.js',
 			'alloy/constants.js',
 			'alloy/underscore.js',
-			'alloy/widget.js',
+			'alloy/widget.js'
+		];
+
+		_.each(singleFileExceptions.slice(0), function(ex) {
+			singleFileExceptions.push(path.join(titaniumFolder, ex));
+		});
+
+		var directoryExceptions = [
+			'alloy/controllers/',
+			'alloy/styles/',
 			'node_modules'
 		].concat(compileConfig.optimizingExceptions || []);
 
 		// widget controllers are already optimized. It should be listed in exceptions.
 		_.each(compileConfig.dependencies, function (version, widgetName) {
-			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
+			directoryExceptions.push('alloy/widgets/' + widgetName + '/controllers/');
 		});
 
-		_.each(exceptions.slice(0), function(ex) {
-			exceptions.push(path.join(titaniumFolder, ex));
+		_.each(directoryExceptions.slice(0), function(ex) {
+			directoryExceptions.push(path.join(titaniumFolder, ex));
 		});
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
+
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
-			return rx.test(f) && !_.find(exceptions, function(e) {
-				return f.indexOf(e) !== -1;
-			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
+			var test = rx.test(f) && 
+			(!_.find(directoryExceptions, function(e) { return f.indexOf(e) !== -1; }) || 
+			singleFileExceptions.indexOf(f) !== -1) && 
+			!fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();		
+			return test;
 		});
 	}
 
