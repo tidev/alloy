@@ -7,7 +7,7 @@
 	`alloy new [path] --testapp ui/tableview `
 */
 var path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	wrench = require('wrench'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
@@ -32,21 +32,21 @@ module.exports = function(args, program) {
 			wrench.rmdirSyncRecursive(paths.app, true);
 		}
 	}
-	wrench.mkdirSyncRecursive(paths.app, 0755);
+	fs.mkdirpSync(paths.app);
 
 	// copy platform-specific folders from Resources to app/assets
 	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
 		var rPath = path.join(paths.resources, platform);
 		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
-			wrench.mkdirSyncRecursive(aPath, 0755);
+			fs.mkdirpSync(aPath);
 			wrench.copyDirSyncRecursive(rPath, aPath, {preserve:true});
 		}
 	});
 
 	// add alloy-specific folders
 	_.each(appDirs, function(dir) {
-		wrench.mkdirSyncRecursive(path.join(paths.app, dir), 0755);
+		fs.mkdirpSync(path.join(paths.app, dir));
 	});
 
 	// move existing i18n and platform directories into app directory
@@ -85,7 +85,7 @@ module.exports = function(args, program) {
 		}
 
 		var p = path.join(paths.app, 'assets', dir);
-		wrench.mkdirSyncRecursive(p, 0755);
+		fs.mkdirpSync(p);
 		wrench.copyDirSyncRecursive(rDir, p);
 	});
 
@@ -117,7 +117,7 @@ module.exports = function(args, program) {
 		wrench.rmdirSyncRecursive(path.join(paths.app, '_generated'), true);
 		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
-			wrench.mkdirSyncRecursive(path.join(paths.app, 'lib'), 0755);
+			fs.mkdirpSync(path.join(paths.app, 'lib'));
 			wrench.copyDirSyncRecursive(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
 		}
 	}

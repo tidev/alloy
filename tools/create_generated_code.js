@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	wrench = require('wrench'),
 	platforms = require('../platforms/index'),
@@ -57,7 +57,7 @@ function doCompile(platform) {
 
 		var genDir = path.join(paths.apps, testApp, '_generated', platform);
 		wrench.rmdirSyncRecursive(genDir, true);
-		wrench.mkdirSyncRecursive(genDir, 0777);
+		fs.mkdirpSync(genDir);
 
 		var locations = [
 			path.join('alloy', 'controllers'),
@@ -68,7 +68,7 @@ function doCompile(platform) {
 			var src = path.join(paths.harness, 'Resources', (platform === 'ios' ? 'iphone' : platform), l);
 			var dst = path.join(genDir, l);
 			if (fs.existsSync(src) && fs.readdirSync(src).length !== 0) {
-				wrench.mkdirSyncRecursive(dst, 0777);
+				fs.mkdirpSync(dst);
 				wrench.copyDirSyncRecursive(src, dst);
 
 				// we don't need to evaluate BaseController.js every time
@@ -86,4 +86,3 @@ function doCompile(platform) {
 		doCompile(platformsArray[platformCtr++]);
 	});
 }
-

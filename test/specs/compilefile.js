@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	wrench = require('wrench'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
@@ -23,7 +23,7 @@ describe('alloy selective compile', function() {
 
 		// Create a copy of Harness to work with
 		wrench.rmdirSyncRecursive(Harness, true);
-		wrench.mkdirSyncRecursive(Harness, 0777);
+		fs.mkdirpSync(Harness);
 		wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
 			forceDelete: true
 		});

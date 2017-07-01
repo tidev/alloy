@@ -1,7 +1,6 @@
 var path = require('path'),
 	colors = require('colors'),
-	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
@@ -10,7 +9,7 @@ function copy(source, destination, callback) {
 	// make sure the target folder exists
 	var fullDir = path.dirname(destination);
 	if (!fs.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+		fs.mkdirpSync(fullDir);
 	}
 
 	var code = fs.readFileSync(source, 'utf8');

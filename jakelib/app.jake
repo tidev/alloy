@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	path = require('path'),
 	os = require('os'),
 	U = require('../Alloy/utils'),
@@ -108,7 +108,7 @@ namespace('app', function() {
 	task('clobber', function() {
 		log('Reseting the Harness app from template...');
 		wrench.rmdirSyncRecursive(harnessAppPath, true);
-		wrench.mkdirSyncRecursive(harnessAppPath, 0777);
+		fs.mkdirpSync(harnessAppPath);
 		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
 	});
 
@@ -116,7 +116,7 @@ namespace('app', function() {
 	task('setup', ['app:clobber'], function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
-			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+			fs.mkdirpSync(resourcesPath);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -127,7 +127,7 @@ namespace('app', function() {
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
+				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
@@ -155,7 +155,7 @@ namespace('app', function() {
 	task('setupNoXML', ['app:clobber'], function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
-			wrench.mkdirSyncRecursive(resourcesPath, 0777);
+			fs.mkdirpSync(resourcesPath);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -166,7 +166,7 @@ namespace('app', function() {
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				wrench.mkdirSyncRecursive(path.join(targetAppPath,'lib'),0777);
+				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),

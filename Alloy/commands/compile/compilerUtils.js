@@ -2,7 +2,7 @@ var U = require('../../utils'),
 	colors = require('colors'),
 	path = require('path'),
 	os = require('os'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../logger'),
@@ -618,7 +618,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var destDir = path.join(resourceDir, dirname, widgetId);
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
-					wrench.mkdirSyncRecursive(destDir, 0755);
+					fs.mkdirpSync(destDir);
 				}
 
 				logger.trace('Copying ' + file.yellow + ' --> ' +
@@ -684,7 +684,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 			if (!fs.existsSync(srcFile)) return;
 
 			if (fs.statSync(srcFile).isDirectory()) {
-				fs.existsSync(destFile) || wrench.mkdirSyncRecursive(destFile, 0755);
+				fs.existsSync(destFile) || fs.mkdirpSync(destFile);
 				return walk(srcFile, destFile);
 			}
 
@@ -849,7 +849,7 @@ function generateConfig(obj) {
 		logger.info(' [config.json] regenerating CFG.js from config.json...');
 		buildLog.data.cfgHash = hash;
 		// write out the config runtime module
-		wrench.mkdirSyncRecursive(resourcesBase, 0755);
+		fs.mkdirpSync(resourcesBase);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 		var output = 'module.exports=' + JSON.stringify(o) + ';';
@@ -858,7 +858,7 @@ function generateConfig(obj) {
 		// TODO: deal with TIMOB-14884
 		var baseFolder = path.join(obj.dir.resources, 'alloy');
 		if (!fs.existsSync(baseFolder)) {
-			wrench.mkdirSyncRecursive(baseFolder, 0755);
+			fs.mkdirpSync(baseFolder);
 		}
 		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}

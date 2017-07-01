@@ -1,5 +1,5 @@
 var path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),
@@ -26,13 +26,13 @@ module.exports = function(name, args, program) {
 		var typeTemplate = path.join(paths.template, 'widget', type.toLowerCase() + '.' +
 			CONST.FILE_EXT[type]);
 
-		wrench.mkdirSyncRecursive(typeFolder, 0755);
+		fs.mkdirpSync(typeFolder);
 		fs.writeFileSync(
 			path.join(typeFolder, CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
 			fs.readFileSync(typeTemplate, 'utf8')
 		);
 	});
-	wrench.mkdirSyncRecursive(path.join(paths.widget, CONST.DIR.ASSETS), 0755);
+	fs.mkdirpSync(path.join(paths.widget, CONST.DIR.ASSETS));
 
 	// create widget.json manifest file
 	fs.writeFileSync(

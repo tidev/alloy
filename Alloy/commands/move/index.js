@@ -1,5 +1,5 @@
 var colors = require('colors'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	path = require('path'),
 	wrench = require('wrench'),
 	_ = require('../../lib/alloy/underscore')._,
@@ -11,7 +11,7 @@ function move(source, destination, callback) {
 	// make sure the target folder exists
 	var fullDir = path.dirname(destination);
 	if (!fs.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+		fs.mkdirpSync(fullDir);
 	}
 
 	var code = fs.readFileSync(source, 'utf8');

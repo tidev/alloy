@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
 	wrench = require('wrench'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
@@ -72,7 +72,7 @@ _.each(RUNS, function(run) {
 		it('executes `' + run.cmd + '` with ' + (run.success ? 'success' : 'error'), function() {
 			// Create a copy of Harness to work with
 			wrench.rmdirSyncRecursive(Harness, true);
-			wrench.mkdirSyncRecursive(Harness, 0777);
+			fs.mkdirpSync(Harness);
 			wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
 				forceDelete: true
 			});

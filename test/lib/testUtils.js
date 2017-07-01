@@ -1,5 +1,5 @@
 var exec = require('child_process').exec,
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	os = require('os'),
 	wrench = require('wrench'),
 	path = require('path'),
@@ -27,7 +27,7 @@ exports.paths = {
 function resetTestApp(callback) {
 	var paths = exports.paths;
 	wrench.rmdirSyncRecursive(paths.harness, true);
-	wrench.mkdirSyncRecursive(paths.harness, 0777);
+	fs.mkdirpSync(paths.harness);
 	wrench.copyDirSyncRecursive(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {

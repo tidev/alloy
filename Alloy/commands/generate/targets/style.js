@@ -1,6 +1,7 @@
 var basePath = '../../../';
 var path = require('path'),
 	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	xml2tss = require('xml2tss'),
 	_ = require(basePath + 'lib/alloy/underscore')._,
 	GU = require('../generateUtils'),
@@ -46,7 +47,7 @@ module.exports = function(name, args, program) {
 				// make sure the target folder exists
 				var fullDir = path.dirname(style_path);
 				if (!path.existsSync(fullDir)) {
-					wrench.mkdirSyncRecursive(fullDir);
+					fs.mkdirpSync(fullDir);
 				}
 				targets.push({
 					style:style,
