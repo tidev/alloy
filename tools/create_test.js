@@ -24,7 +24,7 @@ var pathToTest = path.join(TESTING_FOLDER, appName);
 if (fs.existsSync(pathToTest)) {
 	die('Test app "' + appName + '" already exists at "' + rel(pathToTest) + '"');
 }
-fs.mkdirSync(pathToTest);
+fs.mkdirSync(pathToTest, 0755);
 console.log('* Created folder ' + YELLOW(rel(pathToTest)));
 
 var files = [
@@ -57,7 +57,7 @@ var files = [
 for (var i = 0; i < files.length; i++) {
 	var o = files[i];
 	var fullpath = path.join(o.folder, o.file);
-	fs.mkdirSync(o.folder);
+	fs.mkdirSync(o.folder, 0755);
 	fs.writeFileSync(fullpath, o.data);
 	console.log('* Created file ' + YELLOW(rel(fullpath)));
 }

@@ -1,4 +1,5 @@
 var fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	path = require('path'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
@@ -24,6 +25,7 @@ function BuildLog(_projectPath) {
 	// make sure the alloy build folder exists
 	if (!fs.existsSync(dir)) {
 		fs.mkdirpSync(dir);
+		chmodr.sync(dir, 0755);
 	}
 
 	// load it up

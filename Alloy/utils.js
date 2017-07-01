@@ -2,6 +2,7 @@
 
 var path = require('path'),
 	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	colors = require('colors'),
 	crypto = require('crypto'),
 	util = require('util'),
@@ -147,6 +148,7 @@ exports.getAndValidateProjectPaths = function(argPath, opts) {
 	var appjs = path.join(paths.resources, 'app.js');
 	if (!fs.existsSync(appjs)) {
 		fs.mkdirpSync(paths.resources);
+		chmodr.sync(paths.resources, 0755);
 		fs.writeFileSync(appjs, '');
 	}
 
@@ -186,6 +188,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 
 	if (!fs.existsSync(dstDir)) {
 		fs.mkdirpSync(dstDir);
+		chmodr.sync(dstDir, 0755);
 	}
 
 	// don't process XML/controller files inside .svn folders (ALOY-839)
@@ -248,6 +251,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			if (srcStat.isDirectory()) {
 				logger.trace('Creating directory ' + path.relative(opts.rootDir, dst).yellow);
 				fs.mkdirpSync(dst);
+				chmodr.sync(dst, 0755);
 			} else {
 				logger.trace('Copying ' + path.join('SRC_DIR', path.relative(srcDir, src)).yellow +
 					' --> ' + path.relative(opts.rootDir, dst).yellow);
@@ -504,6 +508,7 @@ exports.copyFileSync = function(srcFile, destFile) {
 exports.ensureDir = function(p) {
 	if (!fs.existsSync(p)) {
 		fs.mkdirpSync(p);
+		chmodr.sync(p, 0755);
 	}
 };
 

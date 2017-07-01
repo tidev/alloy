@@ -36,6 +36,7 @@
     "babel-traverse": "^6.23.1",
     "babel-types": "^6.23.0",
     "babylon": "^6.16.1",
+    "chmodr": "^1.0.2",
     "colors": "0.6.0-1",
     "commander": "0.6.1",
     "deasync": "^0.1.9",

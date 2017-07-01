@@ -4,6 +4,7 @@
 */
 var SM = require('source-map'),
 	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	path = require('path'),
 	wrench = require('wrench'),
 	U = require('../../utils'),
@@ -115,6 +116,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var outfile = target.filepath;
 	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 	fs.mkdirpSync(path.dirname(outfile));
+	chmodr.sync(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, outputResult.code.toString());
 	logger.info('  created:    "' + relativeOutfile + '"');
 
@@ -124,6 +126,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		outfile = path.join(mapDir, relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 		relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 		fs.mkdirpSync(path.dirname(outfile));
+		chmodr.sync(path.dirname(outfile), 0755);
 		fs.writeFileSync(outfile, JSON.stringify(outputResult.map));
 		logger.debug('  map:        "' + relativeOutfile + '"');
 	}
@@ -195,6 +198,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var mapDir = path.join(compileConfig.dir.project, CONST.DIR.MAP);
 	var outfile = path.join(mapDir, relativeOutfile, path.basename(target.filename)) + '.' + CONST.FILE_EXT.MAP;
 	fs.mkdirpSync(path.dirname(outfile));
+	chmodr.sync(path.dirname(outfile), 0755);
 	var tmp = outputResult.map;
 	tmp.sources[0] = compiledFileName;
 	tmp.sources[1] = origFileName;

@@ -3,6 +3,7 @@ var U = require('../../utils'),
 	path = require('path'),
 	os = require('os'),
 	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../logger'),
@@ -619,6 +620,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
 					fs.mkdirpSync(destDir);
+					chmodr.sync(destDir, 0755);
 				}
 
 				logger.trace('Copying ' + file.yellow + ' --> ' +
@@ -685,6 +687,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 
 			if (fs.statSync(srcFile).isDirectory()) {
 				fs.existsSync(destFile) || fs.mkdirpSync(destFile);
+				chmodr.sync(destFile, 0755);
 				return walk(srcFile, destFile);
 			}
 
@@ -850,6 +853,7 @@ function generateConfig(obj) {
 		buildLog.data.cfgHash = hash;
 		// write out the config runtime module
 		fs.mkdirpSync(resourcesBase);
+		chmodr.sync(resourcesBase, 0755);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 		var output = 'module.exports=' + JSON.stringify(o) + ';';
@@ -859,6 +863,7 @@ function generateConfig(obj) {
 		var baseFolder = path.join(obj.dir.resources, 'alloy');
 		if (!fs.existsSync(baseFolder)) {
 			fs.mkdirpSync(baseFolder);
+			chmodr.sync(baseFolder, 0755);
 		}
 		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}

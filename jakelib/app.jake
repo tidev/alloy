@@ -1,4 +1,5 @@
 var fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	path = require('path'),
 	os = require('os'),
 	U = require('../Alloy/utils'),
@@ -109,6 +110,7 @@ namespace('app', function() {
 		log('Reseting the Harness app from template...');
 		wrench.rmdirSyncRecursive(harnessAppPath, true);
 		fs.mkdirpSync(harnessAppPath);
+		chmodr.sync(harnessAppPath, 0777);
 		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
 	});
 
@@ -117,6 +119,7 @@ namespace('app', function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
 			fs.mkdirpSync(resourcesPath);
+			chmodr.sync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -127,7 +130,8 @@ namespace('app', function() {
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
+				fs.mkdirpSync(path.join(targetAppPath,'lib'));
+				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
@@ -156,6 +160,7 @@ namespace('app', function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
 			fs.mkdirpSync(resourcesPath);
+			chmodr.sync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -166,7 +171,8 @@ namespace('app', function() {
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
 				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
-				fs.mkdirpSync(path.join(targetAppPath,'lib'),0777);
+				fs.mkdirpSync(path.join(targetAppPath,'lib'));
+				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
 				wrench.copyDirSyncRecursive(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),

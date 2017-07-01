@@ -1,6 +1,7 @@
 var ejs = require('ejs'),
 	path = require('path'),
 	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	wrench = require('wrench'),
 	vm = require('vm'),
 	babel = require('babel-core'),
@@ -255,6 +256,7 @@ module.exports = function(args, program) {
 	_.each(['COMPONENT', 'WIDGET', 'RUNTIME_STYLE'], function(type) {
 		var p = path.join(paths.resources, titaniumFolder, 'alloy', CONST.DIR[type]);
 		fs.mkdirpSync(p);
+		chmodr.sync(p, 0755);
 	});
 
 	// Copy in all developer assets, libs, and additional resources
@@ -329,6 +331,7 @@ module.exports = function(args, program) {
 		wrench.rmdirSyncRecursive(destPlatformDir);
 	}
 	fs.mkdirpSync(destPlatformDir);
+	chmodr.sync(destPlatformDir, 0755);
 	fs.writeFileSync(path.join(destPlatformDir, 'alloy_generated'), generateMessage('platform'));
 	sourcePlatformDirs.forEach(function (dir) {
 		var dirs = [ dir ];
@@ -353,6 +356,7 @@ module.exports = function(args, program) {
 		wrench.rmdirSyncRecursive(destI18NDir);
 	}
 	fs.mkdirpSync(destI18NDir);
+	chmodr.sync(destI18NDir, 0755);
 	fs.writeFileSync(path.join(destI18NDir, 'alloy_generated'), generateMessage('i18n'));
 	sourceI18NPaths.forEach(function (dir) {
 		if (fs.existsSync(dir)) {
@@ -869,14 +873,16 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	if (manifest) {
 		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetDir),
-			0755
+				manifest.id, widgetDir)
 		);
+		chmodr.sync(path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+			manifest.id, widgetDir), 0755);
 		fs.mkdirpSync(
 			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetStyleDir),
-			0755
+				manifest.id, widgetStyleDir)
 		);
+		chmodr.sync(path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+			manifest.id, widgetStyleDir), 0755);
 
 		// [ALOY-967] merge "i18n" dir in widget folder
 		CU.mergeI18N(path.join(dir, 'i18n'), path.join(compileConfig.dir.project, 'i18n'), { override: false });
@@ -983,6 +989,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		);
 	}
 	fs.mkdirpSync(path.dirname(runtimeStylePath));
+	chmodr.sync(path.dirname(runtimeStylePath), 0755);
 	fs.writeFileSync(runtimeStylePath, styleCode);
 }
 
@@ -1062,6 +1069,7 @@ function processModels(dirs) {
 					titaniumFolder, 'alloy', 'widgets', manifest.id, 'models');
 			}
 			fs.mkdirpSync(modelRuntimeDir);
+			chmodr.sync(modelRuntimeDir, 0755);
 			fs.writeFileSync(path.join(modelRuntimeDir, casedBasename + '.js'), code);
 			models.push(casedBasename);
 		});

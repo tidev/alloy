@@ -4,6 +4,7 @@ var U = require('../../utils'),
 	_ = require('../../lib/alloy/underscore')._,
 	XMLSerializer = require('xmldom').XMLSerializer,
 	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	os = require('os');
 
 var FILE_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>' + os.EOL + '<resources>' +
@@ -24,6 +25,7 @@ module.exports = function(projectRoot, language) {
 	// create 18n folder if it doesn't exist
 	if (!fs.existsSync(i18nDir)) {
 		fs.mkdirpSync(i18nDir);
+		chmodr.sync(i18nDir, 0755);
 	}
 
 	// create i18n file if it doesn't exist
