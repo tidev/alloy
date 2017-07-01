@@ -321,14 +321,14 @@ module.exports = function(args, program) {
 		var iPhonePlatformDir = path.join(paths.project, 'platform', 'iphone');
 		if (fs.existsSync(iPhonePlatformDir)) {
 			logger.trace('Deleting ' + iPhonePlatformDir.yellow);
-			wrench.rmdirSyncRecursive(iPhonePlatformDir);
+			fs.removeSync(iPhonePlatformDir);
 		}
 	} else {
 		sourcePlatformDirs = [ 'platform/' + buildPlatform ];
 	}
 	if (fs.existsSync(destPlatformDir)) {
 		logger.debug('Resetting ' + destPlatformDir.yellow);
-		wrench.rmdirSyncRecursive(destPlatformDir);
+		fs.removeSync(destPlatformDir);
 	}
 	fs.mkdirpSync(destPlatformDir);
 	chmodr.sync(destPlatformDir, 0755);
@@ -353,7 +353,7 @@ module.exports = function(args, program) {
 	}
 	if (fs.existsSync(destI18NDir)) {
 		logger.debug('Resetting ' + destI18NDir.yellow);
-		wrench.rmdirSyncRecursive(destI18NDir);
+		fs.removeSync(destI18NDir);
 	}
 	fs.mkdirpSync(destI18NDir);
 	chmodr.sync(destI18NDir, 0755);

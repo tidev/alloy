@@ -363,9 +363,9 @@ function remove(opts) {
 			if (targetStat.isDirectory()) {
 				if (opts.widgetId) {
 					// remove the widget's folder
-					wrench.rmdirSyncRecursive(path.resolve(runtimeFullpath, '..'), true);
+					fs.removeSync(path.resolve(runtimeFullpath, '..'));
 				} else {
-					wrench.rmdirSyncRecursive(runtimeFullpath, true);
+					fs.removeSync(runtimeFullpath);
 				}
 			} else {
 				fs.unlinkSync(runtimeFullpath);

@@ -25,7 +25,7 @@ exports.paths = {
 //			 is successfully recreated.
 function resetTestApp(callback) {
 	var paths = exports.paths;
-	wrench.rmdirSyncRecursive(paths.harness, true);
+	fs.removeSync(paths.harness);
 	fs.mkdirpSync(paths.harness);
 	wrench.copyDirSyncRecursive(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {

@@ -30,7 +30,7 @@ module.exports = function(args, program) {
 		if (!program.force) {
 			U.die(BASE_ERR + '"app" directory already exists at "' + paths.app + '"');
 		} else {
-			wrench.rmdirSyncRecursive(paths.app, true);
+			fs.removeSync(paths.app);
 		}
 	}
 	fs.mkdirpSync(paths.app);
@@ -119,7 +119,7 @@ module.exports = function(args, program) {
 		// remove _generated folder,
 		// TODO: once we update wrench (ALOY-1001), add an exclude regex to the
 		// copyDirSynRecursive() statements above rather than deleting the folder here
-		wrench.rmdirSyncRecursive(path.join(paths.app, '_generated'), true);
+		fs.removeSync(path.join(paths.app, '_generated'));
 		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
 			fs.mkdirpSync(path.join(paths.app, 'lib'));
@@ -129,7 +129,7 @@ module.exports = function(args, program) {
 	}
 
 	// delete the build folder to give us a fresh run
-	wrench.rmdirSyncRecursive(paths.build, true);
+	fs.removeSync(paths.build);
 
 	logger.info('Generated new project at: ' + paths.app);
 };

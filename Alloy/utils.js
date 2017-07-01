@@ -456,7 +456,7 @@ exports.rmdirContents = function(dir, exceptions) {
 			continue;
 		// use wrench to delete directories
 		} else if (stat.isDirectory()) {
-			wrench.rmdirSyncRecursive(currFile, true);
+			fs.removeSync(currFile);
 		// unlink any files or links
 		} else {
 			fs.unlinkSync(currFile);

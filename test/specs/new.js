@@ -72,7 +72,7 @@ _.each(RUNS, function(run) {
 	describe('alloy new', function() {
 		it('executes `' + run.cmd + '` with ' + (run.success ? 'success' : 'error'), function() {
 			// Create a copy of Harness to work with
-			wrench.rmdirSyncRecursive(Harness, true);
+			fs.removeSync(Harness);
 			fs.mkdirpSync(Harness);
 			chmodr.sync(Harness, 0777);
 			wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {

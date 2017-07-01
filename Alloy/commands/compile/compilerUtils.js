@@ -632,7 +632,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		// [ALOY-1002] Remove ios folder copied from widget
 		var iosDir = path.join(resourceDir, 'ios');
 		if (fs.existsSync(iosDir)) {
-			wrench.rmdirSyncRecursive(iosDir);
+			fs.removeSync(iosDir);
 		}
 		logger.trace(' ');
 	});
@@ -664,7 +664,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				_.each(files, function(file) {
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
-						wrench.rmdirSyncRecursive(source);
+						fs.removeSync(source);
 					}
 				});
 			}

@@ -23,7 +23,7 @@ describe('alloy selective compile', function() {
 	it('preparing test app', function() {
 
 		// Create a copy of Harness to work with
-		wrench.rmdirSyncRecursive(Harness, true);
+		fs.removeSync(Harness);
 		fs.mkdirpSync(Harness);
 		chmodr.sync(Harness, 0777);
 		wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {

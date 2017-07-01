@@ -108,7 +108,7 @@ namespace('app', function() {
 	desc('remove the contents of the test harness\' "app" directory');
 	task('clobber', function() {
 		log('Reseting the Harness app from template...');
-		wrench.rmdirSyncRecursive(harnessAppPath, true);
+		fs.removeSync(harnessAppPath);
 		fs.mkdirpSync(harnessAppPath);
 		chmodr.sync(harnessAppPath, 0777);
 		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);

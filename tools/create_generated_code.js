@@ -57,7 +57,7 @@ function doCompile(platform) {
 		}
 
 		var genDir = path.join(paths.apps, testApp, '_generated', platform);
-		wrench.rmdirSyncRecursive(genDir, true);
+		fs.removeSync(genDir);
 		fs.mkdirpSync(genDir);
 		chmodr.sync(genDir, 0777);
 
