@@ -3,6 +3,7 @@ var U = require('../../utils'),
 	path = require('path'),
 	os = require('os'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
@@ -598,7 +599,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	_.each(resources, function(dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
-		var files = wrench.readdirSyncRecursive(dir);
+		var files = walkSync(dir);
 		_.each(files, function(file) {
 			var source = path.join(dir, file);
 
@@ -660,7 +661,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 
 			// [ALOY-1002] Remove platform-specific folders copied from theme
 			if (fs.existsSync(widgetAssetTargetDir)) {
-				var files = wrench.readdirSyncRecursive(widgetAssetTargetDir);
+				var files = walkSync(widgetAssetTargetDir);
 				_.each(files, function(file) {
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {

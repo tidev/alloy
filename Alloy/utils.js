@@ -2,6 +2,7 @@
 
 var path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	colors = require('colors'),
 	crypto = require('crypto'),
@@ -194,7 +195,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	// don't process XML/controller files inside .svn folders (ALOY-839)
 	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
-	_.each(wrench.readdirSyncRecursive(srcDir), function(file) {
+	_.each(walkSync(srcDir), function(file) {
 		var src = path.join(srcDir, file);
 		var dst = path.join(dstDir, file);
 
