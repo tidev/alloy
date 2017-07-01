@@ -43,7 +43,7 @@ module.exports = function(args, program) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
 			fs.mkdirpSync(aPath);
 			chmodr.sync(aPath, 0755);
-			wrench.copyDirSyncRecursive(rPath, aPath, {preserve:true});
+			fs.copySync(rPath, aPath, {preserveTimestamps:true});
 		}
 	});
 
@@ -91,27 +91,27 @@ module.exports = function(args, program) {
 		var p = path.join(paths.app, 'assets', dir);
 		fs.mkdirpSync(p);
 		chmodr.sync(p, 0755);
-		wrench.copyDirSyncRecursive(rDir, p);
+		fs.copySync(rDir, p);
 	});
 
 	// copy in any Alloy-specific Resources files
-	// wrench.copyDirSyncRecursive(paths.alloyResources,paths.assets,{preserve:true});
+	// fs.copySync(paths.alloyResources,paths.assets,{preserveTimestamps:true});
 	_.each(CONST.PLATFORMS, function(p) {
 		var pDir = path.join(platformsDir, p, 'project');
 		if (!fs.existsSync(pDir)) {
 			return;
 		}
 
-		wrench.copyDirSyncRecursive(
+		fs.copySync(
 			pDir,
 			paths.project,
-			{preserve:true}
+			{preserveTimestamps:true}
 		);
 	});
 
 	// add alloy project template files
 	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate, 'app') : paths.projectTemplate;
-	wrench.copyDirSyncRecursive(tplPath, paths.app, {preserve:true});
+	fs.copySync(tplPath, paths.app, {preserveTimestamps:true});
 	fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
 
 	// if creating from one of the test apps...
@@ -124,7 +124,7 @@ module.exports = function(args, program) {
 			// copy in the test harness
 			fs.mkdirpSync(path.join(paths.app, 'lib'));
 			chmodr.sync(path.join(paths.app, 'lib'), 0755);
-			wrench.copyDirSyncRecursive(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserve:true});
+			fs.copySync(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserveTimestamps:true});
 		}
 	}
 

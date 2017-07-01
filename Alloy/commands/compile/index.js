@@ -340,7 +340,7 @@ module.exports = function(args, program) {
 			dir = path.join(paths.app, dir);
 			if (fs.existsSync(dir)) {
 				logger.debug('Copying ' + dir.yellow + ' --> ' + destPlatformDir.yellow);
-				wrench.copyDirSyncRecursive(dir, destPlatformDir, { preserve: true });
+				fs.copySync(dir, destPlatformDir, { preserveTimestamps: true });
 			}
 		});
 	});

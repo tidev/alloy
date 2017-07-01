@@ -72,7 +72,7 @@ function doCompile(platform) {
 			if (fs.existsSync(src) && fs.readdirSync(src).length !== 0) {
 				fs.mkdirpSync(dst);
 				chmodr.sync(dst, 0777);
-				wrench.copyDirSyncRecursive(src, dst);
+				fs.copySync(src, dst);
 
 				// we don't need to evaluate BaseController.js every time
 				var bc = path.join(dst, 'BaseController.js');

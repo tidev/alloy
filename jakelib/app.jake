@@ -111,7 +111,7 @@ namespace('app', function() {
 		fs.removeSync(harnessAppPath);
 		fs.mkdirpSync(harnessAppPath);
 		chmodr.sync(harnessAppPath, 0777);
-		wrench.copyDirSyncRecursive(harnessTemplatePath, harnessAppPath);
+		fs.copySync(harnessTemplatePath, harnessAppPath);
 	});
 
 	desc('compile the example app in the given directory name and stage for launch, e.g. "jake app:setup dir=masterdetail"');
@@ -129,13 +129,13 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserveTimestamps:true});
 				fs.mkdirpSync(path.join(targetAppPath,'lib'));
 				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
-				wrench.copyDirSyncRecursive(
+				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
-					{preserve:true}
+					{preserveTimestamps:true}
 				);
 				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
 			}
@@ -151,7 +151,7 @@ namespace('app', function() {
 	task('quickrun', function() {
 		log('Quick-running sample app "' + appDir + '"...');
 		log('Staging sample app "' + appDir + '" for launch...');
-		wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+		fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserveTimestamps:true});
 		runApp();
 	});
 
@@ -170,13 +170,13 @@ namespace('app', function() {
 				process.exit(1);
 			} else {
 				log('Staging sample app "'+appDir+'" for launch...');
-				wrench.copyDirSyncRecursive(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserve:true});
+				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserveTimestamps:true});
 				fs.mkdirpSync(path.join(targetAppPath,'lib'));
 				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
-				wrench.copyDirSyncRecursive(
+				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
-					{preserve:true}
+					{preserveTimestamps:true}
 				);
 				fs.unlinkSync(path.join(targetAppPath,'lib','testUtils.js'));
         log('Removing index.xml & index.tss');

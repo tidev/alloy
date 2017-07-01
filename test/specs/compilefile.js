@@ -26,7 +26,7 @@ describe('alloy selective compile', function() {
 		fs.removeSync(Harness);
 		fs.mkdirpSync(Harness);
 		chmodr.sync(Harness, 0777);
-		wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
+		fs.copySync(HarnessTemplate, Harness, {
 			forceDelete: true
 		});
 		TU.asyncExecTest('alloy new "' + Harness + '"', {

@@ -645,17 +645,17 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
 			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
 			if (fs.existsSync(widgetAssetSourceDir)) {
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
 			}
 			// platform-specific assets from the widget must override those of the theme
 			if (platform && path.existsSync(path.join(resources[0], platform))) {
-				wrench.copyDirSyncRecursive(path.join(resources[0], platform), widgetAssetTargetDir, {preserve: true});
+				fs.copySync(path.join(resources[0], platform), widgetAssetTargetDir, {preserveTimestamps: true});
 			}
 			// however platform-specific theme assets must override the platform assets from the widget
 			if (platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
 				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
-				wrench.copyDirSyncRecursive(widgetAssetSourceDir, widgetAssetTargetDir, {preserve: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
 			}
 
 			// [ALOY-1002] Remove platform-specific folders copied from theme

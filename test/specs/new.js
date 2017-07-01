@@ -75,7 +75,7 @@ _.each(RUNS, function(run) {
 			fs.removeSync(Harness);
 			fs.mkdirpSync(Harness);
 			chmodr.sync(Harness, 0777);
-			wrench.copyDirSyncRecursive(HarnessTemplate, Harness, {
+			fs.copySync(HarnessTemplate, Harness, {
 				forceDelete: true
 			});
 
