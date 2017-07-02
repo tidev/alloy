@@ -1,6 +1,5 @@
 var fs = require('fs-extra'),
 	chmodr = require('chmodr'),
-	wrench = require('wrench'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),

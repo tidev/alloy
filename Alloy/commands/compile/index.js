@@ -3,7 +3,6 @@ var ejs = require('ejs'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
-	wrench = require('wrench'),
 	vm = require('vm'),
 	babel = require('babel-core'),
 	async = require('async'),
@@ -1125,7 +1124,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 
 		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
-		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
+		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) !== -1;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();

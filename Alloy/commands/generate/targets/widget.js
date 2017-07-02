@@ -1,7 +1,6 @@
 var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
-	wrench = require('wrench'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),
 	_ = require('../../../lib/alloy/underscore')._,

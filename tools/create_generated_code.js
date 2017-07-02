@@ -1,7 +1,6 @@
 var fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	path = require('path'),
-	wrench = require('wrench'),
 	platforms = require('../platforms/index'),
 	_ = require('../Alloy/lib/alloy/underscore')._,
 	colors = require('colors'),

@@ -1,7 +1,6 @@
 var exec = require('child_process').exec,
 	fs = require('fs-extra'),
 	os = require('os'),
-	wrench = require('wrench'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
 	babylon = require('babylon'),

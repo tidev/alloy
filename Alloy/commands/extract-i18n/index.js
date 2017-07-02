@@ -5,7 +5,6 @@
 var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	wrench = require('wrench'),
 	CONST = require('../../common/constants'),
 	U = require('../../utils'),
 	_ = require('../../lib/alloy/underscore')._,

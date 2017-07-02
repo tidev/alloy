@@ -6,7 +6,6 @@
 var fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	wrench = require('wrench'),
 	platforms = require('../../../platforms/index'),
 	logger = require('../../logger'),
 	CONST = require('../../common/constants'),

@@ -9,7 +9,6 @@
 var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
-	wrench = require('wrench'),
 	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),

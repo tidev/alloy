@@ -10,8 +10,7 @@ var fs = require('fs-extra'),
 // Fix node warning
 path.existsSync = fs.existsSync || path.existsSync;
 
-var	wrench = require('wrench'),
-	spawn = require('child_process').spawn,
+var	spawn = require('child_process').spawn,
 	harnessTemplatePath = path.join(process.cwd(),'test','projects','HarnessTemplate'),
 	harnessAppPath = path.join(process.cwd(),'test','projects','Harness'),
 	targetAppPath = path.join(harnessAppPath,'app'),

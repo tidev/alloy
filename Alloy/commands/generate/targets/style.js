@@ -1,6 +1,5 @@
 var basePath = '../../../';
 var path = require('path'),
-	wrench = require('wrench'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	xml2tss = require('xml2tss'),
