@@ -3,6 +3,7 @@
 	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-Extractinglocalizationstrings
 */
 var fs = require('fs'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
 	wrench = require('wrench'),
 	CONST = require('../../common/constants'),
@@ -19,7 +20,7 @@ var valueRegex = new RegExp(searchString);
 function extractStrings() {
 	try {
 		var sourceDir = paths.app;
-		var files = wrench.readdirSyncRecursive(sourceDir);
+		var files = walkSync(sourceDir);
 		var styleSuffix = '.' + CONST.FILE_EXT.STYLE;
 		var controllerSuffix = '.' + CONST.FILE_EXT.CONTROLLER;
 		var viewSuffix = '.' + CONST.FILE_EXT.VIEW;
