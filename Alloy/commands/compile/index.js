@@ -1,6 +1,7 @@
 var ejs = require('ejs'),
 	path = require('path'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	wrench = require('wrench'),
 	vm = require('vm'),
@@ -404,7 +405,7 @@ module.exports = function(args, program) {
 		// generate runtime controllers from views
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
-			_.each(wrench.readdirSyncRecursive(theViewDir), function(view) {
+			_.each(walkSync(theViewDir), function(view) {
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -425,7 +426,7 @@ module.exports = function(args, program) {
 		// corresponding view markup
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
-			_.each(wrench.readdirSyncRecursive(theControllerDir), function(controller) {
+			_.each(walkSync(theControllerDir), function(controller) {
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));

@@ -4,6 +4,7 @@
 	not deleted and recopied after the initial compile.
 */
 var fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
 	wrench = require('wrench'),
 	platforms = require('../../../platforms/index'),
@@ -324,7 +325,7 @@ function remove(opts) {
 	}
 
 	// Let's see if we need to delete any orphan files...
-	_.each(wrench.readdirSyncRecursive(runtimePath), function(file) {
+	_.each(walkSync(runtimePath), function(file) {
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;
 		var checks, i;

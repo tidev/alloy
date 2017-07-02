@@ -1,4 +1,5 @@
 var fs = require('fs'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
 	os = require('os'),
 	wrench = require('wrench'),
@@ -124,7 +125,7 @@ describe('alloy compile', function() {
 								return;
 							}
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -151,7 +152,7 @@ describe('alloy compile', function() {
 
 						_.each(cPaths, function(cPath) {
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -173,7 +174,7 @@ describe('alloy compile', function() {
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
 					if (!fs.existsSync(genFolder)) { return; }
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
-					var files = wrench.readdirSyncRecursive(genFolder);
+					var files = walkSync(genFolder);
 
 					// FIXME: Run these comparisons on *every* OS? I assume this was due to windows newline difference?
 					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
