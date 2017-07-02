@@ -1,5 +1,5 @@
 var path = require('path'),
-	wrench = require('wrench'),
+	walkSync = require('walk-sync'),
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
@@ -30,7 +30,7 @@ function parse(node, state, args) {
 		// Make sure there's models to be used as the "src" of the Backbone class
 		var modelsPath = path.join(CU.getCompilerConfig().dir.home, CONST.DIR.MODEL);
 		var validModels;
-		if (!path.existsSync(modelsPath) || !(validModels = wrench.readdirSyncRecursive(modelsPath)).length) {
+		if (!path.existsSync(modelsPath) || !(validModels = walkSync(modelsPath)).length) {
 			U.dieWithNode(node, [
 				'You must have a valid model in your app/' + CONST.DIR.MODEL + ' folder to create a <' + nodeName + '>',
 				'Once you have a valid model, assign it like this for a singleton:',
