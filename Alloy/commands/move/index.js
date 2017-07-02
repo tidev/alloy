@@ -1,5 +1,6 @@
 var colors = require('colors'),
 	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
 	wrench = require('wrench'),
 	_ = require('../../lib/alloy/underscore')._,
@@ -28,7 +29,7 @@ function move(source, destination, callback) {
 function cleanup(args) {
 	args = args || {};
 
-	files = wrench.readdirSyncRecursive(args.path);
+	files = walkSync(args.path);
 	if (files.length === 0) {
 		fs.rmdir(args.path, function(err) {
 			if (err) {
