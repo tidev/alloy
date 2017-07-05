@@ -94,7 +94,7 @@ describe('alloy compile', function() {
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									if (file === 'testing'+sep+'ALOY-887') {
+									if (file === 'testing'+sep+'ALOY-887/') {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
@@ -119,7 +119,7 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
-							if (file === 'testing'+sep+'ALOY-887') {
+							if (file === 'testing'+sep+'ALOY-887/') {
 								// skip this test since this app forces a compile error
 								return;
 							}
@@ -139,7 +139,7 @@ describe('alloy compile', function() {
 
 					it('has no undefined style entries', function() {
 						// skip this test, since it specifically tests undefined values in TSS
-						if (file === 'testing'+sep+'ALOY-822') {
+						if (file === 'testing'+sep+'ALOY-822/') {
 							return;
 						}
 
