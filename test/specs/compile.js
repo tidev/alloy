@@ -16,12 +16,12 @@ var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
 var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 var EXCLUDE_FOLDERS = [
-	'ui'+sep+'navwindow',
-	TEST_FOLDER+sep+'ALOY-818',
-	TEST_FOLDER+sep+'ALOY-840',
-	TEST_FOLDER+sep+'ALOY-1080',
-	TEST_FOLDER+sep+'ALOY-932',
-	TEST_FOLDER+sep+'ALOY-961'
+	'ui'+sep+'navwindow/',
+	TEST_FOLDER+sep+'ALOY-818/',
+	TEST_FOLDER+sep+'ALOY-840/',
+	TEST_FOLDER+sep+'ALOY-1080/',
+	TEST_FOLDER+sep+'ALOY-932/',
+	TEST_FOLDER+sep+'ALOY-961/'
 ];
 
 /*
