@@ -2,7 +2,6 @@ var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
 	os = require('os'),
-	wrench = require('wrench'),
 	colors = require('colors'),
 	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
@@ -62,7 +61,7 @@ describe('alloy compile', function() {
 	TU.addMatchers();
 
 	// Iterate through each test app and make sure it compiles for all platforms
-	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+	_.each(walkSync(paths.apps), function(file) {
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
