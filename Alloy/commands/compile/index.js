@@ -1106,23 +1106,23 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			'alloy/backbone.js',
 			'alloy/constants.js',
 			'alloy/underscore.js',
-			'alloy/widget.js',
-			'node_modules'
+			'alloy/widget.js'
 		].concat(compileConfig.optimizingExceptions || []);
-		
+
 		// widget controllers are already optimized. It should be listed in exceptions.
 		_.each(compileConfig.dependencies, function (version, widgetName) {
 			exceptions.push('alloy/widgets/' + widgetName + '/controllers/');
 		});
-		
+
 		_.each(exceptions.slice(0), function(ex) {
 			exceptions.push(path.join(titaniumFolder, ex));
 		});
 
-		var rx = new RegExp('^(?!' + otherPlatforms.join('|') + ').+\\.js$');
+		var excludePatterns = otherPlatforms.concat(['.+node_modules']);
+		var rx = new RegExp('^(?!' + excludePatterns.join('|') + ').+\\.js$');
 		return _.filter(wrench.readdirSyncRecursive(compileConfig.dir.resources), function(f) {
 			return rx.test(f) && !_.find(exceptions, function(e) {
-				return f.indexOf(e) !== -1;
+				return f.indexOf(e) === 0;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
 		});
 	}
