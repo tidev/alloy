@@ -50,11 +50,11 @@ exports.parse = function(node, state) {
 		}
 
 		tempRes.code += U.evaluateTemplate('Ti.Android.ActionBar.js', {
-				parent: state.parent.symbol || CONST.PARENT_SYMBOL_VAR,
-				code: code,
-				eventObject: eventObject,
-				openFunc: CU.generateUniqueId()
-			});
+			parent: state.parent.symbol || CONST.PARENT_SYMBOL_VAR,
+			code: code,
+			eventObject: eventObject,
+			openFunc: CU.generateUniqueId()
+		});
 	}
 	return {
 		parent: {},
