@@ -21,7 +21,7 @@ exports.parse = function(node, state) {
 	var tempRes = require('./Alloy.Abstract._ItemContainer').parse(node, state);
 
 	//Only if the toolbar is passed as an ActionBar to the activity
-	if (state.parent.node.getAttribute('customToolbar') === node.getAttribute('id')) {
+	if (state.parent && state.parent.node && state.parent.node.getAttribute('customToolbar') === node.getAttribute('id')) {
 
 		var activityTssStyles = _.filter(state.styles, function(elem) {
 			// generates a sorted array of styles filtered to include only elements
