@@ -376,7 +376,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 				},
 				postCode;
 
-			if (args.fullname === 'Alloy.Widget') {
+			if (_.contains(['Alloy.Widget', 'Alloy.Require'], args.fullname)) {
 				eventObj.obj = state.controller;
 			}
 
