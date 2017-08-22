@@ -1159,17 +1159,23 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
+	function arrayConcatMerger(objValue, srcValue) {
+		if (_.isArray(objValue)) {
+			return objValue.concat(srcValue);
+		}
+	}
+
 	function transformFiles(alldone) {
 		async.whilst(
 			function() { return (files = _.difference(getJsFiles(), lastFiles)).length > 0; },
 			function(next) {
 				async.each(files, function(file, callback) {
-					var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
+					var options = _.mergeWith(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 							plugins: [
 								[require('./ast/builtins-plugin'), compileConfig],
 								[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
 							]
-						}),
+						}, arrayConcatMerger),
 						fullpath = path.join(compileConfig.dir.resources, file);
 
 					logger.info('- ' + file);
