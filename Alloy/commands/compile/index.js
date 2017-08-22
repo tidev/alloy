@@ -205,13 +205,13 @@ module.exports = function(args, program) {
 	logger.debug('----- BASE RUNTIME FILES -----');
 	U.installPlugin(path.join(alloyRoot, '..'), paths.project);
 
-	// copy in all lib resources from alloy module, exclude backbone dir
+	// copy in all lib resources from alloy module, exclude backbone and lodash dirs
 	updateFilesWithBuildLog(
 		path.join(alloyRoot, 'lib'),
 		path.join(paths.resources, titaniumFolder),
 		{
 			rootDir: paths.project,
-			filter: new RegExp('^alloy[\\/\\\\]backbone([\\/\\\\]|$)'),
+			filter: new RegExp('^alloy[\\/\\\\](backbone|lodash)([\\/\\\\]|$)'),
 			exceptions: _.map(_.difference(CONST.ADAPTERS, compileConfig.adapters), function(a) {
 				return path.join('alloy', 'sync', a + '.js');
 			}),
@@ -229,6 +229,18 @@ module.exports = function(args, program) {
 			'backbone.js'
 		),
 		path.join(paths.resources, titaniumFolder, 'alloy', 'backbone.js')
+	);
+
+	// Copy the version of lodash that is specified in config.json
+	U.copyFileSync(
+		path.join(
+			alloyRoot, 'lib', 'alloy', 'lodash',
+			(_.contains(CONST.SUPPORTED_LODASH_VERSIONS, compileConfig.lodash))
+				? compileConfig.lodash
+				: CONST.DEFAULT_LODASH_VERSION,
+			'lodash.js'
+		),
+		path.join(paths.resources, titaniumFolder, 'alloy', 'lodash.js')
 	);
 
 	if (restrictionPath === null) {
