@@ -1,6 +1,5 @@
 var path = require('path'),
-	fs = require('fs'),
-	wrench = require('wrench'),
+	fs = require('fs-extra'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
 	_ = require('../../../lib/alloy/underscore')._,
@@ -59,7 +58,7 @@ module.exports = function(name, args, program) {
 	// write out the model file
 	var modelDir = path.join(paths.app, 'models');
 	var modelFile = path.join(modelDir, name + '.' + CONST.FILE_EXT.MODEL);
-	wrench.mkdirSyncRecursive(modelDir);
+	fs.mkdirpSync(modelDir);
 	fs.writeFileSync(modelFile, code);
 
 	logger.info('Generated model description named "' + name + '" to file "' + modelFile + '"');

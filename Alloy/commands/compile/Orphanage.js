@@ -3,9 +3,9 @@
 	on subsequent compiles. For example, the base client-side lib, alloy.js, is
 	not deleted and recopied after the initial compile.
 */
-var fs = require('fs'),
+var fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
-	wrench = require('wrench'),
 	platforms = require('../../../platforms/index'),
 	logger = require('../../logger'),
 	CONST = require('../../common/constants'),
@@ -324,7 +324,7 @@ function remove(opts) {
 	}
 
 	// Let's see if we need to delete any orphan files...
-	_.each(wrench.readdirSyncRecursive(runtimePath), function(file) {
+	_.each(walkSync(runtimePath), function(file) {
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;
 		var checks, i;
@@ -363,9 +363,9 @@ function remove(opts) {
 			if (targetStat.isDirectory()) {
 				if (opts.widgetId) {
 					// remove the widget's folder
-					wrench.rmdirSyncRecursive(path.resolve(runtimeFullpath, '..'), true);
+					fs.removeSync(path.resolve(runtimeFullpath, '..'));
 				} else {
-					wrench.rmdirSyncRecursive(runtimeFullpath, true);
+					fs.removeSync(runtimeFullpath);
 				}
 			} else {
 				fs.unlinkSync(runtimeFullpath);
