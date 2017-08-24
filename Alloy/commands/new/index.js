@@ -69,12 +69,14 @@ module.exports = function(args, program) {
 	// add the default app.tss file
 	U.copyFileSync(path.join(paths.template, CONST.GLOBAL_STYLE), path.join(paths.app, CONST.DIR.STYLE, CONST.GLOBAL_STYLE));
 
-	// copy DefaultIcon.png to project root
+	// copy DefaultIcon.png to app directory
 	fs.readdirSync(templatesDir).forEach(function (name) {
 		if (/^DefaultIcon(\-\w+)?\.png$/.test(name)) {
-			U.copyFileSync(path.join(templatesDir, name), path.join(paths.project, name));
+			U.copyFileSync(path.join(templatesDir, name), path.join(paths.app, name));
 		}
 	});
+	// remove DefaultIcon.png from project root
+	fs.removeSync(path.join(paths.project, 'DefaultIcon.png'));
 
 	// copy Resources platform-specific directories to assets
 	U.copyFileSync(
