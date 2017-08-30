@@ -231,6 +231,11 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.UI.iPad.Popover
 	ContentView: 'Ti.UI.iPad.Popover',
 
+	DrawerLayout: 'Ti.UI.Android',
+	LeftView: 'Ti.UI.Android.DrawerLayout',
+	CenterView: 'Ti.UI.Android.DrawerLayout',
+	RightView: 'Ti.UI.Android.DrawerLayout',
+
 	// Table and List proxy properties
 	FooterView: '_ProxyProperty._Lists',
 	HeaderView: '_ProxyProperty._Lists',
