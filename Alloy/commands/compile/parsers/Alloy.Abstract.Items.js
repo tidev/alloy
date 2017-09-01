@@ -4,7 +4,7 @@ exports.parse = function(node, state) {
 	_.extend(state, {
 		itemArrayDefinition: {
 			parents: [
-				'Ti.UI.iOS.Toolbar',
+				'Ti.UI.Toolbar',
 				'Ti.UI.iOS.MenuPopup'
 			],
 			children: [

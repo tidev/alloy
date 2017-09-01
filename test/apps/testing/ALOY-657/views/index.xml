@@ -1,6 +1,6 @@
 <Alloy>
 	<Window>
-		<Toolbar>
+		<Toolbar platform="ios">
 		    <Items>
 		        <FixedSpace/>
 		        <Button systemButton="Titanium.UI.iPhone.SystemButton.EDIT"/>
