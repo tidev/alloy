@@ -17,6 +17,7 @@ var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 var EXCLUDE_FOLDERS = [
 	'ui'+sep+'navwindow/',
+	'ui'+sep+'toolbar/',
 	TEST_FOLDER+sep+'ALOY-818/',
 	TEST_FOLDER+sep+'ALOY-840/',
 	TEST_FOLDER+sep+'ALOY-1080/',
