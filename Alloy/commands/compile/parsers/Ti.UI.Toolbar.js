@@ -1,8 +1,17 @@
 var _ = require('../../../lib/alloy/underscore')._,
+	tiapp = require('../../../tiapp'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
+	var platform = CU.getCompilerConfig().alloyConfig.platform;
+	if (tiapp.version.lt(tiapp.getSdkVersion(), '6.2.0')) {
+		if (platform !== 'ios') {
+			U.die('Ti.UI.Toolbar requires Titanium 6.2.0+');
+		}
+		node.setAttribute('ns', 'Ti.UI.iOS');
+	}
+
 	var eventObject = 'e',
 		code = '',
 		xmlStyles = {};
@@ -17,10 +26,9 @@ exports.parse = function(node, state) {
 		}
 	});
 
-
 	var tempRes = require('./Alloy.Abstract._ItemContainer').parse(node, state);
 
-	// Only if the Ti.UI.Toolvar is passed as an ActionBar to the activity
+	// Only if the Ti.UI.Toolbar is passed as an ActionBar to the activity
 	if (state.parent && state.parent.node && state.parent.node.getAttribute('customToolbar') === node.getAttribute('id')) {
 
 		var activityTssStyles = _.filter(state.styles, function(elem) {

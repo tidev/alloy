@@ -9,7 +9,7 @@
 
 				<!-- uses images and/or widths -->
 				<Label width="40" image="/KS_nav_ui.png"/>
-				
+
 				<!-- set as disabled -->
 				<Label enabled="false">disabled</Label>
 
@@ -17,12 +17,12 @@
 				<!-- <Label/> -->
 			</Labels>
 
-			<!-- 
+			<!--
 				additional views get added as normal, over the labels, as
 			    per the documentation of the add() function.
 			 -->
 			<!-- <View opacity="0.25" backgroundColor="#a00" width="50%"/> -->
 		</ButtonBar>
-		<Label platform="android,mobileweb">Ti.UI.iOS.Toolbar only supported on iOS</Label>
+		<Label platform="android,mobileweb">Ti.UI.ButtonBar only supported on iOS</Label>
 	</Window>
 </Alloy>
