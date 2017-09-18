@@ -2,6 +2,7 @@ var Alloy = require('/alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
+<%= ES6Mod %>
 <%= WPATH %>
 
 function __processArg(obj, key) {

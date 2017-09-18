@@ -910,7 +910,8 @@ exports.loadController = function(file) {
 	var code = {
 			parentControllerName: '',
 			controller: '',
-			pre: ''
+			pre: '',
+			es6mods: ''
 		},
 		contents;
 
@@ -924,9 +925,11 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
-	// get the base controller for this controller
-	code.controller = contents;
-	code.parentControllerName = astController.getBaseController(contents, file);
+	// get the base controller for this controller, also process import/export statements
+	var controller = astController.processController(contents, file);
+	code.controller = controller.code;
+	code.parentControllerName = controller.base;
+	code.es6mods = controller.es6mods;
 
 	return code;
 };

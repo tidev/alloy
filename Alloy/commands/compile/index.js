@@ -604,7 +604,8 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'),
 				{ WIDGETID: manifest.id }
 			),
-			__MAPMARKER_CONTROLLER_CODE__: ''
+			__MAPMARKER_CONTROLLER_CODE__: '',
+			ES6Mod: ''
 		},
 		widgetDir = dirname ? path.join(CONST.DIR.COMPONENT, dirname) : CONST.DIR.COMPONENT,
 		widgetStyleDir = dirname ? path.join(CONST.DIR.RUNTIME_STYLE, dirname) :
@@ -832,6 +833,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		cCode.parentControllerName : CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] || "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
+	template.ES6Mod += cCode.es6mods;
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping, modelVar) {
