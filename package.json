@@ -33,6 +33,7 @@
   "dependencies": {
     "async": "^2.4.0",
     "babel-core": "^6.24.1",
+    "babel-generator": "^6.26.0",
     "babel-traverse": "^6.23.1",
     "babel-types": "^6.23.0",
     "babylon": "^6.16.1",
