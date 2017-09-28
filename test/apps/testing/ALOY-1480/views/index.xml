@@ -1,0 +1,16 @@
+<Alloy>
+	<Model src="model-a" />
+	<Model src="modelb" />
+	<Collection src="model-a" />
+	<Window backgroundColor="white" layout="vertical">
+		<Label top="20" font="{['model-a'].font}" text="{['model-a'].greeting} {modelb['mix-it']}" />
+		<Label font="{['model-a'].font}" text="well {['model-a'].greeting}" />
+		<Label font="{['model-a'].font}" text="{['model-a'].greeting} {modelb.deep.link}!" />
+		<Label font="{['model-a'].font}" text="well {['model-a'].greeting} there's {['model-a'].subject}!" />
+		<ListView height="Ti.UI.SIZE" canScroll="false">
+			<ListSection dataCollection="model-a">
+				<ListItem font="{font}" title="well {greeting} there {subject}!" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

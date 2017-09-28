@@ -8,7 +8,7 @@ if (Alloy.CFG.useAlloyModel) {
 	collection = new Backbone.Collection();
 	var models = [];
 	for (var i = 0; i < 20; i++) {
-		models.push({text: 'label ' + (i+1)});
+		models.push({text: 'label ' + (i + 1)});
 	}
 	collection.reset(models);
 }

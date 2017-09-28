@@ -1,11 +1,11 @@
 /*
 	Corresponds to the `alloy generate *` command.
-	http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
+	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
 
 	Actual component generators are defined in the targets folder
 */
 var path = require('path'),
-	_ = require("../../lib/alloy/underscore")._,
+	_ = require('../../lib/alloy/underscore')._,
 	U = require('../../utils'),
 	CONST = require('../../common/constants');
 
@@ -30,7 +30,7 @@ function generate(args, program) {
 
 	// grab the name
 	if (!name && target !== 'jmk' &&
-		!(target === "style" && program.all)) {
+		!(target === 'style' && program.all)) {
 		U.die('generate requires a NAME such as third argument');
 	}
 

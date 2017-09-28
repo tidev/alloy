@@ -16,11 +16,11 @@ function Controller() {
         var __alloyId1 = [];
         for (var i = 0; len > i; i++) {
             var __alloyId2 = models[i];
-            __alloyId2.__transform = {};
+            __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = {
                 properties: {
-                    title: "undefined" != typeof __alloyId2.__transform["name"] ? __alloyId2.__transform["name"] : __alloyId2.get("name"),
-                    modelId: "undefined" != typeof __alloyId2.__transform["id"] ? __alloyId2.__transform["id"] : __alloyId2.get("id")
+                    title: __alloyId2.__transform.name,
+                    modelId: __alloyId2.__transform.id
                 }
             };
             __alloyId1.push(__alloyId4);
@@ -45,19 +45,13 @@ function Controller() {
         });
         Ti.API.info('Assert single info model returned with "{id:' + modelId + '}": ' + (pass ? green("OK") : red("FAIL")));
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -81,18 +75,18 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.index.add($.__views.__alloyId0);
-    showInfo ? $.__views.__alloyId0.addEventListener("itemclick", showInfo) : __defers["$.__views.__alloyId0!itemclick!showInfo"] = true;
+    showInfo ? $.addListener($.__views.__alloyId0, "itemclick", showInfo) : __defers["$.__views.__alloyId0!itemclick!showInfo"] = true;
     exports.destroy = function() {
-        __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
+        __alloyId5 && __alloyId5.off("fetch destroy change add remove reset", __alloyId6);
     };
     _.extend($, $.__views);
     var names = Alloy.Collections.name;
     names.fetch();
     $.index.open();
-    __defers["$.__views.__alloyId0!itemclick!showInfo"] && $.__views.__alloyId0.addEventListener("itemclick", showInfo);
+    __defers["$.__views.__alloyId0!itemclick!showInfo"] && $.addListener($.__views.__alloyId0, "itemclick", showInfo);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

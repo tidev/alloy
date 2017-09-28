@@ -16,14 +16,14 @@ function Controller() {
         var __alloyId7 = [];
         for (var i = 0; len > i; i++) {
             var __alloyId8 = models[i];
-            __alloyId8.__transform = {};
+            __alloyId8.__transform = _.isFunction(__alloyId8.transform) ? __alloyId8.transform() : __alloyId8.toJSON();
             var __alloyId10 = {
                 template: "template",
                 title: {
-                    text: "undefined" != typeof __alloyId8.__transform["title"] ? __alloyId8.__transform["title"] : __alloyId8.get("title")
+                    text: __alloyId8.__transform.title
                 },
                 properties: {
-                    searchableText: "undefined" != typeof __alloyId8.__transform["title"] ? __alloyId8.__transform["title"] : __alloyId8.get("title")
+                    searchableText: __alloyId8.__transform.title
                 }
             };
             __alloyId7.push(__alloyId10);
@@ -36,19 +36,13 @@ function Controller() {
         for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
         return result;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -69,7 +63,7 @@ function Controller() {
             height: Ti.UI.SIZE,
             color: "#000",
             bindId: "title",
-            left: "5"
+            left: 5
         }
     };
     __alloyId5.push(__alloyId6);
@@ -92,12 +86,12 @@ function Controller() {
         templates: __alloyId2,
         searchView: $.__views.searchList,
         id: "listView",
-        top: "0",
+        top: 0,
         defaultItemTemplate: "template"
     });
     $.__views.index.add($.__views.listView);
     exports.destroy = function() {
-        __alloyId11.off("fetch destroy change add remove reset", __alloyId12);
+        __alloyId11 && __alloyId11.off("fetch destroy change add remove reset", __alloyId12);
     };
     _.extend($, $.__views);
     var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -112,6 +106,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

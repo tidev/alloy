@@ -79,9 +79,9 @@ module.exports = function(opts) {
 		for (i = 0; i < messages.length; i++) {
 			print(indent(messages[i], 2));
 		}
-		for (i = 0; i < stackTraces.length; i++) {
-			print(indent(stackTraces[i], 2));
-		}
+		// for (i = 0; i < stackTraces.length; i++) {
+		// 	print(indent(stackTraces[i], 2));
+		// }
 	}
 
 	function finished(elapsed) {

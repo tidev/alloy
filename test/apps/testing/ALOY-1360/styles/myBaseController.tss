@@ -1,0 +1,8 @@
+'Window': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+},
+'Label': {
+	color: '#000',
+},

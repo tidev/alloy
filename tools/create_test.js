@@ -7,7 +7,7 @@ var path = require('path'),
 var EOL = os.EOL;
 
 // ensure we're targeting the right folder
-var TESTING_FOLDER = path.join(__dirname,'..','test','apps','testing');
+var TESTING_FOLDER = path.join(__dirname, '..', 'test', 'apps', 'testing');
 if (!fs.existsSync(TESTING_FOLDER)) {
 	die('"testing" folder does not exist at ' + rel(TESTING_FOLDER));
 }
@@ -20,7 +20,7 @@ if (!appName) {
 }
 
 // make sure this doesn't already exist, then create it
-var pathToTest = path.join(TESTING_FOLDER,appName);
+var pathToTest = path.join(TESTING_FOLDER, appName);
 if (fs.existsSync(pathToTest)) {
 	die('Test app "' + appName + '" already exists at "' + rel(pathToTest) + '"');
 }
@@ -29,7 +29,7 @@ console.log('* Created folder ' + YELLOW(rel(pathToTest)));
 
 var files = [
 	{
-		folder: path.join(pathToTest,'views'),
+		folder: path.join(pathToTest, 'views'),
 		file: 'index.xml',
 		data:
 		'<Alloy>' + EOL +
@@ -38,31 +38,31 @@ var files = [
 		'</Alloy>'
 	},
 	{
-		folder: path.join(pathToTest,'controllers'),
+		folder: path.join(pathToTest, 'controllers'),
 		file: 'index.js',
 		data: '$.index.open();'
 	},
 	{
-		folder: path.join(pathToTest,'styles'),
+		folder: path.join(pathToTest, 'styles'),
 		file: 'index.tss',
 		data:
 		"'#index': {" + EOL +
 		"\tbackgroundColor: '#fff'," + EOL +
-		"\tfullscreen: false," + EOL +
-		"\texitOnClose: true" + EOL +
-		"}"
+		'\tfullscreen: false,' + EOL +
+		'\texitOnClose: true' + EOL +
+		'}'
 	}
 ];
 
 for (var i = 0; i < files.length; i++) {
 	var o = files[i];
-	var fullpath = path.join(o.folder,o.file);
+	var fullpath = path.join(o.folder, o.file);
 	fs.mkdirSync(o.folder, 0755);
 	fs.writeFileSync(fullpath, o.data);
 	console.log('* Created file ' + YELLOW(rel(fullpath)));
 }
 console.log(GREEN('test app ' + appName + ' successfully created.'));
-console.log('')
+console.log('');
 console.log(YELLOW('Make sure to create _generated code when you are done with: '));
 console.log('   node tools/create_generated_code.js testing/' + appName);
 

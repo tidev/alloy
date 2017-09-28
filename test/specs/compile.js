@@ -1,7 +1,7 @@
 var fs = require('fs'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
 	os = require('os'),
-	wrench = require('wrench'),
 	colors = require('colors'),
 	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
@@ -16,12 +16,13 @@ var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
 var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 var EXCLUDE_FOLDERS = [
-	'ui'+sep+'navwindow',
-	TEST_FOLDER+sep+'ALOY-818',
-	TEST_FOLDER+sep+'ALOY-840',
-	TEST_FOLDER+sep+'ALOY-1080',
-	TEST_FOLDER+sep+'ALOY-932',
-	TEST_FOLDER+sep+'ALOY-961'
+	'ui'+sep+'navwindow/',
+	'ui'+sep+'toolbar/',
+	TEST_FOLDER+sep+'ALOY-818/',
+	TEST_FOLDER+sep+'ALOY-840/',
+	TEST_FOLDER+sep+'ALOY-1080/',
+	TEST_FOLDER+sep+'ALOY-932/',
+	TEST_FOLDER+sep+'ALOY-961/'
 ];
 
 /*
@@ -61,7 +62,7 @@ describe('alloy compile', function() {
 	TU.addMatchers();
 
 	// Iterate through each test app and make sure it compiles for all platforms
-	_.each(wrench.readdirSyncRecursive(paths.apps), function(file) {
+	_.each(walkSync(paths.apps), function(file) {
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
 
@@ -94,10 +95,15 @@ describe('alloy compile', function() {
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									if (file === 'testing'+sep+'ALOY-887') {
+									if (file === 'testing'+sep+'ALOY-887/') {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
+										// Spit out stderr/stdout, so we can see *why* it failed
+										if (this.output.error) {
+											console.error(this.output.stderr);
+											console.log(this.output.stdout);
+										}
 										expect(this.output.error).toBeFalsy();
 									}
 								},
@@ -114,12 +120,12 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
-							if (file === 'testing'+sep+'ALOY-887') {
+							if (file === 'testing'+sep+'ALOY-887/') {
 								// skip this test since this app forces a compile error
 								return;
 							}
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -134,7 +140,7 @@ describe('alloy compile', function() {
 
 					it('has no undefined style entries', function() {
 						// skip this test, since it specifically tests undefined values in TSS
-						if (file === 'testing'+sep+'ALOY-822') {
+						if (file === 'testing'+sep+'ALOY-822/') {
 							return;
 						}
 
@@ -146,7 +152,7 @@ describe('alloy compile', function() {
 
 						_.each(cPaths, function(cPath) {
 							if (!fs.existsSync(cPath)) { return; }
-							var files = wrench.readdirSyncRecursive(cPath);
+							var files = walkSync(cPath);
 							_.each(files, function(file) {
 								var fullpath = path.join(cPath,file);
 								if (!fs.statSync(fullpath).isFile() ||
@@ -168,9 +174,10 @@ describe('alloy compile', function() {
 					var genFolder = path.join(paths.apps,file,GEN_FOLDER,platform.platform);
 					if (!fs.existsSync(genFolder)) { return; }
 					var hrFolder = path.join(paths.harness, 'Resources', platform.titaniumFolder);
-					var files = wrench.readdirSyncRecursive(genFolder);
+					var files = walkSync(genFolder);
 
-					os.platform() === 'darwin' && _.each(files, function(gFile) {
+					// FIXME: Run these comparisons on *every* OS? I assume this was due to windows newline difference?
+					/*os.platform() === 'darwin'*/ false && _.each(files, function(gFile) {
 						var goodFile = path.join(genFolder,gFile);
 						if (!fs.statSync(goodFile).isFile()) { return; }
 						var newFile = path.join(hrFolder,gFile);
@@ -182,17 +189,17 @@ describe('alloy compile', function() {
 						it('matches known good generated code for ' + gFile.yellow, function () {
 							var goodFileContents = fs.readFileSync(goodFile, 'utf8');
 							var newFileContents = fs.readFileSync(newFile, 'utf8');
-
-/*						if(goodFileContents !== newFileContents) {
-							// Cheat way to re-generate known-good files
-							// uncomment this block, run jake test:spec[compile.js]
-							// then re-comment this block. jake test:all should now be happy
-							console.log('>>>> writing a new goodFile');
-							fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
-							goodFileContents = fs.readFileSync(goodFile, 'utf8');
-						}
+/*
+							if(goodFileContents !== newFileContents) {
+								// Cheat way to re-generate known-good files
+								// uncomment this block, run jake test:spec[compile.js]
+								// then re-comment this block. jake test:all should now be happy
+								console.log('>>>> writing a new goodFile');
+								fs.createReadStream(newFile).pipe(fs.createWriteStream(goodFile));
+								goodFileContents = fs.readFileSync(goodFile, 'utf8');
+							}
 */
-							expect(goodFileContents === newFileContents).toBeTruthy();
+							expect(newFileContents).toNotDiff(goodFileContents, gFile);
 						});
 					});
 				});

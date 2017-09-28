@@ -1,7 +1,9 @@
 <Alloy>
 	<Collection src="book"/>
 	<Window backgroundColor="white" exitOnClose="true">
-		<ActionBar onHomeIconItemSelected="doClick"/>
+		<Menu>
+			<MenuItem title="Add" onClick="doClick" showAsAction="Ti.Android.SHOW_AS_ACTION_ALWAYS" />
+		</Menu>
 		<Picker top="0">
 			<Column dataCollection="book">
 				<Row title="{title}"/>

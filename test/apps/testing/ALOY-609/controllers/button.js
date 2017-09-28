@@ -5,7 +5,7 @@ function doTouchstart(e) {
 	e.source.backgroundColor = '#333';
 
 	var obj = {};
-	switch(label) {
+	switch (label) {
 		case 'reset':
 			break;
 		case 'template3':

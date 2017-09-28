@@ -1,4 +1,4 @@
-var Alloy = require('alloy'),
+var Alloy = require('/alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
@@ -71,9 +71,9 @@ var Controller = function() {
 	for (each in views) {
 		var view = views[each];
 		console.log(view.id);
-	}		 
+	}
 
-		 * 				
+		 *
 		 *
 		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
 		 */
@@ -92,7 +92,7 @@ var Controller = function() {
 		 * with the `id` of "loginWin" and then calls its [open()](Titanium.UI.Window) method.
 
 	var loginWindow = $.getView('loginWin');
-	loginWindow.open();		 
+	loginWindow.open();
 		 *
 		 * @param {String} [id] ID of the view to return.
 		 * @return {Titanium.UI.View/Alloy.Controller}
@@ -133,7 +133,7 @@ var Controller = function() {
 			</Tab>
 		</TabGroup>
 		<View id="otherview"></View>
-	</Alloy>		 
+	</Alloy>
 
 		* The following view-controller outputs the id of each view in the hierarchy.
 
@@ -141,7 +141,7 @@ var Controller = function() {
 	for (each in views) {
 		var view = views[each];
 		console.log(view.id);
-	}	
+	}
 
 	[INFO] :   win1
 	[INFO] :   label1
@@ -174,9 +174,9 @@ var Controller = function() {
 
 	$.dialog.addEventListener('close', function() {
 		$.destroy();
-	});		 
+	});
 		 */
-		destroy: function(){
+		destroy: function() {
 			// destroy() is defined during the compile process based on
 			// the UI components and binding contained within the controller.
 		},
@@ -224,7 +224,7 @@ var Controller = function() {
 		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
 		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
 		 * #### Examples
-		 * The following creates a new style object that is passed as a parameter 
+		 * The following creates a new style object that is passed as a parameter
 		 * to the {@link Titanium.UI#method-createLabel Ti.UI.createLabel()} method.
 
 	var styleArgs = {
@@ -236,7 +236,7 @@ var Controller = function() {
 		borderColor: '#000'
 	};
 	var styleObject = $.createStyle(styleArgs);
-	testLabel = Ti.UI.createLabel(styleObject);	 
+	testLabel = Ti.UI.createLabel(styleObject);
 
 		 * The next example uses the {@link Titanium#method-applyProperties applyProperties()} method
 		 * to apply a style object to an existing Button control (button not shown).
@@ -289,9 +289,9 @@ The 'redbg' and 'bigger' classes are shown below:
 	}
 	".bigger": {
 		font : {
-		   fontSize: '36'    
+		   fontSize: '36'
 		}
-	}	
+	}
 
 		 * @param {Object} proxy View object to which to add class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to apply.
@@ -352,8 +352,8 @@ The 'redbg' and 'bigger' classes are shown below:
 		/**
 		 * @method updateViews
 		 * Applies a set of properties to view elements associated with this controller.
-		 * This method is useful for setting properties on repeated elements such as 
-		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller 
+		 * This method is useful for setting properties on repeated elements such as
+		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller
 		 * for those child controllers.
 		 * #### Example
 		 * The following example uses this method to update a Label inside a TableViewRow object
@@ -367,7 +367,7 @@ The 'redbg' and 'bigger' classes are shown below:
 	  	"#theLabel": {
 	  		text: "I am row #" + i
 	  	}
-	  });  
+	  });
 	  $.tableView.appendRow(row.getView());
 	};
 
@@ -377,19 +377,19 @@ The 'redbg' and 'bigger' classes are shown below:
 		<TableViewRow>
 			<Label id="theLabel"></Label>
 		</TableViewRow>
-	</Alloy>	 
+	</Alloy>
 
 			 * XML view: views/index.xml
 
 	<TableView id="tableView">
-	</TableView>			 
+	</TableView>
 		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
 		 * @since 1.4.0
 
 		 */
 		updateViews: function(args) {
 			var views = this.getViews();
-			if(_.isObject(args)) {
+			if (_.isObject(args)) {
 				_.each(_.keys(args), function(key) {
 					var elem = views[key.substring(1)];
 					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.applyProperties === 'function') {
@@ -403,16 +403,19 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method addListener
-		 * Add a tracked event listeners to a view proxy object.
+		 * Adds a tracked event listeners to a view proxy object.
+		 * By default, any event listener declared in XML is tracked by Alloy.
 		 *
 		 * #### Example
-		 * addEventListener wrapper, add an event to tracking target.
+		 * Add an event to the tracking target.
 
 	$.addListener($.aView, 'click', onClick);
 
-		 * @param {Object} [proxy] Proxy view object to listen to.
-		 * @param {String} [type] Event type to listen to.
-		 * @param {Function} [callback] Callback to receive event.
+		 * @param {Object} proxy Proxy view object to listen to.
+		 * @param {String} type Name of the event.
+		 * @param {Function} callback Callback function to invoke when the event is fired.
+		 * @returns {String} ID attribute of the view object.  If one does not exist, Alloy will create a unique ID.
+		 * @since 1.7.0
 		 */
 		addListener: function(proxy, type, callback) {
 			if (!proxy.id) {
@@ -437,16 +440,20 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method getListener
-		 * Get the event listeners associated with a combination of
-		 * view proxy object, event type.
+		 * Gets all the tracked event listeners of the view-controller or
+		 * only the ones specified by the parameters.  Passing no parameters,
+		 * retrieves all tracked event listeners. Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
 		 *
 		 * #### Example
-		 * Get the all events.
+		 * Get all events bound to the view-controller.
 
 	var listener = $.getListener();
 
-		 * @param {Object} [proxy] Proxy view object to remove from.
-		 * @param {String} [type] Event type to remove.
+		 * @param {Object} [proxy] Proxy view object.
+		 * @param {String} [type] Name of the event.
+		 * @returns {Array<TrackedEventListener>} List of tracked event listeners.
+		 * @since 1.7.0
 		 */
 
 		getListener: function(proxy, type) {
@@ -462,24 +469,28 @@ The 'redbg' and 'bigger' classes are shown below:
 
 		/**
 		 * @method removeListener
-		 * Remove the event listeners associated with a combination of
-		 * view proxy object, event type and/or callback.
+		 * Removes all tracked event listeners or only the ones
+		 * specified by the parameters. Passing no parameters,
+		 * removes all tracked event listeners.  Set a parameter to `null`
+		 * if you do not want to restrict the match to that parameter.
 		 *
 		 * #### Example
-		 * When is closed window, remove the all events.
+		 * When the window is closed, remove all tracked event listeners.
 
 	<Alloy>
 		<Window onOpen="doOpen" onClose="doClose">
 			<Label id="label" onClick="doClick">Hello, world</Label>
 		</Window>
-	</Alloy>		 
+	</Alloy>
 
 	function doClose() {
 		$.removeListener();
 	}
-		 * @param {Object} [proxy] Proxy view object to remove from.
-		 * @param {String} [type] Event type to remove.
+		 * @param {Object} [proxy] Proxy view object to remove event listeners from.
+		 * @param {String} [type] Name of the event to remove.
 		 * @param {Function} [callback] Callback to remove.
+		 * @returns {Alloy.Controller} Controller instance.
+		 * @since 1.7.0
 		 */
 		removeListener: function(proxy, type, callback) {
 			_.each(this.__events, function(event, index) {

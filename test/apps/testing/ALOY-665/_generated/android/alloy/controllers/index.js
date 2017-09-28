@@ -11,19 +11,13 @@ function Controller() {
     function doSwipe(e) {
         Ti.API.info("swipe: " + e.direction);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -36,16 +30,16 @@ function Controller() {
     });
     $.__views.index && $.addTopLevelView($.__views.index);
     try {
-        $.__views.index.addEventListener("touchstart", touch.start);
+        $.addListener($.__views.index, "touchstart", touch.start);
     } catch (e) {
         __defers["$.__views.index!touchstart!touch.start"] = true;
     }
     try {
-        $.__views.index.addEventListener("touchend", touch["end"].func);
+        $.addListener($.__views.index, "touchend", touch["end"].func);
     } catch (e) {
         __defers["$.__views.index!touchend!touch['end'].func"] = true;
     }
-    doSwipe ? $.__views.index.addEventListener("swipe", doSwipe) : __defers["$.__views.index!swipe!doSwipe"] = true;
+    doSwipe ? $.addListener($.__views.index, "swipe", doSwipe) : __defers["$.__views.index!swipe!doSwipe"] = true;
     $.__views.label = Ti.UI.createLabel({
         touchEnabled: false,
         color: "#000",
@@ -62,22 +56,22 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var touch = {
-        start: function() {
+        start: function(e) {
             Ti.API.info("touchstart");
         },
         end: {
-            func: function() {
+            func: function(e) {
                 Ti.API.info("touchend");
             }
         }
     };
     $.index.open();
-    __defers["$.__views.index!touchstart!touch.start"] && $.__views.index.addEventListener("touchstart", touch.start);
-    __defers["$.__views.index!touchend!touch['end'].func"] && $.__views.index.addEventListener("touchend", touch["end"].func);
-    __defers["$.__views.index!swipe!doSwipe"] && $.__views.index.addEventListener("swipe", doSwipe);
+    __defers["$.__views.index!touchstart!touch.start"] && $.addListener($.__views.index, "touchstart", touch.start);
+    __defers["$.__views.index!touchend!touch['end'].func"] && $.addListener($.__views.index, "touchend", touch["end"].func);
+    __defers["$.__views.index!swipe!doSwipe"] && $.addListener($.__views.index, "swipe", doSwipe);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

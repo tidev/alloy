@@ -10,11 +10,19 @@ function parse(node, state, args) {
 	if (!state.itemsArray) {
 		U.die('Invalid use of <ButtonName>. Must be the child of <ButtonNames>.');
 	}
-	var string = U.trim(U.XML.getNodeText(node) || '').replace(/"/g,'\\"');
+
+	var nodeText = U.trim(U.XML.getNodeText(node) || '');
+	var returnCode = '';
+
+	if (U.isLocaleAlias(nodeText)) {
+		returnCode = '.push(' + nodeText + ');';
+	} else {
+		returnCode = '.push("' + nodeText.replace(/"/g, '\\"') + '");';
+	}
 
 	return {
 		parent: {},
 		styles: state.styles,
-		code: state.itemsArray + '.push("' + string + '");'
+		code: state.itemsArray + returnCode
 	};
 }

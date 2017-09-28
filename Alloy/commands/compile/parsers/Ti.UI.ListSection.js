@@ -115,7 +115,7 @@ function parse(node, state, args) {
 
 		// fill in poxy property templates, if present
 		if (isControllerNode) {
-			_.each(proxyProperties, function(v,k) {
+			_.each(proxyProperties, function(v, k) {
 				proxyProperties[k] = _.template(v, {
 					controllerSymbol: controllerSymbol
 				});
@@ -150,7 +150,7 @@ function parse(node, state, args) {
 		localModel = localModel || CU.generateUniqueId();
 		var sps = sectionState.parent.symbol;
 
-		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 			// if this node or a parent has set the formFactor attribute
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));

@@ -18,6 +18,7 @@ var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.ListSection',
 	'Alloy.Abstract.Templates',
+	'Ti.UI.iOS.PreviewContext'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 var ORDER = {
@@ -36,7 +37,7 @@ function parse(node, state, args) {
 		sectionArray, templateObject;
 
 	if (isDataBound) {
-		U.dieWithNode(node, "'dataCollection' attribute should be set on <ListSection>.")
+		U.dieWithNode(node, "'dataCollection' attribute should be set on <ListSection>.");
 	}
 
 	// sort the children of the ListView
@@ -150,7 +151,7 @@ function parse(node, state, args) {
 	// the <ListView> and linked to the list via the searchView attribute
 	if (node.hasAttribute('searchView')) {
 		var attr = node.getAttribute('searchView');
-		extras.push(['searchView', '$.__views.'+attr]);
+		extras.push(['searchView', '$.__views.' + attr]);
 		node.removeAttribute('searchView');
 	}
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }

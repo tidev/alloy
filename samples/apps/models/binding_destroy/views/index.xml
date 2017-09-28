@@ -1,0 +1,26 @@
+<Alloy>
+	<!-- global reference to info model -->
+	<Model src="info"/>
+
+	<!-- global reference to movies collection -->
+	<Collection src="movies"/>
+
+	<!-- ios -->
+	<NavigationWindow id="index" platform="ios">
+		<Window>
+			<Require src="main"/>
+		</Window>
+	</NavigationWindow>
+
+	<Window id="index" platform="!ios">
+		<!-- mobileweb -->
+		<NavigationGroup id="navgroup" platform="mobileweb">
+			<Window>
+				<Require src="main"/>
+			</Window>
+		</NavigationGroup>
+
+		<!-- just use window hierarchy on android -->
+		<Require src="main" platform="android"/>
+	</Window>
+</Alloy>

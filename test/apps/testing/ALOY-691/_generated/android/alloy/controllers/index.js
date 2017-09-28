@@ -17,24 +17,18 @@ function Controller() {
         for (var d = children.length - 1; d >= 0; d--) $.__views.content.remove(children[d]);
         for (var i = 0; len > i; i++) {
             var __alloyId2 = models[i];
-            __alloyId2.__transform = {};
+            __alloyId2.__transform = _.isFunction(__alloyId2.transform) ? __alloyId2.transform() : __alloyId2.toJSON();
             var __alloyId4 = Ti.UI.createView({});
             $.__views.content.add(__alloyId4);
         }
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -54,7 +48,7 @@ function Controller() {
     var __alloyId5 = Alloy.Collections["test"] || test;
     __alloyId5.on("fetch destroy change add remove reset", render);
     exports.destroy = function() {
-        __alloyId5.off("fetch destroy change add remove reset", render);
+        __alloyId5 && __alloyId5.off("fetch destroy change add remove reset", render);
     };
     _.extend($, $.__views);
     $.index.open();
@@ -63,6 +57,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

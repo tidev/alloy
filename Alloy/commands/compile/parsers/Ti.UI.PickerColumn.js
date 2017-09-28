@@ -15,7 +15,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	var isDataBound = args[CONST.BIND_COLLECTION] ? true : false,
 		localModel,
-		rowCode = "";
+		rowCode = '';
 
 	// generate the code for the table itself
 	if (isDataBound) {
@@ -65,16 +65,16 @@ function parse(node, state, args) {
 	// finally, fill in any model-view binding code, if present
 	if (isDataBound) {
 		localModel = localModel || CU.generateUniqueId();
-		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 			// if this node or a parent has set the formFactor attribute
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
 		}
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: "var rows=[];\n_.each(" + args.symbol + ".getRows(), function(r) { " + args.symbol + ".removeRow(r);});\n",
+			pre: 'var rows=[];\n_.each(' + args.symbol + '.getRows(), function(r) { ' + args.symbol + '.removeRow(r);});\n',
 			items: rowCode,
-			post: "_.each(rows, function(row) { " + args.symbol + ".addRow(row); });"
+			post: '_.each(rows, function(row) { ' + args.symbol + '.addRow(row); });'
 		});
 	}
 

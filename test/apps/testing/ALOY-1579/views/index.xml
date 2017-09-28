@@ -1,0 +1,22 @@
+<Alloy>
+	<Window class='container'>
+		<ActionBar
+			displayHomeAsUp='true'
+			onHomeIconItemSelected='doHomeIcon' />
+		<DrawerLayout id='drawer'>
+			<LeftView>
+				<View backgroundColor='red'></View>
+			</LeftView>
+
+			<CenterView>
+				<View backgroundColor='yellow'>
+					<Button onClick='doButtonClick'>RIGHT</Button>
+				</View>
+			</CenterView>
+
+			<RightView>
+				<View backgroundColor='orange'></View>
+			</RightView>
+		</DrawerLayout>
+	</Window>
+</Alloy>

@@ -18,7 +18,8 @@ var SEARCH_PROPERTIES = [
 var REFRESH_PROPERTY = 'Ti.UI.RefreshControl';
 var VALID = [
 	'Ti.UI.TableViewRow',
-	'Ti.UI.TableViewSection'
+	'Ti.UI.TableViewSection',
+	'Ti.UI.iOS.PreviewContext'
 ];
 var ALL_VALID = _.union(PROXY_PROPERTIES, SEARCH_PROPERTIES, [REFRESH_PROPERTY], VALID);
 
@@ -35,7 +36,7 @@ function parse(node, state, args) {
 		proxyProperties = {},
 		localModel, arrayName, controllerSymbol;
 
-	if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+	if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 		// if this node or a parent has set the formFactor attribute
 		// we need to pass it to the data binding generator
 		args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
@@ -46,7 +47,7 @@ function parse(node, state, args) {
 		var config = CU.getCompilerConfig(),
 			platform = config && config.alloyConfig ? config.alloyConfig.platform : undefined;
 		if (child.nodeName === 'SearchView' && platform !== 'android') {
-			if (node.getAttribute('platform') !== 'android') {
+			if (child.getAttribute('platform') !== 'android') {
 				logger.warn([
 					'<SearchView> is only available in Android',
 					'To get rid of this warning, add platform="android" to your <SearchView> element'
@@ -54,7 +55,7 @@ function parse(node, state, args) {
 			}
 			return;
 		}
-		if(child.nodeName === 'SearchView' && !child.hasAttribute('ns')) {
+		if (child.nodeName === 'SearchView' && !child.hasAttribute('ns')) {
 			child.setAttribute('ns', 'Ti.UI.Android');
 		}
 		var fullname = CU.getNodeFullname(child),
@@ -176,7 +177,7 @@ function parse(node, state, args) {
 
 		// fill in proxy property templates, if present
 		if (isControllerNode) {
-			_.each(proxyProperties, function(v,k) {
+			_.each(proxyProperties, function(v, k) {
 				proxyProperties[k] = _.template(v, {
 					controllerSymbol: controllerSymbol
 				});
@@ -210,9 +211,9 @@ function parse(node, state, args) {
 		localModel = localModel || CU.generateUniqueId();
 		code += _.template(CU.generateCollectionBindingTemplate(args), {
 			localModel: localModel,
-			pre: "var rows=[];",
+			pre: 'var rows=[];',
 			items: itemCode,
-			post: tableState.parent.symbol + ".setData(rows);"
+			post: tableState.parent.symbol + '.setData(rows);'
 		});
 	}
 

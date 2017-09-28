@@ -8,15 +8,15 @@ function CompilerMakeFile() {
 	this.process = process;
 
 	this.task = function(event, fn) {
-		logger.debug('adding task: '+event.yellow);
+		logger.debug('adding task: ' + event.yellow);
 		handlers[event] = fn;
 	};
 
 	this.trigger = function(event, config) {
-		logger.debug("compile:trigger-> "+event.yellow);
+		logger.debug('compile:trigger-> ' + event.yellow);
 		var fn = handlers[event];
 		if (fn) {
-			return fn(config,logger);
+			return fn(config, logger);
 		}
 		return null;
 	};

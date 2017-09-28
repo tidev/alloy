@@ -1,0 +1,37 @@
+var fs = require('fs'),
+	path = require('path');
+
+var titaniumFolder;
+
+task('pre:load', function(config, logger) {
+	logger.info('***** pre:load *****');
+	logger.info(JSON.stringify(config));
+
+	titaniumFolder = config.alloyConfig.platform === 'ios' ? 'iphone' : config.alloyConfig.platform;
+
+	try {
+		logger.info(JSON.stringify(fs.readdirSync(path.join(config.dir.resources, titaniumFolder)), null, '  '));
+	} catch (e) {
+		logger.error('"pre:load" failed: ' + e.message);
+	}
+});
+
+task('pre:compile', function(config, logger) {
+	logger.info('***** pre:compile *****');
+	logger.info(JSON.stringify(config));
+
+	try {
+		logger.info(JSON.stringify(fs.readdirSync(path.join(config.dir.resources, titaniumFolder)), null, '  '));
+	} catch (e) {
+		logger.error('"pre:compile" failed: ' + e.message);
+	}
+});
+
+task('post:compile', function(config, logger) {
+	logger.info('***** post:compile *****');
+	logger.info(JSON.stringify(config));
+});
+
+task('compile:app.js', function(config, logger) {
+	logger.info('***** compile:app.js *****');
+});

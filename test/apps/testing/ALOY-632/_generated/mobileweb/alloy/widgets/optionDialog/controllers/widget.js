@@ -14,9 +14,9 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    new (require("alloy/widget"))("optionDialog");
+    new (require("/alloy/widget"))("optionDialog");
     this.__widgetId = "optionDialog";
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "widget";
     this.args = arguments[0] || {};
     if (arguments[0]) {
@@ -35,10 +35,10 @@ function Controller() {
     $.__views.theView && $.addTopLevelView($.__views.theView);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    require("alloy/animation").popIn($.theView, function() {});
+    require("alloy/animation").popIn($.theView, function(e) {});
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

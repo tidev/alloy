@@ -57,3 +57,37 @@
  * @type String
  * TSS ID style to apply to the Titanium UI object.
  */
+
+/**
+ * @class TrackedEventListener
+ * @typestr Object
+ * @since 1.7.0
+ * @pseudo
+ * A tracked event listener.
+ */
+
+ /**
+ * @property handler
+ * @type Function
+ * Callback bound to the view's event.
+ */
+
+ /**
+ * @property id
+ * @type String
+ * ID attribute of the view object. If the view object does not have an ID attribute,
+ * Alloy assigns it a unique ID.
+ */
+
+/**
+ * @property type
+ * @type String
+ * Name of the event.
+ */
+
+/**
+ * @property view
+ * @type Object
+ * View object bound to the event listener.
+ */
+

@@ -51,6 +51,7 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {
+					parentSymbol = state.parent.symbol;
 					controllerSymbol = state.controller;
 				}
 			});
@@ -65,6 +66,10 @@ function parse(node, state, args) {
 					hasUiNodes = true;
 				}
 			});
+
+			if (hasUiNodes) {
+				rowCode += '<%= sectionSymbol %>.add(' + parentSymbol + ');';
+			}
 		}
 
 		// generate code for proxy property assignments
@@ -77,7 +82,7 @@ function parse(node, state, args) {
 			});
 
 		// generate code for the static row
-		} else if (hasUiNodes || !isControllerNode) {
+		} else if (!isControllerNode) {
 			rowCode += CU.generateNodeExtended(child, state, {
 				parent: {},
 				post: function(node, state, args) {

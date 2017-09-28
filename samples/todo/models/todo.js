@@ -2,14 +2,14 @@ var moment = require('alloy/moment');
 
 exports.definition = {
 	config: {
-		"columns": {
-			"item":"text",
-			"done":"integer",
-			"date_completed":"text"
+		'columns': {
+			'item':'text',
+			'done':'integer',
+			'date_completed':'text'
 		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "todo"
+		'adapter': {
+			'type': 'sql',
+			'collection_name': 'todo'
 		}
 	},
 
@@ -19,12 +19,12 @@ exports.definition = {
 				for (var key in attrs) {
 					var value = attrs[key];
 					if (value) {
-						if (key === "item") {
-							if (value.length <= 0) {
+						if (key === 'item') {
+							if ((/^\s*$/).test(value)) {
 								return 'Error: No item!';
 							}
 						}
-						if (key === "done") {
+						if (key === 'done') {
 							if (value.length <= 0) {
 								return 'Error: No completed flag!';
 							}

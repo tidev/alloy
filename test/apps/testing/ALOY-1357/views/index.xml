@@ -1,0 +1,11 @@
+<Alloy>
+	<Window>
+		<Label id='lbl'>Click to show MenuPopup</Label>
+		<MenuPopup id="popup" platform="ios" onClick='popupClick'>
+			<Items>
+				<Item>Hello</Item>
+				<Item>World</Item>
+			</Items>
+		</MenuPopup>
+	</Window>
+</Alloy>

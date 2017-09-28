@@ -8,24 +8,18 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
     var __alloyId1 = [];
-    if (true && Alloy.isTablet) {
+    if (Alloy.isTablet) {
         $.__views.__alloyId3 = Ti.UI.createWindow({
             id: "__alloyId3"
         });
@@ -52,19 +46,19 @@ function Controller() {
             id: "detail_navGroup"
         });
         $.__views.__alloyId6.add($.__views.detail_navGroup);
-        $.__views.splitWin = Ti.UI.iPad.createSplitWindow({
+        $.__views.splitWin = Ti.UI.iOS.createSplitWindow({
             masterView: $.__views.__alloyId3,
             detailView: $.__views.__alloyId6,
             id: "splitWin"
         });
+        $.__views.__alloyId2 = Ti.UI.createTab({
+            window: $.__views.splitWin,
+            title: "Tab 1",
+            icon: "KS_nav_ui.png",
+            id: "__alloyId2"
+        });
+        __alloyId1.push($.__views.__alloyId2);
     }
-    $.__views.__alloyId2 = Ti.UI.createTab({
-        window: $.__views.splitWin,
-        title: "Tab 1",
-        icon: "KS_nav_ui.png",
-        id: "__alloyId2"
-    });
-    __alloyId1.push($.__views.__alloyId2);
     $.__views.__alloyId9 = Ti.UI.createWindow({
         title: "Tab 2",
         id: "__alloyId9"
@@ -97,6 +91,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -35,19 +35,13 @@ function Controller() {
     function doTouchend(e) {
         e.source.backgroundColor = "#a00";
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "button";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -61,8 +55,8 @@ function Controller() {
         id: "button"
     });
     $.__views.button && $.addTopLevelView($.__views.button);
-    doTouchstart ? $.__views.button.addEventListener("touchstart", doTouchstart) : __defers["$.__views.button!touchstart!doTouchstart"] = true;
-    doTouchend ? $.__views.button.addEventListener("touchend", doTouchend) : __defers["$.__views.button!touchend!doTouchend"] = true;
+    doTouchstart ? $.addListener($.__views.button, "touchstart", doTouchstart) : __defers["$.__views.button!touchstart!doTouchstart"] = true;
+    doTouchend ? $.addListener($.__views.button, "touchend", doTouchend) : __defers["$.__views.button!touchend!doTouchend"] = true;
     $.__views.label = Ti.UI.createLabel({
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
@@ -80,11 +74,11 @@ function Controller() {
     var args = arguments[0] || {};
     var label = args.label || "";
     args.label && ($.label.text = args.label);
-    __defers["$.__views.button!touchstart!doTouchstart"] && $.__views.button.addEventListener("touchstart", doTouchstart);
-    __defers["$.__views.button!touchend!doTouchend"] && $.__views.button.addEventListener("touchend", doTouchend);
+    __defers["$.__views.button!touchstart!doTouchstart"] && $.addListener($.__views.button, "touchstart", doTouchstart);
+    __defers["$.__views.button!touchend!doTouchend"] && $.addListener($.__views.button, "touchend", doTouchend);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

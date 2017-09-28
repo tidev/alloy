@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -32,7 +26,7 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.label = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             height: Ti.UI.SIZE,
             width: "90%",
             font: {
@@ -42,13 +36,13 @@ function Controller() {
             textAlign: "center",
             color: "#0f0"
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             color: "#0ff"
         });
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             color: "#963"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             text: 'Check the console output and make sure that only styles relevant to the current build platform are listed in the printed array. Note also that the "platform" key has been removed entirely from the "queries" object in conditional styles.',
             id: "label"
         });
@@ -62,6 +56,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -1,8 +1,97 @@
 ## Alloy Release Notes
 
-### Release 1.6.0 (5/21/2015)
+### Release 1.10.3
+
+#### Fixed
+  * [ALOY-1570](https://jira.appcelerator.org/browse/ALOY-1570): exports.baseController does not work since 1.10.0
+
+### Release 1.10.2
+
+#### Fixed
+  * [ALOY-1567](https://jira.appcelerator.org/browse/ALOY-1567): Minification produces invalid code
+    * Remove the minification process from Alloy and handle it from the SDK instead.
+
+### Release 1.10.1
+
+#### Fixed
+  * [ALOY-1565](https://jira.appcelerator.org/browse/ALOY-1565): KitchenSink v2 errors out on iOS
+    * Fix to use only 3 of babili's plugins to 'optimize' code and avoid modifying code in a way our old TiCore on iOS chokes on.
+
+### Release 1.10.0
+
+#### Fixed
+  * [ALOY-1312](https://jira.appcelerator.org/browse/ALOY-1312): Upgrade Alloy to support ES6
+    * Migrates from using uglifyjs to parse and transform user and library code to using babel and babili
+
+### Release 1.8.0
+
+#### Fixed
+  * [ALOY-1365](https://jira.appcelerator.org/browse/ALOY-1365): Added support
+    for Alloy-specific i18n and platform folders for both the whole Alloy app
+    and overridable at the theme level. Improved widget i18n support.
+
+### Release 1.7.6 - (08/26/2015)
+
+#### Fixed
+  * [CLI-768](https://jira.appcelerator.org/browse/CLI-768): Alloy app fails to build on Windows with
+    error "Alloy compiler failed"
+
+---
+### Release 1.7.5 - (08/21/2015)
+
+#### Fixed
+  * [ALOY-1300](https://jira.appcelerator.org/browse/ALOY-1300): iOS Assets Catalog inconsistency between
+    Alloy and Classic
+
+---
+### Release 1.7.4 - (08/18/2015)
+
+#### Changed
+  * [ALOY-1239](https://jira.appcelerator.org/browse/ALOY-1239): Set Node 0.10 as minimum supported version
+
+#### Fixed
+  * [ALOY-1299](https://jira.appcelerator.org/browse/ALOY-1299): Cannot build a new project for iOS
+    due to missing appicons
+  * [ALOY-1226](https://jira.appcelerator.org/browse/ALOY-1226): To Do sample app - validate() fails
+    to prevent invalid (empty) items from being added
+
+---
+### Release 1.7.2 - (07/29/2015)
+
+#### Fixed
+  * [ALOY-1288](https://jira.appcelerator.org/browse/ALOY-1288): Windows: Label not visible when using default app.tss
+  * [ALOY-1287](https://jira.appcelerator.org/browse/ALOY-1287): Alloy styles compilation does not produce the
+    same results across successive compilations
+
+---
+### Release 1.7.1 - (07/21/2015)
+
+#### Added
+  * [ALOY-1280](https://jira.appcelerator.org/browse/ALOY-1280): Support CommandBar in XML markup on Windows
+
+#### Fixed
+  * [ALOY-1214](https://jira.appcelerator.org/browse/ALOY-1214): Button in Inheritance sample app difficult to click on iOS
+
+---
+### Release 1.6.2 - (06/11/2015)
+
+Alloy 1.6.2 is a patch release addressing high-priority issues from previous releases.
+
+#### Fixed Issues
+
+  * [ALOY-1272](https://jira.appcelerator.org/browse/ALOY-1272): Building an Alloy project with
+    the Titanium CLI on Windows fails
+
+---
+### Release 1.6.0 - (05/21/2015)
 
 [Full list of Issues that were addressed in Release 1.6.0](https://jira.appcelerator.org/issues/?filter=16721)
+
+#### Behavior Changes
+
+To prepare for forthcoming Windows Phone support, Alloy and the Titaium SDK now support the
+`windows` subfolder to include assets only for Windows Phone applications.  If have existing
+`windows` subfolders, you will need to rename them and update any paths.
 
 #### New Features
 
@@ -31,6 +120,14 @@ the JavaScript and TSS files, to populate the `strings.xml` file.
 
 The underscore.js library was upgraded from version 1.4.4 to version 1.6.0.
 
+##### Windows Phone Support
+
+To prepare for forthcoming Windows Phone support, Alloy added several conditionals to support logic,
+UI elements and assets to only be included with Windows Phone applications.
+
+  * In controllers, use the `OS_WINDOWS` constant.
+  * In XML and TSS files, assign the `platform` attribute of UI elements a `windows` value.
+  * Under the component folders in the `app` folder, add `windows` subfolders to include assets only for Windows Phone.
 
 ##### XML Markup Enhancements
 
@@ -84,7 +181,7 @@ The moment built-in now uses version 2.7.0 of the moment.js library.
   * Support mapping multiple model attributes to a single XML attribute, for example,
     `<Label text="{model.title} by {model.author}">`.
 
-For more details, see [Alloy Data Binding](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding).
+For more details, see [Alloy Data Binding](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Data_Binding).
 
 ##### XML Markup/TSS Enhancements
 
@@ -93,7 +190,7 @@ For more details, see [Alloy Data Binding](http://docs.appcelerator.com/titanium
     Before this Release, you defined ActionBar properties in the `Menu` element.  Do not set the same
     ActionBar properties in both the `ActionBar` and `Menu` elements.
     For more details, see the "Android ActionBar" section in
-    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+    [Alloy XML Markup](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup).
 
   * Support `<KeyboardToolbar/>` as a child tag of the `<TextArea/>` object to set the `keyboardToolbar`
     property of `Titanium.UI.TextArea`.  Only supports the iOS platform.
@@ -160,7 +257,7 @@ that is, you can include the external views, but the styles cannot be updated wi
 method.
 
   1. Use the `Alloy.createController()` method to create a controller from the controller-less view.
-  2. Use the [updateViews()](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.Controller-method-updateViews)
+  2. Use the [updateViews()](http://docs.appcelerator.com/platform/latest/#!/api/Alloy.Controller-method-updateViews)
      method with the controller instance to update the styles of the view components.
      Pass a style dictionary as the only argument to the method.  The style dictionary contains key-value pairs,
      where the key is the id of the view component and the value is another dictionary containing
@@ -170,7 +267,7 @@ method.
 
 See also:
 
-  * [Alloy Guides: Views without Controllers](http://docs.appcelerator.com/titanium/latest/#!/guide/Views_without_Controllers)
+  * [Alloy Guides: Views without Controllers](http://docs.appcelerator.com/platform/latest/#!/guide/Views_without_Controllers)
   * [Controller-less View test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-362)
 
 
@@ -189,12 +286,12 @@ To use a custom query:
 
 See also:
 
-  * [Alloy Styles and Themes: Custom Query Styles](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Styles_and_Themes-section-35621526_AlloyStylesandThemes-CustomQueryStyles)
+  * [Alloy Styles and Themes: Custom Query Styles](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Styles_and_Themes-section-35621526_AlloyStylesandThemes-CustomQueryStyles)
   * [Custom TSS queries test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/advanced/custom_tss_queries)
 
 ##### Map Module Integration
 
-This release introduces better integration with the [ti.map module](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map),
+This release introduces better integration with the [ti.map module](http://docs.appcelerator.com/platform/latest/#!/api/Modules.Map),
 which includes the ability to define `Annotation` objects in XML markup and support for data-view binding.
 
 To add `Annotation` objects in the XML markup, use the `<Module>` tag to load the map module
@@ -215,7 +312,7 @@ supports the `dataFilter` and `dataTransform` attributes.
 
 See also:
 
-  * Alloy Example in [ti.map module](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map)
+  * Alloy Example in [ti.map module](http://docs.appcelerator.com/platform/latest/#!/api/Modules.Map)
   * [Map Module test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-800)
   * [Map Module with Data Binding test app](http://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-503)
 
@@ -243,7 +340,7 @@ used by the widget.
 
 See also:
 
-  * "Themes" section in [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets)
+  * "Themes" section in [Alloy Widgets](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Widgets)
   * [Widget Themes test app](https://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-378)
 
 
@@ -253,31 +350,31 @@ See also:
     add the `<Menu>` tag as a child of either a `<Window>` or `<TabGroup>`. To add action items in XML markup, add
     `<MenuItem>` tags as children of `<Menu>`.  The `ActionBar` attributes may be defined in the XML
     markup or TSS file. For details, see the "Android ActionBar" section in
-    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+    [Alloy XML Markup](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup).
 
   * Support `Button` attributes in `<LeftNavButton>` and `<RightNavButton>`.  Instead of
     creating a `Button` object for the `LeftNavButton` or `RightNavButton` elements, add the
     `Button` attributes to either `LeftNavButton` or `RightNavButton` in either the XML markup
     or the TSS file. For details, see the "iOS Navigation Button Shorthand" section in
-    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+    [Alloy XML Markup](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup).
 
   * Support Date Picker attributes. The
-    [maxDate](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-maxDate)
-    [minDate](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-minDate),
-    and [value](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker-property-value)
+    [maxDate](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.Picker-property-maxDate)
+    [minDate](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.Picker-property-minDate),
+    and [value](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.Picker-property-value)
     attributes now accept date strings. For Alloy XML and TSS files, use a date string that can
     be parsed by the [moment.js constructor](http://momentjs.com/docs/#/parsing/string/), which includes
     ISO-8601 and RFC2822 dates.
 
   * Support the localization function, `L()`, as node text for the `OptionDialog`'s `<Option>` tag.
 
-  * Support [Titanium.UI.RefreshControl](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.RefreshControl)
+  * Support [Titanium.UI.RefreshControl](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.RefreshControl)
     in XML markup.  Add the `<RefreshControl>` tag as a child of either `<ListView>` or `<TableView>`.
 
   * Add shorthand notation for `TextField` keyboard attributes. When specifying either the `keyboardType` or
     `returnKeyType` attributes, you do not need to use `Titanium.UI.KEYBOARD_` or `Titanium.UI.RETURNKEYTYPE_`
     as part of the constant name. For details, see the "TextField Keyboard Shorthands" section in
-    [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup).
+    [Alloy XML Markup](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup).
 
   * Support `undefined` as a settable value in the TSS files.  Assign `undefined` to an attribute
     to unset it.  Do not encase `undefined` in quotes.
@@ -458,7 +555,7 @@ passed to `applyProperties` or a create method, or modify TSS class styles to an
 the fly.
 
 For more information, see:
-* [Dynamic Styles guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Dynamic_Styles)
+* [Dynamic Styles guide](http://docs.appcelerator.com/platform/latest/#!/guide/Dynamic_Styles)
 * [dynamic_styling Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/dynamic_styling)
 * Refer to the "New APIs" section below.
 
@@ -469,7 +566,7 @@ ListView objects can now be created in markup and with collection-view binding e
 For more information, see:
 * [listview Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/ui/listview)
 * [binding_listview Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_listview)
-* [ListView API Reference](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListView)
+* [ListView API Reference](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ListView)
 * [Alloy Data Binding guide](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_listview)
 
 ##### Module Markup Element
@@ -477,7 +574,7 @@ For more information, see:
 Use the new `Module` XML element to include a view from a native module.
 
 For more information, see:
-* "Module XML Element" section in the [Alloy XML Markup guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup)
+* "Module XML Element" section in the [Alloy XML Markup guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup)
 * [native_modules Sample](https://github.com/appcelerator/alloy/tree/master/test/apps/advanced/native_modules)
 
 ##### CLI Command to Generate Styles
@@ -486,7 +583,7 @@ Style files can be generated using the Alloy CLI.  The Alloy CLI extracts the ID
 the markup file to create a skeleton style file.
 
 For more information, see the "Generating a Style" section in the
-[Alloy Tasks guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks).
+[Alloy Tasks guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks).
 
 #### New APIs
 
@@ -557,7 +654,7 @@ CommonJS modules and Alloy Models will support this feature in a future release 
 Studio and Alloy.  You still need to add breakpoints for these files in the generated Titanium
 files located in the `Resources` directory.
 
-Refer to [Alloy Debugging](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Debugging_and_Troubleshooting)
+Refer to [Alloy Debugging](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Debugging_and_Troubleshooting)
 for more information.
 
 
@@ -582,7 +679,7 @@ Some of the Alloy-specific attributes, such as `platform`, `formFactor` and the 
 attributes, will be supported in a future release of Titanium Studio.
 
 Refer to the "Using Content Assistance" section in
-[Alloy Tasks](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Tasks) for more information.
+[Alloy Tasks](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks) for more information.
 
 
 #### Expanded Support for Collection-View Binding
@@ -599,7 +696,7 @@ For CoverFlowView, refer to the
 For ScrollableView, refer to the
 [binding_scrollableview example](https://github.com/appcelerator/alloy/tree/1_1_X/test/apps/models/binding_scrollableview).
 
-Refer to [Alloy Data Binding](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding)
+Refer to [Alloy Data Binding](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Data_Binding)
 for more information.
 
 
@@ -618,7 +715,7 @@ Various enhancements to widgets:
     and `Widget.createCollection` instead of `Alloy.createModel` and `Alloy.createCollection`,
     respectively to create models and collections inside a widget.
 
-Refer to [Alloy Widgets](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Widgets) for
+Refer to [Alloy Widgets](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Widgets) for
 more information.
 
 #### XML Markup Enhancements
@@ -634,7 +731,7 @@ Various enhancements to XML markup:
   * Support the `name` attribute with the `<Widget>` and `<Require>` tags to specify a widget
     view-controller to use besides `widget.xml`/`widget.js`.
 
-Refer to [Alloy XML Markup](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_XML_Markup)
+Refer to [Alloy XML Markup](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_XML_Markup)
 for more information.
 
 ---
@@ -672,7 +769,7 @@ platform, the view items are not being repopulated correctly. To follow this iss
 
 Model-view binding with TableViews works fine and does not suffer from any known issues.
 
-For more information, see the [Alloy Data Binding guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Data_Binding).
+For more information, see the [Alloy Data Binding guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Data_Binding).
 
 
 #### Custom Sync Adapter
@@ -752,7 +849,7 @@ to execute SQLite commands. DO NOT CLOSE THIS HANDLE OR OPEN A SECOND INSTANCE O
 This will cause fatal application errors.
 
 See the [Alloy Sync Adapters and Migrations
-guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Sync_Adapters_and_Migrations) for
+guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Sync_Adapters_and_Migrations) for
 information about the new SQLite sync adapter and the new migration features.
 
 #### Removed ti.physicalSizeCategory Module
@@ -772,12 +869,12 @@ The following deprecated APIs have been removed in this release:
 
 | API | Type | Notes |
 |-----|------|-------|
-| `Alloy.getCollection` | method | Creates a local instance of a collection. Use [Alloy.createCollection](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createCollection) instead. |
-| `Alloy.getController` | method | Creates a local instance of a controller. Use [Alloy.createController](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createController) instead. |
-| `Alloy.getModel` | method | Creates a local instance of a model. Use [Alloy.createModel](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createModel) instead. |
-| `Alloy.getWidget` | method | Creates a local instance of a widget. Use [Alloy.createWidget](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-method-createWidget) instead. |
-| `Alloy.globals` | property | Global namespace. Use [Alloy.Globals](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy-property-Globals) instead. |
-| `datatime.js` | builtin | Collection of functions for datetime formatting. Use [moment.js](http://docs.appcelerator.com/titanium/latest/#!/api/Alloy.builtins.moment) instead. |
+| `Alloy.getCollection` | method | Creates a local instance of a collection. Use [Alloy.createCollection](http://docs.appcelerator.com/platform/latest/#!/api/Alloy-method-createCollection) instead. |
+| `Alloy.getController` | method | Creates a local instance of a controller. Use [Alloy.createController](http://docs.appcelerator.com/platform/latest/#!/api/Alloy-method-createController) instead. |
+| `Alloy.getModel` | method | Creates a local instance of a model. Use [Alloy.createModel](http://docs.appcelerator.com/platform/latest/#!/api/Alloy-method-createModel) instead. |
+| `Alloy.getWidget` | method | Creates a local instance of a widget. Use [Alloy.createWidget](http://docs.appcelerator.com/platform/latest/#!/api/Alloy-method-createWidget) instead. |
+| `Alloy.globals` | property | Global namespace. Use [Alloy.Globals](http://docs.appcelerator.com/platform/latest/#!/api/Alloy-property-Globals) instead. |
+| `datatime.js` | builtin | Collection of functions for datetime formatting. Use [moment.js](http://docs.appcelerator.com/platform/latest/#!/api/Alloy.builtins.moment) instead. |
 | `size` | XML/TSS attribute | Defines size-specific view components or styles. Use the `formFactor` attribute instead. |
 
 ### New features
@@ -857,7 +954,7 @@ All freshly built apps will work with the **sql_new** adapter, including all the
 
 ### Important Note for Model/Collection Binding Feature
 
-* [ALOY-432](https://jira.appcelerator.org/browse/ALOY-432). Added $.destroy() function to all controllers. When using model/collection binding in a controller, you **MUST** call this when closing a controller to prevent potential memory leaks. This is especially true if your binding makes references to global models/collections. More detailed documentation on this point will be added to the [Alloy Data Binding Guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Alloy_Models-section-34636390_AlloyModels-DataBinding) very soon. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy)\)
+* [ALOY-432](https://jira.appcelerator.org/browse/ALOY-432). Added $.destroy() function to all controllers. When using model/collection binding in a controller, you **MUST** call this when closing a controller to prevent potential memory leaks. This is especially true if your binding makes references to global models/collections. More detailed documentation on this point will be added to the [Alloy Data Binding Guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Models-section-34636390_AlloyModels-DataBinding) very soon. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/binding_destroy)\)
 
 ### New features
 * [ALOY-394](http://jira.appcelerator.org/browse/ALOY-394). Support collection binding on Views, allowing for arbitrary component repetition. \([TEST APP](https://github.com/appcelerator/alloy/tree/master/test/apps/models/journal)\)

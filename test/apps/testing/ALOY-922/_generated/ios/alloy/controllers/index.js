@@ -9,19 +9,13 @@ function __processArg(obj, key) {
 
 function Controller() {
     function TFUpdate() {}
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -31,7 +25,7 @@ function Controller() {
         exitOnClose: true,
         id: "settingsWin",
         title: "Settings",
-        tabBarHidden: "true"
+        tabBarHidden: true
     });
     $.__views.settingsWin && $.addTopLevelView($.__views.settingsWin);
     var __alloyId0 = {};
@@ -41,7 +35,7 @@ function Controller() {
         bindId: "textfield",
         properties: {
             bindId: "textfield",
-            autocorrect: "false",
+            autocorrect: false,
             hintText: "User name / e-mail address"
         },
         events: {
@@ -79,7 +73,7 @@ function Controller() {
         templates: __alloyId0,
         id: "listView",
         defaultItemTemplate: "template",
-        allowsSelection: "false"
+        allowsSelection: false
     });
     $.__views.settingsWin.add($.__views.listView);
     exports.destroy = function() {};
@@ -88,6 +82,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;
