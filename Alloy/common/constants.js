@@ -73,7 +73,7 @@ exports.BACKGROUND_IMAGE = 'backgroundImage';
 exports.DISPLAY_HOME_AS_UP = 'displayHomeAsUp';
 exports.HOME_BUTTON_ENABLED = 'homeButtonEnabled';
 exports.NAVIGATION_MODE = 'navigationMode';
-exports.ON_HOME_ICOT_ITEM_SELECTED = 'onHomeIconItemSelected';
+exports.ON_HOME_ICON_ITEM_SELECTED = 'onHomeIconItemSelected';
 
 // Listings for supported platforms and commands
 exports.INSTALL_TYPES = ['plugin'];

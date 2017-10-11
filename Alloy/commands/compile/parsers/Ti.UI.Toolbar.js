@@ -16,7 +16,7 @@ exports.parse = function(node, state) {
 		code = '',
 		xmlStyles = {};
 	// Properties inherited from ActionBar when Toolbar is passed to the Activity
-	var inheritedProperties = [CONST.BACKGROUND_IMAGE, CONST.DISPLAY_HOME_AS_UP, CONST.HOME_BUTTON_ENABLED, CONST.NAVIGATION_MODE, CONST.ON_HOME_ICOT_ITEM_SELECTED];
+	var inheritedProperties = [CONST.BACKGROUND_IMAGE, CONST.DISPLAY_HOME_AS_UP, CONST.HOME_BUTTON_ENABLED, CONST.NAVIGATION_MODE, CONST.ON_HOME_ICON_ITEM_SELECTED];
 
 	state = _.extend(state, {
 		itemContainerDefinition: {
