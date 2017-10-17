@@ -45,7 +45,7 @@ program
 	.option('-n, --no-colors', 'Turn off colors')
 	.option('-o, --outputPath <outputPath>', 'Output path for generated code')
 	.option('-p, --project-dir <project-dir>', 'Titanium project directory')
-	.option('-q, --platform <platform>', 'Target mobile platform [android,ios,mobileweb]')
+	.option('-q, --platform <platform>', 'Target mobile platform [android,ios]')
 	.option('-s, --spec <spec>', 'test spec to use with "alloy test"')
 	.option('-w, --all', 'require flag for generate styles')
 	.option('-x, --column <column>', 'Column for source map query', 1)
