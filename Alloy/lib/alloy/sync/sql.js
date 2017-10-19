@@ -422,7 +422,8 @@ function installDatabase(config) {
 			rs.next();
 		}
 		rs.close();
-	} else {
+	}
+	if (Object.keys(columns).length === 0) {
 		var idAttribute = (config.adapter.idAttribute) ? config.adapter.idAttribute : ALLOY_ID_DEFAULT;
 		for (var k in config.columns) {
 			cName = k;
