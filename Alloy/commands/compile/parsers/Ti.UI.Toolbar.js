@@ -1,6 +1,7 @@
 var _ = require('../../../lib/alloy/underscore')._,
 	tiapp = require('../../../tiapp'),
 	U = require('../../../utils'),
+	CONST = require('../../../common/constants'),
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
