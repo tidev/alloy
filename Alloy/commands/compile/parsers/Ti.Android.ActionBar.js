@@ -12,7 +12,7 @@ function parse(node, state, args) {
 	var eventObject = 'e',
 		code = '',
 		xmlStyles = {},
-		actionBarProperties = ['title', 'subtitle', 'backgroundImage', 'displayHomeAsUp', 'homeButtonEnabled', 'icon', 'logo', 'navigationMode', 'onHomeIconItemSelected'];
+		actionBarProperties = ['title', 'subtitle', CONST.BACKGROUND_IMAGE, CONST.DISPLAY_HOME_AS_UP, CONST.HOME_BUTTON_ENABLED, 'icon', 'logo', CONST.NAVIGATION_MODE, CONST.ON_HOME_ICON_ITEM_SELECTED];
 
 	// if this isn't android, generate no code, but show a warning
 	var config = CU.getCompilerConfig(),
