@@ -37,7 +37,7 @@ timestamps() {
 							// Install titanium
 							sh 'yarn global add titanium'
 						}
-						if (sh(returnStatus: true, script: 'ti config sdk.selected') != 0) {
+						if (sh(returnStatus: true, script: 'ti sdk select 6.3.0.GA') != 0) {
 							// Install titanium SDK and select it
 							sh 'ti sdk install -d'
 						}
