@@ -1,5 +1,6 @@
 #! groovy
 library 'pipeline-library'
+def nodeVersion = '8.9.0'
 
 timestamps() {
 	node('(osx || linux) && git && npm-publish && curl') {
@@ -21,7 +22,7 @@ timestamps() {
 			currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 		}
 
-		nodejs(nodeJSInstallationName: 'node 4.7.3') {
+		nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 			ansiColor('xterm') {
 				timeout(55) {
 					stage('Build') {
