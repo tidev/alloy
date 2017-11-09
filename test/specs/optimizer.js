@@ -79,7 +79,10 @@ var tests = [
 	["if ('<%= name %>' !== Ti.Platform.name) var a = 1; else var a = 2;", "if ('<%= name %>' !== \"<%= name %>\") var a = 1;else var a = 2;"],
 
 	// works if Ti.Platform.* is on the left or right hand side
-	["if ('<%= name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }", "if ('<%= name %>' === \"<%= name %>\") {\n  var a = 1;\n} else {\n  a = 2;\n}"]
+	["if ('<%= name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }", "if ('<%= name %>' === \"<%= name %>\") {\n  var a = 1;\n} else {\n  a = 2;\n}"],
+
+	['var a = OS_IOS', 'var a = true;', ['ios']],
+	['var a = OS_ANDROID', 'var a = true;', ['android']]
 ];
 
 // Prepare each platform with values we can swap out at compile time.
@@ -129,7 +132,6 @@ describe('optimizer.js', function() {
 					it(prefix + 'generated code matches expected code', function() {
 						var passFor = test[2];
 						var expected = _.template(test[1], platforms[platform]);
-
 						if (!passFor || _.contains(passFor, platform)) {
 							expect(code).toBe(expected);
 						} else {
