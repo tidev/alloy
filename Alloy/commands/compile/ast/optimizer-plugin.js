@@ -61,7 +61,8 @@ module.exports = function (_ref) {
 				}
 			},
 			Identifier: function(path) {
-				if (this.defines.hasOwnProperty(path.node.name) && path.parent.type !== 'VariableDeclarator') {
+				if (this.defines.hasOwnProperty(path.node.name) &&
+					(path.parent.type !== 'VariableDeclarator' || path.node.name !== path.parent.id.name)) {
 					path.replaceWith(types.booleanLiteral(this.defines[path.node.name]));
 				}
 			}
