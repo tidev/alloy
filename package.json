@@ -30,7 +30,7 @@
   "preferGlobal": true,
   "dependencies": {
     "async": "^2.4.0",
-    "babel-core": "^6.24.1",
+    "babel-core": "^6.26.0",
     "babel-generator": "^6.26.0",
     "babel-traverse": "^6.23.1",
     "babel-types": "^6.23.0",
@@ -47,7 +47,7 @@
     "node.extend": "1.0.10",
     "pkginfo": "0.2.2",
     "resolve": "^1.1.7",
-    "source-map": "0.1.9",
+    "source-map": "^0.6.1",
     "walk-sync": "^0.3.2",
     "xml2tss": "0.0.5",
     "xmldom": "0.1.19"
