@@ -105,9 +105,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		]
 	});
 	if (compileConfig.sourcemap) {
-		options.sourceMaps = true;
-		options.sourceMapTarget = target.filename;
-		options.inputSourceMap = mapper.toJSON();
+		options.retainLines = true;
+		// FIXME: babel source map generation is broken! So we copy the source map we generated initially
+		// And we tell babel to retain the lines so they stay correct (columns go wacky, but OH WELL)
+		// options.sourceMaps = true;
+		// options.sourceMapTarget = target.filename;
+		// options.inputSourceMap = mapper.toJSON();
 	}
 	var outputResult = babel.transformFromAst(ast, genMap.code, options);
 
@@ -126,8 +129,10 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 		fs.mkdirpSync(path.dirname(outfile));
 		chmodr.sync(path.dirname(outfile), 0755);
-		fs.writeFileSync(outfile, JSON.stringify(outputResult.map));
-		logger.debug('  map:        "' + relativeOutfile + '"');
+		fs.writeFileSync(outfile, JSON.stringify(mapper.toJSON()));
+		// FIXME: babel source map generation is broken! So we copy teh source map we generated initially
+		// fs.writeFileSync(outfile, JSON.stringify(outputResult.map));
+		// logger.debug('  map:        "' + relativeOutfile + '"');
 	}
 };
 
@@ -186,9 +191,11 @@ exports.generateSourceMap = function(generator, compileConfig) {
 			[require('./ast/builtins-plugin'), compileConfig],
 			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
 		],
-		sourceMaps: true,
-		sourceMapTarget: compiledFileName,
-		inputSourceMap: mapper.toJSON()
+		retainLines: true,
+		// FIXME: babel source map generation is broken! So we copy the source map we generated initially
+		// sourceMaps: true,
+		// sourceMapTarget: compiledFileName,
+		// inputSourceMap: mapper.toJSON()
 	});
 	var outputResult = babel.transformFromAst(ast, genMap.code, options);
 
@@ -198,9 +205,11 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var outfile = path.join(mapDir, relativeOutfile, path.basename(target.filename)) + '.' + CONST.FILE_EXT.MAP;
 	fs.mkdirpSync(path.dirname(outfile));
 	chmodr.sync(path.dirname(outfile), 0755);
-	var tmp = outputResult.map;
-	tmp.sources[0] = compiledFileName;
-	tmp.sources[1] = origFileName;
-	fs.writeFileSync(outfile, JSON.stringify(tmp));
+	// FIXME: babel source map generation is broken! So we copy the source map we generated initially
+	fs.writeFileSync(outfile, JSON.stringify(mapper.toJSON()));
+	// var tmp = outputResult.map;
+	// tmp.sources[0] = compiledFileName;
+	// tmp.sources[1] = origFileName;
+	// fs.writeFileSync(outfile, JSON.stringify(tmp));
 	logger.debug('  map:        "' + outfile + '"');
 };
