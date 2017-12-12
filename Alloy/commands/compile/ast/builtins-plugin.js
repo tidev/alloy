@@ -4,7 +4,7 @@ var path = require('path'),
 	logger = require('../../../logger'),
 	U = require('../../../utils');
 
-var EXCLUDE = ['backbone', 'CFG', 'underscore'];
+var EXCLUDE = ['backbone', 'CFG', 'lodash', 'underscore'];
 var BUILTINS_PATH = path.join(__dirname, '..', '..', '..', 'builtins');
 var loaded = [];
 

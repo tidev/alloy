@@ -5,7 +5,7 @@ if (isTitanium) {
 	_ = require('/alloy/underscore')._;
 } else {
 	var platforms = require('../../platforms/index');
-	_ = require('../lib/alloy/underscore')._;
+	_ = require('../lib/alloy/lodash')._;
 
 	// iterate through supported platforms to create specific constants
 	generatePlatformArray = function(key) {

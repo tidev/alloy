@@ -14,6 +14,7 @@ docs/
 **/jasmine.js
 **/lib/colors.js
 **/underscore.js
+**/lodash.js
 **/backbone.js
 Alloy/grammar
 Alloy/builtins/social.js
