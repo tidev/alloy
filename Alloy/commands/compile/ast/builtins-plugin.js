@@ -1,6 +1,6 @@
 var path = require('path'),
 	fs = require('fs'),
-	_ = require('../../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	logger = require('../../../logger'),
 	U = require('../../../utils');
 
@@ -65,8 +65,8 @@ module.exports = function (_ref) {
 				if (p.node.callee.name === 'require' &&         // Is this a require call?
 					theString && types.isStringLiteral(theString) && // Is the 1st param a literal string?
 					(match = theString.value.match(rx)) !== null &&  // Is it an alloy module?
-					!_.contains(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
-					!_.contains(loaded, match[2])                    // Make sure we didn't find it already
+					!_.includes(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
+					!_.includes(loaded, match[2])                    // Make sure we didn't find it already
 				) {
 					// Make sure it hasn't already been copied to Resources
 					var name = appendExtension(match[2], 'js');

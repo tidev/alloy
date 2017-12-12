@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	GU = require('../generateUtils'),
+var GU = require('../generateUtils'),
 	logger = require('../../../logger');
 
 module.exports = function(name, args, program) {

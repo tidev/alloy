@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -28,14 +28,14 @@ function parse(node, state, args) {
 	// iterate through all children
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		var theNode = CU.validateNodeName(child, ROWS),
-			isControllerNode = _.contains(CONST.CONTROLLER_NODES, CU.getNodeFullname(child));
+			isControllerNode = _.includes(CONST.CONTROLLER_NODES, CU.getNodeFullname(child));
 
 		// make sure it's a valid node
 		if (!theNode) {
 			U.dieWithNode(child, 'Ti.UI.PickerColumn child elements must be one of the following: [' + ROWS.join(',') + ']');
 
 		// handle rows
-		} else if (_.contains(ROWS, theNode) && !isControllerNode) {
+		} else if (_.includes(ROWS, theNode) && !isControllerNode) {
 			child.nodeName = 'PickerRow';
 		}
 
@@ -70,7 +70,7 @@ function parse(node, state, args) {
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
 		}
-		code += _.template(CU.generateCollectionBindingTemplate(args), {
+		code += _.template(CU.generateCollectionBindingTemplate(args))({
 			localModel: localModel,
 			pre: 'var rows=[];\n_.each(' + args.symbol + '.getRows(), function(r) { ' + args.symbol + '.removeRow(r);});\n',
 			items: rowCode,

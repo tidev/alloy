@@ -3,7 +3,7 @@ var path = require('path'),
 	chmodr = require('chmodr'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),
-	_ = require('../../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	CONST = require('../../../common/constants'),
 	logger = require('../../../logger');
 
@@ -39,7 +39,7 @@ module.exports = function(name, args, program) {
 	// create widget.json manifest file
 	fs.writeFileSync(
 		path.join(paths.widget, 'widget.json'),
-		_.template(fs.readFileSync(paths.widgetTemplate, 'utf8'), {
+		_.template(fs.readFileSync(paths.widgetTemplate, 'utf8'))({
 			id: escapeDoubleQuotes(widgetId),
 			name: escapeDoubleQuotes(name),
 			version: VERSION_DEFAULT,

@@ -12,7 +12,7 @@ var async = require('async'),
 	fs = require('fs'),
 	os = require('os'),
 	SM = require('source-map'),
-	_ = require('../Alloy/lib/alloy/underscore');
+	_ = require('lodash');
 
 scan(path.join(__dirname, '..', 'test', 'projects', 'Harness', 'build', 'map', 'Resources'), '.map', function(err, files) {
 	// Do something with files that ends in '.ext'.

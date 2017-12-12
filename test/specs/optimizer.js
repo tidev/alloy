@@ -3,7 +3,7 @@ var fs = require('fs'),
 	colors = require('colors'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
-	_ = require('../../Alloy/lib/alloy/underscore')._,
+	_ = require('lodash'),
 	sourceMapper = require('../../Alloy/commands/compile/sourceMapper'),
 	babylon = require('babylon'),
 	babel = require('babel-core');
@@ -100,7 +100,7 @@ describe('optimizer.js', function() {
 			_.each(platforms, function(platformObj, platform) {
 				describe('[' + platform + ']', function() {
 					var ast, code,
-						testContent = _.template(test[0], platforms[platform]),
+						testContent = _.template(test[0])(platforms[platform]),
 						prefix = pad(platform);
 
 					it(prefix + testContent.blue, function() {
@@ -131,8 +131,8 @@ describe('optimizer.js', function() {
 
 					it(prefix + 'generated code matches expected code', function() {
 						var passFor = test[2];
-						var expected = _.template(test[1], platforms[platform]);
-						if (!passFor || _.contains(passFor, platform)) {
+						var expected = _.template(test[1])(platforms[platform]);
+						if (!passFor || _.includes(passFor, platform)) {
 							expect(code).toBe(expected);
 						} else {
 							expect(code).not.toBe(expected);

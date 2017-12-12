@@ -9,7 +9,7 @@
 var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
-	_ = require('../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');

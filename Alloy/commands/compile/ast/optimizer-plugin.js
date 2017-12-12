@@ -1,5 +1,5 @@
 var CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	path = require('path'),
 	fs = require('fs');
 
@@ -23,7 +23,7 @@ module.exports = function (_ref) {
 				defines[d.key] = config.deploytype === d.value;
 			});
 			_.each(CONST.DIST_TYPES, function(d) {
-				defines[d.key] = _.contains(d.value, config.target);
+				defines[d.key] = _.includes(d.value, config.target);
 			});
 			_.each(CONST.PLATFORMS, function(p) {
 				defines['OS_' + p.toUpperCase()] = config.platform === p;

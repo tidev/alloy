@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils');
+var U = require('../../../utils');
 
 var LOCALE_REGEX = /^\s*(?:L|Ti\.Locale\.getString|Titanium\.Locale\.getString)\(.+\)\s*$/;
 

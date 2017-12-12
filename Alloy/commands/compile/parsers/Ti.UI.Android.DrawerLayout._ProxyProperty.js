@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._;
+var _ = require('lodash');
 
 exports.parse = function(node, state) {
 	console.log(' Ti.UI.Android.DrawerLayout');

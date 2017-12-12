@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
@@ -38,9 +38,9 @@ function parse(node, state, args) {
 			U.dieWithNode(child, 'Ti.UI.TableView child elements must be one of the following: [' + ALL_VALID.join(',') + ']');
 		} else if (!CU.isNodeForCurrentPlatform(child)) {
 			return;
-		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+		} else if (_.includes(CONST.CONTROLLER_NODES, fullname)) {
 			isControllerNode = true;
-		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+		} else if (_.includes(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
 		}
 
@@ -59,7 +59,7 @@ function parse(node, state, args) {
 			// set up any proxy properties at the top-level of the controller
 			var inspect = CU.inspectRequireNode(child);
 			_.each(_.uniq(inspect.names), function(name) {
-				if (_.contains(PROXY_PROPERTIES, name)) {
+				if (_.includes(PROXY_PROPERTIES, name)) {
 					var prop = U.proxyPropertyNameFromFullname(name);
 					proxyProperties[prop] = controllerSymbol + '.getProxyPropertyEx("' + prop + '", {recurse:true})';
 				} else {
@@ -104,7 +104,7 @@ function parse(node, state, args) {
 
 	// add the rows to the section
 	if (rowCode) {
-		code += _.template(rowCode, {
+		code += _.template(rowCode)({
 			sectionSymbol: tableState.parent.symbol
 		});
 	}

@@ -8,7 +8,7 @@ var program = require('commander'),
 	os = require('os'),
 	U = require('./utils'),
 	colors = require('colors'),
-	_ = require('./lib/alloy/underscore')._,
+	_ = require('lodash'),
 	pkginfo = require('pkginfo')(module, 'version'),
 	path = require('path'),
 	fs = require('fs'),
@@ -98,13 +98,13 @@ if (program.args.length === 0) {
 	process.exit(0);
 }
 
-if (program.platform && !_.contains(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
+if (program.platform && !_.includes(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
 	U.die('Invalid platform "' + program.platform + '" specified, must be [' + CONST.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
 }
 
 // Validate the given command
 var command = program.args[0];
-if (!_.contains(getCommands(), command)) {
+if (!_.includes(getCommands(), command)) {
 	U.die('Unknown command: ' + command.red);
 }
 
