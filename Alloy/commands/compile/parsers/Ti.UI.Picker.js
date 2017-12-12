@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	logger = require('../../../logger'),
 	CU = require('../compilerUtils'),
@@ -38,7 +38,7 @@ function parse(node, state, args) {
 		extras = [];
 
 	// ALOY-263, support date/time type pickers
-	if (node.hasAttribute('type') && _.contains(DATETIMETYPES, node.getAttribute('type'))) {
+	if (node.hasAttribute('type') && _.includes(DATETIMETYPES, node.getAttribute('type'))) {
 		// We have a date or time type picker so cast the string values to date objects
 		var d;
 		if (node.hasAttribute('value')) {
@@ -78,14 +78,14 @@ function parse(node, state, args) {
 		var child = children[i],
 			err = errBase + ' Invalid child at position ' + i,
 			theNode = CU.validateNodeName(child, VALID),
-			isControllerNode = _.contains(CONST.CONTROLLER_NODES, CU.getNodeFullname(child));
+			isControllerNode = _.includes(CONST.CONTROLLER_NODES, CU.getNodeFullname(child));
 
 		// make sure it's a valid node
 		if (!theNode) {
 			U.dieWithNode(child, 'Ti.UI.Picker child elements must be one of the following: [' + VALID.join(',') + ']');
 
 		// handle columns
-		} else if (_.contains(COLUMNS, theNode)) {
+		} else if (_.includes(COLUMNS, theNode)) {
 			foundColumn = true;
 			if (foundRow) {
 				U.die([
@@ -96,7 +96,7 @@ function parse(node, state, args) {
 			!isControllerNode && (child.nodeName = 'PickerColumn');
 
 		// handle rows
-		} else if (_.contains(ROWS, theNode)) {
+		} else if (_.includes(ROWS, theNode)) {
 			foundRow = true;
 			if (foundColumn) {
 				U.die([

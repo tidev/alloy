@@ -2,7 +2,7 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	tiapp = require('../../../tiapp'),
 	platform = CU.getCompilerConfig().alloyConfig.platform;
 
@@ -169,7 +169,7 @@ function parse(node, state, args) {
 				// we need to pass it to the data binding generator
 				args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
 			}
-			code += _.template(CU.generateCollectionBindingTemplate(args), {
+			code += _.template(CU.generateCollectionBindingTemplate(args))({
 				localModel: localModel,
 				pre: pre,
 				items: itemCode,

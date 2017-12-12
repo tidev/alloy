@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
@@ -61,13 +61,13 @@ function parse(node, state, args) {
 				ALL_VALID.join(',') + ']');
 		} else if (!CU.isNodeForCurrentPlatform(child)) {
 			return;
-		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+		} else if (_.includes(CONST.CONTROLLER_NODES, fullname)) {
 			isControllerNode = true;
 		} else if (REFRESH_PROPERTY === theNode) {
 			isRefreshControl = true;
-		} else if (_.contains(SEARCH_PROPERTIES, theNode)) {
+		} else if (_.includes(SEARCH_PROPERTIES, theNode)) {
 			isSearchBar = true;
-		} else if (_.contains(PROXY_PROPERTIES, theNode)) {
+		} else if (_.includes(PROXY_PROPERTIES, theNode)) {
 			isProxyProperty = true;
 		}
 
@@ -88,7 +88,7 @@ function parse(node, state, args) {
 			// set up any proxy properties at the top-level of the controller
 			var inspect = CU.inspectRequireNode(child);
 			_.each(_.uniq(inspect.names), function(name) {
-				if (_.contains(PROXY_PROPERTIES, name)) {
+				if (_.includes(PROXY_PROPERTIES, name)) {
 					var propertyName = U.proxyPropertyNameFromFullname(name);
 					proxyProperties[propertyName] = controllerSymbol + '.getProxyPropertyEx("' + propertyName + '", {recurse:true})';
 				} else {

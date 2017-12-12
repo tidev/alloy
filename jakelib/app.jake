@@ -3,7 +3,7 @@ var fs = require('fs-extra'),
 	path = require('path'),
 	os = require('os'),
 	U = require('../Alloy/utils'),
-	_ = require('../Alloy/lib/alloy/underscore')._,
+	_ = require('lodash'),
 	CONST = require('../Alloy/common/constants'),
 	logger = require('../Alloy/logger');
 

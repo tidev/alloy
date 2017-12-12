@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	styler = require('../styler'),
+var styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	tiapp = require('../../../tiapp'),

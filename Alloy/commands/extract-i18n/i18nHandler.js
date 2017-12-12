@@ -1,7 +1,7 @@
 var U = require('../../utils'),
 	logger = require('../../logger'),
 	path = require('path'),
-	_ = require('../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	XMLSerializer = require('xmldom').XMLSerializer,
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),

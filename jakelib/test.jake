@@ -2,7 +2,7 @@ var fs = require('fs'),
 	path = require('path'),
 	jlib = require('../test/lib/jasmine'),
 	ConsoleReporter = require('../test/lib/ConsoleReporter'),
-	_ = require('../Alloy/lib/alloy/underscore');
+	_ = require('lodash');
 
 process.env.ALLOY_TESTS = true;
 path.existsSync = fs.existsSync || path.existsSync;

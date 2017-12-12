@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils'),
+var U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {

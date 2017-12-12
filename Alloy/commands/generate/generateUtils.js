@@ -3,7 +3,7 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	xml2tss = require('xml2tss'),
 	alloyRoot = path.join(__dirname, '..', '..'),
-	_ = require(basePath + 'lib/alloy/underscore')._,
+	_ = require('lodash'),
 	U = require(basePath + 'utils'),
 	CONST = require(basePath + 'common/constants'),
 	logger = require(basePath + 'logger');
@@ -37,7 +37,7 @@ exports.generate = function(name, type, program, args) {
 
 	// add the platform-specific folder to the path, if necessary
 	if (program.platform) {
-		if (_.contains(['VIEW', 'CONTROLLER', 'STYLE'], type)) {
+		if (_.includes(['VIEW', 'CONTROLLER', 'STYLE'], type)) {
 			dir = path.join(dir, program.platform);
 		} else {
 			logger.warn('platform "' + program.platform +
@@ -77,7 +77,7 @@ exports.generate = function(name, type, program, args) {
 		if (args.templateFunc) {
 			templateContents = args.templateFunc(templateContents);
 		}
-		var code = _.template(templateContents, args.template || {});
+		var code = _.template(templateContents)(args.template || {});
 		fs.writeFileSync(file, code);
 
 		return {

@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	_ = require('../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
 	optimizer = require('./optimizer'),
@@ -145,7 +145,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	}
 
 	// create hash of existing global styles
-	var hash = U.createHash(_.pluck(loadArray, 'path'));
+	var hash = U.createHash(_.map(loadArray, 'path'));
 
 	// see if we can use the cached global style
 	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile)) {
@@ -387,13 +387,13 @@ exports.processStyle = function(_style, _state) {
 						} else {
 							// keyboard type shortcuts for TextField, TextArea
 							// support shortcuts for keyboard type, return key type, and autocapitalization
-							if (sn === KEYBOARD_PROPERTIES[0] && _.contains(KEYBOARD_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[0] && _.includes(KEYBOARD_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.KEYBOARD_' + value.toUpperCase() + ',';
 							}
-							if (sn === KEYBOARD_PROPERTIES[1] && _.contains(RETURN_KEY_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[1] && _.includes(RETURN_KEY_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.RETURNKEY_' + value.toUpperCase() + ',';
 							}
-							if (sn === KEYBOARD_PROPERTIES[2] && _.contains(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[2] && _.includes(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + value.toUpperCase() + ',';
 							}
 						}
@@ -437,7 +437,7 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 	// process all style items, in order
 	_.each(styles, function(style) {
 		if ((style.isId && style.key === id) ||
-			(style.isClass && _.contains(classes, style.key)) ||
+			(style.isClass && _.includes(classes, style.key)) ||
 			(style.isApi && elementName === style.key)) {
 
 			// manage potential runtime conditions for the style
@@ -565,7 +565,7 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 				} else if (referencePath[0] === '$') {
 					// instance model binding
 					attribute = referencePath.splice(2, referencePath.length);
-				} else if (_.contains(CU.models, referencePath[0])) {
+				} else if (_.includes(CU.models, referencePath[0])) {
 					// global model binding
 					attribute = referencePath.splice(1, referencePath.length);
 					referencePath.unshift('Alloy', 'Models');
@@ -579,7 +579,7 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 					modelVar = fromPath(referencePath);
 					reference = fromPath(referencePath.concat(CONST.BIND_TRANSFORM_VAR, attribute));
 
-					if (!_.contains(bindsModels, modelVar)) {
+					if (!_.includes(bindsModels, modelVar)) {
 						bindsModels.push(modelVar);
 					}
 				} else {

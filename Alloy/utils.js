@@ -14,7 +14,7 @@ var path = require('path'),
 	tiapp = require('./tiapp'),
 	XMLSerializer = require('xmldom').XMLSerializer,
 	DOMParser = require('xmldom').DOMParser,
-	_ = require('./lib/alloy/underscore')._,
+	_ = require('lodash'),
 	CONST = require('./common/constants'),
 	sourceMapper = require('./commands/compile/sourceMapper');
 
@@ -110,7 +110,7 @@ exports.readTemplate = function(name) {
 };
 
 exports.evaluateTemplate = function(name, o) {
-	return _.template(exports.readTemplate(name), o);
+	return _.template(exports.readTemplate(name))(o);
 };
 
 exports.getAndValidateProjectPaths = function(argPath, opts) {
@@ -205,8 +205,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 		// make sure the file exists and that it is not filtered
 		if (!fs.existsSync(src) ||
 			(opts.filter && opts.filter.test(file)) ||
-			(opts.exceptions && _.contains(opts.exceptions, file)) ||
-			(opts.restrictionPath && !_.contains(opts.restrictionPath, src)) ) {
+			(opts.exceptions && _.includes(opts.exceptions, file)) ||
+			(opts.restrictionPath && !_.includes(opts.restrictionPath, src)) ) {
 			return;
 		}
 

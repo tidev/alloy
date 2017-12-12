@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils');
+var U = require('../../../utils');
 
 exports.parse = function(node, state) {
 	var height = state.parent.node.getAttribute('height') || null;

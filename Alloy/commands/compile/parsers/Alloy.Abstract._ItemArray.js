@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -65,7 +65,7 @@ function parse(node, state, args) {
 			}
 
 		// Make sure the children match the parent
-		} else if (!_.contains(def.children, childArgs.fullname)) {
+		} else if (!_.includes(def.children, childArgs.fullname)) {
 			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
 		}
 	});
@@ -91,7 +91,7 @@ function parse(node, state, args) {
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
 		}
-		code += _.template(CU.generateCollectionBindingTemplate(args), {
+		code += _.template(CU.generateCollectionBindingTemplate(args))({
 			localModel: localModel,
 			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,

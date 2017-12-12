@@ -5,7 +5,7 @@
 	Actual component generators are defined in the targets folder
 */
 var path = require('path'),
-	_ = require('../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants');
 
@@ -35,7 +35,7 @@ function generate(args, program) {
 	}
 
 	// validate the generate target
-	if (!_.contains(CONST.GENERATE_TARGETS, target)) {
+	if (!_.includes(CONST.GENERATE_TARGETS, target)) {
 		U.die(
 			'Invalid generate target "' + target + '"\n' +
 			'Must be one of the following: [' + CONST.GENERATE_TARGETS.join(',') + ']'

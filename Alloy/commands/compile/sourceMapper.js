@@ -11,7 +11,7 @@ var SM = require('source-map'),
 	babylon = require('babylon'),
 	babel = require('babel-core'),
 	logger = require('../../logger'),
-	_ = require('../../lib/alloy/underscore')._;
+	_ = require('lodash');
 
 var lineSplitter = /(?:\r\n|\r|\n)/;
 
@@ -76,7 +76,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// generate the source map and composite code
 	_.each(target.lines, function(line) {
 		var trimmed = U.trim(line);
-		if (_.contains(markers, trimmed)) {
+		if (_.includes(markers, trimmed)) {
 			_.each(data[trimmed].lines, function(line) {
 				mapLine(mapper, data[trimmed], genMap, line);
 			});
@@ -162,7 +162,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	// generate the source map and composite code
 	_.each(target.lines, function(line) {
 		var trimmed = U.trim(line);
-		if (_.contains(markers, trimmed)) {
+		if (_.includes(markers, trimmed)) {
 			_.each(data[trimmed].lines, function(line) {
 				mapLine(mapper, data[trimmed], genMap, line);
 			});

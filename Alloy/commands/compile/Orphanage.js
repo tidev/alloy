@@ -10,7 +10,7 @@ var fs = require('fs-extra'),
 	logger = require('../../logger'),
 	CONST = require('../../common/constants'),
 	U = require('../../utils'),
-	_ = require('../../lib/alloy/underscore');
+	_ = require('lodash');
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..');
 
@@ -98,7 +98,7 @@ Orphanage.prototype.removeAdapters = function(opts) {
 		_.each(fs.readdirSync(adapterDir), function(adapterFile) {
 			var fullpath = path.join(adapterDir, adapterFile);
 			var adapterName = adapterFile.replace(/\.js$/, '');
-			if (!_.contains(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
+			if (!_.includes(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
 				logger.trace('* ' + path.join(p, adapterFile));
 				fs.unlinkSync(fullpath);
 			}
@@ -180,7 +180,7 @@ Orphanage.prototype.removeAssets = function() {
 	});
 
 	// don't worry about cleaning platforms that aren't the current target
-	_.each(_.without(_.pluck(platforms, 'titaniumFolder'), platforms[platform].titaniumFolder),
+	_.each(_.without(_.map(platforms, 'titaniumFolder'), platforms[platform].titaniumFolder),
 		function(tf) {
 			exceptions.unshift(tf + '*');
 		}
@@ -251,7 +251,7 @@ function getChecks(file, fullpath, opts) {
 			}
 
 			// is this a widget asset?
-			if (_.contains(parts, widgetId)) {
+			if (_.includes(parts, widgetId)) {
 				file = _.without(parts, widgetId).join('/');
 				break;
 			}
@@ -286,7 +286,7 @@ function isException(file, exceptions) {
 			}
 
 		// straight up comparison if there's no wildcards
-		} else if (_.contains(exs, file)) {
+		} else if (_.includes(exs, file)) {
 			return true;
 		}
 	}

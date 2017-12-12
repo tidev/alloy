@@ -2,7 +2,7 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
 	styler = require('../styler'),
-	_ = require('../../../lib/alloy/underscore')._;
+	_ = require('lodash');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);

@@ -2,7 +2,7 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	U = require('../../../utils'),
 	CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	logger = require('../../../logger');
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..', '..'),
@@ -26,7 +26,7 @@ module.exports = function(name, args, program) {
 		U.die(['`alloy generate model` requires a type and list of columns', USAGE]);
 	} else {
 		adapter = args[0];
-		if (!_.contains(VALID_ADAPTERS, adapter)) {
+		if (!_.includes(VALID_ADAPTERS, adapter)) {
 			U.die([
 				'Invalid adapter type "' + adapter + '".',
 				'Must be one of the following: [' + VALID_ADAPTERS.join(',') + ']',
@@ -49,7 +49,7 @@ module.exports = function(name, args, program) {
 	});
 
 	// assemble columns object into code
-	var code = _.template(fs.readFileSync(MODEL_TEMPLATE, 'utf8'), {
+	var code = _.template(fs.readFileSync(MODEL_TEMPLATE, 'utf8'))({
 		adapter: adapter,
 		name: name,
 		schema: _.isEmpty(columns) ? '' : prepareColumnsForWriting(columns)

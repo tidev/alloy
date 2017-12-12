@@ -5,7 +5,7 @@ var fs = require('fs-extra'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	platforms = require('../../platforms/index'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	_ = require('lodash');
 
 var TIMEOUT_DEFAULT = 2000;
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;

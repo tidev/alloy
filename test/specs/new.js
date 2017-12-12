@@ -4,7 +4,7 @@ var fs = require('fs-extra'),
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	_ = require('lodash');
 
 var TIMEOUT_DEFAULT = 2000;
 var PLATFORMS = CONST.PLATFORMS;

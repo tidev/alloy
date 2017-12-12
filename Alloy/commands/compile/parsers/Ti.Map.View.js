@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
@@ -72,7 +72,7 @@ function parse(node, state, args) {
 		}
 		// set a custom property for special handling of Annotations in CU.generateCollectionBindingTemplate()
 		args.isDataBoundMap = true;
-		code += _.template(CU.generateCollectionBindingTemplate(args), {
+		code += _.template(CU.generateCollectionBindingTemplate(args))({
 			localModel: localModel,
 			pre: '',
 			items: itemCode,
