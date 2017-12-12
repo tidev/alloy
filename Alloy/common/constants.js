@@ -3,9 +3,10 @@ var _, generatePlatformArray;
 
 if (isTitanium) {
 	_ = require('/alloy/lodash')._;
+	console.log('is titanium');
 } else {
 	var platforms = require('../../platforms/index');
-	_ = require('../lib/alloy/lodash')._;
+	_ = require('../lib/alloy/lodash/4.17.4/lodash')._;
 
 	// iterate through supported platforms to create specific constants
 	generatePlatformArray = function(key) {

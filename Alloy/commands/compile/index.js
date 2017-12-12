@@ -235,7 +235,7 @@ module.exports = function(args, program) {
 	U.copyFileSync(
 		path.join(
 			alloyRoot, 'lib', 'alloy', 'lodash',
-			(_.contains(CONST.SUPPORTED_LODASH_VERSIONS, compileConfig.lodash))
+			(_.includes(CONST.SUPPORTED_LODASH_VERSIONS, compileConfig.lodash))
 				? compileConfig.lodash
 				: CONST.DEFAULT_LODASH_VERSION,
 			'lodash.js'

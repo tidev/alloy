@@ -278,7 +278,7 @@ exports.createStyle = function(controller, opts, defaults) {
 
 		// does this style match the given opts?
 		if ((style.isId && opts.id && style.key === opts.id) ||
-			(style.isClass && _.contains(classes, style.key))) {
+			(style.isClass && _.includes(classes, style.key))) {
 			// do nothing here, keep on processing
 		} else if (style.isApi) {
 			if (style.key.indexOf('.') === -1) {
