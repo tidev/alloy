@@ -38,7 +38,7 @@
     "chmodr": "^1.0.2",
     "colors": "0.6.0-1",
     "commander": "0.6.1",
-    "deasync": "^0.1.9",
+    "deasync": "^0.1.12",
     "ejs": "2.3.4",
     "fs-extra": "^3.0.1",
     "global-paths": "^0.1.2",
