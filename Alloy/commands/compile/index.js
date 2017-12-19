@@ -6,7 +6,6 @@ var ejs = require('ejs'),
 	vm = require('vm'),
 	babel = require('babel-core'),
 	async = require('async'),
-	deasync = require('deasync'),
 
 	// alloy requires
 	_ = require('lodash'),
@@ -1159,49 +1158,26 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
-	function transformFiles(alldone) {
-		async.whilst(
-			function() { return (files = _.difference(getJsFiles(), lastFiles)).length > 0; },
-			function(next) {
-				async.each(files, function(file, callback) {
-					var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-							plugins: [
-								[require('./ast/builtins-plugin'), compileConfig],
-								[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
-							]
-						}),
-						fullpath = path.join(compileConfig.dir.resources, file);
+	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
+		_.each(files, function(file) {
+			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
+					plugins: [
+						[require('./ast/builtins-plugin'), compileConfig],
+						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
+					]
+				}),
+				fullpath = path.join(compileConfig.dir.resources, file);
 
-					logger.info('- ' + file);
-					try {
-						babel.transformFile(fullpath, options, function (err, result) {
-							if (err) {
-								return callback(err);
-							}
-							fs.writeFile(fullpath, result.code, callback);
-						});
-					} catch (e) {
-						callback(e);
-					}
-				}, function(err) {
-					// if any of the file processing produced an error, err would equal that error
-					if (err) {
-						U.die('Error transforming JS file', err);
-					} else {
-						// Combine lastFiles and files, so on the next iteration we can make sure that the
-						// list of files to be processed has not grown, like in the case of builtins.
-						lastFiles = _.union(lastFiles, files);
-						next();
-					}
-				});
-			},
-			alldone
-		);
+			logger.info('- ' + file);
+			try {
+				var result = babel.transformFileSync(fullpath, options);
+				fs.writeFile(fullpath, result.code);
+			} catch (e) {
+				U.die('Error transforming JS file', e);
+			}
+		});
+		lastFiles = _.union(lastFiles, files);
 	}
-
-	// We transform files in an async way, but need to 'block' here because this function was written to be sync
-	var desyncdified = deasync(transformFiles);
-	desyncdified();
 }
 
 function BENCHMARK(desc, isFinished) {
