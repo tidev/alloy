@@ -1,4 +1,4 @@
 <Alloy>
-    <Button id="button" onClick="doClick" platform="ios,mobileweb"/>
+    <Button id="button" onClick="doClick" platform="ios,windows"/>
     <MenuItem id="button" onClick="doClick" platform="android"/>
 </Alloy>

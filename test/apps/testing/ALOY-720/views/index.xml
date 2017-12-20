@@ -16,9 +16,9 @@
 		<Label id="info"/>
 	</Window>
 
-	<Window platform="mobileweb">
+	<Window platform="windows">
 		<NavigationGroup>
-			<Window title="MobileWeb">
+			<Window title="Windows">
 			<RightNavButton>
 				<Widget src="alloy.button" title="MW" onClick="doSave"/>
 			</RightNavButton>

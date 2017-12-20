@@ -4,7 +4,7 @@
 		<View id="content" dataCollection="test" dataFunction="render" platform="android">
 			<View></View>
 		</View>
-		<TableView id="content" dataCollection="test" dataFunction="render" platform="ios,mobileweb">
+		<TableView id="content" dataCollection="test" dataFunction="render" platform="ios,windows">
 			<TableViewRow>
 				<View></View>
 			</TableViewRow>
