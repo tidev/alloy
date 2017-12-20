@@ -16,7 +16,8 @@ var path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	_ = require('lodash'),
 	CONST = require('./common/constants'),
-	sourceMapper = require('./commands/compile/sourceMapper');
+	sourceMapper = require('./commands/compile/sourceMapper'),
+	codeFrame = require('babel-code-frame');
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -519,6 +520,13 @@ exports.die = function(msg, e) {
 		logger.error(msg);
 	}
 	process.exit(1);
+};
+
+exports.dieWithCodeFrame = function(msg, e, file) {
+	var rawLines = fs.readFileSync(file).toString();
+	var frame = codeFrame(rawLines, e.loc.line, e.loc.column, { highlightCode: true });
+	console.log(frame);
+	exports.die(msg);
 };
 
 exports.dieWithNode = function(node, msg) {

@@ -30,6 +30,7 @@
   "preferGlobal": true,
   "dependencies": {
     "async": "^2.4.0",
+    "babel-code-frame": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-generator": "^6.26.0",
     "babel-traverse": "^6.23.1",

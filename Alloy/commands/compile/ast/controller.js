@@ -63,7 +63,7 @@ exports.processController = function(code, file) {
 
 		newCode = generate(ast, {}).code;
 	} catch (e) {
-		U.die('Error generating AST for "' + file + '"', e);
+		U.dieWithCodeFrame('Error generating AST for "' + file + '"', e, file);
 	}
 
 	return {
