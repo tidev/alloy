@@ -3,26 +3,26 @@
 		<Label id="explain"/>
 		<Label platform="ios">ios</Label>
 		<Label platform="android">android</Label>
-		<Label platform="windows">windows</Label>
-		<Label platform="ios,windows">ios,windows</Label>
-		<Label platform="android,windows">android,windows</Label>
+		<Label platform="mobileweb">mobileweb</Label>
+		<Label platform="ios,mobileweb">ios,mobileweb</Label>
+		<Label platform="android,mobileweb">android,mobileweb</Label>
 		<Label platform="ios,android">ios,android</Label>
 		<Label platform="!ios">!ios</Label>
 		<Label platform="!android">!android</Label>
-		<Label platform="!windows">!windows</Label>
-		<Label platform="windows,!ios">windows,!ios</Label>
-		<Label platform="windows,!android">windows,!android</Label>
+		<Label platform="!mobileweb">!mobileweb</Label>
+		<Label platform="mobileweb,!ios">mobileweb,!ios</Label>
+		<Label platform="mobileweb,!android">mobileweb,!android</Label>
 		<View height="1" width="Ti.UI.FILL" backgroundColor="black" top="10"/>
 		<Label class="tsslabel" id="ios"/>
 		<Label class="tsslabel" id="android"/>
-		<Label class="tsslabel" id="windows"/>
-		<Label class="tsslabel" id="ioswindows"/>
-		<Label class="tsslabel" id="androidwindows"/>
+		<Label class="tsslabel" id="mobileweb"/>
+		<Label class="tsslabel" id="iosmobileweb"/>
+		<Label class="tsslabel" id="androidmobileweb"/>
 		<Label class="tsslabel" id="iosandroid"/>
 		<Label class="tsslabel" id="notios"/>
 		<Label class="tsslabel" id="notandroid"/>
-		<Label class="tsslabel" id="notwindows"/>
-		<Label class="tsslabel" id="windowsNotios"/>
-		<Label class="tsslabel" id="windowsNotandroid"/>
+		<Label class="tsslabel" id="notmobileweb"/>
+		<Label class="tsslabel" id="mobilewebNotios"/>
+		<Label class="tsslabel" id="mobilewebNotandroid"/>
 	</Window>
 </Alloy>
