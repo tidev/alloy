@@ -1,5 +1,5 @@
 <Alloy>
-	<Window platform="ios , android, windows " exitOnClose="true">
+	<Window platform="ios , android, mobileweb " exitOnClose="true">
 		<Button bottom="5" width="Ti.UI.FILL">Click</Button>
 	</Window>
 </Alloy>

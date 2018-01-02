@@ -16,14 +16,14 @@ var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
 var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 var EXCLUDE_FOLDERS = [
-	'ui/navwindow/',
-	'ui/toolbar/',
-	TEST_FOLDER + '/ALOY-818/',
-	TEST_FOLDER + '/ALOY-840/',
-	TEST_FOLDER + '/ALOY-1080/',
-	TEST_FOLDER + '/ALOY-1584/',
-	TEST_FOLDER + '/ALOY-932/',
-	TEST_FOLDER + '/ALOY-961/'
+	'ui'+sep+'navwindow/',
+	'ui'+sep+'toolbar/',
+	TEST_FOLDER+sep+'ALOY-818/',
+	TEST_FOLDER+sep+'ALOY-840/',
+	TEST_FOLDER+sep+'ALOY-1080/',
+	TEST_FOLDER+sep+'ALOY-1584/',
+	TEST_FOLDER+sep+'ALOY-932/',
+	TEST_FOLDER+sep+'ALOY-961/'
 ];
 
 /*
@@ -66,6 +66,7 @@ describe('alloy compile', function() {
 	_.each(walkSync(paths.apps), function(file) {
 		// are we testing only a specific app?
 		if (process.env.app && file !== process.env.app) { return; }
+
 		// TODO: Stop skipping the ui/navwindow test when TiSDK 3.1.3 is in the HarnessTemplate
 		//       tiapp.xml. We skip it now because it purposely fails compilation on any SDK below
 		//       TiSDK 3.1.3, where Ti.UI.iOS.NavigationWindow was introduced.
@@ -95,7 +96,7 @@ describe('alloy compile', function() {
 								'alloy compile ' + paths.harness + ' --config platform=' + platform.platform, {
 								test: function() {
 									// Make sure there were no compile errors
-									if (file === 'testing/ALOY-887/') {
+									if (file === 'testing'+sep+'ALOY-887/') {
 										// this test specifically tests a compiler error
 										expect(this.output.error).toBeTruthy();
 									} else {
@@ -120,7 +121,7 @@ describe('alloy compile', function() {
 						];
 
 						_.each(cPaths, function(cPath) {
-							if (file === 'testing/ALOY-887/') {
+							if (file === 'testing'+sep+'ALOY-887/') {
 								// skip this test since this app forces a compile error
 								return;
 							}
@@ -140,7 +141,7 @@ describe('alloy compile', function() {
 
 					it('has no undefined style entries', function() {
 						// skip this test, since it specifically tests undefined values in TSS
-						if (file === 'testing/ALOY-822/') {
+						if (file === 'testing'+sep+'ALOY-822/') {
 							return;
 						}
 

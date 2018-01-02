@@ -2,8 +2,8 @@
     <Window backgroundColor="white" layout="vertical">
     <TableView id="container" top="30">
             <TableViewRow id="row1" title="Row 1 - iOS and Android" platform="ios,android"/>
-            <TableViewRow id="row2" title="Row 2 - Android and Windows" platform="android,windows"/>
-            <TableViewRow id="row1" title="Row 3 - Windows and iOS" platform="windows,ios"/>
+            <TableViewRow id="row2" title="Row 2 - Android and Mobileweb" platform="android,mobileweb"/>
+            <TableViewRow id="row1" title="Row 3 - Mobileweb and iOS" platform="mobileweb,ios"/>
     </TableView>
-    </Window>
+    </Window>     
 </Alloy>
