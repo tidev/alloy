@@ -47,7 +47,7 @@ exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem', 'Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
 exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
 exports.DEFAULT_BACKBONE_VERSION = '0.9.2';
-exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2'];
+exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2', '1.3.3'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
