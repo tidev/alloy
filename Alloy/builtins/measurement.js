@@ -66,45 +66,45 @@
  *     [INFO] :   -----
  */
 
- var currentUnit = Ti.App.Properties.getString('ti.ui.defaultunit', 'system');
- currentUnit = (currentUnit === 'system') ? (OS_IOS) ? Ti.UI.UNIT_DIP : Ti.UI.UNIT_PX : currentUnit;
+var currentUnit = Ti.App.Properties.getString('ti.ui.defaultunit', 'system');
+currentUnit = (currentUnit === 'system') ? (OS_IOS) ? Ti.UI.UNIT_DIP : Ti.UI.UNIT_PX : currentUnit;
 
- function convert(val, fromUnit, toUnit) {
-     return Ti.UI.convertUnits('' + parseInt(val) + fromUnit, toUnit);
- }
+function convert(val, fromUnit, toUnit) {
+	return Ti.UI.convertUnits('' + parseInt(val) + fromUnit, toUnit);
+}
 
- module.exports = exports = {
-     dpToPX: function(val) {
-         return convert(val, Ti.UI.UNIT_DIP, Ti.UI.UNIT_PX);
-     },
-     dpToSystem: function(val) {
-         return convert(val, Ti.UI.UNIT_DIP, currentUnit);
-     },
-     pxToDP: function(val) {
-         return convert(val, Ti.UI.UNIT_PX, Ti.UI.UNIT_DIP);
-     },
-     pxToSystem: function(val) {
-         return convert(val, Ti.UI.UNIT_PX, currentUnit);
-     },
-     systemToPX: function(val) {
-         return convert(val, currentUnit, Ti.UI.UNIT_PX);
-     },
-     systemToDP: function(val) {
-         return convert(val, currentUnit, Ti.UI.UNIT_DIP);
-     },
-     convertUnitToPX: function(valStr) {
-         return Ti.UI.convertUnits(valStr, Ti.UI.UNIT_PX);
-     },
-     convertUnitToDP: function(valStr) {
-         return Ti.UI.convertUnits(valStr, Ti.UI.UNIT_DIP);
-     },
-     convertUnitToSystem: function(valStr) {
-         return Ti.UI.convertUnits(valStr, currentUnit);
-     },
-     pointPXToDP: function(pt) {
-         return {
-             x: this.pxToDP(pt.x),
-             y: this.pxToDP(pt.y)
-         };
-     }
- };
+module.exports = exports = {
+	dpToPX: function(val) {
+		return convert(val, Ti.UI.UNIT_DIP, Ti.UI.UNIT_PX);
+	},
+	dpToSystem: function(val) {
+		return convert(val, Ti.UI.UNIT_DIP, currentUnit);
+	},
+	pxToDP: function(val) {
+		return convert(val, Ti.UI.UNIT_PX, Ti.UI.UNIT_DIP);
+	},
+	pxToSystem: function(val) {
+		return convert(val, Ti.UI.UNIT_PX, currentUnit);
+	},
+	systemToPX: function(val) {
+		return convert(val, currentUnit, Ti.UI.UNIT_PX);
+	},
+	systemToDP: function(val) {
+		return convert(val, currentUnit, Ti.UI.UNIT_DIP);
+	},
+	convertUnitToPX: function(valStr) {
+		return Ti.UI.convertUnits(valStr, Ti.UI.UNIT_PX);
+	},
+	convertUnitToDP: function(valStr) {
+		return Ti.UI.convertUnits(valStr, Ti.UI.UNIT_DIP);
+	},
+	convertUnitToSystem: function(valStr) {
+		return Ti.UI.convertUnits(valStr, currentUnit);
+	},
+	pointPXToDP: function(pt) {
+		return {
+			x: this.pxToDP(pt.x),
+			y: this.pxToDP(pt.y)
+		};
+	}
+};
