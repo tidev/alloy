@@ -1,28 +1,94 @@
 ## Alloy Release Notes
 
+### Release 1.10.12
+  * [ALOY-1534](https://jira.appcelerator.org/browse/ALOY-1534): Add support for Backbone 1.3.3 and Underscore 1.8.3
+
+---
+### Release 1.10.11
+
+#### Fixed
+  * [ALOY-1168](https://jira.appcelerator.org/browse/ALOY-1168): Replace Underscore with Lodash for Alloy compile
+
+---
+### Release 1.10.10
+
+#### Fixed
+  * [ALOY-1593](https://jira.appcelerator.org/browse/ALOY-1593): Android Debugger: Some breakpoints not hit if "Resume"
+    is done anytime during debug
+
+---
+### Release 1.10.9
+
+#### Fixed
+  * [ALOY-1590](https://jira.appcelerator.org/browse/ALOY-1590): OS_IOS assigned to a variable causes a crash
+
+---
+### Release 1.10.8
+
+#### Fixed
+  * [CLI-1272](https://jira.appcelerator.org/browse/CLI-1272): Removed mobileweb and blackberry from studio config.json
+    template
+  * [ALOY-1584](https://jira.appcelerator.org/browse/ALOY-1584): Android: Ti.UI.Toolbar has no click event
+
+---
+### Release 1.10.7
+
+#### Fixed
+  * [ALOY-1318](https://jira.appcelerator.org/browse/ALOY-1318): DefaultIcon(-platform).png should be theme-able
+
+---
+### Release 1.10.6
+
+#### Fixed
+  * [CLI-1272](https://jira.appcelerator.org/browse/CLI-1272): Remove "mobileweb" from config template
+  * [CLI-1273](https://jira.appcelerator.org/browse/CLI-1273): Fallback if empty ResultSet is returned
+
+---
+### Release 1.10.5
+
+#### Fixed
+  * [ALOY-1582](https://jira.appcelerator.org/browse/ALOY-1582): Fix Ti.Platform.osname on Windows
+
+---
+### Release 1.10.4
+
+#### Fixed
+  * [ALOY-1574](https://jira.appcelerator.org/browse/ALOY-1574): Unable to use ES6 import/exports in alloy controllers
+  * [TIMOB-25269](https://jira.appcelerator.org/browse/TIMOB-25269): iOS: Add iPhone X screenshots
+  * [ALOY-1579](https://jira.appcelerator.org/browse/ALOY-1579): Support Titanium.UI.Android.DrawerLayout
+  * [ALOY-1578](https://jira.appcelerator.org/browse/ALOY-1578): Move Ti.UI.iOS.Toolbar to Ti.UI.Toolbar
+  * [ALOY-1572](https://jira.appcelerator.org/browse/ALOY-1572): Alloy doesn't compile external app.js
+  * [ALOY-1564](https://jira.appcelerator.org/browse/ALOY-1564): Broken Require data-binding event translation
+  * [ALOY-1524](https://jira.appcelerator.org/browse/ALOY-1524): Replace wrench with fs-extra
+
+---
 ### Release 1.10.3
 
 #### Fixed
   * [ALOY-1570](https://jira.appcelerator.org/browse/ALOY-1570): exports.baseController does not work since 1.10.0
 
+---
 ### Release 1.10.2
 
 #### Fixed
   * [ALOY-1567](https://jira.appcelerator.org/browse/ALOY-1567): Minification produces invalid code
     * Remove the minification process from Alloy and handle it from the SDK instead.
 
+---
 ### Release 1.10.1
 
 #### Fixed
   * [ALOY-1565](https://jira.appcelerator.org/browse/ALOY-1565): KitchenSink v2 errors out on iOS
     * Fix to use only 3 of babili's plugins to 'optimize' code and avoid modifying code in a way our old TiCore on iOS chokes on.
 
+---
 ### Release 1.10.0
 
 #### Fixed
   * [ALOY-1312](https://jira.appcelerator.org/browse/ALOY-1312): Upgrade Alloy to support ES6
     * Migrates from using uglifyjs to parse and transform user and library code to using babel and babili
 
+---
 ### Release 1.8.0
 
 #### Fixed
@@ -30,6 +96,7 @@
     for Alloy-specific i18n and platform folders for both the whole Alloy app
     and overridable at the theme level. Improved widget i18n support.
 
+---
 ### Release 1.7.6 - (08/26/2015)
 
 #### Fixed
