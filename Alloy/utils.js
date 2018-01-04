@@ -293,7 +293,19 @@ exports.getWidgetDirectories = function(appDir) {
 	if (fs.existsSync(configPath)) {
 		try {
 			var content = fs.readFileSync(configPath, 'utf8');
-			appWidgets = jsonlint.parse(content).dependencies;
+			var config = jsonlint.parse(content);
+			appWidgets = config.dependencies;
+
+			if (config.global && config.global.theme) {
+				var themePath = path.join(appDir, 'themes', config.global.theme, 'config.json');
+				if (fs.existsSync(themePath)) {
+					var themeContent = fs.readFileSync(themePath, 'utf8');
+					var themeConfig = jsonlint.parse(themeContent);
+					if (themeConfig.dependencies) {
+						appWidgets = _.extend(appWidgets, themeConfig.dependencies);
+					}
+				}
+			}
 		} catch (e) {
 			exports.die('Error parsing "config.json"', e);
 		}
