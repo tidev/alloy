@@ -9,7 +9,7 @@
 
   // Set up Backbone appropriately for the environment. Start with Node.js or CommonJS
   if (typeof exports !== 'undefined') {
-      var _ = require('alloy/underscore');
+      var _ = require('/alloy/underscore');
       factory(root, exports, _);
 
   // Next for AMD.

@@ -8,25 +8,19 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function showAlert() {
+    function showAlert(e) {
         Ti.API.debug(JSON.stringify(Alloy.CFG, null, "	"));
         alert("Alloy.CFG.mainConfig = " + Alloy.CFG.mainConfig);
         alert("Alloy.CFG.bothConfig = " + Alloy.CFG.bothConfig);
         alert("Alloy.CFG.themeConfig = " + Alloy.CFG.themeConfig);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -56,6 +50,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

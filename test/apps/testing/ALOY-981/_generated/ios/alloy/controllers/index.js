@@ -11,19 +11,13 @@ function Controller() {
     function btnClick(e) {
         alert(e.source.title + " is clicked");
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -35,30 +29,30 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     var __alloyId3 = [];
     $.__views.__alloyId4 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CANCEL,
+        systemButton: Ti.UI.iOS.SystemButton.CANCEL,
         title: "Cancel",
         id: "__alloyId4"
     });
     __alloyId3.push($.__views.__alloyId4);
     btnClick ? $.addListener($.__views.__alloyId4, "click", btnClick) : __defers["$.__views.__alloyId4!click!btnClick"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.CAMERA,
+        systemButton: Ti.UI.iOS.SystemButton.CAMERA,
         title: "Camera",
         id: "__alloyId6"
     });
     __alloyId3.push($.__views.__alloyId6);
     btnClick ? $.addListener($.__views.__alloyId6, "click", btnClick) : __defers["$.__views.__alloyId6!click!btnClick"] = true;
     $.__views.__alloyId7 = Ti.UI.createButton({
-        systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE
     });
     __alloyId3.push($.__views.__alloyId7);
     $.__views.__alloyId8 = Ti.UI.createButton({
         title: "Send",
-        style: Ti.UI.iPhone.SystemButtonStyle.DONE,
+        style: Ti.UI.iOS.SystemButtonStyle.DONE,
         id: "__alloyId8"
     });
     __alloyId3.push($.__views.__alloyId8);
@@ -97,6 +91,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

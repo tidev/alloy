@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils'),
+var U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
 var LOCALE_REGEX = /^\s*(?:L|Ti\.Locale\.getString|Titanium\.Locale\.getString)\(.+\)\s*$/;
@@ -15,7 +14,7 @@ function parse(node, state, args) {
 
 	var string = U.trim(U.XML.getNodeText(node) || '');
 	if (!LOCALE_REGEX.test(string)) {
-		string = '"' + string.replace(/"/g,'\\"') + '"';
+		string = '"' + string.replace(/"/g, '\\"') + '"';
 	}
 
 	return {

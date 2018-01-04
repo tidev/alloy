@@ -1,0 +1,10 @@
+<Alloy>
+	<Collection src="test"/>
+	<Window>
+		<TableView dataCollection="test">
+			<TableViewRow>
+				<Label text="{username}"/>
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>

@@ -1,4 +1,4 @@
-var Alloy = require('alloy');
+var Alloy = require('/alloy');
 
 // Hold a collection of widget objects instances. These
 // objects are not the widgets themselves, but a set of
@@ -7,8 +7,8 @@ var Alloy = require('alloy');
 var widgets = {};
 
 function ucfirst(text) {
-    if (!text) { return text; }
-    return text[0].toUpperCase() + text.substr(1);
+	if (!text) { return text; }
+	return text[0].toUpperCase() + text.substr(1);
 }
 
 module.exports = function(widgetId) {
@@ -27,13 +27,13 @@ module.exports = function(widgetId) {
 
 	// functions
 	this.createController = function(name, args) {
-		return new (require('alloy/widgets/' + widgetId + '/controllers/' + name))(args);
+		return new (require('/alloy/widgets/' + widgetId + '/controllers/' + name))(args);
 	};
 	this.createCollection = function(name, args) {
-		return new (require('alloy/widgets/' + widgetId + '/models/' + ucfirst(name)).Collection)(args);
+		return new (require('/alloy/widgets/' + widgetId + '/models/' + ucfirst(name)).Collection)(args);
 	};
 	this.createModel = function(name, args) {
-		return new (require('alloy/widgets/' + widgetId + '/models/' + ucfirst(name)).Model)(args);
+		return new (require('/alloy/widgets/' + widgetId + '/models/' + ucfirst(name)).Model)(args);
 	};
 	this.createWidget = Alloy.createWidget; // just to be complete
 	this.Collections.instance = function(name) {

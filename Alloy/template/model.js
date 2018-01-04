@@ -1,5 +1,5 @@
-var Alloy = require('alloy'),
-    _ = require("alloy/underscore")._,
+var Alloy = require('/alloy'),
+    _ = require("/alloy/underscore")._,
 	model, collection;
 
 <%= modelJs %>

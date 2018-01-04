@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
@@ -16,7 +16,7 @@ function parse(node, state, args) {
 	}
 
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		err = ['NavigationWindow must have only one child element, which must be a Window'];
+		err = ['NavigationWindow must have only one child element, which must be a Window'],
 		code = '';
 
 	// NavigationWindow must have 1 window as a child

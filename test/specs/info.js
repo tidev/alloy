@@ -1,5 +1,5 @@
 var TU = require('../lib/testUtils'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	_ = require('lodash')._;
 
 describe('alloy info', function() {
 	TU.addMatchers();

@@ -1,5 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
-	U = require('../../../utils'),
+var U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
 exports.parse = function(node, state) {
@@ -17,7 +16,7 @@ function parse(node, state, args) {
 	if (U.isLocaleAlias(nodeText)) {
 		returnCode = '.push(' + nodeText + ');';
 	} else {
-		returnCode = '.push("' + nodeText.replace(/"/g,'\\"') + '");'
+		returnCode = '.push("' + nodeText.replace(/"/g, '\\"') + '");';
 	}
 
 	return {

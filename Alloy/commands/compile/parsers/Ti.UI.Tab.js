@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash')._,
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
@@ -9,7 +9,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		err = ['Tab must have only one child element, which must be a Window'];
+		err = ['Tab must have only one child element, which must be a Window'],
 		code = '';
 
 	// Tab must have 1 window as a child

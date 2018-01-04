@@ -1,0 +1,8 @@
+<Alloy>
+	<Window>
+		<ScrollView>
+			<RefreshControl tintColor='red' onRefreshstart='doRefresh' />
+			<Label>Hello</Label>
+		</ScrollView>
+	</Window>
+</Alloy>

@@ -11,6 +11,6 @@ $.index.add($.newLabel);
 
 try {
 	require('specs/index')($);
-} catch(e) {
+} catch (e) {
 	Ti.API.warn('no unit tests found for index.js');
 }

@@ -26,4 +26,4 @@ exports.definition = {
 		});
 		return Collection;
 	}
-}
+};

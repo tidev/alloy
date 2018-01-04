@@ -1,12 +1,12 @@
 var basePath = '../../../';
 var path = require('path'),
-		wrench = require('wrench'),
-		xml2tss = require('xml2tss'),
-		_ = require(basePath + 'lib/alloy/underscore')._,
-		GU = require('../generateUtils'),
-		U = require(basePath + 'utils'),
-		CONST = require(basePath + 'common/constants'),
-		logger = require(basePath + 'logger');
+	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
+	xml2tss = require('xml2tss'),
+	GU = require('../generateUtils'),
+	U = require(basePath + 'utils'),
+	CONST = require(basePath + 'common/constants'),
+	logger = require(basePath + 'logger');
 
 // a recursive function to generate styles since xml2tss is async
 function generateStyles(targets) {
@@ -16,7 +16,7 @@ function generateStyles(targets) {
 		xml2tss.updateFile(
 			current.view_path,
 			current.style_path,
-			function(err,ok) {
+			function(err, ok) {
 				if (ok) {
 					logger.info('Style generated: ' + current.style);
 				}
@@ -27,26 +27,26 @@ function generateStyles(targets) {
 }
 
 module.exports = function(name, args, program) {
-	var paths      = U.getAndValidateProjectPaths(program.outputPath),
-			view_root  = path.join(paths.app,CONST.DIR.VIEW),
-			style_root = path.join(paths.app,CONST.DIR.STYLE),
-			targets =[];
+	var paths = U.getAndValidateProjectPaths(program.outputPath),
+		view_root  = path.join(paths.app, CONST.DIR.VIEW),
+		style_root = path.join(paths.app, CONST.DIR.STYLE),
+		targets = [];
 	if (name) {
 		var info = GU.generate(name, 'STYLE', program);
 		if (info) {
-			logger.info('Generated style named '+name);
+			logger.info('Generated style named ' + name);
 		}
 	} else if (program.all) {
-		wrench.readdirSyncRecursive(view_root).forEach(function(view) {
-			if (view.match(".xml$")) {
-				var style = view.replace(/\.xml/,'.tss'),
-						style_path = path.join(style_root, style),
-						view_path  = path.join(view_root, view);
+		walkSync(view_root).forEach(function(view) {
+			if (view.match('.xml$')) {
+				var style = view.replace(/\.xml/, '.tss'),
+					style_path = path.join(style_root, style),
+					view_path  = path.join(view_root, view);
 
 				// make sure the target folder exists
 				var fullDir = path.dirname(style_path);
 				if (!path.existsSync(fullDir)) {
-					wrench.mkdirSyncRecursive(fullDir);
+					fs.mkdirpSync(fullDir);
 				}
 				targets.push({
 					style:style,

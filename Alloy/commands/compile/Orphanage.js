@@ -3,14 +3,14 @@
 	on subsequent compiles. For example, the base client-side lib, alloy.js, is
 	not deleted and recopied after the initial compile.
 */
-var fs = require('fs'),
+var fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
-	wrench = require('wrench'),
 	platforms = require('../../../platforms/index'),
 	logger = require('../../logger'),
 	CONST = require('../../common/constants'),
 	U = require('../../utils'),
-	_ = require('../../lib/alloy/underscore');
+	_ = require('lodash');
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..');
 
@@ -53,7 +53,7 @@ Orphanage.prototype.clean = function() {
 	var widgets = path.join(dirs.runtime, CONST.DIR.WIDGET);
 	if (fs.existsSync(widgets)) {
 		_.each(fs.readdirSync(widgets), function(file) {
-			if(!widgetsInUse[file]) {
+			if (!widgetsInUse[file]) {
 				that.removeAll({ widgetId: file });
 			}
 		});
@@ -68,7 +68,7 @@ Orphanage.prototype.clean = function() {
 Orphanage.prototype.removeAll = function(opts) {
 	opts = opts || {};
 
-	if(!opts.widgetId) {
+	if (!opts.widgetId) {
 		logger.debug('Removing orphaned controllers ...');
 		this.removeControllers(opts);
 
@@ -98,7 +98,7 @@ Orphanage.prototype.removeAdapters = function(opts) {
 		_.each(fs.readdirSync(adapterDir), function(adapterFile) {
 			var fullpath = path.join(adapterDir, adapterFile);
 			var adapterName = adapterFile.replace(/\.js$/, '');
-			if (!_.contains(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
+			if (!_.includes(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
 				logger.trace('* ' + path.join(p, adapterFile));
 				fs.unlinkSync(fullpath);
 			}
@@ -110,7 +110,7 @@ Orphanage.prototype.removeControllers = function(opts) {
 	opts = _.clone(opts || {});
 	remove(_.extend(opts, {
 		folder: CONST.DIR.CONTROLLER,
-		types: ['CONTROLLER','VIEW'],
+		types: ['CONTROLLER', 'VIEW'],
 		exceptions: ['BaseController.js']
 	}));
 };
@@ -127,7 +127,7 @@ Orphanage.prototype.removeStyles = function(opts) {
 	opts = _.clone(opts || {});
 	remove(_.extend(opts, {
 		folder: CONST.DIR.STYLE,
-		types: ['CONTROLLER','VIEW']
+		types: ['CONTROLLER', 'VIEW']
 	}));
 };
 
@@ -180,7 +180,7 @@ Orphanage.prototype.removeAssets = function() {
 	});
 
 	// don't worry about cleaning platforms that aren't the current target
-	_.each(_.without(_.pluck(platforms, 'titaniumFolder'), platforms[platform].titaniumFolder),
+	_.each(_.without(_.map(platforms, 'titaniumFolder'), platforms[platform].titaniumFolder),
 		function(tf) {
 			exceptions.unshift(tf + '*');
 		}
@@ -194,7 +194,7 @@ Orphanage.prototype.removeAssets = function() {
 };
 
 Orphanage.prototype.removeWidget = function(opts) {
-	if(opts.widgetId===".DS_Store") { return; }
+	if (opts.widgetId === '.DS_Store') { return; }
 	opts.runtimePath = path.join(dirs.runtime, CONST.DIR.WIDGET, opts.widgetId);
 	remove(opts);
 };
@@ -251,7 +251,7 @@ function getChecks(file, fullpath, opts) {
 			}
 
 			// is this a widget asset?
-			if (_.contains(parts, widgetId)) {
+			if (_.includes(parts, widgetId)) {
 				file = _.without(parts, widgetId).join('/');
 				break;
 			}
@@ -275,9 +275,9 @@ function isException(file, exceptions) {
 		exs.push(ex);
 
 		// handle folder wildcards
-		if (ex.charAt(ex.length-1) === '*') {
+		if (ex.charAt(ex.length - 1) === '*') {
 			for (var j = 0; j < exs.length; j++) {
-				var newEx = exs[i].substr(0, exs[i].length-2);
+				var newEx = exs[i].substr(0, exs[i].length - 2);
 
 				// see if the file starts with the wildcard
 				if (file.length >= newEx.length && file.substr(0, newEx.length) === newEx) {
@@ -286,7 +286,7 @@ function isException(file, exceptions) {
 			}
 
 		// straight up comparison if there's no wildcards
-		} else if (_.contains(exs, file)) {
+		} else if (_.includes(exs, file)) {
 			return true;
 		}
 	}
@@ -324,7 +324,7 @@ function remove(opts) {
 	}
 
 	// Let's see if we need to delete any orphan files...
-	_.each(wrench.readdirSyncRecursive(runtimePath), function(file) {
+	_.each(walkSync(runtimePath), function(file) {
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;
 		var checks, i;
@@ -361,11 +361,11 @@ function remove(opts) {
 			// delete the directory or file
 			var targetStat = fs.statSync(runtimeFullpath);
 			if (targetStat.isDirectory()) {
-				if(opts.widgetId) {
+				if (opts.widgetId) {
 					// remove the widget's folder
-					wrench.rmdirSyncRecursive(path.resolve(runtimeFullpath, '..'), true);
+					fs.removeSync(path.resolve(runtimeFullpath, '..'));
 				} else {
-					wrench.rmdirSyncRecursive(runtimeFullpath, true);
+					fs.removeSync(runtimeFullpath);
 				}
 			} else {
 				fs.unlinkSync(runtimeFullpath);

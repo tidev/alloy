@@ -1,11 +1,11 @@
 exports.definition = {
 	config: {
-		"columns": {
+		'columns': {
 			text: 'TEXT'
 		},
-		"adapter": {
-			"type": "sql",
-			"collection_name": "collection",
+		'adapter': {
+			'type': 'sql',
+			'collection_name': 'collection',
 		}
 	},
 	extendCollection : function(Collection) {
@@ -22,4 +22,4 @@ exports.definition = {
 		});
 		return Collection;
 	}
-}
+};

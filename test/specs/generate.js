@@ -2,12 +2,12 @@ var fs = require('fs'),
 	path = require('path'),
 	os = require('os'),
 	exec = require('child_process').exec,
-	DOMParser = require("xmldom").DOMParser,
+	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	U = require('../../Alloy/utils'),
 	CU = require('../../Alloy/commands/compile/compilerUtils'),
 	CONST = require('../../Alloy/common/constants'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	_ = require('lodash');
 
 var alloyRoot = path.join(__dirname,'..','..');
 var templatePath = path.join(alloyRoot,'Alloy','template');

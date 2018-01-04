@@ -8,8 +8,8 @@ for (var i = 0; i < 4; i++) {
 	var theStyle = Alloy.createStyle('index', {
 		// used by createStyle() to merge styles
 		apiName: 'Label',
-		classes: ['blue','shadow'],
-		id: 'label' + (i+1),
+		classes: ['blue', 'shadow'],
+		id: 'label' + (i + 1),
 
 		// additional properties to be merged in a final step
 		textAlign: 'left',
@@ -17,7 +17,7 @@ for (var i = 0; i < 4; i++) {
 	});
 
 	// in practice you wouldn't make multiple copies of a UI component with the
-	// same id attribute, but this is just 
+	// same id attribute, but this is just
 	var label = Ti.UI.createLabel(theStyle);
 	labels.push(label);
 	$.index.add(label);
@@ -28,6 +28,6 @@ try {
 	require('specs/index')($, {
 		labels: labels
 	});
-} catch(e) {
+} catch (e) {
 	Ti.API.warn('No unit tests for controller "index"');
 }

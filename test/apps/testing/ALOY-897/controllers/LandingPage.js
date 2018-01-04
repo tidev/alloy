@@ -1,3 +1,3 @@
-function closeWindow(){
+function closeWindow() {
 	$.landingPageWindow.close();
 }

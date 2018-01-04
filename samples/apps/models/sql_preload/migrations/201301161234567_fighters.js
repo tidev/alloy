@@ -1,7 +1,7 @@
 migration.up = function(migrator) {
 	for (var i = 0; i < 5; i++) {
 		migrator.insertRow({
-			name: 'Migration ' + (i+1),
+			name: 'Migration ' + (i + 1),
 			nickname: 'nickname'
 		});
 	}
@@ -10,7 +10,7 @@ migration.up = function(migrator) {
 migration.down = function(migrator) {
 	for (var i = 0; i < 5; i++) {
 		migrator.deleteRow({
-			name: 'Migration ' + (i+1),
+			name: 'Migration ' + (i + 1),
 			nickname: 'nickname'
 		});
 	}

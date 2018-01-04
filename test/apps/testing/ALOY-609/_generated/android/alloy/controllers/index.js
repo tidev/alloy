@@ -35,7 +35,7 @@ function Controller() {
     }
     function doTransform(model) {
         var o = model.toJSON();
-        o.template = o.subtitle ? o.image ? "fullItem" : "titleAndSub" : "title";
+        o.subtitle ? o.image ? o.template = "fullItem" : o.template = "titleAndSub" : o.template = "title";
         return o;
     }
     function doButtonClick(e) {
@@ -50,19 +50,13 @@ function Controller() {
             model.save();
         }
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -268,6 +262,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

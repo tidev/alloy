@@ -1,18 +1,18 @@
 var exec = require('child_process').exec,
-	fs = require('fs'),
+	fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	os = require('os'),
-	wrench = require('wrench'),
 	path = require('path'),
 	JsDiff = require('diff'),
-	_ = require('../../Alloy/lib/alloy/underscore')._,
-	uglifyjs = require('uglify-js'),
+	_ = require('lodash'),
+	babylon = require('babylon'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
 var alloyRoot = path.join(__dirname,'..','..');
 var IS_WIN = /^win/i.test(os.platform());
 
-exports.TIMEOUT_DEFAULT = IS_WIN ? 5000 : 2000;
+exports.TIMEOUT_DEFAULT = IS_WIN ? 5000 : 3500;
 exports.paths = {
 	templates: path.join(alloyRoot,'Alloy','template'),
 	harnessTemplate: path.join(alloyRoot,'test','projects','HarnessTemplate'),
@@ -26,12 +26,14 @@ exports.paths = {
 //             is successfully recreated.
 function resetTestApp(callback) {
 	var paths = exports.paths;
-	wrench.rmdirSyncRecursive(paths.harness, true);
-	wrench.mkdirSyncRecursive(paths.harness, 0777);
-	wrench.copyDirSyncRecursive(paths.harnessTemplate, paths.harness);
+	fs.removeSync(paths.harness);
+	fs.mkdirpSync(paths.harness);
+	chmodr.sync(paths.harness, 0777);
+	fs.copySync(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);
+			console.error(stderr);
 			process.exit();
 		}
 		callback();
@@ -126,18 +128,20 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return uglifyjs.parse(this.actual);
+		babylon.parse(this.actual);
+		return true;
 	} catch (e) {
+		console.error(e);
 		return false;
 	}
 }
 
 function toBeJavascriptFile(expected) {
 	var actual = this.actual;
-    var notText = this.isNot ? " not" : "";
+	var notText = this.isNot ? " not" : "";
 	this.message = function () {
-        return "Expected " + actual + notText + " to be a Javascript file";
-    };
+		return "Expected " + actual + notText + " to be a Javascript file";
+	};
 
 	try {
 		var js = fs.readFileSync(this.actual,'utf8');
@@ -176,7 +180,7 @@ exports.addMatchers = function() {
 				this.message = function() {
 					return ["Expected to have no diff, but it does: \n\n" + JsDiff.createPatch(filename, expected, this.actual)];
 				};
-	      return pass;
+				return pass;
 			}
 		});
 	});

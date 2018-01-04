@@ -1,13 +1,13 @@
 var attributes = {
-  greeting: 'hello',
-  subject: 'world'
+	greeting: 'hello',
+	subject: 'world'
 };
 
 Alloy.Models.modelb.set({
-  'mix-it': 'Mix It!',
-  deep: {
-    link: 'deep-link'
-  }
+	'mix-it': 'Mix It!',
+	deep: {
+		link: 'deep-link'
+	}
 });
 
 Alloy.Models['model-a'].set(attributes);

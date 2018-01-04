@@ -1,8 +1,8 @@
 function doClick() {
-    alert('label clicked');
+	alert('label clicked');
 }
 function doMenuClick() {
-    alert('menu clicked');
+	alert('menu clicked');
 }
 
 $.index.open();
