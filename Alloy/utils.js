@@ -292,14 +292,14 @@ exports.getWidgetDirectories = function(appDir) {
 	var appWidgets = [];
 	if (fs.existsSync(configPath)) {
 		try {
-			var content = fs.readFileSync(configPath,'utf8');
+			var content = fs.readFileSync(configPath, 'utf8');
 			var config = jsonlint.parse(content);
 			appWidgets = config.dependencies;
 
 			if (config.global && config.global.theme) {
 				var themePath = path.join(appDir, 'themes', config.global.theme, 'config.json');
 				if (fs.existsSync(themePath)) {
-					var themeContent = fs.readFileSync(themePath,'utf8');
+					var themeContent = fs.readFileSync(themePath, 'utf8');
 					var themeConfig = jsonlint.parse(themeContent);
 					if (themeConfig.dependencies) {
 						appWidgets = _.extend(appWidgets, themeConfig.dependencies);
