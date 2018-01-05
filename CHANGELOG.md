@@ -1,7 +1,13 @@
 ## Alloy Release Notes
 
 ### Release 1.10.12
+
+#### Fixed
+  * [ALOY-1596](https://jira.appcelerator.org/browse/ALOY-1596): Do not copy Mobileweb assets on alloy new
+  * [ALOY-1592](https://jira.appcelerator.org/browse/ALOY-1592): Builtins: Reimplement measurement by convertUnits
   * [ALOY-1534](https://jira.appcelerator.org/browse/ALOY-1534): Add support for Backbone 1.3.3 and Underscore 1.8.3
+  * [ALOY-1528](https://jira.appcelerator.org/browse/ALOY-1528): Checks the theme’s config.json for dependencies when
+    returning widget directories
 
 ---
 ### Release 1.10.11
