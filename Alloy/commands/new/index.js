@@ -143,8 +143,7 @@ function getPaths(project, templateName, testapp) {
 		alloy: alloy,
 		template: path.join(alloy, 'template'),
 		readme: path.join(template, 'README'),
-		projectTemplate: (!testapp) ? path.join(projectTemplates, templateName) :
-		path.join(sampleAppsDir, testapp),
+		projectTemplate: (!testapp) ? path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
 
 		// project paths
 		project: project,
