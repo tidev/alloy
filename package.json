@@ -36,22 +36,22 @@
     "babel-types": "^6.23.0",
     "babylon": "^6.16.1",
     "chmodr": "^1.0.2",
-    "colors": "0.6.0-1",
-    "commander": "0.6.1",
+    "colors": "^1.1.2",
+    "commander": "^2.12.2",
     "deasync": "^0.1.9",
-    "ejs": "2.3.4",
-    "fs-extra": "^3.0.1",
-    "global-paths": "^0.1.2",
-    "jsonlint": "1.5.1",
+    "ejs": "2.5.7",
+    "fs-extra": "^5.0.0",
+    "global-paths": "^1.0.0",
+    "jsonlint": "1.6.2",
     "lodash": "^4.17.4",
-    "moment": "2.17.1",
-    "node.extend": "1.0.10",
-    "pkginfo": "0.2.2",
+    "moment": "2.20.1",
+    "node.extend": "2.0.0",
+    "pkginfo": "0.4.1",
     "resolve": "^1.1.7",
     "source-map": "^0.6.1",
     "walk-sync": "^0.3.2",
     "xml2tss": "0.0.5",
-    "xmldom": "0.1.19"
+    "xmldom": "^0.1.27"
   },
   "license": "Apache-2.0",
   "bin": {
@@ -66,8 +66,8 @@
     "node": ">=0.10"
   },
   "devDependencies": {
-    "diff": "^2.2.2",
-    "eslint": "^3.11.1",
+    "diff": "^3.4.0",
+    "eslint": "^4.14.0",
     "jake": "^8.0.12",
     "mkdirp": "^0.5.1"
   }

@@ -20,6 +20,7 @@ module.exports = {
 		'no-control-regex': OFF,
 		'no-fallthrough': OFF,
 		'no-unused-vars': OFF,
+		'no-useless-escape': OFF,
 		'no-undef': OFF,
 		'no-octal': OFF,
 		'quotes': [ERROR, 'single', {'avoidEscape': true, allowTemplateLiterals: true}],

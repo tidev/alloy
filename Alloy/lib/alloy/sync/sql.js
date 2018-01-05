@@ -267,7 +267,7 @@ function Sync(method, model, opts) {
 			break;
 	}
 
-  // process success/error handlers, if present
+	// process success/error handlers, if present
 	if (resp) {
 		if (_.isFunction(opts.success)) { opts.success(resp); }
 		if (method === 'read' && !opts.silent) { model.trigger('fetch', { fromAdapter: true }); }
