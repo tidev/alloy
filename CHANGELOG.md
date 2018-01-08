@@ -2,7 +2,8 @@
 
 ### Release 1.10.12
 
-#### Fixed
+#### Fixes and Improvements
+  * [ALOY-1597](https://jira.appcelerator.org/browse/ALOY-1597): Improve compile error messages to include a code frame that     point to source locations
   * [ALOY-1596](https://jira.appcelerator.org/browse/ALOY-1596): Do not copy Mobileweb assets on alloy new
   * [ALOY-1592](https://jira.appcelerator.org/browse/ALOY-1592): Builtins: Reimplement measurement by convertUnits
   * [ALOY-1534](https://jira.appcelerator.org/browse/ALOY-1534): Add support for Backbone 1.3.3 and Underscore 1.8.3
