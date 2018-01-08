@@ -64,6 +64,7 @@ exports.XML = {
 			var errorHandler = {};
 			errorHandler.error = errorHandler.fatalError = function(m) {
 				var errorInfo = extractLineData(m);
+				m = m.replace(/@#\[line:(\d+),col:(\d+)\]/, '').trim();
 				exports.dieWithCodeFrame(m, errorInfo, string);
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
