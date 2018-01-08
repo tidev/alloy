@@ -63,7 +63,7 @@ exports.processController = function(code, file) {
 
 		newCode = generate(ast, {}).code;
 	} catch (e) {
-		U.dieWithCodeFrame('Error generating AST for "' + file + '"', e, file);
+		U.dieWithCodeFrame('Error generating AST for "' + file + '". Unexpected token at line ' + e.loc.line + ' column ' + e.loc.column, e.loc, code);
 	}
 
 	return {

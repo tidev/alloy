@@ -47,10 +47,24 @@ exports.XML = {
 	},
 	parseFromString: function(string) {
 		var doc;
+
+		function extractLineData(errorString) {
+			var lineData = errorString.match(/@#\[line:(\d+),col:(\d+)\]/);
+			var errorInfo = {
+				line: null,
+				column: null
+			};
+			if (lineData) {
+				errorInfo.line = parseInt(lineData[1], 10);
+				errorInfo.column = parseInt(lineData[2], 10);
+			}
+			return errorInfo;
+		}
 		try {
 			var errorHandler = {};
 			errorHandler.error = errorHandler.fatalError = function(m) {
-				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+				var errorInfo = extractLineData(m);
+				exports.dieWithCodeFrame(m, errorInfo, string);
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
 				// ALOY-840: die on unclosed XML tags
@@ -60,7 +74,8 @@ exports.XML = {
 					logger.warn((m || '').split(/[\r\n]/));
 				} else {
 					m = m.replace('unclosed xml attribute', 'Unclosed XML tag or attribute');
-					exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+					var errorInfo = extractLineData(m);
+					exports.dieWithCodeFrame('Unclosed XML tag or attribute', errorInfo, string);
 				}
 			};
 			doc = new DOMParser({errorHandler:errorHandler, locator:{}}).parseFromString(string);
@@ -522,11 +537,16 @@ exports.die = function(msg, e) {
 	process.exit(1);
 };
 
-exports.dieWithCodeFrame = function(msg, e, file) {
-	var rawLines = fs.readFileSync(file).toString();
-	var frame = codeFrame(rawLines, e.loc.line, e.loc.column, { highlightCode: true });
-	console.log(frame);
-	exports.die(msg);
+exports.dieWithCodeFrame = function(errorMessage, lineInfo, fileContents, hint) {
+	var frame = codeFrame(fileContents, lineInfo.line, lineInfo.column, { highlightCode: true });
+	logger.error(errorMessage);
+	// Convert the code frame from a string to an Array so that the logger logs
+	// each line individually to keep the code frame intact
+	logger.error(frame.split('\n'));
+	if (hint) {
+		logger.info(hint);
+	}
+	process.exit(1);
 };
 
 exports.dieWithNode = function(node, msg) {

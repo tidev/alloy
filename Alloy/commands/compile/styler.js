@@ -263,8 +263,13 @@ exports.loadStyle = function(tssFile) {
 	if (path.existsSync(tssFile)) {
 		// read the style file
 		var contents;
+		var originalContents;
+		var addedBraces;
 		try {
 			contents = fs.readFileSync(tssFile, 'utf8');
+			// Store the originalContents in case we hit a parse error,
+			// this allows us to show the correct contents of the .tss file
+			originalContents = contents;
 		} catch (e) {
 			U.die('Failed to read style file "' + tssFile + '"', e);
 		}
@@ -275,7 +280,10 @@ exports.loadStyle = function(tssFile) {
 		}
 
 		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+		if (!/^\s*\{[\s\S]+\}\s*$/gi.test(contents)) {
+			contents = '{\n' + contents + '\n}';
+			addedBraces = true;
+		}
 		// [ALOY-793] double-escape '\' in tss
 		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
@@ -285,16 +293,20 @@ exports.loadStyle = function(tssFile) {
 			json = grammar.parse(contents);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
-			U.die([
+			// If we added braces to the contents then the actual line number
+			// on the original contents is one less than the error reports
+			if (addedBraces) {
+				e.line--;
+			}
+			U.dieWithCodeFrame(
 				'Error processing style "' + tssFile + '"',
-				e.message,
-				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
-				'- line:    ' + e.line,
-				'- column:  ' + e.column,
-				'- offset:  ' + e.offset
-			]);
+				{ line: e.line, column: e.column },
+				originalContents,
+				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message)
+					? 'Do you have an extra comma in your style definition?'
+					: ''
+			);
 		}
-
 		return json;
 	}
 	return {};
