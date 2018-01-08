@@ -16,7 +16,8 @@ var path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	_ = require('lodash'),
 	CONST = require('./common/constants'),
-	sourceMapper = require('./commands/compile/sourceMapper');
+	sourceMapper = require('./commands/compile/sourceMapper'),
+	codeFrame = require('babel-code-frame');
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -46,10 +47,25 @@ exports.XML = {
 	},
 	parseFromString: function(string) {
 		var doc;
+
+		function extractLineData(errorString) {
+			var lineData = errorString.match(/@#\[line:(\d+),col:(\d+)\]/);
+			var errorInfo = {
+				line: null,
+				column: null
+			};
+			if (lineData) {
+				errorInfo.line = parseInt(lineData[1], 10);
+				errorInfo.column = parseInt(lineData[2], 10);
+			}
+			return errorInfo;
+		}
 		try {
 			var errorHandler = {};
 			errorHandler.error = errorHandler.fatalError = function(m) {
-				exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+				var errorInfo = extractLineData(m);
+				m = m.replace(/@#\[line:(\d+),col:(\d+)\]/, '').trim();
+				exports.dieWithCodeFrame(m, errorInfo, string);
 			};
 			errorHandler.warn = errorHandler.warning = function(m) {
 				// ALOY-840: die on unclosed XML tags
@@ -59,7 +75,8 @@ exports.XML = {
 					logger.warn((m || '').split(/[\r\n]/));
 				} else {
 					m = m.replace('unclosed xml attribute', 'Unclosed XML tag or attribute');
-					exports.die(['Error parsing XML file.'].concat((m || '').split(/[\r\n]/)));
+					var errorInfo = extractLineData(m);
+					exports.dieWithCodeFrame('Unclosed XML tag or attribute', errorInfo, string);
 				}
 			};
 			doc = new DOMParser({errorHandler:errorHandler, locator:{}}).parseFromString(string);
@@ -529,6 +546,18 @@ exports.die = function(msg, e) {
 		logger.error(exports.createErrorOutput(msg, e));
 	} else {
 		logger.error(msg);
+	}
+	process.exit(1);
+};
+
+exports.dieWithCodeFrame = function(errorMessage, lineInfo, fileContents, hint) {
+	var frame = codeFrame(fileContents, lineInfo.line, lineInfo.column, { highlightCode: true });
+	logger.error(errorMessage);
+	// Convert the code frame from a string to an Array so that the logger logs
+	// each line individually to keep the code frame intact
+	logger.error(frame.split('\n'));
+	if (hint) {
+		logger.info(hint);
 	}
 	process.exit(1);
 };
