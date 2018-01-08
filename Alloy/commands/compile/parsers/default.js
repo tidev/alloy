@@ -71,7 +71,8 @@ function parse(node, state, args) {
 				fullname,
 				_.defaults(state.extraStyle || {}, args.createArgs || {}),
 				state
-		)};
+			)
+		};
 
 		// add in any events on the ItemTemplate
 		if (args.events && args.events.length > 0) {

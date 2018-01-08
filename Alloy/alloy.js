@@ -55,25 +55,25 @@ program
 	.option('--testapp <name>', 'Test app name to import, used with new command');
 
 program.command('new'.blue + ' <dir>'.white)
-		.description('    create a new alloy project'.grey);
+	.description('    create a new alloy project'.grey);
 
 program.command('compile'.blue + ' [dir]'.white)
-		.description('    compile into titanium source code'.grey);
+	.description('    compile into titanium source code'.grey);
 
 program.command('extract-i18n'.blue + ' <language>'.white)
-		.description('    extracts i18n strings from the source code (js and tss files)'.grey);
+	.description('    extracts i18n strings from the source code (js and tss files)'.grey);
 
 program.command('generate'.blue + ' <type> <name>'.white)
-		.description('    generate a new alloy type such as a controller'.grey);
+	.description('    generate a new alloy type such as a controller'.grey);
 
 program.command('copy'.blue + ' <source> <destination>'.white)
-		.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
+	.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
 
 program.command('move'.blue + ' <source> <destination>'.white)
-		.description('    move the controller, view, and style files from <source> to <destination>'.grey);
+	.description('    move the controller, view, and style files from <source> to <destination>'.grey);
 
 program.command('remove'.blue + ' <source>'.white)
-		.description('    remove the controller, view, and style files at <source>'.grey);
+	.description('    remove the controller, view, and style files at <source>'.grey);
 
 program.parse(process.argv);
 
