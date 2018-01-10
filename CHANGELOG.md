@@ -1,5 +1,10 @@
 ## Alloy Release Notes
 
+---
+### Release 1.11.0
+ * No changes, just a version bump
+
+---
 ### Release 1.10.12
 
 #### Fixes and Improvements
