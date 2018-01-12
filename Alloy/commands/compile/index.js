@@ -416,7 +416,7 @@ module.exports = function(args, program) {
 	// Process all models
 	var models = processModels(widgetDirs);
 	_.each(models, function(m) {
-		CU.models.push(m.charAt(0).toLowerCase() + m.slice(1));
+		CU.models.push(m);
 	});
 
 	// Create a regex for determining which platform-specific
@@ -1099,7 +1099,7 @@ function processModels(dirs) {
 			fs.mkdirpSync(modelRuntimeDir);
 			chmodr.sync(modelRuntimeDir, 0755);
 			fs.writeFileSync(path.join(modelRuntimeDir, casedBasename + '.js'), code);
-			models.push(casedBasename);
+			models.push(basename);
 		});
 	});
 
