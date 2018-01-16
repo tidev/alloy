@@ -2,8 +2,8 @@ exports.definition = {
 	config: {
 
 		adapter: {
-			type: "properties",
-			collection_name: "small"
+			type: 'properties',
+			collection_name: 'small'
 		}
 	},
 	extendModel: function(Model) {
