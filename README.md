@@ -13,7 +13,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 
 * [Quick Start Guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Quick_Start) that covers _everything_ from installation to building your first app with Alloy.
 * Complete collection of [Alloy Guides](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework)
-* [Collection of test apps](https://github.com/appcelerator/alloy/tree/master/test/apps) showing various aspects of Alloy in practice.
+* [Collection of sample apps](https://github.com/appcelerator/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
 
 ## Installation
 
@@ -36,7 +36,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 
 ## Running Sample Test Apps
 
-Alloy includes many sample and test apps in the **test/apps** folder (see above). For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/test/apps/basics/simple) or [models/todo](https://github.com/appcelerator/alloy/tree/master/test/apps/models/todo). You can run these in a few different ways:
+Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/samples/apps/basics/simple) or [todo](https://github.com/appcelerator/alloy/tree/master/samples/apps/todo). You can run these in a few different ways:
 
 ### A) With a regular Alloy installation
 Beginning with Alloy 1.6, you can do the following:
