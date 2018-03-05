@@ -493,7 +493,7 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		removeListener: function(proxy, type, callback) {
-			_.each(this.__events, function(event, index) {
+			this.__events.forEach(function(event, index) {
 				if ((!proxy || proxy.id === event.id) &&
 					(!type || type === event.type) &&
 					(!callback || callback === event.handler)) {
