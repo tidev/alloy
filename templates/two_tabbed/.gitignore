@@ -10,4 +10,4 @@ tmp
 .project
 .settings
 Thumbs.db
-plugins/ti.alloy/hooks/alloy.js
+plugins/ti.alloy
