@@ -4,7 +4,8 @@ var ERROR = 2;
 
 module.exports = {
 	env: {
-		'node': true
+		'node': true,
+		'es6': true
 	},
 
 	extends: 'eslint:recommended',
