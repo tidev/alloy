@@ -1,7 +1,4 @@
-Ti.include('/runtimeTester.js');
-
 module.exports = function($) {
-	addMatchers();
 
 	var styler = {};
 	if (OS_ANDROID) {
@@ -116,82 +113,4 @@ module.exports = function($) {
 	// add the styer as a hidden argument to the controller to
 	// DRY out the unit testing code.
 	$.__styler = styler;
-
-	describe('index controller', function() {
-		validateUiComponent($, 'index', {
-			api: 'Ti.UI.Window',
-			style: {
-				backgroundColor: '#fff',
-				id: 'index'
-			}
-		});
-
-		validateUiComponent($, 'title', {
-			api: 'Ti.UI.Label',
-			style: {
-				color: '#000',
-				top: 0,
-				height: 46,
-				width: Ti.UI.FILL,
-				textAlign: 'center',
-				font: {
-					fontSize: 24,
-					fontWeight: 'bold'
-				},
-				text: 'Patience Tester',
-				id: 'title'
-			}
-		});
-
-		validateUiComponent($, 'container', {
-			api: 'Ti.UI.View',
-			style: {
-				height: 170,
-				width: 250,
-				top: 80,
-				borderColor: '#000',
-				borderWidth: 2,
-				borderRadius: 16,
-				id: 'container'
-			}
-		});
-
-		validateUiComponent($, 'label', {
-			api: 'Ti.UI.Label',
-			style: {
-				color: '#000',
-				text: '5s',
-				top: 10,
-				font: {
-					fontSize: 140,
-					fontWeight: 'bold'
-				},
-				textAlign: 'center',
-				id: 'label'
-			}
-		});
-
-		validateUiComponent($, 'slider', {
-			api: 'Ti.UI.Slider',
-			style: {
-				min: 1,
-				max: 10,
-				value: 5,
-				id: 'slider'
-			}
-		});
-
-		validateUiComponent($, 'testButton', {
-			api: 'Ti.UI.Button',
-			style: {
-				bottom: 30,
-				height: 50,
-				width: 180,
-				title: 'Test Patience',
-				id: 'testButton'
-			}
-		});
-	});
-
-	launchTests();
 };
