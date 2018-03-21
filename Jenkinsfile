@@ -1,11 +1,13 @@
 #! groovy
 library 'pipeline-library'
 def nodeVersion = '8.9.0'
+def npmVersion = '5.7.1' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 timestamps() {
 	node('(osx || linux) && git && npm-publish && curl') {
 		def packageVersion = ''
 		def isPR = false
+		def published = false
 
 		stage('Checkout') {
 			// checkout scm
@@ -26,16 +28,12 @@ timestamps() {
 			ansiColor('xterm') {
 				timeout(55) {
 					stage('Build') {
+						ensureNPM(npmVersion)
 						// Install yarn if not installed
-						if (sh(returnStatus: true, script: 'which yarn') != 0) {
-							// TODO Install using the curl script via chef before-hand?
-							// sh 'curl -o- -L https://yarnpkg.com/install.sh | bash'
-							sh 'npm install -g yarn'
-						}
-						sh 'yarn install'
+						sh 'npm ci'
 						if (sh(returnStatus: true, script: 'which ti') != 0) {
 							// Install titanium
-							sh 'yarn global add titanium'
+							sh 'npm install -g titanium'
 						}
 						if (sh(returnStatus: true, script: 'ti config sdk.selected') != 0) {
 							// Install titanium SDK and select it
@@ -43,44 +41,47 @@ timestamps() {
 						}
 						try {
 							withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
-								sh 'yarn test'
+								sh 'npm test'
 							}
 						} finally {
 							junit 'TEST-*.xml'
 						}
 						fingerprint 'package.json'
-						// Don't tag PRs
-						if (!isPR) {
-							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
-						}
 					} // stage
 				} // timeout
 
 				stage('Security') {
 					// Clean up and install only production dependencies
-					sh 'rm -rf node_modules/'
-					sh 'yarn install --production'
+					ensureNPM(npmVersion)
+					sh 'npm ci --production'
 
-					// Scan for NSP and RetireJS warnings
-					sh 'yarn global add nsp'
-					sh 'nsp check --output summary --warn-only'
+					sh 'npx nsp check --output summary --warn-only'
 
-					sh 'yarn global add retire'
-					sh 'retire --exitwith 0'
+					sh 'npx retire --exitwith 0'
 
 					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
 				} // stage
 
 				stage('Publish') {
 					if (!isPR) {
-						sh 'npm publish'
-						// Trigger appc-cli job
-						build job: '../appc-cli/master', wait: false
+						try {
+							// Publish
+							sh 'npm publish'
+							// Tag git
+							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
+							// Trigger appc-cli job
+							build job: '../appc-cli/master', wait: false
+							// Set published to true so we can update tickets
+							published = true
+						} catch (e) {
+							// Don't thow the errors as we don't want a failed publish due to the version not being bumped
+							// being classed as a failure on the build
+						}
 					}
 				}
 
 				stage('JIRA') {
-					if (!isPR) {
+					if (published) {
 						def versionName = "Alloy ${packageVersion}"
 						def projectKey = 'ALOY'
 						def issueKeys = jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector'])
