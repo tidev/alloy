@@ -1,6 +1,7 @@
 #! groovy
 library 'pipeline-library'
 def nodeVersion = '8.9.0'
+def npmVersion = '5.7.1' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 timestamps() {
 	node('(osx || linux) && git && npm-publish && curl') {
@@ -27,6 +28,7 @@ timestamps() {
 			ansiColor('xterm') {
 				timeout(55) {
 					stage('Build') {
+						ensureNPM(npmVersion)
 						// Install yarn if not installed
 						sh 'npm ci'
 						if (sh(returnStatus: true, script: 'which ti') != 0) {
@@ -50,6 +52,7 @@ timestamps() {
 
 				stage('Security') {
 					// Clean up and install only production dependencies
+					ensureNPM(npmVersion)
 					sh 'npm ci --production'
 
 					sh 'npx nsp check --output summary --warn-only'
