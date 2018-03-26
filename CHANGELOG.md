@@ -1,6 +1,21 @@
 ## Alloy Release Notes
 
 ---
+### Release 1.11.1
+
+### Fixed
+ * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602) :Avoid some global variables to be only available in parent controller
+    - Thanks to @clementblanco for this contribution!
+ * [ALOY-1607](https://jira.appcelerator.org/browse/ALOY-1607): Fix BaseController.removeListener
+    - Thanks to @jormagar for this contribution!
+ * [ALOY-1609](https://jira.appcelerator.org/browse/ALOY-1609): Add plugins/ti.alloy to gitignore
+ * [ALOY-1599](https://jira.appcelerator.org/browse/ALOY-1599): Model Data binding problem with the first upper case in the model src
+    - Thanks to @darknos for this contribution!
+ * [ALOY-1595](https://jira.appcelerator.org/browse/ALOY-1595): alloy compile broken on node 9.3.0
+ * [PR-878](https://github.com/appcelerator/alloy/pull/878): Fix links in README
+    - Thanks to @dfrankow for this contribution!
+
+---
 ### Release 1.11.0
  * No changes, just a version bump
 
