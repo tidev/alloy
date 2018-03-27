@@ -11,7 +11,7 @@
 		<Tab title="About Us">
 			<Window title="About Us" barColor="{user.themeBGColor}">
 				<RightNavButton><Button class="logout" onClick="logout"/></RightNavButton>
-				<WebView url="https://en.wikipedia.org/wiki/Banana (fruit)"/>
+				<WebView url="https://en.wikipedia.org/wiki/Banana"/>
 			</Window>
 		</Tab>
 		<Tab title="Settings">
