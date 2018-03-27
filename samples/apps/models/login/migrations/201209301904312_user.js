@@ -12,8 +12,8 @@ migration.up = function(migrator) {
 	});
 	migrator.insertRow({
 		'username':'user',
-		'realname':'Tobias Funke',
-		'email':'tfunke@bluth.com',
+		'realname':'Jane Smith',
+		'email':'jane.smith@appcelerator.com',
 		'loggedIn':0,
 		'loggedInSince':'',
 		'authKey':'',
