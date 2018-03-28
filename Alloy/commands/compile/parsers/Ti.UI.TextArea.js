@@ -102,7 +102,6 @@ function parse(node, state, args) {
 		node.setAttribute('autocapitalization', 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + autocapitalization.toUpperCase());
 	}
 
-
 	// add all creation time properties to the state
 	if (node.hasAttribute('clearOnEdit')) {
 		var attr = node.getAttribute('clearOnEdit');
@@ -112,6 +111,16 @@ function parse(node, state, args) {
 		extras.push([k, v]);
 	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
+
+	const nodeText = U.XML.getNodeText(node);
+	if (nodeText && nodeText.trim() !== '') {
+		state.extraStyle = state.extraStyle || {};
+		if (U.isLocaleAlias(nodeText)) {
+			state.extraStyle['value'] = styler.STYLE_EXPR_PREFIX + nodeText;
+		} else {
+			_.extend(state.extraStyle, styler.createVariableStyle('value', U.possibleMultilineString(U.trim(nodeText.replace(/'/g, "\\'")))));
+		}
+	}
 
 	// generate the code for the textarea itself
 	var nodeState = require('./default').parse(node, state);
