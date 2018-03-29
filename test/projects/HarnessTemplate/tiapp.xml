@@ -25,17 +25,23 @@
     <analytics>false</analytics>
     <guid>92f97a58-b1da-4de6-a761-0a4a33892dbc</guid>
     <property name="ti.ui.defaultunit">system</property>
-    <iphone>
-        <orientations device="iphone">
-            <orientation>Ti.UI.PORTRAIT</orientation>
-        </orientations>
-        <orientations device="ipad">
-            <orientation>Ti.UI.PORTRAIT</orientation>
-            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
-            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
-            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
-        </orientations>
-    </iphone>
+    <ios>
+        <plist>
+            <dict>
+                <key>UISupportedInterfaceOrientations~iphone</key>
+                <array>
+                    <string>Ti.UI.PORTRAIT</string>
+                </array>
+                <key>UISupportedInterfaceOrientations~ipad</key>
+                <array>
+                    <string>Ti.UI.PORTRAIT</string>
+                    <string>Ti.UI.UPSIDE_PORTRAIT</string>
+                    <string>Ti.UI.LANDSCAPE_LEFT</string>
+                    <string>Ti.UI.LANDSCAPE_RIGHT</string>
+                </array>
+            </dict>
+        </plist>
+    </ios>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
             <!-- Allows the API to download data from Google Map servers -->
