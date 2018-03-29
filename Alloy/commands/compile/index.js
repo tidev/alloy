@@ -1146,7 +1146,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 
 		_.each(exceptions.slice(0), function(ex) {
-			exceptions.push(path.join(titaniumFolder, ex));
+			exceptions.push(`${titaniumFolder}/${ex}`);
 		});
 
 		var excludePatterns = otherPlatforms.concat(['.+node_modules']);
