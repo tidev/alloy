@@ -1,10 +1,19 @@
 ## Alloy Release Notes
 
 ---
-### Release 1.11.1
+### Release 1.12.0
+
+### Improvements
+
+* [ALOY-1603](https://jira.appcelerator.org/browse/ALOY-1603): Update momentjs to 2.21.0
+    - View the momentjs release notes [here](https://github.com/moment/moment/blob/d0a45f0390c108cc18d71a3d3f38d040392483c5/CHANGELOG.md), previous version was 2.16.0
+
+
 
 ### Fixed
- * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602) :Avoid some global variables to be only available in parent controller
+ 
+ * [ALOY-1606](https://jira.appcelerator.org/browse/ALOY-1606): Android: Debugger not hitting breakpoints on Windows
+ * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602): Avoid some global variables to be only available in parent controller
     - Thanks to @clementblanco for this contribution!
  * [ALOY-1607](https://jira.appcelerator.org/browse/ALOY-1607): Fix BaseController.removeListener
     - Thanks to @jormagar for this contribution!
