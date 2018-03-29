@@ -114,7 +114,7 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
  authors  : 
   2364	Tony Lukasavage        62.2%
    377	Feon Sua               9.9%
-   374	Tim Poulsen            9.9%
+   374	Tim Poulsen            9.8%
     87	Fokke Zandbergen       2.3%
     87	Jeff Haynie            2.3%
     75	Russ McMahon           2.0%
