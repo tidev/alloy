@@ -112,11 +112,9 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
  commits  : 3799
  files    : 4075
  authors  : 
-  1971	tonylukasavage         51.9%
-   393	Tony Lukasavage        10.3%
+  2364	Tony Lukasavage        62.2%
    377	Feon Sua               9.9%
-   278	Tim Poulsen            7.3%
-    96	skypanther             2.5%
+   374	Tim Poulsen            9.9%
     87	Fokke Zandbergen       2.3%
     87	Jeff Haynie            2.3%
     75	Russ McMahon           2.0%
