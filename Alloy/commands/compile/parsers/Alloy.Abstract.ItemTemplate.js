@@ -54,8 +54,8 @@ function parse(node, state, args) {
 		_.each(children, function(child) {
 			if (child.nodeName === 'Require') {
 				U.dieWithNode(child, [
-					'<ItemTemplate> cannot contain <Require> or <Widget> elements.',
-					'ListView currently only supports Titanium API elements:',
+					'<ItemTemplate> cannot contain <Require> elements.',
+					'ListView currently only supports Titanium API elements and Widgets:',
 					'  examples: <Label>, <Button>, <ImageView>, etc...',
 					'Please reference the ListView guide at docs.appcelerator.com for more details.'
 				]);
