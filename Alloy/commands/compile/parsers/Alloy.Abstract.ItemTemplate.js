@@ -52,7 +52,7 @@ function parse(node, state, args) {
 		code += 'var ' + childTemplates + '=[];';
 
 		_.each(children, function(child) {
-			if (child.nodeName === 'Require' || child.nodeName === 'Widget') {
+			if (child.nodeName === 'Require') {
 				U.dieWithNode(child, [
 					'<ItemTemplate> cannot contain <Require> or <Widget> elements.',
 					'ListView currently only supports Titanium API elements:',
@@ -61,14 +61,25 @@ function parse(node, state, args) {
 				]);
 			}
 
+			// lets be naughty and pretend this is not a Widget
+			// to generate a valid template
+			if (child.nodeName === 'Widget') {
+				let src = child.getAttribute('src'),
+					ns = src.split('.')
+					name = ns.pop();
+
+				child.removeAttribute('src');
+				child.setAttribute('ns', ns.join('.'));
+				child.nodeName = name;
+			}
+
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
 				local: true,
 				isViewTemplate: true,
 				post: function(node, state, args) {
-					if (state.item) {
-						return childTemplates + '.push(' + state.item.symbol + ');';
-					}
+					let symbol = (state.item && state.item.symbol) || args.symbol;
+					return childTemplates + '.push(' + symbol + ');';
 				}
 			});
 		});
