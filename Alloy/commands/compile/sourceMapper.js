@@ -57,7 +57,10 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var target = generator.target;
 	var data = generator.data;
 	var markers = _.map(data, function(v, k) { return k; });
-	var mapper = new SM.SourceMapGenerator({ file: target.filename });
+	var mapper = new SM.SourceMapGenerator({
+		file: target.filename,
+		sourceRoot: `file://${compileConfig.dir.project}/`
+	});
 	var genMap = {
 		file: target.filename,
 		count: 1,
@@ -117,6 +120,8 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// write the generated controller code
 	var outfile = target.filepath;
 	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
+	outputResult.code += `\n//# sourceMappingURL=file://${compileConfig.dir.project}/${CONST.DIR.MAP}/${relativeOutfile}.${CONST.FILE_EXT.MAP}`;
+
 	fs.mkdirpSync(path.dirname(outfile));
 	chmodr.sync(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, outputResult.code.toString());
