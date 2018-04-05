@@ -65,7 +65,7 @@ function parse(node, state, args) {
 			// to generate a valid template
 			if (child.nodeName === 'Widget') {
 				let src = child.getAttribute('src'),
-					ns = src.split('.')
+					ns = src.split('.'),
 					name = ns.pop();
 
 				child.removeAttribute('src');
