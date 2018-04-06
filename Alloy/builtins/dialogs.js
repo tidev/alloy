@@ -36,9 +36,10 @@ exports.buttonNames = ['No', 'Yes'];
  * @param {String} [args.yes="Yes"] Label of the affirmative button of the dialog box.
  * @param {String} [args.no="No"] Label of the negative button of the dialog box.
  * @param {Function} [args.callback] Callback function invoked after an affirmative response.
+ * @param {Function} [args.failure] Callback function invoked after a failure response.
  * @param {...*} [args.evt] Callback context.
  */
-exports.confirm = function (args) {
+exports.confirm = function(args) {
 	args = args || {};
 	if (args.buttonNames) {
 		args.no = args.no || args.buttonNames[0];
@@ -51,9 +52,13 @@ exports.confirm = function (args) {
 		buttonNames: [args.no || exports.buttonNames[0], args.yes || exports.buttonNames[1]],
 		cancel: 0
 	});
-	alertDialog.addEventListener('click', function (evt) {
+	alertDialog.addEventListener('click', function(evt) {
 		if (evt.index) {
-			if (args.callback) { args.callback(args.evt || {}); }
+			if (args.callback) {
+				args.callback(args.evt || {});
+			}
+		} else if (args.failure) {
+			args.failure(args.evt || {});
 		}
 		args = null;
 	});
