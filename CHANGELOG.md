@@ -1,6 +1,30 @@
 ## Alloy Release Notes
 
 ---
+### Release 1.12.0
+
+### Improvements
+
+* [ALOY-1603](https://jira.appcelerator.org/browse/ALOY-1603): Update momentjs to 2.21.0
+    - View the momentjs release notes [here](https://github.com/moment/moment/blob/d0a45f0390c108cc18d71a3d3f38d040392483c5/CHANGELOG.md), previous version was 2.16.0
+
+
+
+### Fixed
+ 
+ * [ALOY-1606](https://jira.appcelerator.org/browse/ALOY-1606): Android: Debugger not hitting breakpoints on Windows
+ * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602): Avoid some global variables to be only available in parent controller
+    - Thanks to @clementblanco for this contribution!
+ * [ALOY-1607](https://jira.appcelerator.org/browse/ALOY-1607): Fix BaseController.removeListener
+    - Thanks to @jormagar for this contribution!
+ * [ALOY-1609](https://jira.appcelerator.org/browse/ALOY-1609): Add plugins/ti.alloy to gitignore
+ * [ALOY-1599](https://jira.appcelerator.org/browse/ALOY-1599): Model Data binding problem with the first upper case in the model src
+    - Thanks to @darknos for this contribution!
+ * [ALOY-1595](https://jira.appcelerator.org/browse/ALOY-1595): alloy compile broken on node 9.3.0
+ * [PR-878](https://github.com/appcelerator/alloy/pull/878): Fix links in README
+    - Thanks to @dfrankow for this contribution!
+
+---
 ### Release 1.11.0
  * No changes, just a version bump
 
