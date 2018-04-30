@@ -121,7 +121,7 @@ exports.getParserArgs = function(node, state, opts) {
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
-		fullname = ns + '.' + name,
+		fullname = (ns && ns.length) ? (ns + '.' + name) : name,
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
