@@ -1,0 +1,27 @@
+<Alloy>
+	
+	<NavigationWindow module="ui.drawer" platform="ios">
+		<Window module="ui.drawer" id="drawer" class="drawer" onMenuClick="toggleDrawer">
+			<!-- Views are placeholders here. 
+				Inside the ui.drawer module they're replaced with require -->
+			<View src="menu/navigation" role="leftView" module="ui.drawer" />
+			<View src="content" role="centerView" module="ui.drawer" />
+		</Window>
+	</NavigationWindow>
+	
+	<Window platform="android" class="drawer">
+		<ActionBar
+			platform="android"
+			displayHomeAsUp="true"
+			onHomeIconItemSelected="toggleDrawer" />
+			
+		<DrawerLayout class="drawer" id="drawer" module="ui.drawer">
+			<LeftView>
+				<Require src="menu/navigation" />
+			</LeftView>
+			<CenterView>
+				<Require src="content" />
+			</CenterView>
+		</DrawerLayout>		
+	</Window>
+</Alloy>

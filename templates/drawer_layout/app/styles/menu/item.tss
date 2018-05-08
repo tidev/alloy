@@ -1,0 +1,21 @@
+'#navigationItem': {
+	height: 60
+}
+
+'#name': {
+	font: {
+		fontSize: 16
+	},
+	left: 20,
+	color: '#333333'
+}
+
+'.line': {
+	height: 1,
+	backgroundColor: '#dddddd',
+	width: Ti.UI.FILL
+}
+
+'#lineTop': {
+	top: 0
+}
