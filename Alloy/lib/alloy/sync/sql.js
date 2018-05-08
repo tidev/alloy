@@ -86,6 +86,8 @@ function Migrator(config, transactionDb) {
 		// compose the create query
 		var columns = [];
 		var found = false;
+		var sql;
+
 		for (var k in config.columns) {
 			if (k === this.idAttribute) { found = true; }
 			columns.push(k + ' ' + this.column(config.columns[k]));
@@ -95,7 +97,13 @@ function Migrator(config, transactionDb) {
 		if (!found && this.idAttribute === ALLOY_ID_DEFAULT) {
 			columns.push(ALLOY_ID_DEFAULT + ' TEXT UNIQUE');
 		}
-		var sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
+
+		// handle empty columns (TIMOB-26011)
+		if (columns.length > 0) {
+			sql = 'CREATE TABLE IF NOT EXISTS ' + this.table + ' ( ' + columns.join(',') + ')';
+		} else {
+			sql = 'CREATE TABLE IF NOT EXISTS ' + this.table;
+		}
 
 		// execute the create
 		this.db.execute(sql);
@@ -458,7 +466,14 @@ function installDatabase(config) {
 		});
 		var colsString = colStrings.join(',');
 		db.execute('ALTER TABLE ' + table + ' RENAME TO ' + table + '_temp;');
-		db.execute('CREATE TABLE ' + table + '(' + fullStrings.join(',') + ',' + ALLOY_ID_DEFAULT + ' TEXT UNIQUE);');
+
+		// handle empty columns (TIMOB-26011)
+		if (fullStrings.length > 0) {
+			db.execute('CREATE TABLE ' + table + '(' + fullStrings.join(',') + ',' + ALLOY_ID_DEFAULT + ' TEXT UNIQUE);');
+		} else {
+			db.execute('CREATE TABLE ' + table + '(' + ALLOY_ID_DEFAULT + ' TEXT UNIQUE);');
+		}
+
 		db.execute('INSERT INTO ' + table + '(' + colsString + ',' + ALLOY_ID_DEFAULT + ') SELECT ' + colsString + ',CAST(_ROWID_ AS TEXT) FROM ' + table + '_temp;');
 		db.execute('DROP TABLE ' + table + '_temp;');
 		config.columns[ALLOY_ID_DEFAULT] = 'TEXT UNIQUE';
