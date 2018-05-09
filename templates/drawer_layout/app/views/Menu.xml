@@ -1,6 +1,0 @@
-<Alloy>
-	<Window>
-		<ScrollView id="navigationContainer" />
-		<View id="blackScreen" onClick="closeDrawer" />
-	</Window>
-</Alloy>

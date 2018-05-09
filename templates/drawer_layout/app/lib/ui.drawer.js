@@ -55,7 +55,7 @@ drawerWindow.prototype.showDrawer = function() {
 	args.drawerWidth = this.args.leftWidth;
 	args.animationDuration = this.args.animationDuration;
 	
-	Alloy.createController('Menu', args).open();
+	Alloy.createController('menu', args).open();
 };
 
 exports.createWindow = function(args) {

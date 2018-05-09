@@ -1,6 +1,0 @@
-<Alloy>
-	<View id="navigationItem">
-		<View id="lineTop" class="line" />
-		<Label id="name" />
-	</View>
-</Alloy>

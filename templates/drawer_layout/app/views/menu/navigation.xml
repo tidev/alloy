@@ -1,7 +1,0 @@
-<Alloy>
-	<View id="wrapper">
-		<Label id="header">Navigation</Label>
-		<Require src="menu/item" id="home" />
-		<Require src="menu/item" id="second" />
-	</View>
-</Alloy>
