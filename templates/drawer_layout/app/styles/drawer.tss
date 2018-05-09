@@ -1,0 +1,12 @@
+'.drawer': {
+	leftWidth: 200,
+	animationDuration: 300,
+	title: 'Drawer Sample'
+}
+
+'.drawer[platform=ios]': {
+	barColor: '#ffffff',
+	titleAttributes: {
+		color: '#222222'
+	}
+}

@@ -27,7 +27,7 @@ drawerWindow.prototype.toggleLeft = function() {
 };
 
 drawerWindow.prototype.add = function(view) {
-	 if (view.role === 'centerView'){
+	 if (view.role === 'centerView') {
 	 	this.win.add(Alloy.createController(view.src, view).getView());
 	 }
 	 if (view.role === 'leftView') {

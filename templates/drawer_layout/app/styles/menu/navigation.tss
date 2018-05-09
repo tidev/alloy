@@ -1,0 +1,31 @@
+'#wrapper': {
+	top: 0,
+	layout: 'vertical',
+	backgroundColor: "#fff"
+}
+
+'#header': {
+	color: '#333333',
+	font: {
+		fontSize: 20,
+		fontWeight: 'bold'
+	},
+	top: 40,
+	left: 15
+}
+
+'#header[platform=ios]': {
+	top: 40
+}
+'#header[platform=android]': {
+	top: 20
+}
+
+'#home': {
+	name: 'Home',
+	top: 15
+}
+
+'#second': {
+	name: 'Second page'
+}
