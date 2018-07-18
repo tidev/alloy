@@ -1,6 +1,5 @@
 "#row": {
-	height: '60dp',
-	backgroundColor: '#fff'
+	height: '60dp'
 }
 
 "Label": {
