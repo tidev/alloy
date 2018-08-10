@@ -39,7 +39,7 @@ exports.buttonNames = ['No', 'Yes'];
  * @param {Function} [args.cancel] Callback function invoked after a negative response.
  * @param {...*} [args.evt] Callback context.
  */
-exports.confirm = function(args) {
+exports.confirm = function (args) {
 	args = args || {};
 	if (args.buttonNames) {
 		args.no = args.no || args.buttonNames[0];
@@ -52,7 +52,7 @@ exports.confirm = function(args) {
 		buttonNames: [args.no || exports.buttonNames[0], args.yes || exports.buttonNames[1]],
 		cancel: 0
 	});
-	alertDialog.addEventListener('click', function(evt) {
+	alertDialog.addEventListener('click', function (evt) {
 		if (evt.index) {
 			if (args.callback) {
 				args.callback(args.evt || {});
