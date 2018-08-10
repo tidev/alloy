@@ -1,3 +1,7 @@
+"Window": {
+	barColor: '#333'
+}
+
 "Label": {
 	color: '#fff'
 }

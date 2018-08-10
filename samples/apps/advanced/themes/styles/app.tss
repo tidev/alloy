@@ -1,3 +1,10 @@
+"Window[platform=ios]": {
+	translucent: false,
+	titleAttributes: {
+		color: '#fff'
+	}
+}
+
 "Label": {
 	color: '#000'
 }

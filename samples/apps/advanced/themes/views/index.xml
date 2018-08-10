@@ -1,10 +1,9 @@
 <Alloy>
-	<Window>
-	  <Label id="title">Patience Tester</Label>
+	<Window title="Patience Tester">
 	  <View id="container">
 	    <Label id="label"/>
 	  </View>
-		<Slider id="slider" onChange="updateLabel"/>
-    <Button id="testButton" onClick="testPatience">Test Patience</Button>	
+	  <Slider id="slider" onChange="updateLabel"/>
+      <Button id="testButton" onClick="testPatience">Test Patience</Button>	
   </Window>
 </Alloy>

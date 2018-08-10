@@ -2,17 +2,6 @@
 	backgroundColor: '#fff'
 }
 
-"#title": {
-	top: 0,
-	height: 46,
-	width: Ti.UI.FILL,
-	textAlign: 'center',
-	font: {
-		fontSize: 24,
-		fontWeight: 'bold'
-	}
-}
-
 "#container": {
 	height: 170,
 	width: 250,

@@ -6,7 +6,14 @@ function testPatience(e) {
 	Alloy.createController('dialog').show($.slider.value * 1000);
 }
 
-$.index.open();
+// For iOS, lets use a native Navigation Window!
+if (OS_IOS) {
+	Ti.UI.iOS.createNavigationWindow({
+		window: $.index
+	}).open();
+} else {
+	$.index.open();
+}
 
 if (!ENV_PROD) {
 	require('specs/index')($);
