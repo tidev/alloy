@@ -27,7 +27,7 @@
  *     the widget as the key and the version number as the value.
  *  3. Add the widget to a view or create an instance of the widget in a controller:
  *
- *      * To add a widget to a view, add the <Widget> tag in the XML markup and
+ *      * To add a widget to a view, add the &lt;Widget&gt; tag in the XML markup and
  *        set the `src` attribute to the folder name of the widget.
  *      * To create an instance of a widget in a controller, use the Alloy.createController method.
  *
