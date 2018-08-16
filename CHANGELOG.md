@@ -1,16 +1,25 @@
 ## Alloy Release Notes
 
----
+### Release 1.13.1
+
+#### Fixed
+
+[ALOY-1622](https://jira.appcelerator.org/browse/ALOY-1622) Error on sql migration due to undeclared variable 
+
+### Release 1.13.0
+
+#### Added
+
+[TIMOB-24817](https://jira.appcelerator.org/browse/TIMOB-24817) Support defining Alloy widgets in ListView templates
+
 ### Release 1.12.0
 
-### Improvements
+#### Improvements
 
 * [ALOY-1603](https://jira.appcelerator.org/browse/ALOY-1603): Update momentjs to 2.21.0
     - View the momentjs release notes [here](https://github.com/moment/moment/blob/d0a45f0390c108cc18d71a3d3f38d040392483c5/CHANGELOG.md), previous version was 2.16.0
 
-
-
-### Fixed
+#### Fixed
  
  * [ALOY-1606](https://jira.appcelerator.org/browse/ALOY-1606): Android: Debugger not hitting breakpoints on Windows
  * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602): Avoid some global variables to be only available in parent controller
@@ -120,7 +129,7 @@
 ---
 ### Release 1.10.0
 
-#### Fixed
+#### Added
   * [ALOY-1312](https://jira.appcelerator.org/browse/ALOY-1312): Upgrade Alloy to support ES6
     * Migrates from using uglifyjs to parse and transform user and library code to using babel and babili
 

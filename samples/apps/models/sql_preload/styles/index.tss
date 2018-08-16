@@ -1,5 +1,4 @@
 "Window": {
-	backgroundColor: '#fff',
 	navBarHidden: true,
 	exitOnClose: true
 }
