@@ -14,7 +14,7 @@ function parse(node, state, args) {
 	if (tiapp.version.gte(tiapp.getSdkVersion(), DEPRECATED_VERSION)) {
 		logger.warn([
 			'Ti.UI.iPhone.NavigationGroup (line ' + node.lineNumber + ') is deprecated as of Titanium ' + DEPRECATED_VERSION,
-			'Use Ti.UI.iOS.NavigationWindow instead'
+			'Use Ti.UI.NavigationWindow instead'
 		]);
 	}
 
