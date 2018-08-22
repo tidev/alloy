@@ -197,6 +197,7 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.Media
 	VideoPlayer: NS_TI_MEDIA,
 	MusicPlayer: NS_TI_MEDIA,
+	AudioPlayer: NS_TI_MEDIA,
 
 	// Ti.UI.iOS
 	AdView: NS_TI_UI_IOS,
