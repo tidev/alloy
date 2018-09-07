@@ -5,8 +5,8 @@ var fs = require('fs'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash'),
 	sourceMapper = require('../../Alloy/commands/compile/sourceMapper'),
-	babylon = require('babylon'),
-	babel = require('babel-core');
+	babylon = require('@babel/parser'),
+	babel = require('@babel/core');
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
