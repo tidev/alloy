@@ -8,8 +8,8 @@ var SM = require('source-map'),
 	path = require('path'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	babylon = require('babylon'),
-	babel = require('babel-core'),
+	babylon = require('@babel/parser'),
+	babel = require('@babel/core'),
 	logger = require('../../logger'),
 	_ = require('lodash');
 

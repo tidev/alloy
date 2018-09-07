@@ -4,7 +4,7 @@ var ejs = require('ejs'),
 	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	vm = require('vm'),
-	babel = require('babel-core'),
+	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -1174,7 +1174,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			logger.info('- ' + file);
 			try {
 				var result = babel.transformFileSync(fullpath, options);
-				fs.writeFile(fullpath, result.code);
+				fs.writeFileSync(fullpath, result.code);
 			} catch (e) {
 				U.die('Error transforming JS file', e);
 			}

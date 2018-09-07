@@ -17,7 +17,7 @@ var path = require('path'),
 	_ = require('lodash'),
 	CONST = require('./common/constants'),
 	sourceMapper = require('./commands/compile/sourceMapper'),
-	codeFrame = require('babel-code-frame');
+	codeFrameColumns = require('@babel/code-frame').codeFrameColumns;
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -534,7 +534,11 @@ exports.die = function(msg, e) {
 };
 
 exports.dieWithCodeFrame = function(errorMessage, lineInfo, fileContents, hint) {
-	var frame = codeFrame(fileContents, lineInfo.line, lineInfo.column, { highlightCode: true });
+	var frame = codeFrameColumns(fileContents, {
+		start: lineInfo
+	}, {
+		highlightCode: true
+	});
 	logger.error(errorMessage);
 	// Convert the code frame from a string to an Array so that the logger logs
 	// each line individually to keep the code frame intact
