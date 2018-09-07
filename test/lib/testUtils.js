@@ -5,7 +5,7 @@ var exec = require('child_process').exec,
 	path = require('path'),
 	JsDiff = require('diff'),
 	_ = require('lodash'),
-	babylon = require('babylon'),
+	babylon = require('@babel/parser'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
