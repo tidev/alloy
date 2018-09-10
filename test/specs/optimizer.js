@@ -10,7 +10,7 @@ var fs = require('fs'),
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
-	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = { a: 0, b: 0, c: 0 };test.b = 1;'],
+	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = {\n  a: 0,\n  b: 0,\n  c: 0\n};\ntest.b = 1;'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Titanium.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.name=="<%= name %>" ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
