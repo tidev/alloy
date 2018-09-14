@@ -6,6 +6,10 @@ var U = require('../../../utils'),
 
 var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
+const GENCODE_OPTIONS = {
+	retainLines: true
+};
+
 exports.processController = function(code, file) {
 	var baseController = '',
 		moduleCodes = '',
@@ -23,7 +27,7 @@ exports.processController = function(code, file) {
 			},
 
 			ImportDeclaration: function(path) {
-				moduleCodes += generate(path.node, {}).code;
+				moduleCodes += generate(path.node, GENCODE_OPTIONS).code;
 				path.remove();
 			},
 
@@ -37,7 +41,7 @@ exports.processController = function(code, file) {
 						}
 					});
 				}
-				moduleCodes += generate(node, {}).code;
+				moduleCodes += generate(node, GENCODE_OPTIONS).code;
 				path.remove();
 			}
 		});
@@ -54,14 +58,14 @@ exports.processController = function(code, file) {
 					}
 
 					if (exportSpecifiers.indexOf(name) !== -1) {
-						moduleCodes += generate(node, {}).code;
+						moduleCodes += generate(node, GENCODE_OPTIONS).code;
 						path.remove();
 					}
 				}
 			});
 		}
 
-		newCode = generate(ast, {}).code;
+		newCode = generate(ast, GENCODE_OPTIONS).code;
 	} catch (e) {
 		U.dieWithCodeFrame('Error generating AST for "' + file + '". Unexpected token at line ' + e.loc.line + ' column ' + e.loc.column, e.loc, code);
 	}
