@@ -901,6 +901,9 @@ exports.parseConfig = function(file, alloyConfig, o) {
 				o = _.extend(o, j['os:' + alloyConfig.platform + ' ' + distType]);
 			}
 		}
+		if (alloyConfig.theme) {
+			o.theme = alloyConfig.theme;
+		}
 	}
 
 	return o;
