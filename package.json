@@ -12,12 +12,20 @@
     "html5",
     "appc-client"
   ],
-  "version": "1.13.2",
+  "version": "1.13.3",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
       "name": "Tony Lukasavage",
       "email": "tlukasavage@appcelerator.com"
+    },
+    {
+      "name": "Feon Miao",
+      "email": "fmiao@axway.com"
+    },
+    {
+      "name": "Chris Williams",
+      "email": "cwilliams@axway.com"
     }
   ],
   "bugs": {
