@@ -3,9 +3,15 @@
  * This is generated code, DO NOT MODIFY - changes will be lost!
  * Copyright (c) 2012 by Appcelerator, Inc.
  */
-global.Alloy = require('/alloy');
-global._ = Alloy._;
-global.Backbone = Alloy.Backbone;
+var Alloy = require('/alloy'),
+	_ = Alloy._,
+	Backbone = Alloy.Backbone;
+
+if (global) {
+	global.Alloy = Alloy;
+	global._ = _;
+	global.Backbone = Backbone;
+}
 
 __MAPMARKER_ALLOY_JS__
 Alloy.createController('index');
