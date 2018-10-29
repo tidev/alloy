@@ -30,7 +30,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 [sudo] npm install -g git://github.com/appcelerator/alloy.git
 ```
 
-### from Axwy Appcelerator Studio
+### from Axway Appcelerator Studio
 
 ...oh yeah, Studio will do it for you automatically. :)
 
