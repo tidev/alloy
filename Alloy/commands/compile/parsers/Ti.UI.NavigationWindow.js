@@ -5,7 +5,7 @@ var _ = require('lodash'),
 	tiapp = require('../../../tiapp');
 
 const MIN_VERSION_FOR_IOS = '3.1.3';
-const MIN_VERSION = '7.5.0';
+const MIN_VERSION = '8.0.0';
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -18,10 +18,6 @@ function parse(node, state, args) {
 	}
 
 	if (tiapp.version.lt(tiappSdkVersion, MIN_VERSION)) {
-		const platform = CU.getCompilerConfig().alloyConfig.platform;
-		if (platform !== 'ios') {
-			U.die(`Ti.UI.NavigationWindow for ${platform} requires Titanium ${MIN_VERSION}+`);
-		}
 		node.setAttribute('ns', 'Ti.UI.iOS');
 	}
 
