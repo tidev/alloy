@@ -764,8 +764,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 				'Ti.UI.Window',
 				'Ti.UI.iOS.SplitWindow',
 				'Ti.UI.TabGroup',
-				'Ti.UI.iOS.NavigationWindow',
-				'Ti.UI.NavigationWindow'
+				'Ti.UI.iOS.NavigationWindow'
 			].concat(CONST.MODEL_ELEMENTS);
 			_.each(rootChildren, function(node) {
 				var found = true;

@@ -3,7 +3,7 @@ var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
-var VALID = ['Ti.UI.Window', 'Ti.UI.TabGroup', 'Ti.UI.iOS.NavigationWindow', 'Ti.UI.NavigationWindow'];
+var VALID = ['Ti.UI.Window', 'Ti.UI.TabGroup', 'Ti.UI.iOS.NavigationWindow'];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
