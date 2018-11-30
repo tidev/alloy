@@ -1,5 +1,9 @@
 ## Alloy Release Notes
 
+### Release 1.13.5
+
+[ALOY-1638](https://jira.appcelerator.org/browse/ALOY-1638) Theme is "null" when a theme is defined in config.json
+
 ### Release 1.13.1
 
 #### Fixed
