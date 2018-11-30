@@ -5,7 +5,7 @@
  */
 
 exports.cliVersion = '>=3.X';
-exports.version = '1.0.0';
+exports.version = '1.0.1';
 var SILENT = true;
 
 exports.init = function (logger, config, cli, appc) {
