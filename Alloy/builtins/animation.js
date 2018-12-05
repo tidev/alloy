@@ -20,6 +20,9 @@ exports.HORIZONTAL = 'horizontal';
  */
 exports.VERTICAL = 'vertical';
 
+const create3DMatrix = Ti.version >= '8.0.0' ? Ti.UI.createMatrix3D : Ti.UI.create3DMatrix;
+const create2DMatrix = Ti.version >= '8.0.0' ? Ti.UI.createMatrix2D : Ti.UI.create2DMatrix;
+
 /**
  * @method flip
  * Transitions from one view to another using a 3D flip animation.
@@ -34,7 +37,7 @@ exports.VERTICAL = 'vertical';
  */
 exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) {
 	var vertical = (direction === exports.VERTICAL);
-	var flipped_matrix = Ti.UI.create3DMatrix().rotate(
+	var flipped_matrix = create3DMatrix().rotate(
 		-90,
 		vertical ? 1 : 0,
 		vertical ? 0 : 1,
@@ -46,7 +49,7 @@ exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) 
 	});
 	to.transform = flipped_matrix;
 	from.animate(from_animation, function() {
-		var unflipped_matrix = Ti.UI.create3DMatrix().rotate(
+		var unflipped_matrix = create3DMatrix().rotate(
 			0,
 			vertical ? 1 : 0,
 			vertical ? 0 : 1,
@@ -196,18 +199,18 @@ exports.fadeOut = function (to, duration, finishCallback) {
  */
 exports.popIn = function (view, finishCallback) {
 	if (!OS_IOS) {
-		view.transform = Ti.UI.create2DMatrix();
+		view.transform = create2DMatrix();
 		view.opacity = 1;
 		return;
 	}
 
 	var animate1 = Ti.UI.createAnimation({
 		opacity: 1,
-		transform: Ti.UI.create2DMatrix().scale(1.05, 1.05),
+		transform: create2DMatrix().scale(1.05, 1.05),
 		duration: 200
 	});
 	var animate2 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix(),
+		transform: create2DMatrix(),
 		duration: 300
 	});
 
@@ -225,23 +228,23 @@ exports.popIn = function (view, finishCallback) {
  */
 exports.shake = function (view, delay, finishCallback) {
 	var shake1 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix().translate(5, 0),
+		transform: create2DMatrix().translate(5, 0),
 		duration: 100
 	});
 	var shake2 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix().translate(-5, 0),
+		transform: create2DMatrix().translate(-5, 0),
 		duration: 100
 	});
 	var shake3 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix().translate(5, 0),
+		transform: create2DMatrix().translate(5, 0),
 		duration: 100
 	});
 	var shake4 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix().translate(-5, 0),
+		transform: create2DMatrix().translate(-5, 0),
 		duration: 100
 	});
 	var shake5 = Ti.UI.createAnimation({
-		transform: Ti.UI.create2DMatrix(),
+		transform: create2DMatrix(),
 		duration: 100
 	});
 	if (delay) {
