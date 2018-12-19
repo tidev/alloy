@@ -53,19 +53,19 @@ module.exports = function(babel) {
 						case 'Alloy':
 							this.toRequire.push({
 								VARIABLE: 'Alloy',
-								REQUIRECALL: 'require(\'alloy\')'
+								REQUIRECALL: 'require(\'/alloy\')'
 							});
 							break;
 						case '_':
 							this.toRequire.push({
 								VARIABLE: '_',
-								REQUIRECALL: 'require(\'alloy/underscore\')._'
+								REQUIRECALL: 'require(\'/alloy/underscore\')._'
 							});
 							break;
 						case 'Backbone':
 							this.toRequire.push({
 								VARIABLE: 'Backbone',
-								REQUIRECALL: 'require(\'alloy/backbone\')'
+								REQUIRECALL: 'require(\'/alloy/backbone\')'
 							});
 							break;
 					}
