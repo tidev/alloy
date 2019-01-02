@@ -1,11 +1,11 @@
 exports.definition = {
 	config: {
 		columns : {
-			"name" : "text"
+			'name' : 'text'
 		},
 		adapter: {
-			type: "sql",
-			collection_name: "fruits"
+			type: 'sql',
+			collection_name: 'fruits'
 		}
 	},
 	extendModel: function(Model) {

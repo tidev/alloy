@@ -1,0 +1,7 @@
+<Alloy>
+	<NavigationWindow>
+		<Window>
+			<Label>Hello, World</Label>
+		</Window>
+	</NavigationWindow>
+</Alloy>

@@ -1,5 +1,5 @@
 var TU = require('../lib/testUtils'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	_ = require('lodash')._;
 
 describe('alloy info', function() {
 	TU.addMatchers();
@@ -39,7 +39,7 @@ describe('alloy info', function() {
 			expect(theFunction).not.toThrow();
 		});
 
-		_.each(['sql','properties','localStorage'], function(adapter) {
+		_.each(['sql','properties'], function(adapter) {
 			it('JSON contains "' + adapter + '" adapter', function() {
 				expect(json[adapter]).toBeTruthy();
 			});

@@ -1,0 +1,15 @@
+<Alloy>
+	<Window layout="vertical">
+		<Label top="20" width="100" backgroundColor="#ccc">Hello</Label>
+		<Label text="L('hello_world')"/>
+		<Label>L('hello_world')</Label>
+
+		<TextField top="20" width="100" backgroundColor="#ccc">Hello</TextField>
+		<TextField value="L('hello_world')"/>
+		<TextField>L('hello_world')</TextField>
+
+		<TextArea top="20" width="100" backgroundColor="#ccc">Hello</TextArea>
+		<TextArea value="L('hello_world')"/>
+		<TextArea>L('hello_world')</TextArea>
+	</Window>
+</Alloy>

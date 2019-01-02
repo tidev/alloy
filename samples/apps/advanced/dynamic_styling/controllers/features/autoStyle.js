@@ -55,7 +55,7 @@ changeImage();
 // time (or manually as in the touch listeners above), but is very important
 // once you start using the $.addClass() and $.removeClass() functions in the
 // "Add/Remove Class" section of this app.
-_.each(['win','scroll','label1','label2','theButton','theImage'], function(id) {
+_.each(['win', 'scroll', 'label1', 'label2', 'theButton', 'theImage'], function(id) {
 	var proxy = $[id];
 	Alloy.Globals.print({
 		apiName: proxy.apiName,

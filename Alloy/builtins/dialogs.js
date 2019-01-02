@@ -4,7 +4,7 @@
  * To use the dialogs builtin library,
  * require it with the `alloy` root directory in your `require` call. For example:
  *
- *     var dialogs = require('alloy/dialogs');
+ *     var dialogs = require('/alloy/dialogs');
  *     dialogs.confirm({});
  */
 
@@ -36,11 +36,12 @@ exports.buttonNames = ['No', 'Yes'];
  * @param {String} [args.yes="Yes"] Label of the affirmative button of the dialog box.
  * @param {String} [args.no="No"] Label of the negative button of the dialog box.
  * @param {Function} [args.callback] Callback function invoked after an affirmative response.
+ * @param {Function} [args.cancel] Callback function invoked after a negative response.
  * @param {...*} [args.evt] Callback context.
  */
 exports.confirm = function (args) {
 	args = args || {};
-	if(args.buttonNames) {
+	if (args.buttonNames) {
 		args.no = args.no || args.buttonNames[0];
 		args.yes = args.yes || args.buttonNames[1];
 	}
@@ -53,7 +54,11 @@ exports.confirm = function (args) {
 	});
 	alertDialog.addEventListener('click', function (evt) {
 		if (evt.index) {
-			if (args.callback) { args.callback(args.evt || {}); }
+			if (args.callback) {
+				args.callback(args.evt || {});
+			}
+		} else if (args.cancel) {
+			args.cancel(args.evt || {});
 		}
 		args = null;
 	});

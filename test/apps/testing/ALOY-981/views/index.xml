@@ -1,15 +1,15 @@
 <Alloy>
 	<Window class="container">
 		<TextArea platform="ios" id="textArea">
-			
+
 			<KeyboardToolbar>
 				<Toolbar>
 					<Items>
-						<Button systemButton="Ti.UI.iPhone.SystemButton.CANCEL" onClick="btnClick" title="Cancel" />
+						<Button systemButton="Ti.UI.iOS.SystemButton.CANCEL" onClick="btnClick" title="Cancel" />
 						<FlexSpace />
-						<Button systemButton="Ti.UI.iPhone.SystemButton.CAMERA" onClick="btnClick" title="Camera" />
+						<Button systemButton="Ti.UI.iOS.SystemButton.CAMERA" onClick="btnClick" title="Camera" />
 						<FlexSpace />
-						<Button style="Ti.UI.iPhone.SystemButtonStyle.DONE" onClick="btnClick">Send</Button>
+						<Button style="Ti.UI.iOS.SystemButtonStyle.DONE" onClick="btnClick">Send</Button>
 					</Items>
 				</Toolbar>
 			</KeyboardToolbar>

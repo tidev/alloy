@@ -30,7 +30,7 @@ function Controller() {
                     fontWeight: "bold"
                 },
                 touchEnabled: false,
-                text: "undefined" != typeof __alloyId1.__transform["text"] ? __alloyId1.__transform["text"] : __alloyId1.get("text")
+                text: __alloyId1.__transform.text
             });
             __alloyId3.add(__alloyId5);
         }
@@ -46,19 +46,13 @@ function Controller() {
         o.text = "### " + o.text + " ###";
         return o;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -76,7 +70,7 @@ function Controller() {
     var __alloyId6 = Alloy.Collections["collection"] || collection;
     __alloyId6.on("fetch destroy change add remove reset", __alloyId7);
     exports.destroy = function() {
-        __alloyId6.off("fetch destroy change add remove reset", __alloyId7);
+        __alloyId6 && __alloyId6.off("fetch destroy change add remove reset", __alloyId7);
     };
     _.extend($, $.__views);
     Alloy.Collections.collection.trigger("change");
@@ -84,6 +78,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

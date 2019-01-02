@@ -13,19 +13,13 @@ function Controller() {
             message: "Opened " + e.source.title
         }).openDialog($.index);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -35,32 +29,33 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    $.__views.__alloyId0 = Ti.UI.createView({
-        layout: "vertical",
+    $.__views.container = Ti.UI.createView({
+        top: "40dp",
+        id: "container",
+        layout: "vertical"
+    });
+    $.__views.index.add($.__views.container);
+    $.__views.__alloyId0 = Ti.UI.createButton({
+        title: "baseDialog",
         id: "__alloyId0"
     });
-    $.__views.index.add($.__views.__alloyId0);
+    $.__views.container.add($.__views.__alloyId0);
+    openDialog ? $.addListener($.__views.__alloyId0, "click", openDialog) : __defers["$.__views.__alloyId0!click!openDialog"] = true;
     $.__views.__alloyId1 = Ti.UI.createButton({
-        title: "baseDialog",
+        title: "animatedDialog",
         id: "__alloyId1"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId1);
-    openDialog ? $.__views.__alloyId1.addEventListener("click", openDialog) : __defers["$.__views.__alloyId1!click!openDialog"] = true;
-    $.__views.__alloyId2 = Ti.UI.createButton({
-        title: "animatedDialog",
-        id: "__alloyId2"
-    });
-    $.__views.__alloyId0.add($.__views.__alloyId2);
-    openDialog ? $.__views.__alloyId2.addEventListener("click", openDialog) : __defers["$.__views.__alloyId2!click!openDialog"] = true;
+    $.__views.container.add($.__views.__alloyId1);
+    openDialog ? $.addListener($.__views.__alloyId1, "click", openDialog) : __defers["$.__views.__alloyId1!click!openDialog"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.__alloyId1!click!openDialog"] && $.__views.__alloyId1.addEventListener("click", openDialog);
-    __defers["$.__views.__alloyId2!click!openDialog"] && $.__views.__alloyId2.addEventListener("click", openDialog);
+    __defers["$.__views.__alloyId0!click!openDialog"] && $.addListener($.__views.__alloyId0, "click", openDialog);
+    __defers["$.__views.__alloyId1!click!openDialog"] && $.addListener($.__views.__alloyId1, "click", openDialog);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

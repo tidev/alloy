@@ -3,20 +3,20 @@ var Alloy = require('alloy');
 exports.addItem = function(collection) {
 	// random title and image
 	var random = Math.ceil(Math.random() * 12);
-    var model = Alloy.createModel('MyModel', {
-        title : 'title ' + random,
-        image: '/' + random + '.png',
-        timestamp: new Date().getTime()
-    });
+	var model = Alloy.createModel('MyModel', {
+		title : 'title ' + random,
+		image: '/' + random + '.png',
+		timestamp: new Date().getTime()
+	});
 
-    // add new model to local collection
-    collection.add(model);
+	// add new model to local collection
+	collection.add(model);
 
 	// save the model to persistent storage
-    model.save();
+	model.save();
 
 	// reload the collection from persistent storage
-    collection.fetch();
+	collection.fetch();
 };
 
 exports.removeItem = function(collection, index) {

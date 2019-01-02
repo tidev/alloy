@@ -12,9 +12,10 @@ exports.init = function (logger, config, cli, appc) {
 		fs = require('fs'),
 		afs = appc.fs;
 
-	function run() {
-		if(cli.argv['shallow'] === '') {
+	function run(finished) {
+		if (cli.argv['shallow'] === '') {
 			logger.info('Not cleaning the Resources directory');
+			finished();
 			return;
 		}
 		var appDir = path.join(cli.argv['project-dir'], 'app');
@@ -27,14 +28,16 @@ exports.init = function (logger, config, cli, appc) {
 		var resourcesDir = path.join(cli.argv['project-dir'], 'Resources');
 		if (!afs.exists(resourcesDir)) {
 			logger.debug('Resources directory does not exist.');
+			finished();
 			return;
 		}
 		rmdir(resourcesDir, fs, path, logger);
 		logger.debug('Resources directory of %s has been emptied', appDir.cyan);
+		finished();
 	}
 
 	cli.addHook('clean.post', function (build, finished) {
-		run();
+		run(finished);
 	});
 
 };
@@ -43,8 +46,7 @@ function rmdir(dirPath, fs, path, logger, removeSelf) {
 	var files;
 	try {
 		files = fs.readdirSync(dirPath);
-	}
-	catch(e) {
+	} catch (e) {
 		return;
 	}
 	if (files.length > 0) {

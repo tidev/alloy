@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function addLabels() {
+    function addLabels(e) {
         $.scroller.add(Ti.UI.createLabel(Alloy.createStyle("index", {
             apiName: "Ti.UI.Label",
             text: "Alloy.createStyle() + Ti.UI.createLabel()"
@@ -25,19 +25,13 @@ function Controller() {
         }));
         $.scroller.add(Alloy.createWidget("alloy.testWidget", "labelmaker").createLabels());
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -49,7 +43,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    addLabels ? $.__views.index.addEventListener("click", addLabels) : __defers["$.__views.index!click!addLabels"] = true;
+    addLabels ? $.addListener($.__views.index, "click", addLabels) : __defers["$.__views.index!click!addLabels"] = true;
     $.__views.scroller = Ti.UI.createScrollView({
         layout: "vertical",
         height: Ti.UI.FILL,
@@ -60,10 +54,10 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.index!click!addLabels"] && $.__views.index.addEventListener("click", addLabels);
+    __defers["$.__views.index!click!addLabels"] && $.addListener($.__views.index, "click", addLabels);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -11,22 +11,22 @@ module.exports = function($) {
 			};
 			var validators = {
 				a: [
-                    new Validator.Assert().GreaterThan(0),
-                    new Validator.Assert().LessThan(80)
-                ],
-                b: [
-                    new Validator.Assert().NotNull()
-                ],
-                c: [
-                    new Validator.Assert().Null()
-                ]
+					new Validator.Assert().GreaterThan(0),
+					new Validator.Assert().LessThan(80)
+				],
+				b: [
+					new Validator.Assert().NotNull()
+				],
+				c: [
+					new Validator.Assert().Null()
+				]
 			};
 			expect(new Validator.Validator().validate(values, validators)).toEqual(true);
 
 			validators.c = [
-                new Validator.Assert().NotNull()
-            ];
-            expect(new Validator.Validator().validate(values, validators)).not.toEqual(true);
+				new Validator.Assert().NotNull()
+			];
+			expect(new Validator.Validator().validate(values, validators)).not.toEqual(true);
 
 		});
 	});

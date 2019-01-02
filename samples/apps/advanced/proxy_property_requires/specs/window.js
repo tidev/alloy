@@ -7,16 +7,16 @@ module.exports = function($) {
 		validateUiComponent($, 'leftButton', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "left",
-				id: "leftButton"
+				title: 'left',
+				id: 'leftButton'
 			}
 		});
 
 		validateUiComponent($, 'rightButton', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "right",
-				id: "rightButton"
+				title: 'right',
+				id: 'rightButton'
 			}
 		});
 	});

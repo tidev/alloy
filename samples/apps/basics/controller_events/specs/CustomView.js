@@ -7,10 +7,10 @@ module.exports = function($) {
 		validateUiComponent($, 'CustomView', {
 			api: 'Ti.UI.View',
 			style: {
-				layout: "vertical",
-				height: "300",
-				backgroundColor: "blue",
-				id: "CustomView"
+				layout: 'vertical',
+				height: '300',
+				backgroundColor: 'blue',
+				id: 'CustomView'
 			}
 		});
 
@@ -18,21 +18,21 @@ module.exports = function($) {
 			api: 'Ti.UI.TextField',
 			style: {
 				borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-				id: "text",
-				top: "10",
-				height: "44",
-				width: "250"
+				id: 'text',
+				top: '10',
+				height: '44',
+				width: '250'
 			}
 		});
 
 		validateUiComponent($, 'btn', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "Fire Event",
-				id: "btn",
-				top: "10",
-				height: "44",
-				width: "250"
+				title: 'Fire Event',
+				id: 'btn',
+				top: '10',
+				height: '44',
+				width: '250'
 			}
 		});
 	});

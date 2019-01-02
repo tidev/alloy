@@ -1,12 +1,12 @@
 exports.definition = {
 	config: {
-		"adapter": {
-			"type": "sql",
-			"db_file": "/dbs/colors.sqlite",
-			"collection_name": "colors"
+		'adapter': {
+			'type': 'sql',
+			'db_file': '/dbs/colors.sqlite',
+			'collection_name': 'colors'
 		}
 	},
-	extendCollection : function(Collection) {
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

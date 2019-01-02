@@ -10,20 +10,20 @@ var imageCtr = 0;
 for (var i = 0; i < 1023; i++) {
 
 	// gradual increase to red
-	var hex = (i%256).toString(16);
+	var hex = (i % 256).toString(16);
 	if (hex.length < 2) {
 		hex = '0' + hex;
 	}
 
 	// Use a different template every other row
-	if (i%2) {
+	if (i % 2) {
 		moreItems.push({
 			template: 'requiredTemplate',
 			leftImage: {
 				image: IMAGES[imageCtr++]
 			},
 			rightImage: {
-				image: i%5 ? '/images/up.png' : '/images/down.png'
+				image: i % 5 ? '/images/up.png' : '/images/down.png'
 			},
 			title: {
 				text: 'This is my title'
@@ -38,7 +38,7 @@ for (var i = 0; i < 1023; i++) {
 		moreItems.push({
 			template: 'template2',
 			label: {
-				text: 'row ' + (i+1),
+				text: 'row ' + (i + 1),
 				color: '#' + hex + '0000',
 				textAlign: textAlign,
 				width: Ti.UI.FILL

@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isApi: true,
-    priority: 1000.0005,
+    priority: 1000.0004,
     key: "Label",
     style: {
         top: "5dp",
@@ -21,7 +21,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0006,
+    priority: 100000.0005,
     key: "header",
     style: {
         top: "20dp"

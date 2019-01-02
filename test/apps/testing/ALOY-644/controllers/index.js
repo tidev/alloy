@@ -2,9 +2,9 @@ var appState = Alloy.Models.appState;
 var heroes = Alloy.Collections.heroes;
 
 function generateRandomColor() {
-	var c =(Math.floor(Math.random()*255))*256*256 + 
-	       (Math.floor(Math.random()*255))*256 + 
-	       (Math.floor(Math.random()*255));
+	var c = (Math.floor(Math.random() * 255)) * 256 * 256 +
+			(Math.floor(Math.random() * 255)) * 256 +
+			(Math.floor(Math.random() * 255));
 	c = c.toString(16);
 	while (c.length < 6) {
 		c = '0' + c;
@@ -12,10 +12,10 @@ function generateRandomColor() {
 	return '#' + c;
 }
 
-// Contrived update function to modify the model 
+// Contrived update function to modify the model
 // associated with the clicked row
 function modifyHero(e) {
-	var model = heroes.at(e.index);	
+	var model = heroes.at(e.index);
 	model.set('name', model.get('name') + '+');
 
 	// this should throw a warning since it is attempting
@@ -27,7 +27,7 @@ function modifyHero(e) {
 // updates the UI via model binding
 function updateState() {
 	appState.set({
-		counter: appState.get('counter')+1,
+		counter: appState.get('counter') + 1,
 		color: generateRandomColor()
 	});
 }

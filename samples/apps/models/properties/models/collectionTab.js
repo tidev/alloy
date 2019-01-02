@@ -1,19 +1,19 @@
 exports.definition = {
 	config: {
-		"columns": {
-			"name": "String",
-			"score": "Int"
+		'columns': {
+			'name': 'String',
+			'score': 'Int'
 		},
-		"defaults": {
-			"name": "<no name>",
-			"score": 0
+		'defaults': {
+			'name': '<no name>',
+			'score': 0
 		},
-		"adapter": {
-			"type": "properties",
-			"collection_name": "collection"
+		'adapter': {
+			'type': 'properties',
+			'collection_name': 'collection'
 		}
 	},
-	extendCollection : function(Collection) {
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

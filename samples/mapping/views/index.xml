@@ -1,7 +1,0 @@
-<!-- Android users: See the comment in the controllers/index.js file -->
-<Alloy>
-	<Window class="container">
-		<Require src="addAddress" id="addAddress" />
-		<Require src="map" id="map" />
-	</Window>
-</Alloy>

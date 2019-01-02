@@ -9,10 +9,10 @@ module.exports = function($) {
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "#fff",
+				backgroundColor: '#fff',
 				fullscreen: false,
 				exitOnClose: true,
-				id: "index"
+				id: 'index'
 			}
 		});
 
@@ -22,11 +22,11 @@ module.exports = function($) {
 				right: 0,
 				bottom: 0,
 				left: 0,
-				strokeColor: "#0f0",
+				strokeColor: '#0f0',
 				strokeAlpha: 255,
 				strokeWidth: 10,
 				eraseMode: false,
-				id: "paint"
+				id: 'paint'
 			}
 		});
 	});

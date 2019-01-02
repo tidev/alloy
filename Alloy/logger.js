@@ -32,7 +32,7 @@ exports.error = function(msg) {
 };
 
 // Private functions and members
-var levels = ['info','debug','error','warn','trace'];
+var levels = ['info', 'debug', 'error', 'warn', 'trace'];
 var has = function(array, item) {
 	var len = array.length;
 	for (var i = 0; i < len; i++) {
@@ -52,7 +52,7 @@ var formattedDate = function() {
 		val += '';
 		return val.length < 2 ? '0' + val : val;
 	};
-	return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate()) + ' ' +
+	return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + ' ' +
 		pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
 };
 

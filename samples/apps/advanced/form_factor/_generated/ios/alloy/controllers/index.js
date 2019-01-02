@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -32,13 +26,13 @@ function Controller() {
     if (!Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            Alloy.isHandheld && _.extend(o, {
+            Alloy.isHandheld && Alloy.deepExtend(true, o, {
                 backgroundColor: "blue"
             });
-            Alloy.isTablet && _.extend(o, {
+            Alloy.isTablet && Alloy.deepExtend(true, o, {
                 backgroundColor: "red"
             });
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 id: "main"
             });
             return o;
@@ -56,13 +50,13 @@ function Controller() {
     if (Alloy.isTablet) {
         $.__views.main = Ti.UI.createView(function() {
             var o = {};
-            Alloy.isHandheld && _.extend(o, {
+            Alloy.isHandheld && Alloy.deepExtend(true, o, {
                 backgroundColor: "blue"
             });
-            Alloy.isTablet && _.extend(o, {
+            Alloy.isTablet && Alloy.deepExtend(true, o, {
                 backgroundColor: "red"
             });
-            _.extend(o, {
+            Alloy.deepExtend(true, o, {
                 id: "main"
             });
             return o;
@@ -79,23 +73,23 @@ function Controller() {
     }
     $.__views.container = Ti.UI.createView(function() {
         var o = {};
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             backgroundColor: "blue"
         });
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             backgroundColor: "red"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "container",
-            height: "50",
-            width: "200",
-            bottom: "10",
+            height: 50,
+            width: 200,
+            bottom: 10,
             backgroundColor: "#cdcdcd"
         });
         return o;
     }());
     $.__views.index.add($.__views.container);
-    if (true && Alloy.isTablet) {
+    if (Alloy.isTablet) {
         $.__views.platformLabel = Ti.UI.createLabel({
             width: Ti.UI.SIZE,
             height: Ti.UI.SIZE,
@@ -105,7 +99,7 @@ function Controller() {
         });
         $.__views.container.add($.__views.platformLabel);
     }
-    if (true && !Alloy.isTablet) {
+    if (!Alloy.isTablet) {
         $.__views.platformLabel = Ti.UI.createLabel({
             width: Ti.UI.SIZE,
             height: Ti.UI.SIZE,
@@ -122,6 +116,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

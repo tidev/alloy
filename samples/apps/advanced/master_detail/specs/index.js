@@ -13,7 +13,7 @@ module.exports = function($) {
 			validateUiComponent($, 'index', {
 				api: 'Ti.UI.iPhone.NavigationGroup',
 				style: {
-					id: "index",
+					id: 'index',
 					backgroundColor: '#fff'
 				}
 			});
@@ -23,7 +23,7 @@ module.exports = function($) {
 			validateUiComponent($, 'index', {
 				api: 'Ti.UI.iPad.createSplitWindow',
 				style: {
-					id: "index"
+					id: 'index'
 				}
 			});
 

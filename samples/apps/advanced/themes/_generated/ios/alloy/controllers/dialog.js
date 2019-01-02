@@ -8,28 +8,22 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function handleAnimation() {
+    function handleAnimation(e) {
         anim.removeEventListener("complete", handleAnimation);
         $.button.title = "You made it!";
     }
-    function closeDialog() {
+    function closeDialog(e) {
         anim.removeEventListener("complete", handleAnimation);
         $.progressFront.animate();
         $.dialog.close();
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "dialog";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -93,7 +87,7 @@ function Controller() {
         id: "button"
     });
     $.__views.mainView.add($.__views.button);
-    closeDialog ? $.__views.button.addEventListener("click", closeDialog) : __defers["$.__views.button!click!closeDialog"] = true;
+    closeDialog ? $.addListener($.__views.button, "click", closeDialog) : __defers["$.__views.button!click!closeDialog"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var anim;
@@ -110,10 +104,10 @@ function Controller() {
         $.progressFront.animate(anim);
         require("specs/dialog")($);
     };
-    __defers["$.__views.button!click!closeDialog"] && $.__views.button.addEventListener("click", closeDialog);
+    __defers["$.__views.button!click!closeDialog"] && $.addListener($.__views.button, "click", closeDialog);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

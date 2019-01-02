@@ -1,0 +1,13 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+"#webView[platform=ios]":{
+	blacklistedURLs : ['intent://'],
+}
+
+"#webView[platform=android]":{
+	blacklistedURLs : ['intent://','ispmobile://','market://'],
+}

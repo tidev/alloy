@@ -1,0 +1,5 @@
+<Alloy>
+    <Window id="myWindow">
+        <Label text="This label is in myBaseController.xml..." />
+    </Window>
+</Alloy>

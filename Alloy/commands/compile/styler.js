@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	_ = require('../../lib/alloy/underscore')._,
+	_ = require('lodash'),
 	U = require('../../utils'),
 	CU = require('./compilerUtils'),
 	optimizer = require('./optimizer'),
@@ -16,7 +16,8 @@ var STYLE_ALLOY_TYPE = '__ALLOY_TYPE__';
 var STYLE_EXPR_PREFIX = exports.STYLE_EXPR_PREFIX = '__ALLOY_EXPR__--';
 var STYLE_REGEX = /^\s*([\#\.]{0,1})([^\[]+)(?:\[([^\]]+)\])*\s*$/;
 var EXPR_REGEX = new RegExp('^' + STYLE_EXPR_PREFIX + '(.+)');
-var BINDING_REGEX = /\{([^:}]+)\}(?!\})/;
+var BINDING_SPLIT_REGEX = /(\{[^:}]+\}(?!\}))/;
+var BINDING_REFERENCE_REGEX = /^\{([^:}]+)\}$/;
 var VALUES = {
 	ID:     100000,
 	CLASS:   10000,
@@ -101,10 +102,10 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	var ret = false;
 	var theme = opts.theme;
 	var apptss = CONST.GLOBAL_STYLE;
-	var stylesDir = path.join(appPath,CONST.DIR.STYLE);
+	var stylesDir = path.join(appPath, CONST.DIR.STYLE);
 	var themesDir;
 	if (theme) {
-		themesDir = path.join(appPath,'themes',theme,CONST.DIR.STYLE);
+		themesDir = path.join(appPath, 'themes', theme, CONST.DIR.STYLE);
 	}
 	var buildlog = BuildLog();
 	var cacheFile = path.join(appPath, '..', CONST.DIR.BUILD, GLOBAL_STYLE_CACHE);
@@ -112,24 +113,24 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	// create array of global styles to load based on arguments
 	var loadArray = [];
 	loadArray.push({
-		path: path.join(stylesDir,apptss),
+		path: path.join(stylesDir, apptss),
 		msg: apptss
 	});
 	if (theme) {
 		loadArray.push({
-			path: path.join(themesDir,apptss),
+			path: path.join(themesDir, apptss),
 			msg: apptss + '(theme:' + theme + ')',
 			obj: { theme: true }
 		});
 	}
 	loadArray.push({
-		path: path.join(stylesDir,platform,apptss),
+		path: path.join(stylesDir, platform, apptss),
 		msg: apptss + '(platform:' + platform + ')',
 		obj: { platform: true }
 	});
 	if (theme) {
 		loadArray.push({
-			path: path.join(themesDir,platform,apptss),
+			path: path.join(themesDir, platform, apptss),
 			msg: apptss + '(theme:' + theme + ' platform:' + platform + ')',
 			obj: { platform: true, theme: true }
 		});
@@ -144,7 +145,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	}
 
 	// create hash of existing global styles
-	var hash = U.createHash(_.pluck(loadArray, 'path'));
+	var hash = U.createHash(_.map(loadArray, 'path'));
 
 	// see if we can use the cached global style
 	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile)) {
@@ -208,7 +209,7 @@ exports.sortStyles = function(style, opts) {
 			if (newKey === 'undefined' && !match[1]) { continue; }
 
 			// get the style key type
-			switch(match[1]) {
+			switch (match[1]) {
 				case '#':
 					obj.isId = true;
 					priority += VALUES.ID;
@@ -262,8 +263,13 @@ exports.loadStyle = function(tssFile) {
 	if (path.existsSync(tssFile)) {
 		// read the style file
 		var contents;
+		var originalContents;
+		var addedBraces;
 		try {
 			contents = fs.readFileSync(tssFile, 'utf8');
+			// Store the originalContents in case we hit a parse error,
+			// this allows us to show the correct contents of the .tss file
+			originalContents = contents;
 		} catch (e) {
 			U.die('Failed to read style file "' + tssFile + '"', e);
 		}
@@ -274,7 +280,10 @@ exports.loadStyle = function(tssFile) {
 		}
 
 		// Add enclosing curly braces, if necessary
-		contents = /^\s*\{[\s\S]+\}\s*$/gi.test(contents) ? contents : '{\n' + contents + '\n}';
+		if (!/^\s*\{[\s\S]+\}\s*$/gi.test(contents)) {
+			contents = '{\n' + contents + '\n}';
+			addedBraces = true;
+		}
 		// [ALOY-793] double-escape '\' in tss
 		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
@@ -284,16 +293,20 @@ exports.loadStyle = function(tssFile) {
 			json = grammar.parse(contents);
 			optimizer.optimizeStyle(json);
 		} catch (e) {
-			U.die([
+			// If we added braces to the contents then the actual line number
+			// on the original contents is one less than the error reports
+			if (addedBraces) {
+				e.line--;
+			}
+			U.dieWithCodeFrame(
 				'Error processing style "' + tssFile + '"',
-				e.message,
-				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message) ? 'Do you have an extra comma in your style definition?' : '',
-				'- line:    ' + e.line,
-				'- column:  ' + e.column,
-				'- offset:  ' + e.offset
-			]);
+				{ line: e.line, column: e.column },
+				originalContents,
+				/Expected bare word\, comment\, end of line\, string or whitespace but ".+?" found\./.test(e.message)
+					? 'Do you have an extra comma in your style definition?'
+					: ''
+			);
 		}
-
 		return json;
 	}
 	return {};
@@ -359,12 +372,13 @@ exports.processStyle = function(_style, _state) {
 				if (matches !== null) {
 					code += prefix + matches[1] + ','; // matched a JS expression
 				} else {
-					if(typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
-						// ALOY-263, support date/time style pickers
-						var d = U.createDate(value);
-						if(DATEFIELDS.indexOf(sn) !== -1) {
-							if(U.isValidDate(d, sn)) {
-								code += prefix + 'new Date("'+d.toString()+'"),';
+					if (typeof style.type !== 'undefined' && typeof style.type.indexOf === 'function' && (style.type).indexOf('UI.PICKER') !== -1 && value !== 'picker') {
+						if (DATEFIELDS.indexOf(sn) !== -1) {
+							// ALOY-263, support date/time style pickers
+							var d = U.createDate(value);
+
+							if (U.isValidDate(d, sn)) {
+								code += prefix + 'new Date("' + d.toString() + '"),';
 							}
 						} else {
 							code += prefix + '"' + value
@@ -375,7 +389,7 @@ exports.processStyle = function(_style, _state) {
 								.replace(/\u2029/g, '\\u2029') +  '",'; // just a string
 						}
 					} else {
-						if(KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
+						if (KEYBOARD_PROPERTIES.indexOf(sn) === -1) {
 							code += prefix + '"' + value
 								.replace(/"/g, '\\"')
 								.replace(/\n/g, '\\n')
@@ -385,13 +399,13 @@ exports.processStyle = function(_style, _state) {
 						} else {
 							// keyboard type shortcuts for TextField, TextArea
 							// support shortcuts for keyboard type, return key type, and autocapitalization
-							if (sn===KEYBOARD_PROPERTIES[0] && _.contains(KEYBOARD_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[0] && _.includes(KEYBOARD_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.KEYBOARD_' + value.toUpperCase() + ',';
 							}
-							if (sn===KEYBOARD_PROPERTIES[1] && _.contains(RETURN_KEY_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[1] && _.includes(RETURN_KEY_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.RETURNKEY_' + value.toUpperCase() + ',';
 							}
-							if (sn===KEYBOARD_PROPERTIES[2] && _.contains(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
+							if (sn === KEYBOARD_PROPERTIES[2] && _.includes(AUTOCAPITALIZATION_TYPES, value.toUpperCase())) {
 								code += prefix + 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + value.toUpperCase() + ',';
 							}
 						}
@@ -422,9 +436,8 @@ exports.processStyle = function(_style, _state) {
 	return code;
 };
 
-exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theState) {
-	var bindingRegex = BINDING_REGEX,
-		styleCollection = [],
+exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle, theState) {
+	var styleCollection = [],
 		lastObj = {},
 		elementName = apiName.split('.').pop();
 
@@ -436,7 +449,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 	// process all style items, in order
 	_.each(styles, function(style) {
 		if ((style.isId && style.key === id) ||
-			(style.isClass && _.contains(classes, style.key)) ||
+			(style.isClass && _.includes(classes, style.key)) ||
 			(style.isApi && elementName === style.key)) {
 
 			// manage potential runtime conditions for the style
@@ -456,7 +469,7 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						_.each(q.platform.toString().split(','), function(p) {
 							// need to account for multiple platforms and negation, such as platform=ios or
 							// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
-							if(p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
+							if (p === platform || (p.indexOf('!') === 0 && p.substr(1) !== platform)) {
 								isForCurrentPlatform = true;
 							}
 						});
@@ -481,11 +494,11 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 				var pcond = conditionals.platform.length > 0 ? '(' + conditionals.platform.join(' || ') + ')' : '';
 				var joinString = (pcond && conditionals.formFactor) ? ' && ' : '';
 				var conditional = pcond + joinString + conditionals.formFactor;
-				if(q.if) {
+				if (q.if) {
 					// ALOY-871: handle custom TSS queries with if conditional
 					var ffcond = conditionals.formFactor.length > 0 ? '(' + conditionals.formFactor + ')' : '';
 					var ffJoinString = (ffcond) ? ' && ' : '';
-					conditional = pcond + joinString + ffcond + ffJoinString + "(" + q.if.split(',').join(' || ')+")";
+					conditional = pcond + joinString + ffcond + ffJoinString + '(' + q.if.split(',').join(' || ') + ')';
 				}
 
 				// push styles if we need to insert a conditional
@@ -495,11 +508,17 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 						styleCollection.push({style:style.style, condition:conditional});
 						lastObj = {};
 					}
-				} else if(!q.if) {
+				} else if (!q.if) {
 					lastObj = deepExtend(true, lastObj, style.style);
 				}
 			} else {
-					lastObj = deepExtend(true, lastObj, style.style);
+				// remove old style
+				_.each(style.style, function(val, key) {
+					if (_.isArray(val) && lastObj.hasOwnProperty(key)) {
+						delete lastObj[key];
+					}
+				});
+				lastObj = deepExtend(true, lastObj, style.style);
 			}
 		}
 	});
@@ -511,77 +530,130 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 	// substitutions for binding
 	_.each(styleCollection, function(style) {
-		_.each(style.style, function(v,k) {
-			if (_.isString(v)) {
-				var match = v.match(bindingRegex);
-				if (match !== null) {
-					var parts = match[1].split('.'),
-						partsLen = parts.length,
-						modelVar,
-						templateStr = v.replace(/\{[\$\.]*/g, '<%=').replace(/\}/g, '%>');
+		_.each(style.style, function(v, k) {
 
-					// model binding
-					if (parts.length > 1) {
+			if (!_.isString(v)) {
+				return;
+			}
 
-						if (CU.models.length !== 0) {
-							if (partsLen > 3 ||
-								(parts[0] !== '$' && !_.contains(CU.models, parts[0]))) {
-								U.die([
-									'Attempt to reference the deep object reference : "' + match[1] + '".',
-									'Instead, please map the object property to an attribute of the model.'
-								]);
-							}
-						}
+			var bindingStrParts = v.split(BINDING_SPLIT_REGEX);
 
-						// are we bound to a global or controller-specific model?
-						modelVar = parts[0] === '$' ? parts[0] + '.' + parts[1] : 'Alloy.Models.' + parts[0];
-						var attr = parts[0] === '$' ? parts[2] : parts[1];
+			if (bindingStrParts.length <= 1) {
+				return;
+			}
 
-						// ensure that the bindings for this model have been initialized
-						if (!_.isArray(exports.bindingsMap[modelVar])) {
-							exports.bindingsMap[modelVar] = [];
-						}
+			var collectionModelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
 
-						// create the binding object
-						var bindingObj = {
-							id: id,
-							prop: k,
-							attr: attr,
-							mname: parts[0] === '$' ? parts[1] : parts[0],
-							tplVal: templateStr
-						};
+			var bindsModels = [];
+			var bindsCollection = false;
 
-						// make sure bindings are wrapped in any conditionals
-						// relevant to the curent style
-						if (theState.condition) {
-							bindingObj.condition = theState.condition;
-						}
+			var bindingExpParts = [];
 
-						// add this property to the global bindings map for the
-						// current controller component
-						exports.bindingsMap[modelVar].push(bindingObj);
+			bindingStrParts.forEach(function(part, i) {
 
-						// since this property is data bound, don't include it in
-						// the style statically
-						delete style.style[k];
-					}
-					// collection binding
-					else {
-						modelVar = theState && theState.model ? theState.model : CONST.BIND_MODEL_VAR;
-						var bindingStr = templateStr.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
-							var v = code.replace(/\\'/g, "'");
-							return "'+" + modelVar +".get('" + v.trim() + "') +'";
-						});
-						var transform = modelVar + "." + CONST.BIND_TRANSFORM_VAR + "['" + match[1].trim() + "']";
-
-						// remove the first '+ and last +'
-						var bStr = bindingStr.match(/^\s*\'\+(.*)\+\'\s*$/),
-							standard = (bStr) ? bStr[1] : bindingStr;
-
-						var modelCheck = "typeof " + transform + " !== 'undefined' ? " + transform + " : " + standard;
-						style.style[k] = STYLE_EXPR_PREFIX + modelCheck;
-					}
+				// empty string
+				if (part === '') {
+					return;
 				}
+
+				var partMatch = part.match(BINDING_REFERENCE_REGEX);
+
+				// regular string
+				if (!partMatch) {
+
+					// escape single quote: ALOY-1478
+					bindingExpParts.push("'" + part.replace(/'/g, "\\'") + "'");
+
+					return;
+				}
+
+				var reference = partMatch[1].trim(); // trim: ALOY-716
+				var referencePath = toPath(reference);
+
+				var attribute, modelVar;
+
+				// collection binding
+				if (referencePath.length === 1) {
+					bindsCollection = true;
+				} else if (referencePath[0] === '$') {
+					// instance model binding
+					attribute = referencePath.splice(2, referencePath.length);
+				} else if (_.includes(CU.models, referencePath[0])) {
+					// global model binding
+					attribute = referencePath.splice(1, referencePath.length);
+					referencePath.unshift('Alloy', 'Models');
+				} else {
+					// collection binding (deep)
+					bindsCollection = true;
+				}
+
+				// model binding
+				if (attribute !== undefined) {
+					modelVar = fromPath(referencePath);
+					reference = fromPath(referencePath.concat(CONST.BIND_TRANSFORM_VAR, attribute));
+
+					if (!_.includes(bindsModels, modelVar)) {
+						bindsModels.push(modelVar);
+					}
+				} else {
+					// collection binding
+					reference = collectionModelVar + '.' + CONST.BIND_TRANSFORM_VAR + (reference[0] === '[' ? '' : '.') + reference;
+				}
+
+				bindingExpParts.push(reference);
+
+			});
+
+			if (!bindsCollection && bindsModels.length === 0) {
+				return;
+			}
+
+			if (bindsCollection && bindsModels.length > 0) {
+				U.die('Attempt to mix model (' + bindsModels.join(', ') + ') and collection (' + collectionModelVar + ') binding in: ' + v);
+			}
+
+			var bindingExp = bindingExpParts.join(' + ');
+
+			if (bindsCollection) {
+				style.style[k] = STYLE_EXPR_PREFIX + bindingExp;
+			}
+
+			if (bindsModels.length > 0) {
+
+				bindsModels.forEach(function(modelVar) {
+
+					// ensure that the bindings for this model have been initialized
+					if (!exports.bindingsMap[modelVar]) {
+						exports.bindingsMap[modelVar] = {
+							models: bindsModels,
+							bindings: []
+						};
+					} else {
+						// ensure that mix use of models contains all
+						exports.bindingsMap[modelVar].models = _.union(exports.bindingsMap[modelVar].models, bindsModels);
+					}
+
+					// create the binding object
+					var bindingObj = {
+						id: id,
+						prop: k,
+						val: bindingExp
+					};
+
+					// make sure bindings are wrapped in any conditionals
+					// relevant to the curent style
+					if (theState.condition) {
+						bindingObj.condition = theState.condition;
+					}
+
+					// add this property to the global bindings map for the
+					// current controller component
+					exports.bindingsMap[modelVar].bindings.push(bindingObj);
+				});
+
+				// since this property is data bound, don't include it in
+				// the style statically
+				delete style.style[k];
 			}
 		});
 	});
@@ -603,14 +675,15 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 		}
 	} else if (styleCollection.length > 1) {
 		// construct self-executing function to merge styles based on runtime conditionals
-		code += '(function(){\n';
+		code += '(function (){\n';
 		code += 'var o = {};\n';
+
 		for (var i = 0, l = styleCollection.length; i < l; i++) {
-			if (styleCollection[i].condition) {
-				code += 'if (' + styleCollection[i].condition + ') ';
-			}
 			var tmpStyle = exports.processStyle(styleCollection[i].style, theState);
-			if(!_.isEmpty(tmpStyle)) {
+			if (!_.isEmpty(tmpStyle)) {
+				if (styleCollection[i].condition) {
+					code += 'if (' + styleCollection[i].condition + ') ';
+				}
 				code += 'Alloy.deepExtend(true, o, {';
 				code += tmpStyle;
 				code += '});\n';
@@ -625,4 +698,25 @@ exports.generateStyleParams = function(styles,classes,id,apiName,extraStyle,theS
 
 function getCacheFilePath(appPath, hash) {
 	return path.join(appPath, '..', CONST.DIR.BUILD, 'global_style_cache_' + hash + '.json');
+}
+
+// source: https://github.com/lodash/lodash/blob/3.8.1-npm-packages/lodash._topath/index.js
+function toPath(value) {
+	var result = [];
+	value.replace(/[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g, function(match, number, quote, string) {
+		result.push(quote ? string.replace(/\\(\\)?/g, '$1') : (number || match));
+	});
+	return result;
+}
+
+function fromPath(path) {
+	var result = path[0];
+
+	if (path.length > 1) {
+		result += '[' + path.slice(1).map(function(string) {
+			return "'" + string.replace(/'/g, "\\'") + "'";
+		}).join('][') + ']';
+	}
+
+	return result;
 }

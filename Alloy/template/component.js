@@ -1,21 +1,21 @@
-var Alloy = require('alloy'),
+var Alloy = require('/alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
+<%= ES6Mod %>
 <%= WPATH %>
 
 function __processArg(obj, key) {
 	var arg = null;
 	if (obj) {
 		arg = obj[key] || null;
-		delete obj[key];
 	}
 	return arg;
 }
 
 function Controller() {
 	<%= Widget %>
-	require('alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
+	require('/alloy/controllers/' + <%= parentController %>).apply(this, Array.prototype.slice.call(arguments));
 	this.__controllerPath = '<%= controllerPath %>';
 	this.args = arguments[0] || {};
 
