@@ -8,23 +8,17 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function doClick() {
+    function doClick(e) {
         alert("Check console output");
         Ti.API.debug(JSON.stringify(Alloy.CFG, null, "	"));
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -41,15 +35,15 @@ function Controller() {
         id: "button"
     });
     $.__views.index.add($.__views.button);
-    doClick ? $.__views.button.addEventListener("click", doClick) : __defers["$.__views.button!click!doClick"] = true;
+    doClick ? $.addListener($.__views.button, "click", doClick) : __defers["$.__views.button!click!doClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
     require("specs/index")($);
-    __defers["$.__views.button!click!doClick"] && $.__views.button.addEventListener("click", doClick);
+    __defers["$.__views.button!click!doClick"] && $.addListener($.__views.button, "click", doClick);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

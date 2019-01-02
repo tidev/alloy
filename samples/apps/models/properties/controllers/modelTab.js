@@ -23,7 +23,7 @@ function destroy(e) {
 
 function increment(e) {
 	app.set({
-		count: app.get('count')+1,
+		count: app.get('count') + 1,
 		id: ID
 	});
 	app.save();

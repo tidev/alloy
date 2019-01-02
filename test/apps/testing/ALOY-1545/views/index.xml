@@ -1,0 +1,10 @@
+<Alloy>
+	<Collection id='demo' src="Demo" instance="true" />
+	<Window class="container">
+		<TableView dataCollection="$.demo">
+			<TableViewRow>
+				<Widget src='foo' onCustomevent="onCustomEvent" />
+			</TableViewRow>
+		</TableView>
+	</Window>
+</Alloy>

@@ -21,15 +21,15 @@ module.exports = function($) {
 		validateUiComponent($, 'label', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#a00",
+				color: '#a00',
 				font: {
-					fontSize: OS_MOBILEWEB ? "48px" : "48dp",
-					fontWeight: "bold"
+					fontSize: OS_MOBILEWEB ? '48px' : '48dp',
+					fontWeight: 'bold'
 				},
 				height: Ti.UI.SIZE,
 				width: Ti.UI.SIZE,
-				text: "some text",
-				id: "label",
+				text: 'some text',
+				id: 'label',
 				shadowColor: '#999',
 				shadowOffset: {
 					x: 3,
@@ -41,10 +41,10 @@ module.exports = function($) {
 		validateUiComponent($, 'newLabel', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#a00",
+				color: '#a00',
 				font: {
-					fontSize: OS_MOBILEWEB ? "48px" : "48dp",
-					fontWeight: "bold"
+					fontSize: OS_MOBILEWEB ? '48px' : '48dp',
+					fontWeight: 'bold'
 				},
 				height: Ti.UI.SIZE,
 				width: Ti.UI.SIZE,
@@ -65,7 +65,7 @@ module.exports = function($) {
 
 		if (autoStyle) {
 			it('has #label, which has "classes" property', function() {
-				expect($.label.classes).toContainSameAs(['main','shadow']);
+				expect($.label.classes).toContainSameAs(['main', 'shadow']);
 			});
 		} else {
 			it('has #label, which has undefined "classes" property', function() {

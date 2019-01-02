@@ -1,9 +1,9 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils');
 
-var VALID = ['Ti.UI.Window', 'Ti.UI.TabGroup', 'Ti.UI.iOS.NavigationWindow'];
+var VALID = ['Ti.UI.Window', 'Ti.UI.TabGroup', 'Ti.UI.iOS.NavigationWindow', 'Ti.UI.NavigationWindow'];
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);

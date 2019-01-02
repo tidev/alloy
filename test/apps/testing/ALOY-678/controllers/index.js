@@ -5,10 +5,10 @@ for (var i = 0; i < 10; i++) {
 			image: '/appc.png'
 		},
 		label: {
-			text: 'auto-row #' + (i+1)
+			text: 'auto-row #' + (i + 1)
 		},
 		button: {
-			title: i+1
+			title: i + 1
 		}
 	});
 }

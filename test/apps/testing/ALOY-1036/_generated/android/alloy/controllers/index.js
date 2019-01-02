@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -33,23 +27,23 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.testLabel = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "22dp"
             },
             color: "purple",
             text: "Simple class label applied"
         });
-        (Alloy.Globals.custom1 || Alloy.Globals.custom2) && _.extend(o, {
+        (Alloy.Globals.custom1 || Alloy.Globals.custom2) && Alloy.deepExtend(true, o, {
             text: "iOS or Android! Styles conditionals correctly applied"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "testLabel"
         });
         return o;
     }());
     $.__views.index.add($.__views.testLabel);
-    if (true && (Alloy.Globals.custom1 || Alloy.Globals.custom2)) {
+    if (Alloy.Globals.custom1 || Alloy.Globals.custom2) {
         $.__views.testLabel2 = Ti.UI.createLabel({
             font: {
                 fontSize: "22dp"
@@ -57,7 +51,7 @@ function Controller() {
             color: "purple",
             text: "Added in XML",
             id: "testLabel2",
-            bottom: "100"
+            bottom: 100
         });
         $.__views.index.add($.__views.testLabel2);
     }
@@ -67,6 +61,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

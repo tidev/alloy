@@ -1,0 +1,5 @@
+<Alloy>
+	<Window>
+		<Stepper id="stepper" platform="ios" onChange='stepperChanged'/>
+	</Window>
+</Alloy>

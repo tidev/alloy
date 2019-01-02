@@ -1,0 +1,8 @@
+<Alloy>
+	<Model src="Big"/>
+	<Model src="small"/>
+	<Window class="container">
+		<Label id="lbl1">{Big.name}</Label>
+		<Label id="lbl2">{small.name}</Label>
+	</Window>
+</Alloy>

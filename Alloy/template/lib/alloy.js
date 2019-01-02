@@ -23,9 +23,9 @@
  * For guides on using Alloy, see
  * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
  */
-var _ = require('alloy/underscore')._,
-	Backbone = require('alloy/backbone'),
-	CONST = require('alloy/constants');
+var _ = require('/alloy/underscore')._,
+	Backbone = require('/alloy/backbone'),
+	CONST = require('/alloy/constants');
 
 exports.version = '<%= version %>';
 exports._ = _;
@@ -117,8 +117,8 @@ if (OS_IOS) {
 }
 
 function ucfirst(text) {
-		if (!text) { return text; }
-		return text[0].toUpperCase() + text.substr(1);
+	if (!text) { return text; }
+	return text[0].toUpperCase() + text.substr(1);
 }
 
 function addNamespace(apiName) {
@@ -134,7 +134,7 @@ exports.M = function(name, modelDesc, migrations) {
 	var mod;
 
 	if (adapter.type) {
-		mod = require('alloy/sync/' + adapter.type);
+		mod = require('/alloy/sync/' + adapter.type);
 		extendObj.sync = function(method, model, opts) {
 			return mod.sync(method, model, opts);
 		};
@@ -150,9 +150,9 @@ exports.M = function(name, modelDesc, migrations) {
 	if (migrations) { extendClass.migrations = migrations; }
 
 	// Run the pre model creation code, if any
-		if (mod && _.isFunction(mod.beforeModelCreate)) {
+	if (mod && _.isFunction(mod.beforeModelCreate)) {
 		config = mod.beforeModelCreate(config, name) || config;
-		}
+	}
 
 	// Create the Model object
 	var Model = Backbone.Model.extend(extendObj, extendClass);
@@ -177,9 +177,9 @@ exports.C = function(name, modelDesc, model) {
 	var mod;
 
 	if (config.adapter && config.adapter.type) {
-		mod = require('alloy/sync/' + config.adapter.type);
+		mod = require('/alloy/sync/' + config.adapter.type);
 		extendObj.sync = function(method, model, opts) {
-			return mod.sync(method,model,opts);
+			return mod.sync(method, model, opts);
 		};
 	} else {
 		extendObj.sync = function(method, model, opts) {
@@ -215,10 +215,10 @@ exports.UI.create = function(controller, apiName, opts) {
 		baseName = apiName;
 		ns = opts.ns || CONST.IMPLICIT_NAMESPACES[baseName] || CONST.NAMESPACE_DEFAULT;
 	} else if (parts.length > 1) {
-		baseName = parts[parts.length-1];
-		ns = parts.slice(0,parts.length-1).join('.');
+		baseName = parts[parts.length - 1];
+		ns = parts.slice(0,parts.length - 1).join('.');
 	} else {
-		throw('Alloy.UI.create() failed: No API name was given in the second parameter');
+		throw ('Alloy.UI.create() failed: No API name was given in the second parameter');
 	}
 	opts.apiName = ns + '.' + baseName;
 	baseName = baseName[0].toUpperCase() + baseName.substr(1);
@@ -257,10 +257,10 @@ exports.createStyle = function(controller, opts, defaults) {
 	// Load the runtime style for the given controller
 	var styleArray;
 	if (controller && _.isObject(controller)) {
-		styleArray = require('alloy/widgets/' + controller.widgetId +
+		styleArray = require('/alloy/widgets/' + controller.widgetId +
 			'/styles/' + controller.name);
 	} else {
-		styleArray = require('alloy/styles/' + controller);
+		styleArray = require('/alloy/styles/' + controller);
 	}
 	var styleFinal = {};
 
@@ -292,7 +292,7 @@ exports.createStyle = function(controller, opts, defaults) {
 
 		// can we clear out any form factor queries?
 		if (style.queries && style.queries.formFactor &&
-			!Alloy[style.queries.formFactor]) {
+			!exports[style.queries.formFactor]) {
 			continue;
 		}
 
@@ -300,8 +300,8 @@ exports.createStyle = function(controller, opts, defaults) {
 		if (style.queries && style.queries.if &&
 			(style.queries.if.trim().toLowerCase() === 'false' ||
 			(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
-			Alloy.Globals[style.queries.if.split('.')[2]] === false))) {
-				continue;
+			exports.Globals[style.queries.if.split('.')[2]] === false))) {
+			continue;
 		}
 
 		// Merge this style into the existing style object
@@ -321,7 +321,7 @@ exports.createStyle = function(controller, opts, defaults) {
 
 	if (MW320_CHECK) { delete styleFinal[CONST.APINAME_PROPERTY]; }
 
-	return defaults ? _.defaults(styleFinal,defaults) : styleFinal;
+	return defaults ? _.defaults(styleFinal, defaults) : styleFinal;
 };
 
 function processStyle(controller, proxy, classes, opts, defaults) {
@@ -413,7 +413,7 @@ exports.createWidget = function(id, name, args) {
 		args = name;
 		name = DEFAULT_WIDGET;
 	}
-	return new (require('alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
+	return new (require('/alloy/widgets/' + id + '/controllers/' + (name || DEFAULT_WIDGET)))(args);
 };
 
 /**
@@ -425,7 +425,7 @@ exports.createWidget = function(id, name, args) {
  * @return {Alloy.Controller} Alloy controller object.
  */
 exports.createController = function(name, args) {
-	return new (require('alloy/controllers/' + name))(args);
+	return new (require('/alloy/controllers/' + name))(args);
 };
 
 /**
@@ -440,7 +440,7 @@ exports.createController = function(name, args) {
  * @return {Backbone.Model} Backbone model object.
  */
 exports.createModel = function(name, args) {
-	return new (require('alloy/models/' + ucfirst(name)).Model)(args);
+	return new (require('/alloy/models/' + ucfirst(name)).Model)(args);
 };
 
 /**
@@ -456,7 +456,7 @@ exports.createModel = function(name, args) {
  * @return {Backbone.Collection} Backbone collection object.
  */
 exports.createCollection = function(name, args) {
-	return new (require('alloy/models/' + ucfirst(name)).Collection)(args);
+	return new (require('/alloy/models/' + ucfirst(name)).Collection)(args);
 };
 
 function isTabletFallback() {
@@ -602,7 +602,7 @@ exports.Collections.instance = function(name) {
  *     var theKey = require('alloy').CFG.key;
  *
  */
-exports.CFG = require('alloy/CFG');
+exports.CFG = require('/alloy/CFG');
 
 if (OS_ANDROID) {
 	exports.Android = {};
@@ -644,10 +644,10 @@ exports.deepExtend = function() {
 
 	for (; i < length; i++) {
 		// Only deal with non-null/undefined values
-		options = arguments[i]
+		options = arguments[i];
 		if (options != null) {
 			if (typeof options === 'string') {
-					options = options.split('');
+				options = options.split('');
 			}
 			// Extend the base object
 			for (name in options) {

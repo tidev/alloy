@@ -1,0 +1,5 @@
+<Alloy>
+	<View>
+		<Label id='lbl'>HELLO</Label>
+	</View>
+</Alloy>

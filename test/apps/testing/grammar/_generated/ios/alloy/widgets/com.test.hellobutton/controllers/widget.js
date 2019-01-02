@@ -17,9 +17,9 @@ function Controller() {
     function sayHello() {
         require(WPATH("hello")).sayHello();
     }
-    new (require("alloy/widget"))("com.test.hellobutton");
+    new (require("/alloy/widget"))("com.test.hellobutton");
     this.__widgetId = "com.test.hellobutton";
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "widget";
     this.args = arguments[0] || {};
     if (arguments[0]) {
@@ -37,13 +37,13 @@ function Controller() {
         id: "helloButton"
     });
     $.__views.helloButton && $.addTopLevelView($.__views.helloButton);
-    sayHello ? $.__views.helloButton.addEventListener("click", sayHello) : __defers["$.__views.helloButton!click!sayHello"] = true;
+    sayHello ? $.addListener($.__views.helloButton, "click", sayHello) : __defers["$.__views.helloButton!click!sayHello"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    __defers["$.__views.helloButton!click!sayHello"] && $.__views.helloButton.addEventListener("click", sayHello);
+    __defers["$.__views.helloButton!click!sayHello"] && $.addListener($.__views.helloButton, "click", sayHello);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

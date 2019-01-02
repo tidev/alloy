@@ -9,7 +9,7 @@
 }
 
 "#logo": {
-	image: '/bluth.png',
+	image: '/company.png',
 	top: 0,
 	left: -3,
 	height: '121dp',

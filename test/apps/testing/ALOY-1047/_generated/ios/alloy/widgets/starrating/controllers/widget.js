@@ -14,9 +14,9 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    new (require("alloy/widget"))("starrating");
+    new (require("/alloy/widget"))("starrating");
     this.__widgetId = "starrating";
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "widget";
     this.args = arguments[0] || {};
     if (arguments[0]) {
@@ -39,7 +39,7 @@ function Controller() {
     var setRating = function(newRating) {
         newRating > max && (newRating = max);
         rating = newRating;
-        for (var i = 0, l = stars.length; l > i; i++) stars[i].image = WPATH(i >= rating ? "star_off.png" : rating > i && i + 1 > rating ? "star_half.png" : "star.png");
+        for (var i = 0, l = stars.length; l > i; i++) i >= rating ? stars[i].image = WPATH("star_off.png") : rating > i && i + 1 > rating ? stars[i].image = WPATH("star_half.png") : stars[i].image = WPATH("star.png");
     };
     exports.setRating = setRating;
     exports.getRating = function() {
@@ -68,6 +68,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -1,0 +1,32 @@
+<Alloy>
+	<Model src="mymodel" />
+	<Model src="mymodel" instance="true" id="modelinstance" />
+	<Collection src="mymodel" />
+	<Collection src="mymodel" instance="true" id="colinstance" />
+	<Window backgroundColor="white" layout="vertical">
+		<Label top="20" text="{$.modelinstance.foo}" />
+		<Label text="{$.modelinstance.foo} {$.modelinstance.bar} {$.modelinstance.missing}" />
+		<Label text="{mymodel.foo}" />
+		<Label text="{mymodel.foo} {mymodel.bar} {mymodel.missing}" />
+		<ListView height="Ti.UI.SIZE" canScroll="false" defaultItemTemplate="Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE">
+			<ListSection dataCollection="mymodel">
+				<ListItem title="{foo}" subtitle="{foo} {bar} {missing}" />
+			</ListSection>
+		</ListView>
+		<ListView height="Ti.UI.SIZE" canScroll="false" defaultItemTemplate="Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE">
+			<ListSection dataCollection="$.colinstance">
+				<ListItem title="{foo}" subtitle="{foo} {bar} {missing}" />
+			</ListSection>
+		</ListView>
+		<ListView height="Ti.UI.SIZE" canScroll="false" defaultItemTemplate="Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE">
+			<ListSection dataCollection="mymodel">
+				<Require src="inherit" />
+			</ListSection>
+		</ListView>
+		<ListView height="Ti.UI.SIZE" canScroll="false" defaultItemTemplate="Ti.UI.LIST_ITEM_TEMPLATE_SUBTITLE">
+			<ListSection dataCollection="$.colinstance">
+				<Require src="inherit" />
+			</ListSection>
+		</ListView>
+	</Window>
+</Alloy>

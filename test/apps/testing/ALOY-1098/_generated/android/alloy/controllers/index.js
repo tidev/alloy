@@ -15,6 +15,7 @@ function Controller() {
                 hintText: "Use a SearchView",
                 id: "__alloyId3"
             });
+            $.__alloyId3 = $.__views.__alloyId3;
             var __alloyId4 = {
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM | Ti.Android.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW,
                 icon: Ti.Android.R.drawable.ic_menu_search,
@@ -28,6 +29,7 @@ function Controller() {
                 title: "Click",
                 id: "__alloyId7"
             });
+            $.__alloyId7 = $.__views.__alloyId7;
             var __alloyId8 = {
                 showAsAction: Ti.Android.SHOW_AS_ACTION_IF_ROOM,
                 id: "__alloyId5"
@@ -49,19 +51,13 @@ function Controller() {
             Ti.API.warn("Android Menus can only be opened on TabGroups and heavyweight Windows.");
         }
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -88,6 +84,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

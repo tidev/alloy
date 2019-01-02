@@ -1,4 +1,4 @@
-function showOptions(){
+function showOptions() {
 	$.dialog.show();
 }
 $.index.open();

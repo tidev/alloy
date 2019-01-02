@@ -8,7 +8,7 @@
  * with `alloy` as the root directory in your `require` call.
  * For example, to use the animation builtin:
  *
- *     var animation = require('alloy/animation');
+ *     var animation = require('/alloy/animation');
  *     animation.crossFade(view1, view2, 500, finishCallback);
  *
  * During the compilation process, Alloy determines which builtins are being used,

@@ -23,12 +23,12 @@ var styles = [
 	{},
 	{
 		apiName: 'Ti.UI.Label',
-		classes: ['blue','shadow','large'],
+		classes: ['blue', 'shadow', 'large'],
 		id: 'tester'
 	},
 	{
 		apiName: 'Label',
-		classes: ['dark','huge']
+		classes: ['dark', 'huge']
 	},
 	{
 		apiName: 'Label',

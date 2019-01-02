@@ -1,4 +1,4 @@
-var colors = ['blue','red','orange'];
+var colors = ['blue', 'red', 'orange'];
 var selectedColor = 'blue';
 
 function closeKeyboard(e) {

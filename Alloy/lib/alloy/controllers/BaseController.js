@@ -1,4 +1,4 @@
-var Alloy = require('alloy'),
+var Alloy = require('/alloy'),
 	Backbone = Alloy.Backbone,
 	_ = Alloy._;
 
@@ -71,9 +71,9 @@ var Controller = function() {
 	for (each in views) {
 		var view = views[each];
 		console.log(view.id);
-	}		 
+	}
 
-		 * 				
+		 *
 		 *
 		 * @return {Array.<(Titanium.UI.View|Alloy.Controller)>}
 		 */
@@ -92,7 +92,7 @@ var Controller = function() {
 		 * with the `id` of "loginWin" and then calls its [open()](Titanium.UI.Window) method.
 
 	var loginWindow = $.getView('loginWin');
-	loginWindow.open();		 
+	loginWindow.open();
 		 *
 		 * @param {String} [id] ID of the view to return.
 		 * @return {Titanium.UI.View/Alloy.Controller}
@@ -133,7 +133,7 @@ var Controller = function() {
 			</Tab>
 		</TabGroup>
 		<View id="otherview"></View>
-	</Alloy>		 
+	</Alloy>
 
 		* The following view-controller outputs the id of each view in the hierarchy.
 
@@ -141,7 +141,7 @@ var Controller = function() {
 	for (each in views) {
 		var view = views[each];
 		console.log(view.id);
-	}	
+	}
 
 	[INFO] :   win1
 	[INFO] :   label1
@@ -174,9 +174,9 @@ var Controller = function() {
 
 	$.dialog.addEventListener('close', function() {
 		$.destroy();
-	});		 
+	});
 		 */
-		destroy: function(){
+		destroy: function() {
 			// destroy() is defined during the compile process based on
 			// the UI components and binding contained within the controller.
 		},
@@ -224,7 +224,7 @@ var Controller = function() {
 		 * {@link Titanium.UI.View#method-applyProperties applyProperties} method
 		 * or a create object method, such as {@link Titanium.UI#method-createView Titanium.UI.createView}.
 		 * #### Examples
-		 * The following creates a new style object that is passed as a parameter 
+		 * The following creates a new style object that is passed as a parameter
 		 * to the {@link Titanium.UI#method-createLabel Ti.UI.createLabel()} method.
 
 	var styleArgs = {
@@ -236,7 +236,7 @@ var Controller = function() {
 		borderColor: '#000'
 	};
 	var styleObject = $.createStyle(styleArgs);
-	testLabel = Ti.UI.createLabel(styleObject);	 
+	testLabel = Ti.UI.createLabel(styleObject);
 
 		 * The next example uses the {@link Titanium#method-applyProperties applyProperties()} method
 		 * to apply a style object to an existing Button control (button not shown).
@@ -289,9 +289,9 @@ The 'redbg' and 'bigger' classes are shown below:
 	}
 	".bigger": {
 		font : {
-		   fontSize: '36'    
+		   fontSize: '36'
 		}
-	}	
+	}
 
 		 * @param {Object} proxy View object to which to add class(es).
 		 * @param {Array<String>/String} classes Array or space-separated list of classes to apply.
@@ -352,8 +352,8 @@ The 'redbg' and 'bigger' classes are shown below:
 		/**
 		 * @method updateViews
 		 * Applies a set of properties to view elements associated with this controller.
-		 * This method is useful for setting properties on repeated elements such as 
-		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller 
+		 * This method is useful for setting properties on repeated elements such as
+		 * {@link Titanium.UI.TableViewRow TableViewRow} objects, rather than needing to have a controller
 		 * for those child controllers.
 		 * #### Example
 		 * The following example uses this method to update a Label inside a TableViewRow object
@@ -367,7 +367,7 @@ The 'redbg' and 'bigger' classes are shown below:
 	  	"#theLabel": {
 	  		text: "I am row #" + i
 	  	}
-	  });  
+	  });
 	  $.tableView.appendRow(row.getView());
 	};
 
@@ -377,19 +377,19 @@ The 'redbg' and 'bigger' classes are shown below:
 		<TableViewRow>
 			<Label id="theLabel"></Label>
 		</TableViewRow>
-	</Alloy>	 
+	</Alloy>
 
 			 * XML view: views/index.xml
 
 	<TableView id="tableView">
-	</TableView>			 
+	</TableView>
 		 * @param {Object} args An object whose keys are the IDs (in form '#id') of views to which the styles will be applied.
 		 * @since 1.4.0
 
 		 */
 		updateViews: function(args) {
 			var views = this.getViews();
-			if(_.isObject(args)) {
+			if (_.isObject(args)) {
 				_.each(_.keys(args), function(key) {
 					var elem = views[key.substring(1)];
 					if (key.indexOf('#') === 0 && key !== '#' && _.isObject(elem) && typeof elem.applyProperties === 'function') {
@@ -481,7 +481,7 @@ The 'redbg' and 'bigger' classes are shown below:
 		<Window onOpen="doOpen" onClose="doClose">
 			<Label id="label" onClick="doClick">Hello, world</Label>
 		</Window>
-	</Alloy>		 
+	</Alloy>
 
 	function doClose() {
 		$.removeListener();
@@ -493,7 +493,7 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		removeListener: function(proxy, type, callback) {
-			_.each(this.__events, function(event, index) {
+			this.__events.forEach(function(event, index) {
 				if ((!proxy || proxy.id === event.id) &&
 					(!type || type === event.type) &&
 					(!callback || callback === event.handler)) {

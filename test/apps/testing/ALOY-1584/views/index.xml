@@ -1,0 +1,15 @@
+<Alloy>
+	<Window title="My Test App" backgroundColor="gray" customToolbar="toolBarID" theme="Theme.AppCompat.NoTitleBar">
+		<Toolbar
+			id="toolBarID"
+			title="MyMenu"
+			subtitle="Subtitle"
+			width="Ti.UI.FILL"
+			top="0"
+			homeButtonEnabled = "true"
+			displayHomeAsUp = "true"
+			onHomeIconItemSelected = "clickAlert"
+			barColor="#639851"
+			/>
+	</Window>
+</Alloy>

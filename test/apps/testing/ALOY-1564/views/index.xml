@@ -1,0 +1,8 @@
+<Alloy>
+	<Collection id='demo' src="Demo" instance="true" />
+	<Window class="container">
+		<ScrollView dataCollection="$.demo" layout="vertical">
+			<Require src="products" onClick="doSomething" />
+ 		</ScrollView>
+	</Window>
+</Alloy>

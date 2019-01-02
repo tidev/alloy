@@ -3,13 +3,13 @@
 		<Tab id="staticTab" title="static">
 			<Window id="staticWindow" title="static">
 				<TableView id="staticTable">
-					<TableViewRow id="staticRow1" title="1"/>
-				    <TableViewRow id="staticRow2" title="2"/>
-				    <Widget id="staticWidgetSection" src="com.foo.widget" name="section" />
-				    <Widget id="staticWidgetRow1" src="com.foo.widget" name="row" />
-				    <Widget id="staticWidgetRow2" src="com.foo.widget" name="row" />
-				    <Widget id="staticWidgetRow3" src="com.foo.widget" name="row" />
-				    <TableViewRow id="staticRow3" title="3"/>
+					<TableViewRow id="staticRow1" title="one"/>
+					<TableViewRow id="staticRow2" title="two"/>
+					<Widget id="staticWidgetSection" src="com.foo.widget" name="section" />
+					<Widget id="staticWidgetRow1" src="com.foo.widget" name="row" />
+					<Widget id="staticWidgetRow2" src="com.foo.widget" name="row" />
+					<Widget id="staticWidgetRow3" src="com.foo.widget" name="row" />
+					<TableViewRow id="staticRow3" title="three"/>
 				</TableView>
 			</Window>
 		</Tab>

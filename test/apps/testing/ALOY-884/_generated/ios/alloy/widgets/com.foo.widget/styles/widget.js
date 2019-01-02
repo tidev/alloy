@@ -6,7 +6,7 @@ function WPATH(s) {
 
 module.exports = [ {
     isId: true,
-    priority: 100000.0002,
+    priority: 100000.0001,
     key: "t",
     style: {
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
@@ -17,7 +17,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0003,
+    priority: 100000.0002,
     key: "hl",
     style: {
         layout: "horizontal",
@@ -26,7 +26,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0004,
+    priority: 100000.0003,
     key: "a",
     style: {
         title: "A",
@@ -35,7 +35,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0005,
+    priority: 100000.0004,
     key: "b",
     style: {
         title: "B",
@@ -44,7 +44,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0006,
+    priority: 100000.0005,
     key: "c",
     style: {
         title: "C",

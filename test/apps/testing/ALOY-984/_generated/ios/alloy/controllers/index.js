@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -30,22 +24,22 @@ function Controller() {
     });
     var leftNavButtons = [];
     $.__views.__alloyId2 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "red",
         id: "__alloyId2"
     });
     leftNavButtons.push($.__views.__alloyId2);
     $.__views.__alloyId3 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "green",
         id: "__alloyId3"
     });
     leftNavButtons.push($.__views.__alloyId3);
     $.__views.__alloyId4 = Ti.UI.createView({
-        width: "25",
-        height: "25",
+        width: 25,
+        height: 25,
         backgroundColor: "blue",
         id: "__alloyId4"
     });
@@ -87,6 +81,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

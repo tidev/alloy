@@ -1,0 +1,9 @@
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'TableView': {
+	top: 20
+}

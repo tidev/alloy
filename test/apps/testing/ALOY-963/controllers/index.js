@@ -1,4 +1,4 @@
-var vendorLib = require("greeting");
+var vendorLib = require('greeting');
 
 function doClick(e) {
 	vendorLib.popup();

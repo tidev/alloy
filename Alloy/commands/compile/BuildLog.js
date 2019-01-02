@@ -1,6 +1,6 @@
-var fs = require('fs'),
+var fs = require('fs-extra'),
+	chmodr = require('chmodr'),
 	path = require('path'),
-	wrench = require('wrench'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
 
@@ -10,7 +10,7 @@ function BuildLog(_projectPath) {
 	// make/reference singleton instance
 	if (BuildLog.instance) {
 		return BuildLog.instance;
-  }
+	}
 	BuildLog.instance = this;
 
 	// set "private" variables
@@ -24,7 +24,8 @@ function BuildLog(_projectPath) {
 
 	// make sure the alloy build folder exists
 	if (!fs.existsSync(dir)) {
-		wrench.mkdirSyncRecursive(dir, 0755);
+		fs.mkdirpSync(dir);
+		chmodr.sync(dir, 0755);
 	}
 
 	// load it up

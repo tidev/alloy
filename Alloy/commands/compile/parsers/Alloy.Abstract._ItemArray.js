@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants');
@@ -65,7 +65,7 @@ function parse(node, state, args) {
 			}
 
 		// Make sure the children match the parent
-		} else if (!_.contains(def.children, childArgs.fullname)) {
+		} else if (!_.includes(def.children, childArgs.fullname)) {
 			U.die('Invalid child of <' + node.nodeName + '> on line ' + child.lineNumber + ': ' + childArgs.fullname);
 		}
 	});
@@ -86,12 +86,12 @@ function parse(node, state, args) {
 			});
 		});
 
-		if(state.parentFormFactor || node.hasAttribute('formFactor')) {
+		if (state.parentFormFactor || node.hasAttribute('formFactor')) {
 			// if this node or a parent has set the formFactor attribute
 			// we need to pass it to the data binding generator
 			args.parentFormFactor = (state.parentFormFactor || node.getAttribute('formFactor'));
 		}
-		code += _.template(CU.generateCollectionBindingTemplate(args), {
+		code += _.template(CU.generateCollectionBindingTemplate(args))({
 			localModel: localModel,
 			pre: 'var ' + itemsVar + '=[];',
 			items: itemCode,
@@ -106,8 +106,8 @@ function parse(node, state, args) {
 
 	// return an empty state if we already processed
 	if (def.children[0] === 'ALL') {
-		if(state.property === 'leftNavButtons' || state.property === 'rightNavButtons' || state.property === 'toolbar') {
-			code += (state.parent.symbol + '.' + state.property + ' = ' + state.itemsArray + ';');
+		if (state.property === 'leftNavButtons' || state.property === 'rightNavButtons' || state.property === 'toolbar') {
+			code += ((state.parent && state.parent.symbol ? state.parent.symbol : CONST.PARENT_SYMBOL_VAR) + '.' + state.property + ' = ' + state.itemsArray + ';');
 		}
 		return {
 			parent: {},

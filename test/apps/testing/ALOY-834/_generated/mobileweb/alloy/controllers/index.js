@@ -14,19 +14,13 @@ function Controller() {
     function doOnFocus() {
         Ti.API.info("doOnFocus");
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -61,16 +55,16 @@ function Controller() {
         tabsBackgroundSelectedColor: "yellow"
     });
     $.__views.ScheduleGroup && $.addTopLevelView($.__views.ScheduleGroup);
-    doOnOpen ? $.__views.ScheduleGroup.addEventListener("open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
-    doOnFocus ? $.__views.ScheduleGroup.addEventListener("focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
+    doOnOpen ? $.addListener($.__views.ScheduleGroup, "open", doOnOpen) : __defers["$.__views.ScheduleGroup!open!doOnOpen"] = true;
+    doOnFocus ? $.addListener($.__views.ScheduleGroup, "focus", doOnFocus) : __defers["$.__views.ScheduleGroup!focus!doOnFocus"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.ScheduleGroup.open();
-    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.__views.ScheduleGroup.addEventListener("open", doOnOpen);
-    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.__views.ScheduleGroup.addEventListener("focus", doOnFocus);
+    __defers["$.__views.ScheduleGroup!open!doOnOpen"] && $.addListener($.__views.ScheduleGroup, "open", doOnOpen);
+    __defers["$.__views.ScheduleGroup!focus!doOnFocus"] && $.addListener($.__views.ScheduleGroup, "focus", doOnFocus);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;
