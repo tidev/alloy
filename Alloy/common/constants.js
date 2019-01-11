@@ -206,7 +206,6 @@ exports.IMPLICIT_NAMESPACES = {
 	DocumentViewer: NS_TI_UI_IOS,
 	LivePhotoView: NS_TI_UI_IOS,
 	SplitWindow: NS_TI_UI_IOS,
-	TabbedBar: NS_TI_UI_IOS,
 	PreviewContext: NS_TI_UI_IOS,
 	PreviewAction: NS_TI_UI_IOS,
 	PreviewActionGroup: NS_TI_UI_IOS,
