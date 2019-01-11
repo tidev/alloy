@@ -4,6 +4,8 @@ var U = require('../../../utils'),
 	generate = require('babel-generator').default,
 	traverse = require('babel-traverse').default;
 
+const { Hub, NodePath } = traverse;
+
 var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
 const GENCODE_OPTIONS = {
@@ -18,6 +20,27 @@ exports.processController = function(code, file) {
 
 	try {
 		var ast = babylon.parse(code, { sourceFilename: file, sourceType: 'module' });
+
+		const hub = new Hub({
+			buildCodeFrameError(node, message, Error) {
+				const loc = node && node.loc;
+				const err = new Error(message);
+
+				if (loc) {
+					err.loc = loc.start;
+				}
+
+				return err;
+			}
+		});
+
+		const path = NodePath.get({
+			hub: hub,
+			parent: ast,
+			container: ast,
+			key: 'program'
+		}).setContext();
+
 		traverse(ast, {
 			enter: function(path) {
 				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
@@ -44,7 +67,7 @@ exports.processController = function(code, file) {
 				moduleCodes += generate(node, GENCODE_OPTIONS).code;
 				path.remove();
 			}
-		});
+		}, path.scope);
 
 		if (exportSpecifiers.length > 0) {
 			traverse(ast, {
