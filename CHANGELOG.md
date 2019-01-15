@@ -1,5 +1,16 @@
 ## Alloy Release Notes
 
+### Release 1.13.6
+
+#### Improvements
+
+[ALOY-1640](https://jira.appcelerator.org/browse/ALOY-1640) Update TabbedBar to use the Ti.UI namespace
+
+#### Fixes
+
+[ALOY-1637](https://jira.appcelerator.org/browse/ALOY-1637) ES6 code frame fails when using duplicate variable declarations
+[ALOY-1639](https://jira.appcelerator.org/browse/ALOY-1639) Update animation library to use `createMatrix3D/createMatrix2D` in place of the deprecated `create3DMatrix/create2DMatrix`
+
 ### Release 1.13.5
 
 [ALOY-1638](https://jira.appcelerator.org/browse/ALOY-1638) Theme is "null" when a theme is defined in config.json
