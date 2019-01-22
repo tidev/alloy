@@ -5,7 +5,8 @@ exports.parse = function(node, state) {
 		itemArrayDefinition: {
 			parents: [
 				'Ti.UI.ButtonBar',
-				'Ti.UI.iOS.TabbedBar'
+				'Ti.UI.iOS.TabbedBar',
+				'Ti.UI.TabbedBar'
 			],
 			children: [
 				'Alloy.Abstract.BarItemType'

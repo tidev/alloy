@@ -34,7 +34,7 @@ exports.Backbone = Backbone;
 var DEFAULT_WIDGET = 'widget';
 var TI_VERSION = Ti.version;
 var MW320_CHECK = OS_MOBILEWEB && TI_VERSION >= '3.2.0';
-var IDENTITY_TRANSFORM = OS_ANDROID ? Ti.UI.create2DMatrix() : undefined;
+var IDENTITY_TRANSFORM = OS_ANDROID ? (Ti.version >= '8.0.0' ? Ti.UI.createMatrix2D() : Ti.UI.create2DMatrix()) : undefined;
 var RESET = {
 	bottom: null,
 	left: null,
