@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	styler = require('../styler'),
@@ -10,7 +10,7 @@ function fixDefinition(def) {
 		children: [],
 		translations: [],
 		doRemoveNode: def.doRemoveNode || typeof(def.doRemoveNode) === 'undefined',
-		processOthers: def.processOthers || function(){},
+		processOthers: def.processOthers || function() {},
 		inViewHierarchy: def.inViewHierarchy || typeof(def.inViewHierarchy) === 'undefined'
 	});
 	return def;
@@ -41,8 +41,8 @@ function parse(node, state, args) {
 		});
 
 		// process item arrays if present
-		var theNode = CU.validateNodeName(child, _.pluck(def.children, 'name'));
-		if (_.find(def.children, function(c){ return c.name === theNode; })) {
+		var theNode = CU.validateNodeName(child, _.map(def.children, 'name'));
+		if (_.find(def.children, function(c) { return c.name === theNode; })) {
 			var childState = {
 				parent: {},
 				itemsArray: CU.generateUniqueId()
@@ -87,9 +87,11 @@ function parse(node, state, args) {
 	}
 
 	var outState = require('./default').parse(node, state);
-	code = _.template(code, {
-		itemContainer: outState.parent.symbol
-	});
+	if (outState.parent) {
+		code = _.template(code)({
+			itemContainer: outState.parent.symbol
+		});
+	}
 	code += outState.code;
 
 	// Update the parsing state

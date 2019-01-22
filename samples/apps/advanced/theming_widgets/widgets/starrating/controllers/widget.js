@@ -6,21 +6,19 @@ var args = arguments[0] || {},
 // public method to set the rating
 var setRating = function(newRating) {
 	// save newRating to the instance's rating property
-	if(newRating > max) {
+	if (newRating > max) {
 		newRating = max;
 	}
 	rating = newRating;
-	
+
 	// use a loop to set the stars[i].image property
 	// using the half-image for fractional values
 	for (var i = 0, l = stars.length; i < l; i++) {
 		if (i >= rating) {
 			stars[i].image = WPATH('star_off.png');
-		}
-		else if (rating > i && rating < i+1) {
+		} else if (rating > i && rating < i + 1) {
 			stars[i].image = WPATH('star_half.png');
-		}
-		else {
+		} else {
 			stars[i].image = WPATH('star.png');
 		}
 	}
@@ -41,11 +39,11 @@ var createStars = function(num, cb) {
 		// use a closure (self-calling function) to add
 		// a click-event listener that calls setRating
 		// passing the value of i+1
-			(function() {
+		(function() {
 			var index = i;
 			star.addEventListener('click', function() {
-				setRating(index+1);
-				cb(index+1);
+				setRating(index + 1);
+				cb(index + 1);
 			});
 		})();
 		// add the star image to the stars array
@@ -58,13 +56,13 @@ var createStars = function(num, cb) {
 exports.init = function (callback) {
 	var max = args.max || 5,
 		initialRating = args.initialRating || 0,
-		cb = callback || function(){};
+		cb = callback || function() {};
 	createStars(max, cb);
 	setRating(initialRating);
 	// can't apply view properties from the calling context when you use this widget
 	// without coding them in to this controller, alloy limitation as of this writing
 	_.extend($.starrating, args);
-	
+
 };
 
 

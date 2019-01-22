@@ -14,9 +14,9 @@ function validateTabTable($, title, opts) {
 	validateUiComponent($, title + 'Window', {
 		api: 'Ti.UI.Window',
 		style: {
-			backgroundColor: "#fff",
+			backgroundColor: '#fff',
 			title: opts.windowTitle || title,
-			id: title + "Window"
+			id: title + 'Window'
 		}
 	});
 
@@ -37,24 +37,36 @@ module.exports = function($) {
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.TabGroup',
 			style: {
-				id: "index"
+				id: 'index'
 			}
 		});
 
 		validateTabTable($, 'static');
 
-		var i, id;
-		for (i = 1; i <= 3; i++) {
-			id = 'staticRow' + i;
-			validateUiComponent($, id, {
-				api: 'Ti.UI.TableViewRow',
-				style: {
-					height: "50dp",
-					id: id,
-					title: i + ''
-				}
-			});
-		}
+		validateUiComponent($, 'staticRow1', {
+			api: 'Ti.UI.TableViewRow',
+			style: {
+				height: '50dp',
+				id: 'staticRow1',
+				title: 'one'
+			}
+		});
+		validateUiComponent($, 'staticRow2', {
+			api: 'Ti.UI.TableViewRow',
+			style: {
+				height: '50dp',
+				id: 'staticRow2',
+				title: 'two'
+			}
+		});
+		validateUiComponent($, 'staticRow3', {
+			api: 'Ti.UI.TableViewRow',
+			style: {
+				height: '50dp',
+				id: 'staticRow3',
+				title: 'three'
+			}
+		});
 
 		it('#staticWidgetSection is a widget', function() {
 			expect($.staticWidgetSection).toBeWidget();

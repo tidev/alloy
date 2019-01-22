@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -39,7 +33,7 @@ function Controller() {
     $.__views.index.add($.__views.__alloyId0);
     $.__views.__alloyId1 = Ti.UI.createButton({
         title: "'Hello foo & bar\"",
-        bottom: "50",
+        bottom: 50,
         id: "__alloyId1"
     });
     $.__views.index.add($.__views.__alloyId1);
@@ -52,8 +46,8 @@ function Controller() {
         options: __alloyId3,
         id: "options",
         title: "App Options",
-        destructive: "3",
-        cancel: "2"
+        destructive: 3,
+        cancel: 2
     });
     exports.destroy = function() {};
     _.extend($, $.__views);
@@ -62,6 +56,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -2,7 +2,7 @@ var CU = require('../compilerUtils'),
 	U = require('../../../utils'),
 	styler = require('../styler'),
 	CONST = require('../../../common/constants'),
-	_ = require('../../../lib/alloy/underscore')._;
+	_ = require('lodash');
 
 var NAME_ERROR = 'Alloy.Abstract.ItemTemplate must have a "name" attribute';
 
@@ -39,7 +39,7 @@ function parse(node, state, args) {
 
 	// add in any events on the ItemTemplate
 	if (args.events && args.events.length > 0) {
-		argsObject.events = '{' + _.reduce(args.events, function(memo,o) {
+		argsObject.events = '{' + _.reduce(args.events, function(memo, o) {
 			return memo + o.name + ':' + o.value + ',';
 		}, '') + '}';
 	}
@@ -52,13 +52,25 @@ function parse(node, state, args) {
 		code += 'var ' + childTemplates + '=[];';
 
 		_.each(children, function(child) {
-			if (child.nodeName === 'Require' || child.nodeName === 'Widget') {
+			if (child.nodeName === 'Require') {
 				U.dieWithNode(child, [
-					'<ItemTemplate> cannot contain <Require> or <Widget> elements.',
-					'ListView currently only supports Titanium API elements:',
+					'<ItemTemplate> cannot contain <Require> elements.',
+					'ListView currently only supports Titanium API elements and Widgets:',
 					'  examples: <Label>, <Button>, <ImageView>, etc...',
 					'Please reference the ListView guide at docs.appcelerator.com for more details.'
 				]);
+			}
+
+			// lets be naughty and pretend this is not a Widget
+			// to generate a valid template
+			if (child.nodeName === 'Widget') {
+				let src = child.getAttribute('src'),
+					ns = src.split('.'),
+					name = ns.pop();
+
+				child.removeAttribute('src');
+				child.setAttribute('ns', ns.join('.'));
+				child.nodeName = name;
 			}
 
 			code += CU.generateNodeExtended(child, state, {
@@ -66,7 +78,8 @@ function parse(node, state, args) {
 				local: true,
 				isViewTemplate: true,
 				post: function(node, state, args) {
-					return childTemplates + '.push(' + state.item.symbol + ');';
+					let symbol = (state.item && state.item.symbol) || args.symbol;
+					return childTemplates + '.push(' + symbol + ');';
 				}
 			});
 		});
@@ -75,8 +88,8 @@ function parse(node, state, args) {
 	}
 
 	// Generate runtime code
-	code += (state.local ? 'var ' : '') + args.symbol + " = {";
-	code += _.reduce(argsObject, function(memo,v,k) {
+	code += (state.local ? 'var ' : '') + args.symbol + ' = {';
+	code += _.reduce(argsObject, function(memo, v, k) {
 		return memo + k + ':' + v + ',';
 	}, '');
 	code += '};';

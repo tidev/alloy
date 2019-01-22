@@ -8,7 +8,7 @@ The existing list of builtins can be found at: [https://github.com/appcelerator/
 To use a builtin library in your code and have it automatically added to your generate Titanium project, all you need to do is require it with the `alloy` root diretory in your `require()` call. For example, if you wanted to include the `animation` builtin, all you need to do is this:
 
 ```javascript
-var animation = require('alloy/animation');
+var animation = require('/alloy/animation');
 ```
 
 Now you are free to use the builtin animation library in your code.

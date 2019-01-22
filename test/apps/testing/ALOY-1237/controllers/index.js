@@ -6,7 +6,7 @@ function doOpen() {
 		title: 'button'
 	});
 	$.index.add(button);
-	$.addListener(button, 'click', function(e){
+	$.addListener(button, 'click', function(e) {
 		// __trackId testing dummy event
 		e.cancelBubble = true;
 	});
@@ -14,8 +14,8 @@ function doOpen() {
 	// manually add event
 	$.addListener($.index, 'click', doWindowClick);
 
-	$.addListener($.index, 'click', function(){
-		_.each($.getListener($.index), function(listener){
+	$.addListener($.index, 'click', function() {
+		_.each($.getListener($.index), function(listener) {
 			if (listener.type === 'click' &&
 				listener.handler !== doWindowClick) {
 				console.log('This is anonymous callback function');

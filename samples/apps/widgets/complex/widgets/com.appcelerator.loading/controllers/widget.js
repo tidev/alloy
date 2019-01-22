@@ -5,7 +5,7 @@ for (var k in args) {
 }
 
 if (Ti.Platform.osname === 'mobileweb') {
-    $.loading.duration = 100;
+	$.loading.duration = 100;
 }
 $.loading.start();
 

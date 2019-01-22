@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function changeClasses() {
+    function changeClasses(e) {
         var c = $.tester.classes[0];
         if (c) {
             Ti.API.info('Removing class "' + c + '"');
@@ -19,19 +19,13 @@ function Controller() {
         }
         $.tester.text = JSON.stringify($.tester.classes);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -81,16 +75,16 @@ function Controller() {
         classes: []
     });
     $.__views.index.add($.__views.changer);
-    changeClasses ? $.__views.changer.addEventListener("click", changeClasses) : __defers["$.__views.changer!click!changeClasses"] = true;
+    changeClasses ? $.addListener($.__views.changer, "click", changeClasses) : __defers["$.__views.changer!click!changeClasses"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var classes = [ "transform", "opacity", "bgGradient", "greenBg", "red", "shadow", "huge", "right", "zIndex" ];
     changeClasses();
     $.index.open();
-    __defers["$.__views.changer!click!changeClasses"] && $.__views.changer.addEventListener("click", changeClasses);
+    __defers["$.__views.changer!click!changeClasses"] && $.addListener($.__views.changer, "click", changeClasses);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

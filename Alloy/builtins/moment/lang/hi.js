@@ -3,7 +3,7 @@
 //! author : Mayank Singhal : https://github.com/mayanksinghal
 
 (function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('alloy/moment')) :
+   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
    typeof define === 'function' && define.amd ? define(['moment'], factory) :
    factory(global.moment)
 }(this, function (moment) { 'use strict';

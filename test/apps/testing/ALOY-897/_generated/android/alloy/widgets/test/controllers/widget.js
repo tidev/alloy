@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "test/" + s : s.substring(0, index) + "/test/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
 function __processArg(obj, key) {
@@ -14,9 +14,9 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    new (require("alloy/widget"))("test");
+    new (require("/alloy/widget"))("test");
     this.__widgetId = "test";
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "widget";
     this.args = arguments[0] || {};
     if (arguments[0]) {
@@ -43,6 +43,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

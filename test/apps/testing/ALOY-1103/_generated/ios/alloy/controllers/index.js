@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -60,13 +54,13 @@ function Controller() {
     }
     $.__views.__alloyId0 = Ti.UI.createTableView(function() {
         var o = {};
-        Alloy.isTablet && _.extend(o, {
+        Alloy.isTablet && Alloy.deepExtend(true, o, {
             headerView: $.__views.__alloyId2
         });
-        Alloy.isHandheld && _.extend(o, {
+        Alloy.isHandheld && Alloy.deepExtend(true, o, {
             headerView: $.__views.__alloyId5
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             height: "80%",
             id: "__alloyId0"
         });
@@ -109,6 +103,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

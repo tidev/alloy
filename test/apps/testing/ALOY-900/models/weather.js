@@ -1,14 +1,14 @@
 exports.definition = {
 	config: {
-		"columns" : {
-			"city" : "text",
-			"id": "integer"
+		'columns' : {
+			'city' : 'text',
+			'id': 'integer'
 		},
 		adapter: {
-			type: "sql",
-			collection_name: "cities",
-			db_file: "/weather.sqlite",
-			idAttribute: "id"
+			type: 'sql',
+			collection_name: 'cities',
+			db_file: '/weather.sqlite',
+			idAttribute: 'id'
 		}
 	},
 	extendModel: function(Model) {
@@ -18,7 +18,7 @@ exports.definition = {
 
 		return Model;
 	},
-	extendCollection : function(Collection) {
+	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

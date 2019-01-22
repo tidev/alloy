@@ -24,6 +24,6 @@
 			 -->
 			<!-- <View opacity="0.25" backgroundColor="#a00" width="50%"/> -->
 		</TabbedBar>
-		<Label platform="!ios">Ti.UI.iOS.Toolbar only supported on iOS</Label>
+		<Label platform="!ios">Ti.UI.iOS.TabbedBar only supported on iOS</Label>
 	</Window>
 </Alloy>

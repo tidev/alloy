@@ -4,12 +4,11 @@
 var fs = require('fs'),
 	path = require('path'),
 	spawn = require('child_process').spawn,
-	_ = require("../../lib/alloy/underscore")._,
 	U = require('../../utils'),
 	logger = require('../../logger');
 
-var ALLOY_ROOT = path.join(__dirname,'../../..');
-var JAKE = path.join(ALLOY_ROOT,'node_modules','.bin','jake');
+var ALLOY_ROOT = path.join(__dirname, '../../..');
+var JAKE = path.join(ALLOY_ROOT, 'node_modules', '.bin', 'jake');
 
 module.exports = function(args, program) {
 	logger.error('"alloy test" is not yet implemented');

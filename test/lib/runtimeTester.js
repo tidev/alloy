@@ -1,4 +1,4 @@
-var _ = require('alloy/underscore')._,
+var _ = require('lodash'),
 	__j = require('jasmine'),
 	CR = require('ConsoleReporter'),
 	describe = __j.describe,

@@ -9,18 +9,18 @@ module.exports = function($, opts) {
 	if (OS_ANDROID) {
 		styler = {
 			mainView: {
-				backgroundImage: "/bg_blue.png",
-				borderColor: "#383838"
+				backgroundImage: '/bg_blue.png',
+				borderColor: '#383838'
 			},
 			progressBack: {
-				backgroundColor: "#ddd"
+				backgroundColor: '#ddd'
 			},
 			progressFront: {
-				backgroundImage: "/title_gray.png"
+				backgroundImage: '/title_gray.png'
 			},
 			button: {
-				backgroundImage: "/button_dark.png",
-				color: "#fff"
+				backgroundImage: '/button_dark.png',
+				color: '#fff'
 			}
 		};
 	} else if (OS_IOS) {
@@ -29,39 +29,39 @@ module.exports = function($, opts) {
 				backgroundColor: '#050'
 			},
 			mainView: {
-				backgroundImage: "/bg_tan.png",
-				borderColor: "#3da22f"
+				backgroundImage: '/bg_tan.png',
+				borderColor: '#3da22f'
 			},
 			patienceLabel: {
 				color: '#000'
 			},
 			progressBack: {
-				backgroundColor: "#333",
+				backgroundColor: '#333',
 				borderRadius: 16
 			},
 			progressFront: {
-				backgroundImage: "/title_green.png",
+				backgroundImage: '/title_green.png',
 				borderRadius: 16
 			},
 			button: {
-				backgroundImage: "/button_green.png"
+				backgroundImage: '/button_green.png'
 			}
 		};
 	} else if (OS_MOBILEWEB) {
 		styler = {
 			mainView: {
-				backgroundImage: "/bg_gray.png",
-				borderColor: "#1e99fd"
+				backgroundImage: '/bg_gray.png',
+				borderColor: '#1e99fd'
 			},
 			progressBack: {
-				backgroundColor: "#333"
+				backgroundColor: '#333'
 			},
 			progressFront: {
-				backgroundImage: "/title_blue.png"
+				backgroundImage: '/title_blue.png'
 			},
 			button: {
-				backgroundImage: "/button_blue.png",
-				color: "#fff"
+				backgroundImage: '/button_blue.png',
+				color: '#fff'
 			}
 		};
 	}
@@ -72,17 +72,17 @@ module.exports = function($, opts) {
 		validateUiComponent($, 'dialog', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "transparent",
-				id: "dialog"
+				backgroundColor: 'transparent',
+				id: 'dialog'
 			}
 		});
 
 		validateUiComponent($, 'cover', {
 			api: 'Ti.UI.View',
 			style: {
-				backgroundColor: "#000",
+				backgroundColor: '#000',
 				opacity: 0.65,
-				id: "cover"
+				id: 'cover'
 			}
 		});
 
@@ -90,22 +90,22 @@ module.exports = function($, opts) {
 			api: 'Ti.UI.View',
 			style: {
 				height: 155,
-				width: "85%",
+				width: '85%',
 				borderWidth: 2,
 				borderRadius: 8,
-				backgroundColor: "#fff",
-				id: "mainView",
-				layout: "vertical"
+				backgroundColor: '#fff',
+				id: 'mainView',
+				layout: 'vertical'
 			}
 		});
 
 		validateUiComponent($, 'patienceLabel', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#fff",
+				color: '#fff',
 				top: 10,
-				text: "Testing your patience...",
-				id: "patienceLabel"
+				text: 'Testing your patience...',
+				id: 'patienceLabel'
 			}
 		});
 
@@ -115,7 +115,7 @@ module.exports = function($, opts) {
 				width: 200,
 				height: 30,
 				top: 15,
-				id: "progressBack"
+				id: 'progressBack'
 			}
 		});
 
@@ -126,8 +126,8 @@ module.exports = function($, opts) {
 				left: 1,
 				top: 1,
 				height: 28,
-				backgroundColor: "#00f",
-				id: "progressFront"
+				backgroundColor: '#00f',
+				id: 'progressFront'
 			}
 		});
 
@@ -137,8 +137,8 @@ module.exports = function($, opts) {
 				top: 15,
 				height: 50,
 				width: 120,
-				title: "I quit!",
-				id: "button"
+				title: 'I quit!',
+				id: 'button'
 			}
 		});
 	});

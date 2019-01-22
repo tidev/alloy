@@ -26,19 +26,13 @@ function Controller() {
             view: $.button3
         });
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -54,33 +48,33 @@ function Controller() {
     $.__views.button1 = Ti.UI.createButton({
         title: "Show View-based Popover",
         id: "button1",
-        top: "250"
+        top: 250
     });
     $.__views.index.add($.__views.button1);
-    openPopover ? $.__views.button1.addEventListener("click", openPopover) : __defers["$.__views.button1!click!openPopover"] = true;
+    openPopover ? $.addListener($.__views.button1, "click", openPopover) : __defers["$.__views.button1!click!openPopover"] = true;
     $.__views.button2 = Ti.UI.createButton({
         title: "Show Window-based Popover",
         id: "button2",
-        top: "50"
+        top: 50
     });
     $.__views.index.add($.__views.button2);
-    openPopoverWin ? $.__views.button2.addEventListener("click", openPopoverWin) : __defers["$.__views.button2!click!openPopoverWin"] = true;
+    openPopoverWin ? $.addListener($.__views.button2, "click", openPopoverWin) : __defers["$.__views.button2!click!openPopoverWin"] = true;
     $.__views.button3 = Ti.UI.createButton({
         title: "Show NavigationWindow-based Popover",
         id: "button3",
-        top: "50"
+        top: 50
     });
     $.__views.index.add($.__views.button3);
-    openPopoverNavWin ? $.__views.button3.addEventListener("click", openPopoverNavWin) : __defers["$.__views.button3!click!openPopoverNavWin"] = true;
+    openPopoverNavWin ? $.addListener($.__views.button3, "click", openPopoverNavWin) : __defers["$.__views.button3!click!openPopoverNavWin"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.button1!click!openPopover"] && $.__views.button1.addEventListener("click", openPopover);
-    __defers["$.__views.button2!click!openPopoverWin"] && $.__views.button2.addEventListener("click", openPopoverWin);
-    __defers["$.__views.button3!click!openPopoverNavWin"] && $.__views.button3.addEventListener("click", openPopoverNavWin);
+    __defers["$.__views.button1!click!openPopover"] && $.addListener($.__views.button1, "click", openPopover);
+    __defers["$.__views.button2!click!openPopoverWin"] && $.addListener($.__views.button2, "click", openPopoverWin);
+    __defers["$.__views.button3!click!openPopoverNavWin"] && $.addListener($.__views.button3, "click", openPopoverNavWin);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

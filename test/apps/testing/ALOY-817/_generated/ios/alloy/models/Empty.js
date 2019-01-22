@@ -1,4 +1,4 @@
-var Alloy = require("alloy"), _ = require("alloy/underscore")._, model, collection;
+var Alloy = require("/alloy"), _ = require("/alloy/underscore")._, model, collection;
 
 exports.definition = {
     config: {},

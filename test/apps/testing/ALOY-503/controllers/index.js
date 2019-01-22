@@ -1,10 +1,10 @@
 if (!Ti.App.Properties.hasProperty('seeded')) {
 	var pins = [
-		{ title: "Appcelerator", latitude: 37.3892876, longitude: -122.0502364},
-		{ title: "SETI Institute", latitude: 37.386697, longitude: -122.052028},
-		{ title: "Someplace nearby", latitude: 37.3880608, longitude: -122.0559039}
+		{ title: 'Appcelerator', latitude: 37.3892876, longitude: -122.0502364},
+		{ title: 'SETI Institute', latitude: 37.386697, longitude: -122.052028},
+		{ title: 'Someplace nearby', latitude: 37.3880608, longitude: -122.0559039}
 	];
-	for(var i=0,j=pins.length;i<j;i++) {
+	for (var i = 0, j = pins.length; i < j; i++) {
 		Alloy.createModel('pins', {
 			title: pins[i].title,
 			latitude: pins[i].latitude,
@@ -23,7 +23,7 @@ function doTransform(model) {
 }
 
 function doFilter(collection) {
-    return collection.where({title:'Appcelerator'});
+	return collection.where({title:'Appcelerator'});
 }
 
 

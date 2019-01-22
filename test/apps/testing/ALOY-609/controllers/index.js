@@ -7,7 +7,7 @@ function doTransform(model) {
 		if (o.image) {
 			o.template = 'fullItem';
 		} else {
-			o.template = 'titleAndSub'
+			o.template = 'titleAndSub';
 		}
 	} else {
 		o.template = 'title';

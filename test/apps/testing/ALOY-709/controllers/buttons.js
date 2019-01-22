@@ -1,5 +1,5 @@
 try {
 	require('specs/buttons')($);
-} catch(e) {
+} catch (e) {
 	Ti.API.warn('no unit tests found for buttons.js');
 }
