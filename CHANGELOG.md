@@ -1,10 +1,17 @@
 ## Alloy Release Notes
 
+
+### Release 1.13.8
+
+#### Fixes
+
+[ALOY-1644](https://jira.appcelerator.org/browse/ALOY-1644) Selective compilation does not regenerate platform app.js on Windows
+
 ### Release 1.13.7
 
 #### Fixes
 
-[ALOY-1641](https://jira.appcelerator.org/browse/ALOY-1641) iOS: TabbedBar usage on lowe than SDK 8 is broken
+[ALOY-1641](https://jira.appcelerator.org/browse/ALOY-1641) iOS: TabbedBar usage on lower than SDK 8 is broken
 
 ### Release 1.13.6
 
