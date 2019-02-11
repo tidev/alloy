@@ -600,6 +600,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
 		_.each(files, function(file) {
+			file = path.resolve(file);
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered

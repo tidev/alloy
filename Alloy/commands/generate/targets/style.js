@@ -38,6 +38,7 @@ module.exports = function(name, args, program) {
 		}
 	} else if (program.all) {
 		walkSync(view_root).forEach(function(view) {
+			view = path.resolve(view);
 			if (view.match('.xml$')) {
 				var style = view.replace(/\.xml/, '.tss'),
 					style_path = path.join(style_root, style),

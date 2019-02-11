@@ -26,6 +26,7 @@ function extractStrings() {
 
 		// filter only js, xml and style files
 		files = _.filter(files, function(f) {
+			f = path.resolve(f);
 			return f.substr(-styleSuffix.length) === styleSuffix ||
 				f.substr(-viewSuffix.length) === viewSuffix ||
 				f.substr(-controllerSuffix.length) === controllerSuffix;
