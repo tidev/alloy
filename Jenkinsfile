@@ -6,7 +6,7 @@ def npmVersion = '6.8.0' // We can change this without any changes to Jenkins. 5
 def packageVersion = ''
 def isPR = false
 
-def unitTests(titaniumBranch) {
+def unitTests(titaniumBranch, nodeVersion) {
 	checkout scm
 	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 		ansiColor('xterm') {
@@ -63,12 +63,12 @@ timestamps() {
 			parallel(
 				'GA SDK': {
 					node('(osx || linux) && git ') {
-						unitTests('GA')
+						unitTests('GA', nodeVersion)
 					}
 				},
 				'master SDK': {
 					node('(osx || linux) && git ') {
-						unitTests('master')
+						unitTests('master', nodeVersion)
 
 					}
 				}
