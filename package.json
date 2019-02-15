@@ -58,8 +58,8 @@
     "alloy": "./bin/alloy"
   },
   "scripts": {
-    "pretest": "eslint .",
-    "test": "jake test:all"
+    "test": "jake test:all",
+    "lint": "eslint ."
   },
   "main": "./Alloy/alloy",
   "engines": {
