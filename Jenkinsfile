@@ -78,40 +78,45 @@ timestamps() {
 		node('(osx || linux) && git ') {
 			stage('Security') {
 				checkout scm
-				// Clean up and install only production dependencies
-				ensureNPM(npmVersion)
-				sh 'npm ci --production'
+				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+					// Install only production dependencies
+					ensureNPM(npmVersion)
+					sh 'npm ci --production'
 
-				sh 'npx nsp check --output summary --warn-only'
+					sh 'npx nsp check --output summary --warn-only'
 
-				sh 'npx retire --exitwith 0'
+					sh 'npx retire --exitwith 0'
 
-				step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
+					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
+				} // nodejs
 			} // stage
 		} // node
 
 		node('(osx || linux) && git && npm-publish') {
 			stage('Publish') {
-				if (!isPR) {
-					try {
-						// Publish
-						sh 'npm publish'
+				checkout scm
+				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+					if (!isPR) {
+						try {
+							// Publish
+							sh 'npm publish'
 
-						// Tag git
-						pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
+							// Tag git
+							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
 
-						// Trigger appc-cli job
-						build job: '../appc-cli/master', wait: false, parameters: [ 
-							[$class: 'StringParameterValue', name: 'packageName', value: 'alloy' ],
-							[$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion ],
-						]
-						// Update tickets
-						updateJIRA('ALOY', "Alloy ${packageVersion}", scm)
-					} catch (e) {
-						// Don't thow the errors as we don't want a failed publish due to the version not being bumped
-						// being classed as a failure on the build
-					}
-				} // if
+							// Trigger appc-cli job
+							build job: '../appc-cli/master', wait: false, parameters: [ 
+								[$class: 'StringParameterValue', name: 'packageName', value: 'alloy' ],
+								[$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion ],
+							]
+							// Update tickets
+							updateJIRA('ALOY', "Alloy ${packageVersion}", scm)
+						} catch (e) {
+							// Don't thow the errors as we don't want a failed publish due to the version not being bumped
+							// being classed as a failure on the build
+						}
+					} // if
+				} // nodejs
 			} // stage
 		} // node
 	} finally {
