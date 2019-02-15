@@ -21,7 +21,7 @@ def unitTests(titaniumBranch, nodeVersion, npmVersion) {
 				if ('GA'.equals(titaniumBranch)) {
 					sh 'ti sdk install latest -d'
 				} else if ('master'.equals(titaniumBranch)) {
-					sh 'ti sdk install master -d'
+					sh 'ti sdk install -b master -d'
 				}
 				try {
 					withEnv(["PATH+ALLOY=${pwd()}/bin"]) {
