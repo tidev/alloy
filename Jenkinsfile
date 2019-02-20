@@ -4,7 +4,7 @@ def nodeVersion = '8.9.0'
 def npmVersion = '6.8.0' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 def packageVersion = ''
-def isPR = false
+def isPR = env.BRANCH_NAME.startsWith('PR-')
 def runDanger = isPR
 
 def unitTests(titaniumBranch, nodeVersion, npmVersion) {
@@ -45,7 +45,6 @@ timestamps() {
 			stage('Lint') {
 				checkout scm
 
-				isPR = env.BRANCH_NAME.startsWith('PR-')
 				packageVersion = jsonParse(readFile('package.json'))['version']
 				currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 
