@@ -5,6 +5,7 @@ def npmVersion = '6.8.0' // We can change this without any changes to Jenkins. 5
 
 def packageVersion = ''
 def isPR = false
+def runDanger = isPR
 
 def unitTests(titaniumBranch, nodeVersion, npmVersion) {
 	checkout scm
@@ -54,7 +55,17 @@ timestamps() {
 					timeout(5) {
 						sh 'npm ci'
 					}
-					sh 'npm run lint'
+					// Run npm test, but record output in a file and check for failure of command by checking output
+					if (fileExists('npm_test.log')) {
+						sh 'rm -rf npm_test.log'
+					}
+					def npmTestResult = sh(returnStatus: true, script: 'npm run lint &> npm_test.log')
+					if (runDanger) { // Stash files for danger.js later
+						stash includes: 'package.json,package-lock.json,dangerfile.js,.eslintignore,.eslintrc,npm_test.log', name: 'danger'
+					}
+					if (npmTestResult != 0) {
+						error readFile('npm_test.log')
+					}
 				} // nodejs
 			} // stage('Lint')
 		} // node
@@ -120,8 +131,26 @@ timestamps() {
 			} // stage
 		} // node
 	} finally {
-		stage('Danger') {
-			// TODO
-		}
+		if (runDanger) {
+			stage('Danger') {
+				node('osx || linux') {
+					nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+						unstash 'danger'
+						try {
+							unstash 'test-report-master'
+						} catch (e) {}
+						try {
+							unstash 'test-report-GA'
+						} catch (e) {}
+						ensureNPM(npmVersion)
+						sh 'npm ci'
+						withEnv(["DANGER_JS_APP_INSTALL_ID=''"]) {
+							sh returnStatus: true, script: 'npx danger ci --verbose'
+						} // withEnv
+					} // nodejs
+					deleteDir()
+				} // node
+			} // stage
+		} // if
 	}
 } // timestamps
