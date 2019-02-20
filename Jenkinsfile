@@ -54,17 +54,7 @@ timestamps() {
 					timeout(5) {
 						sh 'npm ci'
 					}
-					// Run npm test, but record output in a file and check for failure of command by checking output
-					if (fileExists('npm_test.log')) {
-						sh 'rm -rf npm_test.log'
-					}
-					def npmTestResult = sh(returnStatus: true, script: 'npm run lint &> npm_test.log')
-					if (runDanger) { // Stash files for danger.js later
-						stash includes: 'package.json,package-lock.json,dangerfile.js,.eslintignore,.eslintrc,npm_test.log', name: 'danger'
-					}
-					if (npmTestResult != 0) {
-						error readFile('npm_test.log')
-					}
+					sh 'npm run lint'
 				} // nodejs
 			} // stage('Lint')
 		} // node
@@ -134,7 +124,7 @@ timestamps() {
 			stage('Danger') {
 				node('osx || linux') {
 					nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-						unstash 'danger'
+						checkout scm
 						try {
 							unstash 'test-report-master'
 						} catch (e) {}
@@ -142,7 +132,9 @@ timestamps() {
 							unstash 'test-report-GA'
 						} catch (e) {}
 						ensureNPM(npmVersion)
-						sh 'npm ci'
+						timeout(5) {
+							sh 'npm ci'
+						}
 						withEnv(["DANGER_JS_APP_INSTALL_ID=''"]) {
 							sh returnStatus: true, script: 'npx danger ci --verbose'
 						} // withEnv
