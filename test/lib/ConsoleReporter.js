@@ -120,9 +120,6 @@ module.exports = function(opts) {
 	};
 
 	this.reportSpecResults = function(spec) {
-		if (process && process.env && process.env.JENKINS) {
-			return;
-		}
 		var results = spec.results();
 		var desc = '';
 
