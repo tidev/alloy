@@ -51,6 +51,7 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, childState);
 			var prop = _.find(def.children, function(c) { return c.name === theNode; }).property;
 			extras.push([prop, childState.itemsArray]);
+			_.each(state.extraOptions, (v, k) => extras.push([k, v]));
 
 			// get rid of the node when we're done so we can pass the current state
 			// back to generateNode() and then process any additional views that
