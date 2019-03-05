@@ -53,18 +53,13 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
-    // ALOY-1363: set child object values from xml attribute with prefix
-    var objectAttributes = _.filter(_.keys(args.createArgs), function (key) {
-        return key.indexOf(':') !== -1;
-    });
-    if (objectAttributes.length > 0) {
-        _.each(objectAttributes, function (key) {
-            var attributeParts = key.split(':');
-            args.createArgs[attributeParts[0]] = args.createArgs[attributeParts[0]] || {};
-            args.createArgs[attributeParts[0]][attributeParts[1]] = args.createArgs[key];
-            delete args.createArgs[key];
-        })
-    }
+	// find attributes using dotted notation
+	const dotAttributes = _.filter(_.keys(args.createArgs), key => _.includes(key, '.'));
+	_.forEach(dotAttributes, attribute => {
+		const value = args.createArgs[attribute];
+		delete args.createArgs[attribute];
+		_.set(args.createArgs, attribute, value);
+	});
 
 	// Generate runtime code
 	if (state.isViewTemplate) {
