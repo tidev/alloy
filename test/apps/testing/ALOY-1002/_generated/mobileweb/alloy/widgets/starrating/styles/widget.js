@@ -21,7 +21,7 @@ module.exports = [ {
     }
 }, {
     isId: true,
-    priority: 100000.0004,
+    priority: 100000.0005,
     key: "starrating",
     style: {
         layout: "horizontal",

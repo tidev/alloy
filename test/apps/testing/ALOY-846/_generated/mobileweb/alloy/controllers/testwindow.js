@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "testwindow";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -28,12 +22,12 @@ function Controller() {
         id: "testwin"
     });
     $.__views.testwin && $.addTopLevelView($.__views.testwin);
-    $.__views.__alloyId6 = Ti.UI.createLabel({
+    $.__views.__alloyId5 = Ti.UI.createLabel({
         color: "#000",
         text: "Label",
-        id: "__alloyId6"
+        id: "__alloyId5"
     });
-    $.__views.testwin.add($.__views.__alloyId6);
+    $.__views.testwin.add($.__views.__alloyId5);
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.testwin.addEventListener("click", function() {
@@ -44,6 +38,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

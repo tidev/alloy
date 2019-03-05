@@ -11,19 +11,13 @@ function Controller() {
     function openList() {
         $.listWin.open();
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -59,7 +53,7 @@ function Controller() {
         id: "__alloyId4"
     });
     __alloyId1.push($.__views.__alloyId4);
-    openList ? $.__views.__alloyId4.addEventListener("click", openList) : __defers["$.__views.__alloyId4!click!openList"] = true;
+    openList ? $.addListener($.__views.__alloyId4, "click", openList) : __defers["$.__views.__alloyId4!click!openList"] = true;
     $.__views.jobList = Ti.UI.createTableView({
         data: __alloyId1,
         search: $.__views.__alloyId0,
@@ -102,15 +96,15 @@ function Controller() {
         id: "jobList"
     });
     $.__views.listWin.add($.__views.jobList);
-    openList ? $.__views.jobList.addEventListener("click", openList) : __defers["$.__views.jobList!click!openList"] = true;
+    openList ? $.addListener($.__views.jobList, "click", openList) : __defers["$.__views.jobList!click!openList"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.index.open();
-    __defers["$.__views.__alloyId4!click!openList"] && $.__views.__alloyId4.addEventListener("click", openList);
-    __defers["$.__views.jobList!click!openList"] && $.__views.jobList.addEventListener("click", openList);
+    __defers["$.__views.__alloyId4!click!openList"] && $.addListener($.__views.__alloyId4, "click", openList);
+    __defers["$.__views.jobList!click!openList"] && $.addListener($.__views.jobList, "click", openList);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

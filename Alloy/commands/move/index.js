@@ -1,8 +1,8 @@
 var colors = require('colors'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
+	walkSync = require('walk-sync'),
 	path = require('path'),
-	wrench = require('wrench'),
-	_ = require("../../lib/alloy/underscore")._,
+	_ = require('lodash'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
 	logger = require('../../logger');
@@ -11,11 +11,11 @@ function move(source, destination, callback) {
 	// make sure the target folder exists
 	var fullDir = path.dirname(destination);
 	if (!fs.existsSync(fullDir)) {
-		wrench.mkdirSyncRecursive(fullDir);
+		fs.mkdirpSync(fullDir);
 	}
 
 	var code = fs.readFileSync(source, 'utf8');
-	fs.writeFile(destination, code, function(err){
+	fs.writeFile(destination, code, function(err) {
 		if (err) {
 			callback(err);
 		}
@@ -28,9 +28,9 @@ function move(source, destination, callback) {
 function cleanup(args) {
 	args = args || {};
 
-	files = wrench.readdirSyncRecursive(args.path);
+	files = walkSync(args.path);
 	if (files.length === 0) {
-		fs.rmdir(args.path, function(err){
+		fs.rmdir(args.path, function(err) {
 			if (err) {
 				logger.error('Failed to remove the empty directory. Please manually remove ' + args.path.cyan);
 			} else {
@@ -118,7 +118,7 @@ module.exports = function(args, program) {
 	}
 
 	if (controller.exists.source) {
-		move(controller.source, controller.destination, function(err){
+		move(controller.source, controller.destination, function(err) {
 			if (err) {
 				logger.error('move failed view-style-controller ' + controller.source.cyan + ' -> ' + controller.destination.cyan);
 			} else {
@@ -132,7 +132,7 @@ module.exports = function(args, program) {
 	}
 
 	if (view.exists.source) {
-		move(view.source, view.destination, function(err){
+		move(view.source, view.destination, function(err) {
 			if (err) {
 				logger.error('move failed view ' + view.source.cyan + ' -> ' + view.destination.cyan);
 			} else {
@@ -146,7 +146,7 @@ module.exports = function(args, program) {
 	}
 
 	if (style.exists.source) {
-		move(style.source, style.destination, function(err){
+		move(style.source, style.destination, function(err) {
 			if (err) {
 				logger.error('move failed style ' + style.source.cyan + ' -> ' + style.destination.cyan);
 			} else {

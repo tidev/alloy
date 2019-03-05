@@ -14,24 +14,24 @@ module.exports = function($) {
 		validateUiComponent($, 'mover', {
 			api: 'Ti.UI.View',
 			style: {
-				backgroundColor: "#a00",
+				backgroundColor: '#a00',
 				height: Ti.UI.SIZE,
 				width: Ti.UI.SIZE,
-				top: "20dp",
-				id: "mover"
+				top: '20dp',
+				id: 'mover'
 			}
 		});
 
 		validateUiComponent($, 'label', {
 			api: 'Ti.UI.Label',
 			style: {
-				color: "#eee",
+				color: '#eee',
 				font: {
-					fontSize: OS_MOBILEWEB ? "28px" : "28dp",
-					fontWeight: "bold"
+					fontSize: OS_MOBILEWEB ? '28px' : '28dp',
+					fontWeight: 'bold'
 				},
-				text: "Trimmable String",
-				id: "label"
+				text: 'Trimmable String',
+				id: 'label'
 			}
 		});
 
@@ -40,10 +40,10 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#000",
-				top: "20dp",
-				title: "Shake",
-				id: "shake"
+				color: '#000',
+				top: '20dp',
+				title: 'Shake',
+				id: 'shake'
 			}
 		});
 
@@ -52,10 +52,10 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#000",
-				top: "20dp",
-				title: "Flash",
-				id: "flash"
+				color: '#000',
+				top: '20dp',
+				title: 'Flash',
+				id: 'flash'
 			}
 		});
 
@@ -64,9 +64,9 @@ module.exports = function($) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				top: "20dp",
-				title: "Trim",
-				id: "trim"
+				top: '20dp',
+				title: 'Trim',
+				id: 'trim'
 			}
 		});
 	});

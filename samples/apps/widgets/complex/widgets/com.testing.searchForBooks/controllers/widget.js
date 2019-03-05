@@ -1,5 +1,5 @@
 var API_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
-var HANDLERS = ['success','error'];
+var HANDLERS = ['success', 'error'];
 var MAX_BOOKS = 10; // for demo purposes, set a max for the number of books
 
 var AppModel = require('alloy/backbone').Model.extend({ loading: false });
@@ -46,7 +46,7 @@ function processBookData(data) {
 	}
 
 	// process each book, turning it into a table row
-	for (var i = 0; i < Math.min(items.length,MAX_BOOKS); i++) {
+	for (var i = 0; i < Math.min(items.length, MAX_BOOKS); i++) {
 		var info = items[i].volumeInfo;
 		if (!info) { continue; }
 		var links = info.imageLinks || {};
@@ -95,6 +95,6 @@ function searchForBooks(e) {
 		},
 		timeout: 5000
 	});
-	xhr.open("GET", API_URL + value);
+	xhr.open('GET', API_URL + value);
 	xhr.send();
 }

@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "baseDialog";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -64,7 +58,7 @@ function Controller() {
     });
     $.__views.dialog.add($.__views.closeButton);
     try {
-        $.__views.closeButton.addEventListener("click", exports.closeDialog);
+        $.addListener($.__views.closeButton, "click", exports.closeDialog);
     } catch (e) {
         __defers["$.__views.closeButton!click!exports.closeDialog"] = true;
     }
@@ -85,10 +79,10 @@ function Controller() {
     require("specs/baseDialog")($, {
         message: $.message.text
     });
-    __defers["$.__views.closeButton!click!exports.closeDialog"] && $.__views.closeButton.addEventListener("click", exports.closeDialog);
+    __defers["$.__views.closeButton!click!exports.closeDialog"] && $.addListener($.__views.closeButton, "click", exports.closeDialog);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

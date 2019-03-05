@@ -11,19 +11,13 @@ function Controller() {
     function doFoo(num) {
         alert("Your rating = " + num);
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -35,15 +29,15 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.starwidget = Alloy.createWidget("starrating", "widget", {
         id: "starwidget",
-        max: "5",
-        initialRating: "2.5",
-        top: "20",
+        max: 5,
+        initialRating: 2.5,
+        top: 20,
         __parentSymbol: $.__views.index
     });
     $.__views.starwidget.setParent($.__views.index);
     $.__views.table = Ti.UI.createTableView({
         id: "table",
-        top: "50"
+        top: 50
     });
     $.__views.index.add($.__views.table);
     exports.destroy = function() {};
@@ -59,6 +53,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

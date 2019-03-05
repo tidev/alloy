@@ -11,7 +11,7 @@
 		<Tab title="About Us">
 			<Window title="About Us" barColor="{user.themeBGColor}">
 				<RightNavButton><Button class="logout" onClick="logout"/></RightNavButton>
-				<WebView url="http://en.wikipedia.org/wiki/Arrested_Development_(TV_series)"/>
+				<WebView url="https://en.wikipedia.org/wiki/Banana"/>
 			</Window>
 		</Tab>
 		<Tab title="Settings">
@@ -25,8 +25,8 @@
 					</TableViewSection>
 					<TableViewSection headerTitle="Themes">
 						<TableViewRow title="Default" id="theme0"/>
-						<TableViewRow title="Banana Stand" id="theme1"/>
-						<TableViewRow title="Never-Nude Blue Man" id="theme2"/>
+						<TableViewRow title="Banana" id="theme1"/>
+						<TableViewRow title="Jeans" id="theme2"/>
 					</TableViewSection>
 				</TableView>
 			</Window>

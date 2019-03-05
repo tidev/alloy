@@ -1,10 +1,10 @@
-var _ = require('../../../lib/alloy/underscore')._;
+var _ = require('lodash');
 
 exports.parse = function(node, state) {
 	_.extend(state, {
 		itemArrayDefinition: {
 			parents: [
-				'Ti.UI.iOS.Toolbar',
+				'Ti.UI.Toolbar',
 				'Ti.UI.iOS.MenuPopup'
 			],
 			children: [

@@ -1,3 +1,3 @@
 exports.popup = function() {
-	alert("clicked iphone");
+	alert('clicked iphone');
 };

@@ -1,0 +1,6 @@
+'.container': {
+	backgroundColor: '#fff',
+	layout: 'vertical',
+	exitOnClose: true,
+	fullscreen: false
+}

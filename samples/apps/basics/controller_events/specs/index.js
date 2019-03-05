@@ -7,18 +7,18 @@ module.exports = function($) {
 		validateUiComponent($, 'index', {
 			api: 'Ti.UI.Window',
 			style: {
-				layout: "vertical",
-				backgroundColor: "white",
-				id: "index"
+				layout: 'vertical',
+				backgroundColor: 'white',
+				id: 'index'
 			}
 		});
 
 		validateUiComponent($, 'remove', {
 			api: 'Ti.UI.Button',
 			style: {
-				title: "Remove Listener",
-				id: "remove",
-				top: "10"
+				title: 'Remove Listener',
+				id: 'remove',
+				top: '10'
 			}
 		});
 	});

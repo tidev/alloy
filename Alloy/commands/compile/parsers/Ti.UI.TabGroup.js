@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	tiapp = require('../../../tiapp'),
 	CU = require('../compilerUtils'),
@@ -23,7 +23,7 @@ function parse(node, state, args) {
 	}
 
 	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
-		var theNode = CU.validateNodeName(child, ['Ti.UI.Tab','Ti.Android.Menu', 'Ti.Android.ActionBar']);
+		var theNode = CU.validateNodeName(child, ['Ti.UI.Tab', 'Ti.Android.Menu', 'Ti.Android.ActionBar']);
 		if (theNode) {
 			var ext = { parent: {} };
 			if (theNode === 'Ti.UI.Tab') {

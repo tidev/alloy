@@ -19,7 +19,7 @@ function Controller() {
             $.__views.__alloyId11 = e.menu.add(_.pick(__alloyId12, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId11.applyProperties(_.omit(__alloyId12, Alloy.Android.menuItemCreateArgs));
             $.__alloyId11 = $.__views.__alloyId11;
-            doClick ? $.__views.__alloyId11.addEventListener("click", doClick) : __defers["$.__views.__alloyId11!click!doClick"] = true;
+            doClick ? $.addListener($.__views.__alloyId11, "click", doClick) : __defers["$.__views.__alloyId11!click!doClick"] = true;
             var __alloyId14 = {
                 title: "home",
                 icon: "/ic_menu_home.png",
@@ -28,7 +28,7 @@ function Controller() {
             $.__views.__alloyId13 = e.menu.add(_.pick(__alloyId14, Alloy.Android.menuItemCreateArgs));
             $.__views.__alloyId13.applyProperties(_.omit(__alloyId14, Alloy.Android.menuItemCreateArgs));
             $.__alloyId13 = $.__views.__alloyId13;
-            doClick ? $.__views.__alloyId13.addEventListener("click", doClick) : __defers["$.__views.__alloyId13!click!doClick"] = true;
+            doClick ? $.addListener($.__views.__alloyId13, "click", doClick) : __defers["$.__views.__alloyId13!click!doClick"] = true;
         }; else {
             Ti.API.warn("You attempted to attach an Android Menu to a lightweight Window");
             Ti.API.warn("or other UI component which does not have an Android activity.");
@@ -41,19 +41,13 @@ function Controller() {
     function setCurrentTab(e) {
         currentTab = e.index + 1;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -141,17 +135,17 @@ function Controller() {
     });
     $.__views.index.addEventListener("open", __alloyId15);
     $.__views.index && $.addTopLevelView($.__views.index);
-    setCurrentTab ? $.__views.index.addEventListener("focus", setCurrentTab) : __defers["$.__views.index!focus!setCurrentTab"] = true;
+    setCurrentTab ? $.addListener($.__views.index, "focus", setCurrentTab) : __defers["$.__views.index!focus!setCurrentTab"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var currentTab;
     $.index.open();
-    __defers["$.__views.__alloyId11!click!doClick"] && $.__views.__alloyId11.addEventListener("click", doClick);
-    __defers["$.__views.__alloyId13!click!doClick"] && $.__views.__alloyId13.addEventListener("click", doClick);
-    __defers["$.__views.index!focus!setCurrentTab"] && $.__views.index.addEventListener("focus", setCurrentTab);
+    __defers["$.__views.__alloyId11!click!doClick"] && $.addListener($.__views.__alloyId11, "click", doClick);
+    __defers["$.__views.__alloyId13!click!doClick"] && $.addListener($.__views.__alloyId13, "click", doClick);
+    __defers["$.__views.index!focus!setCurrentTab"] && $.addListener($.__views.index, "focus", setCurrentTab);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

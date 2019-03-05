@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	CU = require('../compilerUtils'),
 	U = require('../../../utils'),
@@ -40,7 +40,7 @@ function parse(node, state, args) {
 		// the textarea or a proxy property assigment
 		if (!CU.isNodeForCurrentPlatform(child)) {
 			return;
-		} else if (_.contains(CONST.CONTROLLER_NODES, fullname)) {
+		} else if (_.includes(CONST.CONTROLLER_NODES, fullname)) {
 			isControllerNode = true;
 		} else if (fullname.split('.')[0] === '_ProxyProperty') {
 			isProxyProperty = true;
@@ -90,18 +90,17 @@ function parse(node, state, args) {
 
 	// support shortcuts for keyboard type, return key type, and autocapitalization
 	var keyboardType = node.getAttribute('keyboardType');
-	if (_.contains(KEYBOARD_TYPES, keyboardType.toUpperCase())) {
+	if (_.includes(KEYBOARD_TYPES, keyboardType.toUpperCase())) {
 		node.setAttribute('keyboardType', 'Ti.UI.KEYBOARD_' + keyboardType.toUpperCase());
 	}
 	var returnKey = node.getAttribute('returnKeyType');
-	if (_.contains(RETURN_KEY_TYPES, returnKey.toUpperCase())) {
+	if (_.includes(RETURN_KEY_TYPES, returnKey.toUpperCase())) {
 		node.setAttribute('returnKeyType', 'Ti.UI.RETURNKEY_' + returnKey.toUpperCase());
 	}
 	var autocapitalization = node.getAttribute('keyboardType');
-	if (_.contains(AUTOCAPITALIZATION_TYPES, autocapitalization.toUpperCase())) {
+	if (_.includes(AUTOCAPITALIZATION_TYPES, autocapitalization.toUpperCase())) {
 		node.setAttribute('autocapitalization', 'Ti.UI.TEXT_AUTOCAPITALIZATION_' + autocapitalization.toUpperCase());
 	}
-
 
 	// add all creation time properties to the state
 	if (node.hasAttribute('clearOnEdit')) {
@@ -113,13 +112,23 @@ function parse(node, state, args) {
 	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
+	const nodeText = U.XML.getNodeText(node);
+	if (nodeText && nodeText.trim() !== '') {
+		state.extraStyle = state.extraStyle || {};
+		if (U.isLocaleAlias(nodeText)) {
+			state.extraStyle['value'] = styler.STYLE_EXPR_PREFIX + nodeText;
+		} else {
+			_.extend(state.extraStyle, styler.createVariableStyle('value', U.possibleMultilineString(U.trim(nodeText.replace(/'/g, "\\'")))));
+		}
+	}
+
 	// generate the code for the textarea itself
 	var nodeState = require('./default').parse(node, state);
 	code += nodeState.code;
 
 	// add the rows to the section
 	if (nodeState.parent && postCode) {
-		code += _.template(postCode, {
+		code += _.template(postCode)({
 			parentSymbol: nodeState.parent.symbol
 		});
 	}

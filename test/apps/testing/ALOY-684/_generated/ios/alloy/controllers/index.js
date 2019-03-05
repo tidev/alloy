@@ -8,7 +8,7 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function addNewLabel() {
+    function addNewLabel(e) {
         var index = ctr % classes.length;
         var label = Alloy.UI.create("index", "Label", {
             classes: classes[index],
@@ -19,19 +19,13 @@ function Controller() {
         $.index.add(label);
         ctr++;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -44,7 +38,7 @@ function Controller() {
         id: "index"
     });
     $.__views.index && $.addTopLevelView($.__views.index);
-    addNewLabel ? $.__views.index.addEventListener("click", addNewLabel) : __defers["$.__views.index!click!addNewLabel"] = true;
+    addNewLabel ? $.addListener($.__views.index, "click", addNewLabel) : __defers["$.__views.index!click!addNewLabel"] = true;
     $.__views.staticLabel = Ti.UI.createLabel({
         color: "#a00",
         font: {
@@ -67,10 +61,10 @@ function Controller() {
     var ctr = 0;
     var classes = [ [], [ "big" ], [ "blue" ], "shadow", [ "shadow" ], [ "shadow", "big" ], [ "big", "shadow" ], [ "big", "blue", "shadow" ], "big blue shadow" ];
     $.index.open();
-    __defers["$.__views.index!click!addNewLabel"] && $.__views.index.addEventListener("click", addNewLabel);
+    __defers["$.__views.index!click!addNewLabel"] && $.addListener($.__views.index, "click", addNewLabel);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

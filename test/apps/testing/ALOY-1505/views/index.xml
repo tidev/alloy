@@ -1,0 +1,11 @@
+<Alloy>
+	<Window>
+		<OptionDialog id="dialog" title="Delete File?">
+			<Options>
+				<Option>Confirm</Option>
+				<Option platform="ios">Help</Option>
+				<Option cancel='true'>Cancel</Option>
+			</Options>
+		</OptionDialog>
+	</Window>
+</Alloy>

@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	styler = require('../styler'),
 	CU = require('../compilerUtils'),
 	U = require('../../../utils');
@@ -12,7 +12,7 @@ function parse(node, state, args) {
 		attributedStringObj = {},
 		code = '';
 
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child){
+	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
 		if (CU.validateNodeName(child, 'Ti.UI.AttributedString')) {
 			code += CU.generateNodeExtended(child, state, {
 				parent: {},
@@ -36,11 +36,11 @@ function parse(node, state, args) {
 		if (U.isLocaleAlias(nodeText)) {
 			textObj = {'text': styler.STYLE_EXPR_PREFIX + nodeText};
 		} else {
-			textObj = styler.createVariableStyle('text', "'" + U.trim(nodeText.replace(/'/g, "\\'")) + "'");
+			textObj = styler.createVariableStyle('text', U.possibleMultilineString(U.trim(nodeText.replace(/'/g, "\\'"))));
 		}
 
 		if (nodeText.match(/\{([^}]+)\}/) !== null) {
-			textObj["text"] = nodeText;
+			textObj['text'] = nodeText;
 		}
 	}
 

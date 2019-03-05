@@ -11,19 +11,13 @@ function Controller() {
     function myFunction() {
         return true;
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -35,7 +29,7 @@ function Controller() {
     $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.label1 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 20,
             left: 0,
             font: {
@@ -43,13 +37,13 @@ function Controller() {
             },
             color: "black"
         });
-        Alloy.Globals.isiPhone6 && _.extend(o, {
+        Alloy.Globals.isiPhone6 && Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "16dp"
             },
             color: "green"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue",
             text: "This is a label",
             id: "label1"
@@ -59,7 +53,7 @@ function Controller() {
     $.__views.index.add($.__views.label1);
     $.__views.label2 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 20,
             left: 0,
             font: {
@@ -67,13 +61,13 @@ function Controller() {
             },
             color: "black"
         });
-        Alloy.Globals.isiPhone6 && _.extend(o, {
+        Alloy.Globals.isiPhone6 && Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "16dp"
             },
             color: "green"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue",
             text: "This is also a label",
             id: "label2"
@@ -83,7 +77,7 @@ function Controller() {
     $.__views.index.add($.__views.label2);
     $.__views.label3 = Ti.UI.createLabel(function() {
         var o = {};
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             top: 20,
             left: 0,
             font: {
@@ -91,23 +85,23 @@ function Controller() {
             },
             color: "black"
         });
-        Alloy.Globals.isiPhone6 && _.extend(o, {
+        Alloy.Globals.isiPhone6 && Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "16dp"
             },
             color: "green"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             color: "blue",
             text: "Tap for new Window"
         });
-        myFunction() && _.extend(o, {
+        myFunction() && Alloy.deepExtend(true, o, {
             font: {
                 fontSize: "18dp"
             },
             color: "red"
         });
-        _.extend(o, {
+        Alloy.deepExtend(true, o, {
             id: "label3"
         });
         return o;
@@ -127,6 +121,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

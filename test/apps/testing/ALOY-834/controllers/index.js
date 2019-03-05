@@ -2,7 +2,7 @@ function doOnOpen() {
 	Ti.API.info('doOnOpen');
 }
 
-function doOnFocus(){
+function doOnFocus() {
 	Ti.API.info('doOnFocus');
 }
 

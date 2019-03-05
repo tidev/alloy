@@ -8,19 +8,13 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -46,8 +40,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.info);
     $.__views.button1 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         height: "70dp",
         width: "250dp",
         borderRadius: 8,
@@ -58,8 +52,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.button1);
     $.__views.button2 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         width: "100dp",
         height: Ti.UI.SIZE,
         title: "button2",
@@ -67,8 +61,8 @@ function Controller() {
     });
     $.__views.index.add($.__views.button2);
     $.__views.button3 = Ti.UI.createButton({
-        top: "15dp",
         color: "#500",
+        top: "15dp",
         height: "40dp",
         width: "200dp",
         borderRadius: 32,
@@ -95,6 +89,6 @@ function Controller() {
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

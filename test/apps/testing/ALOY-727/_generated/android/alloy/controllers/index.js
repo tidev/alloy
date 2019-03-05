@@ -8,22 +8,16 @@ function __processArg(obj, key) {
 }
 
 function Controller() {
-    function showOptions() {
+    function showOptions(e) {
         $.options.show();
     }
-    require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
+    require("/alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     this.args = arguments[0] || {};
     if (arguments[0]) {
-        {
-            __processArg(arguments[0], "__parentSymbol");
-        }
-        {
-            __processArg(arguments[0], "$model");
-        }
-        {
-            __processArg(arguments[0], "__itemTemplate");
-        }
+        __processArg(arguments[0], "__parentSymbol");
+        __processArg(arguments[0], "$model");
+        __processArg(arguments[0], "__itemTemplate");
     }
     var $ = this;
     var exports = {};
@@ -58,8 +52,8 @@ function Controller() {
         androidView: $.__views.androidView,
         id: "options",
         title: "App Options",
-        destructive: "3",
-        cancel: "2"
+        destructive: 3,
+        cancel: 2
     });
     $.__views.__alloyId4 = Ti.UI.createButton({
         height: Ti.UI.SIZE,
@@ -68,15 +62,15 @@ function Controller() {
         id: "__alloyId4"
     });
     $.__views.index.add($.__views.__alloyId4);
-    showOptions ? $.__views.__alloyId4.addEventListener("click", showOptions) : __defers["$.__views.__alloyId4!click!showOptions"] = true;
+    showOptions ? $.addListener($.__views.__alloyId4, "click", showOptions) : __defers["$.__views.__alloyId4!click!showOptions"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     $.avLabel.text = "This is an androidView";
     $.index.open();
-    __defers["$.__views.__alloyId4!click!showOptions"] && $.__views.__alloyId4.addEventListener("click", showOptions);
+    __defers["$.__views.__alloyId4!click!showOptions"] && $.addListener($.__views.__alloyId4, "click", showOptions);
     _.extend($, exports);
 }
 
-var Alloy = require("alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
+var Alloy = require("/alloy"), Backbone = Alloy.Backbone, _ = Alloy._;
 
 module.exports = Controller;

@@ -1,4 +1,4 @@
-var _ = require('../../../lib/alloy/underscore')._,
+var _ = require('lodash'),
 	U = require('../../../utils'),
 	CU = require('../compilerUtils'),
 	CONST = require('../../../common/constants'),
@@ -32,7 +32,7 @@ function parse(node, state, args) {
 	}
 
 	// standard proxy property handling
-	if(node.hasChildNodes()) {
+	if (node.hasChildNodes()) {
 
 		// process children
 		_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
@@ -55,7 +55,7 @@ function parse(node, state, args) {
 		});
 
 	// explicitly create nav buttons from proxy property element
-	} else if (_.contains(['LeftNavButton', 'RightNavButton'], node.nodeName)) {
+	} else if (_.includes(['LeftNavButton', 'RightNavButton'], node.nodeName)) {
 		node.nodeName = 'Button';
 		var exState = _.extend(_.clone(state), { parent: {} });
 		var buttonState = require('./Ti.UI.Button').parse(node, exState);

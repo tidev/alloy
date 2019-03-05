@@ -2,8 +2,7 @@ var fs = require('fs'),
 	path = require('path'),
 	TU = require('../lib/testUtils'),
 	U = require('../../Alloy/utils'),
-	CONST = require('../../Alloy/common/constants'),
-	_ = require('../../Alloy/lib/alloy/underscore')._;
+	CONST = require('../../Alloy/common/constants');
 
 var TIMEOUT_DEFAULT = 1000;
 

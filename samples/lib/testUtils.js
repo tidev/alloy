@@ -1,33 +1,32 @@
 var exec = require('child_process').exec,
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	os = require('os'),
-	wrench = require('wrench'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	uglifyjs = require('uglify-js'),
+	babylon = require('babylon'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
-var alloyRoot = path.join(__dirname,'..','..');
+var alloyRoot = path.join(__dirname, '..', '..');
 var IS_WIN = /^win/i.test(os.platform());
 
 exports.TIMEOUT_DEFAULT = IS_WIN ? 5000 : 2000;
 exports.paths = {
-	templates: path.join(alloyRoot,'Alloy','template'),
-	harnessTemplate: path.join(alloyRoot,'test','projects','HarnessTemplate'),
-	harness: path.join(alloyRoot,'test','projects','Harness')
+	templates: path.join(alloyRoot, 'Alloy', 'template'),
+	harnessTemplate: path.join(alloyRoot, 'test', 'projects', 'HarnessTemplate'),
+	harness: path.join(alloyRoot, 'test', 'projects', 'Harness')
 };
 
 // Recreate the test app harness
 //
 // Params:
 // * callback: the callback function to be executed when the harness
-//             is successfully recreated.
+//			 is successfully recreated.
 function resetTestApp(callback) {
 	var paths = exports.paths;
-	wrench.rmdirSyncRecursive(paths.harness, true);
-	wrench.mkdirSyncRecursive(paths.harness, 0777);
-	wrench.copyDirSyncRecursive(paths.harnessTemplate, paths.harness);
+	fs.removeSync(paths.harness);
+	fs.mkdirpSync(paths.harness);
+	fs.copySync(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);
@@ -61,10 +60,10 @@ function getExecObject(args) {
 // Params:
 // * cmd:  The command to run through exec()
 // * opts: An object that can contain the following parameters:
-//     * timeout: How long to wait for the command to execute before declaring
-//                the test failed
-//     * test:    The actual test function to execute on output returned from exec()
-//     * reset: If truthy, recreate the default test harness before executing
+//	 * timeout: How long to wait for the command to execute before declaring
+//				the test failed
+//	 * test:	The actual test function to execute on output returned from exec()
+//	 * reset: If truthy, recreate the default test harness before executing
 //
 // Return: none
 exports.asyncExecTest = function(cmd, opts) {
@@ -125,7 +124,7 @@ function toBeTssFile(expected) {
 
 function toBeJavascript(expected) {
 	try {
-		return uglifyjs.parse(this.actual);
+		return babylon.parse(this.actual);
 	} catch (e) {
 		return false;
 	}
@@ -133,13 +132,13 @@ function toBeJavascript(expected) {
 
 function toBeJavascriptFile(expected) {
 	var actual = this.actual;
-    var notText = this.isNot ? " not" : "";
+	var notText = this.isNot ? ' not' : '';
 	this.message = function () {
-        return "Expected " + actual + notText + " to be a Javascript file";
-    };
+		return 'Expected ' + actual + notText + ' to be a Javascript file';
+	};
 
 	try {
-		var js = fs.readFileSync(this.actual,'utf8');
+		var js = fs.readFileSync(this.actual, 'utf8');
 		return toBeJavascript.call({actual:js}, expected);
 	} catch (e) {
 		return false;
@@ -158,8 +157,8 @@ exports.addMatchers = function() {
 				});
 			},
 			toHaveSameContentAs: function(expected) {
-				return U.normalizeReturns(fs.readFileSync(this.actual,'utf8')) ===
-					U.normalizeReturns(fs.readFileSync(expected,'utf8'));
+				return U.normalizeReturns(fs.readFileSync(this.actual, 'utf8')) ===
+					U.normalizeReturns(fs.readFileSync(expected, 'utf8'));
 			},
 			toExist: function(expected) {
 				return path.existsSync(this.actual);

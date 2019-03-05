@@ -3,7 +3,7 @@
 		<Label text="L('foo')" />
 
 		<Label text="TabbedBar" />
-		<TabbedBar id="tb">
+		<TabbedBar id="tb" platform="ios">
 			<Labels>
 				<Label title='L(foo)' />
 				<Label title='L("foo")' />

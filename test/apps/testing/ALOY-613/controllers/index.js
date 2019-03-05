@@ -17,21 +17,21 @@ var labels = [
 			classes: ['tiny'],
 			text: '["tiny"]'
 		}),
-		classes: ['right','greyBg']
+		classes: ['right', 'greyBg']
 	},
 	{
 		label: $.UI.create('Label', {
 			classes: ['red'],
 			text: '["red"]'
 		}),
-		classes: ['left','blueshadow']
+		classes: ['left', 'blueshadow']
 	},
 	{
 		label: Ti.UI.createLabel({
 			text: '[]',
 			apiName: 'Label'
 		}),
-		classes: ['bigspace','red','huge']
+		classes: ['bigspace', 'red', 'huge']
 	}
 ];
 
@@ -41,13 +41,13 @@ _.each(labels, function(o, index) {
 
 	label.addEventListener('click', function(e) {
 		label._wasClicked = typeof label._wasClicked === 'undefined' ?
-			false : !label._wasClicked; 
+			false : !label._wasClicked;
 		if (label._wasClicked) {
-			Ti.API.info('remove: ' + JSON.stringify(classes) + ' from ' + 
+			Ti.API.info('remove: ' + JSON.stringify(classes) + ' from ' +
 				JSON.stringify(label.classes));
 			$.removeClass(label, classes);
 		} else {
-			Ti.API.info('add: ' + JSON.stringify(classes) + ' to ' + 
+			Ti.API.info('add: ' + JSON.stringify(classes) + ' to ' +
 				JSON.stringify(label.classes));
 			$.addClass(label, classes);
 		}
@@ -63,6 +63,6 @@ $.index.open();
 try {
 	$.tester = $.UI.create('Label');
 	require('specs/index')($);
-} catch(e) {
+} catch (e) {
 	Ti.API.warn('No unit tests found for controller "index"');
 }

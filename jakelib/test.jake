@@ -2,13 +2,18 @@ var fs = require('fs'),
 	path = require('path'),
 	jlib = require('../test/lib/jasmine'),
 	ConsoleReporter = require('../test/lib/ConsoleReporter'),
-	_ = require('../Alloy/lib/alloy/underscore');
+	_ = require('lodash');
 
 process.env.ALLOY_TESTS = true;
 path.existsSync = fs.existsSync || path.existsSync;
 
 //globalize the Jasmine functions
 _.extend(global, jlib);
+
+// MUST ADD JUNIT REPORTER FIRST, OR ELSE ANY FAILURES CAUSE
+// CONSOLE REPORTER TO CALL process.exit(1) first
+require('../test/lib/JunitReporter');
+jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
 
 //Set up Jasmine to print to the console with our custom printer
 jasmine.getEnv().addReporter(new ConsoleReporter({

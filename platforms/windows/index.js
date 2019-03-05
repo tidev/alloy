@@ -3,5 +3,5 @@ module.exports = new (require('../base.js'))({
 	alloyFolder: 'windows',
 	titaniumFolder: 'windows',
 	name: 'Windows Phone',
-	osname: 'windows'
+	osname: ['windowsphone', 'windowsstore']
 });

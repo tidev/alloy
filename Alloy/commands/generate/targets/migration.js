@@ -7,7 +7,7 @@ module.exports = function(name, args, program, template) {
 	var type = 'MIGRATION';
 	var dir = path.dirname(name);
 	name = path.join(dir,
-		GU.generateMigrationFileName(path.basename(name,'.'+CONST.FILE_EXT.MIGRATION)));
+		GU.generateMigrationFileName(path.basename(name, '.' + CONST.FILE_EXT.MIGRATION)));
 	var info = GU.generate(name, type, program, {
 		template: template || {
 			up:'',

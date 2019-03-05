@@ -11,14 +11,14 @@ module.exports = function($, opts) {
 			style: {
 				width: Ti.UI.SIZE,
 				height: Ti.UI.SIZE,
-				color: "#000",
+				color: '#000',
 				left: 15,
 				top: 10,
 				font: {
-					fontSize: "18dp",
-					fontWeight: "normal"
+					fontSize: '18dp',
+					fontWeight: 'normal'
 				},
-				textAlign: "left",
+				textAlign: 'left',
 				id: id
 			}
 		};
@@ -30,9 +30,9 @@ module.exports = function($, opts) {
 		validateUiComponent($, 'detail', {
 			api: 'Ti.UI.Window',
 			style: {
-				backgroundColor: "#fff",
-				layout: "vertical",
-				id: "detail"
+				backgroundColor: '#fff',
+				layout: 'vertical',
+				id: 'detail'
 			}
 		});
 
