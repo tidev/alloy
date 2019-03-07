@@ -117,6 +117,7 @@ exports.getParserArgs = function(node, state, opts) {
 	state = state || {};
 	opts = opts || {};
 
+	node.nodeName = _.upperFirst(_.camelCase(node.nodeName));
 	var defaultId = opts.defaultId || undefined,
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
