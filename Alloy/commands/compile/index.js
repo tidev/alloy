@@ -437,6 +437,7 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(walkSync(theViewDir), function(view) {
+				view = path.normalize(view);
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -458,6 +459,7 @@ module.exports = function(args, program) {
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
 			_.each(walkSync(theControllerDir), function(controller) {
+				controller = path.normalize(controller);
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));
@@ -1153,6 +1155,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var excludePatterns = otherPlatforms.concat(['.+node_modules']);
 		var rx = new RegExp('^(?!' + excludePatterns.join('|') + ').+\\.js$');
 		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
+			f = path.normalize(f);
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
