@@ -1,5 +1,10 @@
 ## Alloy Release Notes
 
+### Release 1.13.9
+
+#### Fixes
+
+[ALOY-1650](https://jira.appcelerator.org/browse/ALOY-1650) Debugger does not hit breakpoints when running Android on Windows
 
 ### Release 1.13.8
 
