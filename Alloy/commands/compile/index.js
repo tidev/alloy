@@ -1155,7 +1155,6 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var excludePatterns = otherPlatforms.concat(['.+node_modules']);
 		var rx = new RegExp('^(?!' + excludePatterns.join('|') + ').+\\.js$');
 		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
-			f = path.normalize(f);
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
