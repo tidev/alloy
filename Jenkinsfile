@@ -1,11 +1,15 @@
 #! groovy
 library 'pipeline-library'
 def nodeVersion = '8.9.0'
-def npmVersion = '6.8.0' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
+def npmVersion = 'latest' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 def packageVersion = ''
 def isPR = env.BRANCH_NAME.startsWith('PR-')
 def runDanger = isPR
+
+def MAINLINE_BRANCH_REGEXP = /master|next|\d_\d+_(X|\d)/ // a branch is considered mainline if 'master' or like 1_13_X
+def isMainlineBranch = (env.BRANCH_NAME ==~ MAINLINE_BRANCH_REGEXP)
+def isMaster = 'master'.equals(env.BRANCH_NAME)
 
 def unitTests(titaniumBranch, nodeVersion, npmVersion) {
 	checkout scm
@@ -32,11 +36,10 @@ def unitTests(titaniumBranch, nodeVersion, npmVersion) {
 					junit 'TEST-*.xml'
 					stash includes: 'TEST-*.xml', name: "test-report-${titaniumBranch}"
 				}
-				
-				fingerprint 'package.json'
 			} // timeout
 		} // ansi
 	} // nodejs
+	deleteDir()
 }
 
 timestamps() {
@@ -47,6 +50,7 @@ timestamps() {
 
 				packageVersion = jsonParse(readFile('package.json'))['version']
 				currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
+				fingerprint 'package.json'
 
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					ensureNPM(npmVersion)
@@ -56,6 +60,7 @@ timestamps() {
 					}
 					sh 'npm run lint'
 				} // nodejs
+				stash includes: 'package.json,package-lock.json', name: 'security'
 			} // stage('Lint')
 		} // node
 
@@ -69,7 +74,6 @@ timestamps() {
 				'master SDK': {
 					node('(osx || linux) && git ') {
 						unitTests('master', nodeVersion, npmVersion)
-
 					}
 				}
 			)
@@ -77,7 +81,7 @@ timestamps() {
 
 		node('(osx || linux) && git ') {
 			stage('Security') {
-				checkout scm
+				unstash 'security'
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					// Install only production dependencies
 					ensureNPM(npmVersion)
@@ -89,6 +93,7 @@ timestamps() {
 
 					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
 				} // nodejs
+				deleteDir()
 			} // stage
 		} // node
 
@@ -96,7 +101,7 @@ timestamps() {
 			stage('Publish') {
 				checkout scm
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-					if (!isPR) {
+					if (!isMainlineBranch) {
 						try {
 							// Publish
 							sh 'npm publish'
@@ -104,11 +109,14 @@ timestamps() {
 							// Tag git
 							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
 
-							// Trigger appc-cli job
-							build job: '../appc-cli/master', wait: false, parameters: [ 
-								[$class: 'StringParameterValue', name: 'packageName', value: 'alloy' ],
-								[$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion ],
-							]
+							if (isMaster) {
+								// Trigger appc-cli job
+								build job: '../appc-cli/master', wait: false, parameters: [ 
+									[$class: 'StringParameterValue', name: 'packageName', value: 'alloy' ],
+									[$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion ],
+								]
+							}
+
 							// Update tickets
 							updateJIRA('ALOY', "Alloy ${packageVersion}", scm)
 						} catch (e) {
@@ -117,6 +125,7 @@ timestamps() {
 						}
 					} // if
 				} // nodejs
+				deleteDir()
 			} // stage
 		} // node
 	} finally {
