@@ -126,6 +126,16 @@ function parse(node, state, args) {
 	});
 	if (extras.length) { state.extraStyle = styler.createVariableStyle(extras); }
 
+	const nodeText = U.XML.getNodeText(node);
+	if (nodeText && nodeText.trim() !== '') {
+		state.extraStyle = state.extraStyle || {};
+		if (U.isLocaleAlias(nodeText)) {
+			state.extraStyle['value'] = styler.STYLE_EXPR_PREFIX + nodeText;
+		} else {
+			_.extend(state.extraStyle, styler.createVariableStyle('value', U.possibleMultilineString(U.trim(nodeText.replace(/'/g, "\\'")))));
+		}
+	}
+
 	// generate the code for the textfield itself
 	var nodeState = require('./default').parse(node, state);
 	code += nodeState.code;

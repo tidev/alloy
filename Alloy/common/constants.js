@@ -197,6 +197,7 @@ exports.IMPLICIT_NAMESPACES = {
 	// Ti.Media
 	VideoPlayer: NS_TI_MEDIA,
 	MusicPlayer: NS_TI_MEDIA,
+	AudioPlayer: NS_TI_MEDIA,
 
 	// Ti.UI.iOS
 	AdView: NS_TI_UI_IOS,
@@ -204,9 +205,7 @@ exports.IMPLICIT_NAMESPACES = {
 	CoverFlowView: NS_TI_UI_IOS,
 	DocumentViewer: NS_TI_UI_IOS,
 	LivePhotoView: NS_TI_UI_IOS,
-	NavigationWindow: NS_TI_UI_IOS,
 	SplitWindow: NS_TI_UI_IOS,
-	TabbedBar: NS_TI_UI_IOS,
 	PreviewContext: NS_TI_UI_IOS,
 	PreviewAction: NS_TI_UI_IOS,
 	PreviewActionGroup: NS_TI_UI_IOS,

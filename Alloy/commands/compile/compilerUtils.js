@@ -121,7 +121,7 @@ exports.getParserArgs = function(node, state, opts) {
 		doSetId = opts.doSetId === false ? false : true,
 		name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
-		fullname = ns + '.' + name,
+		fullname = (ns && ns.length) ? (ns + '.' + name) : name,
 		id = node.getAttribute('id') || defaultId || exports.generateUniqueId(),
 		platform = node.getAttribute('platform'),
 		formFactor = node.getAttribute('formFactor'),
@@ -600,6 +600,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
 		_.each(files, function(file) {
+			file = path.normalize(file);
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -900,6 +901,9 @@ exports.parseConfig = function(file, alloyConfig, o) {
 				o = _.extend(o, j[distType]);
 				o = _.extend(o, j['os:' + alloyConfig.platform + ' ' + distType]);
 			}
+		}
+		if (alloyConfig.theme) {
+			o.theme = alloyConfig.theme;
 		}
 	}
 

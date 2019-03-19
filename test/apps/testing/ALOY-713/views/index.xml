@@ -4,7 +4,7 @@
             <TableView dataCollection="feed" top="10" separatorColor="#ffffff" height="600">
                 <TableViewRow height="200">
                     <Label text="first" align="left" left="10"/>
-                    <TabbedBar left="50" top="10">
+                    <TabbedBar left="50" top="10" platform="ios">
                         <Labels>
                             <Label>TAB1</Label>
                             <Label title="{fourth}"/>

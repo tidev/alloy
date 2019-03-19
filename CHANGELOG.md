@@ -1,5 +1,73 @@
 ## Alloy Release Notes
 
+### Unreleased items
+
+### Release 1.13.9
+
+#### Fixes
+
+[ALOY-1650](https://jira.appcelerator.org/browse/ALOY-1650) Debugger does not hit breakpoints when running Android on Windows
+
+### Release 1.13.8
+
+#### Fixes
+
+[ALOY-1644](https://jira.appcelerator.org/browse/ALOY-1644) Selective compilation does not regenerate platform app.js on Windows
+
+### Release 1.13.7
+
+#### Fixes
+
+[ALOY-1641](https://jira.appcelerator.org/browse/ALOY-1641) iOS: TabbedBar usage on lower than SDK 8 is broken
+
+### Release 1.13.6
+
+#### Improvements
+
+[ALOY-1640](https://jira.appcelerator.org/browse/ALOY-1640) Update TabbedBar to use the Ti.UI namespace
+
+#### Fixes
+
+[ALOY-1637](https://jira.appcelerator.org/browse/ALOY-1637) ES6 code frame fails when using duplicate variable declarations
+[ALOY-1639](https://jira.appcelerator.org/browse/ALOY-1639) Update animation library to use `createMatrix3D/createMatrix2D` in place of the deprecated `create3DMatrix/create2DMatrix`
+
+### Release 1.13.5
+
+[ALOY-1638](https://jira.appcelerator.org/browse/ALOY-1638) Theme is "null" when a theme is defined in config.json
+
+### Release 1.13.1
+
+#### Fixed
+
+[ALOY-1622](https://jira.appcelerator.org/browse/ALOY-1622) Error on sql migration due to undeclared variable 
+
+### Release 1.13.0
+
+#### Added
+
+[TIMOB-24817](https://jira.appcelerator.org/browse/TIMOB-24817) Support defining Alloy widgets in ListView templates
+
+### Release 1.12.0
+
+#### Improvements
+
+* [ALOY-1603](https://jira.appcelerator.org/browse/ALOY-1603): Update momentjs to 2.21.0
+    - View the momentjs release notes [here](https://github.com/moment/moment/blob/d0a45f0390c108cc18d71a3d3f38d040392483c5/CHANGELOG.md), previous version was 2.16.0
+
+#### Fixed
+ 
+ * [ALOY-1606](https://jira.appcelerator.org/browse/ALOY-1606): Android: Debugger not hitting breakpoints on Windows
+ * [ALOY-1602](https://jira.appcelerator.org/browse/ALOY-1602): Avoid some global variables to be only available in parent controller
+    - Thanks to @clementblanco for this contribution!
+ * [ALOY-1607](https://jira.appcelerator.org/browse/ALOY-1607): Fix BaseController.removeListener
+    - Thanks to @jormagar for this contribution!
+ * [ALOY-1609](https://jira.appcelerator.org/browse/ALOY-1609): Add plugins/ti.alloy to gitignore
+ * [ALOY-1599](https://jira.appcelerator.org/browse/ALOY-1599): Model Data binding problem with the first upper case in the model src
+    - Thanks to @darknos for this contribution!
+ * [ALOY-1595](https://jira.appcelerator.org/browse/ALOY-1595): alloy compile broken on node 9.3.0
+ * [PR-878](https://github.com/appcelerator/alloy/pull/878): Fix links in README
+    - Thanks to @dfrankow for this contribution!
+
 ---
 ### Release 1.11.0
  * No changes, just a version bump
@@ -96,7 +164,7 @@
 ---
 ### Release 1.10.0
 
-#### Fixed
+#### Added
   * [ALOY-1312](https://jira.appcelerator.org/browse/ALOY-1312): Upgrade Alloy to support ES6
     * Migrates from using uglifyjs to parse and transform user and library code to using babel and babili
 

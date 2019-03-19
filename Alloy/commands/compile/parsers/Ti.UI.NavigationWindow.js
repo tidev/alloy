@@ -4,15 +4,21 @@ var _ = require('lodash'),
 	CU = require('../compilerUtils'),
 	tiapp = require('../../../tiapp');
 
-var MIN_VERSION = '3.1.3';
+const MIN_VERSION_FOR_IOS = '3.1.3';
+const MIN_VERSION = '8.0.0';
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	if (tiapp.version.lt(tiapp.getSdkVersion(), MIN_VERSION)) {
-		U.die('Ti.UI.iOS.NavigationWindow (line ' + node.lineNumber + ') requires Titanium 3.1.3+');
+	const tiappSdkVersion = tiapp.getSdkVersion();
+	if (tiapp.version.lt(tiappSdkVersion, MIN_VERSION_FOR_IOS)) {
+		U.die(`Ti.UI.iOS.NavigationWindow (line ${node.lineNumber}) requires Titanium ${MIN_VERSION_FOR_IOS}+`);
+	}
+
+	if (tiapp.version.lt(tiappSdkVersion, MIN_VERSION)) {
+		node.setAttribute('ns', 'Ti.UI.iOS');
 	}
 
 	var children = U.XML.getElementsFromNodes(node.childNodes),

@@ -6,7 +6,7 @@
 				<TextField id="username" onReturn="focusPassword"/>
 				<TextField id="password" onReturn="login"/>
 				<Button id="loginButton" onClick="login">Login</Button>
-				<Label id="motto">"There's always money in the banana stand."</Label>
+				<Label id="motto">"There's always a banana."</Label>
 			</View>
 		</ScrollView>
 	</Window>

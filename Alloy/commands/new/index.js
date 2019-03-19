@@ -137,13 +137,20 @@ function getPaths(project, templateName, testapp) {
 	var alloy = path.join(__dirname, '..', '..');
 	var template = path.join(alloy, 'template');
 	var projectTemplates = path.join(alloy, '..', 'templates');
+	var customTemplateDir;
+	var readMeFile;
+
+	if (fs.existsSync(templateName) && !testapp) {
+		customTemplateDir = templateName;
+		readMeFile = path.join(customTemplateDir, 'README');
+	}
 
 	var paths = {
 		// alloy paths
 		alloy: alloy,
 		template: path.join(alloy, 'template'),
-		readme: path.join(template, 'README'),
-		projectTemplate: (!testapp) ? path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
+		readme: fs.existsSync(readMeFile) ? readMeFile : path.join(template, 'README'),
+		projectTemplate: (!testapp) ? customTemplateDir || path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
 
 		// project paths
 		project: project,

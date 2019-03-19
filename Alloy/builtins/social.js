@@ -38,8 +38,8 @@
  *		}
  *
  *		// Post a message
- *	        // Setup both callbacks for confirmation
- *	        // Note: share() automatically calls authorize() so an explicit call as above is unnecessary
+ *		// Setup both callbacks for confirmation
+ *		// Note: share() automatically calls authorize() so an explicit call as above is unnecessary
  *		social.share({
  *			message: "Salut, Monde!",
  *			success: function(e) {alert('Success!')},

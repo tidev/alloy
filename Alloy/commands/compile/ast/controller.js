@@ -4,7 +4,13 @@ var U = require('../../../utils'),
 	generate = require('babel-generator').default,
 	traverse = require('babel-traverse').default;
 
+const { Hub, NodePath } = traverse;
+
 var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
+
+const GENCODE_OPTIONS = {
+	retainLines: true
+};
 
 exports.processController = function(code, file) {
 	var baseController = '',
@@ -14,6 +20,27 @@ exports.processController = function(code, file) {
 
 	try {
 		var ast = babylon.parse(code, { sourceFilename: file, sourceType: 'module' });
+
+		const hub = new Hub({
+			buildCodeFrameError(node, message, Error) {
+				const loc = node && node.loc;
+				const err = new Error(message);
+
+				if (loc) {
+					err.loc = loc.start;
+				}
+
+				return err;
+			}
+		});
+
+		const path = NodePath.get({
+			hub: hub,
+			parent: ast,
+			container: ast,
+			key: 'program'
+		}).setContext();
+
 		traverse(ast, {
 			enter: function(path) {
 				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
@@ -23,7 +50,7 @@ exports.processController = function(code, file) {
 			},
 
 			ImportDeclaration: function(path) {
-				moduleCodes += generate(path.node, {}).code;
+				moduleCodes += generate(path.node, GENCODE_OPTIONS).code;
 				path.remove();
 			},
 
@@ -37,10 +64,10 @@ exports.processController = function(code, file) {
 						}
 					});
 				}
-				moduleCodes += generate(node, {}).code;
+				moduleCodes += generate(node, GENCODE_OPTIONS).code;
 				path.remove();
 			}
-		});
+		}, path.scope);
 
 		if (exportSpecifiers.length > 0) {
 			traverse(ast, {
@@ -54,14 +81,14 @@ exports.processController = function(code, file) {
 					}
 
 					if (exportSpecifiers.indexOf(name) !== -1) {
-						moduleCodes += generate(node, {}).code;
+						moduleCodes += generate(node, GENCODE_OPTIONS).code;
 						path.remove();
 					}
 				}
 			});
 		}
 
-		newCode = generate(ast, {}).code;
+		newCode = generate(ast, GENCODE_OPTIONS).code;
 	} catch (e) {
 		U.dieWithCodeFrame('Error generating AST for "' + file + '". Unexpected token at line ' + e.loc.line + ' column ' + e.loc.column, e.loc, code);
 	}

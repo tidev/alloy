@@ -212,6 +212,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 	var ordered = [];
 	_.each(walkSync(srcDir), function(file) {
+		file = path.normalize(file);
 		var src = path.join(srcDir, file);
 		var dst = path.join(dstDir, file);
 
@@ -513,25 +514,7 @@ exports.resolveAppHome = function() {
 };
 
 exports.copyFileSync = function(srcFile, destFile) {
-	var BUF_LENGTH = 64 * 1024,
-		buff,
-		bytesRead,
-		fdr,
-		fdw,
-		pos;
-	buff = new Buffer(BUF_LENGTH);
-	fdr = fs.openSync(srcFile, 'r');
-	exports.ensureDir(path.dirname(destFile));
-	fdw = fs.openSync(destFile, 'w');
-	bytesRead = 1;
-	pos = 0;
-	while (bytesRead > 0) {
-		bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos);
-		fs.writeSync(fdw, buff, 0, bytesRead);
-		pos += bytesRead;
-	}
-	fs.closeSync(fdr);
-	return fs.closeSync(fdw);
+	fs.copySync(srcFile, destFile, { overwrite: true });
 };
 
 exports.ensureDir = function(p) {

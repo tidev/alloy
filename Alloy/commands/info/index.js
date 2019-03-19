@@ -18,10 +18,6 @@ var info = {
 			sql: {
 				Description: 'Local persistence adapter that uses SQLite storage',
 				platforms: ['android', 'ios', 'blackberry', 'windows']
-			},
-			localStorage: {
-				Description: 'Local persistence adapter that uses HTML5 localStorage API',
-				platforms: ['mobileweb']
 			}
 		};
 		console.log(JSON.stringify(desc, null, 4));
