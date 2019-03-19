@@ -122,7 +122,7 @@ describe('optimizer.js', function() {
 							var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 								plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]
 							});
-							var result = babel.transformFromAst(ast, null, options);
+							var result = babel.transformFromAstSync(ast, null, options);
 							ast = result.ast;
 							code = result.code.replace(/\s*$/,'');
 						};
