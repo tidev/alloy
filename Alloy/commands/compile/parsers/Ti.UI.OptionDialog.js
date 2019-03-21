@@ -21,6 +21,9 @@ exports.parse = function(node, state) {
 
 	const newCode = _.map(state.extraOptions, (varName, name) => {
 		const attr = _.find(node.attributes, ['nodeName', name]);
+		if (attr === undefined) {
+			return;
+		}
 		return `var ${varName} = ${attr && attr.nodeValue}`;
 	}).join(';');
 
