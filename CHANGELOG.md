@@ -14,6 +14,8 @@
 
 #### Fixes
 
+* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android
+
 ### Release 1.13.9
 
 #### Fixes
