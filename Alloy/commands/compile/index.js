@@ -23,6 +23,8 @@ var ejs = require('ejs'),
 	BuildLog = require('./BuildLog'),
 	Orphanage = require('./Orphanage');
 
+const MvcCompileTask = require('./tasks/mvc-compile-task');
+
 var alloyRoot = path.join(__dirname, '..', '..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
 	controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$'),
@@ -418,93 +420,52 @@ module.exports = function(args, program) {
 		CU.models.push(m);
 	});
 
-	// Create a regex for determining which platform-specific
-	// folders should be used in the compile process
-	var filteredPlatforms = _.reject(CONST.PLATFORM_FOLDERS_ALLOY, function(p) {
-		return p === buildPlatform;
-	});
-	filteredPlatforms = _.map(filteredPlatforms, function(p) { return p + '[\\\\\\/]'; });
-	var filterRegex = new RegExp('^(?:(?!' + filteredPlatforms.join('|') + '))');
-
-	// don't process XML/controller files inside .svn folders (ALOY-839)
-	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
-
-	// Process all views/controllers and generate their runtime
-	// commonjs modules and source maps.
-	var tracker = {};
-	_.each(widgetDirs, function(collection) {
-		// generate runtime controllers from views
-		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
-		if (fs.existsSync(theViewDir)) {
-			_.each(walkSync(theViewDir), function(view) {
-				view = path.normalize(view);
-				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
-					// make sure this controller is only generated once
-					var theFile = view.substring(0, view.lastIndexOf('.'));
-					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
-					var fp = path.join(collection.dir, theKey);
-					if (tracker[fp]) { return; }
-
-					// generate runtime controller
-					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id +
-						' ' : '') + 'view processing...');
-					parseAlloyComponent(view, collection.dir, collection.manifest, null, restrictionPath);
-					tracker[fp] = true;
-				}
+	return Promise.resolve()
+		.then(() => {
+			const mvcCompileTask = new MvcCompileTask({
+				incrementalDirectory: path.join(compileConfig.dir.project, 'build', 'alloy', 'incremental', 'mvc'),
+				logger,
+				compileConfig,
+				restrictionPath,
+				parseAlloyComponent,
+				sourceCollections: widgetDirs,
+				targetPlatform: buildPlatform
 			});
-		}
+			return mvcCompileTask.run();
+		})
+		.then(() => {
+			generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
 
-		// generate runtime controllers from any controller code that has no
-		// corresponding view markup
-		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
-		if (fs.existsSync(theControllerDir)) {
-			_.each(walkSync(theControllerDir), function(controller) {
-				controller = path.normalize(controller);
-				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
-					// make sure this controller is only generated once
-					var theFile = controller.substring(0, controller.lastIndexOf('.'));
-					var theKey = theFile.replace(new RegExp('^' + buildPlatform + '[\\/\\\\]'), '');
-					var fp = path.join(collection.dir, theKey);
-					if (tracker[fp]) { return; }
+			// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
+			// in platform-specific folders, so we just copy the platform-specific one to
+			// the Resources folder.
+			if (buildPlatform === 'ios' && tiapp.version.lt('3.2.0')) {
+				U.copyFileSync(path.join(paths.resources, titaniumFolder, 'app.js'), path.join(paths.resources, 'app.js'));
+			}
 
-					// generate runtime controller
-					logger.info('[' + controller + '] ' + (collection.manifest ?
-						collection.manifest.id + ' ' : '') + 'controller processing...');
-					parseAlloyComponent(controller, collection.dir, collection.manifest, true, restrictionPath);
-					tracker[fp] = true;
-				}
-			});
-		}
-	});
-	logger.info('');
+			// optimize code
+			logger.info('----- OPTIMIZING -----');
 
-	generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
+			if (restrictionSkipOptimize) {
+				logger.info('Skipping optimize due to file restriction.');
+			} else {
+				optimizeCompiledCode(alloyConfig, paths);
+			}
 
-	// ALOY-905: workaround TiSDK < 3.2.0 iOS device build bug where it can't reference app.js
-	// in platform-specific folders, so we just copy the platform-specific one to
-	// the Resources folder.
-	if (buildPlatform === 'ios' && tiapp.version.lt('3.2.0')) {
-		U.copyFileSync(path.join(paths.resources, titaniumFolder, 'app.js'), path.join(paths.resources, 'app.js'));
-	}
+			// trigger our custom compiler makefile
+			if (compilerMakeFile.isActive) {
+				compilerMakeFile.trigger('post:compile', _.clone(compileConfig));
+			}
 
-	// optimize code
-	logger.info('----- OPTIMIZING -----');
+			// write out the log for this build
+			buildLog.write();
 
-	if (restrictionSkipOptimize) {
-		logger.info('Skipping optimize due to file restriction.');
-	} else {
-		optimizeCompiledCode(alloyConfig, paths);
-	}
-
-	// trigger our custom compiler makefile
-	if (compilerMakeFile.isActive) {
-		compilerMakeFile.trigger('post:compile', _.clone(compileConfig));
-	}
-
-	// write out the log for this build
-	buildLog.write();
-
-	BENCHMARK('TOTAL', true);
+			BENCHMARK('TOTAL', true);
+		})
+		.catch(e => {
+			logger.error(e);
+			U.die(e.message);
+		});
 };
 
 
