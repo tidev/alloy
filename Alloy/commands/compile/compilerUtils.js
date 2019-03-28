@@ -220,6 +220,16 @@ exports.getParserArgs = function(node, state, opts) {
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
 
+			// find platform specific attributes
+			var attributeParts = attribute.split(':');
+			if ( attributeParts.length ) {
+				// if this attribute is for this platform, create it without namespace.
+				if ( attributeParts[0] === platform ) {
+					attrName = attributeParts[1];
+				} else {
+					return;
+				}
+			}
 
 			if (attrName === 'class') {
 				if (autoStyle) {

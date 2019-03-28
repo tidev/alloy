@@ -53,17 +53,6 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
-	// find platform specific attributes
-	var platformAttributes = _.filter(_.keys(args.createArgs), key => _.includes(key, ':'));
-	_.forEach(platformAttributes, attribute => {
-		var attributeParts = attribute.split(':');
-		// if this attribute is for this platform, create it without namespace.
-		if ( attributeParts[0] === platform ) {
-			args.createArgs[attributeParts[1]] = args.createArgs[attribute];
-		} 
-		delete args.createArgs[attribute];
-	});
-
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
