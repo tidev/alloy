@@ -221,7 +221,7 @@ exports.getParserArgs = function(node, state, opts) {
 			}
 
 			// find platform specific attributes
-			var attributeParts = attribute.split(':');
+			var attributeParts = attrName.split(':');
 			if ( attributeParts.length ) {
 				// if this attribute is for this platform, create it without namespace.
 				if ( attributeParts[0] === platform ) {
