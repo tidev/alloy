@@ -12,7 +12,7 @@
     "html5",
     "appc-client"
   ],
-  "version": "1.13.8",
+  "version": "1.13.9",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -29,13 +29,13 @@
   },
   "preferGlobal": true,
   "dependencies": {
+    "@babel/code-frame": "^7.0.0",
+    "@babel/core": "^7.2.2",
+    "@babel/generator": "^7.3.2",
+    "@babel/parser": "^7.3.2",
+    "@babel/traverse": "^7.2.3",
+    "@babel/types": "^7.3.2",
     "async": "^2.4.0",
-    "babel-code-frame": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-generator": "^6.26.0",
-    "babel-traverse": "^6.23.1",
-    "babel-types": "^6.23.0",
-    "babylon": "^6.16.1",
     "chmodr": "^1.0.2",
     "colors": "^1.1.2",
     "commander": "^2.12.2",
@@ -58,14 +58,18 @@
     "alloy": "./bin/alloy"
   },
   "scripts": {
-    "pretest": "eslint .",
-    "test": "jake test:all"
+    "test": "jake test:all",
+    "lint": "eslint ."
   },
   "main": "./Alloy/alloy",
   "engines": {
     "node": ">=0.10"
   },
   "devDependencies": {
+    "@seadub/danger-plugin-dependencies": "^0.1.0",
+    "@seadub/danger-plugin-eslint": "^1.0.0",
+    "@seadub/danger-plugin-junit": "0.0.2",
+    "danger": "^7.0.13",
     "diff": "^3.4.0",
     "eslint": "^4.14.0",
     "jake": "^8.0.12",

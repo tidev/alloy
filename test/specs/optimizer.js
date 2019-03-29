@@ -5,12 +5,12 @@ var fs = require('fs'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash'),
 	sourceMapper = require('../../Alloy/commands/compile/sourceMapper'),
-	babylon = require('babylon'),
-	babel = require('babel-core');
+	babylon = require('@babel/parser'),
+	babel = require('@babel/core');
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
-	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = { a: 0, b: 0, c: 0 };test.b = 1;'],
+	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = {\n  a: 0,\n  b: 0,\n  c: 0\n};\ntest.b = 1;'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Titanium.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.name=="<%= name %>" ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
@@ -122,7 +122,7 @@ describe('optimizer.js', function() {
 							var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 								plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]
 							});
-							var result = babel.transformFromAst(ast, null, options);
+							var result = babel.transformFromAstSync(ast, null, options);
 							ast = result.ast;
 							code = result.code.replace(/\s*$/,'');
 						};

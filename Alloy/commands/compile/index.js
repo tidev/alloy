@@ -4,7 +4,7 @@ var ejs = require('ejs'),
 	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	vm = require('vm'),
-	babel = require('babel-core'),
+	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -1155,7 +1155,6 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		var excludePatterns = otherPlatforms.concat(['.+node_modules']);
 		var rx = new RegExp('^(?!' + excludePatterns.join('|') + ').+\\.js$');
 		return _.filter(walkSync(compileConfig.dir.resources), function(f) {
-			f = path.normalize(f);
 			return rx.test(f) && !_.find(exceptions, function(e) {
 				return f.indexOf(e) === 0;
 			}) && !fs.statSync(path.join(compileConfig.dir.resources, f)).isDirectory();
@@ -1175,7 +1174,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			logger.info('- ' + file);
 			try {
 				var result = babel.transformFileSync(fullpath, options);
-				fs.writeFile(fullpath, result.code);
+				fs.writeFileSync(fullpath, result.code);
 			} catch (e) {
 				U.die('Error transforming JS file', e);
 			}
