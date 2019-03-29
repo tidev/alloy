@@ -212,6 +212,18 @@ exports.getParserArgs = function(node, state, opts) {
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
+
+			// find platform specific attributes
+			var attributeParts = attrName.split(':');
+			if ( attributeParts.length === 2 && _.includes(CONST.PLATFORMS, attributeParts[0])) {
+				// if this attribute is for this platform, create it without namespace.
+				if ( attributeParts[0] === compilerConfig.alloyConfig.platform ) {
+					attrName = attributeParts[1];
+				} else {
+					return;
+				}
+			}	
+
 			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG)\.|L\(.+\)\s*$)/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
 				if (match !== null) {
@@ -219,7 +231,6 @@ exports.getParserArgs = function(node, state, opts) {
 				}
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
-
 
 			if (attrName === 'class') {
 				if (autoStyle) {
