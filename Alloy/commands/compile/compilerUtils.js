@@ -215,7 +215,7 @@ exports.getParserArgs = function(node, state, opts) {
 
 			// find platform specific attributes
 			var attributeParts = attrName.split(':');
-			if ( attributeParts.length === 2 ) {
+			if ( attributeParts.length === 2 && _.includes(CONST.PLATFORMS, attributeParts[0])) {
 				// if this attribute is for this platform, create it without namespace.
 				if ( attributeParts[0] === compilerConfig.alloyConfig.platform ) {
 					attrName = attributeParts[1];
