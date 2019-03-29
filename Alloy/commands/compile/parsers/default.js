@@ -53,14 +53,6 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
-	// find attributes using dotted notation
-	const dotAttributes = _.filter(_.keys(args.createArgs), key => _.includes(key, '.'));
-	_.forEach(dotAttributes, attribute => {
-		const value = args.createArgs[attribute];
-		delete args.createArgs[attribute];
-		_.set(args.createArgs, attribute, value);
-	});
-
 	// Generate runtime code
 	if (state.isViewTemplate) {
 		var bindId = node.getAttribute('bindId');
