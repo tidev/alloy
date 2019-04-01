@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : frisian (fy)
-//! author : Robin van der Vliet : https://github.com/robin0van0der0v
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var monthsShortWithDots = 'jan._feb._mrt._apr._mai_jun._jul._aug._sep._okt._nov._des.'.split('_'),
@@ -15,15 +14,19 @@
     var fy = moment.defineLocale('fy', {
         months : 'jannewaris_febrewaris_maart_april_maaie_juny_july_augustus_septimber_oktober_novimber_desimber'.split('_'),
         monthsShort : function (m, format) {
-            if (/-MMM-/.test(format)) {
+            if (!m) {
+                return monthsShortWithDots;
+            } else if (/-MMM-/.test(format)) {
                 return monthsShortWithoutDots[m.month()];
             } else {
                 return monthsShortWithDots[m.month()];
             }
         },
+        monthsParseExact : true,
         weekdays : 'snein_moandei_tiisdei_woansdei_tongersdei_freed_sneon'.split('_'),
         weekdaysShort : 'si._mo._ti._wo._to._fr._so.'.split('_'),
         weekdaysMin : 'Si_Mo_Ti_Wo_To_Fr_So'.split('_'),
+        weekdaysParseExact : true,
         longDateFormat : {
             LT : 'HH:mm',
             LTS : 'HH:mm:ss',
@@ -44,6 +47,7 @@
             future : 'oer %s',
             past : '%s lyn',
             s : 'in pear sekonden',
+            ss : '%d sekonden',
             m : 'ien minút',
             mm : '%d minuten',
             h : 'ien oere',
@@ -55,7 +59,7 @@
             y : 'ien jier',
             yy : '%d jierren'
         },
-        ordinalParse: /\d{1,2}(ste|de)/,
+        dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
         ordinal : function (number) {
             return number + ((number === 1 || number === 8 || number >= 20) ? 'ste' : 'de');
         },
@@ -67,4 +71,4 @@
 
     return fy;
 
-}));
+})));

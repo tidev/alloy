@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : Welsh (cy)
-//! author : Robert Allen
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var cy = moment.defineLocale('cy', {
@@ -15,6 +14,7 @@
         weekdays: 'Dydd Sul_Dydd Llun_Dydd Mawrth_Dydd Mercher_Dydd Iau_Dydd Gwener_Dydd Sadwrn'.split('_'),
         weekdaysShort: 'Sul_Llun_Maw_Mer_Iau_Gwe_Sad'.split('_'),
         weekdaysMin: 'Su_Ll_Ma_Me_Ia_Gw_Sa'.split('_'),
+        weekdaysParseExact : true,
         // time formats are the same as en-gb
         longDateFormat: {
             LT: 'HH:mm',
@@ -36,6 +36,7 @@
             future: 'mewn %s',
             past: '%s yn ôl',
             s: 'ychydig eiliadau',
+            ss: '%d eiliad',
             m: 'munud',
             mm: '%d munud',
             h: 'awr',
@@ -47,7 +48,7 @@
             y: 'blwyddyn',
             yy: '%d flynedd'
         },
-        ordinalParse: /\d{1,2}(fed|ain|af|il|ydd|ed|eg)/,
+        dayOfMonthOrdinalParse: /\d{1,2}(fed|ain|af|il|ydd|ed|eg)/,
         // traditional ordinal numbers above 31 are not commonly used in colloquial Welsh
         ordinal: function (number) {
             var b = number,
@@ -75,4 +76,4 @@
 
     return cy;
 
-}));
+})));
