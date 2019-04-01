@@ -252,7 +252,7 @@ exports.getParserArgs = function(node, state, opts) {
 						}
 					}
 				}
-				createArgs[attrName] = theValue;
+				_.set(createArgs, attrName, theValue );
 			}
 		}
 	});
