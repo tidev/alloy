@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : tibetan (bo)
-//! author : Thupten N. Chakrishar : https://github.com/vajradog
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var symbolMap = {
@@ -60,6 +59,7 @@
             future : '%s ལ་',
             past : '%s སྔན་ལ',
             s : 'ལམ་སང',
+            ss : '%d སྐར་ཆ།',
             m : 'སྐར་མ་གཅིག',
             mm : '%d སྐར་མ',
             h : 'ཆུ་ཚོད་གཅིག',
@@ -82,8 +82,17 @@
             });
         },
         meridiemParse: /མཚན་མོ|ཞོགས་ཀས|ཉིན་གུང|དགོང་དག|མཚན་མོ/,
-        isPM: function (input) {
-            return /^(ཉིན་གུང|དགོང་དག|མཚན་མོ)$/.test(input);
+        meridiemHour : function (hour, meridiem) {
+            if (hour === 12) {
+                hour = 0;
+            }
+            if ((meridiem === 'མཚན་མོ' && hour >= 4) ||
+                    (meridiem === 'ཉིན་གུང' && hour < 5) ||
+                    meridiem === 'དགོང་དག') {
+                return hour + 12;
+            } else {
+                return hour;
+            }
         },
         meridiem : function (hour, minute, isLower) {
             if (hour < 4) {
@@ -100,10 +109,10 @@
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
     return bo;
 
-}));
+})));
