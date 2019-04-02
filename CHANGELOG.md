@@ -13,6 +13,7 @@
 
 * [ALOY-1629](https://jira.appcelerator.org/browse/ALOY-1629) Upgrade to babel 7 packages [#905](https://github.com/appcelerator/alloy/pull/905)
 * [ALOY-1652](https://jira.appcelerator.org/browse/ALOY-1652) Improve handling of missing directories and files in `alloy new` [#925](https://github.com/appcelerator/alloy/pull/925)
+* [ALOY-1682](https://jira.appcelerator.org/browse/ALOY-1682) Update to moment to 2.24.0 and update moment locales. New locales are ar-dz, ar-kw, ar-ly, bm, de-ch, dv, en-SG, en-ie, en-il, en-nz, es-do, es-us, fr-ch, ga, gd, gom-latn, gu, it-ch, kk, kn, ku, ky, lo, mi, mn, mt, nl-be, pa-in, sd, se, ss, sw, te, tet, tg, tlh, ug-cn, ur, uz-latn, x-pseudo, yo, zh-hk,
 
 #### Fixes
 
