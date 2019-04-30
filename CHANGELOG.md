@@ -1,4 +1,4 @@
-## Alloy Release Notes
+# Alloy Release Notes
 
 ### Unreleased items
 
@@ -14,7 +14,8 @@
 
 #### Fixes
 
-* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android
+* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android [#810](https://github.com/appcelerator/alloy/pull/810)
+* [ALOY-1653](https://jira.appcelerator.org/browse/ALOY-1653): Runtime error on Android when using optiondialog and not declaring destructive or cancel properties [#926](https://github.com/appcelerator/alloy/pull/926)
 
 ### Release 1.13.9
 
