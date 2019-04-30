@@ -4,6 +4,8 @@
 
 #### New Features
 
+* [ALOY-1683](https://jira.appcelerator.org/browse/ALOY-1683) Update to Underscore.js 1.9.1
+* [ALOY-1648](https://jira.appcelerator.org/browse/ALOY-1648) Update to Backbone.js 1.4.0
 * [ALOY-1505](https://jira.appcelerator.org/browse/ALOY-1505) Add ability to set cancel and destructive properties on OptionDialog options [#879](https://github.com/appcelerator/alloy/pull/879)
 * [ALOY-1632](https://jira.appcelerator.org/browse/ALOY-1632) Allow passing custom template directories to the `alloy new` command [#912](https://github.com/appcelerator/alloy/pull/912)
 
