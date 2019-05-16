@@ -1,5 +1,12 @@
 ## Alloy Release Notes
 
+
+### Release  1.13.10
+
+#### Fixes
+
+[ALOY-1686](https://jira.appcelerator.org/browse/ALOY-1686) Alloy: App crashes due to context used when accessing Ti.Database API
+
 ### Release 1.13.9
 
 #### Fixes
