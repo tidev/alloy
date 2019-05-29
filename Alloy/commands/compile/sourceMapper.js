@@ -145,7 +145,10 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var target = generator.target;
 	var data = generator.data;
 	var markers = _.map(data, function(v, k) { return k; });
-	var mapper = new SM.SourceMapGenerator({ file: target.filename });
+	var mapper = new SM.SourceMapGenerator({
+		file: target.filename,
+		sourceRoot: `file://${compileConfig.dir.project}/`
+	});
 	var genMap = {
 		file: target.filename,
 		count: 1,
