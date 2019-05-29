@@ -142,9 +142,6 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 };
 
 exports.generateSourceMap = function(generator, compileConfig) {
-	if (!fs.existsSync(generator.target.filename) || fs.statSync(generator.target.filename).isDirectory()) {
-		return;
-	}
 	var target = generator.target;
 	var data = generator.data;
 	var markers = _.map(data, function(v, k) { return k; });
