@@ -974,6 +974,12 @@ exports.validateNodeName = function(node, names) {
 
 exports.generateCollectionBindingTemplate = function(args) {
 	var code = '';
+	var COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS_092;
+	
+	// Check if not 0.9.2 and if it's a supported version as we'll default to 0.9.2 if the version is not supported
+	if (compilerConfig.backbone !== '0.9.2' && CONST.SUPPORTED_BACKBONE_VERSIONS.includes(compilerConfig.backbone)) {
+		COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS;
+	}
 
 	// Determine the collection variable to use
 	var obj = { name: args[CONST.BIND_COLLECTION] };
@@ -1015,10 +1021,10 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += '	}';
 	code += '<%= post %>';
 	code += '};';
-	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
+	code += colVar + ".on('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	exports.destroyCode += colVar + ' && ' + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
-		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
+		colVar + ".off('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	return code;
 };
