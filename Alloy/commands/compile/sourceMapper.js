@@ -21,9 +21,10 @@ exports.OPTIONS_OUTPUT = {
 	// do NOT minify Alloy code because Titanium will do it!
 	minified: false,
 	compact: false,
-	comments: false,
+	comments: true,
 	babelrc: false,
-	passPerPreset: false
+	passPerPreset: false,
+	retainLines: true
 };
 
 function mapLine(mapper, theMap, genMap, line) {

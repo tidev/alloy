@@ -10,19 +10,19 @@ var fs = require('fs'),
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
-	['var test = { a: 0, b:0, c:0 }; test.b = 1', 'var test = {\n  a: 0,\n  b: 0,\n  c: 0\n};\ntest.b = 1;'],
+	['var test = {\n  a: 0,\n  b:0,\n  c:  0};\ntest.b = 1', 'var test = {\n  a: 0,\n  b: 0,\n  c: 0 };\ntest.b = 1;'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Titanium.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.name=="<%= name %>" ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
-	['var a = Ti.Platform.name=="<%= name %>", b', 'var a = "<%= name %>" == "<%= name %>",\n    b;'],
-	['var a = Ti.Platform.name=="<%= name %>", b, c = 2', 'var a = "<%= name %>" == "<%= name %>",\n    b,\n    c = 2;'],
+	['var a = Ti.Platform.name=="<%= name %>",\nb', 'var a = "<%= name %>" == "<%= name %>",\nb;'],
+	['var a = Ti.Platform.name=="<%= name %>",\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\nb,\nc = 2;'],
 	['var a = Ti.Platform.name=="<%= name %>"', 'var a = "<%= name %>" == "<%= name %>";'],
-	['var a, b = Ti.Platform.name=="<%= name %>", c = 2;', 'var a,\n    b = "<%= name %>" == "<%= name %>",\n    c = 2;'],
+	['var a,\nb = Ti.Platform.name=="<%= name %>",\nc = 2;', 'var a,\nb = "<%= name %>" == "<%= name %>",\nc = 2;'],
 	['var a = "<%= name %>"==Ti.Platform.name ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
-	['var a = "<%= name %>"==Ti.Platform.name, b', 'var a = "<%= name %>" == "<%= name %>",\n    b;'],
-	['var a = "<%= name %>"==Ti.Platform.name, b, c = 2', 'var a = "<%= name %>" == "<%= name %>",\n    b,\n    c = 2;'],
+	['var a = "<%= name %>"==Ti.Platform.name,\nb', 'var a = "<%= name %>" == "<%= name %>",\nb;'],
+	['var a = "<%= name %>"==Ti.Platform.name,\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\nb,\nc = 2;'],
 	['var a = "<%= name %>"==Ti.Platform.name', 'var a = "<%= name %>" == "<%= name %>";'],
-	['var a, b = "<%= name %>"==Ti.Platform.name, c = 2;', 'var a,\n    b = "<%= name %>" == "<%= name %>",\n    c = 2;'],
+	['var a,\nb = "<%= name %>"==Ti.Platform.name,\nc = 2;', 'var a,\nb = "<%= name %>" == "<%= name %>",\nc = 2;'],
 	['var a = "1"', 'var a = "1";'],
 	['var a = true', 'var a = true;'],
 	['var a = 1', 'var a = 1;'],
@@ -34,7 +34,7 @@ var tests = [
 	['var a = Ti.Platform.osname', 'var a = "android";', ['android']],
 	['var a = Ti.Platform.osname', 'var a = "mobileweb";', ['mobileweb']],
 	['var a = Ti.Platform.osname', 'var a = "blackberry";', ['blackberry']],
-	['var a, b = 1, c = 2;', 'var a,\n    b = 1,\n    c = 2;'],
+	['var a,\nb = 1,\nc = 2;', 'var a,\nb = 1,\nc = 2;'],
 	['var a = 1;', 'var a = 1;'],
 	['var a =+1;', 'var a = +1;'],
 	['var a =1+1;', 'var a = 1 + 1;'],
@@ -48,14 +48,14 @@ var tests = [
 	// TODO: Revisit all "var a,a=2;" expecteds once ALOY-540 is resolved
 
 	// make sure we didn't break normal if conditions
-	['if (true) { var a = 1; } else { var a = 2; }', "if (true) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	['if (true) {\n  var a = 1;\n} else {\n  var a = 2;\n}', "if (true) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
 
 	// check platform conditionals (if/else)
-	["if (Titanium.Platform.name === '<%= name %>') { var a = 1; } else { var a = 2; }", "if (\"<%= name %>\" === '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Titanium.Platform.name !== '<%= name %>') { var a = 1; } else { var a = 2; }", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Titanium.Platform['name'] == '<%= name %>') { var a = 1; } else { var a = 2; }", "if (\"<%= name %>\" == '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Titanium.Platform.name !== '<%= name %>') { var a = 1; } else { var a = 2; }", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Titanium.Platform['name'] !== '<%= name %>') { var a = 1; } else { var a = 2; }", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Titanium.Platform.name === '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}", "if (\"<%= name %>\" === '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Titanium.Platform.name !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Titanium.Platform['name'] == '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}", "if (\"<%= name %>\" == '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Titanium.Platform.name !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Titanium.Platform['name'] !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}", "if (\"<%= name %>\" !== '<%= name %>') {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
 
 	// check platform conditional assignments
 	["var platform = Ti.Platform['name'] === '<%= name %>'", "var platform = \"<%= name %>\" === '<%= name %>';"],
@@ -68,9 +68,9 @@ var tests = [
 	["var a = Ti.Platform.name === Titanium.Platform.name","var a = \"<%= name %>\" === \"<%= name %>\";"],
 
 	// shouldn't attempt to process anything other than strings
-	["if (Ti.Platform.name === couldBeAnything()) { var a = 1; } else { var a = 2; }","if (\"<%= name %>\" === couldBeAnything()) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Ti.Platform.name === some.Other.Value) { var a = 1; } else { var a = 2; }","if (\"<%= name %>\" === some.Other.Value) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
-	["if (Ti.Platform.name !== aVariable) { var a = 1; } else { var a = 2; }","if (\"<%= name %>\" !== aVariable) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Ti.Platform.name === couldBeAnything()) {\n  var a = 1;\n} else {\n  var a = 2;\n}","if (\"<%= name %>\" === couldBeAnything()) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Ti.Platform.name === some.Other.Value) {\n  var a = 1;\n} else {\n  var a = 2;\n}","if (\"<%= name %>\" === some.Other.Value) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
+	["if (Ti.Platform.name !== aVariable) {\n  var a = 1;\n} else {\n  var a = 2;\n}","if (\"<%= name %>\" !== aVariable) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
 
 	// properly handles conditionals without curly braces
 	["if (Ti.Platform.name === '<%= name %>') var a = 1; else var a = 2;", "if (\"<%= name %>\" === '<%= name %>') var a = 1;else var a = 2;"],
@@ -79,7 +79,7 @@ var tests = [
 	["if ('<%= name %>' !== Ti.Platform.name) var a = 1; else var a = 2;", "if ('<%= name %>' !== \"<%= name %>\") var a = 1;else var a = 2;"],
 
 	// works if Ti.Platform.* is on the left or right hand side
-	["if ('<%= name %>' === Ti.Platform.name) { var a = 1; } else { a = 2; }", "if ('<%= name %>' === \"<%= name %>\") {\n  var a = 1;\n} else {\n  a = 2;\n}"],
+	["if ('<%= name %>' === Ti.Platform.name) {\n  var a = 1;\n} else {\n  a = 2;\n}", "if ('<%= name %>' === \"<%= name %>\") {\n  var a = 1;\n} else {\n  a = 2;\n}"],
 
 	['var a = OS_IOS', 'var a = true;', ['ios']],
 	['var a = OS_ANDROID', 'var a = true;', ['android']]
