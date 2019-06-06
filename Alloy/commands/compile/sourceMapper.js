@@ -145,9 +145,10 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 exports.generateSourceMap = function(generator, compileConfig) {
 	var target = generator.target;
 	var data = generator.data;
+	var origFile = generator.origFile;
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: target.filename,
+		file: origFile.filename,
 		sourceRoot: `file://${compileConfig.dir.project}/`
 	});
 	var genMap = {
@@ -208,7 +209,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	// write source map for the generated file
 	var relativeOutfile = path.relative(compileConfig.dir.project, target.filepath);
 	var mapDir = path.join(compileConfig.dir.project, CONST.DIR.MAP);
-	var outfile = path.join(mapDir, relativeOutfile, path.basename(target.filename)) + '.' + CONST.FILE_EXT.MAP;
+	var outfile = path.join(mapDir, relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 	fs.mkdirpSync(path.dirname(outfile));
 	chmodr.sync(path.dirname(outfile), 0755);
 	// FIXME: babel source map generation is broken! So we copy the source map we generated initially

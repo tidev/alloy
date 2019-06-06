@@ -278,10 +278,9 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			}
 		}
 		if (!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
-			var tpath = path.join(opts.rootDir, 'build', 'map', 'Resources', (opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform), 'alloy');
 			var target = {
-					filename: path.join(tpath, path.basename(src)),
-					filepath: path.dirname(dst),
+					filename: path.relative(opts.compileConfig.dir.project, dst),
+					filepath: dst,
 					template: dst
 				},
 				data = {
@@ -294,7 +293,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				target: target,
 				data: data,
 				origFile: {
-					filename: src,
+					filename: path.relative(opts.compileConfig.dir.project, src),
 					filepath: path.dirname(src)
 				}
 			}, opts.compileConfig);
