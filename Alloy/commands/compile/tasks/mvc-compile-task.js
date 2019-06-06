@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const walkSync = require('walk-sync');
 
-const CONST = require('alloy/Alloy/common/constants');
+const CONST = require('../../../common/constants');
 
 const viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$');
 const controllerRegex = new RegExp('\\.' + CONST.FILE_EXT.CONTROLLER + '$');
