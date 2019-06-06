@@ -51,7 +51,17 @@ function parse(node, state, args) {
 			code += CU.generateNodeExtended(child, state, childState);
 			var prop = _.find(def.children, function(c) { return c.name === theNode; }).property;
 			extras.push([prop, childState.itemsArray]);
-			_.each(state.extraOptions, (v, k) => extras.push([k, v]));
+
+			// Only add the extraOptions if they are defined on the child nodes
+			_.each(U.XML.getElementsFromNodes(child.childNodes), (node) => {
+				_.each(state.extraOptions, (varName, name) => {
+					const attr = _.find(node.attributes, ['nodeName', name]);
+					if (attr !== undefined) {
+						extras.push([name, varName]);
+					}
+				});
+			});
+
 
 			// get rid of the node when we're done so we can pass the current state
 			// back to generateNode() and then process any additional views that
