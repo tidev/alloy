@@ -101,7 +101,7 @@ timestamps() {
 			stage('Publish') {
 				checkout scm
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-					if (!isMainlineBranch) {
+					if (isMainlineBranch) {
 						try {
 							// Publish
 							sh 'npm publish'
