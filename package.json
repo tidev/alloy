@@ -68,8 +68,8 @@
   "devDependencies": {
     "@seadub/danger-plugin-dependencies": "^0.1.0",
     "@seadub/danger-plugin-eslint": "^1.0.0",
-    "@seadub/danger-plugin-junit": "0.0.2",
-    "danger": "^7.0.13",
+    "@seadub/danger-plugin-junit": "^0.1.1",
+    "danger": "^7.1.4",
     "diff": "^3.4.0",
     "eslint": "^4.14.0",
     "jake": "^8.0.12",
