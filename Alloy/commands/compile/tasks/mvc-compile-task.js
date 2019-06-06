@@ -90,9 +90,7 @@ class MvcCompileTask extends IncrementalFileTask {
 			if (fileState === 'deleted') {
 				// @todo delete associated controller, view and styles
 			} else {
-				const collection = this.findSourceCollection(inputFile);
-				const parseAsCotroller = controllerRegex.test(inputFile);
-				parseAlloyComponent(view, collection.dir, collection.manifest, parseAsCotroller, restrictionPath);
+				this.compileAlloyComponent(filePath);
 			}
 		});
 
@@ -123,7 +121,7 @@ class MvcCompileTask extends IncrementalFileTask {
 	 */
 	compileAlloyComponent(inputFile) {
 		const collection = this.findSourceCollection(inputFile);
-		const parseAsCotroller = controllerRegex.test(inputFile);
+		const parseAsController = controllerRegex.test(inputFile);
 		let relativeComponentPath = inputFile.replace(collection.dir, '');
 		relativeComponentPath = relativeComponentPath.replace(new RegExp(`^${path.sep}?(views|controllers)${path.sep}?`), '');
 
@@ -135,8 +133,8 @@ class MvcCompileTask extends IncrementalFileTask {
 		}
 
 		this.logger.info('[' + relativeComponentPath + '] ' + (collection.manifest ? collection.manifest.id +
-			' ' : '') + `${parseAsCotroller ? 'controller' : 'view'} processing...`);
-		this.parseAlloyComponent(relativeComponentPath, collection.dir, collection.manifest, parseAsCotroller, this.restrictionPath);
+			' ' : '') + `${parseAsController ? 'controller' : 'view'} processing...`);
+		this.parseAlloyComponent(relativeComponentPath, collection.dir, collection.manifest, parseAsController, this.restrictionPath);
 		this.processed[fullComponentIdentifier] = true;
 	}
 }
