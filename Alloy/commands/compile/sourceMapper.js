@@ -8,8 +8,8 @@ var SM = require('source-map'),
 	path = require('path'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	babylon = require('babylon'),
-	babel = require('babel-core'),
+	babylon = require('@babel/parser'),
+	babel = require('@babel/core'),
 	logger = require('../../logger'),
 	_ = require('lodash');
 
@@ -112,7 +112,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		// options.sourceMapTarget = target.filename;
 		// options.inputSourceMap = mapper.toJSON();
 	}
-	var outputResult = babel.transformFromAst(ast, genMap.code, options);
+	var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
 
 	// write the generated controller code
 	var outfile = target.filepath;
@@ -197,7 +197,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 		// sourceMapTarget: compiledFileName,
 		// inputSourceMap: mapper.toJSON()
 	});
-	var outputResult = babel.transformFromAst(ast, genMap.code, options);
+	var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
 
 	// write source map for the generated file
 	var relativeOutfile = path.relative(compileConfig.dir.project, target.filepath);

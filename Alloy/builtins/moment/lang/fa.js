@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : Persian (fa)
-//! author : Ebrahim Byagowi : https://github.com/ebraminio
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var symbolMap = {
@@ -39,6 +38,7 @@
         weekdays : 'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split('_'),
         weekdaysShort : 'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split('_'),
         weekdaysMin : 'ی_د_س_چ_پ_ج_ش'.split('_'),
+        weekdaysParseExact : true,
         longDateFormat : {
             LT : 'HH:mm',
             LTS : 'HH:mm:ss',
@@ -69,7 +69,8 @@
         relativeTime : {
             future : 'در %s',
             past : '%s پیش',
-            s : 'چندین ثانیه',
+            s : 'چند ثانیه',
+            ss : 'ثانیه d%',
             m : 'یک دقیقه',
             mm : '%d دقیقه',
             h : 'یک ساعت',
@@ -91,14 +92,14 @@
                 return symbolMap[match];
             }).replace(/,/g, '،');
         },
-        ordinalParse: /\d{1,2}م/,
+        dayOfMonthOrdinalParse: /\d{1,2}م/,
         ordinal : '%dم',
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12 // The week that contains Jan 1st is the first week of the year.
+            doy : 12 // The week that contains Jan 12th is the first week of the year.
         }
     });
 
     return fa;
 
-}));
+})));

@@ -1,5 +1,5 @@
 var U = require('../../../utils'),
-	CU = require('../compilerUtils');
+	_ = require('lodash');
 
 var LOCALE_REGEX = /^\s*(?:L|Ti\.Locale\.getString|Titanium\.Locale\.getString)\(.+\)\s*$/;
 
@@ -17,9 +17,23 @@ function parse(node, state, args) {
 		string = '"' + string.replace(/"/g, '\\"') + '"';
 	}
 
+	const codePush = `${state.itemsArray}.push(${string})`;
+	const attrName = _.findKey(state.extraOptions, (varName, name) => args.createArgs[name] !== undefined);
+	const attrVarName = state.extraOptions[attrName];
+
+	let code = codePush;
+
+	if (attrName) {
+		if (args.createArgs[attrName]) {
+			code = `${attrVarName} = ${codePush} - 1`;
+		} else {
+			code = `${attrVarName} = undefined; ${codePush}`;
+		}
+	}
+
 	return {
 		parent: {},
 		styles: state.styles,
-		code: state.itemsArray + '.push(' + string + ');'
+		code: `${code};`
 	};
 }

@@ -52,6 +52,17 @@ function parse(node, state, args) {
 			var prop = _.find(def.children, function(c) { return c.name === theNode; }).property;
 			extras.push([prop, childState.itemsArray]);
 
+			// Only add the extraOptions if they are defined on the child nodes
+			_.each(U.XML.getElementsFromNodes(child.childNodes), (node) => {
+				_.each(state.extraOptions, (varName, name) => {
+					const attr = _.find(node.attributes, ['nodeName', name]);
+					if (attr !== undefined) {
+						extras.push([name, varName]);
+					}
+				});
+			});
+
+
 			// get rid of the node when we're done so we can pass the current state
 			// back to generateNode() and then process any additional views that
 			// need to be added to the view hierarchy
@@ -70,8 +81,17 @@ function parse(node, state, args) {
 						}
 					});
 					code += androidView;
-				} else {
-					logger.warn('Additional views in ' + theNode + ' only supported on Android');
+				} else if (child.getAttribute('platform') !== 'android') {
+					var currentPlatform =  child.getAttribute('platform');
+					var warningLog = [
+						'Additional views in <' + node.nodeName + '> (line ' + node.lineNumber + ') are only supported on Android',
+					];
+					if (!currentPlatform) {
+						warningLog.push('To get rid of this warning, add platform="android" to your child elements');
+					} else {
+						warningLog.push('To get rid of this warning, remove any other platforms from your child elements');
+					}
+					logger.warn(warningLog);
 				}
 			} else {
 				U.die(theNode + ' can only have one androidView');

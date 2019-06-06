@@ -47,7 +47,7 @@ exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem', 'Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
 exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
 exports.DEFAULT_BACKBONE_VERSION = '0.9.2';
-exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2', '1.3.3'];
+exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2', '1.3.3', '1.4.0'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
@@ -66,7 +66,8 @@ exports.BIND_TRANSFORM_VAR = '__transform';
 exports.BIND_MODEL_VAR = '$model';
 exports.MODEL_ELEMENTS = ['Alloy.Collection', 'Alloy.Model'];
 exports.MODEL_BINDING_EVENTS = 'fetch change destroy';
-exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset';
+exports.COLLECTION_BINDING_EVENTS = 'fetch destroy change add remove reset sort';
+exports.COLLECTION_BINDING_EVENTS_092 = 'fetch destroy change add remove reset';
 
 // Constants for properties shared between ActionBar and Toolbar on Android
 exports.BACKGROUND_IMAGE = 'backgroundImage';

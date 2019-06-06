@@ -1,5 +1,36 @@
-## Alloy Release Notes
+# Alloy Release Notes
 
+### Unreleased items
+
+#### New Features
+
+* [ALOY-1683](https://jira.appcelerator.org/browse/ALOY-1683) Update to Underscore.js 1.9.1
+* [ALOY-1648](https://jira.appcelerator.org/browse/ALOY-1648) Update to Backbone.js 1.4.0
+* [ALOY-1505](https://jira.appcelerator.org/browse/ALOY-1505) Add ability to set cancel and destructive properties on OptionDialog options [#879](https://github.com/appcelerator/alloy/pull/879)
+* [ALOY-1632](https://jira.appcelerator.org/browse/ALOY-1632) Allow passing custom template directories to the `alloy new` command [#912](https://github.com/appcelerator/alloy/pull/912)
+
+#### Improvements
+
+* [ALOY-1629](https://jira.appcelerator.org/browse/ALOY-1629) Upgrade to babel 7 packages [#905](https://github.com/appcelerator/alloy/pull/905)
+* [ALOY-1652](https://jira.appcelerator.org/browse/ALOY-1652) Improve handling of missing directories and files in `alloy new` [#925](https://github.com/appcelerator/alloy/pull/925)
+* [ALOY-1682](https://jira.appcelerator.org/browse/ALOY-1682) Update to moment to 2.24.0 and update moment locales. New locales are ar-dz, ar-kw, ar-ly, bm, de-ch, dv, en-SG, en-ie, en-il, en-nz, es-do, es-us, fr-ch, ga, gd, gom-latn, gu, it-ch, kk, kn, ku, ky, lo, mi, mn, mt, nl-be, pa-in, sd, se, ss, sw, te, tet, tg, tlh, ug-cn, ur, uz-latn, x-pseudo, yo, zh-hk,
+
+#### Fixes
+
+* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android [#810](https://github.com/appcelerator/alloy/pull/810)
+* [ALOY-1653](https://jira.appcelerator.org/browse/ALOY-1653): Runtime error on Android when using optiondialog and not declaring destructive or cancel properties [#926](https://github.com/appcelerator/alloy/pull/926)
+
+### Release  1.13.10
+
+#### Fixes
+
+[ALOY-1686](https://jira.appcelerator.org/browse/ALOY-1686) Alloy: App crashes due to context used when accessing Ti.Database API
+
+### Release 1.13.9
+
+#### Fixes
+
+[ALOY-1650](https://jira.appcelerator.org/browse/ALOY-1650) Debugger does not hit breakpoints when running Android on Windows
 
 ### Release 1.13.8
 

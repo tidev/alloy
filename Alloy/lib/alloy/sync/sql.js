@@ -224,7 +224,6 @@ function Sync(method, model, opts) {
 			var values = [];
 			var fieldNames = [];
 			var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
-			var getField = OS_ANDROID || OS_WINDOWS ? rs.field.bind(rs) : rs.field;
 			var i = 0;
 
 			for (; i < fieldCount; i++) {
@@ -235,7 +234,7 @@ function Sync(method, model, opts) {
 			while (rs.isValidRow()) {
 				var o = {};
 				for (i = 0; i < fieldCount; i++) {
-					o[fieldNames[i]] = getField(i);
+					o[fieldNames[i]] = rs.field(i);
 				}
 				values.push(o);
 				rs.next();
