@@ -281,7 +281,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			var target = {
 					filename: path.relative(opts.compileConfig.dir.project, dst),
 					filepath: dst,
-					template: dst
+					template: src
 				},
 				data = {
 					'__MAPMARKER_NONCONTROLLER__': {
@@ -294,7 +294,7 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				data: data,
 				origFile: {
 					filename: path.relative(opts.compileConfig.dir.project, src),
-					filepath: path.dirname(src)
+					filepath: src
 				}
 			}, opts.compileConfig);
 		}

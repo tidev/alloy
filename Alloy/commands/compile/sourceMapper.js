@@ -148,18 +148,23 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var origFile = generator.origFile;
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: origFile.filename,
+		file: target.filename, // relative path to output file from project root
 		sourceRoot: `file://${compileConfig.dir.project}/`
 	});
 	var genMap = {
-		file: target.filename,
 		count: 1,
 		code: ''
+	};
+	// passed in to mapLine so "sources" points at original src file
+	var theMap = {
+		count: 1,
+		filename: origFile.filename // relative path to src file from project root
 	};
 
 	// initialize the rest of the generator properties
 	target.count = 1;
-	target.lines = getTextFromGenerator(target.templateContent, target.template).split(lineSplitter);
+	// gets text from original src file since template content is empty
+	target.lines = getTextFromGenerator(null, origFile.filepath).split(lineSplitter);
 	_.each(markers, function(m) {
 		var marker = data[m];
 		marker.count = 1;
@@ -167,6 +172,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	});
 
 	// generate the source map and composite code
+	// (shoudl simpley map every line from src -> dest)
 	_.each(target.lines, function(line) {
 		var trimmed = U.trim(line);
 		if (_.includes(markers, trimmed)) {
@@ -174,11 +180,13 @@ exports.generateSourceMap = function(generator, compileConfig) {
 				mapLine(mapper, data[trimmed], genMap, line);
 			});
 		} else {
-			mapLine(mapper, target, genMap, line);
+			mapLine(mapper, theMap, genMap, line);
 		}
 	});
 
 	// parse composite code into an AST
+	// TODO: Remove? This is a sanity check, I suppose, but is it necessary?
+	// Our classic build should blow up on bad JS files
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
@@ -190,21 +198,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 		throw e;
 	}
 
-	// create source map
-	var origFileName = path.relative(compileConfig.dir.project, generator.origFile.filename),
-		compiledFileName = path.join('Resources', path.basename(generator.origFile.filename));
-	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
-		plugins: [
-			[require('./ast/builtins-plugin'), compileConfig],
-			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
-		],
-		retainLines: true,
-		// FIXME: babel source map generation is broken! So we copy the source map we generated initially
-		// sourceMaps: true,
-		// sourceMapTarget: compiledFileName,
-		// inputSourceMap: mapper.toJSON()
-	});
-	var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
+	// TODO: We do not run the babel plugins (optimizer/builtins) here. Is that ok?
 
 	// write source map for the generated file
 	var relativeOutfile = path.relative(compileConfig.dir.project, target.filepath);
