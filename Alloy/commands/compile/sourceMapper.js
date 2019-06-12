@@ -87,7 +87,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 				mapLine(mapper, data[trimmed], genMap, line);
 			});
 		} else {
-			mapLine(mapper, target, genMap, line);
+			genMap.code += line + '\n'; // do not 'map' the generated output code as an input source!
 		}
 	});
 
