@@ -64,19 +64,24 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		file: `${compileConfig.dir.project}/${relativeOutfile}`,
 		sourceRoot: compileConfig.dir.project
 	});
+	// the line counter and code string for the generated file
 	var genMap = {
-		file: target.filename,
 		count: 1,
 		code: ''
 	};
+	// The line counter and reported source name for the input template
+	var templateMap = {
+		count: 1,
+		filename: target.template || 'template.js'
+	};
 
-	// initialize the rest of the generator properties
-	target.count = 1;
 	// ensure target.templateContent will have a value so we can embed in sourcesContent
 	target.templateContent = getTextFromGenerator(target.templateContent, target.template);
 	target.lines = target.templateContent.split(lineSplitter);
 	_.each(markers, function(m) {
 		var marker = data[m];
+		// set the line counter for each "data" object we place into the generated code at certain point in template
+		// already has a filename, fileContent property
 		marker.count = 1;
 		// ensure marker.fileContent will have a value so we can embed in sourcesContent
 		marker.fileContent = getTextFromGenerator(marker.fileContent, marker.filepath);
@@ -87,12 +92,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	_.each(target.lines, function(line) {
 		var trimmed = U.trim(line);
 		if (_.includes(markers, trimmed)) {
-			target.count++; // skip this line in the template count now or else we'll be off by one from here on out
+			templateMap.count++; // skip this line in the template count now or else we'll be off by one from here on out
 			_.each(data[trimmed].lines, function(line) {
 				mapLine(mapper, data[trimmed], genMap, line);
 			});
 		} else {
-			mapLine(mapper, target, genMap, line);
+			mapLine(mapper, templateMap, genMap, line);
 		}
 	});
 
@@ -100,7 +105,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var ast;
 	try {
 		ast = babylon.parse(genMap.code, {
-			sourceFilename: genMap.file,
+			sourceFilename: outfile,
 			sourceType: 'module'
 		});
 	} catch (e) {
