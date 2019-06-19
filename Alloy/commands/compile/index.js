@@ -537,7 +537,7 @@ function generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile) 
 		// hash used to determine if we need to rebuild
 		hash = U.createHash(alloyJs);
 
-	// is it already generated from a prior copile?
+	// is it already generated from a prior compile?
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
 	if (!compileConfig.buildLog.data.deploytypeChanged && fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');

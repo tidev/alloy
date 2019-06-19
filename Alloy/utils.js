@@ -278,11 +278,10 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			}
 		}
 		if (!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
-			var tpath = path.join(opts.rootDir, 'build', 'map', 'Resources', (opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform), 'alloy');
 			var target = {
-					filename: path.join(tpath, path.basename(src)),
-					filepath: path.dirname(dst),
-					template: dst
+					filename: path.relative(opts.compileConfig.dir.project, dst),
+					filepath: dst,
+					template: src
 				},
 				data = {
 					'__MAPMARKER_NONCONTROLLER__': {
@@ -294,8 +293,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				target: target,
 				data: data,
 				origFile: {
-					filename: src,
-					filepath: path.dirname(src)
+					filename: path.relative(opts.compileConfig.dir.project, src),
+					filepath: src
 				}
 			}, opts.compileConfig);
 		}
