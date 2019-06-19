@@ -25,12 +25,16 @@
 * [ALOY-1648](https://jira.appcelerator.org/browse/ALOY-1648) Include Backbone.js 1.4.0 [#929](https://github.com/appcelerator/alloy/pull/929)
   * Includes 42 new locales
 * [ALOY-1505](https://jira.appcelerator.org/browse/ALOY-1505) Add ability to set cancel and destructive properties on OptionDialog options [#879](https://github.com/appcelerator/alloy/pull/879)
+* [ALOY-1612](https://jira.appcelerator.org/browse/ALOY-1612) CLI: Be able to use Alloy source-maps in Safari Debugger / Chrome Dev-Tools [#893](https://github.com/appcelerator/alloy/pull/893)
 
 #### Fixes
 
 * [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android [#810](https://github.com/appcelerator/alloy/pull/810)
 * [ALOY-1653](https://jira.appcelerator.org/browse/ALOY-1653) Runtime error on Android when using optiondialog and not declaring destructive or cancel properties [#926](https://github.com/appcelerator/alloy/pull/926)
 * [ALOY-1684](https://jira.appcelerator.org/browse/ALOY-1684) Calling sort for a collection does not call the dataFunction as of backbone 1.1.2 and above [#929](https://github.com/appcelerator/alloy/pull/929)
+* [ALOY-1690](https://jira.appcelerator.org/browse/ALOY-1690) sourcemaps not being generated for files under lib [#893](https://github.com/appcelerator/alloy/pull/893)
+* [ALOY-1691](https://jira.appcelerator.org/browse/ALOY-1691) Source maps report incorrect "file" value [#893](https://github.com/appcelerator/alloy/pull/893)
+
 
 ### Release  1.13.10
 
