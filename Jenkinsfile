@@ -87,8 +87,6 @@ timestamps() {
 					ensureNPM(npmVersion)
 					sh 'npm ci --production'
 
-					sh 'npx nsp check --output summary --warn-only'
-
 					sh 'npx retire --exitwith 0'
 
 					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
