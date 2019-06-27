@@ -31,7 +31,7 @@ var EXCLUDE_FOLDERS = [
 // once ALOY-1230 is resolved, rewrite using beforeAll()
 
 // Skip the test that depends on version of SDKs
-exec('ti sdk list --output json', function(error, stdout, stderr){
+exec('appc ti sdk list --output json', function(error, stdout, stderr){
     if (error === null) {
         var sdkInfo = JSON.parse(stdout);
 
