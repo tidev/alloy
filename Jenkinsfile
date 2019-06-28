@@ -1,6 +1,6 @@
 #! groovy
 library 'pipeline-library'
-def nodeVersion = '8.9.0'
+def nodeVersion = '8.9.1'
 def npmVersion = 'latest' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 def packageVersion = ''
