@@ -109,8 +109,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 			sourceType: 'module'
 		});
 	} catch (e) {
-		logger.trace(genMap.code);
-		throw e;
+		U.dieWithCodeFrame(`Error parsing code in ${outfile}. ${e.message}`, e.loc, genMap.code);
 	}
 
 	// create source map and generated code
@@ -208,7 +207,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 			sourceType: 'module'
 		});
 	} catch (e) {
-		U.dieWithCodeFrame('Error parsing code in "' + origFile.filename + '". Unexpected token at line ' + e.loc.line + ' column ' + e.loc.column, e.loc, genMap.code);
+		U.dieWithCodeFrame(`Error parsing code in ${target.filepath}. ${e.message}`, e.loc, genMap.code);
 	}
 
 	// TODO: We do not run the babel plugins (optimizer/builtins) here. Is that ok?
