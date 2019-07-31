@@ -109,7 +109,12 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 			sourceType: 'module'
 		});
 	} catch (e) {
-		const filename = path.relative(compileConfig.dir.project, generator.target.template);
+		let filename;
+		if (data.__MAPMARKER_CONTROLLER_CODE__) {
+			filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
+		} else if (data.__MAPMARKER_ALLOY_JS__) {
+			filename = data.__MAPMARKER_ALLOY_JS__.filename;
+		}
 
 		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
 	}
