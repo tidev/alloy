@@ -109,8 +109,14 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 			sourceType: 'module'
 		});
 	} catch (e) {
-		logger.trace(genMap.code);
-		throw e;
+		let filename;
+		if (data.__MAPMARKER_CONTROLLER_CODE__) {
+			filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
+		} else if (data.__MAPMARKER_ALLOY_JS__) {
+			filename = data.__MAPMARKER_ALLOY_JS__.filename;
+		}
+
+		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
 	}
 
 	// create source map and generated code
@@ -208,8 +214,9 @@ exports.generateSourceMap = function(generator, compileConfig) {
 			sourceType: 'module'
 		});
 	} catch (e) {
-		logger.trace(genMap.code);
-		throw e;
+		const filename = path.relative(compileConfig.dir.project, generator.target.template);
+
+		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
 	}
 
 	// TODO: We do not run the babel plugins (optimizer/builtins) here. Is that ok?
