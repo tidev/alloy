@@ -34,7 +34,7 @@ if (!testApp) {
 }
 
 // Stage the app
-var cmd = 'jake app:setup dir=' + testApp + ' quiet=1';
+var cmd = 'npx jake app:setup dir=' + testApp + ' quiet=1';
 exec(cmd, function(error, stdout, stderr) {
 	if (error !== null) {
 		console.error(error);
