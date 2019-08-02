@@ -2,6 +2,9 @@
 
 ### Unreleased items
 
+* [ALOY-1698](https://jira.appcelerator.org/browse/ALOY-1698) - Compile: Errors thrown during sourcemap step are not visible to a user
+* [ALOY-1697](https://jira.appcelerator.org/browse/ALOY-1697) - Add WebView "onlink" callback support
+
 ### Release 1.14.0
 
 #### New Features
