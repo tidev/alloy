@@ -17,7 +17,7 @@ var path = require('path'),
 	_ = require('lodash'),
 	CONST = require('./common/constants'),
 	sourceMapper = require('./commands/compile/sourceMapper'),
-	codeFrame = require('babel-code-frame');
+	codeFrameColumns = require('@babel/code-frame').codeFrameColumns;
 
 var NODE_ACS_REGEX = /^ti\.cloud\..+?\.js$/;
 
@@ -278,11 +278,10 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 			}
 		}
 		if (!srcStat.isDirectory() && opts.createSourceMap && path.extname(src) === '.js') {
-			var tpath = path.join(opts.rootDir, 'build', 'map', 'Resources', (opts.compileConfig.alloyConfig.platform === 'ios' ? 'iphone' : opts.compileConfig.alloyConfig.platform), 'alloy');
 			var target = {
-					filename: path.join(tpath, path.basename(src)),
-					filepath: path.dirname(dst),
-					template: dst
+					filename: path.relative(opts.compileConfig.dir.project, dst),
+					filepath: dst,
+					template: src
 				},
 				data = {
 					'__MAPMARKER_NONCONTROLLER__': {
@@ -294,8 +293,8 @@ exports.updateFiles = function(srcDir, dstDir, opts) {
 				target: target,
 				data: data,
 				origFile: {
-					filename: src,
-					filepath: path.dirname(src)
+					filename: path.relative(opts.compileConfig.dir.project, src),
+					filepath: src
 				}
 			}, opts.compileConfig);
 		}
@@ -534,7 +533,11 @@ exports.die = function(msg, e) {
 };
 
 exports.dieWithCodeFrame = function(errorMessage, lineInfo, fileContents, hint) {
-	var frame = codeFrame(fileContents, lineInfo.line, lineInfo.column, { highlightCode: true });
+	var frame = codeFrameColumns(fileContents, {
+		start: lineInfo
+	}, {
+		highlightCode: true
+	});
 	logger.error(errorMessage);
 	// Convert the code frame from a string to an Array so that the logger logs
 	// each line individually to keep the code frame intact

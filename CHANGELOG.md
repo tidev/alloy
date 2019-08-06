@@ -1,5 +1,52 @@
-## Alloy Release Notes
+# Alloy Release Notes
 
+### Unreleased items
+
+### Release 1.14.0
+
+#### New Features
+
+* [ALOY-1632](https://jira.appcelerator.org/browse/ALOY-1632) Allow passing custom template directories to the `alloy new` command [#912](https://github.com/appcelerator/alloy/pull/912)
+* [ALOY-1646](https://jira.appcelerator.org/browse/ALOY-1646) Allow platform xml namespaces to be used with xml attributes in Alloy [#922](https://github.com/appcelerator/alloy/pull/922)
+  * XML attributes can now be prefixed with a platform to have the property be platform specific. For example `<Label android:text="Hello Android!" ios:text="Hello iOS!" windows:text="Hello Windows!" />`
+* [ALOY-1363](https://jira.appcelerator.org/browse/ALOY-1363) Add support to set object properties via XML [#765](https://github.com/appcelerator/alloy/pull/765)
+  * Properties that are objects (like `font`) can now be set in XML as well as TSS files. For example to set the `font.fontFamily` property use `<Label font.fontFamily="Roboto">Hello</Label>`
+* [ALOY-1316](https://jira.appcelerator.org/browse/ALOY-1316) Support use of $.args.* in any XML attribute or TSS property [#885](https://github.com/appcelerator/alloy/pull/885)
+
+#### Improvements
+
+* [ALOY-1629](https://jira.appcelerator.org/browse/ALOY-1629) Upgrade to babel 7 packages [#905](https://github.com/appcelerator/alloy/pull/905)
+* [ALOY-1652](https://jira.appcelerator.org/browse/ALOY-1652) Improve handling of missing directories and files in `alloy new` [#925](https://github.com/appcelerator/alloy/pull/925)
+* [ALOY-1682](https://jira.appcelerator.org/browse/ALOY-1682) Update to moment to 2.24.0 and update moment locales. [#928](https://github.com/appcelerator/alloy/pull/928)
+  * Previous version was 2.21.0
+  * New locales are ar-dz, ar-kw, ar-ly, bm, de-ch, dv, en-SG, en-ie, en-il, en-nz, es-do, es-us, fr-ch, ga, gd, gom-latn, gu, it-ch, kk, kn, ku, ky, lo, mi, mn, mt, nl-be, pa-in, sd, se, ss, sw, te, tet, tg, tlh, ug-cn, ur, uz-latn, x-pseudo, yo, zh-hk,
+* [ALOY-1683](https://jira.appcelerator.org/browse/ALOY-1683) Update to Underscore.js 1.9.1 [#929](https://github.com/appcelerator/alloy/pull/929)
+  * Previous version was 1.8.3
+* [ALOY-1648](https://jira.appcelerator.org/browse/ALOY-1648) Include Backbone.js 1.4.0 [#929](https://github.com/appcelerator/alloy/pull/929)
+  * Includes 42 new locales
+* [ALOY-1505](https://jira.appcelerator.org/browse/ALOY-1505) Add ability to set cancel and destructive properties on OptionDialog options [#879](https://github.com/appcelerator/alloy/pull/879)
+* [ALOY-1612](https://jira.appcelerator.org/browse/ALOY-1612) CLI: Be able to use Alloy source-maps in Safari Debugger / Chrome Dev-Tools [#893](https://github.com/appcelerator/alloy/pull/893)
+
+#### Fixes
+
+* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android [#810](https://github.com/appcelerator/alloy/pull/810)
+* [ALOY-1653](https://jira.appcelerator.org/browse/ALOY-1653) Runtime error on Android when using optiondialog and not declaring destructive or cancel properties [#926](https://github.com/appcelerator/alloy/pull/926)
+* [ALOY-1684](https://jira.appcelerator.org/browse/ALOY-1684) Calling sort for a collection does not call the dataFunction as of backbone 1.1.2 and above [#929](https://github.com/appcelerator/alloy/pull/929)
+* [ALOY-1690](https://jira.appcelerator.org/browse/ALOY-1690) sourcemaps not being generated for files under lib [#893](https://github.com/appcelerator/alloy/pull/893)
+* [ALOY-1691](https://jira.appcelerator.org/browse/ALOY-1691) Source maps report incorrect "file" value [#893](https://github.com/appcelerator/alloy/pull/893)
+
+
+### Release  1.13.10
+
+#### Fixes
+
+[ALOY-1686](https://jira.appcelerator.org/browse/ALOY-1686) Alloy: App crashes due to context used when accessing Ti.Database API
+
+### Release 1.13.9
+
+#### Fixes
+
+[ALOY-1650](https://jira.appcelerator.org/browse/ALOY-1650) Debugger does not hit breakpoints when running Android on Windows
 
 ### Release 1.13.8
 

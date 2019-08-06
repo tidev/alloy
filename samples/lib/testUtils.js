@@ -3,7 +3,7 @@ var exec = require('child_process').exec,
 	os = require('os'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	babylon = require('babylon'),
+	babylon = require('@babel/parser'),
 	U = require('../../Alloy/utils'),
 	styler = require('../../Alloy/commands/compile/styler');
 
