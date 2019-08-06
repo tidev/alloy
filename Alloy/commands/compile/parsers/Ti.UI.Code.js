@@ -1,5 +1,3 @@
-var _ = require('lodash');
-var CONST = require('../../../common/constants');
 var CU = require('../compilerUtils');
 var U = require('../../../utils');
 var fs = require('fs-extra');
@@ -26,6 +24,6 @@ exports.parse = function(node, state) {
 	code += U.XML.getNodeText(node) || '';
 
 	return {
-		code: code.trim() + '\n',
+		code: code.trim() + '\n\n',
 	};
 };
