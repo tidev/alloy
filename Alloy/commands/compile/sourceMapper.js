@@ -211,7 +211,8 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	try {
 		ast = babylon.parse(genMap.code, {
 			sourceFilename: genMap.file,
-			sourceType: 'module'
+			sourceType: 'module',
+			allowReturnOutsideFunction: true,
 		});
 	} catch (e) {
 		const filename = path.relative(compileConfig.dir.project, generator.target.template);
