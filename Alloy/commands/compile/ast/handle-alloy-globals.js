@@ -47,7 +47,7 @@ module.exports = function(babel) {
 			},
 			ReferencedIdentifier(path) {
 				const node = path.node;
-				if (toCheck.includes(node.name) && !this.required.includes(node.name) && !this.imported.includes(node.name)) {
+				if (toCheck.includes(node.name) && !this.required.includes(node.name) && !this.imported.includes(node.name) && !path.scope.hasBinding(node.name)) {
 					this.required.push(node.name);
 					switch (node.name) {
 						case 'Alloy':
