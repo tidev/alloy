@@ -2,6 +2,8 @@
 
 ### Unreleased items
 
+* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen
+
 ### Release 1.14.1
 
 #### Improvements
