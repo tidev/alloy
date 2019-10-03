@@ -2,6 +2,16 @@
 
 ### Unreleased items
 
+### Release 1.14.1
+
+#### Improvements
+
+* [ALOY-1697](https://jira.appcelerator.org/browse/ALOY-1697) - Add WebView "onlink" callback support
+
+#### Bug Fixes
+
+* [ALOY-1698](https://jira.appcelerator.org/browse/ALOY-1698) - Compile: Errors thrown during sourcemap step are not visible to a user
+
 ### Release 1.14.0
 
 #### New Features
