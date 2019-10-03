@@ -50,7 +50,7 @@ var RESERVED_ATTRIBUTES = [
 		'method',
 		'module'
 	],
-	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
+	RESERVED_EVENT_REGEX =  new RegExp(`^(?:(${CONST.PLATFORMS.join('|')}):)?on([A-Z].+)`);
 
 // load CONDITION_MAP with platforms
 exports.CONDITION_MAP = {
@@ -206,8 +206,11 @@ exports.getParserArgs = function(node, state, opts) {
 		if (_.includes(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null && exports.isNodeForCurrentPlatform(node) && !_.includes(CONST.SPECIAL_PROPERTY_NAMES, attrName)) {
+			if (matches[1] && compilerConfig.alloyConfig.platform !== matches[1]) {
+				return;
+			}
 			events.push({
-				name: U.lcfirst(matches[1]),
+				name: U.lcfirst(matches[2]),
 				value: node.getAttribute(attrName)
 			});
 		} else {
