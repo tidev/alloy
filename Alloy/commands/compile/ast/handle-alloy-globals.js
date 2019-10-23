@@ -16,40 +16,14 @@ module.exports = function(babel) {
 				if (!node.arguments || !node.arguments[0]) {
 					return;
 				}
-				switch (node.arguments[0].value) {
-					case 'alloy':
-					case '/alloy':
-						this.required.push('Alloy');
-						break;
-					case 'alloy/underscore':
-					case '/alloy/underscore':
-						this.required.push('_');
-						break;
-					case 'alloy/backbone':
-					case '/alloy/backbone':
-						this.required.push('Backbone');
-						break;
-				}
+				checkStatement(node.arguments[0].value, state);
 			},
 			ImportDeclaration (path) {
 				const node = path.node;
 				if (!node.source || !node.source.value) {
 					return;
-				} 
-				switch (node.source.value) {
-					case 'alloy':
-					case '/alloy':
-						this.required.push('Alloy');
-						break;
-					case 'alloy/underscore':
-					case '/alloy/underscore':
-						this.required.push('_');
-						break;
-					case 'alloy/backbone':
-					case '/alloy/backbone':
-						this.required.push('Backbone');
-						break;
 				}
+				checkStatement(node.source.value, state);
 			},
 			ReferencedIdentifier(path) {
 				const name = path.name;
@@ -100,3 +74,25 @@ module.exports = function(babel) {
 		}
 	};
 };
+
+/**
+ *
+ * @param {String} moduleName - Module name in the import or require statement
+ * @param {Object} state - Babel state object
+ */
+function checkStatement(moduleName, state) {
+	switch (moduleName) {
+		case 'alloy':
+		case '/alloy':
+			state.required.push('Alloy');
+			break;
+		case 'alloy/underscore':
+		case '/alloy/underscore':
+			state.required.push('_');
+			break;
+		case 'alloy/backbone':
+		case '/alloy/backbone':
+			state.required.push('Backbone');
+			break;
+	}
+}
