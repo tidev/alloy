@@ -1,7 +1,7 @@
-const toCheck = [ 'Alloy', '_', 'Backbone' ];
-var template = require('@babel/template').default;
+const ALLOY_GLOBALS_TO_CHECK = [ 'Alloy', '_', 'Backbone' ];
+const template = require('@babel/template').default;
 
-var buildRequire = template(`
+const buildRequire = template(`
 	var VARIABLE = REQUIRECALL;
 `);
 module.exports = function(babel) {
@@ -17,14 +17,17 @@ module.exports = function(babel) {
 					return;
 				}
 				switch (node.arguments[0].value) {
+					case 'alloy':
 					case '/alloy':
-						this.imported.push('Alloy');
+						this.required.push('Alloy');
 						break;
+					case 'alloy/underscore':
 					case '/alloy/underscore':
-						this.imported.push('_');
+						this.required.push('_');
 						break;
+					case 'alloy/backbone':
 					case '/alloy/backbone':
-						this.imported.push('Backbone');
+						this.required.push('Backbone');
 						break;
 				}
 			},
@@ -34,26 +37,28 @@ module.exports = function(babel) {
 					return;
 				} 
 				switch (node.source.value) {
+					case 'alloy':
 					case '/alloy':
-						this.imported.push('Alloy');
+						this.required.push('Alloy');
 						break;
+					case 'alloy/underscore':
 					case '/alloy/underscore':
-						this.imported.push('_');
+						this.required.push('_');
 						break;
+					case 'alloy/backbone':
 					case '/alloy/backbone':
-						this.imported.push('Backbone');
+						this.required.push('Backbone');
 						break;
 				}
 			},
 			ReferencedIdentifier(path) {
-				const node = path.node;
-				if (toCheck.includes(node.name) // Is this identifier one of the special 3
-					&& !this.required.includes(node.name) // Have we already imported it
-					&& !this.imported.includes(node.name) // Did the user already import it
-					&& !path.scope.hasBinding(node.name) // Does this binding already exist in the scope? (e.g user might import lodash as _ which we don't want to override)
+				const name = path.name;
+				if (ALLOY_GLOBALS_TO_CHECK.includes(name) // Is this identifier one of the special 3
+					&& !this.required.includes(name) // Have we already imported it
+					&& !path.scope.hasBinding(name) // Does this binding already exist in the scope? (e.g user might import lodash as _ which we don't want to override)
 				) {
-					this.required.push(node.name);
-					switch (node.name) {
+					this.required.push(name);
+					switch (name) {
 						case 'Alloy':
 							this.toRequire.push({
 								VARIABLE: 'Alloy',
@@ -78,7 +83,6 @@ module.exports = function(babel) {
 			},
 			Program: {
 				enter() {
-					this.imported = [];
 					this.toRequire = [];
 					this.required = [];
 				},
