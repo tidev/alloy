@@ -47,7 +47,11 @@ module.exports = function(babel) {
 			},
 			ReferencedIdentifier(path) {
 				const node = path.node;
-				if (toCheck.includes(node.name) && !this.required.includes(node.name) && !this.imported.includes(node.name) && !path.scope.hasBinding(node.name)) {
+				if (toCheck.includes(node.name) // Is this identifier one of the special 3
+					&& !this.required.includes(node.name) // Have we already imported it
+					&& !this.imported.includes(node.name) // Did the user already import it
+					&& !path.scope.hasBinding(node.name) // Does this binding already exist in the scope? (e.g user might import lodash as _ which we don't want to override)
+				) {
 					this.required.push(node.name);
 					switch (node.name) {
 						case 'Alloy':
