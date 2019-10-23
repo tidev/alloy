@@ -2,8 +2,9 @@
 
 ### Unreleased items
 
-* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen
 * [ALOY-1701](https://jira.appcelerator.org/browse/ALOY-1701) - XML: Unable to use platform namespace restriction on event handlers
+* [ALOY-1705](https://jira.appcelerator.org/browse/ALOY-1705) - Fix to allow return outside of function
+* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen
 
 ### Release 1.14.1
 
