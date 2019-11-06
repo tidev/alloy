@@ -2,11 +2,14 @@
 
 ### Unreleased items
 
-* [ALOY-1701](https://jira.appcelerator.org/browse/ALOY-1701) - XML: Unable to use platform namespace restriction on event handlers
-* [ALOY-1705](https://jira.appcelerator.org/browse/ALOY-1705) - Fix to allow return outside of function
-* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen
+### Release 1.14.2
+
+* [ALOY-1598](https://jira.appcelerator.org/browse/ALOY-1598) - Fix error with binding_no_persistence sample [#882](https://github.com/appcelerator/alloy/pull/882)
 * [ALOY-1693](https://jira.appcelerator.org/browse/ALOY-1693) - Maintain db connection during sql sync [#933](https://github.com/appcelerator/alloy/pull/933)
 * [ALOY-1633](https://jira.appcelerator.org/browse/ALOY-1633) - Inject _, Alloy, and Backbone variables into files when used rather than make available as globals  [#911](https://github.com/appcelerator/alloy/pull/911)
+* [ALOY-1701](https://jira.appcelerator.org/browse/ALOY-1701) - XML: Unable to use platform namespace restriction on event handlers [#940](https://github.com/appcelerator/alloy/pull/940)
+* [ALOY-1705](https://jira.appcelerator.org/browse/ALOY-1705) - Fix to allow return outside of function [#939](https://github.com/appcelerator/alloy/pull/939)
+* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen [#938](https://github.com/appcelerator/alloy/pull/938)
 
 ### Release 1.14.1
 
