@@ -18,7 +18,7 @@ module.exports = function(babel) {
 				}
 				checkStatement(node.arguments[0].value, state);
 			},
-			ImportDeclaration (path) {
+			ImportDeclaration (path, state) {
 				const node = path.node;
 				if (!node.source || !node.source.value) {
 					return;
@@ -52,7 +52,7 @@ module.exports = function(babel) {
 							});
 							break;
 					}
-					
+
 				}
 			},
 			Program: {
