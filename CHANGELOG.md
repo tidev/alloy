@@ -2,6 +2,10 @@
 
 ### Unreleased items
 
+### Release 1.14.3
+
+* [ALOY-1710](https://jira.appcelerator.org/browse/ALOY-1710) - Fix undeclared variable error [#947](https://github.com/appcelerator/alloy/pull/947)
+
 ### Release 1.14.2
 
 * [ALOY-1598](https://jira.appcelerator.org/browse/ALOY-1598) - Fix error with binding_no_persistence sample [#882](https://github.com/appcelerator/alloy/pull/882)
