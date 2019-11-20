@@ -26,7 +26,7 @@ module.exports = function(babel) {
 				checkStatement(node.source.value, state);
 			},
 			ReferencedIdentifier(path) {
-				const name = path.name;
+				const name = path.node.name;
 				if (ALLOY_GLOBALS_TO_CHECK.includes(name) // Is this identifier one of the special 3
 					&& !this.required.includes(name) // Have we already imported it
 					&& !path.scope.hasBinding(name) // Does this binding already exist in the scope? (e.g user might import lodash as _ which we don't want to override)
