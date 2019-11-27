@@ -46,7 +46,7 @@
     "jsonlint": "1.6.2",
     "lodash": "^4.17.4",
     "moment": "2.20.1",
-    "node.extend": "2.0.0",
+    "node.extend": "2.0.2",
     "pkginfo": "0.4.1",
     "resolve": "^1.1.7",
     "source-map": "^0.6.1",
