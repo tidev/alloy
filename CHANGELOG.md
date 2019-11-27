@@ -2,6 +2,14 @@
 
 ### Unreleased items
 
+### Release 1.14.5
+
+* Update node.extend
+
+### Release 1.14.4
+
+* Correctly get node name in alloy global transform
+
 ### Release 1.14.3
 
 * [ALOY-1710](https://jira.appcelerator.org/browse/ALOY-1710) - Fix undeclared variable error [#947](https://github.com/appcelerator/alloy/pull/947)
