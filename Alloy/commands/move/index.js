@@ -1,11 +1,13 @@
-var colors = require('colors'),
-	fs = require('fs-extra'),
+var fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	_ = require('lodash'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 function move(source, destination, callback) {
 	// make sure the target folder exists

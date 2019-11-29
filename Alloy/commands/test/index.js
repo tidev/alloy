@@ -3,9 +3,12 @@
 */
 var fs = require('fs'),
 	path = require('path'),
-	spawn = require('child_process').spawn,
-	U = require('../../utils'),
-	logger = require('../../logger');
+	spawn = require('child_process').spawn;
+
+const {
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var ALLOY_ROOT = path.join(__dirname, '../../..');
 var JAKE = path.join(ALLOY_ROOT, 'node_modules', '.bin', 'jake');

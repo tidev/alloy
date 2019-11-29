@@ -4,15 +4,18 @@
  * See LICENSE for more information on licensing.
  */
 var program = require('commander'),
-	logger = require('./logger'),
 	os = require('os'),
-	U = require('./utils'),
 	colors = require('colors'),
 	_ = require('lodash'),
-	pkginfo = require('pkginfo')(module, 'version'),
 	path = require('path'),
-	fs = require('fs'),
-	CONST = require('./common/constants');
+	fs = require('fs');
+
+const {
+	constants: CONST,
+	logger,
+	platforms,
+	utils: U
+} = require('alloy-utils');
 
 // patch to remove the warning in node >=0.8
 path.existsSync = fs.existsSync || path.existsSync;
@@ -98,8 +101,8 @@ if (program.args.length === 0) {
 	process.exit(0);
 }
 
-if (program.platform && !_.includes(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
-	U.die('Invalid platform "' + program.platform + '" specified, must be [' + CONST.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
+if (program.platform && !_.includes(platforms.constants.PLATFORM_FOLDERS_ALLOY, program.platform)) {
+	U.die('Invalid platform "' + program.platform + '" specified, must be [' + platforms.constants.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
 }
 
 // Validate the given command

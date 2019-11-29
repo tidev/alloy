@@ -4,10 +4,12 @@
 
 	Actual component generators are defined in the targets folder
 */
-var path = require('path'),
-	_ = require('lodash'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants');
+var _ = require('lodash');
+
+const {
+	constants: CONST,
+	utils: U
+} = require('alloy-utils');
 
 function generate(args, program) {
 	args = args || [];

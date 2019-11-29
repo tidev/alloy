@@ -2,10 +2,10 @@
 	The `alloy info` command is used by Studio to discover info about supported adapters,
 	sample applications, and application templates.
 */
-var path = require('path'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
-	alloyRoot = path.join(__dirname, '..', '..', '..');
+const {
+	constants: CONST,
+	utils: U
+} = require('alloy-utils');
 
 var info = {
 	// TODO: reorganize and dynamically list data for adapters

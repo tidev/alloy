@@ -1,9 +1,12 @@
 var path = require('path'),
 	fs = require('fs-extra'),
-	U = require('../../../utils'),
-	CONST = require('../../../common/constants'),
-	_ = require('lodash'),
-	logger = require('../../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..', '..'),
 	MODEL_TEMPLATE = path.join(ALLOY_ROOT, 'template', 'modelcode.js'),

@@ -2,10 +2,13 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	jsonlint = require('jsonlint'),
-	U = require('../../../utils'),
-	_ = require('lodash'),
-	CONST = require('../../../common/constants'),
-	logger = require('../../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var VERSION_DEFAULT = '1.0';
 

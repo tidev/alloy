@@ -1,11 +1,13 @@
-var colors = require('colors'),
-	fs = require('fs'),
+var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	_ = require('lodash'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 function cleanup(args) {
 	args = args || {};

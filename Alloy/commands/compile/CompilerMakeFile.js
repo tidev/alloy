@@ -1,5 +1,6 @@
-var logger = require('../../logger'),
-	colors = require('colors');
+var colors = require('colors');
+
+const { logger } = require('alloy-utils');
 
 function CompilerMakeFile() {
 	var handlers = {};

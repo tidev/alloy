@@ -1,7 +1,8 @@
 var fs = require('fs'),
 	path = require('path'),
-	U = require('../../utils'),
 	SM = require('source-map');
+
+const {	utils: U } = require('alloy-utils');
 
 var FUNCTIONS = {
 	generated: 'generatedPositionFor',

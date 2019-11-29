@@ -3,10 +3,13 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	xml2tss = require('xml2tss'),
-	GU = require('../generateUtils'),
-	U = require(basePath + 'utils'),
-	CONST = require(basePath + 'common/constants'),
-	logger = require(basePath + 'logger');
+	GU = require('../generateUtils');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 // a recursive function to generate styles since xml2tss is async
 function generateStyles(targets) {

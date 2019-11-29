@@ -5,11 +5,14 @@
 var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	CONST = require('../../common/constants'),
-	U = require('../../utils'),
 	_ = require('lodash'),
-	logger = require('../../logger'),
 	i18nHandler = require('./i18nHandler');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var searchString = '(?:L|Ti.Locale.getString|Titanium.Locale.getString)' +
 	"\\(\\s*[\"']([a-zA-Z]\\w*?)[\"']\\s*[\\),]";

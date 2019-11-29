@@ -1,8 +1,11 @@
 var path = require('path'),
 	fs = require('fs'),
-	logger = require('../../../logger'),
-	U = require('../../../utils'),
 	alloyRoot = path.join(__dirname, '..', '..', '..');
+
+const {
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 module.exports = function(name, args, program) {
 	var filename = 'alloy.jmk';

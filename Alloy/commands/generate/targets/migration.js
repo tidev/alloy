@@ -1,7 +1,10 @@
 var path = require('path'),
-	GU = require('../generateUtils'),
-	CONST = require('../../../common/constants'),
-	logger = require('../../../logger');
+	GU = require('../generateUtils');
+
+const {
+	constants: CONST,
+	logger
+} = require('alloy-utils');
 
 module.exports = function(name, args, program, template) {
 	var type = 'MIGRATION';
