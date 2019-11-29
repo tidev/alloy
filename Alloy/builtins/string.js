@@ -64,10 +64,7 @@ exports.lcfirst = function (text) {
  * @param {String} amount Amount to format.
  * @return {String} Amount formatted as a currency value.
  */
-exports.formatCurrency = !(OS_MOBILEWEB) ? String.formatCurrency : function (amount) {
-	var num = isNaN(amount) || amount === '' || amount === null ? 0.00 : amount;
-	return '$' + parseFloat(num).toFixed(2);
-};
+exports.formatCurrency = String.formatCurrency;
 
 
 /**
