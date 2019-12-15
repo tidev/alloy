@@ -1,6 +1,6 @@
 #! groovy
 library 'pipeline-library'
-def nodeVersion = '8.16.0'
+def nodeVersion = '10.17.0'
 def npmVersion = 'latest' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 def packageVersion = ''
@@ -44,7 +44,7 @@ def unitTests(titaniumBranch, nodeVersion, npmVersion) {
 
 timestamps() {
 	try {
-		node('(osx || linux) && git ') {
+		node('(osx || linux) && git && !master') {
 			stage('Lint') {
 				checkout scm
 
@@ -67,19 +67,19 @@ timestamps() {
 		stage('Test') {
 			parallel(
 				'GA SDK': {
-					node('(osx || linux) && git ') {
+					node('(osx || linux) && git && !master') {
 						unitTests('GA', nodeVersion, npmVersion)
 					}
 				},
 				'master SDK': {
-					node('(osx || linux) && git ') {
+					node('(osx || linux) && git && !master') {
 						unitTests('master', nodeVersion, npmVersion)
 					}
 				}
 			)
 		}
 
-		node('(osx || linux) && git ') {
+		node('(osx || linux) && git && !master') {
 			stage('Security') {
 				unstash 'security'
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
@@ -95,7 +95,7 @@ timestamps() {
 			} // stage
 		} // node
 
-		node('(osx || linux) && git && npm-publish') {
+		node('(osx || linux) && git && npm-publish && !master') {
 			stage('Publish') {
 				checkout scm
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
@@ -129,7 +129,7 @@ timestamps() {
 	} finally {
 		if (runDanger) {
 			stage('Danger') {
-				node('osx || linux') {
+				node('(osx || linux) && !master') {
 					nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 						checkout scm
 						try {
