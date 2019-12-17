@@ -128,9 +128,11 @@ function parse(node, state, args) {
 			type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
 			args.createArgs,
 			state
-		) + ');\n';
+		) + ')';
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
-		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
+		code += ';\n' + args.symbol + '.setParent(' + args.parent.symbol + ');\n';
+	} else {
+		code += '.getViewEx({recurse:true});\n';
 	}
 
 	return {
