@@ -1,10 +1,95 @@
-## Alloy Release Notes
+# Alloy Release Notes
+
+### Unreleased items
+
+### Release 1.14.5
+
+* Update node.extend
+
+### Release 1.14.4
+
+* Correctly get node name in alloy global transform
+
+### Release 1.14.3
+
+* [ALOY-1710](https://jira.appcelerator.org/browse/ALOY-1710) - Fix undeclared variable error [#947](https://github.com/appcelerator/alloy/pull/947)
+
+### Release 1.14.2
+
+* [ALOY-1598](https://jira.appcelerator.org/browse/ALOY-1598) - Fix error with binding_no_persistence sample [#882](https://github.com/appcelerator/alloy/pull/882)
+* [ALOY-1693](https://jira.appcelerator.org/browse/ALOY-1693) - Maintain db connection during sql sync [#933](https://github.com/appcelerator/alloy/pull/933)
+* [ALOY-1633](https://jira.appcelerator.org/browse/ALOY-1633) - Inject _, Alloy, and Backbone variables into files when used rather than make available as globals  [#911](https://github.com/appcelerator/alloy/pull/911)
+* [ALOY-1701](https://jira.appcelerator.org/browse/ALOY-1701) - XML: Unable to use platform namespace restriction on event handlers [#940](https://github.com/appcelerator/alloy/pull/940)
+* [ALOY-1705](https://jira.appcelerator.org/browse/ALOY-1705) - Fix to allow return outside of function [#939](https://github.com/appcelerator/alloy/pull/939)
+* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen [#938](https://github.com/appcelerator/alloy/pull/938)
+
+### Release 1.14.1
+
+#### Improvements
+
+* [ALOY-1697](https://jira.appcelerator.org/browse/ALOY-1697) - Add WebView "onlink" callback support
+
+#### Bug Fixes
+
+* [ALOY-1698](https://jira.appcelerator.org/browse/ALOY-1698) - Compile: Errors thrown during sourcemap step are not visible to a user
+
+### Release 1.14.0
+
+#### New Features
+
+* [ALOY-1632](https://jira.appcelerator.org/browse/ALOY-1632) Allow passing custom template directories to the `alloy new` command [#912](https://github.com/appcelerator/alloy/pull/912)
+* [ALOY-1646](https://jira.appcelerator.org/browse/ALOY-1646) Allow platform xml namespaces to be used with xml attributes in Alloy [#922](https://github.com/appcelerator/alloy/pull/922)
+  * XML attributes can now be prefixed with a platform to have the property be platform specific. For example `<Label android:text="Hello Android!" ios:text="Hello iOS!" windows:text="Hello Windows!" />`
+* [ALOY-1363](https://jira.appcelerator.org/browse/ALOY-1363) Add support to set object properties via XML [#765](https://github.com/appcelerator/alloy/pull/765)
+  * Properties that are objects (like `font`) can now be set in XML as well as TSS files. For example to set the `font.fontFamily` property use `<Label font.fontFamily="Roboto">Hello</Label>`
+* [ALOY-1316](https://jira.appcelerator.org/browse/ALOY-1316) Support use of $.args.* in any XML attribute or TSS property [#885](https://github.com/appcelerator/alloy/pull/885)
+
+#### Improvements
+
+* [ALOY-1629](https://jira.appcelerator.org/browse/ALOY-1629) Upgrade to babel 7 packages [#905](https://github.com/appcelerator/alloy/pull/905)
+* [ALOY-1652](https://jira.appcelerator.org/browse/ALOY-1652) Improve handling of missing directories and files in `alloy new` [#925](https://github.com/appcelerator/alloy/pull/925)
+* [ALOY-1682](https://jira.appcelerator.org/browse/ALOY-1682) Update to moment to 2.24.0 and update moment locales. [#928](https://github.com/appcelerator/alloy/pull/928)
+  * Previous version was 2.21.0
+  * New locales are ar-dz, ar-kw, ar-ly, bm, de-ch, dv, en-SG, en-ie, en-il, en-nz, es-do, es-us, fr-ch, ga, gd, gom-latn, gu, it-ch, kk, kn, ku, ky, lo, mi, mn, mt, nl-be, pa-in, sd, se, ss, sw, te, tet, tg, tlh, ug-cn, ur, uz-latn, x-pseudo, yo, zh-hk,
+* [ALOY-1683](https://jira.appcelerator.org/browse/ALOY-1683) Update to Underscore.js 1.9.1 [#929](https://github.com/appcelerator/alloy/pull/929)
+  * Previous version was 1.8.3
+* [ALOY-1648](https://jira.appcelerator.org/browse/ALOY-1648) Include Backbone.js 1.4.0 [#929](https://github.com/appcelerator/alloy/pull/929)
+  * Includes 42 new locales
+* [ALOY-1505](https://jira.appcelerator.org/browse/ALOY-1505) Add ability to set cancel and destructive properties on OptionDialog options [#879](https://github.com/appcelerator/alloy/pull/879)
+* [ALOY-1612](https://jira.appcelerator.org/browse/ALOY-1612) CLI: Be able to use Alloy source-maps in Safari Debugger / Chrome Dev-Tools [#893](https://github.com/appcelerator/alloy/pull/893)
+
+#### Fixes
+
+* [ALOY-1535](https://jira.appcelerator.org/browse/ALOY-1535) Only warn when using an AlertDialog with child views not restricted to Android [#810](https://github.com/appcelerator/alloy/pull/810)
+* [ALOY-1653](https://jira.appcelerator.org/browse/ALOY-1653) Runtime error on Android when using optiondialog and not declaring destructive or cancel properties [#926](https://github.com/appcelerator/alloy/pull/926)
+* [ALOY-1684](https://jira.appcelerator.org/browse/ALOY-1684) Calling sort for a collection does not call the dataFunction as of backbone 1.1.2 and above [#929](https://github.com/appcelerator/alloy/pull/929)
+* [ALOY-1690](https://jira.appcelerator.org/browse/ALOY-1690) sourcemaps not being generated for files under lib [#893](https://github.com/appcelerator/alloy/pull/893)
+* [ALOY-1691](https://jira.appcelerator.org/browse/ALOY-1691) Source maps report incorrect "file" value [#893](https://github.com/appcelerator/alloy/pull/893)
+
+
+### Release  1.13.10
+
+#### Fixes
+
+[ALOY-1686](https://jira.appcelerator.org/browse/ALOY-1686) Alloy: App crashes due to context used when accessing Ti.Database API
+
+### Release 1.13.9
+
+#### Fixes
+
+[ALOY-1650](https://jira.appcelerator.org/browse/ALOY-1650) Debugger does not hit breakpoints when running Android on Windows
+
+### Release 1.13.8
+
+#### Fixes
+
+[ALOY-1644](https://jira.appcelerator.org/browse/ALOY-1644) Selective compilation does not regenerate platform app.js on Windows
 
 ### Release 1.13.7
 
 #### Fixes
 
-[ALOY-1641](https://jira.appcelerator.org/browse/ALOY-1641) iOS: TabbedBar usage on lowe than SDK 8 is broken
+[ALOY-1641](https://jira.appcelerator.org/browse/ALOY-1641) iOS: TabbedBar usage on lower than SDK 8 is broken
 
 ### Release 1.13.6
 

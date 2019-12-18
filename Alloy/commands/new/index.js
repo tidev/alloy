@@ -137,13 +137,23 @@ function getPaths(project, templateName, testapp) {
 	var alloy = path.join(__dirname, '..', '..');
 	var template = path.join(alloy, 'template');
 	var projectTemplates = path.join(alloy, '..', 'templates');
+	var customTemplateDir;
+	var customAppDir;
+	var readMeFile;
+
+	if (fs.existsSync(templateName) && !testapp) {
+		customTemplateDir = templateName;
+		customAppDir = path.join(templateName, 'app');
+		readMeFile = path.join(customTemplateDir, 'README');
+	}
 
 	var paths = {
 		// alloy paths
 		alloy: alloy,
 		template: path.join(alloy, 'template'),
-		readme: path.join(template, 'README'),
-		projectTemplate: (!testapp) ? path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
+		readme: fs.existsSync(readMeFile) ? readMeFile : path.join(template, 'README'),
+		appTemplate: (!testapp) ? customAppDir || path.join(projectTemplates, templateName, 'app') : path.join(sampleAppsDir, testapp),
+		projectTemplate: (!testapp) ? customTemplateDir || path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
 
 		// project paths
 		project: project,
@@ -160,8 +170,12 @@ function getPaths(project, templateName, testapp) {
 					// skip
 					return;
 				case 'projectTemplate':
-					var error = (!testapp) ? 'Project template "' + templateName : 'Test app "' + testapp;
-					errs.push(error + '" not found at "' + v + '"');
+					var projError = (!testapp) ? 'Project template "' + templateName : 'Test app "' + testapp;
+					errs.push(projError + '" not found at "' + v + '"');
+					break;
+				case 'appTemplate':
+					var appError = (!testapp) ? 'Application template "' + v : 'Test app "' + testapp;
+					errs.push(appError + '" not found');
 					break;
 				case 'project':
 					errs.push('Project path not found at "' + v + '"');

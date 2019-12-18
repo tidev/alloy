@@ -325,6 +325,7 @@ function remove(opts) {
 
 	// Let's see if we need to delete any orphan files...
 	_.each(walkSync(runtimePath), function(file) {
+		file = path.normalize(file);
 		var runtimeFullpath = path.join(runtimePath, file);
 		var found = false;
 		var checks, i;

@@ -16,8 +16,16 @@ function guid() {
 
 var cache = {
 	config: {},
-	Model: {}
+	Model: {},
+	db: {}
 };
+
+function getDatabase(name) {
+	if (!cache.db[name]) {
+		cache.db[name] = Ti.Database.open(name);
+	}
+	return cache.db[name];
+}
 
 // The sql-specific migration object, which is the main parameter
 // to the up() and down() migration functions.
@@ -179,7 +187,7 @@ function Sync(method, model, opts) {
 
 				// execute the query
 				sql = 'REPLACE INTO ' + table + ' (' + names.join(',') + ') VALUES (' + q.join(',') + ');';
-				db = Ti.Database.open(dbName);
+				db = getDatabase(dbName);
 				db.execute(sql, values);
 
 				// if model.id is still null, grab the last inserted id
@@ -188,9 +196,6 @@ function Sync(method, model, opts) {
 					attrObj[model.idAttribute] = model.id;
 					backbone.VERSION === '0.9.2' ? model.set(attrObj, { silent: true }) : model.set(attrObj);
 				}
-
-				// cleanup
-				db.close();
 
 				return model.toJSON();
 			})();
@@ -211,7 +216,7 @@ function Sync(method, model, opts) {
 			}
 
 			// execute the select query
-			db = Ti.Database.open(dbName);
+			db = getDatabase(dbName);
 			var rs;
 
 			// is it a string or a prepared statement?
@@ -224,7 +229,6 @@ function Sync(method, model, opts) {
 			var values = [];
 			var fieldNames = [];
 			var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
-			var getField = OS_ANDROID || OS_WINDOWS ? rs.field.bind(rs) : rs.field;
 			var i = 0;
 
 			for (; i < fieldCount; i++) {
@@ -235,15 +239,12 @@ function Sync(method, model, opts) {
 			while (rs.isValidRow()) {
 				var o = {};
 				for (i = 0; i < fieldCount; i++) {
-					o[fieldNames[i]] = getField(i);
+					o[fieldNames[i]] = rs.field(i);
 				}
 				values.push(o);
 				rs.next();
 			}
-
-			// close off db after read query
 			rs.close();
-			db.close();
 
 			// shape response based on whether it's a model or collection
 			var len = values.length;
@@ -259,9 +260,8 @@ function Sync(method, model, opts) {
 			sql = 'DELETE FROM ' + table + ' WHERE ' + model.idAttribute + '=?';
 
 			// execute the delete
-			db = Ti.Database.open(dbName);
+			db = getDatabase(dbName);
 			db.execute(sql, model.id);
-			db.close();
 
 			resp = model.toJSON();
 			break;
@@ -280,14 +280,13 @@ function Sync(method, model, opts) {
 // Gets the current saved migration
 function GetMigrationFor(dbname, table) {
 	var mid = null;
-	var db = Ti.Database.open(dbname);
+	var db = getDatabase(dbname);
 	db.execute('CREATE TABLE IF NOT EXISTS migrations (latest TEXT, model TEXT);');
 	var rs = db.execute('SELECT latest FROM migrations where model = ?;', table);
 	if (rs.isValidRow()) {
 		mid = rs.field(0) + '';
 	}
 	rs.close();
-	db.close();
 	return mid;
 }
 
@@ -313,10 +312,9 @@ function Migrate(Model) {
 	var targetNumber = typeof config.adapter.migration === 'undefined' ||
 		config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
 	if (typeof targetNumber === 'undefined' || targetNumber === null) {
-		var tmpDb = Ti.Database.open(config.adapter.db_name);
+		var tmpDb = getDatabase(config.adapter.db_name);
 		migrator.db = tmpDb;
 		migrator.createTable(config);
-		tmpDb.close();
 		return;
 	}
 	targetNumber = targetNumber + ''; // ensure that it's a string
@@ -338,7 +336,7 @@ function Migrate(Model) {
 	}
 
 	// open db for our migration transaction
-	var db = Ti.Database.open(config.adapter.db_name);
+	var db = getDatabase(config.adapter.db_name);
 	migrator.db = db;
 	db.execute('BEGIN;');
 
@@ -377,7 +375,6 @@ function Migrate(Model) {
 
 	// end the migration transaction
 	db.execute('COMMIT;');
-	db.close();
 	migrator.db = null;
 }
 
@@ -398,6 +395,7 @@ function installDatabase(config) {
 	// install and open the preloaded db
 	Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
 	var db = Ti.Database.install(dbFile, dbName);
+	cache.db[dbName] = db;
 
 	// set remoteBackup status for iOS
 	if (config.adapter.remoteBackup === false && OS_IOS) {
@@ -464,9 +462,6 @@ function installDatabase(config) {
 		config.columns[ALLOY_ID_DEFAULT] = 'TEXT UNIQUE';
 		config.adapter.idAttribute = ALLOY_ID_DEFAULT;
 	}
-
-	// close the db handle
-	db.close();
 }
 
 module.exports.beforeModelCreate = function(config, name) {

@@ -94,8 +94,19 @@ basevalue
   / "false" __ { return false;  }
   / "undefined" __  { return ALLOY_EXPR + "undefined"; }
   / "null" __  { return ALLOY_EXPR + "null"; }
+  / DollarArgs
 
 /* ===== Lexical Elements ===== */
+
+DollarArgs
+  = parts:("$.args" ('.' bareString)+) {
+    var args = ALLOY_EXPR + parts[0];
+    var len = parts[1] ? parts[1].length : 0;
+    for (var i = 0; i < len; i++) {
+      args += parts[1][i].join('');
+    }
+    return args;
+  }
 
 bitwise_operator "bitwise_operator"
   = ">>"

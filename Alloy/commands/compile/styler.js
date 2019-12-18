@@ -524,7 +524,8 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 	});
 
 	// add in any final styles
-	_.extend(lastObj, extraStyle || {});
+	// ALOY-1363: deep merge necessary to properly merge children
+	lastObj = deepExtend(true, lastObj, extraStyle || {});
 	if (!_.isEmpty(lastObj)) { styleCollection.push({style:lastObj}); }
 
 	// substitutions for binding
@@ -577,20 +578,19 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 				} else if (referencePath[0] === '$') {
 					// instance model binding
 					attribute = referencePath.splice(2, referencePath.length);
-				} else if (_.includes(CU.models, referencePath[0])) {
-					// global model binding
-					attribute = referencePath.splice(1, referencePath.length);
-					referencePath.unshift('Alloy', 'Models');
-				} else {
+				} else if (collectionModelVar !== CONST.BIND_MODEL_VAR) {
 					// collection binding (deep)
 					bindsCollection = true;
+				} else {
+					// default to global model binding
+					attribute = referencePath.splice(1, referencePath.length);
+					referencePath.unshift('Alloy', 'Models');
 				}
 
 				// model binding
 				if (attribute !== undefined) {
 					modelVar = fromPath(referencePath);
 					reference = fromPath(referencePath.concat(CONST.BIND_TRANSFORM_VAR, attribute));
-
 					if (!_.includes(bindsModels, modelVar)) {
 						bindsModels.push(modelVar);
 					}

@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : norwegian nynorsk (nn)
-//! author : https://github.com/mechuwind
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var nn = moment.defineLocale('nn', {
@@ -19,9 +18,9 @@
             LT : 'HH:mm',
             LTS : 'HH:mm:ss',
             L : 'DD.MM.YYYY',
-            LL : 'D MMMM YYYY',
-            LLL : 'D MMMM YYYY HH:mm',
-            LLLL : 'dddd D MMMM YYYY HH:mm'
+            LL : 'D. MMMM YYYY',
+            LLL : 'D. MMMM YYYY [kl.] H:mm',
+            LLLL : 'dddd D. MMMM YYYY [kl.] HH:mm'
         },
         calendar : {
             sameDay: '[I dag klokka] LT',
@@ -33,8 +32,9 @@
         },
         relativeTime : {
             future : 'om %s',
-            past : 'for %s sidan',
+            past : '%s sidan',
             s : 'nokre sekund',
+            ss : '%d sekund',
             m : 'eit minutt',
             mm : '%d minutt',
             h : 'ein time',
@@ -46,7 +46,7 @@
             y : 'eit år',
             yy : '%d år'
         },
-        ordinalParse: /\d{1,2}\./,
+        dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
@@ -56,4 +56,4 @@
 
     return nn;
 
-}));
+})));

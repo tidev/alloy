@@ -4,7 +4,7 @@ var ejs = require('ejs'),
 	walkSync = require('walk-sync'),
 	chmodr = require('chmodr'),
 	vm = require('vm'),
-	babel = require('babel-core'),
+	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -437,6 +437,7 @@ module.exports = function(args, program) {
 		var theViewDir = path.join(collection.dir, CONST.DIR.VIEW);
 		if (fs.existsSync(theViewDir)) {
 			_.each(walkSync(theViewDir), function(view) {
+				view = path.normalize(view);
 				if (viewRegex.test(view) && filterRegex.test(view) && !excludeRegex.test(view)) {
 					// make sure this controller is only generated once
 					var theFile = view.substring(0, view.lastIndexOf('.'));
@@ -458,6 +459,7 @@ module.exports = function(args, program) {
 		var theControllerDir = path.join(collection.dir, CONST.DIR.CONTROLLER);
 		if (fs.existsSync(theControllerDir)) {
 			_.each(walkSync(theControllerDir), function(controller) {
+				controller = path.normalize(controller);
 				if (controllerRegex.test(controller) && filterRegex.test(controller) && !excludeRegex.test(controller)) {
 					// make sure this controller is only generated once
 					var theFile = controller.substring(0, controller.lastIndexOf('.'));
@@ -535,7 +537,7 @@ function generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile) 
 		// hash used to determine if we need to rebuild
 		hash = U.createHash(alloyJs);
 
-	// is it already generated from a prior copile?
+	// is it already generated from a prior compile?
 	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
 	if (!compileConfig.buildLog.data.deploytypeChanged && fs.existsSync(target.filepath) && buildLog.data[buildPlatform][alloyJs] === hash) {
 		logger.info('[app.js] using cached app.js...');
@@ -1164,6 +1166,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 					plugins: [
 						[require('./ast/builtins-plugin'), compileConfig],
+						[require('./ast/handle-alloy-globals')],
 						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
 					]
 				}),
@@ -1172,7 +1175,7 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			logger.info('- ' + file);
 			try {
 				var result = babel.transformFileSync(fullpath, options);
-				fs.writeFile(fullpath, result.code);
+				fs.writeFileSync(fullpath, result.code);
 			} catch (e) {
 				U.die('Error transforming JS file', e);
 			}

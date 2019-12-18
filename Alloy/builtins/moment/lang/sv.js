@@ -1,12 +1,11 @@
 //! moment.js locale configuration
-//! locale : swedish (sv)
-//! author : Jens Alm : https://github.com/ulmus
 
-(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('/alloy/moment')) :
-   typeof define === 'function' && define.amd ? define(['moment'], factory) :
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('/alloy/moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
-}(this, function (moment) { 'use strict';
+}(this, (function (moment) { 'use strict';
 
 
     var sv = moment.defineLocale('sv', {
@@ -20,8 +19,10 @@
             LTS : 'HH:mm:ss',
             L : 'YYYY-MM-DD',
             LL : 'D MMMM YYYY',
-            LLL : 'D MMMM YYYY HH:mm',
-            LLLL : 'dddd D MMMM YYYY HH:mm'
+            LLL : 'D MMMM YYYY [kl.] HH:mm',
+            LLLL : 'dddd D MMMM YYYY [kl.] HH:mm',
+            lll : 'D MMM YYYY HH:mm',
+            llll : 'ddd D MMM YYYY HH:mm'
         },
         calendar : {
             sameDay: '[Idag] LT',
@@ -35,6 +36,7 @@
             future : 'om %s',
             past : 'för %s sedan',
             s : 'några sekunder',
+            ss : '%d sekunder',
             m : 'en minut',
             mm : '%d minuter',
             h : 'en timme',
@@ -46,7 +48,7 @@
             y : 'ett år',
             yy : '%d år'
         },
-        ordinalParse: /\d{1,2}(e|a)/,
+        dayOfMonthOrdinalParse: /\d{1,2}(e|a)/,
         ordinal : function (number) {
             var b = number % 10,
                 output = (~~(number % 100 / 10) === 1) ? 'e' :
@@ -63,4 +65,4 @@
 
     return sv;
 
-}));
+})));

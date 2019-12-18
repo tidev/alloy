@@ -50,7 +50,7 @@ var RESERVED_ATTRIBUTES = [
 		'method',
 		'module'
 	],
-	RESERVED_EVENT_REGEX =  /^on([A-Z].+)/;
+	RESERVED_EVENT_REGEX =  new RegExp(`^(?:(${CONST.PLATFORMS.join('|')}):)?on([A-Z].+)`);
 
 // load CONDITION_MAP with platforms
 exports.CONDITION_MAP = {
@@ -86,7 +86,7 @@ exports.generateVarName = function(id, name) {
 			'Reserved words: [' + CONST.JS_RESERVED_ALL.sort().join(',') + ']'
 		]);
 	}
-	return '$.__views.' + id;
+	return '$.__views["' + id + '"]';
 };
 
 exports.generateUniqueId = function() {
@@ -206,20 +206,34 @@ exports.getParserArgs = function(node, state, opts) {
 		if (_.includes(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
 		if (matches !== null && exports.isNodeForCurrentPlatform(node) && !_.includes(CONST.SPECIAL_PROPERTY_NAMES, attrName)) {
+			if (matches[1] && compilerConfig.alloyConfig.platform !== matches[1]) {
+				return;
+			}
 			events.push({
-				name: U.lcfirst(matches[1]),
+				name: U.lcfirst(matches[2]),
 				value: node.getAttribute(attrName)
 			});
 		} else {
 			var theValue = node.getAttribute(attrName);
-			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG)\.|L\(.+\)\s*$)/.test(theValue)) {
+
+			// find platform specific attributes
+			var attributeParts = attrName.split(':');
+			if ( attributeParts.length === 2 && _.includes(CONST.PLATFORMS, attributeParts[0])) {
+				// if this attribute is for this platform, create it without namespace.
+				if ( attributeParts[0] === compilerConfig.alloyConfig.platform ) {
+					attrName = attributeParts[1];
+				} else {
+					return;
+				}
+			}	
+
+			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG|\$.args)\.|L\(.+\)\s*$)/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
 				if (match !== null) {
 					theValue = theValue.replace(/\(/g, '("').replace(/\)/g, '")');
 				}
 				theValue = styler.STYLE_EXPR_PREFIX + theValue;
 			}
-
 
 			if (attrName === 'class') {
 				if (autoStyle) {
@@ -241,7 +255,7 @@ exports.getParserArgs = function(node, state, opts) {
 						}
 					}
 				}
-				createArgs[attrName] = theValue;
+				_.set(createArgs, attrName, theValue );
 			}
 		}
 	});
@@ -600,6 +614,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
 		_.each(files, function(file) {
+			file = path.normalize(file);
 			var source = path.join(dir, file);
 
 			// make sure the file exists and that it is not filtered
@@ -962,6 +977,12 @@ exports.validateNodeName = function(node, names) {
 
 exports.generateCollectionBindingTemplate = function(args) {
 	var code = '';
+	var COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS_092;
+	
+	// Check if not 0.9.2 and if it's a supported version as we'll default to 0.9.2 if the version is not supported
+	if (compilerConfig.backbone !== '0.9.2' && CONST.SUPPORTED_BACKBONE_VERSIONS.includes(compilerConfig.backbone)) {
+		COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS;
+	}
 
 	// Determine the collection variable to use
 	var obj = { name: args[CONST.BIND_COLLECTION] };
@@ -1003,10 +1024,10 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += '	}';
 	code += '<%= post %>';
 	code += '};';
-	code += colVar + ".on('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
+	code += colVar + ".on('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	exports.destroyCode += colVar + ' && ' + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
-		colVar + ".off('" + CONST.COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
+		colVar + ".off('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	return code;
 };
