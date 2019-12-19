@@ -129,18 +129,20 @@ function parse(node, state, args) {
 			args.createArgs,
 			state
 		) + ')';
+	let parent = { symbol: args.symbol };
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += ';\n' + args.symbol + '.setParent(' + args.parent.symbol + ');\n';
+		parent = {
+			symbol: args.symbol + '.getViewEx({recurse:true})'
+		};
 	} else {
 		code += '.getViewEx({recurse:true});\n';
 	}
 
 	return {
-		parent: {
-			symbol: args.symbol + '.getViewEx({recurse:true})'
-		},
+		parent: parent,
 		controller: args.symbol,
 		styles: state.styles,
 		code: code
-	};
+		};
 }
