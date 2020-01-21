@@ -587,7 +587,9 @@ function parseAlloyComponentNew(view, dir, manifest, noView, fileRestriction) {
 		U.die('Failed to parse ' + parseType + ' "' + view + '", no directory given');
 	}
 
-	const meta = compiler.resolveComponentMeta(path.join(dir, `${parseType}s`, view));
+	const meta = compiler.factory
+		.createCompiler('component')
+		.resolveComponentMeta(path.join(dir, `${parseType}s`, view));
 	const { componentName: viewName, subPath: dirname, files } = meta;
 	const { componentOutputPath, styleOutputPath } = resolveOutputPaths(viewName, dirname, manifest, files);
 
