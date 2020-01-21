@@ -164,7 +164,8 @@ module.exports = function(args, program) {
 	compileConfig = createCompileConfig({
 		projectDir: paths.project,
 		buildLog,
-		alloyConfig
+		alloyConfig,
+		logLevel: logger.TRACE
 	});
 	theme = compileConfig.theme;
 	platformTheme = buildLog.data[buildPlatform] ? buildLog.data[buildPlatform]['theme'] : '';
@@ -612,7 +613,7 @@ function parseAlloyComponentNew(view, dir, manifest, noView, fileRestriction) {
 		finalCode += `\n//# sourceMappingURL=file://${sourceMapOutputPath}`;
 	}
 	fs.outputFileSync(componentOutputPath, finalCode);
-	logger.info('  created:    "' + relativeOutfile + '"');
+	logger.info(`  created:    "${relativeOutfile}"`);
 
 	// generate runtime style file
 	const styleFiles = Array.isArray(files.STYLE) ? files.STYLE : [ files.STYLE ];
@@ -620,6 +621,8 @@ function parseAlloyComponentNew(view, dir, manifest, noView, fileRestriction) {
 		file: styleFiles[0]
 	});
 	fs.outputFileSync(styleOutputPath, styleCode);
+	const relativeStylePath = path.relative(compileConfig.dir.project, styleOutputPath);
+	logger.info(`  created:    "${relativeStylePath}"`);
 
 	if (manifest) {
 		// merge widget i18n and copy resources (but only once for every widget)
