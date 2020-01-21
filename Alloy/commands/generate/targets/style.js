@@ -49,7 +49,7 @@ module.exports = function(name, args, program) {
 
 				// make sure the target folder exists
 				var fullDir = path.dirname(style_path);
-				if (!path.existsSync(fullDir)) {
+				if (!fs.existsSync(fullDir)) {
 					fs.mkdirpSync(fullDir);
 				}
 				targets.push({

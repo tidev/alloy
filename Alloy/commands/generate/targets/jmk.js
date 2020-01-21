@@ -13,7 +13,7 @@ module.exports = function(name, args, program) {
 	var templatePath = path.join(alloyRoot, 'template', filename);
 
 	// only overwrite if using force option
-	if (path.existsSync(filepath) && !program.force) {
+	if (fs.existsSync(filepath) && !program.force) {
 		U.die('"alloy.jmk" file already exists. Use "-f,--force" to overwrite.');
 	}
 
