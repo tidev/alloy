@@ -450,7 +450,7 @@ module.exports = function(args, program) {
 					// generate runtime controller
 					logger.info('[' + view + '] ' + (collection.manifest ? collection.manifest.id +
 						' ' : '') + 'view processing...');
-					parseAlloyComponentNew(view, collection.dir, collection.manifest, null, restrictionPath);
+					parseAlloyComponent(view, collection.dir, collection.manifest, null, restrictionPath);
 					tracker[fp] = true;
 				}
 			});
@@ -472,7 +472,7 @@ module.exports = function(args, program) {
 					// generate runtime controller
 					logger.info('[' + controller + '] ' + (collection.manifest ?
 						collection.manifest.id + ' ' : '') + 'controller processing...');
-					parseAlloyComponentNew(controller, collection.dir, collection.manifest, true, restrictionPath);
+					parseAlloyComponent(controller, collection.dir, collection.manifest, true, restrictionPath);
 					tracker[fp] = true;
 				}
 			});
@@ -579,7 +579,7 @@ function matchesRestriction(files, fileRestriction) {
 	return matches;
 }
 
-function parseAlloyComponentNew(view, dir, manifest, noView, fileRestriction) {
+function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	const parseType = noView ? 'controller' : 'view';
 	if (!view) {
 		U.die('Undefined ' + parseType + ' passed to parseAlloyComponent()');
