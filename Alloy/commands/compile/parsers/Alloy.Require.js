@@ -144,5 +144,5 @@ function parse(node, state, args) {
 		controller: args.symbol,
 		styles: state.styles,
 		code: code
-		};
+	};
 }
