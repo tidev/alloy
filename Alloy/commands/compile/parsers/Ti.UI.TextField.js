@@ -136,6 +136,10 @@ function parse(node, state, args) {
 		}
 	}
 
+	if ( node.getAttribute('verticalAlign') === 'center' ) {
+		node.setAttribute('verticalAlign', 'Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER');
+	}
+
 	// generate the code for the textfield itself
 	var nodeState = require('./default').parse(node, state);
 	code += nodeState.code;

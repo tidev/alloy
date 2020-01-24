@@ -86,6 +86,10 @@ function parse(node, state, args) {
 			postCode += '<%= parentSymbol %>.add(' + parentSymbol + ');';
 		}
 
+		if ( node.getAttribute('verticalAlign') === 'center' ) {
+			node.setAttribute('verticalAlign', 'Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER');
+		}
+
 	});
 
 	// support shortcuts for keyboard type, return key type, and autocapitalization

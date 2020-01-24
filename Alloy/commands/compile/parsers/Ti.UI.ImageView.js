@@ -3,11 +3,14 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	// Get image property from the
-	if (node.hasAttribute('image')) {
-		var attr = node.getAttribute('image');
-		node.setAttribute('image', attr.trim());
+
+	if ( node.hasAttribute('src') ) {
+		node.setAttribute('image', node.getAttribute('src').trim());
+		node.removeAttribute('src');
+	} else if (node.hasAttribute('image')) {
+		node.setAttribute('image', node.getAttribute('image').trim());
 	}
+	
 	// Generate runtime code using default
 	return require('./default').parse(node, state);
 }

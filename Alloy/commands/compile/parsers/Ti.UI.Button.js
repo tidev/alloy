@@ -36,6 +36,15 @@ function parse(node, state, args) {
 		node.setAttribute('systemButton', 'Ti.UI.' + iOSProxy + '.SystemButton.' + systemButton);
 	}
 
+	if ( node.hasAttribute('text') ) {
+		node.setAttribute('title', node.getAttribute('text'));
+		node.removeAttribute('text');
+	}
+
+	if ( node.getAttribute('verticalAlign') === 'center' ) {
+		node.setAttribute('verticalAlign', 'Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER');
+	}
+
 	// Generate runtime code using default
 	return require('./default').parse(node, state);
 }
