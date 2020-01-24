@@ -55,7 +55,6 @@ var TO_BE_CREATED = [
 	path.join('app','assets'),
 	path.join('app','assets','android'),
 	path.join('app','assets','iphone'),
-	path.join('app','assets','mobileweb'),
 	path.join('plugins'),
 	path.join('plugins','ti.alloy'),
 	path.join('plugins','ti.alloy','plugin.py'),
