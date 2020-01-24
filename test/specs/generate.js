@@ -1,13 +1,11 @@
 var fs = require('fs'),
 	path = require('path'),
 	os = require('os'),
-	exec = require('child_process').exec,
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
-	U = require('../../Alloy/utils'),
-	CU = require('../../Alloy/commands/compile/compilerUtils'),
-	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash');
+
+const { constants: CONST } = require('alloy-utils');
 
 var alloyRoot = path.join(__dirname,'..','..');
 var templatePath = path.join(alloyRoot,'Alloy','template');

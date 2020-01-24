@@ -1,15 +1,12 @@
 var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	os = require('os'),
-	colors = require('colors'),
-	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
-	CONST = require('../../Alloy/common/constants'),
-	_ = require('lodash'),
-	tiapp = require('../../Alloy/tiapp'),
-	platforms = require('../../platforms/index'),
-	sep = process.platform !== 'win32' ? '/' : '\\';
+	_ = require('lodash');
+
+const { constants: CONST, platforms } = require('alloy-utils');
+
+const availablePlatforms = _.omit(platforms, [ 'constants' ]);
 
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
 var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
@@ -79,7 +76,7 @@ describe('alloy compile', function() {
 				TU.asyncExecTest('jake app:setup dir=' + file + ' quiet=1', { timeout: TIMEOUT_PREP });
 			});
 
-			_.each(platforms, function(platform,k) {
+			_.each(availablePlatforms, function(platform,k) {
 				if (process.platform !== 'win32' && platform.platform === 'blackberry') {
 					return;
 				}

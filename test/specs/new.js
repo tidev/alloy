@@ -3,11 +3,9 @@ var fs = require('fs-extra'),
 	path = require('path'),
 	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
-	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash');
 
 var TIMEOUT_DEFAULT = 2000;
-var PLATFORMS = CONST.PLATFORMS;
 
 var alloyRoot = path.join(__dirname,'..','..');
 var Harness = path.join(alloyRoot,'test','projects','Harness');

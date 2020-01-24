@@ -2,10 +2,13 @@ var fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	path = require('path'),
 	os = require('os'),
-	U = require('../Alloy/utils'),
-	_ = require('lodash'),
-	CONST = require('../Alloy/common/constants'),
-	logger = require('../Alloy/logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 // Fix node warning
 path.existsSync = fs.existsSync || path.existsSync;

@@ -1,10 +1,7 @@
-var fs = require('fs'),
-	path = require('path'),
-	TU = require('../lib/testUtils'),
-	U = require('../../Alloy/utils'),
-	CONST = require('../../Alloy/common/constants');
+const { constants: CONST, utils: U } = require('alloy-utils');
+const stripAnsi = require('strip-ansi');
 
-var TIMEOUT_DEFAULT = 1000;
+var TU = require('../lib/testUtils');
 
 // The alloy command test suite
 describe('alloy', function() {
@@ -15,7 +12,7 @@ describe('alloy', function() {
 	it('displays help when it receives no arguments', function() {
 		TU.asyncExecTest('alloy', {
 			test: function() {
-				expect(U.stripColors(this.output.stdout)).toMatch(
+				expect(stripAnsi(this.output.stdout)).toMatch(
 					/Usage\:\s+alloy\s+COMMAND\s+\[ARGS\]\s+\[OPTIONS\]/);
 			}
 		});

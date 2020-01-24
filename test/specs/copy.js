@@ -3,7 +3,6 @@ var path = require('path'),
 	TU = require('../lib/testUtils');
 
 var alloyRoot = path.join(__dirname,'..','..');
-var templatePath = path.join(alloyRoot,'Alloy','template');
 var Harness = path.join(alloyRoot,'test','projects','Harness');
 
 describe('alloy copy', function() {
