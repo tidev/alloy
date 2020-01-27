@@ -1,5 +1,6 @@
-var GU = require('../generateUtils'),
-	logger = require('../../../logger');
+const { logger} = require('alloy-utils');
+
+var GU = require('../generateUtils');
 
 module.exports = function(name, args, program) {
 	var info = GU.generate(name, 'VIEW', program);
