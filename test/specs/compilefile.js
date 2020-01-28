@@ -2,11 +2,8 @@ var fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	path = require('path'),
 	TU = require('../lib/testUtils'),
+	platforms = require('../../platforms'),
 	_ = require('lodash');
-
-const { platforms } = require('alloy-utils');
-
-const availablePlatforms = _.omit(platforms, [ 'constants' ]);
 
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
 var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
@@ -34,7 +31,7 @@ describe('alloy selective compile', function() {
 			});
 	});
 
-	_.each(availablePlatforms, function(platform, k) {
+	_.each(platforms, function(platform, k) {
 		if (process.platform !== 'win32' && platform.platform === 'blackberry') {
 			return;
 		}
