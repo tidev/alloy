@@ -616,10 +616,8 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	logger.info(`  created:    "${relativeOutfile}"`);
 
 	// generate runtime style file
-	const styleFiles = Array.isArray(files.STYLE) ? files.STYLE : [ files.STYLE ];
-	const { code: styleCode } = compiler.compileStyle({
-		file: styleFiles[0]
-	});
+	const styleFiles = Array.isArray(files.STYLE) ? files.STYLE : [ { file: files.STYLE } ];
+	const { code: styleCode } = compiler.compileStyle(styleFiles[0]);
 	fs.outputFileSync(styleOutputPath, styleCode);
 	const relativeStylePath = path.relative(compileConfig.dir.project, styleOutputPath);
 	logger.info(`  created:    "${relativeStylePath}"`);
