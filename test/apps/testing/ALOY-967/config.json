@@ -4,9 +4,7 @@
     "env:test": {},
     "env:production": {},
     "os:android": {},
-    "os:blackberry": {},
     "os:ios": {},
-    "os:mobileweb": {},
     "dependencies": {
         "com.language.widget": "1.0",
         "com.random.widget": "1.0"

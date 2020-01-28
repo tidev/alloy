@@ -1,3 +1,0 @@
-$.index.open();
-
-alert('mobileweb');

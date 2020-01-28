@@ -24,7 +24,7 @@ module.exports = function($) {
 			style: {
 				color: '#a00',
 				font: {
-					fontSize: OS_MOBILEWEB ? '48px' : '48dp',
+					fontSize: '48dp',
 					fontWeight: 'bold'
 				},
 				height: Ti.UI.SIZE,

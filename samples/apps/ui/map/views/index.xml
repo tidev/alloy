@@ -1,6 +1,6 @@
 <Alloy>
 	<Window class='container'>
-    	<Module id="map" module="ti.map" method="createView" platform="ios,android">
+    <Module id="map" module="ti.map" method="createView" platform="ios,android">
 			<!-- annotation styled via tss file -->
 			<Annotation id="annotation1"/>
 
@@ -21,14 +21,5 @@
 			-->
 			<Require src="overlay" platform="ios"/>
 		</Module>
-    	<View id="map" ns="Ti.Map" method="createView" platform="mobileweb">
-    		<!--
-    			Mobileweb doesn't support the Ti.Map add-on module but uses the
-    			built-in Ti.Map object. For this, we need to add the ns="Ti.Map" attribute
-    		-->
-			<Annotation id="annotation1"/>
-			<Annotation title="Palo Alto" latitude="37.47" longitude="-122.12"/>
-			<Require src="annotationView" title="Sunnyvale" latitude="37.37" longitude="-122.03"/>
-		</View>
 	</Window>
 </Alloy>

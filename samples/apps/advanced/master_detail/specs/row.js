@@ -22,7 +22,7 @@ module.exports = function($, opts) {
 				top: '5dp',
 				left: '10dp',
 				font: {
-					fontSize: OS_MOBILEWEB ? '24px' : '24dp',
+					fontSize: '24dp',
 					fontWeight: 'bold'
 				},
 				id: 'name'
@@ -38,7 +38,7 @@ module.exports = function($, opts) {
 				bottom: '5dp',
 				left: '20dp',
 				font: {
-					fontSize: OS_MOBILEWEB ? '16px' : '16dp',
+					fontSize: '16dp',
 					fontWeight: 'normal'
 				},
 				id: 'nickname'

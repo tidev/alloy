@@ -23,7 +23,7 @@ module.exports = function($, opts) {
 			style: {
 				color: color,
 				font: {
-					fontSize: OS_MOBILEWEB ? '28px' : '28dp',
+					fontSize: '28dp',
 					fontWeight: 'bold'
 				},
 				textAlign: 'center',
@@ -42,17 +42,17 @@ module.exports = function($, opts) {
 			var font = (function() {
 				if (i === 0) {
 					return {
-						fontSize: OS_MOBILEWEB ? '14px' : 14,
+						fontSize: 14,
 						fontWeight: 'normal'
 					};
 				} else if (i === 3) {
 					return {
-						fontSize: OS_MOBILEWEB ? '48px' : '48dp',
+						fontSize: '48dp',
 						fontWeight: 'normal'
 					};
 				} else {
 					return {
-						fontSize: OS_MOBILEWEB ? '28px' : '28dp',
+						fontSize: '28dp',
 						fontWeight: 'bold'
 					};
 				}

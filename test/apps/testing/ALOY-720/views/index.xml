@@ -15,17 +15,4 @@
 
 		<Label id="info"/>
 	</Window>
-
-	<Window platform="mobileweb">
-		<NavigationGroup>
-			<Window title="MobileWeb">
-			<RightNavButton>
-				<Widget src="alloy.button" title="MW" onClick="doSave"/>
-			</RightNavButton>
-			<Label id="info"/>
-			</Window>
-		</NavigationGroup>
-	</Window>
-
-
 </Alloy>

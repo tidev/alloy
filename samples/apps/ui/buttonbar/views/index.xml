@@ -23,6 +23,6 @@
 			 -->
 			<!-- <View opacity="0.25" backgroundColor="#a00" width="50%"/> -->
 		</ButtonBar>
-		<Label platform="android,mobileweb">Ti.UI.ButtonBar only supported on iOS</Label>
+		<Label platform="android">Ti.UI.ButtonBar only supported on iOS</Label>
 	</Window>
 </Alloy>

@@ -9,5 +9,5 @@
 	"min-alloy-version": "1.0",
 	"min-titanium-version":"2.1",
 	"tags":"",
-	"platforms":"android,blackberry,ios,mobileweb"
+	"platforms":"android,blackberry,ios"
 }

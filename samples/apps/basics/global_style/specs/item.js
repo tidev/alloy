@@ -17,7 +17,7 @@ module.exports = function($) {
 			style: {
 				color: '#f00',
 				font: {
-					fontSize: OS_MOBILEWEB ? '24px' : 24,
+					fontSize: 24,
 					fontWeight: 'bold'
 				},
 				textAlign: 'center',

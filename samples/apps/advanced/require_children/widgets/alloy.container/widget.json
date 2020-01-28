@@ -4,6 +4,6 @@
 	"description" : "Alloy Container",
 	"author": "Tony Lukasavage",
 	"version": "1.0",
-	"platforms":"android,ios,mobileweb,blackberry,windows",
+	"platforms":"android,ios,windows",
 	"dependencies": {}
 }

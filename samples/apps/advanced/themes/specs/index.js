@@ -67,50 +67,6 @@ module.exports = function($) {
 				right: 15
 			}
 		};
-	} else if (OS_MOBILEWEB) {
-		styler = {
-			index: {
-				backgroundImage: '/bg_gray.png'
-			},
-			title: {
-				color: '#fff',
-				backgroundImage: '/title_blue.png',
-				font: {
-					fontSize: '24px',
-					fontWeight: 'bold'
-				}
-			},
-			container: {
-				backgroundGradient: {
-					type: 'linear',
-					startPoint: {
-						x: '0%',
-						y: '0%'
-					},
-					endPoint: {
-						x: '0%',
-						y: '100%'
-					},
-					colors: [ '#39abfb', '#0285ff' ]
-				}
-			},
-			label: {
-				color: '#fff',
-				font: {
-					fontSize: '140px',
-					fontWeight: 'bold'
-				}
-			},
-			slider: {
-				leftTrackImage: '/title_blue.png',
-				bottom: 100,
-				width: 250
-			},
-			testButton: {
-				color: '#fff',
-				backgroundImage: '/button_blue.png'
-			}
-		};
 	}
 
 	// add the styer as a hidden argument to the controller to

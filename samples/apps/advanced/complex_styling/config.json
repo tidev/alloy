@@ -11,8 +11,5 @@
     "os:android": {
         "theme":"android"
     },
-    "os:mobileweb":{
-        "theme":"mobileweb"
-    },
     "dependencies": {}
 }

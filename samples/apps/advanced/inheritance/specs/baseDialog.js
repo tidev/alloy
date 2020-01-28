@@ -41,7 +41,7 @@ module.exports = function($, opts) {
 				top: 10,
 				height: Ti.UI.SIZE,
 				font: {
-					fontSize: OS_MOBILEWEB ? '16px' : '16dp'
+					fontSize: '16dp'
 				},
 				textAlign: 'center',
 				text: opts.message,
