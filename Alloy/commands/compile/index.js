@@ -1166,7 +1166,6 @@ function optimizeCompiledCode(alloyConfig, paths) {
 			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
 					plugins: [
 						[require('./ast/builtins-plugin'), compileConfig],
-						[require('./ast/handle-alloy-globals')],
 						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
 					]
 				}),
