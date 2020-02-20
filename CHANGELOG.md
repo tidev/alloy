@@ -2,6 +2,10 @@
 
 ### Unreleased items
 
+### Release 1.14.6
+
+* [ALOY-1721](https://jira.appcelerator.org/browse/ALOY-1721) - Alloy global can no longer be accessed in styles [#955](https://github.com/appcelerator/alloy/issues/955)
+
 ### Release 1.14.5
 
 * Update node.extend
