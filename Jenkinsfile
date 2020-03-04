@@ -83,13 +83,8 @@ timestamps() {
 			stage('Security') {
 				unstash 'security'
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-					// Install only production dependencies
-					ensureNPM(npmVersion)
-					sh 'npm ci --production'
-
-					sh 'npx retire --exitwith 0'
-
-					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
+					npmAuditToWarnings() // runs npm audit --json, converts to format needed by scanner and writes to npm-audit.json file
+					recordIssues blameDisabled: true, enabledForFailure: true, forensicsDisabled: true, tools: [issues(name: 'NPM Audit', pattern: 'npm-audit.json')]
 				} // nodejs
 				deleteDir()
 			} // stage
