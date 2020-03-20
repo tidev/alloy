@@ -5,6 +5,5 @@
 	"env:production": {},
 	"os:android": {},
 	"os:ios": {},
-	"os:windows": {},
 	"dependencies": {}
 }
