@@ -244,7 +244,7 @@ module.exports = function(args, program) {
 			libAlloyJsDest,
 			ejs.render(
 				fs.readFileSync(path.join(alloyRoot, 'template', 'lib', 'alloy.js'), 'utf8'),
-				{ version: module.exports.version }
+				{ version: program.version() }
 			)
 		);
 	}
