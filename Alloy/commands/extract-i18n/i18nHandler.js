@@ -1,11 +1,14 @@
-var U = require('../../utils'),
-	logger = require('../../logger'),
-	path = require('path'),
+var path = require('path'),
 	_ = require('lodash'),
 	XMLSerializer = require('xmldom').XMLSerializer,
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	os = require('os');
+
+const {
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var FILE_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>' + os.EOL + '<resources>' +
 	os.EOL + '</resources>';

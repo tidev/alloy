@@ -41,10 +41,6 @@ function Controller() {
                 fontWeight: "bold"
             }
         });
-        Alloy.deepExtend(true, o, {
-            text: "Mobileweb",
-            id: "osLabel"
-        });
         return o;
     }());
     $.__views.win.add($.__views.osLabel);

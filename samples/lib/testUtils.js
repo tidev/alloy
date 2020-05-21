@@ -3,9 +3,10 @@ var exec = require('child_process').exec,
 	os = require('os'),
 	path = require('path'),
 	_ = require('../../Alloy/lib/alloy/underscore')._,
-	babylon = require('@babel/parser'),
-	U = require('../../Alloy/utils'),
-	styler = require('../../Alloy/commands/compile/styler');
+	babylon = require('@babel/parser');
+
+const styler = require('alloy-compiler/lib/styler');
+const { utils: U } = require('alloy-utils');
 
 var alloyRoot = path.join(__dirname, '..', '..');
 var IS_WIN = /^win/i.test(os.platform());

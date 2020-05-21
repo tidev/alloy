@@ -4,7 +4,7 @@
 		<Switch/>
 
 		<!-- switch with some platform-specific styling -->
-		<Switch class="titles" platform="android,mobileweb"/>
+		<Switch class="titles" platform="android"/>
 
 		<!-- an android checkbox -->
 		<Switch class="checkbox" platform="android"/>

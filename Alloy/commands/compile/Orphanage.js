@@ -6,11 +6,14 @@
 var fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	platforms = require('../../../platforms/index'),
-	logger = require('../../logger'),
-	CONST = require('../../common/constants'),
-	U = require('../../utils'),
 	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	platforms,
+	utils: U
+} = require('alloy-utils');
 
 var ALLOY_ROOT = path.join(__dirname, '..', '..');
 

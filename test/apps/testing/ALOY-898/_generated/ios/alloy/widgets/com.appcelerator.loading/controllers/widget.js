@@ -40,7 +40,6 @@ function Controller() {
         if ("id" === k || /^(?:__|#|$)/.test(k)) continue;
         $.loading[k] = args[k];
     }
-    "mobileweb" === Ti.Platform.osname && ($.loading.duration = 100);
     $.loading.start();
     exports.setOpacity = function(opacity) {
         $.loading.opacity = opacity;

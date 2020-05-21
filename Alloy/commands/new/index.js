@@ -9,10 +9,14 @@
 var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
-	_ = require('lodash'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	platforms,
+	utils: U
+} = require('alloy-utils');
 
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname, '..', '..', '..', 'platforms');
@@ -36,7 +40,7 @@ module.exports = function(args, program) {
 	chmodr.sync(paths.app, 0755);
 
 	// copy platform-specific folders from Resources to app/assets
-	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
+	_.each(platforms.constants.PLATFORM_FOLDERS, function(platform) {
 		var rPath = path.join(paths.resources, platform);
 		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
@@ -81,7 +85,7 @@ module.exports = function(args, program) {
 		path.join(paths.template, 'gitignore.txt'),
 		path.join(paths.project, '.gitignore')
 	);
-	_.each(CONST.PLATFORM_FOLDERS, function(dir) {
+	_.each(platforms.constants.PLATFORM_FOLDERS, function(dir) {
 		var rDir = path.join(paths.resources, dir);
 		if (!fs.existsSync(rDir)) {
 			return;
@@ -95,7 +99,7 @@ module.exports = function(args, program) {
 
 	// copy in any Alloy-specific Resources files
 	// fs.copySync(paths.alloyResources,paths.assets,{preserveTimestamps:true});
-	_.each(CONST.PLATFORMS, function(p) {
+	_.each(platforms.constants.PLATFORM_FOLDERS, function(p) {
 		var pDir = path.join(platformsDir, p, 'project');
 		if (!fs.existsSync(pDir)) {
 			return;

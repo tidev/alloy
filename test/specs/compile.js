@@ -1,15 +1,11 @@
 var fs = require('fs'),
 	walkSync = require('walk-sync'),
 	path = require('path'),
-	os = require('os'),
-	colors = require('colors'),
-	exec = require('child_process').exec,
 	TU = require('../lib/testUtils'),
-	CONST = require('../../Alloy/common/constants'),
-	_ = require('lodash'),
-	tiapp = require('../../Alloy/tiapp'),
-	platforms = require('../../platforms/index'),
-	sep = process.platform !== 'win32' ? '/' : '\\';
+	platforms = require('../../platforms'),
+	_ = require('lodash');
+
+const { constants: CONST } = require('alloy-utils');
 
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
 var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;

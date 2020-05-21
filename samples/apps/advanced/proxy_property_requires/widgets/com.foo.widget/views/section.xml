@@ -1,5 +1,5 @@
 <Alloy>
-	<TableViewSection platform="android,windows">
+	<TableViewSection platform="android">
 		<HeaderView>
 			<Label>Test</Label>
 		</HeaderView>
@@ -7,7 +7,7 @@
 		<TableViewRow title="android row"/>
 		<TableViewRow title="android row"/>
 	</TableViewSection>
-	<TableViewSection platform="ios,mobileweb" headerTitle="Test">
+	<TableViewSection platform="ios" headerTitle="Test">
 		<TableViewRow title="table row"/>
 		<TableViewRow title="table row"/>
 		<TableViewRow title="table row"/>

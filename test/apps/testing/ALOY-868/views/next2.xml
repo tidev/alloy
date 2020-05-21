@@ -1,6 +1,6 @@
 <Alloy>
-	<TitleControl platform="ios,mobileweb">
-		<Label>ios/mobileweb - hi there</Label>
+	<TitleControl platform="ios">
+		<Label>ios - hi there</Label>
 	</TitleControl>
 	<Label platform="android">android - hi there</Label>
 </Alloy>

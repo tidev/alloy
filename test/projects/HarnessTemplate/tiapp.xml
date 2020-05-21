@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <deployment-targets>
-        <target device="mobileweb">true</target>
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
-        <target device="blackberry">true</target>
         <target device="windows">true</target>
     </deployment-targets>
     <id>com.appcelerator.AlloyHarness</id>
@@ -67,14 +65,6 @@
             </application>
         </manifest>
     </android>
-    <mobileweb>
-        <precache/>
-        <splash>
-            <enabled>true</enabled>
-            <inline-css-images>true</inline-css-images>
-        </splash>
-        <theme>default</theme>
-    </mobileweb>
     <windows>
         <!-- Add Windows specific nodes, such as orientation handling, here -->
     </windows>
@@ -82,6 +72,5 @@
         <module platform="iphone">ti.paint</module>
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
-        <module platform="windows">ti.map</module>
     </modules>
 </ti:app>

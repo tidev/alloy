@@ -13,7 +13,7 @@
 		  </MenuItem>
 		  <MenuItem title="Normal"/>
 		</Menu>
-		<Label platform="ios,mobileweb" text="This app is for Android only"/>
+		<Label platform="ios" text="This app is for Android only"/>
 		<Label platform="android" text="Tap search icon to expand ActionView"/>
 	</Window>
 </Alloy>

@@ -40,7 +40,7 @@ function Controller() {
         },
         color: "black",
         id: "row1",
-        title: "Row 3 - Mobileweb and iOS"
+        title: "Row 3 - iOS"
     });
     __alloyId0.push($.__views.row1);
     $.__views.container = Ti.UI.createTableView({

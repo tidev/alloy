@@ -1,13 +1,4 @@
-var fs = require('fs'),
-	path = require('path'),
-	_ = require('lodash');
+const _ = require('lodash');
+const { platforms } = require('alloy-utils');
 
-module.exports = (function() {
-	var obj = {};
-	_.each(fs.readdirSync(__dirname), function(file) {
-		if (fs.existsSync(path.join(__dirname, file, 'index.js'))) {
-			obj[file] = require('./' + file + '/index');
-		}
-	});
-	return obj;
-})();
+module.exports = _.omit(platforms, ['constants']);

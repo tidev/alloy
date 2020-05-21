@@ -1,5 +1,5 @@
 <Alloy>
 	<Window>
-		<Label>This app is only supported on Android, iOS, and Mobileweb</Label>
+		<Label>This app is only supported on Android and iOS</Label>
 	</Window>
 </Alloy>

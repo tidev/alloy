@@ -25,7 +25,7 @@ function Controller() {
         font: {
             fontSize: "16dp"
         },
-        text: "ios/mobileweb - hi there",
+        text: "ios - hi there",
         id: "__alloyId3"
     });
     __parentSymbol.titleControl = $.__views.__alloyId3;

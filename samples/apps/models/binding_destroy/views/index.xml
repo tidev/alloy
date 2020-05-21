@@ -13,13 +13,6 @@
 	</NavigationWindow>
 
 	<Window id="index" platform="!ios">
-		<!-- mobileweb -->
-		<NavigationGroup id="navgroup" platform="mobileweb">
-			<Window>
-				<Require src="main"/>
-			</Window>
-		</NavigationGroup>
-
 		<!-- just use window hierarchy on android -->
 		<Require src="main" platform="android"/>
 	</Window>

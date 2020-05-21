@@ -1,9 +1,11 @@
 var path = require('path'),
-	colors = require('colors'),
-	fs = require('fs-extra'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	fs = require('fs-extra');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 function copy(source, destination, callback) {
 	// make sure the target folder exists

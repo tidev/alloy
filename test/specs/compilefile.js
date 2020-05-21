@@ -1,17 +1,12 @@
 var fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	path = require('path'),
-	DOMParser = require('xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
-	CONST = require('../../Alloy/common/constants'),
-	platforms = require('../../platforms/index'),
+	platforms = require('../../platforms'),
 	_ = require('lodash');
 
-var TIMEOUT_DEFAULT = 2000;
 var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
 var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
-var GEN_FOLDER = '_generated';
-var TEST_FOLDER = 'testing';
 
 var alloyRoot = path.join(__dirname,'..','..');
 var Harness = path.join(alloyRoot,'test','projects','Harness');
@@ -36,7 +31,7 @@ describe('alloy selective compile', function() {
 			});
 	});
 
-	_.each(platforms, function(platform,k) {
+	_.each(platforms, function(platform, k) {
 		if (process.platform !== 'win32' && platform.platform === 'blackberry') {
 			return;
 		}

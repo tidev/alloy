@@ -6,10 +6,13 @@
 	and is run by Studio after each compilation.
 */
 var path = require('path'),
-	logger = require('../../logger'),
-	U = require('../../utils'),
-	CONST = require('../../common/constants'),
 	alloyRoot = path.join(__dirname, '..', '..', '..');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 module.exports = function(args, program) {
 	var errMsg = 'Must be one of the following: [' + CONST.INSTALL_TYPES.join(',') + ']';

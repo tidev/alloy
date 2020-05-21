@@ -5,7 +5,3 @@
 "#lbl3[platform=android]": {
 	color: 'green'
 }
-
-"#lbl3[platform=mobileweb]": {
-	color: 'purple'
-}

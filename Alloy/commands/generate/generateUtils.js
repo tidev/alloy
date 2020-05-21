@@ -3,10 +3,13 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	xml2tss = require('xml2tss'),
 	alloyRoot = path.join(__dirname, '..', '..'),
-	_ = require('lodash'),
-	U = require(basePath + 'utils'),
-	CONST = require(basePath + 'common/constants'),
-	logger = require(basePath + 'logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 function pad(x) {
 	if (x < 10) {

@@ -2,10 +2,13 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	chmodr = require('chmodr'),
 	jsonlint = require('jsonlint'),
-	U = require('../../../utils'),
-	_ = require('lodash'),
-	CONST = require('../../../common/constants'),
-	logger = require('../../../logger');
+	_ = require('lodash');
+
+const {
+	constants: CONST,
+	logger,
+	utils: U
+} = require('alloy-utils');
 
 var VERSION_DEFAULT = '1.0';
 
@@ -16,7 +19,7 @@ module.exports = function(name, args, program) {
 	var paths = getPaths(thePaths.app, widgetId);
 
 	// don't overwrite an existing widget unless force is specified
-	if (path.existsSync(paths.widget) && !program.force) {
+	if (fs.existsSync(paths.widget) && !program.force) {
 		U.die('Widget already exists: ' + paths.widget);
 	}
 
@@ -48,7 +51,7 @@ module.exports = function(name, args, program) {
 	);
 
 	// Add this widget as a dependency to our project
-	var configReadPath = path.existsSync(paths.config) ? paths.config : paths.configTemplate;
+	var configReadPath = fs.existsSync(paths.config) ? paths.config : paths.configTemplate;
 	var content = fs.readFileSync(configReadPath, 'utf8');
 	try {
 		var json = jsonlint.parse(content);

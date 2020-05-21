@@ -4,18 +4,19 @@
  * See LICENSE for more information on licensing.
  */
 var program = require('commander'),
-	logger = require('./logger'),
 	os = require('os'),
-	U = require('./utils'),
 	colors = require('colors'),
 	_ = require('lodash'),
-	pkginfo = require('pkginfo')(module, 'version'),
 	path = require('path'),
-	fs = require('fs'),
-	CONST = require('./common/constants');
+	fs = require('fs');
 
-// patch to remove the warning in node >=0.8
-path.existsSync = fs.existsSync || path.existsSync;
+const {
+	logger,
+	platforms,
+	utils: U
+} = require('alloy-utils');
+
+require('pkginfo')(module, 'version');
 
 // avoid io issues on Windows in nodejs 0.10.X: https://github.com/joyent/node/issues/3584
 if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
@@ -98,8 +99,8 @@ if (program.args.length === 0) {
 	process.exit(0);
 }
 
-if (program.platform && !_.includes(CONST.PLATFORM_FOLDERS_ALLOY, program.platform)) {
-	U.die('Invalid platform "' + program.platform + '" specified, must be [' + CONST.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
+if (program.platform && !_.includes(platforms.constants.PLATFORM_FOLDERS_ALLOY, program.platform)) {
+	U.die('Invalid platform "' + program.platform + '" specified, must be [' + platforms.constants.PLATFORM_FOLDERS_ALLOY.join(',') + ']');
 }
 
 // Validate the given command
@@ -134,7 +135,7 @@ function getCommands() {
 	try {
 		var commandsPath = path.join(__dirname, 'commands');
 		return _.filter(fs.readdirSync(commandsPath), function(file) {
-			return path.existsSync(path.join(commandsPath, file, 'index.js'));
+			return fs.existsSync(path.join(commandsPath, file, 'index.js'));
 		});
 	} catch (e) {
 		U.die('Error getting command list', e);

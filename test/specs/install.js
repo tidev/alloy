@@ -1,7 +1,8 @@
 var fs = require('fs'),
 	path = require('path'),
-	TU = require('../lib/testUtils'),
-	CONST = require('../../Alloy/common/constants');
+	TU = require('../lib/testUtils');
+
+	const { constants: CONST } = require('alloy-utils');
 
 var TIMEOUT_DEFAULT = 5000;
 

@@ -39,41 +39,35 @@ function Controller() {
 
   $.__views["index"] && $.addTopLevelView($.__views["index"]);
   $.__views["explain"] = Ti.UI.createLabel(
-  { color: "blue", font: { fontSize: "10dp", fontStyle: "italic" }, text: "You should see 3 labels above and 3 below the line", id: "explain" });
+  { color: "blue", font: { fontSize: "10dp", fontStyle: "italic" }, id: "explain" });
 
   $.__views["index"].add($.__views["explain"]);
-  if (true) {
+  if (false || false || true) {
     $.__views["__alloyId0"] = Ti.UI.createLabel(
-    { text: 'android', id: "__alloyId0" });
+    { text: '!ios', id: "__alloyId0" });
 
     $.__views["index"].add($.__views["__alloyId0"]);
   }
-  if (false || true) {
+  if (false || false || true) {
     $.__views["__alloyId1"] = Ti.UI.createLabel(
-    { text: 'ios,android', id: "__alloyId1" });
+    { text: '!android', id: "__alloyId1" });
 
     $.__views["index"].add($.__views["__alloyId1"]);
   }
-  if (true || false || false) {
-    $.__views["__alloyId2"] = Ti.UI.createLabel(
-    { text: '!ios', id: "__alloyId2" });
+  $.__views["__alloyId2"] = Ti.UI.createView(
+  { height: 1, width: Ti.UI.FILL, backgroundColor: "black", top: 10, id: "__alloyId2" });
 
-    $.__views["index"].add($.__views["__alloyId2"]);
-  }
-  $.__views["__alloyId3"] = Ti.UI.createView(
-  { height: 1, width: Ti.UI.FILL, backgroundColor: "black", top: 10, id: "__alloyId3" });
-
-  $.__views["index"].add($.__views["__alloyId3"]);
+  $.__views["index"].add($.__views["__alloyId2"]);
   $.__views["ios"] = Ti.UI.createLabel(
   { height: 0, id: "ios" });
 
   $.__views["index"].add($.__views["ios"]);
   $.__views["android"] = Ti.UI.createLabel(
-  { height: Ti.UI.SIZE, text: "TSS: android", id: "android" });
+  { height: 0, id: "android" });
 
   $.__views["index"].add($.__views["android"]);
   $.__views["iosandroid"] = Ti.UI.createLabel(
-  { height: Ti.UI.SIZE, text: "TSS: ios,android", id: "iosandroid" });
+  { height: 0, id: "iosandroid" });
 
   $.__views["index"].add($.__views["iosandroid"]);
   $.__views["notios"] = Ti.UI.createLabel(
@@ -81,7 +75,7 @@ function Controller() {
 
   $.__views["index"].add($.__views["notios"]);
   $.__views["notandroid"] = Ti.UI.createLabel(
-  { height: 0, id: "notandroid" });
+  { height: Ti.UI.SIZE, text: "TSS: !android", id: "notandroid" });
 
   $.__views["index"].add($.__views["notandroid"]);
   exports.destroy = function () {};
@@ -106,4 +100,4 @@ function Controller() {
 }
 
 module.exports = Controller;
-//# sourceMappingURL=file:///Users/jvennemann/Development/appc/alloy/test/projects/Harness/build/map/Resources/android/alloy/controllers/index.js.map
+//# sourceMappingURL=file:///Users/jvennemann/Development/appc/alloy/test/projects/Harness/build/map/Resources/windows/alloy/controllers/index.js.map
