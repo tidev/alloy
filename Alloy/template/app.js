@@ -13,4 +13,14 @@ global.Backbone = Backbone;
 
 __MAPMARKER_ALLOY_JS__
 
-Alloy.createController('index');
+// Open root window if a new UI session has started. Can happen more than once in app's lifetime.
+// Event can only be fired if "tiapp.xml" property "run-in-background" is set true.
+Ti.UI.addEventListener('sessionbegin', function () {
+	Alloy.createController('index');
+});
+
+// Open the root window immediately if an active UI session exists on startup.
+// Note: The Ti.UI.hasSession property was added as of Titanium 9.1.0.
+if ((typeof Ti.UI.hasSession === 'undefined') || Ti.UI.hasSession) {
+	Alloy.createController('index');
+}
