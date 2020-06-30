@@ -2,6 +2,15 @@
 
 ### Unreleased items
 
+### Improvements
+
+* [ALOY-1256](https://jira.appcelerator.org/browse/ALOY-1256) - Allow using a Widget as a primary control in an XML View [#949](https://github.com/appcelerator/alloy/pull/949)
+* [ALOY-1253](https://jira.appcelerator.org/browse/ALOY-1253) - Support WPATH in widget XML view attribute values [#948](https://github.com/appcelerator/alloy/pull/948)
+
+### Bug Fixes
+
+* [ALOY-1720](https://jira.appcelerator.org/browse/ALOY-1720) - Version string comparison will break for SDK 10.0.0
+
 ### Release 1.14.6
 
 * [ALOY-1721](https://jira.appcelerator.org/browse/ALOY-1721) - Alloy global can no longer be accessed in styles [#955](https://github.com/appcelerator/alloy/issues/955)
