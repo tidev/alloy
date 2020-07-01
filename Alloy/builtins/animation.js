@@ -21,7 +21,7 @@ exports.HORIZONTAL = 'horizontal';
 exports.VERTICAL = 'vertical';
 
 const create3DMatrix = Ti.UI.createMatrix3D ? Ti.UI.createMatrix3D : Ti.UI.create3DMatrix;
-const create2DMatrix = Ti.UI.createMatrix3D ? Ti.UI.createMatrix2D : Ti.UI.create2DMatrix;
+const create2DMatrix = Ti.UI.createMatrix2D ? Ti.UI.createMatrix2D : Ti.UI.create2DMatrix;
 
 /**
  * @method flip
