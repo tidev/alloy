@@ -2,6 +2,10 @@
 
 ### Unreleased items
 
+### New Features
+
+* [ALOY-1732](https://jira.appcelerator.org/browse/ALOY-1732) - Add ability to run in the background without UI [#959](https://jira.appcelerator.org/browse/ALOY-1732)
+
 ### Improvements
 
 * [ALOY-1256](https://jira.appcelerator.org/browse/ALOY-1256) - Allow using a Widget as a primary control in an XML View [#949](https://github.com/appcelerator/alloy/pull/949)
@@ -9,7 +13,7 @@
 
 ### Bug Fixes
 
-* [ALOY-1720](https://jira.appcelerator.org/browse/ALOY-1720) - Version string comparison will break for SDK 10.0.0
+* [ALOY-1720](https://jira.appcelerator.org/browse/ALOY-1720) - Version string comparison will break for SDK 10.0.0[#960](https://github.com/appcelerator/alloy/pull/960)
 
 ### Release 1.14.6
 
