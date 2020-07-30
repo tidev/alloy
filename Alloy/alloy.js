@@ -109,7 +109,12 @@ if (!_.includes(getCommands(), command)) {
 }
 
 // Launch command with given arguments and options
-(require('./commands/' + command + '/index'))(program.args.slice(1), program);
+const cmd = require('./commands/' + command + '/index');
+Promise
+	.resolve(cmd(program.args.slice(1), program))
+	.catch(error => {
+		U.die(error.messaage, error);
+	});
 
 ///////////////////////////////
 ////////// FUNCTIONS //////////

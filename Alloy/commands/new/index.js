@@ -12,14 +12,16 @@ var path = require('path'),
 	_ = require('lodash'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	logger = require('../../logger'),
+	https = require('https'),
+	{ spawn } = require('child_process');
 
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname, '..', '..', '..', 'platforms');
 var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 var sampleAppsDir = path.join(__dirname, '..', '..', '..', 'samples', 'apps');
 
-module.exports = function(args, program) {
+module.exports = async function(args, program) {
 	var appDirs = ['controllers', 'styles', 'views', 'models', 'assets'];
 	var templateName = args[1] || 'default';
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
@@ -63,8 +65,41 @@ module.exports = function(args, program) {
 	// add the default alloy.js file
 	U.copyFileSync(path.join(paths.template, 'alloy.js'), path.join(paths.app, 'alloy.js'));
 
-	// install ti.alloy compiler plugin
-	U.installPlugin(path.join(paths.alloy, '..'), paths.project);
+	// webpack builds don't require the alloy plugin
+	if (!templateName.includes('webpack')) {
+		// install ti.alloy compiler plugin
+		U.installPlugin(path.join(paths.alloy, '..'), paths.project);
+	}
+
+	// replace the classic webpack plugin with the alloy one
+	if (templateName.includes('webpack')) {
+		let pkg = {
+			dependencies: { }
+		};
+		// if there is an existing package.json then we'll just update it, if not then we'll make a
+		// best attempt to get a working project
+		if (fs.existsSync(paths.packageJson)) {
+			pkg = fs.readJSONSync(paths.packageJson);
+			// remove the classic plugin if it exists
+			if (pkg.dependencies['@titanium-sdk/webpack-plugin-classic']) {
+				delete pkg.dependencies['@titanium-sdk/webpack-plugin-classic'];
+			}
+		} else {
+			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
+			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
+			// specify this exact version of webpack as using a new version requires all things to be updated
+			pkg.dependencies.webpack = '^4.43.0';
+		}
+
+		// add the required dependencies, checking for the latest version if possible
+		Object.assign(pkg.dependencies, {
+			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.0')}`,
+			'@titanium-sdk/webpack-plugin-babel': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-babel', '0.1.2')}`,
+			'alloy': `^${await getLatestPackageVersion('alloy', '1.15.0')}`,
+			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.3')}`
+		});
+		fs.writeJSONSync(paths.packageJson, pkg);
+	}
 
 	// add the default app.tss file
 	U.copyFileSync(path.join(paths.template, CONST.GLOBAL_STYLE), path.join(paths.app, CONST.DIR.STYLE, CONST.GLOBAL_STYLE));
@@ -130,6 +165,16 @@ module.exports = function(args, program) {
 	// delete the build folder to give us a fresh run
 	fs.removeSync(paths.build);
 
+	if (templateName.includes('webpack')) {
+		logger.info('Installing project dependencies');
+		try {
+			await installDependencies(paths.project, logger);
+		} catch (error) {
+			logger.error('Failed to install project dependencies');
+			logger.error(error);
+		}
+	}
+
 	logger.info('Generated new project at: ' + paths.app);
 };
 
@@ -192,8 +237,66 @@ function getPaths(project, templateName, testapp) {
 	_.extend(paths, {
 		app: path.join(paths.project, 'app'),
 		assets: path.join(paths.project, 'app', 'assets'),
-		plugins: path.join(paths.project, 'plugins')
+		plugins: path.join(paths.project, 'plugins'),
+		packageJson: path.join(project, 'package.json')
 	});
 
 	return paths;
+}
+
+/**
+ * Check what the "latest" dist-tag on npm is for the provided package, falling back to the
+ * default version provided if the request errors
+ *
+ * @param {String} packageName - Name of the package to lookup
+ * @param {String} defaultVersion - If the latest version can't be resolved, the version to fallback to
+ *
+ * @returns {Promise<String>} Either the latest version of the defaultVersion if the request errors
+ */
+async function getLatestPackageVersion (packageName, defaultVersion) {
+	return new Promise((resolve) => {
+		try {
+			https.get(`https://registry.npmjs.org/-/package/${packageName}/dist-tags`, res => {
+				if (res.statusCode === 200) {
+					let body = '';
+					res.on('data', data => body += data);
+					res.on('end', () => {
+						return resolve(JSON.parse(body).latest);
+					});
+				} else {
+					return resolve(defaultVersion);
+				}
+			});
+		} catch (error) {
+			return resolve(defaultVersion);
+		}
+	});
+}
+
+/**
+ * Runs "npm i" in the provided project directory, code is lifted from the post-create hook in the
+ * angular project template
+ *
+ * @param {String} projectPath - path to the project
+ */
+async function installDependencies(projectPath) {
+	let npmExecutable = 'npm';
+	const spawnOptions = {
+		cwd: projectPath,
+		stdio: 'inherit'
+	};
+	if (process.platform === 'win32') {
+		spawnOptions.shell = true;
+		npmExecutable += '.cmd';
+	}
+	return new Promise((resolve, reject) => {
+		const child = spawn(npmExecutable, [ 'i' ], spawnOptions);
+		child.on('close', code => {
+			if (code !== 0) {
+				return reject(new Error('Failed to install project dependencies.'));
+			}
+
+			resolve();
+		});
+	});
 }
