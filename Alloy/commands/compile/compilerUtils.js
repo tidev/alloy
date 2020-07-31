@@ -737,7 +737,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 
 			_.each(srcDoc.getElementsByTagName('string'), function (node) {
 				var name = node.getAttribute('name');
-				if (!existing.hasOwnProperty(name)) {
+				if (!Object.prototype.hasOwnProperty.call(existing, name)) {
 					destDoc.appendChild(destXml.createTextNode('\t'));
 					destDoc.appendChild(node);
 					destDoc.appendChild(destXml.createTextNode('\n'));
