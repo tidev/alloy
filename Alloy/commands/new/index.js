@@ -91,9 +91,9 @@ module.exports = async function(args, program) {
 			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
 			// specify this exact version of webpack as using a new version requires all things to be updated
 			pkg.dependencies.webpack = '^4.43.0';
-			pkg.dependencies.eslint = '^7.5.0'
-			pkg.dependencies['eslint-config-axway'] = '4.7.0'
-			pkg.dependencies['babel-eslint'] = '10.1.0'
+			pkg.dependencies.eslint = '^7.5.0';
+			pkg.dependencies['eslint-config-axway'] = '4.7.0';
+			pkg.dependencies['babel-eslint'] = '10.1.0';
 		}
 
 		const srcFolder = path.join(paths.project, 'src');
@@ -113,7 +113,7 @@ module.exports = async function(args, program) {
 
 		Object.assign(pkg.scripts, {
 			lint: 'eslint app/'
-		})
+		});
 
 		fs.writeJSONSync(paths.packageJson, pkg);
 	}
@@ -193,7 +193,7 @@ module.exports = async function(args, program) {
 	}
 
 	if (await fs.exists(paths.eslintTemplate)) {
-		await fs.copy(path.join(paths.eslintTemplate, '.eslintrc.js'), path.join(paths.eslintApp, '.eslintrc.js'));
+		await fs.copy(path.join(paths.eslintTemplate), path.join(paths.eslintApp));
 	}
 
 	logger.info('Generated new project at: ' + paths.app);
@@ -260,7 +260,7 @@ function getPaths(project, templateName, testapp) {
 		assets: path.join(paths.project, 'app', 'assets'),
 		plugins: path.join(paths.project, 'plugins'),
 		packageJson: path.join(paths.project, 'package.json'),
-		eslintTemplate: path.join(paths.appTemplate, '.eslintrc.js'),
+		eslintTemplate: path.join(paths.appTemplate, 'eslintrc_js'),
 		eslintApp: path.join(paths.project, '.eslintrc.js')
 	});
 
