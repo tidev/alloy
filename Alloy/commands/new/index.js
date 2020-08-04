@@ -74,7 +74,8 @@ module.exports = async function(args, program) {
 	// replace the classic webpack plugin with the alloy one
 	if (templateName.includes('webpack')) {
 		let pkg = {
-			dependencies: { }
+			dependencies: { },
+			scripts: { }
 		};
 		// if there is an existing package.json then we'll just update it, if not then we'll make a
 		// best attempt to get a working project
@@ -84,11 +85,21 @@ module.exports = async function(args, program) {
 			if (pkg.dependencies['@titanium-sdk/webpack-plugin-classic']) {
 				delete pkg.dependencies['@titanium-sdk/webpack-plugin-classic'];
 			}
+
 		} else {
 			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
 			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
 			// specify this exact version of webpack as using a new version requires all things to be updated
 			pkg.dependencies.webpack = '^4.43.0';
+			pkg.dependencies.eslint = '^7.5.0'
+			pkg.dependencies['eslint-config-axway'] = '4.7.0'
+			pkg.dependencies['babel-eslint'] = '10.1.0'
+		}
+
+		const srcFolder = path.join(paths.project, 'src');
+		if (await fs.exists(srcFolder)) {
+			logger.info('Removing src folder');
+			await fs.remove(srcFolder);
 		}
 
 		// add the required dependencies, checking for the latest version if possible
@@ -96,8 +107,14 @@ module.exports = async function(args, program) {
 			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.0')}`,
 			'@titanium-sdk/webpack-plugin-babel': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-babel', '0.1.2')}`,
 			'alloy': `^${await getLatestPackageVersion('alloy', '1.15.0')}`,
-			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.3')}`
+			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.3')}`,
+			'eslint-plugin-alloy': `^${await getLatestPackageVersion('eslint-plugin-alloy', '1.1.1')}`
 		});
+
+		Object.assign(pkg.scripts, {
+			lint: 'eslint app/'
+		})
+
 		fs.writeJSONSync(paths.packageJson, pkg);
 	}
 
@@ -175,6 +192,10 @@ module.exports = async function(args, program) {
 		}
 	}
 
+	if (await fs.exists(paths.eslintTemplate)) {
+		await fs.copy(path.join(paths.eslintTemplate, '.eslintrc.js'), path.join(paths.eslintApp, '.eslintrc.js'));
+	}
+
 	logger.info('Generated new project at: ' + paths.app);
 };
 
@@ -238,7 +259,9 @@ function getPaths(project, templateName, testapp) {
 		app: path.join(paths.project, 'app'),
 		assets: path.join(paths.project, 'app', 'assets'),
 		plugins: path.join(paths.project, 'plugins'),
-		packageJson: path.join(project, 'package.json')
+		packageJson: path.join(paths.project, 'package.json'),
+		eslintTemplate: path.join(paths.appTemplate, '.eslintrc.js'),
+		eslintApp: path.join(paths.project, '.eslintrc.js')
 	});
 
 	return paths;
