@@ -1,0 +1,5 @@
+<Alloy>
+	<Window title="$.args.title">
+		<Label class="label">Just an empty window ... for now!</Label>
+	</Window>
+</Alloy>

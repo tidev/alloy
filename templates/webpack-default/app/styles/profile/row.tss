@@ -1,0 +1,33 @@
+'TableViewRow': {
+	height: 70
+}
+
+'TableViewRow[platform=ios]': {
+	selectionStyle: Ti.UI.iOS.TableViewCellSelectionStyle.NONE
+}
+
+'.iconWrapper': {
+	width: 40,
+	height: 40,
+	borderRadius: 20,
+	left: 20,
+	center: { y: 35 },
+	backgroundColor: $.args.iconBG
+}
+
+'.icon': {
+	color: $.args.iconColor
+}
+
+'.title': {
+	left: 20,
+	center: { y: 35 },
+	color: $.args.labelColor,
+	text: $.args.label 
+}
+
+'.chevron': {
+	color: '#c1c2c1',
+	center: { y: 35 },
+	right: 30
+}
