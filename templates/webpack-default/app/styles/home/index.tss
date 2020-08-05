@@ -24,7 +24,7 @@
 		{
 			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
 			value: '#E82C2A',
-			range: [ 5, 7 ]
+			range: [ 5, 20 ]
 		},
 		{
 			type: Ti.UI.ATTRIBUTE_FONT,
@@ -36,7 +36,7 @@
 		{
 			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
 			value: '#aaa',
-			range: [ 13, 20 ]
+			range: [ 25, 21 ]
 		}
 	]
 }

@@ -5,7 +5,7 @@
 				<Label class="fa-solid search">edit</Label>
 				<Label id="editLabel">
 					<AttributedString class="as">
-						Edit home.js to change this view!
+						Edit views/home/index.xml to change this view!
 					</AttributedString>
 				</Label>
 			</View>

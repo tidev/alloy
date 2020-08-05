@@ -11,9 +11,30 @@
 								<View class="separator" />
 							</View>
 						</HeaderView>
-						<Require src="/profile/row" iconBG="#eef0f6" icon="user" iconColor="#a9cdd1" label="Personal Details" labelColor="#000" />
-						<Require src="/profile/row" iconBG="#eef0f6" icon="lock" iconColor="#a9cdd1" label="Privacy &amp; Security" labelColor="#000" />
-						<Require src="/profile/row" iconBG="#eef0f6" icon="balance-scale-left" iconColor="#a9cdd1" label="Legal" labelColor="#000" />
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="user"
+							iconColor="#a9cdd1"
+							label="Personal Details"
+							labelColor="#000" /
+						>
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="lock"
+							iconColor="#a9cdd1"
+							label="Privacy &amp; Security"
+							labelColor="#000"
+						/>
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="balance-scale-left"
+							iconColor="#a9cdd1"
+							label="Legal"
+							labelColor="#000"
+						/>
 						<FooterView>
 							<View class="separatorWrapper">
 								<View class="separator" />
