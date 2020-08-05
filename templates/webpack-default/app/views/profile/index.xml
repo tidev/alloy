@@ -1,0 +1,52 @@
+<Alloy>
+	<Tab title="Profile">
+		<Window title="Profile">
+			<ScrollView id="scrollview">
+				<ImageView id="profile" />
+				<Label class="profileName">Verona Blair</Label>
+				<TableView onClick="doClick">
+					<TableViewSection id="settingsSection">
+						<HeaderView>
+							<View class="separatorWrapper">
+								<View class="separator" />
+							</View>
+						</HeaderView>
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="user"
+							iconColor="#a9cdd1"
+							label="Personal Details"
+							labelColor="#000" /
+						>
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="lock"
+							iconColor="#a9cdd1"
+							label="Privacy &amp; Security"
+							labelColor="#000"
+						/>
+						<Require
+							src="/profile/row"
+							iconBG="#eef0f6"
+							icon="balance-scale-left"
+							iconColor="#a9cdd1"
+							label="Legal"
+							labelColor="#000"
+						/>
+						<FooterView>
+							<View class="separatorWrapper">
+								<View class="separator" />
+							</View>
+						</FooterView>
+					</TableViewSection>
+
+					<TableViewSection>
+						<Require src="/profile/row" iconBG="#FFC5C3" icon="sign-out-alt" iconColor="#E82C2A" label="Logout" labelColor="#E82C2A" />
+					</TableViewSection>
+				</TableView>
+			</ScrollView>
+		</Window>
+	</Tab>
+</Alloy>

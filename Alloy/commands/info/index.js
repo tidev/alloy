@@ -46,6 +46,12 @@ var info = {
 				label: 'Two-tabbed Alloy Application',
 				Description: "Titanium's traditional two-tabbed application created using the Alloy MVC framework.",
 				icon: 'app.png'
+			},
+			{
+				name: 'webpack-default',
+				label: 'Alloy Project with webpack',
+				Description: 'A two-tabbed application created using the Alloy MVC framework and setup for weback support',
+				icon: 'app.png'
 			}
 		];
 		console.log(JSON.stringify(desc, null, 4));

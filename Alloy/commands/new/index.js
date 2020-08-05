@@ -12,14 +12,16 @@ var path = require('path'),
 	_ = require('lodash'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	logger = require('../../logger');
+	logger = require('../../logger'),
+	https = require('https'),
+	{ spawn } = require('child_process');
 
 var BASE_ERR = 'Project creation failed. ';
 var platformsDir = path.join(__dirname, '..', '..', '..', 'platforms');
 var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 var sampleAppsDir = path.join(__dirname, '..', '..', '..', 'samples', 'apps');
 
-module.exports = function(args, program) {
+module.exports = async function(args, program) {
 	var appDirs = ['controllers', 'styles', 'views', 'models', 'assets'];
 	var templateName = args[1] || 'default';
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
@@ -63,8 +65,66 @@ module.exports = function(args, program) {
 	// add the default alloy.js file
 	U.copyFileSync(path.join(paths.template, 'alloy.js'), path.join(paths.app, 'alloy.js'));
 
-	// install ti.alloy compiler plugin
-	U.installPlugin(path.join(paths.alloy, '..'), paths.project);
+	// webpack builds don't require the alloy plugin
+	if (!templateName.includes('webpack')) {
+		// install ti.alloy compiler plugin
+		U.installPlugin(path.join(paths.alloy, '..'), paths.project);
+	}
+
+	// replace the classic webpack plugin with the alloy one
+	if (templateName.includes('webpack')) {
+		let pkg = {
+			devDependencies: { },
+			scripts: { }
+		};
+		// if there is an existing package.json then we'll just update it, if not then we'll make a
+		// best attempt to get a working project
+		if (fs.existsSync(paths.packageJson)) {
+			pkg = fs.readJSONSync(paths.packageJson);
+			// remove the classic plugin if it exists
+			if (pkg.devDependencies['@titanium-sdk/webpack-plugin-classic']) {
+				delete pkg.devDependencies['@titanium-sdk/webpack-plugin-classic'];
+			}
+
+		} else {
+			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
+			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
+			// specify this exact version of webpack as using a new version requires all things to be updated
+			pkg.devDependencies.webpack = '^4.43.0';
+			pkg.devDependencies.eslint = '^7.5.0';
+			pkg.devDependencies['eslint-config-axway'] = '4.7.0';
+			pkg.devDependencies['babel-eslint'] = '10.1.0';
+			pkg.private = true;
+		}
+
+		const srcFolder = path.join(paths.project, 'src');
+		if (await fs.exists(srcFolder)) {
+			logger.info('Removing src folder');
+			await fs.remove(srcFolder);
+		}
+
+		// add the required dependencies, checking for the latest version if possible
+		Object.assign(pkg.devDependencies, {
+			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.1')}`,
+			'@titanium-sdk/webpack-plugin-babel': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-babel', '0.1.2')}`,
+			'alloy': `^${await getLatestPackageVersion('alloy', '1.15.0')}`,
+			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.4')}`,
+			'eslint-plugin-alloy': `^${await getLatestPackageVersion('eslint-plugin-alloy', '1.1.1')}`
+		});
+
+		Object.assign(pkg.scripts, {
+			lint: 'eslint app/'
+		});
+
+		await fs.writeJSON(paths.packageJson, pkg);
+
+		// If the template has a readme then read it in and append it to the existing README.md file,
+		// if that file doesn't exist then it'll get created
+		if (await fs.exists(paths.readme)) {
+			const readmeContents = await fs.readFile(paths.readme);
+			await fs.appendFile(paths.appReadme, `\n${readmeContents}`);
+		}
+	}
 
 	// add the default app.tss file
 	U.copyFileSync(path.join(paths.template, CONST.GLOBAL_STYLE), path.join(paths.app, CONST.DIR.STYLE, CONST.GLOBAL_STYLE));
@@ -111,7 +171,12 @@ module.exports = function(args, program) {
 	// add alloy project template files
 	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate, 'app') : paths.projectTemplate;
 	fs.copySync(tplPath, paths.app, {preserveTimestamps:true});
-	fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
+
+	// Don't copy across the default README if it's a webpack project
+	if (!templateName.includes('webpack')) {
+		fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
+	}
+
 
 	// if creating from one of the test apps...
 	if (program.testapp) {
@@ -130,6 +195,20 @@ module.exports = function(args, program) {
 	// delete the build folder to give us a fresh run
 	fs.removeSync(paths.build);
 
+	if (templateName.includes('webpack')) {
+		logger.info('Installing project dependencies');
+		try {
+			await installDependencies(paths.project, logger);
+		} catch (error) {
+			logger.error('Failed to install project dependencies');
+			logger.error(error);
+		}
+	}
+
+	if (await fs.exists(paths.eslintTemplate)) {
+		await fs.copy(path.join(paths.eslintTemplate), path.join(paths.eslintApp));
+	}
+
 	logger.info('Generated new project at: ' + paths.app);
 };
 
@@ -137,6 +216,7 @@ function getPaths(project, templateName, testapp) {
 	var alloy = path.join(__dirname, '..', '..');
 	var template = path.join(alloy, 'template');
 	var projectTemplates = path.join(alloy, '..', 'templates');
+	var templateReadme = path.join(projectTemplates, templateName, 'README.md');
 	var customTemplateDir;
 	var customAppDir;
 	var readMeFile;
@@ -145,6 +225,8 @@ function getPaths(project, templateName, testapp) {
 		customTemplateDir = templateName;
 		customAppDir = path.join(templateName, 'app');
 		readMeFile = path.join(customTemplateDir, 'README');
+	} else if (fs.existsSync(templateReadme)) {
+		readMeFile = templateReadme;
 	}
 
 	var paths = {
@@ -192,8 +274,69 @@ function getPaths(project, templateName, testapp) {
 	_.extend(paths, {
 		app: path.join(paths.project, 'app'),
 		assets: path.join(paths.project, 'app', 'assets'),
-		plugins: path.join(paths.project, 'plugins')
+		plugins: path.join(paths.project, 'plugins'),
+		packageJson: path.join(paths.project, 'package.json'),
+		eslintTemplate: path.join(paths.appTemplate, 'eslintrc_js'),
+		eslintApp: path.join(paths.project, '.eslintrc.js'),
+		appReadme: path.join(paths.project, 'README.md')
 	});
 
 	return paths;
+}
+
+/**
+ * Check what the "latest" dist-tag on npm is for the provided package, falling back to the
+ * default version provided if the request errors
+ *
+ * @param {String} packageName - Name of the package to lookup
+ * @param {String} defaultVersion - If the latest version can't be resolved, the version to fallback to
+ *
+ * @returns {Promise<String>} Either the latest version of the defaultVersion if the request errors
+ */
+async function getLatestPackageVersion (packageName, defaultVersion) {
+	return new Promise((resolve) => {
+		try {
+			https.get(`https://registry.npmjs.org/-/package/${packageName}/dist-tags`, res => {
+				if (res.statusCode === 200) {
+					let body = '';
+					res.on('data', data => body += data);
+					res.on('end', () => {
+						return resolve(JSON.parse(body).latest);
+					});
+				} else {
+					return resolve(defaultVersion);
+				}
+			});
+		} catch (error) {
+			return resolve(defaultVersion);
+		}
+	});
+}
+
+/**
+ * Runs "npm i" in the provided project directory, code is lifted from the post-create hook in the
+ * angular project template
+ *
+ * @param {String} projectPath - path to the project
+ */
+async function installDependencies(projectPath) {
+	let npmExecutable = 'npm';
+	const spawnOptions = {
+		cwd: projectPath,
+		stdio: 'inherit'
+	};
+	if (process.platform === 'win32') {
+		spawnOptions.shell = true;
+		npmExecutable += '.cmd';
+	}
+	return new Promise((resolve, reject) => {
+		const child = spawn(npmExecutable, [ 'i' ], spawnOptions);
+		child.on('close', code => {
+			if (code !== 0) {
+				return reject(new Error('Failed to install project dependencies.'));
+			}
+
+			resolve();
+		});
+	});
 }

@@ -514,7 +514,7 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 			} else {
 				// remove old style
 				_.each(style.style, function(val, key) {
-					if (_.isArray(val) && lastObj.hasOwnProperty(key)) {
+					if (_.isArray(val) && Object.prototype.hasOwnProperty.call(lastObj, key)) {
 						delete lastObj[key];
 					}
 				});

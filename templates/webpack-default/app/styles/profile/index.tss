@@ -1,0 +1,40 @@
+'Tab[platform=ios]': {
+	icon: 'images/user.png'
+}
+
+'#scrollview': {
+	layout: 'vertical',
+	scrollType: 'vertical'
+}
+
+'TableView': {
+	top: 40,
+	height: Ti.UI.SIZE,
+	scrollable: false,
+	separatorStyle: Ti.UI.TABLE_VIEW_SEPARATOR_STYLE_NONE
+}
+
+'.separatorWrapper': {
+	height: 1
+}
+
+'.separator': {
+	left: 20,
+	right: 20,
+	backgroundColor: '#eef0f6'
+}
+
+'#profile': {
+	top: 30,
+	width: 120,
+	height: 120,
+	borderRadius: 60,
+	image: 'images/profile.jpg'
+}
+
+'.profileName': {
+	font: {
+		fontSize: 28
+	},
+	top: 20
+}
