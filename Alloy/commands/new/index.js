@@ -104,10 +104,10 @@ module.exports = async function(args, program) {
 
 		// add the required dependencies, checking for the latest version if possible
 		Object.assign(pkg.dependencies, {
-			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.0')}`,
+			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.1')}`,
 			'@titanium-sdk/webpack-plugin-babel': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-babel', '0.1.2')}`,
 			'alloy': `^${await getLatestPackageVersion('alloy', '1.15.0')}`,
-			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.3')}`,
+			'alloy-compiler': `^${await getLatestPackageVersion('alloy-compiler', '0.2.4')}`,
 			'eslint-plugin-alloy': `^${await getLatestPackageVersion('eslint-plugin-alloy', '1.1.1')}`
 		});
 
