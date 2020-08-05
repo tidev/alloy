@@ -115,7 +115,14 @@ module.exports = async function(args, program) {
 			lint: 'eslint app/'
 		});
 
-		fs.writeJSONSync(paths.packageJson, pkg);
+		await fs.writeJSON(paths.packageJson, pkg);
+		console.log(paths.readme);
+		// If the template has a readme then read it in and append it to the existing README.md file,
+		// if that file doesn't exist then it'll get created
+		if (await fs.exists(paths.readme)) {
+			const readmeContents = await fs.readFile(paths.readme);
+			await fs.appendFile(paths.appReadme, `\n${readmeContents}`);
+		}
 	}
 
 	// add the default app.tss file
@@ -203,6 +210,7 @@ function getPaths(project, templateName, testapp) {
 	var alloy = path.join(__dirname, '..', '..');
 	var template = path.join(alloy, 'template');
 	var projectTemplates = path.join(alloy, '..', 'templates');
+	var templateReadme = path.join(projectTemplates, templateName, 'README.md');
 	var customTemplateDir;
 	var customAppDir;
 	var readMeFile;
@@ -211,6 +219,8 @@ function getPaths(project, templateName, testapp) {
 		customTemplateDir = templateName;
 		customAppDir = path.join(templateName, 'app');
 		readMeFile = path.join(customTemplateDir, 'README');
+	} else if (fs.existsSync(templateReadme)) {
+		readMeFile = templateReadme;
 	}
 
 	var paths = {
@@ -261,7 +271,8 @@ function getPaths(project, templateName, testapp) {
 		plugins: path.join(paths.project, 'plugins'),
 		packageJson: path.join(paths.project, 'package.json'),
 		eslintTemplate: path.join(paths.appTemplate, 'eslintrc_js'),
-		eslintApp: path.join(paths.project, '.eslintrc.js')
+		eslintApp: path.join(paths.project, '.eslintrc.js'),
+		appReadme: path.join(paths.project, 'README.md')
 	});
 
 	return paths;
