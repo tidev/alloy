@@ -116,7 +116,7 @@ module.exports = async function(args, program) {
 		});
 
 		await fs.writeJSON(paths.packageJson, pkg);
-		console.log(paths.readme);
+
 		// If the template has a readme then read it in and append it to the existing README.md file,
 		// if that file doesn't exist then it'll get created
 		if (await fs.exists(paths.readme)) {
@@ -170,7 +170,12 @@ module.exports = async function(args, program) {
 	// add alloy project template files
 	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate, 'app') : paths.projectTemplate;
 	fs.copySync(tplPath, paths.app, {preserveTimestamps:true});
-	fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
+
+	// Don't copy across the default README if it's a webpack project
+	if (!templateName.includes('webpack')) {
+		fs.writeFileSync(path.join(paths.app, 'README'), fs.readFileSync(paths.readme, 'utf8'));
+	}
+
 
 	// if creating from one of the test apps...
 	if (program.testapp) {
