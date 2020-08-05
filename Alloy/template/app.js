@@ -7,9 +7,13 @@ var Alloy = require('/alloy'),
 	_ = Alloy._,
 	Backbone = Alloy.Backbone;
 
-global.Alloy = Alloy;
-global._ = _;
-global.Backbone = Backbone;
+// The globals should be configured by the bootstrap script, however if anyone is using an SDK
+// older than 7.5.0 that won't get ran. So set them here if they don't exist
+if (!global.Alloy) {
+	global.Alloy = Alloy;
+	global._ = _;
+	global.Backbone = Backbone;
+}
 
 __MAPMARKER_ALLOY_JS__
 
