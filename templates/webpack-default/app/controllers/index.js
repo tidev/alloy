@@ -1,5 +1,3 @@
-const tabgroup = require('@/tabgroup');
-
-tabgroup.tg = $.index;
+require('@/tabgroup').tg = $.index;
 
 $.index.open();
