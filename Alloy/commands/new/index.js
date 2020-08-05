@@ -74,7 +74,7 @@ module.exports = async function(args, program) {
 	// replace the classic webpack plugin with the alloy one
 	if (templateName.includes('webpack')) {
 		let pkg = {
-			dependencies: { },
+			devDependencies: { },
 			scripts: { }
 		};
 		// if there is an existing package.json then we'll just update it, if not then we'll make a
@@ -82,18 +82,19 @@ module.exports = async function(args, program) {
 		if (fs.existsSync(paths.packageJson)) {
 			pkg = fs.readJSONSync(paths.packageJson);
 			// remove the classic plugin if it exists
-			if (pkg.dependencies['@titanium-sdk/webpack-plugin-classic']) {
-				delete pkg.dependencies['@titanium-sdk/webpack-plugin-classic'];
+			if (pkg.devDependencies['@titanium-sdk/webpack-plugin-classic']) {
+				delete pkg.devDependencies['@titanium-sdk/webpack-plugin-classic'];
 			}
 
 		} else {
 			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
 			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
 			// specify this exact version of webpack as using a new version requires all things to be updated
-			pkg.dependencies.webpack = '^4.43.0';
-			pkg.dependencies.eslint = '^7.5.0';
-			pkg.dependencies['eslint-config-axway'] = '4.7.0';
-			pkg.dependencies['babel-eslint'] = '10.1.0';
+			pkg.devDependencies.webpack = '^4.43.0';
+			pkg.devDependencies.eslint = '^7.5.0';
+			pkg.devDependencies['eslint-config-axway'] = '4.7.0';
+			pkg.devDependencies['babel-eslint'] = '10.1.0';
+			pkg.private = true;
 		}
 
 		const srcFolder = path.join(paths.project, 'src');
@@ -103,7 +104,7 @@ module.exports = async function(args, program) {
 		}
 
 		// add the required dependencies, checking for the latest version if possible
-		Object.assign(pkg.dependencies, {
+		Object.assign(pkg.devDependencies, {
 			'@titanium-sdk/webpack-plugin-alloy': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-alloy', '0.2.1')}`,
 			'@titanium-sdk/webpack-plugin-babel': `^${await getLatestPackageVersion('@titanium-sdk/webpack-plugin-babel', '0.1.2')}`,
 			'alloy': `^${await getLatestPackageVersion('alloy', '1.15.0')}`,
