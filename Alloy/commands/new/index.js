@@ -227,6 +227,14 @@ module.exports = async function(args, program) {
 		await fs.copy(path.join(paths.eslintTemplate), path.join(paths.eslintApp));
 	}
 
+	// Copy across the settings.json to have VS Code hide certain directories
+	const vscodeDir = path.join(paths.project, '.vscode');
+	if (!await fs.exists(vscodeDir)) {
+		await fs.ensureDir(vscodeDir);
+	}
+
+	await fs.copy(path.join(paths.template, 'settings.json'), path.join(vscodeDir, 'settings.json'));
+
 	logger.info('Generated new project at: ' + paths.app);
 };
 
