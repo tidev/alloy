@@ -79,9 +79,27 @@ module.exports = async function(args, program) {
 		};
 		// if there is an existing package.json then we'll just update it, if not then we'll make a
 		// best attempt to get a working project
-		if (fs.existsSync(paths.packageJson)) {
-			pkg = fs.readJSONSync(paths.packageJson);
+		if (await fs.exists(paths.packageJson)) {
+			pkg = await fs.readJSON(paths.packageJson);
+
+			// Make sure the required stanzas exist in the package.json
+			if (!pkg.dependencies) {
+				pkg.dependencies = {};
+			}
+
+			if (!pkg.devDependencies) {
+				pkg.devDependencies = {};
+			}
+
+			if (!pkg.scripts) {
+				pkg.scripts = {};
+			}
+
 			// remove the classic plugin if it exists
+			if (pkg.dependencies['@titanium-sdk/webpack-plugin-classic']) {
+				delete pkg.dependencies['@titanium-sdk/webpack-plugin-classic'];
+			}
+
 			if (pkg.devDependencies['@titanium-sdk/webpack-plugin-classic']) {
 				delete pkg.devDependencies['@titanium-sdk/webpack-plugin-classic'];
 			}
@@ -116,7 +134,7 @@ module.exports = async function(args, program) {
 			lint: 'eslint app/'
 		});
 
-		await fs.writeJSON(paths.packageJson, pkg);
+		await fs.writeJSON(paths.packageJson, pkg, { spaces: 2 });
 
 		// If the template has a readme then read it in and append it to the existing README.md file,
 		// if that file doesn't exist then it'll get created
