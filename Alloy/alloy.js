@@ -113,7 +113,7 @@ const cmd = require('./commands/' + command + '/index');
 Promise
 	.resolve(cmd(program.args.slice(1), program))
 	.catch(error => {
-		U.die(error.messaage, error);
+		U.die(error.message, error);
 	});
 
 ///////////////////////////////
