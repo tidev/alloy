@@ -134,7 +134,7 @@ function parse(node, state, args) {
 	};
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += ';\n' + args.symbol + '.setParent(' + args.parent.symbol + ');\n';
-	} else if (type === 'widget') {
+	} else if (type === 'widget' && (node.parentNode && node.parentNode.nodeName === 'Alloy')) {
 		code += '.getViewEx({recurse:true});\n';
 		parent = { symbol: args.symbol };
 	} else {
