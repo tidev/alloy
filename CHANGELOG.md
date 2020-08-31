@@ -2,6 +2,11 @@
 
 ### Unreleased items
 
+### Bug Fixes
+
+* [ALOY-1737](https://jira.appcelerator.org/browse/ALOY-1737) - Set items directly in ListView [#966](https://github.com/appcelerator/alloy/pull/966)
+* [ALOY-1738](https://jira.appcelerator.org/browse/ALOY-1738) - Fix handling of Require tags [#967](https://github.com/appcelerator/alloy/pull/967)
+
 ### Release 1.15.1
 
 ## Improvements
