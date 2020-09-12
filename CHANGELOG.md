@@ -2,6 +2,8 @@
 
 ### Unreleased items
 
+### Release 1.15.2
+
 ### Bug Fixes
 
 * [ALOY-1737](https://jira.appcelerator.org/browse/ALOY-1737) - Set items directly in ListView [#966](https://github.com/appcelerator/alloy/pull/966)
