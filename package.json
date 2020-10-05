@@ -67,7 +67,7 @@
     "node": ">=0.10"
   },
   "devDependencies": {
-    "@seadub/danger-plugin-dependencies": "^0.1.0",
+    "@seadub/danger-plugin-dependencies": "^1.0.0",
     "@seadub/danger-plugin-eslint": "^2.0.0",
     "@seadub/danger-plugin-junit": "^0.1.1",
     "danger": "^7.1.4",
