@@ -52,7 +52,7 @@
     "source-map": "^0.6.1",
     "walk-sync": "^0.3.2",
     "xml2tss": "0.0.5",
-    "xmldom": "^0.1.27"
+    "xmldom": "^0.3.0"
   },
   "license": "Apache-2.0",
   "bin": {
