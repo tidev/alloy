@@ -52,6 +52,13 @@ timestamps() {
 				currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 				fingerprint 'package.json'
 
+				if (skipCI()) {
+					def msg = 'Last commit tagged [skip ci]. Skipping build'
+					manager.addShortText(msg)
+					currentBuild.result = 'ABORTED'
+					error(msg)
+				}
+
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					ensureNPM(npmVersion)
 					// Install dependencies
@@ -96,11 +103,13 @@ timestamps() {
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					if (isMainlineBranch) {
 						try {
-							// Publish
-							sh 'npm publish'
+							withCredentials([string(credentialsId: 'oauth-github-api', variable: 'GH_TOKEN')]) {
+								sh 'npm run release'
+							}
 
-							// Tag git
-							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
+							// reread the package.json to detect version change if we've published
+							packageVersion = jsonParse(readFile('package.json'))['version']
+							currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 
 							if (isMaster) {
 								// Trigger appc-cli job

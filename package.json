@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/appcelerator/alloy.git"
+    "url": "git+https://github.com/appcelerator/alloy.git"
   },
   "preferGlobal": true,
   "dependencies": {
@@ -60,7 +60,8 @@
   },
   "scripts": {
     "test": "jake test:all",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "release": "semantic-release"
   },
   "main": "./Alloy/alloy",
   "engines": {
@@ -70,10 +71,29 @@
     "@seadub/danger-plugin-dependencies": "^1.0.0",
     "@seadub/danger-plugin-eslint": "^2.0.0",
     "@seadub/danger-plugin-junit": "^0.1.1",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "danger": "^7.1.4",
     "diff": "^3.4.0",
     "eslint": "^7.5.0",
     "jake": "^8.0.12",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "semantic-release": "^17.1.2"
+  },
+  "release": {
+    "tagFormat": "${version}",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      [
+        "@semantic-release/github",
+        {
+          "successComment": false
+        }
+      ]
+    ]
   }
 }
