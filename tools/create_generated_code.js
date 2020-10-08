@@ -1,5 +1,4 @@
 var fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	path = require('path'),
 	platforms = require('../platforms/index'),
 	_ = require('lodash'),
@@ -58,7 +57,6 @@ function doCompile(platform) {
 		var genDir = path.join(paths.apps, testApp, '_generated', platform);
 		fs.removeSync(genDir);
 		fs.mkdirpSync(genDir);
-		chmodr.sync(genDir, 0777);
 
 		var locations = [
 			path.join('alloy', 'controllers'),
@@ -70,7 +68,6 @@ function doCompile(platform) {
 			var dst = path.join(genDir, l);
 			if (fs.existsSync(src) && fs.readdirSync(src).length !== 0) {
 				fs.mkdirpSync(dst);
-				chmodr.sync(dst, 0777);
 				fs.copySync(src, dst);
 
 				// we don't need to evaluate BaseController.js every time

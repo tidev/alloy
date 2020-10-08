@@ -1,6 +1,5 @@
 var exec = require('child_process').exec,
 	fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	os = require('os'),
 	path = require('path'),
 	JsDiff = require('diff'),
@@ -28,7 +27,6 @@ function resetTestApp(callback) {
 	var paths = exports.paths;
 	fs.removeSync(paths.harness);
 	fs.mkdirpSync(paths.harness);
-	chmodr.sync(paths.harness, 0777);
 	fs.copySync(paths.harnessTemplate, paths.harness);
 	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
 		if (error) {
