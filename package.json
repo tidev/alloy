@@ -50,7 +50,7 @@
     "pkginfo": "0.4.1",
     "resolve": "^1.1.7",
     "source-map": "^0.6.1",
-    "walk-sync": "^0.3.2",
+    "walk-sync": "^2.2.0",
     "xml2tss": "0.0.5",
     "xmldom": "^0.1.27"
   },
