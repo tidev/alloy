@@ -77,7 +77,7 @@
     "diff": "^3.4.0",
     "eslint": "^7.5.0",
     "jake": "^8.0.12",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.4",
     "semantic-release": "^17.1.2"
   },
   "release": {
