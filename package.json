@@ -73,7 +73,7 @@
     "@seadub/danger-plugin-junit": "^0.1.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "danger": "^7.1.4",
+    "danger": "^10.5.0",
     "diff": "^3.4.0",
     "eslint": "^7.5.0",
     "jake": "^8.0.12",
