@@ -1,7 +1,5 @@
 # Alloy Release Notes
 
-### Unreleased items
-
 ### Release 1.15.2
 
 ### Bug Fixes
