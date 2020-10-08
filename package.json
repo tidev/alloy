@@ -43,7 +43,7 @@
     "ejs": "2.5.7",
     "fs-extra": "^5.0.0",
     "global-paths": "^1.0.0",
-    "jsonlint": "1.6.2",
+    "jsonlint": "1.6.3",
     "lodash": "^4.17.4",
     "moment": "2.20.1",
     "node.extend": "2.0.2",
