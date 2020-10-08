@@ -41,7 +41,7 @@
     "colors": "^1.1.2",
     "commander": "^2.12.2",
     "ejs": "2.5.7",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^9.0.1",
     "global-paths": "^1.0.0",
     "jsonlint": "1.6.3",
     "lodash": "^4.17.4",
