@@ -76,7 +76,7 @@
     "danger": "^7.1.4",
     "diff": "^3.4.0",
     "eslint": "^7.5.0",
-    "jake": "^8.0.12",
+    "jake": "^10.8.2",
     "semantic-release": "^17.1.2"
   },
   "release": {
