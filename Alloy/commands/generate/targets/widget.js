@@ -1,6 +1,5 @@
 var path = require('path'),
 	fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	jsonlint = require('jsonlint'),
 	U = require('../../../utils'),
 	_ = require('lodash'),
@@ -27,14 +26,12 @@ module.exports = function(name, args, program) {
 			CONST.FILE_EXT[type]);
 
 		fs.mkdirpSync(typeFolder);
-		chmodr.sync(typeFolder, 0755);
 		fs.writeFileSync(
 			path.join(typeFolder, CONST.NAME_WIDGET_DEFAULT + '.' + CONST.FILE_EXT[type]),
 			fs.readFileSync(typeTemplate, 'utf8')
 		);
 	});
 	fs.mkdirpSync(path.join(paths.widget, CONST.DIR.ASSETS));
-	chmodr.sync(path.join(paths.widget, CONST.DIR.ASSETS), 0755);
 
 	// create widget.json manifest file
 	fs.writeFileSync(
