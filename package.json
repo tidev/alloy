@@ -38,7 +38,7 @@
     "@babel/template": "^7.4.4",
     "async": "^3.2.0",
     "colors": "^1.1.2",
-    "commander": "^2.12.2",
+    "commander": "^6.1.0",
     "ejs": "3.1.5",
     "fs-extra": "^5.0.0",
     "global-paths": "^1.0.0",
