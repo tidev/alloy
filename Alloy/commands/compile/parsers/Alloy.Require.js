@@ -134,7 +134,7 @@ function parse(node, state, args) {
 	};
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
 		code += ';\n' + args.symbol + '.setParent(' + args.parent.symbol + ');\n';
-	} else if (type === 'widget' && (node.parentNode && node.parentNode.nodeName === 'Alloy')) {
+	} else if (type === 'widget' && isOnlyNodeInView(node)) {
 		code += '.getViewEx({recurse:true});\n';
 		parent = { symbol: args.symbol };
 	} else {
@@ -147,4 +147,37 @@ function parse(node, state, args) {
 		styles: state.styles,
 		code: code
 	};
+}
+
+/**
+ * Determines whether a node is the only child node of the Alloy in the view structure. This is
+ * used to determine whether a Widget should become the root element of the view when only a view
+ * only contains a single Widget tag like below
+ *
+ * <Alloy>
+ *     <Widget src="com.ti.mywidget" id="widget" />
+ * </Alloy>
+ *
+ * @param {Node} node - XMLDom node to be inspected
+ * @return Boolean
+ */
+function isOnlyNodeInView (node) {
+
+	// Shouldn't happen as the Alloy tag should always exist, but lets handle it
+	if (!node.parentNode) {
+		return false;
+	}
+
+	// If the parent isn't the Alloy tag, then it isn't the only node in the view
+	if (node.parentNode.nodeName !== 'Alloy') {
+		return false;
+	}
+
+	// If there are sibling nodes, then it isn't the only node in the view
+	const siblingNodes = U.XML.getElementsFromNodes(node.parentNode.childNodes).filter(n => n !== node);
+	if (siblingNodes.length !== 0) {
+		return false;
+	}
+
+	return true;
 }
