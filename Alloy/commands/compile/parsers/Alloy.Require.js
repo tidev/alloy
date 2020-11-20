@@ -150,8 +150,8 @@ function parse(node, state, args) {
 }
 
 /**
- * Determines whether a node is the only child node of the Alloy in the view structure. This is
- * used to determine whether a Widget should become the root element of the view when only a view
+ * Determines whether a node is the only child node of the Alloy tag in the view structure. This is
+ * used to determine whether a Widget should become the root element of the view when a view
  * only contains a single Widget tag like below
  *
  * <Alloy>
