@@ -103,6 +103,8 @@ timestamps() {
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					if (isMainlineBranch) {
 						try {
+							ensureNPM(npmVersion)
+							sh 'npm ci'
 							withCredentials([string(credentialsId: 'oauth-github-api', variable: 'GH_TOKEN')]) {
 								sh 'npm run release'
 							}
