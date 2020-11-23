@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/appcelerator/alloy/compare/1.15.2...1.15.3) (2020-11-23)
+
+
+### Bug Fixes
+
+* improve check around whether widget is only tag in the view ([#1035](https://github.com/appcelerator/alloy/issues/1035)) ([7e4c3d6](https://github.com/appcelerator/alloy/commit/7e4c3d6e6ba7f3fbf3b9b4889ac1ec79e2b30192))
+
 # Alloy Release Notes
 
 ### Release 1.15.2
