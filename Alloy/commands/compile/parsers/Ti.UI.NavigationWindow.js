@@ -32,7 +32,7 @@ function parse(node, state, args) {
 
 	var child = children[0],
 		childArgs = CU.getParserArgs(child),
-		theNode = CU.validateNodeName(child, 'Ti.UI.Window'),
+		theNode = CU.validateNodeName(child, 'Ti.UI.Window') || CU.validateNodeName(child, 'Ti.UI.TabGroup'),
 		windowSymbol;
 
 	// generate the code for the Window first
