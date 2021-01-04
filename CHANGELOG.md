@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/appcelerator/alloy/compare/1.15.3...1.15.4) (2021-01-04)
+
+
+### Bug Fixes
+
+* **compile:** allow TabGroup as child of a NavigationWindow ([#1067](https://github.com/appcelerator/alloy/issues/1067)) ([d837e76](https://github.com/appcelerator/alloy/commit/d837e76f1e304a8704232020b56e03c0f806953b))
+
 ## [1.15.3](https://github.com/appcelerator/alloy/compare/1.15.2...1.15.3) (2020-11-23)
 
 
