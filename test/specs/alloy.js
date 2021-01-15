@@ -9,13 +9,17 @@ var TIMEOUT_DEFAULT = 1000;
 // The alloy command test suite
 describe('alloy', function() {
 	it('can be executed', function() {
-		TU.asyncExecTest('alloy');
+		TU.asyncExecTest('alloy', {
+			test: function () {
+				expect(this.output.error.code).toBe(1);
+			}
+		});
 	});
 
 	it('displays help when it receives no arguments', function() {
 		TU.asyncExecTest('alloy', {
 			test: function() {
-				expect(U.stripColors(this.output.stdout)).toMatch(
+				expect(U.stripColors(this.output.stderr)).toMatch(
 					/Usage\:\s+alloy\s+COMMAND\s+\[ARGS\]\s+\[OPTIONS\]/);
 			}
 		});
