@@ -33,6 +33,7 @@ if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
 
 // Process command line input
 program
+	.storeOptionsAsProperties() // Enable the legacy behaviour of storing options as properties on the program object
 	.version(module.exports.version, '-v, --version')
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
