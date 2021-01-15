@@ -54,26 +54,34 @@ program
 	.option('--widgetname <name>', 'Widget name, used with generate command')
 	.option('--testapp <name>', 'Test app name to import, used with new command');
 
-program.command('new'.blue + ' <dir>'.white)
-	.description('    create a new alloy project'.grey);
+program.command('new <dir>')
+	.description('create a new alloy project');
 
-program.command('compile'.blue + ' [dir]'.white)
-	.description('    compile into titanium source code'.grey);
+program.command('compile [dir]')
+	.description('compile into titanium source code');
 
-program.command('extract-i18n'.blue + ' <language>'.white)
-	.description('    extracts i18n strings from the source code (js and tss files)'.grey);
+program.command('extract-i18n <language>')
+	.description('extracts i18n strings from the source code (js and tss files)');
 
-program.command('generate'.blue + ' <type> <name>'.white)
-	.description('    generate a new alloy type such as a controller'.grey);
+program.command('generate <type> <name>')
+	.description('generate a new alloy type such as a controller');
 
-program.command('copy'.blue + ' <source> <destination>'.white)
-	.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
+program.command('copy <source> <destination>')
+	.description('copy the controller, view, and style files from <source> to <destination>');
 
-program.command('move'.blue + ' <source> <destination>'.white)
-	.description('    move the controller, view, and style files from <source> to <destination>'.grey);
+program.command('move <source> <destination>')
+	.description('move the controller, view, and style files from <source> to <destination>');
 
-program.command('remove'.blue + ' <source>'.white)
-	.description('    remove the controller, view, and style files at <source>'.grey);
+program.command('remove <source>')
+	.description('remove the controller, view, and style files at <source>');
+
+program.command('info [type]', { hidden: true });
+
+program.command('debugger', { hidden: true });
+
+program.command('install', { hidden: true });
+
+program.command('test', { hidden: true });
 
 program.parse(process.argv);
 
