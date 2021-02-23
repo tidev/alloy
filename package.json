@@ -48,7 +48,7 @@
     "node.extend": "2.0.2",
     "pkginfo": "0.4.1",
     "resolve": "^1.1.7",
-    "source-map": "^0.6.1",
+    "source-map": "^0.7.3",
     "walk-sync": "^0.3.2",
     "xml2tss": "0.0.5",
     "xmldom": "^0.4.0"
