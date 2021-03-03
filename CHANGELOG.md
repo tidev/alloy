@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/appcelerator/alloy/compare/1.15.4...1.16.0) (2021-03-03)
+
+
+### Features
+
+* support using OptionBar ([93c2df1](https://github.com/appcelerator/alloy/commit/93c2df14e190bb281ac191b9c85e529fc2b11dc6))
+
 ## [1.15.4](https://github.com/appcelerator/alloy/compare/1.15.3...1.15.4) (2021-01-04)
 
 
