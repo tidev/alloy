@@ -19,14 +19,14 @@ jobs:
         run: npm run lint
   Test:
     needs: Lint
-    name: ${{ matrix.os }} Node.js ${{ matrix.nodeVersion }} Ti SDK ${{ matrix.sdk }} Tests
+    name: ${{ matrix.os }} Node.js ${{ matrix.nodeVersion }} Ti SDK ${{ matrix.tiSDK }} Tests
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         nodeVersion: [ '12.x' ]
         os: [ macos-latest ]
-        tiSDK: [ GA, '-b master' ] # -b master is to reduce the complexity of handling a GA install vs a branch install
+        tiSDK: [ latest, '-b master' ] # -b master is to reduce the complexity of handling a GA install vs a branch install
     steps:
       - uses: actions/checkout@v2
         with:
