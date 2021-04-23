@@ -18,6 +18,10 @@ exports.paths = {
 	harness: path.join(alloyRoot,'test','projects','Harness')
 };
 
+function createEnv () {
+	return Object.assign(process.env, { PATH: `${process.env.PATH}${path.delimiter}${path.join(process.cwd(), 'bin')}`})
+}
+
 // Recreate the test app harness
 //
 // Params:
@@ -28,11 +32,11 @@ function resetTestApp(callback) {
 	fs.removeSync(paths.harness);
 	fs.mkdirpSync(paths.harness);
 	fs.copySync(paths.harnessTemplate, paths.harness);
-	exec('alloy new "' + paths.harness + '"', function(error, stdout, stderr) {
+	exec('alloy new "' + paths.harness + '"', {env: createEnv() }, function(error, stdout, stderr) {
 		if (error) {
 			console.error('Failed to create new alloy project at ' + paths.harness);
 			console.error(stderr);
-			process.exit();
+			process.exit(1);
 		}
 		callback();
 	});
@@ -76,7 +80,7 @@ exports.asyncExecTest = function(cmd, opts) {
 		self.done = false;
 
 		var asyncFunc = function() {
-			exec(cmd, function() {
+			exec(cmd, { env: createEnv() }, function() {
 				self.done = true;
 				self.output = getExecObject(arguments);
 			});
