@@ -43,6 +43,8 @@ exec('ti sdk list --output json', function(error, stdout, stderr){
 });
 */
 
+delete platforms.mobileweb;
+
 var alloyRoot = path.join(__dirname,'..','..'),
 	paths = {
 		apps: path.join(alloyRoot,'test','apps'),
