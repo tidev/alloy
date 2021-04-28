@@ -1,0 +1,33 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
+  reviewers:
+  - ewanharris
+  ignore:
+  - dependency-name: fs-extra
+    versions:
+    - "> 5.0.0"
+  - dependency-name: walk-sync
+    versions:
+    - "> 0.3.2"
+  - dependency-name: "@babel/types"
+    versions:
+    - 7.12.13
+    - 7.13.13
+    - 7.13.14
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.13.13
+  - dependency-name: "@babel/parser"
+    versions:
+    - 7.12.13
+    - 7.12.14
+    - 7.13.0
+  - dependency-name: "@babel/generator"
+    versions:
+    - 7.12.13
