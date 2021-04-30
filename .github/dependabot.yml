@@ -15,19 +15,3 @@ updates:
   - dependency-name: walk-sync
     versions:
     - "> 0.3.2"
-  - dependency-name: "@babel/types"
-    versions:
-    - 7.12.13
-    - 7.13.13
-    - 7.13.14
-  - dependency-name: "@babel/core"
-    versions:
-    - 7.13.13
-  - dependency-name: "@babel/parser"
-    versions:
-    - 7.12.13
-    - 7.12.14
-    - 7.13.0
-  - dependency-name: "@babel/generator"
-    versions:
-    - 7.12.13
