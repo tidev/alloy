@@ -10,7 +10,8 @@ var U = require('../../utils'),
 	_ = require('lodash'),
 	styler = require('./styler'),
 	XMLSerializer = require('xmldom').XMLSerializer,
-	CONST = require('../../common/constants');
+	CONST = require('../../common/constants'),
+	sourceMapper = require('./sourceMapper');
 
 ///////////////////////////////////////
 ////////// private variables //////////
@@ -639,6 +640,20 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				logger.trace('Copying ' + file.yellow + ' --> ' +
 					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
+
+				if (path.extname(source) === '.js') {
+					sourceMapper.generateSourceMap({
+						target: {
+							filename: file,
+							filepath: dest,
+						},
+						data: {},
+						origFile: {
+							filename: file,
+							filepath: source
+						}
+					}, compilerConfig);
+				}
 			}
 		});
 
