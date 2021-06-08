@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/appcelerator/alloy/compare/1.16.0...1.16.1) (2021-06-08)
+
+
+### Bug Fixes
+
+* **compile:** generate source maps for lib files in widgets ([ba8d4c2](https://github.com/appcelerator/alloy/commit/ba8d4c22872c78927b8b231cc0f5e2cb0384525c))
+
 # [1.16.0](https://github.com/appcelerator/alloy/compare/1.15.4...1.16.0) (2021-03-03)
 
 
