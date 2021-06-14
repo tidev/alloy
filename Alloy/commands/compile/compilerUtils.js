@@ -641,7 +641,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
 
-				if (path.extname(source) === '.js') {
+				if (path.extname(source) === '.js' && compilerConfig.sourcemap) {
 					sourceMapper.generateSourceMap({
 						target: {
 							filename: file,
