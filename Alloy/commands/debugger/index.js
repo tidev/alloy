@@ -8,7 +8,7 @@ var FUNCTIONS = {
 	original: 'originalPositionFor'
 };
 
-module.exports = function(args, program) {
+module.exports = async function(args, program) {
 	// validate arguments
 	if (args.length === 0) {
 		U.die('Missing command and source map file');
@@ -24,6 +24,24 @@ module.exports = function(args, program) {
 		U.die('You must specify a source origin file (-z, --source) when querying for generated positions');
 	}
 
+	var line = 1;
+	var column = 1;
+	if (program.line) {
+		line = parseInt(program.line, 10);
+
+		if (isNaN(line)) {
+			U.die('--line must be a number');
+		}
+	}
+
+	if (program.column) {
+		column = parseInt(program.column, 10);
+
+		if (isNaN(column)) {
+			U.die('--column must be a number');
+		}
+	}
+
 	var sourceMapFile = args[1];
 	if (!fs.existsSync(sourceMapFile)) {
 		U.die('Source map file "' + sourceMapFile + '" does not exist');
@@ -31,10 +49,10 @@ module.exports = function(args, program) {
 
 	// read the source map and generate the consumer
 	var sourceMap = fs.readFileSync(sourceMapFile, 'utf8');
-	var consumer = new SM.SourceMapConsumer(sourceMap);
+	var consumer = await new SM.SourceMapConsumer(sourceMap);
 	var obj = {
-		line: program.line,
-		column: program.column
+		line,
+		column
 	};
 	if (program.source) { obj.source = program.source; }
 
