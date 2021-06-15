@@ -1,3 +1,10 @@
+## [1.16.2](https://github.com/appcelerator/alloy/compare/1.16.1...1.16.2) (2021-06-15)
+
+
+### Bug Fixes
+
+* **compile:** don't create widget sourcemaps if sourcemaps are disabled ([b1259b1](https://github.com/appcelerator/alloy/commit/b1259b1feff867bdab8ebb29ce9ceae2f739290e))
+
 ## [1.16.1](https://github.com/appcelerator/alloy/compare/1.16.0...1.16.1) (2021-06-08)
 
 
