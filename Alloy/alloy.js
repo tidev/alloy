@@ -64,7 +64,7 @@ program.command('compile [dir]')
 program.command('extract-i18n <language>')
 	.description('extracts i18n strings from the source code (js and tss files)');
 
-program.command('generate <type> <name>')
+program.command('generate <type> [name]')
 	.description('generate a new alloy type such as a controller');
 
 program.command('copy <source> <destination>')
