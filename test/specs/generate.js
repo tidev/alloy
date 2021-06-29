@@ -123,7 +123,6 @@ describe('alloy generate', function() {
 		TU.asyncExecTest('alloy generate', {
 			test: function() {
 				expect(this.output.error).not.toBeNull();
-				expect(this.output.stderr.indexOf(CONST.GENERATE_TARGETS.join(','))).not.toBe(-1);
 			}
 		});
 	});
