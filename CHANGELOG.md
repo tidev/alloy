@@ -1,3 +1,11 @@
+## [1.16.3](https://github.com/appcelerator/alloy/compare/1.16.2...1.16.3) (2021-06-29)
+
+
+### Bug Fixes
+
+* **generate:** mark name as optional as it is not required for jmk ([bc0e06f](https://github.com/appcelerator/alloy/commit/bc0e06f9169cc7a5e34c0f1e757f29af3a6ffc7b))
+* **new:** mark dir as optional as it is not required ([d151848](https://github.com/appcelerator/alloy/commit/d151848ad1ba7a8494b5005d016725645173ba4d))
+
 ## [1.16.2](https://github.com/appcelerator/alloy/compare/1.16.1...1.16.2) (2021-06-15)
 
 
