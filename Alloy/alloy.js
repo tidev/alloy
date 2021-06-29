@@ -55,7 +55,7 @@ program
 	.option('--widgetname <name>', 'Widget name, used with generate command')
 	.option('--testapp <name>', 'Test app name to import, used with new command');
 
-program.command('new <dir>')
+program.command('new [dir]')
 	.description('create a new alloy project');
 
 program.command('compile [dir]')
