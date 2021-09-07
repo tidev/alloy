@@ -65,11 +65,11 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	});
 	// try to lookup the filename, falling back to the output file if we can't determine it
 	let filename;
-	if (data.__MAPMARKER_CONTROLLER_CODE__) {
+	if (data.__MAPMARKER_CONTROLLER_CODE__ && data.__MAPMARKER_CONTROLLER_CODE__.filename) {
 		filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
-	} else if (data.__MAPMARKER_ALLOY_JS__) {
+	} else if (data.__MAPMARKER_ALLOY_JS__ && data.__MAPMARKER_ALLOY_JS__.filename) {
 		filename = data.__MAPMARKER_ALLOY_JS__.filename;
-	} else if (data.__MAPMARKER_NONCONTROLLER__) {
+	} else if (data.__MAPMARKER_NONCONTROLLER__ && data.__MAPMARKER_NONCONTROLLER__.filename) {
 		filename = data.__MAPMARKER_NONCONTROLLER__.filename;
 	} else {
 		filename = target.filename;
