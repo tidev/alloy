@@ -1,3 +1,10 @@
+## [1.16.4](https://github.com/appcelerator/alloy/compare/1.16.3...1.16.4) (2021-09-17)
+
+
+### Bug Fixes
+
+* **compile:** provide filename to babel transform to allow using config files ([#1218](https://github.com/appcelerator/alloy/issues/1218)) ([ba0068e](https://github.com/appcelerator/alloy/commit/ba0068ed094906a474c3d6552e27b4e809414a2f))
+
 ## [1.16.3](https://github.com/appcelerator/alloy/compare/1.16.2...1.16.3) (2021-06-29)
 
 
