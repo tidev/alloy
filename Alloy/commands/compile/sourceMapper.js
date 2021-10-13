@@ -60,7 +60,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: `${compileConfig.dir.project}/${relativeOutfile}`,
+		file: path.join(compileConfig.dir.project, relativeOutfile),
 		sourceRoot: compileConfig.dir.project
 	});
 	// try to lookup the filename, falling back to the output file if we can't determine it
@@ -173,7 +173,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var origFile = generator.origFile;
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: `${compileConfig.dir.project}/${target.filename}`,
+		file: path.join(compileConfig.dir.project, target.filename),
 		sourceRoot: compileConfig.dir.project
 	});
 	var genMap = {
