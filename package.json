@@ -74,7 +74,7 @@
     "@semantic-release/git": "^10.0.0",
     "danger": "^10.5.0",
     "diff": "^5.0.0",
-    "eslint": "^7.5.0",
+    "eslint": "^8.0.1",
     "jake": "^10.8.2",
     "semantic-release": "^18.0.0"
   },
