@@ -10,14 +10,14 @@ var MIN_VERSION = '5.4.0';
 var systemButtons = [
 	'ACTION', 'ACTIVITY', 'ADD', 'BOOKMARKS', 'CAMERA', 'CANCEL', 'COMPOSE', 'CONTACT_ADD',
 	'DISCLOSURE', 'DONE', 'EDIT', 'FAST_FORWARD', 'FIXED_SPACE', 'FLEXIBLE_SPACE', 'INFO_DARK',
-	'INFO_LIGHT', 'NEUTRAL', 'ORGANIZE', 'PAUSE', 'PLAY', 'POSITIVE', 'REFRESH', 'REPLY', 'REWIND',
-	'SAVE', 'SPINNER', 'STOP', 'TRASH'
+	'INFO_LIGHT', 'ORGANIZE', 'PAUSE', 'PLAY', 'REFRESH', 'REPLY', 'REWIND','SAVE', 'SPINNER',
+	'STOP', 'TRASH'
 ];
 
 var deprecatedSystemButtons = {
-	DONE: 'POSITIVE',
-	BORDERED: 'NEUTRAL',
-	PLAIN: 'NEUTRAL'
+	DONE: 'BUTTON_STYLE_OPTION_POSITIVE',
+	BORDERED: 'BUTTON_STYLE_OPTION_NEUTRAL',
+	PLAIN: 'BUTTON_STYLE_OPTION_NEUTRAL'
 };
 
 exports.parse = function(node, state) {
@@ -37,8 +37,8 @@ function parse(node, state, args) {
 
 	// Auto-fix deprecated enums
 	if (Object.prototype.hasOwnProperty.call(deprecatedSystemButtons, systemButton)) {
-		logger.warn(`${buttonPrefix}${systemButton} is deprecated in favor of ${buttonPrefix}${deprecatedSystemButtons[systemButton]}`);
 		systemButton = deprecatedSystemButtons[systemButton];
+		buttonPrefix = 'Ti.UI.';
 	}
 
 	if (_.includes(systemButtons, systemButton)) {
