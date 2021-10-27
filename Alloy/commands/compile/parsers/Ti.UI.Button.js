@@ -36,7 +36,7 @@ function parse(node, state, args) {
 	var systemButton = node.getAttribute('systemButton');
 
 	// Auto-fix deprecated enums
-	if (Object.prototype.hasOwnProperty.call(deprecatedSystemButtons, systemButton)) {
+	if (tiapp.version.gte(tiapp.getSdkVersion(), '10.0.0') && Object.prototype.hasOwnProperty.call(deprecatedSystemButtons, systemButton)) {
 		systemButton = deprecatedSystemButtons[systemButton];
 		buttonPrefix = 'Ti.UI.';
 	}
