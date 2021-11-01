@@ -6,5 +6,6 @@
 	"os:android": {},
 	"os:ios": {},
 	"os:windows": {},
-	"dependencies": {}
+	"dependencies": {},
+	"backbone": "1.4.0"
 }
