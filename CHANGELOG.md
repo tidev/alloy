@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/appcelerator/alloy/compare/1.16.4...1.17.0) (2021-11-02)
+
+
+### Bug Fixes
+
+* **compile/sourcemap:** use path.join rather than manually constructing a path ([537107d](https://github.com/appcelerator/alloy/commit/537107debd06930ed3ea932395e2654e4996db48))
+
+
+### Features
+
+* **all:** set default backbone version ([fb845f7](https://github.com/appcelerator/alloy/commit/fb845f735be4ff6999807f14b740c37357145977))
+
 ## [1.16.4](https://github.com/appcelerator/alloy/compare/1.16.3...1.16.4) (2021-09-17)
 
 
