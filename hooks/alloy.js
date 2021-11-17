@@ -123,6 +123,12 @@ exports.init = function (logger, config, cli, appc) {
 				};
 			}), function () {
 
+				if (!paths.alloy) {
+					logger.error('The alloy CLI is not installed');
+					logger.error('Please install it with [sudo] npm i alloy -g');
+					process.exit(1);
+				}
+
 				// compose alloy command execution
 				var cmd = [paths.node, paths.alloy, 'compile', appDir, '--config', config];
 				if (cli.argv['no-colors'] || cli.argv['color'] === false) { cmd.push('--no-colors'); }
@@ -193,9 +199,5 @@ exports.init = function (logger, config, cli, appc) {
 			target = build.target;
 
 		run(build.deviceFamily, deployType, target, finished);
-	});
-
-	cli.addHook('codeprocessor.pre.run', function (build, finished) {
-		run('none', 'development', undefined, finished, SILENT);
 	});
 };
