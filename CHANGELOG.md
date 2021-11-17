@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/appcelerator/alloy/compare/1.17.0...1.17.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **compile/hook:** error if unable to find the alloy cli ([166dc3b](https://github.com/appcelerator/alloy/commit/166dc3b61c2dba6fbeecf1d4d00a742dea15be99))
+
 # [1.17.0](https://github.com/appcelerator/alloy/compare/1.16.4...1.17.0) (2021-11-02)
 
 
