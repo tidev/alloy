@@ -1,6 +1,6 @@
 var fs = require('fs-extra'),
 	path = require('path'),
-	DOMParser = require('xmldom').DOMParser,
+	DOMParser = require('@xmldom/xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	platforms = require('../../platforms/index'),

@@ -36,6 +36,7 @@
     "@babel/traverse": "^7.4.5",
     "@babel/types": "^7.4.4",
     "@babel/template": "^7.4.4",
+    "@xmldom/xmldom": "^0.8.0",
     "async": "^3.2.0",
     "colors": "^1.1.2",
     "commander": "^8.0.0",
@@ -50,8 +51,7 @@
     "resolve": "^1.1.7",
     "source-map": "^0.7.3",
     "walk-sync": "^0.3.2",
-    "xml2tss": "0.0.5",
-    "xmldom": "^0.6.0"
+    "xml2tss": "0.0.5"
   },
   "license": "Apache-2.0",
   "bin": {

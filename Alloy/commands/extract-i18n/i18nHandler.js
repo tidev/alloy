@@ -2,7 +2,7 @@ var U = require('../../utils'),
 	logger = require('../../logger'),
 	path = require('path'),
 	_ = require('lodash'),
-	XMLSerializer = require('xmldom').XMLSerializer,
+	XMLSerializer = require('@xmldom/xmldom').XMLSerializer,
 	fs = require('fs-extra'),
 	os = require('os');
 
