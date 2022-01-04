@@ -9,7 +9,7 @@ var U = require('../../utils'),
 	astController = require('./ast/controller'),
 	_ = require('lodash'),
 	styler = require('./styler'),
-	XMLSerializer = require('xmldom').XMLSerializer,
+	XMLSerializer = require('@xmldom/xmldom').XMLSerializer,
 	CONST = require('../../common/constants'),
 	sourceMapper = require('./sourceMapper');
 
