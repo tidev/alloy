@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/appcelerator/alloy/compare/1.17.1...1.17.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* **deps:** bump xmldom to 0.8.0 ([#1270](https://github.com/appcelerator/alloy/issues/1270)) ([d0a4299](https://github.com/appcelerator/alloy/commit/d0a42991a02b1535d2e5d933365d67e9a3e81b63))
+
 ## [1.17.1](https://github.com/appcelerator/alloy/compare/1.17.0...1.17.1) (2021-11-17)
 
 
