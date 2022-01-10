@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/appcelerator/alloy/compare/1.17.2...1.17.3) (2022-01-10)
+
+
+### Bug Fixes
+
+* pin colors version to avoid dos issue ([5f10891](https://github.com/appcelerator/alloy/commit/5f10891ef6a9f6357a41ef782390a8d6a9d2d1de))
+
 ## [1.17.2](https://github.com/appcelerator/alloy/compare/1.17.1...1.17.2) (2022-01-04)
 
 
