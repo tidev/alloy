@@ -7,8 +7,8 @@ exports.definition = {
 			'twitter': 'text'
 		},
 		'defaults': {
-			'name': 'Jason Kneen',
-			'email': 'jkneen@tidev.io',
+			'name': 'TiDev',
+			'email': 'no-reply@tidev.io',
 			'twitter': '@tidevio'
 		},
 		'adapter': {
