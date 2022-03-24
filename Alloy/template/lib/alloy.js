@@ -21,7 +21,7 @@
  * interact with the View and Model components of the application or widget.
  *
  * For guides on using Alloy, see
- * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
+ * [Alloy Framework](https://titaniumsdk.com/guide/Alloy_Framework).
  */
 var _ = require('/alloy/underscore')._,
 	Backbone = require('/alloy/backbone'),
@@ -64,38 +64,38 @@ var RESET = {
 	backgroundColor: OS_ANDROID ? 'transparent' : null,
 
 	// creates a font slightly different (smaller) than default on iOS
-	// https://jira.appcelerator.org/browse/TIMOB-14565
+	// https://jira-archive.titaniumsdk.com/TIMOB-14565
 	font: null,
 
 	// Throws an exception on Android if set to null. Works on other platforms.
-	// https://jira.appcelerator.org/browse/TIMOB-14566
+	// https://jira-archive.titaniumsdk.com/TIMOB-14566
 	visible: true,
 
 	// Setting to "null" on android makes text transparent
-	// https://jira.appcelerator.org/browse/TIMOB-14567
+	// https://jira-archive.titaniumsdk.com/TIMOB-14567
 	color: OS_ANDROID ? '#000' : null,
 
 	// Android will leave artifact of previous transform unless the identity matrix is
 	// manually reset.
-	// https://jira.appcelerator.org/browse/TIMOB-14568
+	// https://jira-archive.titaniumsdk.com/TIMOB-14568
 	//
 	// Mobileweb does not respect matrix properties set in the constructor, despite the
-	// documentation at docs.appcelerator.com indicating that it should.
-	// https://jira.appcelerator.org/browse/TIMOB-14570
+	// documentation at titaniumsdk indicating that it should.
+	// https://jira-archive.titaniumsdk.com/TIMOB-14570
 	transform: OS_ANDROID ? IDENTITY_TRANSFORM : null,
 
 	// Crashes if set to null on anything but Android
-	// https://jira.appcelerator.org/browse/TIMOB-14571
+	// https://jira-archive.titaniumsdk.com/TIMOB-14571
 	backgroundGradient: !OS_ANDROID ? {} : null,
 
 	// All supported platforms have varying behavior with border properties
-	// https://jira.appcelerator.org/browse/TIMOB-14573
+	// https://jira-archive.titaniumsdk.com/TIMOB-14573
 	borderColor: OS_ANDROID ? null : 'transparent',
 
-	// https://jira.appcelerator.org/browse/TIMOB-14575
+	// https://jira-archive.titaniumsdk.com/TIMOB-14575
 	borderRadius: OS_IOS ? 0 : null,
 
-	// https://jira.appcelerator.org/browse/TIMOB-14574
+	// https://jira-archive.titaniumsdk.com/TIMOB-14574
 	borderWidth: OS_IOS ? 0 : null
 };
 
@@ -125,7 +125,7 @@ function addNamespace(apiName) {
 		'.' + apiName;
 }
 
-exports.M = function(name, modelDesc, migrations) {
+exports.M = function (name, modelDesc, migrations) {
 	var config = (modelDesc || {}).config || {};
 	var adapter = config.adapter || {};
 	var extendObj = {};
@@ -134,11 +134,11 @@ exports.M = function(name, modelDesc, migrations) {
 
 	if (adapter.type) {
 		mod = require('/alloy/sync/' + adapter.type);
-		extendObj.sync = function(method, model, opts) {
+		extendObj.sync = function (method, model, opts) {
 			return mod.sync(method, model, opts);
 		};
 	} else {
-		extendObj.sync = function(method, model, opts) {
+		extendObj.sync = function (method, model, opts) {
 			Ti.API.warn('Execution of ' + method + '#sync() function on a model that does not support persistence');
 			Ti.API.warn('model: ' + JSON.stringify(model.toJSON()));
 		};
@@ -170,18 +170,18 @@ exports.M = function(name, modelDesc, migrations) {
 	return Model;
 };
 
-exports.C = function(name, modelDesc, model) {
+exports.C = function (name, modelDesc, model) {
 	var extendObj = { model: model };
 	var config = (model ? model.prototype.config : {}) || {};
 	var mod;
 
 	if (config.adapter && config.adapter.type) {
 		mod = require('/alloy/sync/' + config.adapter.type);
-		extendObj.sync = function(method, model, opts) {
+		extendObj.sync = function (method, model, opts) {
 			return mod.sync(method, model, opts);
 		};
 	} else {
-		extendObj.sync = function(method, model, opts) {
+		extendObj.sync = function (method, model, opts) {
 			Ti.API.warn('Execution of ' + method + '#sync() function on a collection that does not support persistence');
 			Ti.API.warn('model: ' + JSON.stringify(model.toJSON()));
 		};
@@ -204,7 +204,7 @@ exports.C = function(name, modelDesc, model) {
 };
 
 exports.UI = {};
-exports.UI.create = function(controller, apiName, opts) {
+exports.UI.create = function (controller, apiName, opts) {
 	opts = opts || {};
 
 	// Make sure we have a full api name
@@ -215,7 +215,7 @@ exports.UI.create = function(controller, apiName, opts) {
 		ns = opts.ns || CONST.IMPLICIT_NAMESPACES[baseName] || CONST.NAMESPACE_DEFAULT;
 	} else if (parts.length > 1) {
 		baseName = parts[parts.length - 1];
-		ns = parts.slice(0,parts.length - 1).join('.');
+		ns = parts.slice(0, parts.length - 1).join('.');
 	} else {
 		throw ('Alloy.UI.create() failed: No API name was given in the second parameter');
 	}
@@ -229,7 +229,7 @@ exports.UI.create = function(controller, apiName, opts) {
 	return eval(ns)['create' + baseName](style);
 };
 
-exports.createStyle = function(controller, opts, defaults) {
+exports.createStyle = function (controller, opts, defaults) {
 	var classes, apiName;
 
 	// If there's no opts, there's no reason to load the style module. Just
@@ -298,8 +298,8 @@ exports.createStyle = function(controller, opts, defaults) {
 		// process runtime custom queries
 		if (style.queries && style.queries.if &&
 			(style.queries.if.trim().toLowerCase() === 'false' ||
-			(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
-			exports.Globals[style.queries.if.split('.')[2]] === false))) {
+				(style.queries.if.indexOf('Alloy.Globals') !== -1 &&
+					exports.Globals[style.queries.if.split('.')[2]] === false))) {
 			continue;
 		}
 
@@ -332,7 +332,7 @@ function processStyle(controller, proxy, classes, opts, defaults) {
 	if (OS_ANDROID) { proxy.classes = classes; }
 }
 
-exports.addClass = function(controller, proxy, classes, opts) {
+exports.addClass = function (controller, proxy, classes, opts) {
 
 	// make sure we actually have classes to add
 	if (!classes) {
@@ -361,7 +361,7 @@ exports.addClass = function(controller, proxy, classes, opts) {
 	}
 };
 
-exports.removeClass = function(controller, proxy, classes, opts) {
+exports.removeClass = function (controller, proxy, classes, opts) {
 	classes = classes || [];
 	var pClasses = proxy[CONST.CLASS_PROPERTY] || [];
 	var beforeLen = pClasses.length;
@@ -391,7 +391,7 @@ exports.removeClass = function(controller, proxy, classes, opts) {
 	}
 };
 
-exports.resetClass = function(controller, proxy, classes, opts) {
+exports.resetClass = function (controller, proxy, classes, opts) {
 	classes = classes || [];
 	classes = _.isString(classes) ? classes.split(/\s+/) : classes;
 	processStyle(controller, proxy, classes, opts, RESET);
@@ -406,7 +406,7 @@ exports.resetClass = function(controller, proxy, classes, opts) {
  * @param {Object} [args] Arguments to pass to the widget.
  * @return {Alloy.Controller} Alloy widget controller object.
  */
-exports.createWidget = function(id, name, args) {
+exports.createWidget = function (id, name, args) {
 	if (typeof name !== 'undefined' && name !== null &&
 		_.isObject(name) && !_.isString(name)) {
 		args = name;
@@ -423,7 +423,7 @@ exports.createWidget = function(id, name, args) {
  * @param {Object} [args] Arguments to pass to the controller.
  * @return {Alloy.Controller} Alloy controller object.
  */
-exports.createController = function(name, args) {
+exports.createController = function (name, args) {
 	return new (require('/alloy/controllers/' + name))(args);
 };
 
@@ -432,13 +432,13 @@ exports.createController = function(name, args) {
  * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the
  * named model.
  *
- * See [Backbone.Model](http://docs.appcelerator.com/backbone/0.9.2/#Model) in the Backbone.js documentation for
+ * See Backbone.Model in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
  * @param {Object} [args] Arguments to pass to the model.
  * @return {Backbone.Model} Backbone model object.
  */
-exports.createModel = function(name, args) {
+exports.createModel = function (name, args) {
 	return new (require('/alloy/models/' + ucfirst(name)).Model)(args);
 };
 
@@ -447,14 +447,14 @@ exports.createModel = function(name, args) {
  * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
- * See [Backbone.Collection](http://docs.appcelerator.com/backbone/0.9.2/#Collection) in the Backbone.js
+ * See Backbone.Collection in the Backbone.js
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
  * @param {Object} [args] Arguments to pass to the collection.
  * @return {Backbone.Collection} Backbone collection object.
  */
-exports.createCollection = function(name, args) {
+exports.createCollection = function (name, args) {
 	return new (require('/alloy/models/' + ucfirst(name)).Collection)(args);
 };
 
@@ -470,7 +470,7 @@ function isTabletFallback() {
  * `true` if the current device is a tablet.
  *
  */
-exports.isTablet = (function() {
+exports.isTablet = (function () {
 	if (OS_IOS) {
 		return Ti.Platform.osname === 'ipad';
 	} else if (OS_ANDROID) {
@@ -482,10 +482,10 @@ exports.isTablet = (function() {
 			Ti.Platform.displayCaps.platformHeight,
 			Ti.Platform.displayCaps.platformWidth
 		) >= 400;
-	// } else if (OS_BLACKBERRY) {
-	// 	// Tablets not currently supported by BB TiSDK
-	// 	// https://jira.appcelerator.org/browse/TIMOB-13225
-	// 	return false;
+		// } else if (OS_BLACKBERRY) {
+		// 	// Tablets not currently supported by BB TiSDK
+		// 	// https://jira-archive.titaniumsdk.com/TIMOB-13225
+		// 	return false;
 	} else if (OS_WINDOWS) {
 		// per http://www.extremetech.com/computing/139768-windows-8-smartphones-and-windows-phone-8-tablets
 		// tablets should be >= 1024x768 and phones could be lower, though current phones are running at
@@ -543,7 +543,7 @@ exports.Models = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/model.js for docs site.
  */
-exports.Models.instance = function(name) {
+exports.Models.instance = function (name) {
 	return exports.Models[name] || (exports.Models[name] = exports.createModel(name));
 };
 
@@ -568,7 +568,7 @@ exports.Collections = {};
  * returns an existing instance if one has already been created.
  * Documented in docs/apidoc/collection.js for docs site.
  */
-exports.Collections.instance = function(name) {
+exports.Collections.instance = function (name) {
 	return exports.Collections[name] || (exports.Collections[name] = exports.createCollection(name));
 };
 
@@ -621,7 +621,7 @@ if (OS_ANDROID) {
  * @fileoverview
  * Port of jQuery.extend that actually works on node.js
  */
-exports.deepExtend = function() {
+exports.deepExtend = function () {
 	var target = arguments[0] || {};
 	var i = 1;
 	var length = arguments.length;

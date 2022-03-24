@@ -27,16 +27,16 @@ var alloyRoot = path.join(__dirname, '..', '..'),
 ////////// constants //////////
 ///////////////////////////////
 var RESERVED_ATTRIBUTES = [
-		'platform',
-		'formFactor',
-		'if',
-		CONST.BIND_COLLECTION,
-		CONST.BIND_WHERE,
-		CONST.AUTOSTYLE_PROPERTY,
-		'ns',
-		'method',
-		'module'
-	],
+	'platform',
+	'formFactor',
+	'if',
+	CONST.BIND_COLLECTION,
+	CONST.BIND_WHERE,
+	CONST.AUTOSTYLE_PROPERTY,
+	'ns',
+	'method',
+	'module'
+],
 	RESERVED_ATTRIBUTES_REQ_INC = [
 		'platform',
 		'type',
@@ -50,7 +50,7 @@ var RESERVED_ATTRIBUTES = [
 		'method',
 		'module'
 	],
-	RESERVED_EVENT_REGEX =  new RegExp(`^(?:(${CONST.PLATFORMS.join('|')}):)?on([A-Z].+)`);
+	RESERVED_EVENT_REGEX = new RegExp(`^(?:(${CONST.PLATFORMS.join('|')}):)?on([A-Z].+)`);
 
 // load CONDITION_MAP with platforms
 exports.CONDITION_MAP = {
@@ -61,7 +61,7 @@ exports.CONDITION_MAP = {
 		runtime: 'Alloy.isTablet'
 	}
 };
-_.each(CONST.PLATFORMS, function(p) {
+_.each(CONST.PLATFORMS, function (p) {
 	exports.CONDITION_MAP[p] = require(path.join(platformsDir, p, 'index'))['condition'];
 });
 
@@ -74,11 +74,11 @@ exports.dataFunctionNames = {};
 //////////////////////////////////////
 ////////// public interface //////////
 //////////////////////////////////////
-exports.getCompilerConfig = function() {
+exports.getCompilerConfig = function () {
 	return compilerConfig;
 };
 
-exports.generateVarName = function(id, name) {
+exports.generateVarName = function (id, name) {
 	if (_.includes(CONST.JS_RESERVED_ALL, id)) {
 		U.die([
 			'Invalid ID "' + id + '" for <' + name + '>.',
@@ -89,11 +89,11 @@ exports.generateVarName = function(id, name) {
 	return '$.__views["' + id + '"]';
 };
 
-exports.generateUniqueId = function() {
+exports.generateUniqueId = function () {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 };
 
-exports.getNodeFullname = function(node) {
+exports.getNodeFullname = function (node) {
 	var name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,
 		fullname = ns + '.' + name;
@@ -101,9 +101,9 @@ exports.getNodeFullname = function(node) {
 	return fullname;
 };
 
-exports.isNodeForCurrentPlatform = function(node) {
-	var isForCurrentPlatform =  !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig;
-	_.each(node.getAttribute('platform').split(','), function(p) {
+exports.isNodeForCurrentPlatform = function (node) {
+	var isForCurrentPlatform = !node.hasAttribute('platform') || !compilerConfig || !compilerConfig.alloyConfig;
+	_.each(node.getAttribute('platform').split(','), function (p) {
 		// need to account for multiple platforms and negation, such as
 		// platform=ios,android   or   platform=!ios   or   platform="android,!mobileweb"
 		p = p.trim();
@@ -113,7 +113,7 @@ exports.isNodeForCurrentPlatform = function(node) {
 	});
 	return isForCurrentPlatform;
 };
-exports.getParserArgs = function(node, state, opts) {
+exports.getParserArgs = function (node, state, opts) {
 	state = state || {};
 	opts = opts || {};
 
@@ -156,14 +156,14 @@ exports.getParserArgs = function(node, state, opts) {
 	// process the platform attribute
 	if (platform) {
 		platformObj = {};
-		_.each((platform).split(','), function(p) {
+		_.each((platform).split(','), function (p) {
 			var matches = U.trim(p).match(/^(\!{0,1})(.+)/);
 			if (matches !== null) {
 				var negate = matches[1];
 				var name = matches[2];
 				if (_.includes(CONST.PLATFORMS, name)) {
 					if (negate === '!') {
-						_.each(_.without(CONST.PLATFORMS, name), function(n) {
+						_.each(_.without(CONST.PLATFORMS, name), function (n) {
 							platformObj[n] = true;
 						});
 					} else {
@@ -187,7 +187,7 @@ exports.getParserArgs = function(node, state, opts) {
 	// 1. autoStyle attribute
 	// 2. autoStyle from <Alloy>
 	// 3. autoStyle from config.json
-	var autoStyle = (function() {
+	var autoStyle = (function () {
 		var prop = CONST.AUTOSTYLE_PROPERTY;
 		if (node.hasAttribute(prop)) {
 			return node.getAttribute(prop) === 'true';
@@ -201,7 +201,7 @@ exports.getParserArgs = function(node, state, opts) {
 		createArgs[CONST.APINAME_PROPERTY] = fullname;
 	}
 
-	_.each(node.attributes, function(attr) {
+	_.each(node.attributes, function (attr) {
 		var attrName = attr.nodeName;
 		if (_.includes(attrs, attrName)) { return; }
 		var matches = attrName.match(RESERVED_EVENT_REGEX);
@@ -218,14 +218,14 @@ exports.getParserArgs = function(node, state, opts) {
 
 			// find platform specific attributes
 			var attributeParts = attrName.split(':');
-			if ( attributeParts.length === 2 && _.includes(CONST.PLATFORMS, attributeParts[0])) {
+			if (attributeParts.length === 2 && _.includes(CONST.PLATFORMS, attributeParts[0])) {
 				// if this attribute is for this platform, create it without namespace.
-				if ( attributeParts[0] === compilerConfig.alloyConfig.platform ) {
+				if (attributeParts[0] === compilerConfig.alloyConfig.platform) {
 					attrName = attributeParts[1];
 				} else {
 					return;
 				}
-			}	
+			}
 
 			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG|\$.args)\.|L\(.+\)\s*$|WPATH\()/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
@@ -255,7 +255,7 @@ exports.getParserArgs = function(node, state, opts) {
 						}
 					}
 				}
-				_.set(createArgs, attrName, theValue );
+				_.set(createArgs, attrName, theValue);
 			}
 		}
 	});
@@ -280,11 +280,11 @@ exports.getParserArgs = function(node, state, opts) {
 	}, bindObj);
 };
 
-exports.generateNodeExtended = function(node, state, newState) {
+exports.generateNodeExtended = function (node, state, newState) {
 	return exports.generateNode(node, _.extend(_.clone(state), newState));
 };
 
-exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCollection) {
+exports.generateNode = function (node, state, defaultId, isTopLevel, isModelOrCollection) {
 	if (node.nodeType != 1) return '';
 	if (!exports.isNodeForCurrentPlatform(node)) {
 		return '';
@@ -301,7 +301,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	var conditionType = compilerConfig && compilerConfig.alloyConfig && compilerConfig.alloyConfig.platform ? 'compile' : 'runtime';
 	if (args.platform) {
 		var conditionArray = [];
-		_.each(args.platform, function(v, k) {
+		_.each(args.platform, function (v, k) {
 			conditionArray.push(exports.CONDITION_MAP[k][conditionType]);
 		});
 
@@ -381,14 +381,14 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 		var eventFunc = /^Alloy\.(?:Collection|Model|Require|Widget)/.test(args.fullname) ?
 			'on' : 'addEventListener';
 
-		_.each(args.events, function(ev) {
+		_.each(args.events, function (ev) {
 			var eventObj = {
-					obj: isModelOrCollection ? state.args.symbol : args.symbol,
-					ev: ev.name,
-					cb: ev.value,
-					escapedCb: ev.value.replace(/'/g, "\\'"),
-					func: eventFunc
-				},
+				obj: isModelOrCollection ? state.args.symbol : args.symbol,
+				ev: ev.name,
+				cb: ev.value,
+				escapedCb: ev.value.replace(/'/g, "\\'"),
+				func: eventFunc
+			},
 				postCode;
 
 			if (_.includes(['Alloy.Widget', 'Alloy.Require'], args.fullname)) {
@@ -424,7 +424,7 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	// Continue parsing if necessary
 	if (state.parent) {
 		var states = _.isArray(state.parent) ? state.parent : [state.parent];
-		_.each(states, function(p) {
+		_.each(states, function (p) {
 			var parent = p.node;
 			if (!parent) { return; }
 			for (var i = 0, l = parent.childNodes.length; i < l; i++) {
@@ -443,12 +443,12 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	} else {
 		return {
 			content: code.condition ? _.template(codeTemplate)(code) : code.content,
-			pre: code.condition ? _.template(codeTemplate)({content:code.pre}) : code.pre
+			pre: code.condition ? _.template(codeTemplate)({ content: code.pre }) : code.pre
 		};
 	}
 };
 
-exports.expandRequireNode = function(requireNode, doRecursive) {
+exports.expandRequireNode = function (requireNode, doRecursive) {
 	var cloneNode = requireNode.cloneNode(true);
 
 	function getViewRequirePath(node) {
@@ -472,7 +472,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			fullpaths.push(path.join(compilerConfig.dir.views, src));
 		} else if (fullname === 'Alloy.Widget' ||
 			(fullname === 'Alloy.Require' && type === 'widget')) {
-			U.getWidgetDirectories(compilerConfig.dir.home).forEach(function(wDir) {
+			U.getWidgetDirectories(compilerConfig.dir.home).forEach(function (wDir) {
 				if (wDir.manifest.id === src) {
 					if (platform) {
 						fullpaths.push(path.join(wDir.dir, CONST.DIR.VIEW, platform, name));
@@ -489,7 +489,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		var fullpath;
 		for (var i = 0; i < fullpaths.length; i++) {
 			fullpath = fullpaths[i];
-			fullpath += regex.test(fullpath) ? '' :  '.' + CONST.FILE_EXT.VIEW;
+			fullpath += regex.test(fullpath) ? '' : '.' + CONST.FILE_EXT.VIEW;
 			if (fs.existsSync(fullpath)) {
 				found = true;
 				break;
@@ -500,7 +500,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 		if (!found) {
 			U.die([
 				type + ' "' + src + '" ' + (type === 'widget' ? 'view "' + name + '" ' : '') +
-					'does not exist.',
+				'does not exist.',
 				'The following paths were inspected:'
 			].concat(fullpaths));
 		}
@@ -535,7 +535,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			cloneNode = U.XML.getAlloyFromFile(fullpath);
 		} else {
 			var newDocRoot = U.XML.getAlloyFromFile(fullpath);
-			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function(n) {
+			_.each(U.XML.getElementsFromNodes(newDocRoot.childNodes), function (n) {
 				insertAfter(n, node);
 			});
 
@@ -552,15 +552,15 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 			var all = [];
 
 			// condense node lists into a single array
-			_.each(reqs, function(req) {
+			_.each(reqs, function (req) {
 				all.push(req);
 			});
-			_.each(widgets, function(widget) {
+			_.each(widgets, function (widget) {
 				all.push(widget);
 			});
 
 			// find all the valid widgets/requires
-			var viewRequires = _.filter(reqs, function(req) {
+			var viewRequires = _.filter(reqs, function (req) {
 				return getViewRequirePath(req) !== null;
 			});
 
@@ -568,7 +568,7 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 				break;
 			}
 
-			// TODO: https://jira.appcelerator.org/browse/ALOY-256
+			// TODO: https://jira-archive.titaniumsdk.com/ALOY-256
 			//_.each(viewRequires, processRequire);
 			processRequire(viewRequires[0]);
 		}
@@ -577,12 +577,12 @@ exports.expandRequireNode = function(requireNode, doRecursive) {
 	return cloneNode;
 };
 
-exports.inspectRequireNode = function(node) {
+exports.inspectRequireNode = function (node) {
 	var newNode = exports.expandRequireNode(node, true);
 	var children = U.XML.getElementsFromNodes(newNode.childNodes);
 	var names = [];
 
-	_.each(children, function(c) {
+	_.each(children, function (c) {
 		var args = exports.getParserArgs(c);
 
 		// skip model elements when inspecting nodes for <Require>
@@ -601,7 +601,7 @@ exports.inspectRequireNode = function(node) {
 	};
 };
 
-exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
+exports.copyWidgetResources = function (resources, resourceDir, widgetId, opts) {
 
 	opts = opts || {};
 	var platform;
@@ -609,11 +609,11 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 		platform = compilerConfig.alloyConfig.platform;
 	}
 
-	_.each(resources, function(dir) {
+	_.each(resources, function (dir) {
 		if (!path.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
-		_.each(files, function(file) {
+		_.each(files, function (file) {
 			file = path.normalize(file);
 			var source = path.join(dir, file);
 
@@ -673,23 +673,23 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 			var widgetAssetSourceDir = path.join(widgetThemeDir, 'assets');
 			var widgetAssetTargetDir = path.join(resourceDir, widgetId);
 			if (fs.existsSync(widgetAssetSourceDir)) {
-				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, { preserveTimestamps: true });
 			}
 			// platform-specific assets from the widget must override those of the theme
 			if (platform && path.existsSync(path.join(resources[0], platform))) {
-				fs.copySync(path.join(resources[0], platform), widgetAssetTargetDir, {preserveTimestamps: true});
+				fs.copySync(path.join(resources[0], platform), widgetAssetTargetDir, { preserveTimestamps: true });
 			}
 			// however platform-specific theme assets must override the platform assets from the widget
 			if (platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
 				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
-				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
+				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, { preserveTimestamps: true });
 			}
 
 			// [ALOY-1002] Remove platform-specific folders copied from theme
 			if (fs.existsSync(widgetAssetTargetDir)) {
 				var files = walkSync(widgetAssetTargetDir);
-				_.each(files, function(file) {
+				_.each(files, function (file) {
 					var source = path.join(widgetAssetTargetDir, file);
 					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
 						fs.removeSync(source);
@@ -778,7 +778,7 @@ function updateImplicitNamspaces(platform) {
 	}
 }
 
-exports.createCompileConfig = function(inputPath, outputPath, alloyConfig, buildLog) {
+exports.createCompileConfig = function (inputPath, outputPath, alloyConfig, buildLog) {
 	var dirs = ['assets', 'config', 'controllers', 'lib', 'migrations', 'models', 'styles', 'themes', 'vendor', 'views', 'widgets'];
 	var libDirs = ['builtins', 'template'];
 	var resources = path.resolve(path.join(outputPath, 'Resources'));
@@ -795,10 +795,10 @@ exports.createCompileConfig = function(inputPath, outputPath, alloyConfig, build
 	};
 
 	// create list of dirs
-	_.each(dirs, function(dir) {
+	_.each(dirs, function (dir) {
 		obj.dir[dir] = path.resolve(path.join(inputPath, dir));
 	});
-	_.each(libDirs, function(dir) {
+	_.each(libDirs, function (dir) {
 		obj.dir[dir] = path.resolve(path.join(alloyRoot, dir));
 	});
 
@@ -850,7 +850,7 @@ function generateConfig(obj) {
 
 	// get the app and resources locations
 	var appCfg = path.join(obj.dir.home, 'config.' + CONST.FILE_EXT.CONFIG);
-	var resourcesBase = (function() {
+	var resourcesBase = (function () {
 		var base = obj.dir.resources;
 		if (platform) { base = path.join(base, platform); }
 		return path.join(base, 'alloy');
@@ -898,7 +898,7 @@ function generateConfig(obj) {
 	return o;
 }
 
-exports.parseConfig = function(file, alloyConfig, o) {
+exports.parseConfig = function (file, alloyConfig, o) {
 	var j, distType;
 	try {
 		j = jsonlint.parse(fs.readFileSync(file, 'utf8'));
@@ -906,7 +906,7 @@ exports.parseConfig = function(file, alloyConfig, o) {
 		U.die('Error processing "config.' + CONST.FILE_EXT.CONFIG + '"', e);
 	}
 
-	_.each(j, function(v, k) {
+	_.each(j, function (v, k) {
 		if (!/^(?:env\:|os\:|dist\:)/.test(k) && k !== 'global') {
 			logger.debug(k + ' = ' + JSON.stringify(v));
 			o[k] = v;
@@ -936,13 +936,13 @@ exports.parseConfig = function(file, alloyConfig, o) {
 	return o;
 };
 
-exports.loadController = function(file) {
+exports.loadController = function (file) {
 	var code = {
-			parentControllerName: '',
-			controller: '',
-			pre: '',
-			es6mods: ''
-		},
+		parentControllerName: '',
+		controller: '',
+		pre: '',
+		es6mods: ''
+	},
 		contents;
 
 	// Read the controller file
@@ -964,19 +964,19 @@ exports.loadController = function(file) {
 	return code;
 };
 
-exports.validateNodeName = function(node, names) {
+exports.validateNodeName = function (node, names) {
 	var fullname = exports.getNodeFullname(node);
 	var ret = null;
 	if (!_.isArray(names)) { names = [names]; }
 
 	// Is the node name in the given list of valid names?
-	ret = _.find(names, function(name) { return name === fullname; });
+	ret = _.find(names, function (name) { return name === fullname; });
 	if (ret) { return ret; }
 
 	// Is it an Alloy.Require?
 	if (fullname === 'Alloy.Require' || fullname === 'Alloy.Widget') {
 		var inspect = exports.inspectRequireNode(node);
-		ret = _.find(inspect.children, function(n) {
+		ret = _.find(inspect.children, function (n) {
 			return _.includes(names, exports.getNodeFullname(n));
 		});
 		if (ret) {
@@ -987,10 +987,10 @@ exports.validateNodeName = function(node, names) {
 	return null;
 };
 
-exports.generateCollectionBindingTemplate = function(args) {
+exports.generateCollectionBindingTemplate = function (args) {
 	var code = '';
 	var COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS_092;
-	
+
 	// Check if not 0.9.2 and if it's a supported version as we'll default to 0.9.2 if the version is not supported
 	if (compilerConfig.backbone !== '0.9.2' && CONST.SUPPORTED_BACKBONE_VERSIONS.includes(compilerConfig.backbone)) {
 		COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS;
@@ -1038,7 +1038,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += '};';
 	code += colVar + ".on('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
-	exports.destroyCode += colVar + ' && ' + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '' ) +
+	exports.destroyCode += colVar + ' && ' + ((args.parentFormFactor) ? 'Alloy.is' + U.ucfirst(args.parentFormFactor) + ' && ' : '') +
 		colVar + ".off('" + COLLECTION_BINDING_EVENTS + "'," + handlerFunc + ');';
 
 	return code;

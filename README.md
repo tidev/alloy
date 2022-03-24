@@ -7,13 +7,13 @@
 
 [![NPM](https://nodei.co/npm-dl/alloy.png)](https://nodei.co/npm/alloy/)
 
-Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
+Alloy is an MVC application framework by [TiDev](http://tidev.io) for [Titanium](https://github.com/tidev/titanium_mobile). More high-level details can be found here: [https://github.com/tidev/alloy](https://github.com/tidev/alloy)
 
 ## Getting Started
 
-* [Quick Start Guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework) that covers _everything_ from installation to building your first app with Alloy.
-* Complete collection of [Alloy Guides](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework)
-* [Collection of sample apps](https://github.com/appcelerator/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
+-   [Quick Start Guide](https://titaniumsdk.com/guide/Alloy_Framework/) that covers _everything_ from installation to building your first app with Alloy.
+-   Complete collection of [Alloy Guides](https://titaniumsdk.com/guide/Alloy_Framework)
+-   [Collection of sample apps](https://github.com/tidev/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
 
 ## Installation
 
@@ -36,9 +36,10 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 
 ## Running Sample Test Apps
 
-Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/samples/apps/basics/simple). You can run these in a few different ways:
+Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/tidev/alloy/tree/master/samples/apps/basics/simple). You can run these in a few different ways:
 
 ### A) With a regular Alloy installation
+
 Beginning with Alloy 1.6, you can do the following:
 
 ```bash
@@ -54,7 +55,7 @@ alloy new . --testapp basics/simple
 
 ```bash
 # first, clone the repo
-git clone https://github.com/appcelerator/alloy.git
+git clone https://github.com/tidev/alloy.git
 cd alloy
 
 # install jake globally
@@ -76,32 +77,31 @@ You can use these apps through Titanium Studio too. The easiest way to do that w
 
 ## Additional Notes on Jake
 
-* See the [jake readme](https://github.com/appcelerator/alloy/blob/master/jakelib/readme.md) for  information on using `jake` including the arguments and flags it accepts.
-* on OSX or Linux
-    * Try using `sudo` with the `jake` command if you run into permission errors.
-* on Windows
-    * Don't run `jake` from within a user folder (i.e. `C:\Users\tony\alloy`), as you can get all kinds of non-obvious permissions failures from the child processing Alloy does. Your safest bet is to just `git clone` right to `C:\alloy`.
-    * Node.js has [an issue piping output between node processes on Windows](https://github.com/joyent/node/issues/3584). I've tried to [workaround](https://github.com/joyent/node/issues/3584#issuecomment-23064579) as best I can. You may still see errors pop up, so it's suggested that if you run the automated testing via `jake test:all` or `npm test`, you do so on a non-Windows OS to ensure there's no red herring failures until the aforementioned node.js issue is resolved.
-    * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
-    * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/appcelerator/alloy/tree/master/test/specs).
+-   See the [jake readme](https://github.com/tidev/alloy/blob/master/jakelib/readme.md) for information on using `jake` including the arguments and flags it accepts.
+-   on OSX or Linux
+    -   Try using `sudo` with the `jake` command if you run into permission errors.
+-   on Windows
+    -   Don't run `jake` from within a user folder (i.e. `C:\Users\tony\alloy`), as you can get all kinds of non-obvious permissions failures from the child processing Alloy does. Your safest bet is to just `git clone` right to `C:\alloy`.
+    -   Node.js has [an issue piping output between node processes on Windows](https://github.com/joyent/node/issues/3584). I've tried to [workaround](https://github.com/joyent/node/issues/3584#issuecomment-23064579) as best I can. You may still see errors pop up, so it's suggested that if you run the automated testing via `jake test:all` or `npm test`, you do so on a non-Windows OS to ensure there's no red herring failures until the aforementioned node.js issue is resolved.
+    -   If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
+    -   If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/tidev/alloy/tree/master/test/specs).
 
 ## Feedback
 
 More so than any other Appcelerator project to this point, we are working collaboratively with the community to develop a framework that works for you. Here's the best ways to discuss Alloy or ask questions.
 
-* Got an Alloy development question? Go to the Appcelerator [Q&A](http://developer.appcelerator.com/questions/newest), and make sure to use the **alloy** tag.
-* Want to discuss the past, present, and future of Alloy? Join the [Alloy Google group](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy).
-* Got a confirmed bug? Log it at the [Titanium Community Issue Tracker](https://jira.appcelerator.org/browse/TC). Make sure to give it the **alloy** label.
+-   Got an Alloy development question? Go to the Appcelerator [Q&A](https://github.com/tidev/titanium_mobile/discussions), and make sure to use the **alloy** tag.
+-   Got a confirmed bug? Log it at the [Titanium Community Issue Tracker](https://github.com/tidev/titanium_mobile/issues). Make sure to give it the **alloy** label.
 
 Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
 
 ## Contributing
 
-Alloy is an open source project.  Alloy wouldn't be where it is now without contributions by the community. Please consider forking Alloy to improve, enhance or fix issues. If you feel like the community will benefit from your fork, please open a pull request.
+Alloy is an open source project. Alloy wouldn't be where it is now without contributions by the community. Please consider forking Alloy to improve, enhance or fix issues. If you feel like the community will benefit from your fork, please open a pull request.
 
 To protect the interests of the Alloy contributors, Appcelerator, customers and end users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is simple and straightforward - it requires that the contributions you make to any Appcelerator open source project are properly licensed and that you have the legal authority to make those changes. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes only a few minutes, and only needs to be completed once.
 
-[You can digitally sign the CLA](http://bit.ly/app_cla) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA.  Once you've submitted it, you no longer need to send one for subsequent submissions.
+[You can digitally sign the CLA](https://github.com/tidev/organization-docs/blob/main/AUTHORIZED_CONTRIBUTORS.md) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA. Once you've submitted it, you no longer need to send one for subsequent submissions.
 
 ## Contributors
 
@@ -111,7 +111,7 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
  active   : 843 days
  commits  : 3799
  files    : 4075
- authors  : 
+ authors  :
   2364	Tony Lukasavage        62.2%
    377	Feon Sua               9.9%
    374	Tim Poulsen            9.8%
@@ -201,5 +201,5 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ## Legal
 
-Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
-Alloy is made available under the Apache Public License, version 2.  See the [LICENSE](https://github.com/appcelerator/alloy/blob/master/LICENSE) file for more information.
+Alloy is developed by TiDev and the community and is Copyright (c) 2022 by TiDev, Inc. All Rights Reserved.
+Alloy is made available under the Apache Public License, version 2. See the [LICENSE](https://github.com/tidev/alloy/blob/master/LICENSE) file for more information.

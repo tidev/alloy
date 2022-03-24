@@ -25,12 +25,12 @@ var DATETIMETYPES = [
 	'Titanium.UI.PICKER_TYPE_COUNT_DOWN_TIMER'
 ];
 
-exports.parse = function(node, state) {
+exports.parse = function (node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 
-// TODO: Improve effeciency https://jira.appcelerator.org/browse/ALOY-265
+// TODO: Improve effeciency https://jira-archive.titaniumsdk.com/ALOY-265
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
 		errBase = 'All <Picker> children must be either columns or rows. ',
@@ -84,7 +84,7 @@ function parse(node, state, args) {
 		if (!theNode) {
 			U.dieWithNode(child, 'Ti.UI.Picker child elements must be one of the following: [' + VALID.join(',') + ']');
 
-		// handle columns
+			// handle columns
 		} else if (_.includes(COLUMNS, theNode)) {
 			foundColumn = true;
 			if (foundRow) {
@@ -95,7 +95,7 @@ function parse(node, state, args) {
 			}
 			!isControllerNode && (child.nodeName = 'PickerColumn');
 
-		// handle rows
+			// handle rows
 		} else if (_.includes(ROWS, theNode)) {
 			foundRow = true;
 			if (foundColumn) {
@@ -116,7 +116,7 @@ function parse(node, state, args) {
 		// generate the code for each column/row and add it to the array
 		code += CU.generateNodeExtended(child, state, {
 			parent: {},
-			post: function(node, state, a) {
+			post: function (node, state, a) {
 				return arrayName + '.push(' + state.parent.symbol + ');\n';
 			}
 		});

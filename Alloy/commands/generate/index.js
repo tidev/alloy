@@ -1,6 +1,6 @@
 /*
 	Corresponds to the `alloy generate *` command.
-	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
+	https://titaniumsdk.com/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-GeneratingComponents
 
 	Actual component generators are defined in the targets folder
 */
@@ -24,7 +24,7 @@ function generate(args, program) {
 	// make sure we have a valid project path
 	var paths = U.getAndValidateProjectPaths(
 		program.projectDir || program.outputPath || process.cwd(),
-		{command : CONST.COMMANDS.GENERATE}
+		{ command: CONST.COMMANDS.GENERATE }
 	);
 	program.projectDir = program.outputPath = paths.project;
 

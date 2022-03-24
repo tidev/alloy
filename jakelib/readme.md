@@ -13,13 +13,14 @@ jake app:run dir=ui/tableview
 ```
 
 ## Arguments and options
-You can pass any command-line argument supported by the `ti build` command (see <a href="http://docs.appcelerator.com/platform/latest/#!/guide/Titanium_Command-Line_Interface_Reference-section-35619828_TitaniumCommand-LineInterfaceReference-Build">the docs</a>) with these caveats:
 
-* Do _not_ include the single or double-dashes specified by the `ti build` command docs.
-* You _must_ separate the argument and values with an **equals sign**, not a space.
-* The `p` or `platform` argument defaults to `iphone` for OS X users and `android` for Windows or Linux users. So, you can omit that argument if the default is suitable.
-* If the `ti build` option expects no value (such as its `--tall` flag), you must specify a `true` value when using it with the `jake` command.
-* You can use either the `sdk` or `tiversion` argument to specify the CLI version to use with the build command. See note below.
+You can pass any command-line argument supported by the `ti build` command (see <a href="https://titaniumsdk.com/guide/Titanium_Command-Line_Interface_Reference-section-35619828_TitaniumCommand-LineInterfaceReference-Build">the docs</a>) with these caveats:
+
+-   Do _not_ include the single or double-dashes specified by the `ti build` command docs.
+-   You _must_ separate the argument and values with an **equals sign**, not a space.
+-   The `p` or `platform` argument defaults to `iphone` for OS X users and `android` for Windows or Linux users. So, you can omit that argument if the default is suitable.
+-   If the `ti build` option expects no value (such as its `--tall` flag), you must specify a `true` value when using it with the `jake` command.
+-   You can use either the `sdk` or `tiversion` argument to specify the CLI version to use with the build command. See note below.
 
 ## Xcode 6 / targeting specific simulators
 
@@ -46,6 +47,7 @@ ti info -t android
 # make sure to use quotes if the name has spaces
 jake app:run dir=basics/simple platform=android C="Google Galaxy Nexus - 4.3 - API 18 - 720x1280"
 ```
+
 ## Running our Jira/ticket test apps
 
 In your repo clone, you will find many test apps that correspond to Alloy Jira tickets. We use these when functionally testing Alloy changes. Because we run them so often, there's a shortcut syntax:
@@ -54,8 +56,6 @@ In your repo clone, you will find many test apps that correspond to Alloy Jira t
 # for the Jira apps, the dir= part is optional
 jake app:run dir=ALOY-1000
 ```
-
-
 
 ## Note: SDK / Titanium version
 

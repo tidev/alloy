@@ -1,14 +1,14 @@
 {
 	"user": {
 		"locale": "en_US",
-		"name": "Travis Runner",
-		"email": "no-reply@appcelerator.com"
+		"name": "Chris Barber",
+		"email": "no-reply@tidev.io"
 	},
 	"app": {
 		"workspace": "",
 		"idprefix": "com.appcelerator",
-		"publisher": "Appcelerator Inc.",
-		"url": "http://appcelerator.com"
+		"publisher": "TiDev Inc.",
+		"url": "https://tidev.io"
 	},
 	"cli": {
 		"colors": true,
@@ -24,15 +24,11 @@
 		"ignoreFiles": "^(\\.gitignore|\\.npmignore|\\.cvsignore|\\.DS_Store|\\._.*|[Tt]humbs.db|\\.vspscc|\\.vssscc|\\.sublime-project|\\.sublime-workspace|\\.project|\\.tmproj)$"
 	},
 	"paths": {
-		"commands": [
-			"/usr/local/lib/node_modules/titanium-code-processor/commands"
-		],
+		"commands": ["/usr/local/lib/node_modules/titanium-code-processor/commands"],
 		"hooks": [],
 		"modules": [],
 		"plugins": [],
-		"sdks": [
-			"/Users/admin/Library/Application Support/Titanium"
-		],
+		"sdks": ["/Users/admin/Library/Application Support/Titanium"],
 		"templates": [],
 		"codeProcessorPlugins": []
 	},

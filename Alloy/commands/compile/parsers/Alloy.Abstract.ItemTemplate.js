@@ -6,7 +6,7 @@ var CU = require('../compilerUtils'),
 
 var NAME_ERROR = 'Alloy.Abstract.ItemTemplate must have a "name" attribute';
 
-exports.parse = function(node, state) {
+exports.parse = function (node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
@@ -39,7 +39,7 @@ function parse(node, state, args) {
 
 	// add in any events on the ItemTemplate
 	if (args.events && args.events.length > 0) {
-		argsObject.events = '{' + _.reduce(args.events, function(memo, o) {
+		argsObject.events = '{' + _.reduce(args.events, function (memo, o) {
 			return memo + o.name + ':' + o.value + ',';
 		}, '') + '}';
 	}
@@ -51,13 +51,13 @@ function parse(node, state, args) {
 		childTemplates = CU.generateUniqueId();
 		code += 'var ' + childTemplates + '=[];';
 
-		_.each(children, function(child) {
+		_.each(children, function (child) {
 			if (child.nodeName === 'Require') {
 				U.dieWithNode(child, [
 					'<ItemTemplate> cannot contain <Require> elements.',
 					'ListView currently only supports Titanium API elements and Widgets:',
 					'  examples: <Label>, <Button>, <ImageView>, etc...',
-					'Please reference the ListView guide at docs.appcelerator.com for more details.'
+					'Please reference the ListView guide at titaniumsdk.com for more details.'
 				]);
 			}
 
@@ -77,7 +77,7 @@ function parse(node, state, args) {
 				parent: {},
 				local: true,
 				isViewTemplate: true,
-				post: function(node, state, args) {
+				post: function (node, state, args) {
 					let symbol = (state.item && state.item.symbol) || args.symbol;
 					return childTemplates + '.push(' + symbol + ');';
 				}
@@ -89,13 +89,13 @@ function parse(node, state, args) {
 
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + ' = {';
-	code += _.reduce(argsObject, function(memo, v, k) {
+	code += _.reduce(argsObject, function (memo, v, k) {
 		return memo + k + ':' + v + ',';
 	}, '');
 	code += '};';
 
 	code += (state.templateObject || CONST.ITEM_TEMPLATE_VAR);
-	code +=	'["' + name + '"]=' + args.symbol + ';';
+	code += '["' + name + '"]=' + args.symbol + ';';
 
 	// Update the parsing state
 	return {

@@ -1,5 +1,5 @@
 <!--
-	Mobileweb has a separate view to account for https://jira.appcelerator.org/browse/TIMOB-14754
+	Mobileweb has a separate view to account for https://jira-archive.titaniumsdk.com/TIMOB-14754
 
 	autoStyle is set to "false" here, but that is also the default behavior. All
 	controllers are assumed to have autoStyle set to false, unless autoStyle is

@@ -2,14 +2,14 @@ exports.definition = {
 
 	config: {
 		'columns': {
-			'name':'text',
-			'email':'text',
-			'twitter':'text'
+			'name': 'text',
+			'email': 'text',
+			'twitter': 'text'
 		},
 		'defaults': {
-			'name':'Tony Lukasavage',
-			'email':'tlukasavage@appcelerator.com',
-			'twitter':'@tonylukasavage'
+			'name': 'Jason Kneen',
+			'email': 'jkneen@tidev.io',
+			'twitter': '@tidevio'
 		},
 		'adapter': {
 			'type': 'sql',
@@ -17,7 +17,7 @@ exports.definition = {
 		}
 	},
 
-	extendModel: function(Model) {
+	extendModel: function (Model) {
 		_.extend(Model.prototype, {
 
 			// extended functions go here
@@ -28,7 +28,7 @@ exports.definition = {
 	},
 
 
-	extendCollection: function(Collection) {
+	extendCollection: function (Collection) {
 		_.extend(Collection.prototype, {
 
 			// For Backbone v1.1.2, uncomment this to override the fetch method

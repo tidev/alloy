@@ -1,6 +1,6 @@
 /*
 	Corresponds to `alloy extract-i18n` command.
-	http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-Extractinglocalizationstrings
+	https://titaniumsdk.com/guide/Alloy_Tasks_with_the_CLI-section-37536785_AlloyTaskswiththeCLI-Extractinglocalizationstrings
 */
 var fs = require('fs'),
 	walkSync = require('walk-sync'),
@@ -25,7 +25,7 @@ function extractStrings() {
 		var viewSuffix = '.' + CONST.FILE_EXT.VIEW;
 
 		// filter only js, xml and style files
-		files = _.filter(files, function(f) {
+		files = _.filter(files, function (f) {
 			f = path.normalize(f);
 			return f.substr(-styleSuffix.length) === styleSuffix ||
 				f.substr(-viewSuffix.length) === viewSuffix ||
@@ -33,7 +33,7 @@ function extractStrings() {
 		});
 
 		var strings = [];
-		_.each(files, function(f) {
+		_.each(files, function (f) {
 			var file = path.join(sourceDir, f);
 			var fileContent = fs.readFileSync(file, 'utf8');
 			var calls = fileContent.match(searchRegex);
@@ -41,7 +41,7 @@ function extractStrings() {
 			if (calls && calls.length > 0) {
 				logger.debug(file + ': ' + calls.length + ' strings found.');
 
-				_.each(calls, function(call) {
+				_.each(calls, function (call) {
 					var matches = call.match(valueRegex);
 					strings.push(matches[1]);
 				});
@@ -56,7 +56,7 @@ function extractStrings() {
 	}
 }
 
-module.exports = function(args, program) {
+module.exports = function (args, program) {
 	paths = U.getAndValidateProjectPaths(
 		program.outputPath || process.cwd()
 	);
