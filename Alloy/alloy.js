@@ -76,6 +76,9 @@ program.command('move <source> <destination>')
 program.command('remove <source>')
 	.description('remove the controller, view, and style files at <source>');
 
+program.command('purgetss')
+	.description('Create a clean app.tss file with only the classes used in your XML Files.\nYour original classes will be backed up in _app.tss');
+
 program.command('info [type]', { hidden: true });
 
 program.command('debugger', { hidden: true });
@@ -130,12 +133,12 @@ Promise
 ///////////////////////////////
 function banner() {
 	var str =
-	'       .__  .__                \n' +
-	'_____  |  | |  |   ____ ___.__.\n' +
-	'\\__  \\ |  | |  |  /  _ <   |  |\n' +
-	' / __ \\|  |_|  |_(  <_> )___  |\n' +
-	'(____  /____/____/\\____// ____|\n' +
-	'     \\/                 \\/';
+		'       .__  .__                \n' +
+		'_____  |  | |  |   ____ ___.__.\n' +
+		'\\__  \\ |  | |  |  /  _ <   |  |\n' +
+		' / __ \\|  |_|  |_(  <_> )___  |\n' +
+		'(____  /____/____/\\____// ____|\n' +
+		'     \\/                 \\/';
 
 	if (!program.dump) {
 		console.log(logger.stripColors ? str : str.blue);
