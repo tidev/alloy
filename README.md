@@ -7,7 +7,7 @@
 
 [![NPM](https://nodei.co/npm-dl/alloy.png)](https://nodei.co/npm/alloy/)
 
-Alloy is an MVC application framework by [TiDev](http://tidev.io) for [Titanium](https://github.com/tidev/titanium_mobile). More high-level details can be found here: [https://github.com/tidev/alloy](https://github.com/tidev/alloy)
+Alloy is an MVC application framework by [TiDev](http://tidev.io) for [Titanium](https://titaniumsdk.com/). More high-level details can be found here: [https://github.com/tidev/alloy](https://github.com/tidev/alloy)
 
 ## Getting Started
 
@@ -102,102 +102,6 @@ Alloy is an open source project. Alloy wouldn't be where it is now without contr
 To protect the interests of the Alloy contributors, Appcelerator, customers and end users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is simple and straightforward - it requires that the contributions you make to any Appcelerator open source project are properly licensed and that you have the legal authority to make those changes. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes only a few minutes, and only needs to be completed once.
 
 [You can digitally sign the CLA](https://github.com/tidev/organization-docs/blob/main/AUTHORIZED_CONTRIBUTORS.md) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA. Once you've submitted it, you no longer need to send one for subsequent submissions.
-
-## Contributors
-
-```
- project  : alloy
- repo age : 6 years
- active   : 843 days
- commits  : 3799
- files    : 4075
- authors  :
-  2364	Tony Lukasavage        62.2%
-   377	Feon Sua               9.9%
-   374	Tim Poulsen            9.8%
-    87	Fokke Zandbergen       2.3%
-    87	Jeff Haynie            2.3%
-    75	Russ McMahon           2.0%
-    44	Ben Hatfield           1.2%
-    38	Kevin Whinnery         1.0%
-    32	Christopher Williams   0.8%
-    30	Chris Barber           0.8%
-    21	Carl Orthlieb          0.6%
-    18	Ewan Harris            0.5%
-    18	Michael                0.5%
-    16	Kosuke Isobe           0.4%
-    16	Xavier Lacot           0.4%
-    15	Praveen Innamuri       0.4%
-    13	Ingo Muschenetz        0.3%
-    12	Hans Knöchel           0.3%
-    11	Paul Mietz Egli        0.3%
-    10	Tim Statler            0.3%
-    10	Ng Chee Kiat           0.3%
-     8	David Bankier          0.2%
-     8	Issam Hakimi           0.2%
-     8	Jong Eun Lee           0.2%
-     6	Arthur Evans           0.2%
-     6	bhatfield              0.2%
-     5	Brenton House          0.1%
-     4	Hazem Khaled           0.1%
-     4	Martin Tietz           0.1%
-     4	Joel Herron            0.1%
-     4	Hans Knoechel          0.1%
-     4	mukherjee2             0.1%
-     4	Yordan Banev           0.1%
-     3	Wilson Luu             0.1%
-     3	Federico               0.1%
-     3	Gary Mathews           0.1%
-     2	miga                   0.1%
-     2	Bryan Hughes           0.1%
-     2	Michael Kåring         0.1%
-     2	Aaron Saunders         0.1%
-     2	Rene Pot               0.1%
-     2	Marc Tamlyn            0.1%
-     2	Iain Dawson            0.1%
-     2	Davide Cassenti        0.1%
-     1	farwayer               0.0%
-     1	Ajay kumar Guthikonda  0.0%
-     1	Anders D. Johnson      0.0%
-     1	Andrew Blair           0.0%
-     1	Andrew McElroy         0.0%
-     1	Andrey Tkachenko       0.0%
-     1	Brian Immel            0.0%
-     1	Chris Gedrim           0.0%
-     1	Clem                   0.0%
-     1	Dan Frankowski         0.0%
-     1	Dan Tamas              0.0%
-     1	Daniel Mahon           0.0%
-     1	Daniel Pfeifffer       0.0%
-     1	Daniel Waardal         0.0%
-     1	Family                 0.0%
-     1	J. Tangelder           0.0%
-     1	Jeff Antram            0.0%
-     1	Jeremy Martin          0.0%
-     1	Jorge Macías           0.0%
-     1	João Teixeira          0.0%
-     1	Kelly Nicholes         0.0%
-     1	Kondal Kolipaka        0.0%
-     1	Kota Iguchi            0.0%
-     1	Lee, JongEun           0.0%
-     1	Manuel Conde Vendrell  0.0%
-     1	Manuel Lehner          0.0%
-     1	Matthew Lanham         0.0%
-     1	Mattijah               0.0%
-     1	Micah Alcorn           0.0%
-     1	Muhammad Dadu          0.0%
-     1	Nuno Costa             0.0%
-     1	Reymundo López         0.0%
-     1	Sergey Nosenko         0.0%
-     1	Vui Nguyen             0.0%
-     1	ewieberappc            0.0%
-     1	federico1525           0.0%
-     1	gitizenme              0.0%
-     1	godspeedelbow          0.0%
-     1	hamasyou               0.0%
-     1	jeffatstepup           0.0%
-     1	longton95              0.0%
-```
 
 ## Legal
 
