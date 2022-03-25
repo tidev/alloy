@@ -105,5 +105,5 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ## Legal
 
-Alloy is developed by TiDev and the community and is Copyright (c) 2022 by TiDev, Inc. All Rights Reserved.
-Alloy is made available under the Apache Public License, version 2. See the [LICENSE](https://github.com/tidev/alloy/blob/master/LICENSE) file for more information.
+Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
+Alloy is made available under the Apache Public License, version 2. See the [LICENSE](https://github.com/appcelerator/alloy/blob/master/LICENSE) file for more information.
