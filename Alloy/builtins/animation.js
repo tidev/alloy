@@ -35,7 +35,7 @@ const create2DMatrix = Ti.UI.createMatrix2D ? Ti.UI.createMatrix2D : Ti.UI.creat
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
  */
-exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) {
+exports.flip = OS_IOS ? function (from, to, direction, duration, finishCallback) {
 	var vertical = (direction === exports.VERTICAL);
 	var flipped_matrix = create3DMatrix().rotate(
 		-90,
@@ -48,7 +48,7 @@ exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) 
 		duration: duration
 	});
 	to.transform = flipped_matrix;
-	from.animate(from_animation, function() {
+	from.animate(from_animation, function () {
 		var unflipped_matrix = create3DMatrix().rotate(
 			0,
 			vertical ? 1 : 0,
@@ -62,7 +62,7 @@ exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) 
 		finishCallback ? to.animate(to_animation, finishCallback) : to.animate(to_animation);
 	});
 
-} : function() {
+} : function () {
 	Ti.API.error('The builtin flip-animation is iOS-only.');
 };
 
@@ -76,7 +76,7 @@ exports.flip = OS_IOS ? function(from, to, direction, duration, finishCallback) 
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
  */
-exports.flipHorizontal = function(from, to, duration, finishCallback) {
+exports.flipHorizontal = function (from, to, duration, finishCallback) {
 	exports.flip(from, to, exports.HORIZONTAL, duration, finishCallback);
 };
 
@@ -90,7 +90,7 @@ exports.flipHorizontal = function(from, to, duration, finishCallback) {
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fade completes.
  */
-exports.flipVertical = function(from, to, duration, finishCallback) {
+exports.flipVertical = function (from, to, duration, finishCallback) {
 	exports.flip(from, to, exports.VERTICAL, duration, finishCallback);
 };
 
@@ -146,7 +146,7 @@ exports.fadeAndRemove = function (from, duration, container, finishCallback) {
  * @param {Number} duration Fade duration in milliseconds.
  * @param {function()} [finishCallback] Callback function, invoked after the fadeIn completes.
  */
-exports.fadeIn = function(to, duration, finishCallback) {
+exports.fadeIn = function (to, duration, finishCallback) {
 	if (finishCallback) {
 		if (to) {
 			to.animate({
@@ -191,6 +191,35 @@ exports.fadeOut = function (to, duration, finishCallback) {
 };
 
 /**
+ * @method scale
+ * Scales the view to new size
+ * @param {Titanium.UI.View} view View to scale.
+ * @param {Number} size Size to scale in px.
+ * @param {function()} [finishCallback] Callback function, invoked after the scale completes.
+ */
+exports.scale = function (view, size, duration, finishCallback) {
+	if (!view) {
+		throw new Error('view is undefined');
+	}
+
+	if (size === undefined) {
+		throw new Error('size is undefined');
+	}
+	var duration = duration || 300;
+
+	var animation = Ti.UI.createAnimation({
+		transform: Ti.UI.create2DMatrix({
+			scale: size
+		}), duration: duration
+	});
+	if (finishCallback) {
+		view.animate(animation, finishCallback);
+	} else {
+		view.animate(animation);
+	}
+};
+
+/**
  * @method popIn
  * Makes the specified view appear using a "pop-in" animation, which combines a fade-in
  * with a slight expanding and contracting animation, to call attention to the new view.
@@ -214,7 +243,7 @@ exports.popIn = function (view, finishCallback) {
 		duration: 300
 	});
 
-	exports.chainAnimate(view, [ animate1, animate2 ], finishCallback);
+	exports.chainAnimate(view, [animate1, animate2], finishCallback);
 	view = null;
 };
 
@@ -249,11 +278,11 @@ exports.shake = function (view, delay, finishCallback) {
 	});
 	if (delay) {
 		setTimeout(function () {
-			exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ], finishCallback);
+			exports.chainAnimate(view, [shake1, shake2, shake3, shake4, shake5], finishCallback);
 			view = shake1 = shake2 = shake3 = shake4 = shake5 = null;
 		}, delay);
 	} else {
-		exports.chainAnimate(view, [ shake1, shake2, shake3, shake4, shake5 ], finishCallback);
+		exports.chainAnimate(view, [shake1, shake2, shake3, shake4, shake5], finishCallback);
 	}
 };
 
@@ -285,11 +314,11 @@ exports.flash = function (view, delay, finishCallback) {
 	});
 	if (delay) {
 		setTimeout(function () {
-			exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ], finishCallback);
+			exports.chainAnimate(view, [flash1, flash2, flash3, flash4], finishCallback);
 			view = flash1 = flash2 = flash3 = flash4 = null;
 		}, delay);
 	} else {
-		exports.chainAnimate(view, [ flash1, flash2, flash3, flash4 ], finishCallback);
+		exports.chainAnimate(view, [flash1, flash2, flash3, flash4], finishCallback);
 	}
 };
 

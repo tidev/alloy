@@ -20,7 +20,7 @@ var platformsDir = path.join(__dirname, '..', '..', '..', 'platforms');
 var templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 var sampleAppsDir = path.join(__dirname, '..', '..', '..', 'samples', 'apps');
 
-module.exports = async function(args, program) {
+module.exports = async function (args, program) {
 	var appDirs = ['controllers', 'styles', 'views', 'models', 'assets'];
 	var templateName = args[1] || 'default';
 	var paths = getPaths(args[0] || '.', templateName, program.testapp);
@@ -36,17 +36,17 @@ module.exports = async function(args, program) {
 	fs.mkdirpSync(paths.app);
 
 	// copy platform-specific folders from Resources to app/assets
-	_.each(CONST.PLATFORM_FOLDERS, function(platform) {
+	_.each(CONST.PLATFORM_FOLDERS, function (platform) {
 		var rPath = path.join(paths.resources, platform);
 		if (fs.existsSync(rPath)) {
 			var aPath = path.join(paths.app, CONST.DIR.ASSETS, platform);
 			fs.mkdirpSync(aPath);
-			fs.copySync(rPath, aPath, {preserveTimestamps:true});
+			fs.copySync(rPath, aPath, { preserveTimestamps: true });
 		}
 	});
 
 	// add alloy-specific folders
-	_.each(appDirs, function(dir) {
+	_.each(appDirs, function (dir) {
 		fs.mkdirpSync(path.join(paths.app, dir));
 	});
 
@@ -70,8 +70,8 @@ module.exports = async function(args, program) {
 	// replace the classic webpack plugin with the alloy one
 	if (templateName.includes('webpack')) {
 		let pkg = {
-			devDependencies: { },
-			scripts: { }
+			devDependencies: {},
+			scripts: {}
 		};
 		// if there is an existing package.json then we'll just update it, if not then we'll make a
 		// best attempt to get a working project
@@ -102,7 +102,7 @@ module.exports = async function(args, program) {
 
 		} else {
 			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
-			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
+			logger.warn('Please visit https://github.com/tidev/webpack-plugin-alloy#readme to make sure your project is fully up to date');
 			// specify this exact version of webpack as using a new version requires all things to be updated
 			pkg.devDependencies.webpack = '^4.43.0';
 			pkg.devDependencies.eslint = '^7.5.0';
@@ -155,7 +155,7 @@ module.exports = async function(args, program) {
 		path.join(paths.template, 'gitignore.txt'),
 		path.join(paths.project, '.gitignore')
 	);
-	_.each(CONST.PLATFORM_FOLDERS, function(dir) {
+	_.each(CONST.PLATFORM_FOLDERS, function (dir) {
 		var rDir = path.join(paths.resources, dir);
 		if (!fs.existsSync(rDir)) {
 			return;
@@ -168,7 +168,7 @@ module.exports = async function(args, program) {
 
 	// copy in any Alloy-specific Resources files
 	// fs.copySync(paths.alloyResources,paths.assets,{preserveTimestamps:true});
-	_.each(CONST.PLATFORMS, function(p) {
+	_.each(CONST.PLATFORMS, function (p) {
 		var pDir = path.join(platformsDir, p, 'project');
 		if (!fs.existsSync(pDir)) {
 			return;
@@ -177,13 +177,13 @@ module.exports = async function(args, program) {
 		fs.copySync(
 			pDir,
 			paths.project,
-			{preserveTimestamps:true}
+			{ preserveTimestamps: true }
 		);
 	});
 
 	// add alloy project template files
 	var tplPath = (!program.testapp) ? path.join(paths.projectTemplate, 'app') : paths.projectTemplate;
-	fs.copySync(tplPath, paths.app, {preserveTimestamps:true});
+	fs.copySync(tplPath, paths.app, { preserveTimestamps: true });
 
 	// Don't copy across the default README if it's a webpack project
 	if (!templateName.includes('webpack')) {
@@ -200,7 +200,7 @@ module.exports = async function(args, program) {
 		if (fs.existsSync(path.join(sampleAppsDir, program.testapp, 'specs'))) {
 			// copy in the test harness
 			fs.mkdirpSync(path.join(paths.app, 'lib'));
-			fs.copySync(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), {preserveTimestamps:true});
+			fs.copySync(path.join(path.resolve(sampleAppsDir, '..'), 'lib'), path.join(paths.app, 'lib'), { preserveTimestamps: true });
 		}
 	}
 
@@ -264,7 +264,7 @@ function getPaths(project, templateName, testapp) {
 	};
 
 	// validate the existence of the paths
-	_.each(paths, function(v, k) {
+	_.each(paths, function (v, k) {
 		if (!fs.existsSync(v)) {
 			var errs = [BASE_ERR];
 			switch (k) {
@@ -313,7 +313,7 @@ function getPaths(project, templateName, testapp) {
  *
  * @returns {Promise<String>} Either the latest version of the defaultVersion if the request errors
  */
-async function getLatestPackageVersion (packageName, defaultVersion) {
+async function getLatestPackageVersion(packageName, defaultVersion) {
 	return new Promise((resolve) => {
 		try {
 			https.get(`https://registry.npmjs.org/-/package/${packageName}/dist-tags`, res => {
@@ -350,7 +350,7 @@ async function installDependencies(projectPath) {
 		npmExecutable += '.cmd';
 	}
 	return new Promise((resolve, reject) => {
-		const child = spawn(npmExecutable, [ 'i' ], spawnOptions);
+		const child = spawn(npmExecutable, ['i'], spawnOptions);
 		child.on('close', code => {
 			if (code !== 0) {
 				return reject(new Error('Failed to install project dependencies.'));

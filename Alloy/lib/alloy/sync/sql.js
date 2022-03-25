@@ -44,8 +44,8 @@ function Migrator(config, transactionDb) {
 	this.table = config.adapter.collection_name;
 	this.idAttribute = config.adapter.idAttribute;
 
-	//TODO: normalize columns at compile time - https://jira.appcelerator.org/browse/ALOY-222
-	this.column = function(name) {
+	//TODO: normalize columns at compile time - https://jira-archive.titaniumsdk.com/ALOY-222
+	this.column = function (name) {
 		// split into parts to keep additional column characteristics like
 		// autoincrement, primary key, etc...
 		var parts = name.split(/\s+/);
@@ -90,7 +90,7 @@ function Migrator(config, transactionDb) {
 		return parts.join(' ');
 	};
 
-	this.createTable = function(config) {
+	this.createTable = function (config) {
 		// compose the create query
 		var columns = [];
 		var found = false;
@@ -109,11 +109,11 @@ function Migrator(config, transactionDb) {
 		this.db.execute(sql);
 	};
 
-	this.dropTable = function() {
+	this.dropTable = function () {
 		this.db.execute('DROP TABLE IF EXISTS ' + this.table);
 	};
 
-	this.insertRow = function(columnValues) {
+	this.insertRow = function (columnValues) {
 		var columns = [];
 		var values = [];
 		var qs = [];
@@ -138,7 +138,7 @@ function Migrator(config, transactionDb) {
 		this.db.execute('INSERT INTO ' + this.table + ' (' + columns.join(',') + ') VALUES (' + qs.join(',') + ');', values);
 	};
 
-	this.deleteRow = function(columns) {
+	this.deleteRow = function (columns) {
 		var sql = 'DELETE FROM ' + this.table;
 		var keys = _.keys(columns);
 		var len = keys.length;
@@ -159,7 +159,7 @@ function Migrator(config, transactionDb) {
 }
 
 function Sync(method, model, opts) {
-	var table =  model.config.adapter.collection_name,
+	var table = model.config.adapter.collection_name,
 		columns = model.config.columns,
 		dbName = model.config.adapter.db_name || ALLOY_DB_DEFAULT,
 		resp = null,
@@ -168,7 +168,7 @@ function Sync(method, model, opts) {
 	switch (method) {
 		case 'create':
 		case 'update':
-			resp = (function() {
+			resp = (function () {
 				var attrObj = {};
 
 				if (!model.id) {
@@ -442,7 +442,7 @@ function installDatabase(config) {
 	if (config.adapter.idAttribute) {
 		if (!_.contains(_.keys(config.columns), config.adapter.idAttribute)) {
 			throw 'config.adapter.idAttribute "' + config.adapter.idAttribute + '" not found in list of columns for table "' + table + '"\n' +
-				'columns: [' + _.keys(config.columns).join(',') + ']';
+			'columns: [' + _.keys(config.columns).join(',') + ']';
 		}
 	} else {
 		Ti.API.info('No config.adapter.idAttribute specified for table "' + table + '"');
@@ -450,7 +450,7 @@ function installDatabase(config) {
 
 		var fullStrings = [],
 			colStrings = [];
-		_.each(config.columns, function(type, name) {
+		_.each(config.columns, function (type, name) {
 			colStrings.push(name);
 			fullStrings.push(name + ' ' + type);
 		});
@@ -464,7 +464,7 @@ function installDatabase(config) {
 	}
 }
 
-module.exports.beforeModelCreate = function(config, name) {
+module.exports.beforeModelCreate = function (config, name) {
 	// use cached config if it exists
 	if (cache.config[name]) {
 		return cache.config[name];
@@ -490,7 +490,7 @@ module.exports.beforeModelCreate = function(config, name) {
 	return config;
 };
 
-module.exports.afterModelCreate = function(Model, name) {
+module.exports.afterModelCreate = function (Model, name) {
 	// use cached Model class if it exists
 	if (cache.Model[name]) {
 		return cache.Model[name];

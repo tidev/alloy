@@ -6,3 +6,6 @@ node_modules
 TODO
 npm-debug.log
 TEST-*.xml
+
+# VS Code History Extension
+.history

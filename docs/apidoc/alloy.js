@@ -21,7 +21,7 @@
  * interact with the View and Model components of the application or widget.
  *
  * For guides on using Alloy, see
- * [Alloy Framework](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework).
+ * [Alloy Framework](https://titaniumsdk.com/guide/Alloy_Framework).
  */
 
 /**
@@ -48,7 +48,7 @@
  * Factory method for instantiating a Backbone Model object. Creates and returns an instance of the
  * named model.
  *
- * See [Backbone.Model](http://docs.appcelerator.com/backbone/0.9.2/#Model) in the Backbone.js documentation for
+ * See Backbone.Model in the Backbone.js documentation for
  * information on the methods and properties provided by the Model object.
  * @param {String} name Name of model to instantiate.
  * @param {Object} [args] Arguments to pass to the model.
@@ -60,7 +60,7 @@
  * Factory method for instantiating a Backbone collection of model objects. Creates and returns a
  * collection for holding the named type of model objects.
  *
- * See [Backbone.Collection](http://docs.appcelerator.com/backbone/0.9.2/#Collection) in the Backbone.js
+ * See Backbone.Collection in the Backbone.js
  * documentation for  information on the methods and  properties provided by the
  * Collection object.
  * @param {String} name Name of model to hold in this collection.
@@ -111,59 +111,59 @@
  *
  */
 
- /*
- * Creates a singleton instance of a Model based on the given model, or
- * returns an existing instance if one has already been created.
- * Documented in docs/apidoc/model.js for docs site.
- */
+/*
+* Creates a singleton instance of a Model based on the given model, or
+* returns an existing instance if one has already been created.
+* Documented in docs/apidoc/model.js for docs site.
+*/
 
- /**
- * @property {Object} Collections
- * An object for storing globally accessible Alloy collections. Singleton collections
- * created via markup will be stored on this object.
- *
- *     <Collection src="myModel"/>
- *
- * The above markup would effectively generate the following code:
- *
- *     Alloy.Collections.myModel = Alloy.createCollection('MyModel');
- *
- * Alloy.Collections.myModel would then be accessible in any controller in your app.
- *
- */
+/**
+* @property {Object} Collections
+* An object for storing globally accessible Alloy collections. Singleton collections
+* created via markup will be stored on this object.
+*
+*     <Collection src="myModel"/>
+*
+* The above markup would effectively generate the following code:
+*
+*     Alloy.Collections.myModel = Alloy.createCollection('MyModel');
+*
+* Alloy.Collections.myModel would then be accessible in any controller in your app.
+*
+*/
 
- /*
- * Creates a singleton instance of a Collection based on the given model, or
- * returns an existing instance if one has already been created.
- * Documented in docs/apidoc/collection.js for docs site.
- */
+/*
+* Creates a singleton instance of a Collection based on the given model, or
+* returns an existing instance if one has already been created.
+* Documented in docs/apidoc/collection.js for docs site.
+*/
 
- /**
- * @property {Object} CFG
- * An object that stores Alloy configuration values as defined in your app's
- * app/config.json file. Here's what a typical config.json file might look
- * like in an Alloy app.
- *
- *     {
- *         "global": { "key": "defaultValue", "anotherKey": 12345 },
- *         "env:development": {},
- *         "env:test": {},
- *         "env:production": {},
- *         "os:ios": { "key": "iosValue" },
- *         "os:android": { "key": "androidValue" },
- *         "dependencies": {}
- *     }
- *
- * If this app was compiled for iOS, the Alloy.CFG would look like this:
- *
- *     Alloy.CFG = {
- *         "key": "iosValue",
- *         "anotherKey": 12345
- *     }
- *
- * Alloy.CFG is accessible in any controller in your app, and can be accessed
- * in other non-controller Javascript files like this:
- *
- *     var theKey = require('/alloy').CFG.key;
- *
- */
+/**
+* @property {Object} CFG
+* An object that stores Alloy configuration values as defined in your app's
+* app/config.json file. Here's what a typical config.json file might look
+* like in an Alloy app.
+*
+*     {
+*         "global": { "key": "defaultValue", "anotherKey": 12345 },
+*         "env:development": {},
+*         "env:test": {},
+*         "env:production": {},
+*         "os:ios": { "key": "iosValue" },
+*         "os:android": { "key": "androidValue" },
+*         "dependencies": {}
+*     }
+*
+* If this app was compiled for iOS, the Alloy.CFG would look like this:
+*
+*     Alloy.CFG = {
+*         "key": "iosValue",
+*         "anotherKey": 12345
+*     }
+*
+* Alloy.CFG is accessible in any controller in your app, and can be accessed
+* in other non-controller Javascript files like this:
+*
+*     var theKey = require('/alloy').CFG.key;
+*
+*/

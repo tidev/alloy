@@ -1,97 +1,97 @@
 {
-  "name": "alloy",
-  "description": "Appcelerator Titanium MVC Framework",
-  "keywords": [
-    "appcelerator",
-    "titanium",
-    "alloy",
-    "mobile",
-    "ios",
-    "iphone",
-    "android",
-    "html5",
-    "appc-client"
-  ],
-  "version": "1.17.3",
-  "author": "Appcelerator, Inc. <info@appcelerator.com>",
-  "maintainers": [
-    {
-      "name": "Tony Lukasavage",
-      "email": "tlukasavage@appcelerator.com"
-    }
-  ],
-  "bugs": {
-    "url": "https://jira.appcelerator.org/browse/ALOY"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/appcelerator/alloy.git"
-  },
-  "preferGlobal": true,
-  "dependencies": {
-    "@babel/code-frame": "^7.0.0",
-    "@babel/core": "^7.4.5",
-    "@babel/generator": "^7.4.4",
-    "@babel/parser": "^7.4.5",
-    "@babel/traverse": "^7.4.5",
-    "@babel/types": "^7.4.4",
-    "@babel/template": "^7.4.4",
-    "@xmldom/xmldom": "^0.8.0",
-    "async": "^3.2.0",
-    "colors": "1.4.0",
-    "commander": "^8.0.0",
-    "ejs": "3.1.6",
-    "fs-extra": "^5.0.0",
-    "global-paths": "^1.0.0",
-    "jsonlint": "1.6.3",
-    "lodash": "^4.17.4",
-    "moment": "2.29.1",
-    "node.extend": "2.0.2",
-    "pkginfo": "0.4.1",
-    "resolve": "^1.1.7",
-    "source-map": "^0.7.3",
-    "walk-sync": "^0.3.2",
-    "xml2tss": "0.0.5"
-  },
-  "license": "Apache-2.0",
-  "bin": {
-    "alloy": "./bin/alloy"
-  },
-  "scripts": {
-    "test": "jake test:all",
-    "lint": "eslint .",
-    "release": "semantic-release"
-  },
-  "main": "./Alloy/alloy",
-  "engines": {
-    "node": ">=0.10"
-  },
-  "devDependencies": {
-    "@seadub/danger-plugin-dependencies": "^1.0.0",
-    "@seadub/danger-plugin-eslint": "^3.0.1",
-    "@seadub/danger-plugin-junit": "^0.3.0",
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/git": "^10.0.0",
-    "danger": "^10.5.0",
-    "diff": "^5.0.0",
-    "eslint": "^8.0.1",
-    "jake": "^10.8.2",
-    "semantic-release": "^18.0.0"
-  },
-  "release": {
-    "tagFormat": "${version}",
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      [
-        "@semantic-release/github",
-        {
-          "successComment": false
-        }
-      ]
-    ]
-  }
+	"name": "alloy",
+	"description": "Appcelerator Titanium MVC Framework",
+	"keywords": [
+		"appcelerator",
+		"titanium",
+		"alloy",
+		"mobile",
+		"ios",
+		"iphone",
+		"android",
+		"html5",
+		"appc-client"
+	],
+	"version": "1.17.3",
+	"author": "TiDev, Inc. <info@tidev.io>",
+	"maintainers": [
+		{
+			"name": "Tidev, Inc.",
+			"email": "info@tidev.io"
+		}
+	],
+	"bugs": {
+		"url": "https://jira-archive.titaniumsdk.com/ALOY"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tidev/alloy.git"
+	},
+	"preferGlobal": true,
+	"dependencies": {
+		"@babel/code-frame": "^7.0.0",
+		"@babel/core": "^7.4.5",
+		"@babel/generator": "^7.4.4",
+		"@babel/parser": "^7.4.5",
+		"@babel/traverse": "^7.4.5",
+		"@babel/types": "^7.4.4",
+		"@babel/template": "^7.4.4",
+		"@xmldom/xmldom": "^0.8.0",
+		"async": "^3.2.0",
+		"colors": "1.4.0",
+		"commander": "^8.0.0",
+		"ejs": "3.1.6",
+		"fs-extra": "^5.0.0",
+		"global-paths": "^1.0.0",
+		"jsonlint": "1.6.3",
+		"lodash": "^4.17.4",
+		"moment": "2.29.1",
+		"node.extend": "2.0.2",
+		"pkginfo": "0.4.1",
+		"resolve": "^1.1.7",
+		"source-map": "^0.7.3",
+		"walk-sync": "^0.3.2",
+		"xml2tss": "0.0.5"
+	},
+	"license": "Apache-2.0",
+	"bin": {
+		"alloy": "./bin/alloy"
+	},
+	"scripts": {
+		"test": "jake test:all",
+		"lint": "eslint .",
+		"release": "semantic-release"
+	},
+	"main": "./Alloy/alloy",
+	"engines": {
+		"node": ">=0.10"
+	},
+	"devDependencies": {
+		"@seadub/danger-plugin-dependencies": "^1.0.0",
+		"@seadub/danger-plugin-eslint": "^3.0.1",
+		"@seadub/danger-plugin-junit": "^0.3.0",
+		"@semantic-release/changelog": "^6.0.0",
+		"@semantic-release/git": "^10.0.0",
+		"danger": "^10.5.0",
+		"diff": "^5.0.0",
+		"eslint": "^8.0.1",
+		"jake": "^10.8.2",
+		"semantic-release": "^18.0.0"
+	},
+	"release": {
+		"tagFormat": "${version}",
+		"plugins": [
+			"@semantic-release/commit-analyzer",
+			"@semantic-release/release-notes-generator",
+			"@semantic-release/changelog",
+			"@semantic-release/npm",
+			"@semantic-release/git",
+			[
+				"@semantic-release/github",
+				{
+					"successComment": false
+				}
+			]
+		]
+	}
 }

@@ -48,7 +48,7 @@ function handleCommit(e) {
 }
 
 function handleDelete(e) {
-	// This event fires on item clicks and other times it should not, see https://jira.appcelerator.org/browse/TIMOB-13649
+	// This event fires on item clicks and other times it should not, see https://jira-archive.titaniumsdk.com/TIMOB-13649
 	Ti.API.info('Delete item: ' + e.item.label);
 }
 
