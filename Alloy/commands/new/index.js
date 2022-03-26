@@ -48,7 +48,7 @@ module.exports = async function(args, program) {
 	// copy semantic.colors.json
 	var semanticFile = path.join(paths.resources, 'semantic.colors.json');
 	if (fs.existsSync(semanticFile)) {
-		var targetSemantic = path.join(paths.app, CONST.DIR.ASSETS, 'semantic.colors.json')
+		var targetSemantic = path.join(paths.app, CONST.DIR.ASSETS, 'semantic.colors.json');
 		fs.copyFileSync(semanticFile, targetSemantic);
 	}
 
