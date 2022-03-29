@@ -1,15 +1,11 @@
 const { exec } = require('child_process');
-const commandExistsSync = require('command-exists').sync;
+const U = require('../../utils');
 
 module.exports = async function(args, program) {
-	// console.log('module:', program.module);
-	// console.log('vendor:', program.vendor);
 	let options = '';
 	try {
 		if (args.length === 0) {
-			if (program.all) options += ' --all';
-			if (program.debug) options += ' --debug';
-			execCommand(`purgetss ${options}`);
+			execCommand('purgetss');
 		} else {
 			args.forEach(command => {
 				switch (command) {
@@ -18,9 +14,6 @@ module.exports = async function(args, program) {
 						break;
 					case 'build':
 						execCommand('purgetss build');
-						break;
-					case 'watch':
-						execCommand('purgetss watch');
 						break;
 					case 'fonts':
 						if (program.vendor) options += ` -v=${program.vendor}`;
@@ -44,7 +37,7 @@ module.exports = async function(args, program) {
 
 function execCommand(currentCommand) {
 	exec(currentCommand, (error, response) => {
-		if (error && error.code === 127) return console.error('\n::PurgeTSS:: First install purgetss globally using: [sudo] npm i purgetss -g');
+		if (error && error.code === 127) U.die('\n::PurgeTSS:: First install purgetss globally using: [sudo] npm i purgetss -g');
 		return console.log(response);
 	});
 }
