@@ -53,7 +53,12 @@ program
 	.option('-y, --line <line>', 'Line for source map query', 1)
 	.option('-z, --source <source>', 'Source original file for source map query')
 	.option('--widgetname <name>', 'Widget name, used with generate command')
-	.option('--testapp <name>', 'Test app name to import, used with new command');
+	.option('--testapp <name>', 'Test app name to import, used with new command')
+	// PurgeTSS options
+	.option('--all', 'Run all processes: `purgetss build-fonts`, `purgetss build` and `purgetss`')
+	.option('--debug', 'Show time taken to execute each process.')
+	.option('--modules', 'Copy or generate the corresponding CommonJS module into `./app/lib/` folder.')
+	.option('--vendor <arguments>', 'Use any of the following arguments to copy specific vendors: fa = Font Awesome, md = Material Design or f7 = Framework7 Icons');
 
 program.command('new [dir]')
 	.description('create a new alloy project');
