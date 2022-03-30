@@ -134,14 +134,6 @@ Promise
 ////////// FUNCTIONS //////////
 ///////////////////////////////
 function banner() {
-	var str =
-		'       .__  .__                \n' +
-		'_____  |  | |  |   ____ ___.__.\n' +
-		'\\__  \\ |  | |  |  /  _ <   |  |\n' +
-		' / __ \\|  |_|  |_(  <_> )___  |\n' +
-		'(____  /____/____/\\____// ____|\n' +
-		'     \\/                 \\/';
-
 	if (!program.dump) {
 		console.log(logger.stripColors ? str : str.blue);
 		var m = 'Alloy ' + module.exports.version + ' by Appcelerator. The MVC app framework for Titanium.\n'.white;
