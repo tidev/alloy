@@ -26,7 +26,7 @@ jobs:
       matrix:
         nodeVersion: [ '12.x' ]
         os: [ macos-latest ]
-        tiSDK: [ latest, '-b master' ] # -b master is to reduce the complexity of handling a GA install vs a branch install
+        tiSDK: [ latest ]
     steps:
       - uses: actions/checkout@v2
         with:
