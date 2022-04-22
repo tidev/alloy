@@ -4,7 +4,6 @@
 */
 var SM = require('source-map'),
 	fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	path = require('path'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
@@ -61,9 +60,20 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: `${compileConfig.dir.project}/${relativeOutfile}`,
+		file: path.join(compileConfig.dir.project, relativeOutfile),
 		sourceRoot: compileConfig.dir.project
 	});
+	// try to lookup the filename, falling back to the output file if we can't determine it
+	let filename;
+	if (data.__MAPMARKER_CONTROLLER_CODE__ && data.__MAPMARKER_CONTROLLER_CODE__.filename) {
+		filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
+	} else if (data.__MAPMARKER_ALLOY_JS__ && data.__MAPMARKER_ALLOY_JS__.filename) {
+		filename = data.__MAPMARKER_ALLOY_JS__.filename;
+	} else if (data.__MAPMARKER_NONCONTROLLER__ && data.__MAPMARKER_NONCONTROLLER__.filename) {
+		filename = data.__MAPMARKER_NONCONTROLLER__.filename;
+	} else {
+		filename = target.filename;
+	}
 	// the line counter and code string for the generated file
 	var genMap = {
 		count: 1,
@@ -125,7 +135,8 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		plugins: [
 			[require('./ast/builtins-plugin'), compileConfig],
 			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
-		]
+		],
+		filename
 	});
 	if (compileConfig.sourcemap) {
 		// Tell babel to retain the lines so they stay correct (columns go wacky, but OH WELL)
@@ -143,7 +154,6 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 
 	// write the generated controller code
 	fs.mkdirpSync(path.dirname(outfile));
-	chmodr.sync(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, outputResult.code.toString());
 	logger.info('  created:    "' + relativeOutfile + '"');
 
@@ -153,7 +163,6 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		outfile = path.join(mapDir, relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 		relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 		fs.mkdirpSync(path.dirname(outfile));
-		chmodr.sync(path.dirname(outfile), 0755);
 		fs.writeFileSync(outfile, JSON.stringify(sourceMap));
 	}
 };
@@ -164,7 +173,7 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var origFile = generator.origFile;
 	var markers = _.map(data, function(v, k) { return k; });
 	var mapper = new SM.SourceMapGenerator({
-		file: `${compileConfig.dir.project}/${target.filename}`,
+		file: path.join(compileConfig.dir.project, target.filename),
 		sourceRoot: compileConfig.dir.project
 	});
 	var genMap = {
@@ -229,7 +238,6 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	var mapDir = path.join(compileConfig.dir.project, CONST.DIR.MAP);
 	var outfile = path.join(mapDir, relativeOutfile) + '.' + CONST.FILE_EXT.MAP;
 	fs.mkdirpSync(path.dirname(outfile));
-	chmodr.sync(path.dirname(outfile), 0755);
 	fs.writeFileSync(outfile, JSON.stringify(mapper.toJSON()));
 	logger.debug('  map:        "' + outfile + '"');
 };

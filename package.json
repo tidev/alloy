@@ -12,7 +12,7 @@
     "html5",
     "appc-client"
   ],
-  "version": "1.14.5",
+  "version": "1.18.0",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/appcelerator/alloy.git"
+    "url": "git+https://github.com/appcelerator/alloy.git"
   },
   "preferGlobal": true,
   "dependencies": {
@@ -33,26 +33,25 @@
     "@babel/core": "^7.4.5",
     "@babel/generator": "^7.4.4",
     "@babel/parser": "^7.4.5",
+    "@babel/template": "^7.4.4",
     "@babel/traverse": "^7.4.5",
     "@babel/types": "^7.4.4",
-    "@babel/template": "^7.4.4",
-    "async": "^2.4.0",
-    "chmodr": "^1.0.2",
-    "colors": "^1.1.2",
-    "commander": "^2.12.2",
-    "ejs": "2.5.7",
+    "@xmldom/xmldom": "^0.8.0",
+    "async": "^3.2.0",
+    "colors": "1.4.0",
+    "commander": "^8.0.0",
+    "ejs": "3.1.6",
     "fs-extra": "^5.0.0",
     "global-paths": "^1.0.0",
-    "jsonlint": "1.6.2",
+    "jsonlint": "1.6.3",
     "lodash": "^4.17.4",
-    "moment": "2.20.1",
+    "moment": "2.29.1",
     "node.extend": "2.0.2",
     "pkginfo": "0.4.1",
     "resolve": "^1.1.7",
-    "source-map": "^0.6.1",
+    "source-map": "^0.7.3",
     "walk-sync": "^0.3.2",
-    "xml2tss": "0.0.5",
-    "xmldom": "^0.1.27"
+    "xml2tss": "0.0.5"
   },
   "license": "Apache-2.0",
   "bin": {
@@ -60,20 +59,39 @@
   },
   "scripts": {
     "test": "jake test:all",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "release": "semantic-release"
   },
   "main": "./Alloy/alloy",
   "engines": {
     "node": ">=0.10"
   },
   "devDependencies": {
-    "@seadub/danger-plugin-dependencies": "^0.1.0",
-    "@seadub/danger-plugin-eslint": "^1.0.0",
-    "@seadub/danger-plugin-junit": "^0.1.1",
-    "danger": "^7.1.4",
-    "diff": "^3.4.0",
-    "eslint": "^4.14.0",
-    "jake": "^8.0.12",
-    "mkdirp": "^0.5.1"
+    "@seadub/danger-plugin-dependencies": "^1.0.0",
+    "@seadub/danger-plugin-eslint": "^3.0.1",
+    "@seadub/danger-plugin-junit": "^0.3.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "danger": "^10.5.0",
+    "diff": "^5.0.0",
+    "eslint": "^8.0.1",
+    "jake": "^10.8.2",
+    "semantic-release": "^18.0.0"
+  },
+  "release": {
+    "tagFormat": "${version}",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      [
+        "@semantic-release/github",
+        {
+          "successComment": false
+        }
+      ]
+    ]
   }
 }

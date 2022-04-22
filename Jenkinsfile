@@ -1,6 +1,6 @@
 #! groovy
 library 'pipeline-library'
-def nodeVersion = '10.17.0'
+def nodeVersion = '16.11.1'
 def npmVersion = 'latest' // We can change this without any changes to Jenkins. 5.7.1 is minimum to use 'npm ci'
 
 def packageVersion = ''
@@ -52,6 +52,13 @@ timestamps() {
 				currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 				fingerprint 'package.json'
 
+				if (skipCI()) {
+					def msg = 'Last commit tagged [skip ci]. Skipping build'
+					manager.addShortText(msg)
+					currentBuild.result = 'ABORTED'
+					error(msg)
+				}
+
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					ensureNPM(npmVersion)
 					// Install dependencies
@@ -83,13 +90,8 @@ timestamps() {
 			stage('Security') {
 				unstash 'security'
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-					// Install only production dependencies
-					ensureNPM(npmVersion)
-					sh 'npm ci --production'
-
-					sh 'npx retire --exitwith 0'
-
-					step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, consoleParsers: [[parserName: 'Node Security Project Vulnerabilities'], [parserName: 'RetireJS']], defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', unHealthy: ''])
+					npmAuditToWarnings() // runs npm audit --json, converts to format needed by scanner and writes to npm-audit.json file
+					recordIssues blameDisabled: true, enabledForFailure: true, forensicsDisabled: true, tools: [issues(name: 'NPM Audit', pattern: 'npm-audit.json')]
 				} // nodejs
 				deleteDir()
 			} // stage
@@ -101,11 +103,15 @@ timestamps() {
 				nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 					if (isMainlineBranch) {
 						try {
-							// Publish
-							sh 'npm publish'
+							ensureNPM(npmVersion)
+							sh 'npm ci'
+							withCredentials([string(credentialsId: 'oauth-github-api', variable: 'GH_TOKEN')]) {
+								sh 'npm run release'
+							}
 
-							// Tag git
-							pushGitTag(name: packageVersion, message: "See ${env.BUILD_URL} for more information.", force: true)
+							// reread the package.json to detect version change if we've published
+							packageVersion = jsonParse(readFile('package.json'))['version']
+							currentBuild.displayName = "#${packageVersion}-${currentBuild.number}"
 
 							if (isMaster) {
 								// Trigger appc-cli job

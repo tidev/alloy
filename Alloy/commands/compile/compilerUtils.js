@@ -4,14 +4,14 @@ var U = require('../../utils'),
 	os = require('os'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
-	chmodr = require('chmodr'),
 	jsonlint = require('jsonlint'),
 	logger = require('../../logger'),
 	astController = require('./ast/controller'),
 	_ = require('lodash'),
 	styler = require('./styler'),
-	XMLSerializer = require('xmldom').XMLSerializer,
-	CONST = require('../../common/constants');
+	XMLSerializer = require('@xmldom/xmldom').XMLSerializer,
+	CONST = require('../../common/constants'),
+	sourceMapper = require('./sourceMapper');
 
 ///////////////////////////////////////
 ////////// private variables //////////
@@ -227,7 +227,7 @@ exports.getParserArgs = function(node, state, opts) {
 				}
 			}	
 
-			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG|\$.args)\.|L\(.+\)\s*$)/.test(theValue)) {
+			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG|\$.args)\.|L\(.+\)\s*$|WPATH\()/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
 				if (match !== null) {
 					theValue = theValue.replace(/\(/g, '("').replace(/\)/g, '")');
@@ -639,12 +639,25 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var dest = path.join(destDir, path.basename(file));
 				if (!path.existsSync(destDir)) {
 					fs.mkdirpSync(destDir);
-					chmodr.sync(destDir, 0755);
 				}
 
 				logger.trace('Copying ' + file.yellow + ' --> ' +
 					path.relative(compilerConfig.dir.project, dest).yellow + '...');
 				U.copyFileSync(source, dest);
+
+				if (path.extname(source) === '.js' && compilerConfig.sourcemap) {
+					sourceMapper.generateSourceMap({
+						target: {
+							filename: file,
+							filepath: dest,
+						},
+						data: {},
+						origFile: {
+							filename: file,
+							filepath: source
+						}
+					}, compilerConfig);
+				}
 			}
 		});
 
@@ -705,8 +718,9 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 			if (!fs.existsSync(srcFile)) return;
 
 			if (fs.statSync(srcFile).isDirectory()) {
-				fs.existsSync(destFile) || fs.mkdirpSync(destFile);
-				chmodr.sync(destFile, 0755);
+				if (!fs.existsSync(destFile)) {
+					fs.mkdirpSync(destFile);
+				}
 				return walk(srcFile, destFile);
 			}
 
@@ -741,7 +755,7 @@ exports.mergeI18N = function mergeI18N(src, dest, opts) {
 
 			_.each(srcDoc.getElementsByTagName('string'), function (node) {
 				var name = node.getAttribute('name');
-				if (!existing.hasOwnProperty(name)) {
+				if (!Object.prototype.hasOwnProperty.call(existing, name)) {
 					destDoc.appendChild(destXml.createTextNode('\t'));
 					destDoc.appendChild(node);
 					destDoc.appendChild(destXml.createTextNode('\n'));
@@ -872,7 +886,6 @@ function generateConfig(obj) {
 		buildLog.data.cfgHash = hash;
 		// write out the config runtime module
 		fs.mkdirpSync(resourcesBase);
-		chmodr.sync(resourcesBase, 0755);
 
 		//logger.debug('Writing "Resources/' + (platform ? platform + '/' : '') + 'alloy/CFG.js"...');
 		var output = 'module.exports=' + JSON.stringify(o) + ';';
@@ -882,7 +895,6 @@ function generateConfig(obj) {
 		var baseFolder = path.join(obj.dir.resources, 'alloy');
 		if (!fs.existsSync(baseFolder)) {
 			fs.mkdirpSync(baseFolder);
-			chmodr.sync(baseFolder, 0755);
 		}
 		fs.writeFileSync(path.join(baseFolder, 'CFG.js'), output);
 	}

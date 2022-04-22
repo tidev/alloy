@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
-	XMLSerializer = require('xmldom').XMLSerializer,
+	XMLSerializer = require('@xmldom/xmldom').XMLSerializer,
 	pkg = require('../package'),
 	U = require('./utils'),
 	CONST = require('./common/constants'),

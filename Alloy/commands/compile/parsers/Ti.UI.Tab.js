@@ -26,6 +26,7 @@ function parse(node, state, args) {
 	if (theNode) {
 		code += CU.generateNodeExtended(child, state, {
 			parent: {},
+			insideContainer: true,
 			post: function(node, state, args) {
 				windowSymbol = state.parent.symbol;
 			}

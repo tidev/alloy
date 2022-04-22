@@ -1,0 +1,6 @@
+<Alloy>
+	<TabGroup>
+		<Require src="./home/index"  />
+		<Require src="./profile/index" />
+	</TabGroup>
+</Alloy>

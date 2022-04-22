@@ -1,0 +1,14 @@
+<Alloy>
+	<Tab title="Home">
+		<Window title="Home">
+			<View id="wrapper">
+				<Label class="fa-solid search">edit</Label>
+				<Label id="editLabel">
+					<AttributedString class="as">
+						Edit views/home/index.xml to change this view!
+					</AttributedString>
+				</Label>
+			</View>
+		</Window>
+	</Tab>
+</Alloy>

@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  reviewers:
+  - ewanharris
+  ignore:
+  - dependency-name: fs-extra
+    versions:
+    - "> 5.0.0"
+  - dependency-name: walk-sync
+    versions:
+    - "> 0.3.2"

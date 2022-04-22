@@ -1,0 +1,46 @@
+'Tab[platform=ios]': {
+	icon: 'images/home.png'
+}
+
+'#wrapper': {
+	layout: 'vertical',
+	height: Ti.UI.SIZE
+}
+
+'.search' :{
+	font: {
+		fontSize: 96
+	},
+	color: '#ccc'
+}
+
+'.as': {
+	attributes: [
+		{
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
+			value: '#aaa',
+			range: [ 0, 5 ]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
+			value: '#E82C2A',
+			range: [ 5, 20 ]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_FONT,
+			value: {
+				fontFamily: 'monospace',
+			},
+			range: [ 5, 7 ]
+		},
+		{
+			type: Ti.UI.ATTRIBUTE_FOREGROUND_COLOR,
+			value: '#aaa',
+			range: [ 25, 21 ]
+		}
+	]
+}
+
+'#editLabel': {
+	top: 60
+}

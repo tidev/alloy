@@ -1,0 +1,11 @@
+<Alloy>
+	<TableViewRow name="$.args.label">
+		<View layout="horizontal" horizontalWrap="false" >
+			<View class="iconWrapper">
+				<Label class="fa-solid icon"  text="$.args.icon" />
+			</View>
+			<Label class="title" />
+		</View>
+		<Label class="fa-solid chevron" >chevron-right</Label>
+	</TableViewRow>
+</Alloy>

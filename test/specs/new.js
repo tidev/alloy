@@ -1,7 +1,6 @@
 var fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	path = require('path'),
-	DOMParser = require('xmldom').DOMParser,
+	DOMParser = require('@xmldom/xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash');
@@ -73,7 +72,6 @@ _.each(RUNS, function(run) {
 			// Create a copy of Harness to work with
 			fs.removeSync(Harness);
 			fs.mkdirpSync(Harness);
-			chmodr.sync(Harness, 0777);
 			fs.copySync(HarnessTemplate, Harness, {
 				forceDelete: true
 			});
