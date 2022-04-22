@@ -33,6 +33,7 @@ if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
 
 // Process command line input
 program
+	.storeOptionsAsProperties() // Enable the legacy behaviour of storing options as properties on the program object
 	.version(module.exports.version, '-v, --version')
 	.description('Alloy command line')
 	.usage('COMMAND [ARGS] [OPTIONS]')
@@ -54,26 +55,39 @@ program
 	.option('--widgetname <name>', 'Widget name, used with generate command')
 	.option('--testapp <name>', 'Test app name to import, used with new command');
 
-program.command('new'.blue + ' <dir>'.white)
-	.description('    create a new alloy project'.grey);
+program.command('new [dir]')
+	.description('create a new alloy project');
 
-program.command('compile'.blue + ' [dir]'.white)
-	.description('    compile into titanium source code'.grey);
+program.command('compile [dir]')
+	.description('compile into titanium source code');
 
-program.command('extract-i18n'.blue + ' <language>'.white)
-	.description('    extracts i18n strings from the source code (js and tss files)'.grey);
+program.command('extract-i18n <language>')
+	.description('extracts i18n strings from the source code (js and tss files)');
 
-program.command('generate'.blue + ' <type> <name>'.white)
-	.description('    generate a new alloy type such as a controller'.grey);
+program.command('generate <type> [name]')
+	.description('generate a new alloy type such as a controller');
 
-program.command('copy'.blue + ' <source> <destination>'.white)
-	.description('    copy the controller, view, and style files from <source> to <destination>'.grey);
+program.command('copy <source> <destination>')
+	.description('copy the controller, view, and style files from <source> to <destination>');
 
-program.command('move'.blue + ' <source> <destination>'.white)
-	.description('    move the controller, view, and style files from <source> to <destination>'.grey);
+program.command('move <source> <destination>')
+	.description('move the controller, view, and style files from <source> to <destination>');
 
-program.command('remove'.blue + ' <source>'.white)
-	.description('    remove the controller, view, and style files at <source>'.grey);
+program.command('remove <source>')
+	.description('remove the controller, view, and style files at <source>');
+
+program.command('purgetss')
+	.description('Create a clean app.tss file with only the classes used in your XML Files.\nYour original classes will be backed up in _app.tss')
+	.option('--modules', 'Copy or generate the corresponding CommonJS module into `./app/lib/` folder.')
+	.option('--vendor <arguments>', 'Use any of the following arguments to copy specific vendors: fa = Font Awesome, md = Material Design or f7 = Framework7 Icons');
+
+program.command('info [type]', { hidden: true });
+
+program.command('debugger', { hidden: true });
+
+program.command('install', { hidden: true });
+
+program.command('test', { hidden: true });
 
 program.parse(process.argv);
 
@@ -109,23 +123,19 @@ if (!_.includes(getCommands(), command)) {
 }
 
 // Launch command with given arguments and options
-(require('./commands/' + command + '/index'))(program.args.slice(1), program);
+const cmd = require('./commands/' + command + '/index');
+Promise
+	.resolve(cmd(program.args.slice(1), program))
+	.catch(error => {
+		U.die(error.message, error);
+	});
 
 ///////////////////////////////
 ////////// FUNCTIONS //////////
 ///////////////////////////////
 function banner() {
-	var str =
-	'       .__  .__                \n' +
-	'_____  |  | |  |   ____ ___.__.\n' +
-	'\\__  \\ |  | |  |  /  _ <   |  |\n' +
-	' / __ \\|  |_|  |_(  <_> )___  |\n' +
-	'(____  /____/____/\\____// ____|\n' +
-	'     \\/                 \\/';
-
 	if (!program.dump) {
-		console.log(logger.stripColors ? str : str.blue);
-		var m = 'Alloy ' + module.exports.version + ' by Appcelerator. The MVC app framework for Titanium.\n'.white;
+		var m = 'Alloy ' + module.exports.version + ' by TiDev. The MVC app framework for Titanium.\n'.white;
 		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
 }

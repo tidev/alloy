@@ -1,5 +1,4 @@
 var fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	path = require('path'),
 	os = require('os'),
 	U = require('../Alloy/utils'),
@@ -109,7 +108,6 @@ namespace('app', function() {
 		log('Reseting the Harness app from template...');
 		fs.removeSync(harnessAppPath);
 		fs.mkdirpSync(harnessAppPath);
-		chmodr.sync(harnessAppPath, 0777);
 		fs.copySync(harnessTemplatePath, harnessAppPath);
 	});
 
@@ -118,7 +116,6 @@ namespace('app', function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
 			fs.mkdirpSync(resourcesPath);
-			chmodr.sync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -130,7 +127,6 @@ namespace('app', function() {
 				log('Staging sample app "'+appDir+'" for launch...');
 				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserveTimestamps:true});
 				fs.mkdirpSync(path.join(targetAppPath,'lib'));
-				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
 				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),
@@ -159,7 +155,6 @@ namespace('app', function() {
 		log('Initializing Alloy project...');
 		if (!path.existsSync(resourcesPath)) {
 			fs.mkdirpSync(resourcesPath);
-			chmodr.sync(resourcesPath, 0777);
 		}
 		require('child_process').exec('alloy new -f "' + harnessAppPath + '"', function(error, stdout, stderr) {
 			if (error) {
@@ -171,7 +166,6 @@ namespace('app', function() {
 				log('Staging sample app "'+appDir+'" for launch...');
 				fs.copySync(path.join(process.cwd(), 'test', 'apps', appDir), targetAppPath, {preserveTimestamps:true});
 				fs.mkdirpSync(path.join(targetAppPath,'lib'));
-				chmodr.sync(path.join(targetAppPath,'lib'), 0777);
 				fs.copySync(
 					path.join('test','lib'),
 					path.join(targetAppPath,'lib'),

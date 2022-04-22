@@ -216,9 +216,9 @@
             }
 
             function nodeWrite(path, filename, text) {
-                var fs = require("fs");
+                var fs = require("fs-extra");
                 var nodejs_path = require("path");
-                require("mkdirp").sync(path); // make sure the path exists
+                fs.mkdirpSync(path);
                 var filepath = nodejs_path.join(path, filename);
                 var xmlfile = fs.openSync(filepath, "w");
                 fs.writeSync(xmlfile, text, 0);

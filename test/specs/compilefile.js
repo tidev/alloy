@@ -1,7 +1,6 @@
 var fs = require('fs-extra'),
-	chmodr = require('chmodr'),
 	path = require('path'),
-	DOMParser = require('xmldom').DOMParser,
+	DOMParser = require('@xmldom/xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	platforms = require('../../platforms/index'),
@@ -24,7 +23,6 @@ describe('alloy selective compile', function() {
 		// Create a copy of Harness to work with
 		fs.removeSync(Harness);
 		fs.mkdirpSync(Harness);
-		chmodr.sync(Harness, 0777);
 		fs.copySync(HarnessTemplate, Harness, {
 			forceDelete: true
 		});

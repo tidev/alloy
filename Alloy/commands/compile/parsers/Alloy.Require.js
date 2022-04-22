@@ -122,23 +122,62 @@ function parse(node, state, args) {
 	// Generate runtime code
 	code += (state.local ? 'var ' : '') + args.symbol + ' = Alloy.' + method + "('" + src +
 		"'," + extraArgs + styler.generateStyleParams(
-			state.styles,
-			args.classes,
-			args.id,
-			type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
-			args.createArgs,
-			state
-		) + ');\n';
+		state.styles,
+		args.classes,
+		args.id,
+		type === 'widget' ? 'Alloy.Widget' : 'Alloy.Require',
+		args.createArgs,
+		state
+	) + ')';
+	let parent = {
+		symbol: args.symbol + '.getViewEx({recurse:true})'
+	};
 	if (args.parent.symbol && !state.templateObject && !state.androidMenu) {
-		code += args.symbol + '.setParent(' + args.parent.symbol + ');\n';
+		code += ';\n' + args.symbol + '.setParent(' + args.parent.symbol + ');\n';
+	} else if (type === 'widget' && isOnlyNodeInView(node)) {
+		code += '.getViewEx({recurse:true});\n';
+		parent = { symbol: args.symbol };
+	} else {
+		code += ';\n';
 	}
 
 	return {
-		parent: {
-			symbol: args.symbol + '.getViewEx({recurse:true})'
-		},
+		parent: parent,
 		controller: args.symbol,
 		styles: state.styles,
 		code: code
 	};
+}
+
+/**
+ * Determines whether a node is the only child node of the Alloy tag in the view structure. This is
+ * used to determine whether a Widget should become the root element of the view when a view
+ * only contains a single Widget tag like below
+ *
+ * <Alloy>
+ *     <Widget src="com.ti.mywidget" id="widget" />
+ * </Alloy>
+ *
+ * @param {Node} node - XMLDom node to be inspected
+ * @return Boolean
+ */
+function isOnlyNodeInView (node) {
+
+	// Shouldn't happen as the Alloy tag should always exist, but lets handle it
+	if (!node.parentNode) {
+		return false;
+	}
+
+	// If the parent isn't the Alloy tag, then it isn't the only node in the view
+	if (node.parentNode.nodeName !== 'Alloy') {
+		return false;
+	}
+
+	// If there are sibling nodes, then it isn't the only node in the view
+	const siblingNodes = U.XML.getElementsFromNodes(node.parentNode.childNodes).filter(n => n !== node);
+	if (siblingNodes.length !== 0) {
+		return false;
+	}
+
+	return true;
 }

@@ -1,0 +1,46 @@
+name: Build
+on:
+  - pull_request
+  - push
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+  Test:
+    needs: Lint
+    name: ${{ matrix.os }} Node.js ${{ matrix.nodeVersion }} Ti SDK ${{ matrix.tiSDK }} Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        nodeVersion: [ '12.x' ]
+        os: [ macos-latest ]
+        tiSDK: [ latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.nodeVersion }}
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm i titanium -g
+          ti sdk install ${{ matrix.tiSDK }} -d
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run tests
+        run: npm test
+      

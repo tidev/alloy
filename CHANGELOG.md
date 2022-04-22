@@ -1,6 +1,146 @@
+## [1.17.3](https://github.com/appcelerator/alloy/compare/1.17.2...1.17.3) (2022-01-10)
+
+
+### Bug Fixes
+
+* pin colors version to avoid dos issue ([5f10891](https://github.com/appcelerator/alloy/commit/5f10891ef6a9f6357a41ef782390a8d6a9d2d1de))
+
+## [1.17.2](https://github.com/appcelerator/alloy/compare/1.17.1...1.17.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* **deps:** bump xmldom to 0.8.0 ([#1270](https://github.com/appcelerator/alloy/issues/1270)) ([d0a4299](https://github.com/appcelerator/alloy/commit/d0a42991a02b1535d2e5d933365d67e9a3e81b63))
+
+## [1.17.1](https://github.com/appcelerator/alloy/compare/1.17.0...1.17.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **compile/hook:** error if unable to find the alloy cli ([166dc3b](https://github.com/appcelerator/alloy/commit/166dc3b61c2dba6fbeecf1d4d00a742dea15be99))
+
+# [1.17.0](https://github.com/appcelerator/alloy/compare/1.16.4...1.17.0) (2021-11-02)
+
+
+### Bug Fixes
+
+* **compile/sourcemap:** use path.join rather than manually constructing a path ([537107d](https://github.com/appcelerator/alloy/commit/537107debd06930ed3ea932395e2654e4996db48))
+
+
+### Features
+
+* **all:** set default backbone version ([fb845f7](https://github.com/appcelerator/alloy/commit/fb845f735be4ff6999807f14b740c37357145977))
+
+## [1.16.4](https://github.com/appcelerator/alloy/compare/1.16.3...1.16.4) (2021-09-17)
+
+
+### Bug Fixes
+
+* **compile:** provide filename to babel transform to allow using config files ([#1218](https://github.com/appcelerator/alloy/issues/1218)) ([ba0068e](https://github.com/appcelerator/alloy/commit/ba0068ed094906a474c3d6552e27b4e809414a2f))
+
+## [1.16.3](https://github.com/appcelerator/alloy/compare/1.16.2...1.16.3) (2021-06-29)
+
+
+### Bug Fixes
+
+* **generate:** mark name as optional as it is not required for jmk ([bc0e06f](https://github.com/appcelerator/alloy/commit/bc0e06f9169cc7a5e34c0f1e757f29af3a6ffc7b))
+* **new:** mark dir as optional as it is not required ([d151848](https://github.com/appcelerator/alloy/commit/d151848ad1ba7a8494b5005d016725645173ba4d))
+
+## [1.16.2](https://github.com/appcelerator/alloy/compare/1.16.1...1.16.2) (2021-06-15)
+
+
+### Bug Fixes
+
+* **compile:** don't create widget sourcemaps if sourcemaps are disabled ([b1259b1](https://github.com/appcelerator/alloy/commit/b1259b1feff867bdab8ebb29ce9ceae2f739290e))
+
+## [1.16.1](https://github.com/appcelerator/alloy/compare/1.16.0...1.16.1) (2021-06-08)
+
+
+### Bug Fixes
+
+* **compile:** generate source maps for lib files in widgets ([ba8d4c2](https://github.com/appcelerator/alloy/commit/ba8d4c22872c78927b8b231cc0f5e2cb0384525c))
+
+# [1.16.0](https://github.com/appcelerator/alloy/compare/1.15.4...1.16.0) (2021-03-03)
+
+
+### Features
+
+* support using OptionBar ([93c2df1](https://github.com/appcelerator/alloy/commit/93c2df14e190bb281ac191b9c85e529fc2b11dc6))
+
+## [1.15.4](https://github.com/appcelerator/alloy/compare/1.15.3...1.15.4) (2021-01-04)
+
+
+### Bug Fixes
+
+* **compile:** allow TabGroup as child of a NavigationWindow ([#1067](https://github.com/appcelerator/alloy/issues/1067)) ([d837e76](https://github.com/appcelerator/alloy/commit/d837e76f1e304a8704232020b56e03c0f806953b))
+
+## [1.15.3](https://github.com/appcelerator/alloy/compare/1.15.2...1.15.3) (2020-11-23)
+
+
+### Bug Fixes
+
+* improve check around whether widget is only tag in the view ([#1035](https://github.com/appcelerator/alloy/issues/1035)) ([7e4c3d6](https://github.com/appcelerator/alloy/commit/7e4c3d6e6ba7f3fbf3b9b4889ac1ec79e2b30192))
+
 # Alloy Release Notes
 
-### Unreleased items
+### Release 1.15.2
+
+### Bug Fixes
+
+* [ALOY-1737](https://jira.appcelerator.org/browse/ALOY-1737) - Set items directly in ListView [#966](https://github.com/appcelerator/alloy/pull/966)
+* [ALOY-1738](https://jira.appcelerator.org/browse/ALOY-1738) - Fix handling of Require tags [#967](https://github.com/appcelerator/alloy/pull/967)
+
+### Release 1.15.1
+
+## Improvements
+
+* [ALOY-1735](https://jira.appcelerator.org/browse/ALOY-1735) - Create VS Code settings.json file on project creation [#965](https://github.com/appcelerator/alloy/pull/965)
+
+### Bug Fixes
+
+* [ALOY-1736](https://jira.appcelerator.org/browse/ALOY-1736) - Ensure package.json has correct fields [#965](https://github.com/appcelerator/alloy/pull/965)
+
+### Release 1.15.0
+
+### New Features
+
+* [ALOY-1732](https://jira.appcelerator.org/browse/ALOY-1732) - Add ability to run in the background without UI [#959](https://github.com/appcelerator/alloy/pull/959)
+* [ALOY-1733](https://jira.appcelerator.org/browse/ALOY-1733) - Add template for Alloy + webpack usage [#963](https://github.com/appcelerator/alloy/pull/963)
+
+### Improvements
+
+* [ALOY-1256](https://jira.appcelerator.org/browse/ALOY-1256) - Allow using a Widget as a primary control in an XML View [#949](https://github.com/appcelerator/alloy/pull/949)
+* [ALOY-1253](https://jira.appcelerator.org/browse/ALOY-1253) - Support WPATH in widget XML view attribute values [#948](https://github.com/appcelerator/alloy/pull/948)
+
+### Bug Fixes
+
+* [ALOY-1720](https://jira.appcelerator.org/browse/ALOY-1720) - Version string comparison will break for SDK 10.0.0 [#960](https://github.com/appcelerator/alloy/pull/960)
+* [ALOY-1734](https://jira.appcelerator.org/browse/ALOY-1734) - Declare Alloy globals before execution of app.js/alloy.js [#964](https://github.com/appcelerator/alloy/pull/964)
+
+### Release 1.14.6
+
+* [ALOY-1721](https://jira.appcelerator.org/browse/ALOY-1721) - Alloy global can no longer be accessed in styles [#955](https://github.com/appcelerator/alloy/issues/955)
+
+### Release 1.14.5
+
+* Update node.extend
+
+### Release 1.14.4
+
+* Correctly get node name in alloy global transform
+
+### Release 1.14.3
+
+* [ALOY-1710](https://jira.appcelerator.org/browse/ALOY-1710) - Fix undeclared variable error [#947](https://github.com/appcelerator/alloy/pull/947)
+
+### Release 1.14.2
+
+* [ALOY-1598](https://jira.appcelerator.org/browse/ALOY-1598) - Fix error with binding_no_persistence sample [#882](https://github.com/appcelerator/alloy/pull/882)
+* [ALOY-1693](https://jira.appcelerator.org/browse/ALOY-1693) - Maintain db connection during sql sync [#933](https://github.com/appcelerator/alloy/pull/933)
+* [ALOY-1633](https://jira.appcelerator.org/browse/ALOY-1633) - Inject _, Alloy, and Backbone variables into files when used rather than make available as globals  [#911](https://github.com/appcelerator/alloy/pull/911)
+* [ALOY-1701](https://jira.appcelerator.org/browse/ALOY-1701) - XML: Unable to use platform namespace restriction on event handlers [#940](https://github.com/appcelerator/alloy/pull/940)
+* [ALOY-1705](https://jira.appcelerator.org/browse/ALOY-1705) - Fix to allow return outside of function [#939](https://github.com/appcelerator/alloy/pull/939)
+* [ALOY-1706](https://jira.appcelerator.org/browse/ALOY-1706) - Compile error if Alloy view filename contains hyphen [#938](https://github.com/appcelerator/alloy/pull/938)
 
 ### Release 1.14.1
 

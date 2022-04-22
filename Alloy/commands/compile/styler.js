@@ -514,7 +514,7 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 			} else {
 				// remove old style
 				_.each(style.style, function(val, key) {
-					if (_.isArray(val) && lastObj.hasOwnProperty(key)) {
+					if (_.isArray(val) && Object.prototype.hasOwnProperty.call(lastObj, key)) {
 						delete lastObj[key];
 					}
 				});
@@ -578,20 +578,19 @@ exports.generateStyleParams = function(styles, classes, id, apiName, extraStyle,
 				} else if (referencePath[0] === '$') {
 					// instance model binding
 					attribute = referencePath.splice(2, referencePath.length);
-				} else if (_.includes(CU.models, referencePath[0])) {
-					// global model binding
-					attribute = referencePath.splice(1, referencePath.length);
-					referencePath.unshift('Alloy', 'Models');
-				} else {
+				} else if (collectionModelVar !== CONST.BIND_MODEL_VAR) {
 					// collection binding (deep)
 					bindsCollection = true;
+				} else {
+					// default to global model binding
+					attribute = referencePath.splice(1, referencePath.length);
+					referencePath.unshift('Alloy', 'Models');
 				}
 
 				// model binding
 				if (attribute !== undefined) {
 					modelVar = fromPath(referencePath);
 					reference = fromPath(referencePath.concat(CONST.BIND_TRANSFORM_VAR, attribute));
-
 					if (!_.includes(bindsModels, modelVar)) {
 						bindsModels.push(modelVar);
 					}

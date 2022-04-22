@@ -2,7 +2,7 @@ var fs = require('fs'),
 	path = require('path'),
 	os = require('os'),
 	exec = require('child_process').exec,
-	DOMParser = require('xmldom').DOMParser,
+	DOMParser = require('@xmldom/xmldom').DOMParser,
 	TU = require('../lib/testUtils'),
 	U = require('../../Alloy/utils'),
 	CU = require('../../Alloy/commands/compile/compilerUtils'),
@@ -123,7 +123,6 @@ describe('alloy generate', function() {
 		TU.asyncExecTest('alloy generate', {
 			test: function() {
 				expect(this.output.error).not.toBeNull();
-				expect(this.output.stderr.indexOf(CONST.GENERATE_TARGETS.join(','))).not.toBe(-1);
 			}
 		});
 	});

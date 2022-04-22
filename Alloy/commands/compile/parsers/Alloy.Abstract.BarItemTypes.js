@@ -6,6 +6,7 @@ exports.parse = function(node, state) {
 			parents: [
 				'Ti.UI.ButtonBar',
 				'Ti.UI.iOS.TabbedBar',
+				'Ti.UI.OptionBar',
 				'Ti.UI.TabbedBar'
 			],
 			children: [

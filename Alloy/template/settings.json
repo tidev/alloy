@@ -1,0 +1,26 @@
+{
+	"files.exclude": {
+		"build/": true,
+		"i18n/": true,
+		"platform/": true,
+		"Resources/": true,
+		"node_modules/": true,
+		"package-lock.json": true
+	},
+	"search.exclude": {
+		"build/": true,
+		"i18n/": true,
+		"platform/": true,
+		"Resources/": true,
+		"node_modules/": true,
+		"package-lock.json": true
+	},
+	"files.watcherExclude": {
+		"build/": true,
+		"i18n/": true,
+		"platform/": true,
+		"Resources/": true,
+		"node_modules/": true,
+		"package-lock.json": true
+	}
+}
