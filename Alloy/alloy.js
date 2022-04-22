@@ -76,6 +76,11 @@ program.command('move <source> <destination>')
 program.command('remove <source>')
 	.description('remove the controller, view, and style files at <source>');
 
+program.command('purgetss')
+	.description('Create a clean app.tss file with only the classes used in your XML Files.\nYour original classes will be backed up in _app.tss')
+	.option('--modules', 'Copy or generate the corresponding CommonJS module into `./app/lib/` folder.')
+	.option('--vendor <arguments>', 'Use any of the following arguments to copy specific vendors: fa = Font Awesome, md = Material Design or f7 = Framework7 Icons');
+
 program.command('info [type]', { hidden: true });
 
 program.command('debugger', { hidden: true });
@@ -129,17 +134,8 @@ Promise
 ////////// FUNCTIONS //////////
 ///////////////////////////////
 function banner() {
-	var str =
-	'       .__  .__                \n' +
-	'_____  |  | |  |   ____ ___.__.\n' +
-	'\\__  \\ |  | |  |  /  _ <   |  |\n' +
-	' / __ \\|  |_|  |_(  <_> )___  |\n' +
-	'(____  /____/____/\\____// ____|\n' +
-	'     \\/                 \\/';
-
 	if (!program.dump) {
-		console.log(logger.stripColors ? str : str.blue);
-		var m = 'Alloy ' + module.exports.version + ' by Appcelerator. The MVC app framework for Titanium.\n'.white;
+		var m = 'Alloy ' + module.exports.version + ' by TiDev. The MVC app framework for Titanium.\n'.white;
 		console.log(logger.stripColors ? colors.stripColors(m) : m);
 	}
 }

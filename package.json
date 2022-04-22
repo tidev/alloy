@@ -12,7 +12,7 @@
     "html5",
     "appc-client"
   ],
-  "version": "1.17.3",
+  "version": "1.18.0",
   "author": "Appcelerator, Inc. <info@appcelerator.com>",
   "maintainers": [
     {
@@ -33,9 +33,9 @@
     "@babel/core": "^7.4.5",
     "@babel/generator": "^7.4.4",
     "@babel/parser": "^7.4.5",
+    "@babel/template": "^7.4.4",
     "@babel/traverse": "^7.4.5",
     "@babel/types": "^7.4.4",
-    "@babel/template": "^7.4.4",
     "@xmldom/xmldom": "^0.8.0",
     "async": "^3.2.0",
     "colors": "1.4.0",
