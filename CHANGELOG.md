@@ -651,7 +651,7 @@ See also:
 
   * Alloy Example in [ti.map module](http://docs.appcelerator.com/platform/latest/#!/api/Modules.Map)
   * [Map Module test app](https://github.com/tidev/alloy/tree/1_4_X/test/apps/testing/ALOY-800)
-  * [Map Module with Data Binding test app](http://github.com/appcelerator/alloy/tree/1_4_X/test/apps/testing/ALOY-503)
+  * [Map Module with Data Binding test app](http://github.com/tidev/alloy/tree/1_4_X/test/apps/testing/ALOY-503)
 
 
 ##### Widget Component Generation
