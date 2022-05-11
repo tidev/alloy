@@ -1,6 +1,6 @@
 /**
  * Alloy
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright TiDev, Inc. 04/07/2022-Present
  * See LICENSE for more information on licensing.
  */
 

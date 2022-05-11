@@ -2,13 +2,13 @@
 	"user": {
 		"locale": "en_US",
 		"name": "Travis Runner",
-		"email": "no-reply@appcelerator.com"
+		"email": "no-reply@tidev.io"
 	},
 	"app": {
 		"workspace": "",
 		"idprefix": "com.appcelerator",
-		"publisher": "Appcelerator Inc.",
-		"url": "http://appcelerator.com"
+		"publisher": "TiDev, Inc.",
+		"url": "https://tidev.io"
 	},
 	"cli": {
 		"colors": true,
