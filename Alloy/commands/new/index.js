@@ -109,7 +109,7 @@ module.exports = async function(args, program) {
 
 		} else {
 			logger.warn(`No package.json file exists in ${paths.project} so creating one`);
-			logger.warn('Please visit https://github.com/appcelerator/webpack-plugin-alloy#readme to make sure your project is fully up to date');
+			logger.warn('Please visit https://github.com/tidev/webpack-plugin-alloy#readme to make sure your project is fully up to date');
 			// specify this exact version of webpack as using a new version requires all things to be updated
 			pkg.devDependencies.webpack = '^4.43.0';
 			pkg.devDependencies.eslint = '^7.5.0';

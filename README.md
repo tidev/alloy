@@ -13,7 +13,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 
 * [Quick Start Guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework) that covers _everything_ from installation to building your first app with Alloy.
 * Complete collection of [Alloy Guides](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework)
-* [Collection of sample apps](https://github.com/appcelerator/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
+* [Collection of sample apps](https://github.com/tidev/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
 
 ## Installation
 
@@ -36,7 +36,7 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 
 ## Running Sample Test Apps
 
-Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/appcelerator/alloy/tree/master/samples/apps/basics/simple). You can run these in a few different ways:
+Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/tidev/alloy/tree/master/samples/apps/basics/simple). You can run these in a few different ways:
 
 ### A) With a regular Alloy installation
 Beginning with Alloy 1.6, you can do the following:
@@ -54,7 +54,7 @@ alloy new . --testapp basics/simple
 
 ```bash
 # first, clone the repo
-git clone https://github.com/appcelerator/alloy.git
+git clone https://github.com/tidev/alloy.git
 cd alloy
 
 # install jake globally
@@ -76,14 +76,14 @@ You can use these apps through Titanium Studio too. The easiest way to do that w
 
 ## Additional Notes on Jake
 
-* See the [jake readme](https://github.com/appcelerator/alloy/blob/master/jakelib/readme.md) for  information on using `jake` including the arguments and flags it accepts.
+* See the [jake readme](https://github.com/tidev/alloy/blob/master/jakelib/readme.md) for  information on using `jake` including the arguments and flags it accepts.
 * on OSX or Linux
     * Try using `sudo` with the `jake` command if you run into permission errors.
 * on Windows
     * Don't run `jake` from within a user folder (i.e. `C:\Users\tony\alloy`), as you can get all kinds of non-obvious permissions failures from the child processing Alloy does. Your safest bet is to just `git clone` right to `C:\alloy`.
     * Node.js has [an issue piping output between node processes on Windows](https://github.com/joyent/node/issues/3584). I've tried to [workaround](https://github.com/joyent/node/issues/3584#issuecomment-23064579) as best I can. You may still see errors pop up, so it's suggested that if you run the automated testing via `jake test:all` or `npm test`, you do so on a non-Windows OS to ensure there's no red herring failures until the aforementioned node.js issue is resolved.
     * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
-    * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/appcelerator/alloy/tree/master/test/specs).
+    * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/tidev/alloy/tree/master/test/specs).
 
 ## Feedback
 
@@ -201,5 +201,4 @@ To protect the interests of the Alloy contributors, Appcelerator, customers and 
 
 ## Legal
 
-Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
-Alloy is made available under the Apache Public License, version 2.  See the [LICENSE](https://github.com/appcelerator/alloy/blob/master/LICENSE) file for more information.
+Titanium is a registered trademark of TiDev Inc. All Titanium trademark and patent rights were transferred and assigned to TiDev Inc. on 04/07/2022. Please see the LEGAL information about using our trademarks, privacy policy, terms of usage and other legal information at http://www.tidev.io/legal.

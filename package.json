@@ -1,8 +1,7 @@
 {
   "name": "alloy",
-  "description": "Appcelerator Titanium MVC Framework",
+  "description": "TiDev Titanium MVC Framework",
   "keywords": [
-    "appcelerator",
     "titanium",
     "alloy",
     "mobile",
@@ -13,19 +12,13 @@
     "appc-client"
   ],
   "version": "1.18.0",
-  "author": "Appcelerator, Inc. <info@appcelerator.com>",
-  "maintainers": [
-    {
-      "name": "Tony Lukasavage",
-      "email": "tlukasavage@appcelerator.com"
-    }
-  ],
+  "author": "TiDev, Inc. <npm@tidev.io>",
   "bugs": {
-    "url": "https://jira.appcelerator.org/browse/ALOY"
+    "url": "https://github.com/tidev/alloy/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/appcelerator/alloy.git"
+    "url": "git+https://github.com/tidev/alloy.git"
   },
   "preferGlobal": true,
   "dependencies": {

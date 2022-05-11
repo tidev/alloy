@@ -4,7 +4,7 @@
 	"description" : "Cross-platform loading image",
 	"author": "Dawson Toth (alloy port by Tony Lukasavage)",
 	"version": "1.0",
-	"copyright":"Copyright (c) 2012 by Appcelerator",
+	"copyright":"Copyright TiDev, Inc. 04/07/2022-Present",
 	"license":"Public Domain",
 	"min-alloy-version": "0.1.16",
 	"min-titanium-version":"2.0",
