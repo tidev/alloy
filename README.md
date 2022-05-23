@@ -1,19 +1,12 @@
 # Alloy
 
-[![Build Status](https://travis-ci.org/appcelerator/alloy.svg?branch=master)](https://travis-ci.org/appcelerator/alloy)
-[![Dependency Status](https://david-dm.org/appcelerator/alloy.svg)](https://david-dm.org/appcelerator/alloy)
-[![devDependency Status](https://david-dm.org/appcelerator/alloy/dev-status.svg)](https://david-dm.org/appcelerator/alloy#info=devDependencies)
-[![NPM version](https://badge.fury.io/js/alloy.svg)](http://badge.fury.io/js/grunt-appc-js)
-
-[![NPM](https://nodei.co/npm-dl/alloy.png)](https://nodei.co/npm/alloy/)
-
-Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.com) for [Titanium](http://www.appcelerator.com/platform). More high-level details can be found here: [http://www.appcelerator.com/platform/alloy/](http://www.appcelerator.com/platform/alloy/)
+Alloy is an MVC application framework by [TiDev](https://tidev.io) for the [Titanium SDK](https://titaniumsdk.com).
 
 ## Getting Started
 
-* [Quick Start Guide](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework) that covers _everything_ from installation to building your first app with Alloy.
-* Complete collection of [Alloy Guides](http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework)
-* [Collection of sample apps](https://github.com/tidev/alloy/tree/master/samples/apps) showing various aspects of Alloy in practice.
+* [Quick Start Guide]([http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework](https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Getting_Started.html)) that covers _everything_ from installation to building your first app with Alloy.
+* Complete collection of [Alloy Guides]([http://docs.appcelerator.com/platform/latest/#!/guide/Alloy_Framework](https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Guide/))
+* [Collection of sample apps]([https://github.com/tidev/alloy/tree/master/samples/apps](https://titaniumsdk.com/guide/Alloy_Framework/Alloy_How-tos/Alloy_Samples.html)) showing various aspects of Alloy in practice.
 
 ## Installation
 
@@ -29,10 +22,6 @@ Alloy is an MVC application framework by [Appcelerator](http://www.appcelerator.
 # install cutting edge directly from github
 [sudo] npm install -g git://github.com/tidev/alloy.git
 ```
-
-### from Axway Appcelerator Studio
-
-...oh yeah, Studio will do it for you automatically. :)
 
 ## Running Sample Test Apps
 
@@ -69,10 +58,6 @@ npm install
 # run a test app
 jake app:run dir=basics/simple
 ```
-
-### C) Importing the "Harness" to Titanium Studio
-
-You can use these apps through Titanium Studio too. The easiest way to do that would be to import the **test/project/Harness** into Titanium Studio. After that, everytime you run `jake`, your project in Studio will be updated. Once in Studio, you can run for any platform, Titanium SDK version, or change any settings you want. This will give you a lot more options and power than running solely from the command line.
 
 ## Additional Notes on Jake
 
