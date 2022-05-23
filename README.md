@@ -85,120 +85,32 @@ You can use these apps through Titanium Studio too. The easiest way to do that w
     * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
     * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/tidev/alloy/tree/master/test/specs).
 
-## Feedback
-
-More so than any other Appcelerator project to this point, we are working collaboratively with the community to develop a framework that works for you. Here's the best ways to discuss Alloy or ask questions.
-
-* Got an Alloy development question? Go to the Appcelerator [Q&A](http://developer.appcelerator.com/questions/newest), and make sure to use the **alloy** tag.
-* Want to discuss the past, present, and future of Alloy? Join the [Alloy Google group](https://groups.google.com/forum/?fromgroups#!forum/appc-ti-alloy).
-* Got a confirmed bug? Log it at the [Titanium Community Issue Tracker](https://jira.appcelerator.org/browse/TC). Make sure to give it the **alloy** label.
-
-Other than that, all the usual rules for submitting feedback apply. The more code, details, and test cases you provide, the easier it will be to act on that feedback.
-
 ## Contributing
 
-Alloy is an open source project.  Alloy wouldn't be where it is now without contributions by the community. Please consider forking Alloy to improve, enhance or fix issues. If you feel like the community will benefit from your fork, please open a pull request.
+Interested in contributing? There are several ways you can help contribute to this project.
 
-To protect the interests of the Alloy contributors, Appcelerator, customers and end users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is simple and straightforward - it requires that the contributions you make to any Appcelerator open source project are properly licensed and that you have the legal authority to make those changes. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes only a few minutes, and only needs to be completed once.
+### New Features, Improvements, Bug Fixes, & Documentation
 
-[You can digitally sign the CLA](http://bit.ly/app_cla) online. Please indicate your email address in your first pull request so that we can make sure that will locate your CLA.  Once you've submitted it, you no longer need to send one for subsequent submissions.
+Source code contributions are always welcome! Before we can accept your pull request, you must sign a Contributor License Agreement (CLA). Please visit https://tidev.io/contribute for more information.
 
-## Contributors
+### Donations
 
-```
- project  : alloy
- repo age : 6 years
- active   : 843 days
- commits  : 3799
- files    : 4075
- authors  : 
-  2364	Tony Lukasavage        62.2%
-   377	Feon Sua               9.9%
-   374	Tim Poulsen            9.8%
-    87	Fokke Zandbergen       2.3%
-    87	Jeff Haynie            2.3%
-    75	Russ McMahon           2.0%
-    44	Ben Hatfield           1.2%
-    38	Kevin Whinnery         1.0%
-    32	Christopher Williams   0.8%
-    30	Chris Barber           0.8%
-    21	Carl Orthlieb          0.6%
-    18	Ewan Harris            0.5%
-    18	Michael                0.5%
-    16	Kosuke Isobe           0.4%
-    16	Xavier Lacot           0.4%
-    15	Praveen Innamuri       0.4%
-    13	Ingo Muschenetz        0.3%
-    12	Hans Knöchel           0.3%
-    11	Paul Mietz Egli        0.3%
-    10	Tim Statler            0.3%
-    10	Ng Chee Kiat           0.3%
-     8	David Bankier          0.2%
-     8	Issam Hakimi           0.2%
-     8	Jong Eun Lee           0.2%
-     6	Arthur Evans           0.2%
-     6	bhatfield              0.2%
-     5	Brenton House          0.1%
-     4	Hazem Khaled           0.1%
-     4	Martin Tietz           0.1%
-     4	Joel Herron            0.1%
-     4	Hans Knoechel          0.1%
-     4	mukherjee2             0.1%
-     4	Yordan Banev           0.1%
-     3	Wilson Luu             0.1%
-     3	Federico               0.1%
-     3	Gary Mathews           0.1%
-     2	miga                   0.1%
-     2	Bryan Hughes           0.1%
-     2	Michael Kåring         0.1%
-     2	Aaron Saunders         0.1%
-     2	Rene Pot               0.1%
-     2	Marc Tamlyn            0.1%
-     2	Iain Dawson            0.1%
-     2	Davide Cassenti        0.1%
-     1	farwayer               0.0%
-     1	Ajay kumar Guthikonda  0.0%
-     1	Anders D. Johnson      0.0%
-     1	Andrew Blair           0.0%
-     1	Andrew McElroy         0.0%
-     1	Andrey Tkachenko       0.0%
-     1	Brian Immel            0.0%
-     1	Chris Gedrim           0.0%
-     1	Clem                   0.0%
-     1	Dan Frankowski         0.0%
-     1	Dan Tamas              0.0%
-     1	Daniel Mahon           0.0%
-     1	Daniel Pfeifffer       0.0%
-     1	Daniel Waardal         0.0%
-     1	Family                 0.0%
-     1	J. Tangelder           0.0%
-     1	Jeff Antram            0.0%
-     1	Jeremy Martin          0.0%
-     1	Jorge Macías           0.0%
-     1	João Teixeira          0.0%
-     1	Kelly Nicholes         0.0%
-     1	Kondal Kolipaka        0.0%
-     1	Kota Iguchi            0.0%
-     1	Lee, JongEun           0.0%
-     1	Manuel Conde Vendrell  0.0%
-     1	Manuel Lehner          0.0%
-     1	Matthew Lanham         0.0%
-     1	Mattijah               0.0%
-     1	Micah Alcorn           0.0%
-     1	Muhammad Dadu          0.0%
-     1	Nuno Costa             0.0%
-     1	Reymundo López         0.0%
-     1	Sergey Nosenko         0.0%
-     1	Vui Nguyen             0.0%
-     1	ewieberappc            0.0%
-     1	federico1525           0.0%
-     1	gitizenme              0.0%
-     1	godspeedelbow          0.0%
-     1	hamasyou               0.0%
-     1	jeffatstepup           0.0%
-     1	longton95              0.0%
-```
+Please consider supporting this project by making a charitable [donation](https://tidev.io/donate). The money you donate goes to compensate the skilled engineeers and maintainers that keep this project going.
+
+### Code of Conduct
+
+TiDev wants to provide a safe and welcoming community for everyone to participate. Please see our [Code of Conduct](https://tidev.io/code-of-conduct) that applies to all contributors.
+
+## Security
+
+If you find a security related issue, please send an email to [security@tidev.io](mailto:security@tidev.io) instead of publicly creating a ticket.
+
+## Stay Connected
+
+For the latest information, please find us on Twitter: [Titanium SDK](https://twitter.com/titaniumsdk) and [TiDev](https://twitter.com/tidevio).
+
+Join our growing Slack community by visiting https://slack.tidev.io
 
 ## Legal
 
-Titanium is a registered trademark of TiDev Inc. All Titanium trademark and patent rights were transferred and assigned to TiDev Inc. on 04/07/2022. Please see the LEGAL information about using our trademarks, privacy policy, terms of usage and other legal information at https://tidev.io/legal.
+Titanium is a registered trademark of TiDev Inc. All Titanium trademark and patent rights were transferred and assigned to TiDev Inc. on 4/7/2022. Please see the LEGAL information about using our trademarks, privacy policy, terms of usage and other legal information at https://tidev.io/legal.
