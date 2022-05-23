@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '16.x'
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        nodeVersion: [ '12.x' ]
+        nodeVersion: [ '16.x' ]
         os: [ macos-latest ]
         tiSDK: [ latest ]
     steps:
