@@ -418,6 +418,10 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		addListener: function(proxy, type, callback) {
+			if (!proxy) {
+				return;
+			}
+
 			if (!proxy.id) {
 				proxy.id = _.uniqueId('__trackId');
 
