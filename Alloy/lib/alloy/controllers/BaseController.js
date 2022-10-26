@@ -418,6 +418,10 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		addListener: function(proxy, type, callback) {
+			if (!proxy) {
+				throw new Error(`Trying to pass proxy, but proxy is null. Attempted to add event listener for type = "${type}"`);
+			}
+
 			if (!proxy.id) {
 				proxy.id = _.uniqueId('__trackId');
 
@@ -425,6 +429,11 @@ The 'redbg' and 'bigger' classes are shown below:
 					Ti.API.error('$.addListener: ' + proxy.id + ' was conflict.');
 					return;
 				}
+			}
+
+			// Improve error reporting when passing something wrong to an event listener
+			if (typeof proxy.addEventListener !== 'function') {
+				throw new Error(`Passed proxy "${proxy.id}" is not a valid Alloy proxy. Attempted to add event listener for type = "${type}"`);
 			}
 
 			proxy.addEventListener(type, callback);
