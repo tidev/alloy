@@ -427,6 +427,11 @@ The 'redbg' and 'bigger' classes are shown below:
 				}
 			}
 
+			// Improve error reporting when passing something wrong to an event listener
+			if (typeof proxy.addEventListener !== 'function') {
+				throw new Error(`Passed proxy "${proxy.id}" is not a valid Alloy proxy. Attempted to add event listener for type = "${type}"`);
+			}
+
 			proxy.addEventListener(type, callback);
 			this.__events.push({
 				id: proxy.id,
