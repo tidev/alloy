@@ -418,6 +418,10 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		addListener: function(proxy, type, callback) {
+			if (!proxy) {
+				throw new Error(`Trying to pass proxy, but proxy is null. Attempted to add event listener for type = "${type}"`);
+			}
+
 			if (!proxy.id) {
 				proxy.id = _.uniqueId('__trackId');
 
