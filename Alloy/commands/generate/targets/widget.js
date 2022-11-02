@@ -1,6 +1,6 @@
 var path = require('path'),
 	fs = require('fs-extra'),
-	jsonlint = require('jsonlint'),
+	jsonlint = require('@prantlf/jsonlint'),
 	U = require('../../../utils'),
 	_ = require('lodash'),
 	CONST = require('../../../common/constants'),
