@@ -72,7 +72,7 @@ function parse(node, state, args) {
 		}
 		code += _.template(CU.generateCollectionBindingTemplate(args))({
 			localModel: localModel,
-			pre: 'var rows=[];\n_.each(' + args.symbol + '.getRows(), function(r) { ' + args.symbol + '.removeRow(r);});\n',
+			pre: 'var rows=[];\n_.each(' + args.symbol + '.rows, function(r) { ' + args.symbol + '.removeRow(r);});\n',
 			items: rowCode,
 			post: '_.each(rows, function(row) { ' + args.symbol + '.addRow(row); });'
 		});
