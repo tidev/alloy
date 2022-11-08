@@ -14,15 +14,15 @@ var tests = [
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Titanium.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.name=="<%= name %>" ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
-	['var a = Ti.Platform.name=="<%= name %>",\nb', 'var a = "<%= name %>" == "<%= name %>",\nb;'],
-	['var a = Ti.Platform.name=="<%= name %>",\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\nb,\nc = 2;'],
+	['var a = Ti.Platform.name=="<%= name %>",\nb', 'var a = "<%= name %>" == "<%= name %>",\n  b;'],
+	['var a = Ti.Platform.name=="<%= name %>",\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\n  b,\n  c = 2;'],
 	['var a = Ti.Platform.name=="<%= name %>"', 'var a = "<%= name %>" == "<%= name %>";'],
-	['var a,\nb = Ti.Platform.name=="<%= name %>",\nc = 2;', 'var a,\nb = "<%= name %>" == "<%= name %>",\nc = 2;'],
+	['var a,\nb = Ti.Platform.name=="<%= name %>",\nc = 2;', 'var a,\n  b = "<%= name %>" == "<%= name %>",\n  c = 2;'],
 	['var a = "<%= name %>"==Ti.Platform.name ? 1 : 0', 'var a = "<%= name %>" == "<%= name %>" ? 1 : 0;'],
-	['var a = "<%= name %>"==Ti.Platform.name,\nb', 'var a = "<%= name %>" == "<%= name %>",\nb;'],
-	['var a = "<%= name %>"==Ti.Platform.name,\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\nb,\nc = 2;'],
+	['var a = "<%= name %>"==Ti.Platform.name,\nb', 'var a = "<%= name %>" == "<%= name %>",\n  b;'],
+	['var a = "<%= name %>"==Ti.Platform.name,\nb,\nc = 2', 'var a = "<%= name %>" == "<%= name %>",\n  b,\n  c = 2;'],
 	['var a = "<%= name %>"==Ti.Platform.name', 'var a = "<%= name %>" == "<%= name %>";'],
-	['var a,\nb = "<%= name %>"==Ti.Platform.name,\nc = 2;', 'var a,\nb = "<%= name %>" == "<%= name %>",\nc = 2;'],
+	['var a,\nb = "<%= name %>"==Ti.Platform.name,\nc = 2;', 'var a,\n  b = "<%= name %>" == "<%= name %>",\n  c = 2;'],
 	['var a = "1"', 'var a = "1";'],
 	['var a = true', 'var a = true;'],
 	['var a = 1', 'var a = 1;'],
@@ -32,9 +32,7 @@ var tests = [
 	['var a = new Object()', 'var a = new Object();'],
 	['var a = Ti.Platform.name', 'var a = "<%= name %>";'],
 	['var a = Ti.Platform.osname', 'var a = "android";', ['android']],
-	['var a = Ti.Platform.osname', 'var a = "mobileweb";', ['mobileweb']],
-	['var a = Ti.Platform.osname', 'var a = "blackberry";', ['blackberry']],
-	['var a,\nb = 1,\nc = 2;', 'var a,\nb = 1,\nc = 2;'],
+	['var a,\nb = 1,\nc = 2;', 'var a,\n  b = 1,\n  c = 2;'],
 	['var a = 1;', 'var a = 1;'],
 	['var a =+1;', 'var a = +1;'],
 	['var a =1+1;', 'var a = 1 + 1;'],
@@ -90,9 +88,10 @@ var tests = [
 var platforms = {};
 var platformsDir = path.join(__dirname,'..','..','platforms');
 _.each(CONST.PLATFORMS, function(p) {
-	platforms[p] = require(path.join(platformsDir,p,'index'));
+	if (p != "mobileweb" && p != "windows") {
+		platforms[p] = require(path.join(platformsDir,p,'index'));
+	}
 });
-
 // The alloy command test suite
 describe('optimizer.js', function() {
 	_.each(tests, function(test, index) {
@@ -102,7 +101,6 @@ describe('optimizer.js', function() {
 					var ast, code,
 						testContent = _.template(test[0])(platforms[platform]),
 						prefix = pad(platform);
-
 					it(prefix + testContent.blue, function() {
 						expect(true).toBe(true);
 					});
@@ -128,7 +126,6 @@ describe('optimizer.js', function() {
 						};
 						expect(squeezeFunction).not.toThrow();
 					});
-
 					it(prefix + 'generated code matches expected code', function() {
 						var passFor = test[2];
 						var expected = _.template(test[1])(platforms[platform]);
