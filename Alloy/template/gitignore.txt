@@ -10,3 +10,6 @@ tmp
 .project
 .settings
 Thumbs.db
+.gradle/
+.idea/
+local.properties
