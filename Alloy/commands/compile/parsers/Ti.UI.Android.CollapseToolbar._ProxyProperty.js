@@ -4,7 +4,7 @@ exports.parse = function(node, state) {
 	_.extend(state, {
 		proxyPropertyDefinition: {
 			parents: [
-				'Ti.UI.Android.DrawerLayout'
+				'Ti.UI.Android.CollapseToolbar'
 			]
 		}
 	});
