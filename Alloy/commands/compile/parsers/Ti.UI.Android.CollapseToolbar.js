@@ -27,8 +27,8 @@ function parse(node, state, args) {
 		state.extraStyle = styler.createVariableStyle(extras);
 	}
 
-	scrollViewState = require('./default').parse(node, state);
-	scrollViewState.code = code + scrollViewState.code;
+	viewState = require('./default').parse(node, state);
+	viewState.code = code + viewState.code;
 
-	return scrollViewState;
+	return viewState;
 }
