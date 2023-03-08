@@ -9,7 +9,7 @@ exports.parse = function(node, state) {
 function parse(node, state, args) {
 	const tiappSdkVersion = tiapp.getSdkVersion();
 	if (tiapp.version.lt(tiappSdkVersion, MIN_VERSION)) {
-		U.die(`Ti.UI.OptionBar requires Titanium SDK ${MIN_VERSION}+`);
+		U.die(`Ti.UI.Android.CollapseToolbar requires Titanium SDK ${MIN_VERSION}+`);
 	}
 
 	var children = U.XML.getElementsFromNodes(node.childNodes),
