@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 exports.parse = function(node, state) {
 	_.extend(state, {
