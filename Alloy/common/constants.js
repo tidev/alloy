@@ -235,8 +235,10 @@ exports.IMPLICIT_NAMESPACES = {
 	TitleControl: 'Ti.UI.Window',
 	WindowToolbar: 'Ti.UI.Window',
 
-	// Ti.UI.iPad.Popover
-	ContentView: 'Ti.UI.iPad.Popover',
+	ContentView: isTitanium && Ti.Platform.osname === 'android' ?
+		'Ti.UI.Android.CollapseToolbar' : 'Ti.UI.iPad.Popover',
+
+	CollapseToolbar: 'Ti.UI.Android',
 
 	DrawerLayout: 'Ti.UI.Android',
 	LeftView: 'Ti.UI.Android.DrawerLayout',
