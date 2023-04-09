@@ -1,10 +1,11 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 exports.parse = function(node, state) {
 	_.extend(state, {
 		proxyPropertyDefinition: {
 			parents: [
-				'Ti.UI.Android.DrawerLayout'
+				'Ti.UI.Android.CollapseToolbar',
+				'Ti.UI.iPad.Popover'
 			]
 		}
 	});
