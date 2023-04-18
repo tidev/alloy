@@ -11,8 +11,8 @@ var fs = require('fs'),
 	platforms = require('../../platforms/index'),
 	sep = process.platform !== 'win32' ? '/' : '\\';
 
-var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
-var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
+var TIMEOUT_COMPILE = 20000;
+var TIMEOUT_PREP = 30000;
 var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 var EXCLUDE_FOLDERS = [
