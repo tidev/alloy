@@ -225,7 +225,7 @@ exports.getParserArgs = function(node, state, opts) {
 				} else {
 					return;
 				}
-			}	
+			}
 
 			if (/(^|\+)\s*(?:(?:Ti|Titanium|Alloy.Globals|Alloy.CFG|\$.args)\.|L\(.+\)\s*$|WPATH\()/.test(theValue)) {
 				var match = theValue.match(/^\s*L\([^'"]+\)\s*$/);
@@ -772,9 +772,6 @@ function updateImplicitNamspaces(platform) {
 			break;
 		case 'ios':
 			break;
-		case 'mobileweb':
-			CONST.IMPLICIT_NAMESPACES.NavigationGroup = 'Ti.UI.MobileWeb';
-			break;
 	}
 }
 
@@ -990,7 +987,7 @@ exports.validateNodeName = function(node, names) {
 exports.generateCollectionBindingTemplate = function(args) {
 	var code = '';
 	var COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS_092;
-	
+
 	// Check if not 0.9.2 and if it's a supported version as we'll default to 0.9.2 if the version is not supported
 	if (compilerConfig.backbone !== '0.9.2' && CONST.SUPPORTED_BACKBONE_VERSIONS.includes(compilerConfig.backbone)) {
 		COLLECTION_BINDING_EVENTS = CONST.COLLECTION_BINDING_EVENTS;

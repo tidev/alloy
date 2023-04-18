@@ -6,9 +6,9 @@ var fs = require('fs-extra'),
 	platforms = require('../../platforms/index'),
 	_ = require('lodash');
 
-var TIMEOUT_DEFAULT = 2000;
-var TIMEOUT_COMPILE = process.platform !== 'win32' ? 10000 : 20000;
-var TIMEOUT_PREP = process.platform !== 'win32' ? 10000 : 30000;
+var TIMEOUT_DEFAULT = 20000;
+var TIMEOUT_COMPILE = 20000;
+var TIMEOUT_PREP = 30000;
 var GEN_FOLDER = '_generated';
 var TEST_FOLDER = 'testing';
 

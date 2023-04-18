@@ -5,7 +5,7 @@ var fs = require('fs-extra'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash');
 
-var TIMEOUT_DEFAULT = 2000;
+var TIMEOUT_DEFAULT = 20000;
 var PLATFORMS = CONST.PLATFORMS;
 
 var alloyRoot = path.join(__dirname,'..','..');
