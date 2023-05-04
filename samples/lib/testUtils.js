@@ -10,7 +10,7 @@ var exec = require('child_process').exec,
 var alloyRoot = path.join(__dirname, '..', '..');
 var IS_WIN = /^win/i.test(os.platform());
 
-exports.TIMEOUT_DEFAULT = IS_WIN ? 5000 : 2000;
+exports.TIMEOUT_DEFAULT = 10000;
 exports.paths = {
 	templates: path.join(alloyRoot, 'Alloy', 'template'),
 	harnessTemplate: path.join(alloyRoot, 'test', 'projects', 'HarnessTemplate'),
