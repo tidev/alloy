@@ -19,7 +19,7 @@ exports.paths = {
 };
 
 function createEnv () {
-	return Object.assign(process.env, { PATH: `${process.env.PATH}${path.delimiter}${path.join(process.cwd(), 'bin')}`})
+	return Object.assign(process.env, { PATH: `${path.join(process.cwd(), 'bin')}${path.delimiter}${process.env.PATH}`})
 }
 
 // Recreate the test app harness
