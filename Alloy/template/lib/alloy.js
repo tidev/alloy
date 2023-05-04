@@ -477,23 +477,6 @@ exports.isTablet = (function() {
 		var psc = Ti.Platform.Android.physicalSizeCategory;
 		return psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE ||
 			psc === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE;
-	} else if (OS_MOBILEWEB) {
-		return Math.min(
-			Ti.Platform.displayCaps.platformHeight,
-			Ti.Platform.displayCaps.platformWidth
-		) >= 400;
-	// } else if (OS_BLACKBERRY) {
-	// 	// Tablets not currently supported by BB TiSDK
-	// 	// https://jira.appcelerator.org/browse/TIMOB-13225
-	// 	return false;
-	} else if (OS_WINDOWS) {
-		// per http://www.extremetech.com/computing/139768-windows-8-smartphones-and-windows-phone-8-tablets
-		// tablets should be >= 1024x768 and phones could be lower, though current phones are running at
-		// the 1280x720 range and higher
-		return Math.max(
-			Ti.Platform.displayCaps.platformHeight,
-			Ti.Platform.displayCaps.platformWidth
-		) >= 1024;
 	} else {
 		return isTabletFallback();
 	}
