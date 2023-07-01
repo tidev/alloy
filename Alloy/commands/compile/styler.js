@@ -291,7 +291,7 @@ exports.loadStyle = function(tssFile) {
 		var regex = /@include[ \t]*[ \t]*['"](.*?)['"][ \t]*[ \t]*?;/;
 		while (match = regex.exec(contents)) {
 			var dir = path.dirname(tssFile);
-			contents = contents.replace(match[0], fs.readFileSync(path.join(dir, match[1]+ ".tss")));
+			contents = contents.replace(match[0], fs.readFileSync(path.join(dir, match[1] + '.tss')));
 		}
 
 		// Process tss file then convert to JSON
