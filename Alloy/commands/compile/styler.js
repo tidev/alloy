@@ -287,6 +287,7 @@ exports.loadStyle = function(tssFile) {
 		// [ALOY-793] double-escape '\' in tss
 		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
+		// able to use "@include './file'" in a TSS file
 		var regex = /@include[ \t]*[ \t]*['"](.*?)['"][ \t]*[ \t]*?;/;
 		while (match = regex.exec(contents)) {
 			var dir = path.dirname(tssFile);
