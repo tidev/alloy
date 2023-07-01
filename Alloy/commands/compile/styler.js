@@ -287,6 +287,12 @@ exports.loadStyle = function(tssFile) {
 		// [ALOY-793] double-escape '\' in tss
 		contents = contents.replace(/(\s)(\\+)(\s)/g, '$1$2$2$3');
 
+		var regex = /@include[ \t]*[ \t]*['"](.*?)['"][ \t]*[ \t]*?;/;
+		while (match = regex.exec(contents)) {
+			var dir = path.dirname(tssFile);
+			contents = contents.replace(match[0], fs.readFileSync(path.join(dir, match[1]+ ".tss")));
+		}
+
 		// Process tss file then convert to JSON
 		var json;
 		try {
