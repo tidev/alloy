@@ -1,5 +1,6 @@
 const _ = require('lodash'),
 	U = require('../../../utils'),
+	tiapp = require('../../../tiapp'),
 	MIN_VERSION = '12.1.0';
 
 exports.parse = function(node, state) {
