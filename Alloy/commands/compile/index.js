@@ -3,7 +3,6 @@ var ejs = require('ejs'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	vm = require('vm'),
-	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -20,7 +19,10 @@ var ejs = require('ejs'),
 	sourceMapper = require('./sourceMapper'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	BuildLog = require('./BuildLog'),
-	Orphanage = require('./Orphanage');
+	Orphanage = require('./Orphanage'),
+	swc = require('@swc/core'),
+	BuiltIns = require('./ast/builtins-plugin'),
+	Optimizer = require('./ast/optimizer-plugin');
 
 var alloyRoot = path.join(__dirname, '..', '..'),
 	viewRegex = new RegExp('\\.' + CONST.FILE_EXT.VIEW + '$'),
@@ -1155,17 +1157,19 @@ function optimizeCompiledCode(alloyConfig, paths) {
 
 	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
 		_.each(files, function(file) {
-			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-					plugins: [
-						[require('./ast/builtins-plugin'), compileConfig],
-						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
-					]
-				}),
-				fullpath = path.join(compileConfig.dir.resources, file);
+			const fullpath = path.join(compileConfig.dir.resources, file);
 
 			logger.info('- ' + file);
 			try {
-				var result = babel.transformFileSync(fullpath, options);
+
+				const x = swc.parseFileSync(fullpath);
+				const plugin = new BuiltIns(compileConfig);
+				plugin.visitModule(x);
+				const optimizer = new Optimizer(compileConfig.alloyConfig);
+				optimizer.visitModule(x);
+
+				const result = swc.printSync(x);
+
 				fs.writeFileSync(fullpath, result.code);
 			} catch (e) {
 				U.die('Error transforming JS file', e);

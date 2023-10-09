@@ -1,71 +1,118 @@
 var CONST = require('../../../common/constants'),
 	_ = require('lodash'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	{ Visitor } = require('@swc/core/Visitor');
 
 // Walk tree transformer changing (Ti|Titanium).Platform.(osname|name)
 // into static strings where possible. This will allow the following
 // compression step to reduce the code further.
-module.exports = function (_ref) {
-	var types = _ref.types;
+function isTiPlatform(member, parts) {
+	if (member.type !== 'MemberExpression') {
+		return false;
+	}
 
-	var isTiPlatform = types.buildMatchMemberExpression('Ti.Platform');
-	var isTitaniumPlatform = types.buildMatchMemberExpression('Titanium.Platform');
+	const nodes = [];
+	let n;
+	for (n = member; n.type === 'MemberExpression'; n = n.object) {
+		nodes.push(n.property);
+	}
+	nodes.push(member.object);
 
-	return {
-		pre: function(state) {
-			var config = this.opts || {};
-			config.deploytype = config.deploytype || 'development';
+	if (nodes.length !== 2) {
+		return false;
+	}
 
-			// create list of platform and deploy type defines
-			var defines = {};
-			_.each(CONST.DEPLOY_TYPES, function(d) {
-				defines[d.key] = config.deploytype === d.value;
-			});
-			_.each(CONST.DIST_TYPES, function(d) {
-				defines[d.key] = _.includes(d.value, config.target);
-			});
-			_.each(CONST.PLATFORMS, function(p) {
-				defines['OS_' + p.toUpperCase()] = config.platform === p;
-			});
-			this.defines = defines;
+	for (let i = 0, j = nodes.length - 1; i < parts.length; i++, j--) {
+		const node = nodes[j];
+		let value;
+		if (node.type === 'Identifier' || node.type === 'StringLiteral') {
+			value = node.value;
+		} else if (node.type === 'ThisExpression') {
+			value = 'this';
+		} else {
+			return false;
+		}
+	
+		if (parts[i] !== value) {
+			return false;
+		}
+	}
+	return true;
+}
 
-			// make sure the platform require includes
-			var platformString = config.platform.toLowerCase();
-			var platformPath = path.join(__dirname, '..', '..', '..', '..', 'platforms', platformString, 'index');
-			if (!fs.existsSync(platformPath + '.js')) {
-				this.platform = {name: undefined, osname: undefined };
-			} else {
-				// create, transform, and validate the platform object
-				this.platform = require(platformPath);
-				if (!_.isString(this.platform.name)) { this.platform.name = undefined; }
-				if (!_.isString(this.platform.osname)) { this.platform.osname = undefined; }
-			}
-		},
-		visitor: {
-			MemberExpression: function(path, state) {
-				// console.log(JSON.stringify(path.node));
-				var name = '';
-				if (types.isStringLiteral(path.node.property)) {
-					name = path.node.property.value;
-				} else if (types.isIdentifier(path.node.property)) {
-					name = path.node.property.name;
-				} else {
-					return;
-				}
+module.exports = class Optimizer extends Visitor {
+	constructor(alloyConfig) {
+		super();
+		this.defines = {};
+		this.dirty = false;
 
-				if ((name === 'name' || name === 'osname') && this.platform[name]) {
-					if (isTiPlatform(path.node.object) || isTitaniumPlatform(path.node.object)) {
-						path.replaceWith(types.stringLiteral(this.platform[name]));
-					}
-				}
-			},
-			Identifier: function(path) {
-				if (Object.prototype.hasOwnProperty.call(this.defines, path.node.name) &&
-					(path.parent.type !== 'VariableDeclarator' || path.node.name !== path.parent.id.name)) {
-					path.replaceWith(types.booleanLiteral(this.defines[path.node.name]));
-				}
+		alloyConfig.deploytype = alloyConfig.deploytype || 'development';
+
+
+		for (const deployType of CONST.DEPLOY_TYPES) {
+			this.defines[deployType.key] = alloyConfig.deployType === deployType.value;
+		}
+
+		for (const distType of CONST.DIST_TYPES) {
+			this.defines[distType.key] = distType.value.includes(alloyConfig.target);
+		}
+
+		for (const platform of CONST.PLATFORMS) {
+			this.defines[`OS_${platform.toUpperCase()}`] = alloyConfig.platform === platform;
+		}
+
+		var platformString = alloyConfig.platform.toLowerCase();
+		var platformPath = path.join(__dirname, '..', '..', '..', '..', 'platforms', platformString, 'index');
+		if (!fs.existsSync(platformPath + '.js')) {
+			this.platform = {name: undefined, osname: undefined };
+		} else {
+			// create, transform, and validate the platform object
+			this.platform = require(platformPath);
+			if (!_.isString(this.platform.name)) { this.platform.name = undefined; }
+			if (!_.isString(this.platform.osname)) { this.platform.osname = undefined; }
+		}
+
+	}
+
+	visitMemberExpression(node) {
+		let name;
+		if (node.property.type === 'StringLiteral' || node.property.type === 'Identifier') {
+			name = node.property.value;
+		} else if (node.property.type === 'Computed') {
+			name = node.property.expression.value;
+		} else {
+			return;
+		}
+
+		if ((name === 'name' || name === 'osname') && this.platform[name]) {
+			if (isTiPlatform(node.object, ['Ti', 'Platform']) || isTiPlatform(node.object, ['Titanium', 'Platform'])) {
+				this.dirty = true;
+				return {
+					...node,
+					type: 'StringLiteral',
+					span: node.span,
+					value: this.platform[name]
+				};
 			}
 		}
-	};
+
+		return super.visitMemberExpression(node);
+	}
+
+	visitIdentifier(node) {
+		const name = node.value;
+
+		if (Object.hasOwn(this.defines, name)) {
+			this.dirty = true;
+			return {
+				...node,
+				type: 'BooleanLiteral',
+				span: node.span,
+				value: this.defines[name]
+			};
+		}
+
+		return super.visitIdentifier(node);
+	}
 };
