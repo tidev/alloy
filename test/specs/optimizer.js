@@ -4,9 +4,6 @@ var fs = require('fs'),
 	TU = require('../lib/testUtils'),
 	CONST = require('../../Alloy/common/constants'),
 	_ = require('lodash'),
-	sourceMapper = require('../../Alloy/commands/compile/sourceMapper'),
-	babylon = require('@babel/parser'),
-	babel = require('@babel/core'),
 	swc = require('@swc/core'),
 	Optimizer = require('../../Alloy/commands/compile/ast/optimizer-plugin');
 
@@ -45,7 +42,7 @@ var tests = [
 	['var a = true ? 1 : 0;', 'var a = true ? 1 : 0;'],
 	['var num = isNaN(amount) || amount === "" || amount === null ? 0.00 : amount;', 'var num = isNaN(amount) || amount === "" || amount === null ? 0.00 : amount;'],
 
-	// // TODO: Revisit all "var a,a=2;" expecteds once ALOY-540 is resolved
+	// TODO: Revisit all "var a,a=2;" expecteds once ALOY-540 is resolved
 
 	// // make sure we didn't break normal if conditions
 	['if (true) {\n  var a = 1;\n} else {\n  var a = 2;\n}', "if (true) {\n  var a = 1;\n} else {\n  var a = 2;\n}"],
@@ -64,7 +61,7 @@ var tests = [
 	["var platform = (Ti.Platform.name === '<%= name %>') ? 1 : 0", "var platform = (\"<%= name %>\" === \"<%= name %>\") ? 1 : 0;"],
 	["var platform = (Ti.Platform.name === '<%= name %>') ? true : false", "var platform = (\"<%= name %>\" === \"<%= name %>\") ? true : false;"],
 
-	// // check identities
+	// check identities
 	["var a = Ti.Platform.name === Titanium.Platform.name","var a = \"<%= name %>\" === \"<%= name %>\";"],
 
 	// // shouldn't attempt to process anything other than strings
@@ -78,7 +75,7 @@ var tests = [
 	["if ('<%= name %>' === Ti.Platform.name) var a = 1; else var a = 2;", "if (\"<%= name %>\" === \"<%= name %>\") var a = 1;\nelse var a = 2;"],
 	["if ('<%= name %>' !== Ti.Platform.name) var a = 1; else var a = 2;", "if (\"<%= name %>\" !== \"<%= name %>\") var a = 1;\nelse var a = 2;"],
 
-	// // works if Ti.Platform.* is on the left or right hand side
+	// works if Ti.Platform.* is on the left or right hand side
 	["if ('<%= name %>' === Ti.Platform.name) {\n  var a = 1;\n} else {\n  a = 2;\n}", "if (\"<%= name %>\" === \"<%= name %>\") {\n  var a = 1;\n} else {\n  a = 2;\n}"],
 
 	['var a = OS_IOS', 'var a = true;', ['ios']],
@@ -107,27 +104,7 @@ describe('optimizer.js', function() {
 						expect(true).toBe(true);
 					});
 
-					it(prefix + 'parses AST with babylon', function() {
-						var parseFunction = function() {
-							ast = babylon.parse(testContent);
-						};
-						expect(parseFunction).not.toThrow();
-					});
-
 					it(prefix + 'optimizes code via Babel and our custom plugins', function() {
-						// execute the squeeze to remove dead code, always performed
-						// as the last step of JS file processing. The unit testing here
-						// uses the same settings as the Alloy compile process.
-						// var squeezeFunction = function() {
-						// 	var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-						// 		plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]
-						// 	});
-						// 	var result = babel.transformFromAstSync(ast, null, options);
-						// 	ast = result.ast;
-						// 	code = result.code.replace(/\s*$/,'');
-						// };
-						// expect(squeezeFunction).not.toThrow();
-
 						function optimize() {
 							const x = swc.parseSync(testContent);
 	
@@ -142,8 +119,6 @@ describe('optimizer.js', function() {
 					it(prefix + 'generated code matches expected code', function() {
 						var passFor = test[2];
 						var expected = _.template(test[1])(platforms[platform]);
-						console.log(code);
-						console.log(expected);
 						if (!passFor || _.includes(passFor, platform)) {
 							expect(code).toBe(expected);
 						} else {
@@ -155,11 +130,6 @@ describe('optimizer.js', function() {
 		});
 	});
 });
-
-// helper functions
-function notPlatform(platform) {
-	return _.reject(CONST.PLATFORMS, function(p) { return p === platform; } );
-}
 
 function pad(string) {
 	var ret = '';
