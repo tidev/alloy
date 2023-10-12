@@ -62,34 +62,33 @@ module.exports = class BuiltIns extends Visitor {
 	constructor(opts) {
 		super();
 		this.opts = opts;
+		this.regex = /^(\/?alloy)\/(.+)$/;
+
 	}
 	visitCallExpression(n) {
 		const string = n.arguments[0];
+		let match;
 		if (
 			isRequire(n) &&
 			string.expression.type === 'StringLiteral' &&
-			string.expression.value.startsWith('/alloy')
+			(match = string.expression.value.match(this.regex)) !== null
 		) {
-			const match = string.expression.value.match(/^(\/?alloy)\/(.+)$/);
+			if (!EXCLUDE.includes(match[2]) && !loaded.includes(match[2])) {
+				// Make sure it hasn't already been copied to Resources
+				var name = appendExtension(match[2], 'js');
+				if (fs.existsSync(path.join(this.opts.dir.resources, match[1], name))) {
+					return super.visitCallExpression(n);
+				}
 
-			if (match) {
-				if (!EXCLUDE.includes(match[2]) && !loaded.includes(match[2])) {
-					// Make sure it hasn't already been copied to Resources
-					var name = appendExtension(match[2], 'js');
-					if (fs.existsSync(path.join(this.opts.dir.resources, match[1], name))) {
-						return super.visitCallExpression(n);
-					}
+				// make sure the builtin exists
+				var source = path.join(BUILTINS_PATH, name);
+				var dest = path.join(this.opts.dir.resources, 'alloy', name);
+				loadBuiltin(source, name, dest);
 
-					// make sure the builtin exists
-					var source = path.join(BUILTINS_PATH, name);
-					var dest = path.join(this.opts.dir.resources, 'alloy', name);
-					loadBuiltin(source, name, dest);
-
-					if ('moment.js' === name) {
-						// if momentjs is required in the project, also load the
-						// localizations which may be used
-						loadMomentLanguages(this.opts);
-					}
+				if ('moment.js' === name) {
+					// if momentjs is required in the project, also load the
+					// localizations which may be used
+					loadMomentLanguages(this.opts);
 				}
 			}
 		}
