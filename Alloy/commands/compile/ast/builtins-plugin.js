@@ -2,11 +2,16 @@ var path = require('path'),
 	fs = require('fs'),
 	_ = require('lodash'),
 	logger = require('../../../logger'),
-	U = require('../../../utils');
+	U = require('../../../utils'),
+	{ Visitor } = require('@swc/core/Visitor');
 
 var EXCLUDE = ['backbone', 'CFG', 'underscore'];
 var BUILTINS_PATH = path.join(__dirname, '..', '..', '..', 'builtins');
 var loaded = [];
+
+function isRequire(n) {
+	return n.type === 'CallExpression' && n.callee.value == 'require';
+}
 
 function appendExtension(file, extension) {
 	extension = '.' + extension;
@@ -53,39 +58,40 @@ function loadMomentLanguages(config) {
 	}
 }
 
-module.exports = function (_ref) {
-	var types = _ref.types;
-	var rx = /^(\/?alloy)\/(.+)$/;
+module.exports = class BuiltIns extends Visitor {
+	constructor(opts) {
+		super();
+		this.opts = opts;
+		this.regex = /^(\/?alloy)\/(.+)$/;
 
-	return {
-		visitor: {
-			CallExpression: function(p) {
-				var theString = p.node.arguments[0],
-					match;
-				if (p.node.callee.name === 'require' &&         // Is this a require call?
-					theString && types.isStringLiteral(theString) && // Is the 1st param a literal string?
-					(match = theString.value.match(rx)) !== null &&  // Is it an alloy module?
-					!_.includes(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
-					!_.includes(loaded, match[2])                    // Make sure we didn't find it already
-				) {
-					// Make sure it hasn't already been copied to Resources
-					var name = appendExtension(match[2], 'js');
-					if (fs.existsSync(path.join(this.opts.dir.resources, match[1], name))) {
-						return;
-					}
+	}
+	visitCallExpression(n) {
+		const string = n.arguments[0];
+		let match;
+		if (
+			isRequire(n) &&
+			string.expression.type === 'StringLiteral' &&
+			(match = string.expression.value.match(this.regex)) !== null
+		) {
+			if (!EXCLUDE.includes(match[2]) && !loaded.includes(match[2])) {
+				// Make sure it hasn't already been copied to Resources
+				var name = appendExtension(match[2], 'js');
+				if (fs.existsSync(path.join(this.opts.dir.resources, match[1], name))) {
+					return super.visitCallExpression(n);
+				}
 
-					// make sure the builtin exists
-					var source = path.join(BUILTINS_PATH, name);
-					var dest = path.join(this.opts.dir.resources, 'alloy', name);
-					loadBuiltin(source, name, dest);
+				// make sure the builtin exists
+				var source = path.join(BUILTINS_PATH, name);
+				var dest = path.join(this.opts.dir.resources, 'alloy', name);
+				loadBuiltin(source, name, dest);
 
-					if ('moment.js' === name) {
-						// if momentjs is required in the project, also load the
-						// localizations which may be used
-						loadMomentLanguages(this.opts);
-					}
+				if ('moment.js' === name) {
+					// if momentjs is required in the project, also load the
+					// localizations which may be used
+					loadMomentLanguages(this.opts);
 				}
 			}
 		}
-	};
+		return super.visitCallExpression(n);
+	}
 };

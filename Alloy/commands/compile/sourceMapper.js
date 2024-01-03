@@ -10,7 +10,10 @@ var SM = require('source-map'),
 	babylon = require('@babel/parser'),
 	babel = require('@babel/core'),
 	logger = require('../../logger'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	swc = require('@swc/core'),
+	builtins = require('./ast/builtins-plugin'),
+	Optimizer = require('./ast/optimizer-plugin');
 
 var lineSplitter = /(?:\r\n|\r|\n)/;
 
@@ -26,18 +29,7 @@ exports.OPTIONS_OUTPUT = {
 	retainLines: true
 };
 
-function mapLine(mapper, theMap, genMap, line) {
-	mapper.addMapping({
-		original: {
-			line: theMap.count++,
-			column: 0
-		},
-		generated: {
-			line: genMap.count++,
-			column: 0
-		},
-		source: theMap.filename
-	});
+function mapLine(genMap, line) {
 	genMap.code += line + '\n';
 }
 
@@ -59,10 +51,10 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	var outfile = target.filepath;
 	var relativeOutfile = path.relative(compileConfig.dir.project, outfile);
 	var markers = _.map(data, function(v, k) { return k; });
-	var mapper = new SM.SourceMapGenerator({
-		file: path.join(compileConfig.dir.project, relativeOutfile),
-		sourceRoot: compileConfig.dir.project
-	});
+	// var mapper = new SM.SourceMapGenerator({
+	// 	file: path.join(compileConfig.dir.project, relativeOutfile),
+	// 	sourceRoot: compileConfig.dir.project
+	// });
 	// try to lookup the filename, falling back to the output file if we can't determine it
 	let filename;
 	if (data.__MAPMARKER_CONTROLLER_CODE__ && data.__MAPMARKER_CONTROLLER_CODE__.filename) {
@@ -104,51 +96,60 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 		if (_.includes(markers, trimmed)) {
 			templateMap.count++; // skip this line in the template count now or else we'll be off by one from here on out
 			_.each(data[trimmed].lines, function(line) {
-				mapLine(mapper, data[trimmed], genMap, line);
+				mapLine(genMap, line);
 			});
 		} else {
-			mapLine(mapper, templateMap, genMap, line);
+			mapLine(genMap, line);
 		}
 	});
 
 	// parse composite code into an AST
-	var ast;
-	try {
-		ast = babylon.parse(genMap.code, {
-			sourceFilename: outfile,
-			sourceType: 'unambiguous',
-			allowReturnOutsideFunction: true
-		});
-	} catch (e) {
-		let filename;
-		if (data.__MAPMARKER_CONTROLLER_CODE__) {
-			filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
-		} else if (data.__MAPMARKER_ALLOY_JS__) {
-			filename = data.__MAPMARKER_ALLOY_JS__.filename;
-		}
+	// var ast;
+	// try {
+	// 	ast = babylon.parse(genMap.code, {
+	// 		sourceFilename: outfile,
+	// 		sourceType: 'unambiguous',
+	// 		allowReturnOutsideFunction: true
+	// 	});
+	// } catch (e) {
+	// 	let filename;
+	// 	if (data.__MAPMARKER_CONTROLLER_CODE__) {
+	// 		filename = data.__MAPMARKER_CONTROLLER_CODE__.filename;
+	// 	} else if (data.__MAPMARKER_ALLOY_JS__) {
+	// 		filename = data.__MAPMARKER_ALLOY_JS__.filename;
+	// 	}
 
-		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
-	}
+	// 	U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
+	// }
 
 	// create source map and generated code
-	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
-		plugins: [
-			[require('./ast/builtins-plugin'), compileConfig],
-			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
-		],
-		filename
-	});
-	if (compileConfig.sourcemap) {
-		// Tell babel to retain the lines so they stay correct (columns go wacky, but OH WELL)
-		// we produce our own source maps and we want the lines to stay as we mapped them
-		options.retainLines = true;
-	}
-	var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
+	// var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
+	// 	plugins: [
+	// 		[require('./ast/builtins-plugin'), compileConfig],
+	// 		[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
+	// 	],
+	// 	filename
+	// });
+	// if (compileConfig.sourcemap) {
+	// 	// Tell babel to retain the lines so they stay correct (columns go wacky, but OH WELL)
+	// 	// we produce our own source maps and we want the lines to stay as we mapped them
+	// 	options.retainLines = true;
+	// }
+	// var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
+
+	const x = swc.parseSync(genMap.code);
+	const plugin = new builtins(compileConfig);
+	plugin.visitModule(x);
+
+	const optimizer = new Optimizer(compileConfig.alloyConfig);
+	optimizer.visitModule(x);
+
+	const outputResult = swc.printSync(x, {filename: filename, sourceMaps: true });
 
 	// produce the source map and embed the original source (so the template source can be passed along)
-	const sourceMap = mapper.toJSON();
+	const sourceMap = JSON.parse(outputResult.map);
 	sourceMap.sourcesContent = [ target.templateContent, data[markers[0]].fileContent ];
-
+	sourceMap.sources = [templateMap.filename, filename];
 	// append pointer to the source map to the generated code
 	outputResult.code += `\n//# sourceMappingURL=file://${compileConfig.dir.project}/${CONST.DIR.MAP}/${relativeOutfile}.${CONST.FILE_EXT.MAP}`;
 
@@ -217,18 +218,18 @@ exports.generateSourceMap = function(generator, compileConfig) {
 	// parse composite code into an AST
 	// TODO: Remove? This is a sanity check, I suppose, but is it necessary?
 	// Our classic build should blow up on bad JS files
-	var ast;
-	try {
-		ast = babylon.parse(genMap.code, {
-			sourceFilename: genMap.file,
-			sourceType: 'unambiguous',
-			allowReturnOutsideFunction: true,
-		});
-	} catch (e) {
-		const filename = path.relative(compileConfig.dir.project, generator.target.template);
+	// var ast;
+	// try {
+	// 	ast = babylon.parse(genMap.code, {
+	// 		sourceFilename: genMap.file,
+	// 		sourceType: 'unambiguous',
+	// 		allowReturnOutsideFunction: true,
+	// 	});
+	// } catch (e) {
+	// 	const filename = path.relative(compileConfig.dir.project, generator.target.template);
 
-		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
-	}
+	// 	U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
+	// }
 
 	// TODO: We do not run the babel plugins (optimizer/builtins) here. Is that ok?
 	// TODO: embed sourcesContent into source map? Shouldn't need to since this is supposed to be a straight copy
