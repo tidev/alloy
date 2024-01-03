@@ -1,5 +1,4 @@
 "Label": {
-	color: '#000',
 	font: {
 		fontSize: 18,
 		fontWeight: 'bold'
