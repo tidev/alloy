@@ -14,3 +14,7 @@ updates:
   - dependency-name: walk-sync
     versions:
     - "> 0.3.2"
+  groups:
+    babel:
+      patterns:
+      - "@babel/*"
