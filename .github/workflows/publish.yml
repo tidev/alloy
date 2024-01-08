@@ -1,7 +1,5 @@
 name: Publish
-on:
-  release:
-    types: [ created ]
+on: workflow_dispatch
 
 jobs:
   publish:
@@ -27,5 +25,7 @@ jobs:
     - name: Publish to npm
       env:
         GH_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ github.token }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: npm publish
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: npm run release
