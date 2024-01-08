@@ -60,12 +60,8 @@
     "node": ">=0.10"
   },
   "devDependencies": {
-    "@seadub/danger-plugin-dependencies": "^1.0.0",
-    "@seadub/danger-plugin-eslint": "^3.0.2",
-    "@seadub/danger-plugin-junit": "^0.3.0",
     "@semantic-release/changelog": "^6.0.0",
     "@semantic-release/git": "^10.0.0",
-    "danger": "^11.1.4",
     "diff": "^5.1.0",
     "eslint": "^8.26.0",
     "jake": "^10.8.2",
