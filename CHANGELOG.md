@@ -1,3 +1,19 @@
+# [2.1.0](https://github.com/tidev/alloy/compare/2.0.2...2.1.0) (2024-01-09)
+
+
+### Bug Fixes
+
+* **all:** remove getter in PickerColumn parser ([f916130](https://github.com/tidev/alloy/commit/f91613060b9477ac0bc1c3f534ec367369565a02))
+* missing includes ([819d114](https://github.com/tidev/alloy/commit/819d1142ea6a74d2c5159f2d3a1c48ac351b102a))
+
+
+### Features
+
+* **all:** update packages ([1837254](https://github.com/tidev/alloy/commit/18372540804f5f602b406265015b4c513d18aafe))
+* **android:** add collapseToolbar support ([#1360](https://github.com/tidev/alloy/issues/1360)) ([c3f5e95](https://github.com/tidev/alloy/commit/c3f5e959a41ec2002eb79032eee54c9f3536015c))
+* update momentjs ([#1358](https://github.com/tidev/alloy/issues/1358)) ([100ff29](https://github.com/tidev/alloy/commit/100ff29841ab01f67bb368a2bbcc7e913bfe6622))
+* update underscore to version 1.13.6 ([36b2fc8](https://github.com/tidev/alloy/commit/36b2fc87be8a0732f3bcb3f31f62b52c86cf80ad))
+
 ## [1.17.3](https://github.com/tidev/alloy/compare/1.17.2...1.17.3) (2022-01-10)
 
 
