@@ -78,7 +78,7 @@ Download the latest ZIP from https://github.com/moment/moment and then copy the 
 
 ### Backbone
 
-Download the development version from https://backbonejs.org/ and put it into `Alloy/lib/alloy/backbone` with the correct version number. Open `Alloy/common/constants.js` and add the version to `SUPPORTED_BACKBONE_VERSIONS`. Then you can use your apps config.json file to switch to that version. If you want to make it the default version you can edit `DEFAULT_BACKBONE_VERSION`.
+Download the development version from https://backbonejs.org/ and put it into `Alloy/lib/alloy/backbone` with the correct version number. Open `Alloy/common/constants.js` and add the version to `SUPPORTED_BACKBONE_VERSIONS`. Then you can use your apps config.json file to switch to that version. If you want to make it the default version you can edit `DEFAULT_BACKBONE_VERSION` and the config.json files in all `template/` projects.
 
 ### Underscore
 
