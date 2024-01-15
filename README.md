@@ -74,15 +74,17 @@ jake app:run dir=basics/simple
 
 ### moment.js
 
-Download the latest ZIP from https://github.com/moment/moment and then copy the dist/moment.js file into `Alloy/builtins` and the locale/* files (not dist/locale/* !) to `Alloy/builtins/moment/lang`. After that do a search & replace and replace all `require('../moment')` with `require('/alloy/moment')`.
+Download the latest ZIP from https://github.com/moment/moment and then copy /moment.js (not dist/moment.js!) into `Alloy/builtins` and the locale/* files (not dist/locale/* !) to `Alloy/builtins/moment/lang`. After that do a search & replace and replace all `require('../moment')` with `require('/alloy/moment')`.
 
 ### Backbone
 
 Download the development version from https://backbonejs.org/ and put it into `Alloy/lib/alloy/backbone` with the correct version number. Open `Alloy/common/constants.js` and add the version to `SUPPORTED_BACKBONE_VERSIONS`. Then you can use your apps config.json file to switch to that version. If you want to make it the default version you can edit `DEFAULT_BACKBONE_VERSION` and the config.json files in all `template/` projects.
 
+Open the backbone.js file and replace `var _ = require('underscore'), $;` with `var _ = require('/alloy/underscore'), $;`. Use `console.log(Backbone.VERSION);` to check the version inside your app.
+
 ### Underscore
 
-Download the UMD (dev) version from https://underscorejs.org/ and replace `Alloy/lib/alloy/underscore.js`
+Download the UMD (dev) version from https://underscorejs.org/ and replace `Alloy/lib/alloy/underscore.js`. Use `console.log(_.VERSION);` to check the version inside your app.
 
 ## Contributing
 
