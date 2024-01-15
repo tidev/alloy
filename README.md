@@ -70,6 +70,20 @@ jake app:run dir=basics/simple
     * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
     * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/tidev/alloy/tree/master/test/specs).
 
+## Update moment.js/Backbone/Underscore
+
+### moment.js
+
+Download the latest ZIP from https://github.com/moment/moment and then copy the dist/moment.js file into `Alloy/builtins` and the locale/* files (not dist/locale/* !) to `Alloy/builtins/moment/lang`. After that do a search & replace and replace all `require('../moment')` with `require('/alloy/moment')`.
+
+### Backbone
+
+Download the development version from https://backbonejs.org/ and put it into `Alloy/lib/alloy/backbone` with the correct version number. Open `Alloy/common/constants.js` and add the version to `SUPPORTED_BACKBONE_VERSIONS`. Then you can use your apps config.json file to switch to that version. If you want to make it the default version you can edit `DEFAULT_BACKBONE_VERSION`.
+
+### Underscore
+
+Download the UMD (dev) version from https://underscorejs.org/ and replace `Alloy/lib/alloy/underscore.js`
+
 ## Contributing
 
 Interested in contributing? There are several ways you can help contribute to this project.
