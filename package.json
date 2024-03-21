@@ -39,7 +39,7 @@
     "@prantlf/jsonlint": "11.7.0",
     "lodash": "^4.17.4",
     "moment": "2.29.4",
-    "node.extend": "2.0.2",
+    "node.extend": "2.0.3",
     "pkginfo": "0.4.1",
     "resolve": "^1.22.1",
     "source-map": "^0.7.4",
