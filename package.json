@@ -65,7 +65,7 @@
     "diff": "^5.1.0",
     "eslint": "^8.26.0",
     "jake": "^10.8.2",
-    "semantic-release": "^19.0.5"
+    "semantic-release": "^23.0.7"
   },
   "release": {
     "tagFormat": "${version}",
