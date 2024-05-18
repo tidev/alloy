@@ -42,7 +42,7 @@ jobs:
         run: |
           npm ci
           npm i titanium -g
-          ti sdk install ${{ matrix.tiSDK }} -d
+          ti sdk install ${{ matrix.tiSDK }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run tests
