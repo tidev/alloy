@@ -40,6 +40,12 @@ tiapp.getSdkVersion = function() {
 		}
 	}
 };
+tiapp.getBundleId = function() {
+	var elems = doc.documentElement.getElementsByTagName('id');
+	if (elems && elems.length > 0) {
+		return U.XML.getNodeText(elems.item(elems.length - 1));
+	}
+};
 function getSdkSelectVersion() {
 	var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
 		file = path.join(homeDir, '.titanium', 'config.json');
