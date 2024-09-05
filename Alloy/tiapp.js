@@ -50,7 +50,7 @@ tiapp.getBundleId = function() {
 				// platform specific ID
 				isForced = true;
 				bundleId =  U.XML.getNodeText(elems.item(i));
-			} else if (elems.item(i).getAttribute("platform") === "" && !isForced) {
+			} else if (elems.item(i).getAttribute("platform") === '' && !isForced) {
 				// normal ID - only if no platform specific was set already
 				bundleId =  U.XML.getNodeText(elems.item(i));
 			}
