@@ -46,11 +46,11 @@ tiapp.getBundleId = function() {
 		var bundleId =  U.XML.getNodeText(elems.item(elems.length - 1));
 		var isForced = false;
 		for (var i = 0; i < elems.length; i++) {
-			if (elems.item(i).getAttribute("platform") === "android") {
+			if (elems.item(i).getAttribute('platform') === 'android') {
 				// platform specific ID
 				isForced = true;
 				bundleId =  U.XML.getNodeText(elems.item(i));
-			} else if (elems.item(i).getAttribute("platform") === '' && !isForced) {
+			} else if (elems.item(i).getAttribute('platform') === '' && !isForced) {
 				// normal ID - only if no platform specific was set already
 				bundleId =  U.XML.getNodeText(elems.item(i));
 			}
