@@ -45,7 +45,7 @@ function getSdkSelectVersion() {
 		file = path.join(homeDir, '.titanium', 'config.json');
 	if (!fs.existsSync(file)) {
 		//U.die('Titanium configuration file does not exist at "' + file + '"');
-		return ""
+		return '12.5.0.GA';
 	}
 	var ticonfig = JSON.parse(fs.readFileSync(file, {encoding: 'utf8'}));
 	return ticonfig.sdk.selected;
