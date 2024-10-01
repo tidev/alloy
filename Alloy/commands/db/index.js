@@ -16,11 +16,16 @@ module.exports = async function(args, program) {
 				switch (command) {
 					case 'get':
 						tiapp.init();
-						console.log('Downloading _alloy_ database to: ' + tiapp.getBundleId() + '.db');
 						var adbPath = 'adb';
 						if (os.platform() === 'darwin') {
 							adbPath = '~/Library/Android/sdk/platform-tools/adb';
+							var testPath = path.join(adbPath);
+							if (!fs.existsSync(testPath)) {
+								console.error('adb not found at ' + adbPath);
+								return;
+							}
 						}
+						console.log('Downloading _alloy_ database to: ' + tiapp.getBundleId() + '.db');
 						execCommand(adbPath + ' shell "run-as ' + tiapp.getBundleId() + ' cat /data/data/' + tiapp.getBundleId() + '/databases/_alloy_" > ' + tiapp.getBundleId() + '.db');
 						break;
 				}
