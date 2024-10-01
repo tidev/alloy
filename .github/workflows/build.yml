@@ -11,12 +11,12 @@ jobs:
   Lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
+          node-version: '16.x'
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -28,22 +28,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        nodeVersion: [ '18.x' ]
+        nodeVersion: [ '16.x' ]
         os: [ macos-latest ]
         tiSDK: [ latest ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.nodeVersion }}
       - name: Install dependencies
         run: |
           npm ci
           npm i titanium -g
-          ti sdk install ${{ matrix.tiSDK }}
+          ti sdk install ${{ matrix.tiSDK }} -d
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run tests
         run: npm test
+      
