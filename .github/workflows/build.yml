@@ -30,7 +30,7 @@ jobs:
       matrix:
         nodeVersion: [ '22.x' ]
         os: [ macos-latest ]
-        tiSDK: [ '12.5.0.GA' ]
+        tiSDK: [ 'latest' ]
     steps:
       - uses: actions/checkout@v4
         with:
