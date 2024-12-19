@@ -69,5 +69,5 @@
         <module platform="android">ti.map</module>
         <module platform="iphone">ti.map</module>
     </modules>
-    <sdkVersion>12.6.1.GA</sdkVersion>
+    <sdk-version>12.6.1.GA</sdk-version>
 </ti:app>
