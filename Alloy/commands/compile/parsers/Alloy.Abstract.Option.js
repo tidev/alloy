@@ -25,7 +25,7 @@ function parse(node, state, args) {
 
 	if (attrName) {
 		if (args.createArgs[attrName]) {
-			code = `${attrVarName} = ${codePush} - 1`;
+			code = `var ${attrVarName} = ${codePush} - 1`;
 		} else {
 			code = `${attrVarName} = undefined; ${codePush}`;
 		}
