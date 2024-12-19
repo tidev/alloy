@@ -35,11 +35,10 @@ tiapp.getSdkVersion = function() {
 	} else {
 		if (process.env.sdk) {
 			return process.env.sdk;
-		} else {
-			return getSdkSelectVersion();
 		}
 	}
 };
+
 tiapp.getBundleId = function() {
 	var elems = doc.documentElement.getElementsByTagName('id');
 	if (elems && elems.length > 0) {
@@ -58,6 +57,7 @@ tiapp.getBundleId = function() {
 		return bundleId;
 	}
 };
+
 function getSdkSelectVersion() {
 	var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
 		file = path.join(homeDir, '.titanium', 'config.json');
