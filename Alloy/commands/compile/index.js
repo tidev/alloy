@@ -836,7 +836,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		cCode.parentControllerName : CU[CONST.DOCROOT_BASECONTROLLER_PROPERTY] || "'BaseController'";
 	template.__MAPMARKER_CONTROLLER_CODE__ += cCode.controller;
 	template.preCode += cCode.pre;
-	template.ES6Mod += cCode.es6mods;
+	template.ES6Mod += cCode.es6mods.trim();
 
 	// for each model variable in the bindings map...
 	_.each(styler.bindingsMap, function(mapping, modelVar) {
