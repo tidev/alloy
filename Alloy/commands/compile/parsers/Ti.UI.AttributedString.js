@@ -4,16 +4,11 @@ var _ = require('lodash'),
 	CU = require('../compilerUtils'),
 	tiapp = require('../../../tiapp');
 
-var MIN_VERSION = '3.6.0';
-
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
 };
 
 function parse(node, state, args) {
-	if (tiapp.version.lt(tiapp.getSdkVersion(), MIN_VERSION)) {
-		U.die('Ti.UI.AttributedString (line ' + node.lineNumber + ') requires Titanium 3.6.0+');
-	}
 
 	// Get label text from node text, if present
 	var nodeText = U.XML.getNodeText(node);

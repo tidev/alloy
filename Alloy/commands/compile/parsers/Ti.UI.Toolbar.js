@@ -6,12 +6,6 @@ var _ = require('lodash'),
 
 exports.parse = function(node, state) {
 	var platform = CU.getCompilerConfig().alloyConfig.platform;
-	if (tiapp.version.lt(tiapp.getSdkVersion(), '6.2.0')) {
-		if (platform !== 'ios') {
-			U.die('Ti.UI.Toolbar requires Titanium 6.2.0+');
-		}
-		node.setAttribute('ns', 'Ti.UI.iOS');
-	}
 
 	var eventObject = 'e',
 		code = '',
