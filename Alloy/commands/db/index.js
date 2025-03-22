@@ -31,7 +31,9 @@ module.exports = async function(args, program) {
 				}
 			});
 		}
-	} catch (error) {}
+	} catch (error) {
+		console.error('Failed to get database');
+	}
 };
 
 function execCommand(currentCommand) {
