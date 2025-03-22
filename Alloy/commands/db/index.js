@@ -31,9 +31,7 @@ module.exports = async function(args, program) {
 				}
 			});
 		}
-	} catch (error) {
-		//
-	}
+	} catch (error) {}
 };
 
 function execCommand(currentCommand) {
