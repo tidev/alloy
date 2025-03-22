@@ -24,15 +24,15 @@ module.exports = async function(args, program) {
 							adbPath = '~/Library/Android/sdk/platform-tools/adb';
 
 							// try to get android.sdkPath from ti config
-							const output = execSync('ti config android.sdkPath --json')
+							const output = execSync('ti config android.sdkPath --json');
 							const jsonObject = JSON.parse(output);
-							if (!jsonObject.hasOwnProperty('success')) {
+							if (!Object.prototype.hasOwnProperty.call(jsonObject, 'success')) {
 								// found string
 								adbPath = jsonObject;
 							}
 
 							// check if adb is in that folder
-							const testPath = path.join(adbPath, "platform-tools/adb");
+							const testPath = path.join(adbPath, 'platform-tools/adb');
 							if (!fs.existsSync(testPath)) {
 								U.die('adb not found at ' + testPath + '. Please check "ti config android.sdkPath" and point to your SDK folder.');
 								return;
