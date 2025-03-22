@@ -1,16 +1,18 @@
 const {
-	exec
+	exec,
+	execSync
 } = require('child_process');
 const U = require('../../utils');
 const tiapp = require('../../tiapp');
 const fs = require('fs');
 const os = require('os');
+const path = require('path');
 
 module.exports = async function(args, program) {
 
 	try {
 		if (args.length === 0) {
-			execCommand('db');
+			U.die('Missing parameter "get"');
 		} else {
 			args.forEach(command => {
 				switch (command) {
@@ -18,11 +20,25 @@ module.exports = async function(args, program) {
 						tiapp.init();
 						var adbPath = 'adb';
 						if (os.platform() === 'darwin') {
+							// default path
 							adbPath = '~/Library/Android/sdk/platform-tools/adb';
-							var testPath = path.join(adbPath);
+
+							// try to get android.sdkPath from ti config
+							const output = execSync('ti config android.sdkPath --json')
+							const jsonObject = JSON.parse(output);
+							if (!jsonObject.hasOwnProperty('success')) {
+								// found string
+								adbPath = jsonObject;
+							}
+
+							// check if adb is in that folder
+							const testPath = path.join(adbPath, "platform-tools/adb");
 							if (!fs.existsSync(testPath)) {
-								console.error('adb not found at ' + adbPath);
+								U.die('adb not found at ' + testPath + '. Please check "ti config android.sdkPath" and point to your SDK folder.');
 								return;
+							} else {
+								// use the new path
+								adbPath = testPath;
 							}
 						}
 						console.log('Downloading _alloy_ database to: ' + tiapp.getBundleId() + '.db');
@@ -32,7 +48,7 @@ module.exports = async function(args, program) {
 			});
 		}
 	} catch (error) {
-		console.error('Failed to get database');
+		console.error('Failed to get database: ' + error);
 	}
 };
 
