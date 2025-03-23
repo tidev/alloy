@@ -9,7 +9,6 @@ const os = require('os');
 const path = require('path');
 
 module.exports = async function(args, program) {
-
 	try {
 		if (args.length === 0) {
 			U.die('Missing parameter "get"');
@@ -55,7 +54,11 @@ module.exports = async function(args, program) {
 function execCommand(currentCommand) {
 	exec(currentCommand, (error, response) => {
 		if (error) {
-			console.error(error);
+			if (error.message) {
+				console.error(error.message);
+			} else {
+				console.error("Couldn't fetch database");
+			}
 		}
 		if (response) {
 			console.log(response);
