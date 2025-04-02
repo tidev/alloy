@@ -47,12 +47,12 @@ exports.processController = function(code, file) {
 
 				// find function named __pre
 				if (node.type === 'FunctionDeclaration') {
-				 if (node.id.name == "__pre") {
-					 // put function code into preCode
-					 preCode += generate(node.body, GENCODE_OPTIONS).code;
-					 path.remove();
-				 }
-			 }
+					if (node.id.name == '__pre') {
+						// put function code into preCode
+						preCode += generate(node.body, GENCODE_OPTIONS).code;
+						path.remove();
+					}
+				}
 			},
 
 			ImportDeclaration: function(path) {
