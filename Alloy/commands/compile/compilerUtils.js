@@ -957,6 +957,7 @@ exports.loadController = function(file) {
 	code.controller = controller.code;
 	code.parentControllerName = controller.base;
 	code.es6mods = controller.es6mods;
+	code.pre = controller.pre;
 
 	return code;
 };
