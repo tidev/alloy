@@ -1,6 +1,6 @@
-//     Backbone.js 1.5.0
+//     Backbone.js 1.6.0
 
-//     (c) 2010-2023 Jeremy Ashkenas and DocumentCloud
+//     (c) 2010-2024 Jeremy Ashkenas and DocumentCloud
 //     Backbone may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://backbonejs.org
@@ -22,7 +22,7 @@
 
   // Next for Node.js or CommonJS. jQuery may not be needed as a module.
   } else if (typeof exports !== 'undefined') {
-    var _ = require('/alloy/underscore'), $;
+    var _ = require('underscore'), $;
     try { $ = require('jquery'); } catch (e) {}
     factory(root, exports, _, $);
 
@@ -44,7 +44,7 @@
   var slice = Array.prototype.slice;
 
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '1.5.0';
+  Backbone.VERSION = '1.6.0';
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
@@ -1085,7 +1085,7 @@
       var success = options.success;
       options.success = function(m, resp, callbackOpts) {
         if (wait) {
-          m.off('error', this._forwardPristineError, this);
+          m.off('error', collection._forwardPristineError, collection);
           collection.add(m, callbackOpts);
         }
         if (success) success.call(callbackOpts.context, m, resp, callbackOpts);
@@ -2142,6 +2142,13 @@
       if (error) error.call(options.context, model, resp, options);
       model.trigger('error', model, resp, options);
     };
+  };
+
+  // Provide useful information when things go wrong. This method is not meant
+  // to be used directly; it merely provides the necessary introspection for the
+  // external `debugInfo` function.
+  Backbone._debug = function() {
+    return {root: root, _: _};
   };
 
   return Backbone;
