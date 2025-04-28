@@ -1018,7 +1018,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += 'function ' + handlerFunc + '(e) {';
 	code += '   if (e && e.fromAdapter) { return; }';
 	code += '   var opts = ' + handlerFunc + '.opts || {};';
-	code += '	var models = ' + whereCode + ';';
+	code += '   var len = models ? models.length : 0;';
 	code += ' var len = models ? models.length : 0;';
 	code += '<%= pre %>';
 	code += '	for (var i = 0; i < len; i++) {';
