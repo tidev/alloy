@@ -952,7 +952,7 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
-	var isProduction = (compilerConfig.alloyConfig && compilerConfig.alloyConfig.deploytype === 'production');
+	var isProduction = compilerConfig.alloyConfig?.deploytype === 'production';
 	// get the base controller for this controller, also process import/export statements
 	var controller = astController.processController(contents, file, isProduction);
 	code.controller = controller.code;
