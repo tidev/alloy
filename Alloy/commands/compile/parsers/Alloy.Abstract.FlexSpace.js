@@ -1,9 +1,6 @@
 var U = require('../../../utils'),
 	CU = require('../compilerUtils'),
-	tiapp = require('../../../tiapp'),
-	iOSProxy;
-
-var MIN_VERSION = '5.4.0';
+	tiapp = require('../../../tiapp');
 
 exports.parse = function(node, state) {
 	return require('./base').parse(node, state, parse);
@@ -11,18 +8,12 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 
-	if (tiapp.version.gte(tiapp.getSdkVersion(), MIN_VERSION)) {
-		iOSProxy = 'iOS';
-	} else {
-		iOSProxy = 'iPhone';
-	}
-
 	return {
 		parent: {
 			node: node,
 			symbol: args.symbol
 		},
 		styles: state.styles,
-		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.' + iOSProxy + '.SystemButton.FLEXIBLE_SPACE});'
+		code: args.symbol + ' = Ti.UI.createButton({systemButton: Ti.UI.iOS.SystemButton.FLEXIBLE_SPACE});'
 	};
 }
