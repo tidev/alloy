@@ -6,15 +6,19 @@ var U = require('../../../utils'),
 
 var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
-const GENCODE_OPTIONS = {
+let GENCODE_OPTIONS = {
 	retainLines: true
 };
 
-exports.processController = function(code, file) {
+exports.processController = function(code, file, isProduction = false) {
 	var baseController = '',
 		moduleCodes = '',
 		newCode = '',
 		exportSpecifiers = [];
+
+	if (isProduction) {
+		GENCODE_OPTIONS.retainLines = false;
+	}
 
 	try {
 		var ast = babylon.parse(code, { sourceFilename: file, sourceType: 'unambiguous' });

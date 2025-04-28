@@ -952,8 +952,9 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
+	var isProduction = compilerConfig.alloyConfig?.deploytype === 'production';
 	// get the base controller for this controller, also process import/export statements
-	var controller = astController.processController(contents, file);
+	var controller = astController.processController(contents, file, isProduction);
 	code.controller = controller.code;
 	code.parentControllerName = controller.base;
 	code.es6mods = controller.es6mods;
