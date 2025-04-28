@@ -6,7 +6,7 @@ var U = require('../../../utils'),
 
 var isBaseControllerExportExpression = types.buildMatchMemberExpression('exports.baseController');
 
-var GENCODE_OPTIONS = {
+let GENCODE_OPTIONS = {
 	retainLines: true
 };
 
