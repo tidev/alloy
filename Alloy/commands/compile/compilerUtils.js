@@ -952,8 +952,9 @@ exports.loadController = function(file) {
 		U.die('Error reading controller file "' + file + '".', e);
 	}
 
+	var isProduction = (compilerConfig.alloyConfig && compilerConfig.alloyConfig.deploytype === 'production')
 	// get the base controller for this controller, also process import/export statements
-	var controller = astController.processController(contents, file);
+	var controller = astController.processController(contents, file, isProduction);
 	code.controller = controller.code;
 	code.parentControllerName = controller.base;
 	code.es6mods = controller.es6mods;
@@ -1018,7 +1019,7 @@ exports.generateCollectionBindingTemplate = function(args) {
 	code += '   if (e && e.fromAdapter) { return; }';
 	code += '   var opts = ' + handlerFunc + '.opts || {};';
 	code += '	var models = ' + whereCode + ';';
-	code += '	var len = models ? models.length : 0;';
+	code += '	var len = models.length;';
 	code += '<%= pre %>';
 	code += '	for (var i = 0; i < len; i++) {';
 	code += '		var <%= localModel %> = models[i];';
