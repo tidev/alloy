@@ -14,6 +14,7 @@ exports.processController = function(code, file, isProduction = false) {
 	var baseController = '',
 		moduleCodes = '',
 		newCode = '',
+		preCode = '',
 		exportSpecifiers = [];
 
 	if (isProduction) {
@@ -42,9 +43,19 @@ exports.processController = function(code, file, isProduction = false) {
 		}).setContext();
 		traverse(ast, {
 			enter: function(path) {
-				if (types.isAssignmentExpression(path.node) && isBaseControllerExportExpression(path.node.left)) {
+				var node = path.node;
+				if (types.isAssignmentExpression(node) && isBaseControllerExportExpression(node.left)) {
 					// what's equivalent of print_to_string()? I replaced with simple value property assuming it's a string literal
 					baseController = '\'' + path.node.right.value + '\'';
+				}
+
+				// find function named __pre
+				if (node.type === 'FunctionDeclaration') {
+					if (node.id.name == '__pre') {
+						// put function code into preCode
+						preCode += generate(node.body, GENCODE_OPTIONS).code;
+						path.remove();
+					}
 				}
 			},
 
@@ -95,6 +106,7 @@ exports.processController = function(code, file, isProduction = false) {
 	return {
 		es6mods: moduleCodes,
 		base: baseController,
-		code: newCode
+		code: newCode,
+		pre: preCode.trim()
 	};
 };
