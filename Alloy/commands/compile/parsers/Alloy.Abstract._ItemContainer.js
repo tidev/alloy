@@ -21,15 +21,22 @@ exports.parse = function(node, state) {
 };
 
 function parse(node, state, args) {
-	var def = fixDefinition(state.itemContainerDefinition),
+	var children = U.XML.getElementsFromNodes(node.childNodes),
+	    def = fixDefinition(state.itemContainerDefinition),
 		config = CU.getCompilerConfig(),
 		isAndroid = config && config.alloyConfig && config.alloyConfig.platform === 'android',
 		androidView = null,
 		extras = [],
 		code = '';
 
-	_.each(U.XML.getElementsFromNodes(node.childNodes), function(child) {
+	// iterate through all children
+	_.each(children, function(child) {
 		var childArgs = CU.getParserArgs(child, state);
+
+		// validate the child element
+		if (!CU.isNodeForCurrentPlatform(child)) {
+			return; 
+		} 
 
 		// do translations
 		_.each(def.translations, function(t) {
