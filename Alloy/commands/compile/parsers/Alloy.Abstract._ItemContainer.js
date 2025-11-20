@@ -22,7 +22,7 @@ exports.parse = function(node, state) {
 
 function parse(node, state, args) {
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-	    def = fixDefinition(state.itemContainerDefinition),
+		def = fixDefinition(state.itemContainerDefinition),
 		config = CU.getCompilerConfig(),
 		isAndroid = config && config.alloyConfig && config.alloyConfig.platform === 'android',
 		androidView = null,
