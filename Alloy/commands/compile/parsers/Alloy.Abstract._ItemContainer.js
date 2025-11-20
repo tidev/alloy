@@ -35,7 +35,7 @@ function parse(node, state, args) {
 
 		// validate the child element
 		if (!CU.isNodeForCurrentPlatform(child)) {
-			return; 
+			return;
 		}
 
 		// do translations
