@@ -57,7 +57,7 @@
   },
   "main": "./Alloy/alloy",
   "engines": {
-    "node": ">=0.10"
+    "node": ">=20.18.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.0",
