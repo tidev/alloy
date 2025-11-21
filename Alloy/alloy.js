@@ -81,6 +81,10 @@ program.command('purgetss')
 	.option('--modules', 'Copy or generate the corresponding CommonJS module into `./app/lib/` folder.')
 	.option('--vendor <arguments>', 'Use any of the following arguments to copy specific vendors: fa = Font Awesome, md = Material Design or f7 = Framework7 Icons');
 
+program.command('db')
+	.description('Fetches the default alloy database (_alloy_) from the device')
+	.option('get', 'Downloads the _alloy_ database to your app folder');
+
 program.command('info [type]', { hidden: true });
 
 program.command('debugger', { hidden: true });
