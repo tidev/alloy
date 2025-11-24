@@ -1,5 +1,7 @@
 name: Publish
-on: workflow_dispatch
+on:
+  release:
+    types: [ created ]
 
 jobs:
   publish:
@@ -8,12 +10,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Setup node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: '22'
+        node-version: 22
         registry-url: 'https://registry.npmjs.org'
 
     - name: Install dependencies
@@ -26,7 +28,6 @@ jobs:
 
     - name: Publish to npm
       env:
-        GH_TOKEN: ${{ github.token }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npm run release
 
