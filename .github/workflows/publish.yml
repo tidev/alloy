@@ -11,6 +11,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
+      with:
+        ref: main
+        fetch-depth: 0
 
     - name: Setup node
       uses: actions/setup-node@v6
