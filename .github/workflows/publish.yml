@@ -28,6 +28,7 @@ jobs:
 
     - name: Publish to npm
       env:
+        GH_TOKEN: ${{ github.token }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npm run release
 
