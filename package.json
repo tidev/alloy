@@ -68,6 +68,9 @@
     "semantic-release": "^19.0.5"
   },
   "release": {
+    "branches": [
+      "main"
+    ],
     "tagFormat": "${version}",
     "plugins": [
       "@semantic-release/commit-analyzer",
