@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "diff": "^5.1.0",
-    "eslint": "^8.26.0",
+    "eslint": "^9.39.1",
     "jake": "^10.8.2"
   }
 }
