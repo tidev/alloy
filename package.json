@@ -29,6 +29,7 @@
     "@babel/template": "^7.18.10",
     "@babel/traverse": "^7.18.15",
     "@babel/types": "^7.20.0",
+    "@prantlf/jsonlint": "11.7.0",
     "@xmldom/xmldom": "^0.8.5",
     "async": "^3.2.4",
     "colors": "1.4.0",
@@ -36,7 +37,6 @@
     "ejs": "3.1.8",
     "fs-extra": "^10.1.0",
     "global-paths": "^1.0.0",
-    "@prantlf/jsonlint": "11.7.0",
     "lodash": "^4.17.4",
     "moment": "2.30.1",
     "node.extend": "2.0.3",
@@ -60,26 +60,8 @@
     "node": ">=20.18.1"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/git": "^10.0.0",
     "diff": "^5.1.0",
     "eslint": "^8.26.0",
-    "jake": "^10.8.2",
-    "semantic-release": "^19.0.5"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      [
-        "@semantic-release/github",
-        {
-          "successComment": false
-        }
-      ]
-    ]
+    "jake": "^10.8.2"
   }
 }
