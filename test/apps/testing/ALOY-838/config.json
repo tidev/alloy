@@ -19,17 +19,9 @@
         "button": "os:android",
         "osOnly": "android"
     },
-	"os:blackberry": {
-        "button": "os:blackberry",
-        "osOnly": "blackberry"
-    },
 	"os:ios": {
         "button": "os:ios",
         "osOnly": "ios"
-    },
-	"os:mobileweb": {
-        "button": "os:mobileweb",
-        "osOnly": "mobileweb"
     },
     "os:ios env:development": {
         "button": "os:ios env:development"

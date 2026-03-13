@@ -88,9 +88,7 @@ var tests = [
 var platforms = {};
 var platformsDir = path.join(__dirname,'..','..','platforms');
 _.each(CONST.PLATFORMS, function(p) {
-	if (p != "mobileweb" && p != "windows") {
 		platforms[p] = require(path.join(platformsDir,p,'index'));
-	}
 });
 // The alloy command test suite
 describe('optimizer.js', function() {

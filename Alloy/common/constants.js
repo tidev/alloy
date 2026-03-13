@@ -152,9 +152,7 @@ var NS_ALLOY = 'Alloy',
 	NS_TI_MEDIA = 'Ti.Media',
 	NS_TI_UI_IOS = 'Ti.UI.iOS',
 	NS_TI_UI_IPAD = 'Ti.UI.iPad',
-	NS_TI_UI_IPHONE = 'Ti.UI.iPhone',
-	NS_TI_UI_MOBILEWEB = 'Ti.UI.MobileWeb',
-	NS_TI_UI_WINDOWS = 'Ti.UI.Windows';
+	NS_TI_UI_IPHONE = 'Ti.UI.iPhone';
 
 exports.IMPLICIT_NAMESPACES = {
 	// Alloy
@@ -217,15 +215,8 @@ exports.IMPLICIT_NAMESPACES = {
 	Popover: NS_TI_UI_IPAD,
 
 	// Ti.UI.iPhone
-	NavigationGroup: isTitanium && Ti.Platform.osname === 'mobileweb' ?
-		NS_TI_UI_MOBILEWEB : NS_TI_UI_IPHONE,
+	NavigationGroup: NS_TI_UI_IPHONE,
 	StatusBar: NS_TI_UI_IPHONE,
-
-	// Ti.UI.Windows
-	CommandBar: NS_TI_UI_WINDOWS,
-	AppBarButton: NS_TI_UI_WINDOWS,
-	AppBarToggleButton: NS_TI_UI_WINDOWS,
-	AppBarSeparator: NS_TI_UI_WINDOWS,
 
 	// Ti.UI.Window
 	LeftNavButton: 'Ti.UI.Window',
