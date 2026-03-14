@@ -260,7 +260,7 @@ function getPaths(project, templateName, testapp) {
 		// alloy paths
 		alloy: alloy,
 		template: path.join(alloy, 'template'),
-		readme: fs.existsSync(readMeFile) ? readMeFile : path.join(template, 'README'),
+		readme: readMeFile != undefined && fs.existsSync(readMeFile) ? readMeFile : path.join(template, 'README'),
 		appTemplate: (!testapp) ? customAppDir || path.join(projectTemplates, templateName, 'app') : path.join(sampleAppsDir, testapp),
 		projectTemplate: (!testapp) ? customTemplateDir || path.join(projectTemplates, templateName) : path.join(sampleAppsDir, testapp),
 

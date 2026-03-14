@@ -471,8 +471,8 @@ module.exports.beforeModelCreate = function(config, name) {
 	}
 
 	// check platform compatibility
-	if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
-		throw 'No support for Titanium.Database in MobileWeb environment.';
+	if (typeof Ti.Database === 'undefined') {
+		throw 'No support for Titanium.Database.';
 	}
 
 	// install database file, if specified

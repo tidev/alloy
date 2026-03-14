@@ -44,8 +44,4 @@
     </Menu>
   </Window>
 
-  <!-- Main Window for unsupported platforms -->
-  <Window id="todoWin" platform="blackberry,mobileweb">
-    <Label>todo app is not supported on Blackberry or MobileWeb</Label>
-  </Window>
 </Alloy>

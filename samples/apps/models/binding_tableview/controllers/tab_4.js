@@ -14,7 +14,7 @@ function removeItem(e) {
 	common.removeItem(myModels, e.index);
 }
 
-if (OS_IOS || OS_MOBILEWEB) {
+if (OS_IOS) {
 	common.prepNavBar($.window, addItem);
 }
 
