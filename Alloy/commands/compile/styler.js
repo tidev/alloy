@@ -195,9 +195,13 @@ exports.sortStyles = function(style, opts) {
 	var sortedStyles = [];
 	opts = opts || {};
 
+	function splitSelectors(key) {
+		return key.split(/,(?![^[]]*\])/).map(function(k) { return k.trim(); }).filter(Boolean);
+	}
+
 	if (_.isObject(style) && !_.isEmpty(style)) {
 		for (var key in style) {
-			var keys = key.split(',').map(function(k) { return k.trim(); });
+			var keys = splitSelectors(key);
 			_.each(keys, function(singleKey) {
 				var obj = {};
 				var priority = styleOrderCounter++ * VALUES.ORDER;
