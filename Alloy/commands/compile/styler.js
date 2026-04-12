@@ -196,7 +196,28 @@ exports.sortStyles = function(style, opts) {
 	opts = opts || {};
 
 	function splitSelectors(key) {
-		return key.split(/,(?![^[]]*\])/).map(function(k) { return k.trim(); }).filter(Boolean);
+		const result = [];
+		let current = '';
+		let depth = 0;
+
+		for (let i = 0, len = key.length; i < len; i++) {
+			const char = key[i];
+
+			if (char === '[') {
+				depth++;
+			} else if (char === ']') {
+				depth--;
+			} else if (char === ',' && depth === 0) {
+				if (current) result.push(current.trim());
+				current = '';
+				continue;
+			}
+
+			current += char;
+		}
+
+		if (current) result.push(current.trim());
+		return result;
 	}
 
 	if (_.isObject(style) && !_.isEmpty(style)) {
