@@ -14,8 +14,7 @@ var program = require('commander'),
 	fs = require('fs'),
 	CONST = require('./common/constants');
 
-// patch to remove the warning in node >=0.8
-path.existsSync = fs.existsSync || path.existsSync;
+
 
 // avoid io issues on Windows in nodejs 0.10.X: https://github.com/joyent/node/issues/3584
 if (process.env.ALLOY_TESTS && /^win/i.test(os.platform())) {
@@ -144,7 +143,7 @@ function getCommands() {
 	try {
 		var commandsPath = path.join(__dirname, 'commands');
 		return _.filter(fs.readdirSync(commandsPath), function(file) {
-			return path.existsSync(path.join(commandsPath, file, 'index.js'));
+			return fs.existsSync(path.join(commandsPath, file, 'index.js'));
 		});
 	} catch (e) {
 		U.die('Error getting command list', e);
