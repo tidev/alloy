@@ -21,7 +21,14 @@ var alloyRoot = path.join(__dirname, '..', '..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
-	compilerConfig;
+	compilerConfig,
+	parserFileNames;
+
+// cache parsers directory listing (avoid readdirSync per element)
+(function initParserCache() {
+	var parsersDir = path.join(alloyRoot, 'commands', 'compile', 'parsers');
+	parserFileNames = fs.readdirSync(parsersDir);
+})();
 
 ///////////////////////////////
 ////////// constants //////////
@@ -334,9 +341,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// Determine which parser to use for this node
-	var parsersDir = path.join(alloyRoot, 'commands', 'compile', 'parsers');
 	var parserRequire = 'default';
-	if (_.includes(fs.readdirSync(parsersDir), args.fullname + '.js')) {
+	if (_.includes(parserFileNames, args.fullname + '.js')) {
 		parserRequire = args.fullname + '.js';
 	}
 
