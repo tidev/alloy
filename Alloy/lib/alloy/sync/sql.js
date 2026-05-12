@@ -236,15 +236,18 @@ function Sync(method, model, opts) {
 			}
 
 			// iterate through all queried rows
-			while (rs.isValidRow()) {
-				var o = {};
-				for (i = 0; i < fieldCount; i++) {
-					o[fieldNames[i]] = rs.field(i);
+			try {
+				while (rs.isValidRow()) {
+					var o = {};
+					for (i = 0; i < fieldCount; i++) {
+						o[fieldNames[i]] = rs.field(i);
+					}
+					values.push(o);
+					rs.next();
 				}
-				values.push(o);
-				rs.next();
+			} finally {
+				rs.close();
 			}
-			rs.close();
 
 			// shape response based on whether it's a model or collection
 			var len = values.length;

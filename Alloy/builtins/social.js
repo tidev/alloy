@@ -157,7 +157,7 @@ OAuth == null && (OAuth = {}), OAuth.setProperties = function(into, from) {
 		if (s == null) return '';
 		if (s instanceof Array) {
 			var e = '';
-			for (var i = 0; i < s.length; ++s) e != '' && (e += '&'), e += OAuth.percentEncode(s[i]);
+			for (var i = 0; i < s.length; ++i) e != '' && (e += '&'), e += OAuth.percentEncode(s[i]);
 			return e;
 		}
 		return s = encodeURIComponent(s), s = s.replace(/\!/g, '%21'), s = s.replace(/\*/g, '%2A'), s = s.replace(/\'/g, '%27'), s = s.replace(/\(/g, '%28'), s = s.replace(/\)/g, '%29'), s;
