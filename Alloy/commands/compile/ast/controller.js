@@ -21,6 +21,16 @@ exports.processController = function(code, file, isProduction = false) {
 		GENCODE_OPTIONS.retainLines = false;
 	}
 
+	function buildExportAssignment(exportedName, localName) {
+		return types.expressionStatement(
+			types.assignmentExpression(
+				'=',
+				types.memberExpression(types.identifier('exports'), types.identifier(exportedName)),
+				types.identifier(localName)
+			)
+		);
+	}
+
 	try {
 		var ast = babylon.parse(code, { sourceFilename: file, sourceType: 'unambiguous' });
 
@@ -66,37 +76,53 @@ exports.processController = function(code, file, isProduction = false) {
 
 			ExportNamedDeclaration: function(path) {
 				var node = path.node;
-				var specifiers = node.specifiers;
-				if (specifiers && specifiers.length !== 0) {
-					specifiers.forEach(function (specifier) {
-						if (specifier.local && specifier.local.name) {
-							exportSpecifiers.push(specifier.local.name);
-						}
-					});
+
+				// Re-exports from another module (e.g. `export { foo } from './bar'`) are true
+				// module-level constructs — hoist them out of the controller body.
+				if (node.source) {
+					moduleCodes += generate(node, GENCODE_OPTIONS).code;
+					path.remove();
+					return;
 				}
+
+				// `export function show() {}`, `export const show = ...`, `export class X {}`
+				if (node.declaration) {
+					var decl = node.declaration;
+					var replacements = [decl];
+					if (decl.type === 'FunctionDeclaration' || decl.type === 'ClassDeclaration') {
+						if (decl.id && decl.id.name) {
+							replacements.push(buildExportAssignment(decl.id.name, decl.id.name));
+						}
+					} else if (decl.type === 'VariableDeclaration') {
+						decl.declarations.forEach(function (d) {
+							if (d.id && d.id.name) {
+								replacements.push(buildExportAssignment(d.id.name, d.id.name));
+							}
+						});
+					}
+					path.replaceWithMultiple(replacements);
+					return;
+				}
+
+				// `export { show }` or `export { show as displayShow }` — locally declared
+				// bindings get attached to the controller's local `exports` object.
+				if (node.specifiers && node.specifiers.length !== 0) {
+					var assignments = node.specifiers
+						.filter(function (specifier) { return specifier.local && specifier.local.name; })
+						.map(function (specifier) {
+							var localName = specifier.local.name;
+							var exportedName = (specifier.exported && specifier.exported.name) || localName;
+							return buildExportAssignment(exportedName, localName);
+						});
+					path.replaceWithMultiple(assignments);
+					return;
+				}
+
+				// Fallback: leave as-is at module level.
 				moduleCodes += generate(node, GENCODE_OPTIONS).code;
 				path.remove();
 			}
 		}, path.scope);
-
-		if (exportSpecifiers.length > 0) {
-			traverse(ast, {
-				enter: function(path) {
-					var node = path.node,
-						name;
-					if (node.type === 'VariableDeclaration') {
-						name = node.declarations[0].id.name;
-					} else if (node.type === 'FunctionDeclaration' || node.type === 'ClassDeclaration') {
-						name = node.id.name;
-					}
-
-					if (exportSpecifiers.indexOf(name) !== -1) {
-						moduleCodes += generate(node, GENCODE_OPTIONS).code;
-						path.remove();
-					}
-				}
-			});
-		}
 
 		newCode = generate(ast, GENCODE_OPTIONS).code;
 	} catch (e) {

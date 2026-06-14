@@ -21,7 +21,14 @@ var alloyRoot = path.join(__dirname, '..', '..'),
 	alloyUniqueIdPrefix = '__alloyId',
 	alloyUniqueIdCounter = 0,
 	JSON_NULL = JSON.parse('null'),
-	compilerConfig;
+	compilerConfig,
+	parserFileNames;
+
+// cache parsers directory listing (avoid readdirSync per element)
+(function initParserCache() {
+	var parsersDir = path.join(alloyRoot, 'commands', 'compile', 'parsers');
+	parserFileNames = fs.readdirSync(parsersDir);
+})();
 
 ///////////////////////////////
 ////////// constants //////////
@@ -334,9 +341,8 @@ exports.generateNode = function(node, state, defaultId, isTopLevel, isModelOrCol
 	}
 
 	// Determine which parser to use for this node
-	var parsersDir = path.join(alloyRoot, 'commands', 'compile', 'parsers');
 	var parserRequire = 'default';
-	if (_.includes(fs.readdirSync(parsersDir), args.fullname + '.js')) {
+	if (_.includes(parserFileNames, args.fullname + '.js')) {
 		parserRequire = args.fullname + '.js';
 	}
 
@@ -610,7 +616,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 	}
 
 	_.each(resources, function(dir) {
-		if (!path.existsSync(dir)) { return; }
+		if (!fs.existsSync(dir)) { return; }
 		logger.trace('WIDGET_SRC=' + path.relative(compilerConfig.dir.project, dir));
 		var files = walkSync(dir);
 		_.each(files, function(file) {
@@ -633,7 +639,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 
 				var destDir = path.join(resourceDir, dirname, widgetId);
 				var dest = path.join(destDir, path.basename(file));
-				if (!path.existsSync(destDir)) {
+				if (!fs.existsSync(destDir)) {
 					fs.mkdirpSync(destDir);
 				}
 
@@ -676,11 +682,11 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
 			}
 			// platform-specific assets from the widget must override those of the theme
-			if (platform && path.existsSync(path.join(resources[0], platform))) {
+			if (platform && fs.existsSync(path.join(resources[0], platform))) {
 				fs.copySync(path.join(resources[0], platform), widgetAssetTargetDir, {preserveTimestamps: true});
 			}
 			// however platform-specific theme assets must override the platform assets from the widget
-			if (platform && path.existsSync(path.join(widgetAssetSourceDir, platform))) {
+			if (platform && fs.existsSync(path.join(widgetAssetSourceDir, platform))) {
 				logger.trace('Processing platform-specific theme assets for the ' + widgetId + ' widget');
 				widgetAssetSourceDir = path.join(widgetAssetSourceDir, platform);
 				fs.copySync(widgetAssetSourceDir, widgetAssetTargetDir, {preserveTimestamps: true});
@@ -691,7 +697,7 @@ exports.copyWidgetResources = function(resources, resourceDir, widgetId, opts) {
 				var files = walkSync(widgetAssetTargetDir);
 				_.each(files, function(file) {
 					var source = path.join(widgetAssetTargetDir, file);
-					if (path.existsSync(source) && fs.statSync(source).isDirectory()) {
+					if (fs.existsSync(source) && fs.statSync(source).isDirectory()) {
 						fs.removeSync(source);
 					}
 				});
@@ -855,14 +861,14 @@ function generateConfig(obj) {
 	var resourcesCfg = path.join(resourcesBase, 'CFG.js');
 
 	// parse config.json, if it exists
-	if (path.existsSync(appCfg)) {
+	if (fs.existsSync(appCfg)) {
 		o = exports.parseConfig(appCfg, alloyConfig, o);
 
 		if (o.theme) {
 			var themeCfg = path.join(obj.dir.home, 'themes', o.theme, 'config.' + CONST.FILE_EXT.CONFIG);
 
 			// parse theme config.json, if it exists
-			if (path.existsSync(themeCfg)) {
+			if (fs.existsSync(themeCfg)) {
 				o = exports.parseConfig(themeCfg, alloyConfig, o);
 			}
 		}
@@ -944,7 +950,7 @@ exports.loadController = function(file) {
 
 	// Read the controller file
 	try {
-		if (!path.existsSync(file)) {
+		if (!fs.existsSync(file)) {
 			return code;
 		}
 		contents = fs.readFileSync(file, 'utf8');
