@@ -591,75 +591,63 @@ if (OS_ANDROID) {
 }
 
 /*
- * Adapted version of node.extend https://www.npmjs.org/package/node.extend
+ * Deep merge utility used at runtime to merge TSS styles with create-time properties.
+ * Adapted from node.extend / jQuery.extend.
  *
- * Original copyright:
+ * Preserves Titanium proxy objects by not recursing into objects that have an
+ * `apiName` property — those are treated as atomic values.
  *
- * node.extend
- * Copyright 2011, John Resig
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * @fileoverview
- * Port of jQuery.extend that actually works on node.js
+ * @param {Boolean} deep  If true, recurse into plain objects and arrays.
+ * @param {Object}  target  The object to receive merged properties.
+ * @param {...Object} sources  One or more source objects.
+ * @return {Object}  The target object, mutated in place.
  */
-exports.deepExtend = function() {
+exports.deepExtend = function deepExtend() {
 	var target = arguments[0] || {};
 	var i = 1;
 	var length = arguments.length;
 	var deep = false;
-	var options, name, src, copy, copy_is_array, clone;
+	var options, name, src, copy, clone, copyIsArray;
 
-	// Handle a deep copy situation
 	if (typeof target === 'boolean') {
 		deep = target;
 		target = arguments[1] || {};
-		// skip the boolean and the target
 		i = 2;
 	}
 
-	// Handle case when target is a string or something (possible in deep copy)
-	if (typeof target !== 'object' && !_.isFunction(target)) {
+	if (typeof target !== 'object' && typeof target !== 'function') {
 		target = {};
 	}
 
 	for (; i < length; i++) {
-		// Only deal with non-null/undefined values
 		options = arguments[i];
-		if (options != null) {
-			if (typeof options === 'string') {
-				options = options.split('');
-			}
-			// Extend the base object
-			for (name in options) {
-				src = target[name];
-				copy = options[name];
+		if (options == null) { continue; }
 
-				// Prevent never-ending loop
-				if (target === copy) {
-					continue;
-				}
+		// Iterate own enumerable properties only
+		for (name in options) {
+			if (!Object.prototype.hasOwnProperty.call(options, name)) { continue; }
 
-				if (deep && copy && !_.isFunction(copy) && _.isObject(copy) && ((copy_is_array = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
-					// Recurse if we're merging plain objects or arrays
-					if (copy_is_array) {
-						copy_is_array = false;
-						clone = src && _.isArray(src) ? src : [];
-					} else if (_.isDate(copy)) {
-						clone = new Date(copy.valueOf());
-					} else {
-						clone = src && _.isObject(src) ? src : {};
-					}
+			src = target[name];
+			copy = options[name];
+			if (target === copy) { continue; }
 
-					// Never move original objects, clone them
-					target[name] = exports.deepExtend(deep, clone, copy);
+			// Recurse into plain objects and arrays, but NOT into Ti.UI proxies
+			// (identified by the presence of an `apiName` property).
+			if (deep && copy && typeof copy === 'object' && !_.isFunction(copy) && ((copyIsArray = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
+				if (copyIsArray) {
+					copyIsArray = false;
+					clone = src && _.isArray(src) ? src : [];
+				} else if (_.isDate(copy)) {
+					clone = new Date(copy.valueOf());
 				} else {
-					target[name] = copy;
+					clone = src && typeof src === 'object' ? src : {};
 				}
+				target[name] = deepExtend(deep, clone, copy);
+			} else {
+				target[name] = copy;
 			}
 		}
 	}
 
-	// Return the modified object
 	return target;
 };

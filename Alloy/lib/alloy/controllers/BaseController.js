@@ -502,14 +502,24 @@ The 'redbg' and 'bigger' classes are shown below:
 		 * @since 1.7.0
 		 */
 		removeListener: function(proxy, type, callback) {
-			this.__events.forEach(function(event, index) {
+			for (var i = this.__events.length - 1; i >= 0; i--) {
+				var event = this.__events[i];
 				if ((!proxy || proxy.id === event.id) &&
 					(!type || type === event.type) &&
 					(!callback || callback === event.handler)) {
 					event.view.removeEventListener(event.type, event.handler);
-					delete self.__events[index];
+					this.__events.splice(i, 1);
+				}
+			}
+			return this;
+		},
+		cleanup: function() {
+			this.__events.forEach(function(event) {
+				if (event && event.view) {
+					event.view.removeEventListener(event.type, event.handler);
 				}
 			});
+			this.__events = [];
 			return this;
 		}
 	});
