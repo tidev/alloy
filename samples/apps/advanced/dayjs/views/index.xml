@@ -1,0 +1,7 @@
+<Alloy>
+	<Window onClick="changeLanguage">
+		<Label id="info">click anywhere to change language</Label>
+		<Label id="theDate"/>
+		<Label id="language"/>
+	</Window>
+</Alloy>
