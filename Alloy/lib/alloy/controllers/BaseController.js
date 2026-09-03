@@ -161,11 +161,18 @@ var Controller = function() {
 		/**
 		 * @method destroy
 		 * Frees binding resources associated with this controller and its
-		 * UI components. It is critical that this is called when employing
+		 * UI components, and removes all event listeners tracked by the
+		 * controller (those declared in markup via `onXxx` attributes or added
+		 * with {@link #addListener}), equivalent to calling `$.removeListener()`.
+		 * It is critical that this is called when employing
 		 * model/collection binding in order to avoid potential memory leaks.
 		 * $.destroy() should be called whenever a controller's UI is to
 		 * be "closed" or removed from the app. See the [Destroying Data Bindings](#!/guide/Destroying_Data_Bindings)
 		 * test application for an example of this approach.
+		 *
+		 * Since tracked event listeners are removed, call `$.destroy()` only
+		 * once the controller's UI is no longer in use (for example in the
+		 * window's `close` event), not while the UI is still visible.
 
 		 * #### Example
 		 * In the following example the view-controller for a {@link Titanium.UI.Window Window} object named `dialog`
@@ -507,19 +514,16 @@ The 'redbg' and 'bigger' classes are shown below:
 				if ((!proxy || proxy.id === event.id) &&
 					(!type || type === event.type) &&
 					(!callback || callback === event.handler)) {
-					event.view.removeEventListener(event.type, event.handler);
+					// removeListener() is also called from the generated destroy();
+					// never let one released proxy abort the rest of the cleanup.
+					try {
+						event.view.removeEventListener(event.type, event.handler);
+					} catch (e) {
+						Ti.API.warn('Alloy: failed to remove "' + event.type + '" listener: ' + e);
+					}
 					this.__events.splice(i, 1);
 				}
 			}
-			return this;
-		},
-		cleanup: function() {
-			this.__events.forEach(function(event) {
-				if (event && event.view) {
-					event.view.removeEventListener(event.type, event.handler);
-				}
-			});
-			this.__events = [];
 			return this;
 		}
 	});

@@ -881,8 +881,10 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			handlerVar + ');';
 	});
 
-	// add destroy() function to view for cleaning up bindings
-	template.viewCode += 'exports.destroy = function () {this.cleanup();' + CU.destroyCode + '};';
+	// add destroy() function to view for cleaning up bindings and tracked
+	// event listeners. Use `$` rather than `this` so destroy() still works
+	// when invoked detached, e.g. `$.win.addEventListener('close', $.destroy)`.
+	template.viewCode += 'exports.destroy = function () {$.removeListener();' + CU.destroyCode + '};';
 
 	// add dataFunction of original name (if data-binding with form factor has been used)
 	if (!_.isEmpty(CU.dataFunctionNames)) {

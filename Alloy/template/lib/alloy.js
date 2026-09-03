@@ -592,10 +592,22 @@ if (OS_ANDROID) {
 
 /*
  * Deep merge utility used at runtime to merge TSS styles with create-time properties.
- * Adapted from node.extend / jQuery.extend.
+ * Adapted version of node.extend https://www.npmjs.org/package/node.extend
  *
- * Preserves Titanium proxy objects by not recursing into objects that have an
- * `apiName` property — those are treated as atomic values.
+ * Original copyright:
+ *
+ * node.extend
+ * Copyright 2011, John Resig
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * @fileoverview
+ * Port of jQuery.extend that actually works on node.js
+ *
+ * Objects that carry an own `apiName` property (Titanium proxies created by
+ * Alloy with autoStyle, or via Alloy.createStyle) are treated as atomic values
+ * and are not recursed into. Note that this is a heuristic: proxies without an
+ * own `apiName` are merged like plain objects.
  *
  * @param {Boolean} deep  If true, recurse into plain objects and arrays.
  * @param {Object}  target  The object to receive merged properties.
@@ -623,19 +635,19 @@ exports.deepExtend = function deepExtend() {
 		options = arguments[i];
 		if (options == null) { continue; }
 
-		// Iterate own enumerable properties only
 		for (name in options) {
-			if (!Object.prototype.hasOwnProperty.call(options, name)) { continue; }
+			// Never merge into the prototype chain (prototype pollution guard,
+			// e.g. `{"__proto__": {...}}` coming from JSON.parse).
+			if (name === '__proto__' || name === 'constructor' || name === 'prototype') { continue; }
 
 			src = target[name];
 			copy = options[name];
 			if (target === copy) { continue; }
 
 			// Recurse into plain objects and arrays, but NOT into Ti.UI proxies
-			// (identified by the presence of an `apiName` property).
-			if (deep && copy && typeof copy === 'object' && !_.isFunction(copy) && ((copyIsArray = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
+			// (identified by the presence of an own `apiName` property).
+			if (deep && copy && typeof copy === 'object' && ((copyIsArray = _.isArray(copy)) || !_.has(copy, 'apiName'))) {
 				if (copyIsArray) {
-					copyIsArray = false;
 					clone = src && _.isArray(src) ? src : [];
 				} else if (_.isDate(copy)) {
 					clone = new Date(copy.valueOf());
