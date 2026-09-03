@@ -9,47 +9,55 @@ const os = require('os');
 const path = require('path');
 
 module.exports = async function(args, program) {
+	if (args.length === 0) {
+		U.die('Missing parameter "get"');
+		return;
+	}
+
+	if (!args.includes('get')) {
+		return;
+	}
+
 	try {
-		if (args.length === 0) {
-			U.die('Missing parameter "get"');
-		} else {
-			args.forEach(command => {
-				switch (command) {
-					case 'get':
-						tiapp.init();
-						var adbPath = 'adb';
-						if (os.platform() === 'darwin') {
-							// default path
-							adbPath = '~/Library/Android/sdk/platform-tools/adb';
+		tiapp.init();
+		const bundleId = tiapp.getBundleId();
+		const adbPath = getAdbPath();
 
-							// try to get android.sdkPath from ti config
-							const output = execSync('ti config android.sdkPath --json');
-							const jsonObject = JSON.parse(output);
-							if (!Object.prototype.hasOwnProperty.call(jsonObject, 'success')) {
-								// found string
-								adbPath = jsonObject;
-							}
-
-							// check if adb is in that folder
-							const testPath = path.join(adbPath, 'platform-tools/adb');
-							if (!fs.existsSync(testPath)) {
-								U.die('adb not found at ' + testPath + '. Please check "ti config android.sdkPath" and point to your SDK folder.');
-								return;
-							} else {
-								// use the new path
-								adbPath = testPath;
-							}
-						}
-						console.log('Downloading _alloy_ database to: ' + tiapp.getBundleId() + '.db');
-						execCommand(adbPath + ' shell "run-as ' + tiapp.getBundleId() + ' cat /data/data/' + tiapp.getBundleId() + '/databases/_alloy_" > ' + tiapp.getBundleId() + '.db');
-						break;
-				}
-			});
-		}
+		console.log('Downloading _alloy_ database to: ' + bundleId + '.db');
+		execCommand(adbPath + ' shell "run-as ' + bundleId + ' cat /data/data/' + bundleId + '/databases/_alloy_" > ' + bundleId + '.db');
 	} catch (error) {
 		console.error('Failed to get database: ' + error);
 	}
 };
+
+function getAdbPath() {
+	if (os.platform() !== 'darwin') {
+		return 'adb';
+	}
+
+	// try to get android.sdkPath from ti config
+	let sdkPath;
+	const output = execSync('ti config android.sdkPath --json');
+	const jsonObject = JSON.parse(output);
+	if (!Object.hasOwn(jsonObject, 'success')) {
+		// found string
+		sdkPath = jsonObject;
+	}
+
+	// fall back to the default location (the folder has been spelled "sdk" and "Sdk" over the years)
+	if (!sdkPath) {
+		sdkPath = ['sdk', 'Sdk']
+			.map(dir => path.join(os.homedir(), 'Library', 'Android', dir))
+			.find(dir => fs.existsSync(dir)) || path.join(os.homedir(), 'Library', 'Android', 'sdk');
+	}
+
+	// check if adb is in that folder
+	const adbPath = path.join(sdkPath, 'platform-tools', 'adb');
+	if (!fs.existsSync(adbPath)) {
+		U.die('adb not found at ' + adbPath + '. Please check "ti config android.sdkPath" and point to your SDK folder.');
+	}
+	return adbPath;
+}
 
 function execCommand(currentCommand) {
 	exec(currentCommand, (error, response) => {
