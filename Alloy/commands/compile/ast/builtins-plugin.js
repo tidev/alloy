@@ -21,7 +21,7 @@ function appendExtension(file, extension) {
 }
 
 function loadBuiltin(source, name, dest) {
-	if (!path.existsSync(source)) {
+	if (!fs.existsSync(source)) {
 		return;
 	}
 

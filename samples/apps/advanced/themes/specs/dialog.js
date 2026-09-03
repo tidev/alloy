@@ -47,23 +47,6 @@ module.exports = function($, opts) {
 				backgroundImage: '/button_green.png'
 			}
 		};
-	} else if (OS_MOBILEWEB) {
-		styler = {
-			mainView: {
-				backgroundImage: '/bg_gray.png',
-				borderColor: '#1e99fd'
-			},
-			progressBack: {
-				backgroundColor: '#333'
-			},
-			progressFront: {
-				backgroundImage: '/title_blue.png'
-			},
-			button: {
-				backgroundImage: '/button_blue.png',
-				color: '#fff'
-			}
-		};
 	}
 
 	$.__styler = styler;

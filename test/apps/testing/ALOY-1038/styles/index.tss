@@ -23,15 +23,11 @@
 	height: Ti.UI.SIZE,
 	text: "TSS: android"
 }
-"#mobileweb[platform=mobileweb]": {
-	height: Ti.UI.SIZE,
-	text: "TSS: mobileweb"
-}
-"#iosmobileweb[platform=ios,mobilweb]": {
+"#iosmobileweb[platform=ios]": {
 	height: Ti.UI.SIZE,
 	text: "TSS: ios,mobilweb"
 }
-"#androidmobileweb[platform=android,mobileweb]": {
+"#androidmobileweb[platform=android]": {
 	height: Ti.UI.SIZE,
 	text: "TSS: android,mobileweb"
 }
@@ -47,15 +43,15 @@
 	height: Ti.UI.SIZE,
 	text: "TSS: !android"
 }
-"#notmobileweb[platform=!mobileweb]": {
+"#notmobileweb": {
 	height: Ti.UI.SIZE,
 	text: "TSS: !mobileweb"
 }
-"#mobilewebNotios[platform=mobileweb,!ios]": {
+"#mobilewebNotios[platform=!ios]": {
 	height: Ti.UI.SIZE,
 	text: "TSS: mobileweb,!ios"
 }
-"#mobilewebNotandroid[platform=mobileweb,!android]": {
+"#mobilewebNotandroid[platform=!android]": {
 	height: Ti.UI.SIZE,
 	text: "TSS: mobileweb,!android"
 }

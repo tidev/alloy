@@ -42,7 +42,15 @@ var times = {
 };
 
 var fileRestrictionUpdatedFiles = [],
-	restrictionSkipOptimize = false;
+	restrictionSkipOptimize = false,
+	templateCache = {};
+
+function getCompiledTemplate(name) {
+	if (!templateCache[name]) {
+		templateCache[name] = _.template(fs.readFileSync(path.join(alloyRoot, 'template', name), 'utf8'));
+	}
+	return templateCache[name];
+}
 
 //////////////////////////////////////
 ////////// command function //////////
@@ -605,7 +613,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			Widget: !manifest ? '' : 'var ' + CONST.WIDGET_OBJECT +
 				" = new (require('/alloy/widget'))('" + manifest.id + "');this.__widgetId='" +
 				manifest.id + "';",
-			WPATH: !manifest ? '' : _.template(fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'))({ WIDGETID: manifest.id }),
+			WPATH: !manifest ? '' : getCompiledTemplate('wpath.js')({ WIDGETID: manifest.id }),
 			__MAPMARKER_CONTROLLER_CODE__: '',
 			ES6Mod: ''
 		},
@@ -893,7 +901,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	// create generated controller module code for this view/controller or widget
 	var controllerCode = template.__MAPMARKER_CONTROLLER_CODE__;
 	delete template.__MAPMARKER_CONTROLLER_CODE__;
-	var code = _.template(fs.readFileSync(path.join(compileConfig.dir.template, 'component.js'), 'utf8'))(template);
+	var code = getCompiledTemplate('component.js')(template);
 
 	// prep the controller paths based on whether it's an app
 	// controller or widget controller
@@ -1010,7 +1018,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	// write out the pre-processed styles to runtime module files
 	var styleCode = 'module.exports = [' + processedStyles.join(',') + '];';
 	if (manifest) {
-		styleCode += _.template(fs.readFileSync(path.join(alloyRoot, 'template', 'wpath.js'), 'utf8'))({ WIDGETID: manifest.id });
+		styleCode += getCompiledTemplate('wpath.js')({ WIDGETID: manifest.id });
 	}
 	fs.mkdirpSync(path.dirname(runtimeStylePath));
 	fs.writeFileSync(runtimeStylePath, styleCode);

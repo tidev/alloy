@@ -277,8 +277,7 @@ function isException(file, exceptions) {
 		// handle folder wildcards
 		if (ex.charAt(ex.length - 1) === '*') {
 			for (var j = 0; j < exs.length; j++) {
-				var newEx = exs[i].substr(0, exs[i].length - 2);
-
+				var newEx = exs[j].substr(0, exs[j].length - 2);
 				// see if the file starts with the wildcard
 				if (file.length >= newEx.length && file.substr(0, newEx.length) === newEx) {
 					return true;

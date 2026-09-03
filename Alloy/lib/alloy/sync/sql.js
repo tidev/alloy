@@ -236,15 +236,18 @@ function Sync(method, model, opts) {
 			}
 
 			// iterate through all queried rows
-			while (rs.isValidRow()) {
-				var o = {};
-				for (i = 0; i < fieldCount; i++) {
-					o[fieldNames[i]] = rs.field(i);
+			try {
+				while (rs.isValidRow()) {
+					var o = {};
+					for (i = 0; i < fieldCount; i++) {
+						o[fieldNames[i]] = rs.field(i);
+					}
+					values.push(o);
+					rs.next();
 				}
-				values.push(o);
-				rs.next();
+			} finally {
+				rs.close();
 			}
-			rs.close();
 
 			// shape response based on whether it's a model or collection
 			var len = values.length;
@@ -471,8 +474,8 @@ module.exports.beforeModelCreate = function(config, name) {
 	}
 
 	// check platform compatibility
-	if (Ti.Platform.osname === 'mobileweb' || typeof Ti.Database === 'undefined') {
-		throw 'No support for Titanium.Database in MobileWeb environment.';
+	if (typeof Ti.Database === 'undefined') {
+		throw 'No support for Titanium.Database.';
 	}
 
 	// install database file, if specified

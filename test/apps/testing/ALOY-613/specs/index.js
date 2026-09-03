@@ -5,12 +5,12 @@ var labelStyle = {
 	height: Ti.UI.SIZE,
 	width: Ti.UI.SIZE,
 	font: {
-		fontSize: OS_MOBILEWEB ? '24px' : '24dp',
+		fontSize: '24dp',
 		fontWeight: 'bold'
 	},
-	right: OS_MOBILEWEB ? undefined : null,
-	left: OS_MOBILEWEB ? undefined : null,
-	bottom: OS_MOBILEWEB ? undefined : null
+	right: null,
+	left: null,
+	bottom: null
 };
 
 // TODO: Mobileweb represents null values differently. Remove mobileweb-specific
@@ -36,7 +36,7 @@ module.exports = function($) {
 			style: _.extend(_.clone(labelStyle), {
 				backgroundColor: '#efefef',
 				font: {
-					fontSize: OS_MOBILEWEB ? '10px' : '10dp',
+					fontSize:'10dp',
 					fontWeight: 'normal'
 				},
 				right: 0,
@@ -57,7 +57,7 @@ module.exports = function($) {
 			style: _.extend(_.clone(labelStyle), {
 				backgroundColor: '#efefef',
 				font: {
-					fontSize: OS_MOBILEWEB ? '10px' : '10dp',
+					fontSize: '10dp',
 					fontWeight: 'normal'
 				},
 				apiName: 'Ti.UI.Label',
@@ -92,7 +92,7 @@ module.exports = function($) {
 			style: _.extend(_.clone(labelStyle), {
 				backgroundColor: '#efefef',
 				font: {
-					fontSize: OS_MOBILEWEB ? '10px' : '10dp',
+					fontSize: '10dp',
 					fontWeight: 'normal'
 				},
 				right: 0,

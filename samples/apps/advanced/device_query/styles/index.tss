@@ -58,15 +58,3 @@
 	text: "Android\nTablet",
 	color: "#000"
 }
-
-"#osLabel[platform=mobileweb]": {
-	text: "Mobileweb"
-}
-
-"#osLabel[platform=blackberry]": {
-	text: "Blackberry"
-}
-
-"#osLabel[platform=windows]": {
-	text: "Windows"
-}

@@ -214,22 +214,6 @@ exports.generateSourceMap = function(generator, compileConfig) {
 		}
 	});
 
-	// parse composite code into an AST
-	// TODO: Remove? This is a sanity check, I suppose, but is it necessary?
-	// Our classic build should blow up on bad JS files
-	var ast;
-	try {
-		ast = babylon.parse(genMap.code, {
-			sourceFilename: genMap.file,
-			sourceType: 'unambiguous',
-			allowReturnOutsideFunction: true,
-		});
-	} catch (e) {
-		const filename = path.relative(compileConfig.dir.project, generator.target.template);
-
-		U.dieWithCodeFrame(`Error parsing code in ${filename}. ${e.message}`, e.loc, genMap.code);
-	}
-
 	// TODO: We do not run the babel plugins (optimizer/builtins) here. Is that ok?
 	// TODO: embed sourcesContent into source map? Shouldn't need to since this is supposed to be a straight copy
 
