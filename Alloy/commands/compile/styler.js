@@ -195,63 +195,91 @@ exports.sortStyles = function(style, opts) {
 	var sortedStyles = [];
 	opts = opts || {};
 
+	function splitSelectors(key) {
+		const result = [];
+		let current = '';
+		let depth = 0;
+
+		for (let i = 0, len = key.length; i < len; i++) {
+			const char = key[i];
+
+			if (char === '[') {
+				depth++;
+			} else if (char === ']') {
+				depth--;
+			} else if (char === ',' && depth === 0) {
+				if (current.trim()) { result.push(current.trim()); }
+				current = '';
+				continue;
+			}
+
+			current += char;
+		}
+
+		if (current.trim()) { result.push(current.trim()); }
+		return result;
+	}
+
 	if (_.isObject(style) && !_.isEmpty(style)) {
 		for (var key in style) {
-			var obj = {};
-			var priority = styleOrderCounter++ * VALUES.ORDER;
-			var match = key.match(STYLE_REGEX);
-			if (match === null) {
-				U.die('Invalid style specifier "' + key + '"');
-			}
-			var newKey = match[2];
+			var keys = splitSelectors(key);
+			_.each(keys, function(singleKey) {
+				var obj = {};
+				var priority = styleOrderCounter++ * VALUES.ORDER;
+				var match = singleKey.match(STYLE_REGEX);
+				if (match === null) {
+					U.die('Invalid style specifier "' + singleKey + '"');
+				}
+				var newKey = match[2];
 
-			// skip any invalid style entries
-			if (newKey === 'undefined' && !match[1]) { continue; }
+				if (newKey === 'undefined' && !match[1]) { return; }
 
-			// get the style key type
-			switch (match[1]) {
-				case '#':
-					obj.isId = true;
-					priority += VALUES.ID;
-					break;
-				case '.':
-					obj.isClass = true;
-					priority += VALUES.CLASS;
-					break;
-				default:
-					if (match[2]) {
-						obj.isApi = true;
-						priority += VALUES.API;
-					}
-					break;
-			}
+				switch (match[1]) {
+					case '#':
+						obj.isId = true;
+						priority += VALUES.ID;
+						break;
+					case '.':
+						obj.isClass = true;
+						priority += VALUES.CLASS;
+						break;
+					default:
+						if (match[2]) {
+							obj.isApi = true;
+							priority += VALUES.API;
+						}
+						break;
+				}
 
-			if (match[3]) {
-				obj.queries = {};
-				_.each(match[3].replace(/\s*,\s*/g, ',').split(/\s+/), function(query) {
-					var parts = query.split('=');
-					var q = U.trim(parts[0]);
-					var v = U.trim(parts[1]);
-					if (q === 'platform') {
-						priority += VALUES.PLATFORM + VALUES.SUM;
-						v = v.split(',');
-					} else if (q === 'formFactor') {
-						priority += VALUES.FORMFACTOR + VALUES.SUM;
-					} else if (q === 'if') {
-						priority += VALUES.TSSIF + VALUES.SUM;
-					} else {
-						priority += VALUES.SUM;
-					}
-					obj.queries[q] = v;
+				if (match[3]) {
+					obj.queries = {};
+					_.each(match[3].replace(/\s*,\s*/g, ',').split(/\s+/), function(query) {
+						var parts = query.split('=');
+						var q = U.trim(parts[0]);
+						var v = U.trim(parts[1]);
+						if (q === 'platform') {
+							priority += VALUES.PLATFORM + VALUES.SUM;
+							v = v.split(',');
+						} else if (q === 'formFactor') {
+							priority += VALUES.FORMFACTOR + VALUES.SUM;
+						} else if (q === 'if') {
+							priority += VALUES.TSSIF + VALUES.SUM;
+						} else {
+							priority += VALUES.SUM;
+						}
+						obj.queries[q] = v;
+					});
+				}
+
+				_.extend(obj, {
+					priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
+					key: newKey,
+					// clone so entries from one comma-separated key don't share
+					// (and mutate) the same style object
+					style: keys.length > 1 ? _.cloneDeep(style[key]) : style[key]
 				});
-			}
-
-			_.extend(obj, {
-				priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
-				key: newKey,
-				style: style[key]
+				sortedStyles.push(obj);
 			});
-			sortedStyles.push(obj);
 		}
 	}
 
