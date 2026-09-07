@@ -609,6 +609,9 @@ if (OS_ANDROID) {
  * and are not recursed into. Note that this is a heuristic: proxies without an
  * own `apiName` are merged like plain objects.
  *
+ * Only own enumerable properties of each source are merged; `__proto__`,
+ * `constructor` and `prototype` keys are always skipped.
+ *
  * @param {Boolean} deep  If true, recurse into plain objects and arrays.
  * @param {Object}  target  The object to receive merged properties.
  * @param {...Object} sources  One or more source objects.
@@ -637,8 +640,11 @@ exports.deepExtend = function deepExtend() {
 
 		for (name in options) {
 			// Never merge into the prototype chain (prototype pollution guard,
-			// e.g. `{"__proto__": {...}}` coming from JSON.parse).
-			if (name === '__proto__' || name === 'constructor' || name === 'prototype') { continue; }
+			// e.g. `{"__proto__": {...}}` coming from JSON.parse) and only copy
+			// own properties, so nothing inherited from a (possibly polluted)
+			// prototype leaks into the merge result.
+			if (name === '__proto__' || name === 'constructor' || name === 'prototype' ||
+				!Object.prototype.hasOwnProperty.call(options, name)) { continue; }
 
 			src = target[name];
 			copy = options[name];
