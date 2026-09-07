@@ -208,7 +208,7 @@ exports.sortStyles = function(style, opts) {
 			} else if (char === ']') {
 				depth--;
 			} else if (char === ',' && depth === 0) {
-				if (current) result.push(current.trim());
+				if (current.trim()) { result.push(current.trim()); }
 				current = '';
 				continue;
 			}
@@ -216,7 +216,7 @@ exports.sortStyles = function(style, opts) {
 			current += char;
 		}
 
-		if (current) result.push(current.trim());
+		if (current.trim()) { result.push(current.trim()); }
 		return result;
 	}
 
@@ -274,7 +274,9 @@ exports.sortStyles = function(style, opts) {
 				_.extend(obj, {
 					priority: priority + (opts.platform ? VALUES.PLATFORM : 0) + (opts.theme ? VALUES.THEME : 0),
 					key: newKey,
-					style: style[key]
+					// clone so entries from one comma-separated key don't share
+					// (and mutate) the same style object
+					style: keys.length > 1 ? _.cloneDeep(style[key]) : style[key]
 				});
 				sortedStyles.push(obj);
 			});
