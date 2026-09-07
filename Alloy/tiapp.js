@@ -39,6 +39,24 @@ tiapp.getSdkVersion = function() {
 	}
 };
 
+tiapp.getBundleId = function() {
+	var elems = doc.documentElement.getElementsByTagName('id');
+	if (elems && elems.length > 0) {
+		var bundleId =  U.XML.getNodeText(elems.item(elems.length - 1));
+		var isForced = false;
+		for (var i = 0; i < elems.length; i++) {
+			if (elems.item(i).getAttribute('platform') === 'android') {
+				// platform specific ID
+				isForced = true;
+				bundleId =  U.XML.getNodeText(elems.item(i));
+			} else if (elems.item(i).getAttribute('platform') === '' && !isForced) {
+				// normal ID - only if no platform specific was set already
+				bundleId =  U.XML.getNodeText(elems.item(i));
+			}
+		}
+		return bundleId;
+	}
+};
 
 // Get the value of a property from the tiapp.xml
 tiapp.getProperty = function(name) {
