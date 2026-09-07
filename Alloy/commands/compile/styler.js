@@ -139,7 +139,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	// get rid of entries that don't exist
 	var len = loadArray.length;
 	for (var i = len - 1; i >= 0; i--) {
-		if (!path.existsSync(loadArray[i].path)) {
+		if (!fs.existsSync(loadArray[i].path)) {
 			loadArray.splice(i, 1);
 		}
 	}
@@ -162,7 +162,7 @@ exports.loadGlobalStyles = function(appPath, opts) {
 
 		// create the new global style object
 		_.each(loadArray, function(g) {
-			if (path.existsSync(g.path)) {
+			if (fs.existsSync(g.path)) {
 				logger.info('[' + g.msg + '] global style processing...');
 				exports.globalStyle = exports.loadAndSortStyle(g.path, _.extend(
 					{ existingStyle: exports.globalStyle },
@@ -286,7 +286,7 @@ exports.sortStyles = function(style, opts) {
 };
 
 exports.loadStyle = function(tssFile) {
-	if (path.existsSync(tssFile)) {
+	if (fs.existsSync(tssFile)) {
 		// read the style file
 		var contents;
 		var originalContents;
