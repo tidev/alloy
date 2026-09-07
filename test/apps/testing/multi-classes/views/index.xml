@@ -1,0 +1,12 @@
+<Alloy>
+	<Window id="index" class="container">
+		<View id="header" layout="vertical">
+			<Label id="title" class="heading">Multiple classes per selector</Label>
+			<Label id="subtitle" class="heading small">Comma-separated TSS selectors</Label>
+		</View>
+		<View id="footer" layout="vertical">
+			<Button id="primary" class="button">Primary</Button>
+			<Button id="secondary" class="button muted">Secondary</Button>
+		</View>
+	</Window>
+</Alloy>

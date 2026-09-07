@@ -1,0 +1,28 @@
+".container": {
+	backgroundColor: "#fff"
+},
+// two ids sharing one style
+"#header, #footer": {
+	width: Ti.UI.FILL,
+	height: Ti.UI.SIZE
+},
+// class + api name sharing one style
+".heading, Button": {
+	color: "#000",
+	top: 10
+},
+".small": {
+	font: { fontSize: 12 }
+},
+// comma inside a query must not be treated as a selector separator
+".button[platform=ios,android]": {
+	width: 200
+},
+// query only applies to the selector it is attached to
+".muted[platform=ios], #secondary": {
+	opacity: 0.5
+},
+// trailing comma is ignored
+".button,": {
+	height: 44
+}
