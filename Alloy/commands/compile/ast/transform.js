@@ -1,10 +1,25 @@
 const parser = require('@babel/parser'),
-	traverseModule = require('@babel/traverse'),
+	traverse = require('@babel/traverse').default,
 	generate = require('@babel/generator').default,
+	_ = require('lodash'),
 	builtinsVisitor = require('./builtins-plugin'),
-	optimizerVisitor = require('./optimizer-plugin');
+	optimizerVisitor = require('./optimizer-plugin'),
+	CONST = require('../../../common/constants');
 
-const traverse = traverseModule.default;
+// Every identifier the optimizer visitor can fold, built from the same
+// constants it builds its defines from, plus the two member expressions it
+// rewrites. A file containing none of these cannot be changed by it.
+const OPTIMIZE_RX = new RegExp(
+	'\\b(?:' + []
+		.concat(_.map(CONST.DEPLOY_TYPES, 'key'))
+		.concat(_.map(CONST.DIST_TYPES, 'key'))
+		.concat(_.map(CONST.PLATFORMS, function(p) { return 'OS_' + p.toUpperCase(); }))
+		.join('|') + ')\\b'
+	+ '|Ti(?:tanium)?\\.Platform\\.(?:os)?name'
+);
+
+// What the builtins visitor looks for: require('alloy/x') or require('/alloy/x').
+const ALLOY_REQUIRE_RX = /require\s*\(\s*['"]\/?alloy\//;
 
 const SOURCE_MAP_COMMENT = /\n?\/\/# sourceMappingURL=[^\n]*$/;
 
@@ -17,10 +32,38 @@ const SOURCE_MAP_COMMENT = /\n?\/\/# sourceMappingURL=[^\n]*$/;
  * @return {Object} A @babel/traverse visitor
  */
 exports.createVisitor = function(compileConfig, alloyConfig) {
-	return traverseModule.visitors.merge([
+	return traverse.visitors.merge([
 		builtinsVisitor(compileConfig),
 		optimizerVisitor(alloyConfig)
 	]);
+};
+
+/*
+ * @method createBuiltinsVisitor
+ * The builtins visitor on its own. It only reads the AST -- it copies builtin
+ * modules into Resources as a side effect -- so a file that needs this but not
+ * the optimizer can be scanned without ever being printed or rewritten.
+ */
+exports.createBuiltinsVisitor = function(compileConfig) {
+	return builtinsVisitor(compileConfig);
+};
+
+/*
+ * @method needsOptimize
+ * True if the optimizer visitor could change this code. Deliberately
+ * over-inclusive: a define name inside a comment or string costs one needless
+ * parse, which is what every file costs today.
+ */
+exports.needsOptimize = function(code) {
+	return OPTIMIZE_RX.test(code);
+};
+
+/*
+ * @method hasAlloyRequire
+ * True if the builtins visitor could find something to copy in this code.
+ */
+exports.hasAlloyRequire = function(code) {
+	return ALLOY_REQUIRE_RX.test(code);
 };
 
 /*
@@ -57,4 +100,12 @@ exports.stripSourceMapComment = function(code) {
 exports.run = function(ast, code, visitor, options) {
 	traverse(ast, visitor);
 	return generate(ast, options, code).code;
+};
+
+/*
+ * @method traverse
+ * Applies a visitor without printing, for the scan-only case.
+ */
+exports.traverse = function(ast, visitor) {
+	traverse(ast, visitor);
 };
