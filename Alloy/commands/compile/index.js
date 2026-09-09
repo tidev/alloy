@@ -3,7 +3,6 @@ var ejs = require('ejs'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	vm = require('vm'),
-	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -18,6 +17,7 @@ var ejs = require('ejs'),
 	CU = require('./compilerUtils'),
 	styler = require('./styler'),
 	sourceMapper = require('./sourceMapper'),
+	transform = require('./ast/transform'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	BuildLog = require('./BuildLog'),
 	Orphanage = require('./Orphanage');
@@ -1161,20 +1161,20 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
+	// the visitor is stateless across files, so build it once rather than
+	// rebuilding it (and re-reading the platform module) for every file
+	var visitor = transform.createVisitor(compileConfig, compileConfig.alloyConfig);
+	var options = _.clone(sourceMapper.OPTIONS_OUTPUT);
+
 	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
 		_.each(files, function(file) {
-			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-					plugins: [
-						[require('./ast/builtins-plugin'), compileConfig],
-						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
-					]
-				}),
-				fullpath = path.join(compileConfig.dir.resources, file);
+			var fullpath = path.join(compileConfig.dir.resources, file);
 
 			logger.info('- ' + file);
 			try {
-				var result = babel.transformFileSync(fullpath, options);
-				fs.writeFileSync(fullpath, result.code);
+				var code = transform.stripSourceMapComment(fs.readFileSync(fullpath, 'utf8'));
+				var ast = transform.parse(code, fullpath);
+				fs.writeFileSync(fullpath, transform.run(ast, code, visitor, options));
 			} catch (e) {
 				U.die('Error transforming JS file', e);
 			}

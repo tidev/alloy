@@ -1,5 +1,6 @@
 var path = require('path'),
 	fs = require('fs'),
+	types = require('@babel/types'),
 	_ = require('lodash'),
 	logger = require('../../../logger'),
 	U = require('../../../utils');
@@ -53,37 +54,34 @@ function loadMomentLanguages(config) {
 	}
 }
 
-module.exports = function (_ref) {
-	var types = _ref.types;
+module.exports = function (config) {
 	var rx = /^(\/?alloy)\/(.+)$/;
 
 	return {
-		visitor: {
-			CallExpression: function(p) {
-				var theString = p.node.arguments[0],
-					match;
-				if (p.node.callee.name === 'require' &&         // Is this a require call?
-					theString && types.isStringLiteral(theString) && // Is the 1st param a literal string?
-					(match = theString.value.match(rx)) !== null &&  // Is it an alloy module?
-					!_.includes(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
-					!_.includes(loaded, match[2])                    // Make sure we didn't find it already
-				) {
-					// Make sure it hasn't already been copied to Resources
-					var name = appendExtension(match[2], 'js');
-					if (fs.existsSync(path.join(this.opts.dir.resources, match[1], name))) {
-						return;
-					}
+		CallExpression: function(p) {
+			var theString = p.node.arguments[0],
+				match;
+			if (p.node.callee.name === 'require' &&         // Is this a require call?
+				theString && types.isStringLiteral(theString) && // Is the 1st param a literal string?
+				(match = theString.value.match(rx)) !== null &&  // Is it an alloy module?
+				!_.includes(EXCLUDE, match[2]) &&                // Make sure it's not excluded.
+				!_.includes(loaded, match[2])                    // Make sure we didn't find it already
+			) {
+				// Make sure it hasn't already been copied to Resources
+				var name = appendExtension(match[2], 'js');
+				if (fs.existsSync(path.join(config.dir.resources, match[1], name))) {
+					return;
+				}
 
-					// make sure the builtin exists
-					var source = path.join(BUILTINS_PATH, name);
-					var dest = path.join(this.opts.dir.resources, 'alloy', name);
-					loadBuiltin(source, name, dest);
+				// make sure the builtin exists
+				var source = path.join(BUILTINS_PATH, name);
+				var dest = path.join(config.dir.resources, 'alloy', name);
+				loadBuiltin(source, name, dest);
 
-					if ('moment.js' === name) {
-						// if momentjs is required in the project, also load the
-						// localizations which may be used
-						loadMomentLanguages(this.opts);
-					}
+				if ('moment.js' === name) {
+					// if momentjs is required in the project, also load the
+					// localizations which may be used
+					loadMomentLanguages(config);
 				}
 			}
 		}
