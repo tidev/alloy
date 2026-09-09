@@ -1,0 +1,36 @@
+'Label': {
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE,
+	textAlign: 'center',
+	touchEnabled: false,
+	color: '#555',
+	font: {
+		fontSize: '18dp',
+		fontWeight: 'normal'
+	}
+}
+
+'#index': {
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
+}
+
+'#info': {
+	top: '20dp'
+}
+
+'#theDate': {
+	color: '#111',
+	shadowColor: '#888',
+	shadowOffset: { x:2, y:2 },
+	font: {
+		fontSize: '32dp',
+		fontWeight: 'bold'
+	}
+}
+
+'#language': {
+	bottom: '20dp',
+	color: '#a00'
+}
