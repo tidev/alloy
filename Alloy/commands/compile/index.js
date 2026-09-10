@@ -3,7 +3,6 @@ var ejs = require('ejs'),
 	fs = require('fs-extra'),
 	walkSync = require('walk-sync'),
 	vm = require('vm'),
-	babel = require('@babel/core'),
 	async = require('async'),
 
 	// alloy requires
@@ -18,6 +17,7 @@ var ejs = require('ejs'),
 	CU = require('./compilerUtils'),
 	styler = require('./styler'),
 	sourceMapper = require('./sourceMapper'),
+	transform = require('./ast/transform'),
 	CompilerMakeFile = require('./CompilerMakeFile'),
 	BuildLog = require('./BuildLog'),
 	Orphanage = require('./Orphanage');
@@ -1161,20 +1161,45 @@ function optimizeCompiledCode(alloyConfig, paths) {
 		});
 	}
 
+	// the visitors are stateless across files, so build them once rather than
+	// rebuilding them (and re-reading the platform module) for every file
+	var visitor = transform.createVisitor(compileConfig, compileConfig.alloyConfig);
+	var scanVisitor = transform.createBuiltinsVisitor(compileConfig);
+	var options = _.clone(sourceMapper.OPTIONS_OUTPUT);
+
 	while ((files = _.difference(getJsFiles(), lastFiles)).length > 0) {
 		_.each(files, function(file) {
-			var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-					plugins: [
-						[require('./ast/builtins-plugin'), compileConfig],
-						[require('./ast/optimizer-plugin'), compileConfig.alloyConfig],
-					]
-				}),
-				fullpath = path.join(compileConfig.dir.resources, file);
+			var fullpath = path.join(compileConfig.dir.resources, file);
 
-			logger.info('- ' + file);
 			try {
-				var result = babel.transformFileSync(fullpath, options);
-				fs.writeFileSync(fullpath, result.code);
+				// Most files in Resources contain nothing either visitor can act
+				// on such as vendored libraries especially. Parsing and
+				// reprinting them only reformats them. 
+				// By checking the source text first: it costs a fraction of a millisecond 
+				// against the whole tree, and lets us skip the parse entirely for most of it.
+				var original = fs.readFileSync(fullpath, 'utf8');
+				var code = transform.stripSourceMapComment(original);
+				var optimize = transform.needsOptimize(code);
+				if (!optimize && !transform.hasAlloyRequire(code)) {
+					return;
+				}
+
+				logger.info('- ' + file);
+				var ast = transform.parse(code, fullpath);
+
+				if (!optimize) {
+					// the builtins visitor only reads the AST, so there is
+					// nothing to print or write once it has run
+					transform.traverse(ast, scanVisitor);
+					return;
+				}
+
+				var result = transform.run(ast, code, visitor, options);
+				// not rewriting an unchanged file keeps its mtime stable, which
+				// matters for Titanium's incremental builds
+				if (result !== original) {
+					fs.writeFileSync(fullpath, result);
+				}
 			} catch (e) {
 				U.die('Error transforming JS file', e);
 			}

@@ -6,7 +6,8 @@ var fs = require('fs'),
 	_ = require('lodash'),
 	sourceMapper = require('../../Alloy/commands/compile/sourceMapper'),
 	babylon = require('@babel/parser'),
-	babel = require('@babel/core');
+	transform = require('../../Alloy/commands/compile/ast/transform'),
+	optimizerVisitor = require('../../Alloy/commands/compile/ast/optimizer-plugin');
 
 var tests = [
 	// make sure we didn't break normal conditionals and assigments
@@ -110,17 +111,13 @@ describe('optimizer.js', function() {
 						expect(parseFunction).not.toThrow();
 					});
 
-					it(prefix + 'optimizes code via Babel and our custom plugins', function() {
+					it(prefix + 'optimizes code via our custom visitors', function() {
 						// execute the squeeze to remove dead code, always performed
 						// as the last step of JS file processing. The unit testing here
 						// uses the same settings as the Alloy compile process.
 						var squeezeFunction = function() {
-							var options = _.extend(_.clone(sourceMapper.OPTIONS_OUTPUT), {
-								plugins: [['./Alloy/commands/compile/ast/optimizer-plugin', {platform: platform}]]
-							});
-							var result = babel.transformFromAstSync(ast, null, options);
-							ast = result.ast;
-							code = result.code.replace(/\s*$/,'');
+							var visitor = optimizerVisitor({platform: platform});
+							code = transform.run(ast, null, visitor, sourceMapper.OPTIONS_OUTPUT).replace(/\s*$/,'');
 						};
 						expect(squeezeFunction).not.toThrow();
 					});
