@@ -45,6 +45,15 @@ var fileRestrictionUpdatedFiles = [],
 	restrictionSkipOptimize = false,
 	templateCache = {};
 
+// Generated controllers and runtime styles are cached across compiles in the
+// build log, keyed by a hash of everything that feeds into them. See
+// createComponentCacheBase() and componentCacheHash().
+var componentCache = {},
+	componentCacheBase = '',
+	componentCacheSeen = {},
+	componentViewDirs = [],
+	allViewsHash = null;
+
 function getCompiledTemplate(name) {
 	if (!templateCache[name]) {
 		templateCache[name] = _.template(fs.readFileSync(path.join(alloyRoot, 'template', name), 'utf8'));
@@ -176,6 +185,12 @@ module.exports = function(args, program) {
 	// track whether deploy type has changed since previous build
 	buildLog.data.deploytypeChanged = buildLog.data.deploytype !== alloyConfig.deploytype;
 	buildLog.data.deploytype = alloyConfig.deploytype;
+
+	// generated components are tracked per platform, since each platform
+	// writes into its own Resources folder
+	buildLog.data[buildPlatform] || (buildLog.data[buildPlatform] = {});
+	componentCache = buildLog.data[buildPlatform].components || (buildLog.data[buildPlatform].components = {});
+	componentCacheSeen = {};
 	logger.debug('');
 
 	// wipe the controllers, models, and widgets
@@ -433,6 +448,9 @@ module.exports = function(args, program) {
 	// don't process XML/controller files inside .svn folders (ALOY-839)
 	var excludeRegex = new RegExp('(?:^|[\\/\\\\])(?:' + CONST.EXCLUDED_FILES.join('|') + ')(?:$|[\\/\\\\])');
 
+	// everything that is shared by all components and can change their output
+	componentCacheBase = createComponentCacheBase(widgetDirs, paths);
+
 	// Process all views/controllers and generate their runtime
 	// commonjs modules and source maps.
 	var tracker = {};
@@ -480,6 +498,16 @@ module.exports = function(args, program) {
 			});
 		}
 	});
+
+	// forget components whose sources are gone. Orphanage already removed
+	// their generated files, so their entries could never be used again.
+	if (restrictionPath === null) {
+		_.each(_.keys(componentCache), function(id) {
+			if (!componentCacheSeen[id]) {
+				delete componentCache[id];
+			}
+		});
+	}
 	logger.info('');
 
 	generateAppJs(paths, compileConfig, restrictionPath, compilerMakeFile);
@@ -627,6 +655,10 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	styler.bindingsMap = {};
 	CU.destroyCode = '';
 	CU.postCode = '';
+	// form factor data functions belong to the component that declared them,
+	// they must not leak into the components generated afterwards
+	CU.dataFunctionNames = {};
+	styler.resetStyleOrder();
 	CU[CONST.AUTOSTYLE_PROPERTY] = compileConfig[CONST.AUTOSTYLE_PROPERTY];
 	CU.currentManifest = manifest;
 	CU.currentDefaultId = viewName;
@@ -669,6 +701,62 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 		files[fileType] = path.join(files[fileType], viewName + '.js');
 	});
 
+	// prep the controller paths based on whether it's an app
+	// controller or widget controller
+	var targetFilepath = path.join(compileConfig.dir.resources, titaniumFolder,
+		path.relative(compileConfig.dir.resources, files.COMPONENT));
+	var runtimeStylePath = path.join(compileConfig.dir.resources, titaniumFolder,
+		path.relative(compileConfig.dir.resources, files.RUNTIME_STYLE));
+	if (manifest) {
+		fs.mkdirpSync(
+			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+				manifest.id, widgetDir)
+		);
+		fs.mkdirpSync(
+			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
+				manifest.id, widgetStyleDir)
+		);
+
+		// [ALOY-967] merge "i18n" dir in widget folder
+		CU.mergeI18N(path.join(dir, 'i18n'), path.join(compileConfig.dir.project, 'i18n'), { override: false });
+		widgetIds.push(manifest.id);
+
+		CU.copyWidgetResources(
+			[path.join(dir, CONST.DIR.ASSETS), path.join(dir, CONST.DIR.LIB)],
+			path.join(compileConfig.dir.resources, titaniumFolder),
+			manifest.id,
+			{
+				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
+				exceptions: otherPlatforms,
+				titaniumFolder: titaniumFolder,
+				theme: theme
+			}
+		);
+		targetFilepath = path.join(
+			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
+			widgetDir, viewName + '.js'
+		);
+		runtimeStylePath = path.join(
+			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
+			widgetStyleDir, viewName + '.js'
+		);
+	}
+
+	// theme styles that override the component's own, if a theme is active
+	var themeStyleFiles = getThemeStyleFiles(dirname, viewName, manifest);
+
+	// Reuse the generated files from the previous compile when every input
+	// that feeds into them is unchanged. This is what makes rebuilds fast.
+	var cacheId = path.relative(compileConfig.dir.resources, targetFilepath).replace(/\\/g, '/');
+	var cacheHash = componentCacheHash(files, themeStyleFiles, manifest ? path.join(dir, 'widget.json') : null);
+	componentCacheSeen[cacheId] = true;
+	if (componentCache[cacheId] === cacheHash && generatedFilesExist(targetFilepath, runtimeStylePath)) {
+		logger.info('  cached:     "' + path.relative(compileConfig.dir.project, targetFilepath) + '"');
+		restrictionSkipOptimize = (fileRestriction !== null);
+		return;
+	}
+	delete componentCache[cacheId];
+
 	// we are processing a view, not just a controller
 	if (!noView) {
 		// validate view
@@ -695,22 +783,11 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 			});
 		}
 
-		if (theme) {
+		if (themeStyleFiles) {
 			// if a theme is applied, override TSS definitions with those defined in the theme
-			var themeStylesDir, theStyle, themeStylesFile, psThemeStylesFile;
-			if (!manifest) {
-				// theming a "normal" controller
-				themeStylesDir = path.join(compileConfig.dir.themes, theme, 'styles');
-				theStyle = dirname ? path.join(dirname, viewName + '.tss') : viewName + '.tss';
-				themeStylesFile = path.join(themeStylesDir, theStyle);
-				psThemeStylesFile = path.join(themeStylesDir, buildPlatform, theStyle);
-			} else {
-				// theming a widget
-				themeStylesDir = path.join(compileConfig.dir.themes, theme, 'widgets', manifest.id, 'styles');
-				theStyle = dirname ? path.join(dirname, viewName + '.tss') : viewName + '.tss';
-				themeStylesFile = path.join(themeStylesDir, theStyle);
-				psThemeStylesFile = path.join(themeStylesDir, buildPlatform, theStyle);
-			}
+			var theStyle = themeStyleFiles.name,
+				themeStylesFile = themeStyleFiles.base,
+				psThemeStylesFile = themeStyleFiles.platform;
 
 			if (fs.existsSync(themeStylesFile)) {
 				// load theme-specific styles, overriding default definitions
@@ -903,47 +980,6 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	delete template.__MAPMARKER_CONTROLLER_CODE__;
 	var code = getCompiledTemplate('component.js')(template);
 
-	// prep the controller paths based on whether it's an app
-	// controller or widget controller
-	var targetFilepath = path.join(compileConfig.dir.resources, titaniumFolder,
-		path.relative(compileConfig.dir.resources, files.COMPONENT));
-	var runtimeStylePath = path.join(compileConfig.dir.resources, titaniumFolder,
-		path.relative(compileConfig.dir.resources, files.RUNTIME_STYLE));
-	if (manifest) {
-		fs.mkdirpSync(
-			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetDir)
-		);
-		fs.mkdirpSync(
-			path.join(compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET,
-				manifest.id, widgetStyleDir)
-		);
-
-		// [ALOY-967] merge "i18n" dir in widget folder
-		CU.mergeI18N(path.join(dir, 'i18n'), path.join(compileConfig.dir.project, 'i18n'), { override: false });
-		widgetIds.push(manifest.id);
-
-		CU.copyWidgetResources(
-			[path.join(dir, CONST.DIR.ASSETS), path.join(dir, CONST.DIR.LIB)],
-			path.join(compileConfig.dir.resources, titaniumFolder),
-			manifest.id,
-			{
-				filter: new RegExp('^(?:' + otherPlatforms.join('|') + ')[\\/\\\\]'),
-				exceptions: otherPlatforms,
-				titaniumFolder: titaniumFolder,
-				theme: theme
-			}
-		);
-		targetFilepath = path.join(
-			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
-			widgetDir, viewName + '.js'
-		);
-		runtimeStylePath = path.join(
-			compileConfig.dir.resources, titaniumFolder, 'alloy', CONST.DIR.WIDGET, manifest.id,
-			widgetStyleDir, viewName + '.js'
-		);
-	}
-
 	// generate the code and source map for the current controller
 	sourceMapper.generateCodeAndSourceMap({
 		target: {
@@ -1022,6 +1058,108 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	}
 	fs.mkdirpSync(path.dirname(runtimeStylePath));
 	fs.writeFileSync(runtimeStylePath, styleCode);
+
+	// remember what was generated so the next compile can skip it
+	componentCache[cacheId] = cacheHash;
+}
+
+// Everything shared by all components that changes their generated output.
+// Combined with the per-component inputs in componentCacheHash().
+function createComponentCacheBase(widgetDirs, paths) {
+	componentViewDirs = _.map(widgetDirs, function(collection) {
+		return path.join(collection.dir, CONST.DIR.VIEW);
+	});
+	allViewsHash = null;
+
+	return JSON.stringify({
+		version: require('../../../package.json').version,
+		platform: buildPlatform,
+		deploytype: compileConfig.alloyConfig.deploytype,
+		theme: theme || '',
+		cfgHash: buildLog.data.cfgHash,
+		globalStyleHash: buildLog.data.globalStyleCacheHash,
+		sourcemap: compileConfig.sourcemap,
+		autoStyle: compileConfig[CONST.AUTOSTYLE_PROPERTY],
+		backbone: compileConfig.backbone,
+		adapters: compileConfig.adapters,
+		models: CU.models.slice().sort(),
+		jmk: U.createHash(path.join(paths.app, 'alloy.jmk'))
+	});
+}
+
+// Hash of the contents of every file a single component is generated from.
+// Missing files hash as empty, so one appearing later changes the hash, and
+// the paths are part of it, so a platform-specific file taking over does too.
+function componentCacheHash(files, themeStyleFiles, manifestFile) {
+	var inputs = [files.VIEW, files.CONTROLLER];
+	_.each([].concat(files.STYLE || []), function(style) {
+		inputs.push(style.file || style);
+	});
+	if (themeStyleFiles) {
+		inputs.push(themeStyleFiles.base, themeStyleFiles.platform);
+	}
+	if (manifestFile) {
+		inputs.push(manifestFile);
+	}
+
+	// Parsers expand <Require> and <Widget> and generate different code
+	// depending on what the referenced view contains, so a component that
+	// uses them also depends on the other views.
+	var dependsOnViews = files.VIEW && fs.existsSync(files.VIEW) &&
+		/<(?:Require|Widget)[\s\/>]/.test(fs.readFileSync(files.VIEW, 'utf8'));
+
+	return U.createHashFromString(componentCacheBase + '\n' + U.createHash(_.compact(inputs)) +
+		(dependsOnViews ? '\n' + getAllViewsHash() : ''));
+}
+
+// Hash of the paths and contents of every view in the app and its widgets,
+// computed at most once per compile.
+function getAllViewsHash() {
+	if (allViewsHash === null) {
+		var views = [];
+		_.each(componentViewDirs, function(dir) {
+			if (fs.existsSync(dir)) {
+				_.each(walkSync(dir), function(f) {
+					if (viewRegex.test(f)) {
+						views.push(path.join(dir, f));
+					}
+				});
+			}
+		});
+		allViewsHash = U.createHash(views.sort());
+	}
+	return allViewsHash;
+}
+
+// Theme TSS files for a component. Returns null when no theme is active.
+function getThemeStyleFiles(dirname, viewName, manifest) {
+	if (!theme) {
+		return null;
+	}
+	var themeStylesDir = manifest ?
+		path.join(compileConfig.dir.themes, theme, 'widgets', manifest.id, 'styles') :
+		path.join(compileConfig.dir.themes, theme, 'styles');
+	var name = dirname ? path.join(dirname, viewName + '.tss') : viewName + '.tss';
+	return {
+		name: name,
+		base: path.join(themeStylesDir, name),
+		platform: path.join(themeStylesDir, buildPlatform, name)
+	};
+}
+
+// A cache entry is only usable while the files it describes are still there.
+function generatedFilesExist(targetFilepath, runtimeStylePath) {
+	if (!fs.existsSync(targetFilepath) || !fs.existsSync(runtimeStylePath)) {
+		return false;
+	}
+	if (compileConfig.sourcemap !== false) {
+		var mapFile = path.join(compileConfig.dir.project, CONST.DIR.MAP,
+			path.relative(compileConfig.dir.project, targetFilepath)) + '.' + CONST.FILE_EXT.MAP;
+		if (!fs.existsSync(mapFile)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 function findModelMigrations(name, inDir) {

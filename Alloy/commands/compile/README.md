@@ -2,7 +2,7 @@ Files related to the `alloy compile` command:
 
 * ast - optimizer, compressor, and related AST scripts
 * parsers - parsers for specific UI components
-* BuildLog.js - generates the build/alloy/build.json file which is used to track files that could be reused by subsequent compile operations
+* BuildLog.js - generates the build/alloy/build.json file which is used to track files that could be reused by subsequent compile operations, including a per-platform hash of every generated controller and runtime style so unchanged components are skipped on the next compile
 * CompilerMakeFile.js - class used during JMK processing
 * compilerUtils.js - utility functions used by the compiler, such as validation of nodes, getting parser arguments, etc. But this script also defines the main code generating functions: CU.generateNode and CU.generateNodeExtended which are used in processing nearly every XML tag.
 * index.js - main entry point for the alloy compiler
