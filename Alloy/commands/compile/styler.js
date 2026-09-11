@@ -47,6 +47,16 @@ var KEYBOARD_PROPERTIES = ['keyboardType', 'returnKeyType', 'autocapitalization'
 
 // private variables
 var styleOrderCounter = 1;
+
+// The style order counter feeds into the priority value written to every
+// runtime style module. Priorities only order the styles of one component
+// against each other, so the counter restarts for every component right
+// after the global styles. That keeps each component's output independent of
+// the components generated before it, which lets the compiler cache them.
+var componentStyleOrderStart = 1;
+exports.resetStyleOrder = function() {
+	styleOrderCounter = componentStyleOrderStart;
+};
 var platform;
 
 exports.setPlatform = function(p) {
@@ -148,17 +158,20 @@ exports.loadGlobalStyles = function(appPath, opts) {
 	var hash = U.createHash(_.map(loadArray, 'path'));
 
 	// see if we can use the cached global style
-	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile)) {
+	if (buildlog.data.globalStyleCacheHash === hash && fs.existsSync(cacheFile) &&
+		_.isNumber(buildlog.data.globalStyleOrder)) {
 		// load global style object from cache
 		logger.info('[global style] loading from cache...');
 		exports.globalStyle = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
 		ret = true;
 
-		// increment the style order counter with the number of rules in the global style
-		styleOrderCounter += exports.globalStyle.length;
+		// advance the style order counter exactly as processing the files
+		// would have, so the priorities of all component styles stay stable
+		styleOrderCounter += buildlog.data.globalStyleOrder;
 	} else {
 		// add new hash to the buildlog
 		buildlog.data.globalStyleCacheHash = hash;
+		var styleOrderStart = styleOrderCounter;
 
 		// create the new global style object
 		_.each(loadArray, function(g) {
@@ -177,7 +190,9 @@ exports.loadGlobalStyles = function(appPath, opts) {
 
 		// simply increment the style order counter
 		styleOrderCounter++;
+		buildlog.data.globalStyleOrder = styleOrderCounter - styleOrderStart;
 	}
+	componentStyleOrderStart = styleOrderCounter;
 
 	return ret;
 };
