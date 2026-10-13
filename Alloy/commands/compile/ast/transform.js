@@ -6,12 +6,19 @@ const parser = require('@babel/parser'),
 	optimizerVisitor = require('./optimizer-plugin'),
 	CONST = require('../../../common/constants');
 
+// Whitespace and comments, which JavaScript allows between any two tokens.
+// The block comment is the unrolled form, which can only end at the first
+// closing delimiter, so a run of comments can't be split in many ways when a
+// match fails. A line comment has to run to the end of its line for the same
+// reason.
+const TRIVIA = '(?:\\s|\\/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*\\/|\\/\\/[^\\r\\n]*(?:\\r?\\n|$))*';
+
 // Every identifier the optimizer visitor can fold, built from the same
 // constants it builds its defines from, plus any reference to Ti.Platform /
 // Titanium.Platform. The visitor folds Ti.Platform.name, Ti.Platform['osname']
 // and so on, so only the object is matched here: dotted or bracketed, with
-// whitespace allowed around the dot. A file containing none of these cannot
-// be changed by it.
+// whitespace or comments allowed between the tokens. A file containing none
+// of these cannot be changed by it.
 //
 // Built on first use: constants -> platforms -> utils -> sourceMapper -> here
 // is a require cycle, so CONST may still be half-loaded when this module is.
@@ -24,14 +31,17 @@ function getOptimizeRx() {
 				.concat(_.map(CONST.DIST_TYPES, 'key'))
 				.concat(_.map(CONST.PLATFORMS, function(p) { return 'OS_' + p.toUpperCase(); }))
 				.join('|') + ')\\b'
-			+ '|\\bTi(?:tanium)?\\s*(?:\\.\\s*Platform\\b|\\[\\s*[\'"]Platform[\'"])'
+			+ '|\\bTi(?:tanium)?' + TRIVIA
+			+ '(?:\\.' + TRIVIA + 'Platform\\b|\\[' + TRIVIA + '[\'"]Platform[\'"])'
 		);
 	}
 	return optimizeRx;
 }
 
 // What the builtins visitor looks for: require('alloy/x') or require('/alloy/x').
-const ALLOY_REQUIRE_RX = /require\s*\(\s*['"]\/?alloy\//;
+// Missing one here means a builtin is never copied and the app fails at
+// runtime, so comments between the tokens are allowed too.
+const ALLOY_REQUIRE_RX = new RegExp('\\brequire' + TRIVIA + '\\(' + TRIVIA + '[\'"]\\/?alloy\\/');
 
 // One or more trailing source map comments, in line or block form, with the
 // legacy @ prefix too, followed by any whitespace. The URL part mirrors

@@ -150,6 +150,9 @@ describe('transform.needsOptimize', function() {
 		'var a = Titanium.Platform["name"];',
 		'var a = Ti\n\t.Platform\n\t.osname;',
 		'var a = Ti[\'Platform\'].name;',
+		'var a = Ti /* comment */ . Platform.name;',
+		'var a = Titanium // comment\n\t.Platform.osname;',
+		'var a = Ti[/* comment */ \'Platform\'].name;',
 		'if (OS_IOS) {}',
 		'if (ENV_PROD) {}'
 	], function(src) {
@@ -161,10 +164,42 @@ describe('transform.needsOptimize', function() {
 	_.each([
 		'var a = Ti.UI.createView();',
 		'var TiPlatform = 1;',
-		'var a = foo.OS_IOSX;'
+		'var a = foo.OS_IOSX;',
+		'var a = Ti /* unterminated . Platform.name;'
 	], function(src) {
 		it('skips ' + JSON.stringify(src), function() {
 			expect(transform.needsOptimize(src)).toBe(false);
+		});
+	});
+
+	it('fails fast on a long run of comments', function() {
+		var src = 'Ti' + _.repeat(' /* a */ // b\n', 5000) + 'x';
+		var start = Date.now();
+		expect(transform.needsOptimize(src)).toBe(false);
+		expect(Date.now() - start).toBeLessThan(1000);
+	});
+});
+
+describe('transform.hasAlloyRequire', function() {
+	_.each([
+		'var m = require(\'alloy/moment\');',
+		'var m = require("/alloy/moment");',
+		'var m = require (\n\t\'alloy/moment\');',
+		'var m = require /* comment */ (/* comment */ \'alloy/moment\');',
+		'var m = require // comment\n(\'alloy/moment\');'
+	], function(src) {
+		it('flags ' + JSON.stringify(src), function() {
+			expect(transform.hasAlloyRequire(src)).toBe(true);
+		});
+	});
+
+	_.each([
+		'var m = require(\'moment\');',
+		'var m = myrequire(\'alloy/moment\');',
+		'var m = require /* unterminated (\'alloy/moment\');'
+	], function(src) {
+		it('skips ' + JSON.stringify(src), function() {
+			expect(transform.hasAlloyRequire(src)).toBe(false);
 		});
 	});
 });
