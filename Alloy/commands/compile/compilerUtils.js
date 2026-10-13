@@ -100,6 +100,13 @@ exports.generateUniqueId = function() {
 	return alloyUniqueIdPrefix + alloyUniqueIdCounter++;
 };
 
+// Generated ids only have to be unique inside one component, so the counter
+// restarts for every component. That keeps the generated code of a component
+// the same no matter which components were generated (or cached) before it.
+exports.resetUniqueId = function() {
+	alloyUniqueIdCounter = 0;
+};
+
 exports.getNodeFullname = function(node) {
 	var name = node.nodeName,
 		ns = node.getAttribute('ns') || CONST.IMPLICIT_NAMESPACES[name] || CONST.NAMESPACE_DEFAULT,

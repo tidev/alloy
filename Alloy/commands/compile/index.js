@@ -658,6 +658,7 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 	// form factor data functions belong to the component that declared them,
 	// they must not leak into the components generated afterwards
 	CU.dataFunctionNames = {};
+	CU.resetUniqueId();
 	styler.resetStyleOrder();
 	CU[CONST.AUTOSTYLE_PROPERTY] = compileConfig[CONST.AUTOSTYLE_PROPERTY];
 	CU.currentManifest = manifest;
