@@ -7,21 +7,42 @@ const parser = require('@babel/parser'),
 	CONST = require('../../../common/constants');
 
 // Every identifier the optimizer visitor can fold, built from the same
-// constants it builds its defines from, plus the two member expressions it
-// rewrites. A file containing none of these cannot be changed by it.
-const OPTIMIZE_RX = new RegExp(
-	'\\b(?:' + []
-		.concat(_.map(CONST.DEPLOY_TYPES, 'key'))
-		.concat(_.map(CONST.DIST_TYPES, 'key'))
-		.concat(_.map(CONST.PLATFORMS, function(p) { return 'OS_' + p.toUpperCase(); }))
-		.join('|') + ')\\b'
-	+ '|Ti(?:tanium)?\\.Platform\\.(?:os)?name'
-);
+// constants it builds its defines from, plus any reference to Ti.Platform /
+// Titanium.Platform. The visitor folds Ti.Platform.name, Ti.Platform['osname']
+// and so on, so only the object is matched here: dotted or bracketed, with
+// whitespace allowed around the dot. A file containing none of these cannot
+// be changed by it.
+//
+// Built on first use: constants -> platforms -> utils -> sourceMapper -> here
+// is a require cycle, so CONST may still be half-loaded when this module is.
+let optimizeRx;
+function getOptimizeRx() {
+	if (!optimizeRx) {
+		optimizeRx = new RegExp(
+			'\\b(?:' + []
+				.concat(_.map(CONST.DEPLOY_TYPES, 'key'))
+				.concat(_.map(CONST.DIST_TYPES, 'key'))
+				.concat(_.map(CONST.PLATFORMS, function(p) { return 'OS_' + p.toUpperCase(); }))
+				.join('|') + ')\\b'
+			+ '|\\bTi(?:tanium)?\\s*(?:\\.\\s*Platform\\b|\\[\\s*[\'"]Platform[\'"])'
+		);
+	}
+	return optimizeRx;
+}
 
 // What the builtins visitor looks for: require('alloy/x') or require('/alloy/x').
 const ALLOY_REQUIRE_RX = /require\s*\(\s*['"]\/?alloy\//;
 
-const SOURCE_MAP_COMMENT = /\n?\/\/# sourceMappingURL=[^\n]*$/;
+// One or more trailing source map comments, in line or block form, with the
+// legacy @ prefix too, followed by any whitespace. The URL part mirrors
+// @babel/core's EXTERNAL_SOURCEMAP_REGEX, so a comment-like string at the end
+// of a template literal or string (which would end in a quote) is not matched.
+const SOURCE_MAP_URL = '[@#][ \\t]+sourceMappingURL=[^\\s\'"`]+[ \\t]*';
+const SOURCE_MAP_COMMENT = new RegExp(
+	'(?:\\/\\/' + SOURCE_MAP_URL + '|\\/\\*' + SOURCE_MAP_URL + '\\*\\/)'
+	+ '(?:\\s*(?:\\/\\/' + SOURCE_MAP_URL + '|\\/\\*' + SOURCE_MAP_URL + '\\*\\/))*'
+	+ '\\s*$'
+);
 
 /*
  * @method createVisitor
@@ -55,7 +76,7 @@ exports.createBuiltinsVisitor = function(compileConfig) {
  * parse, which is what every file costs today.
  */
 exports.needsOptimize = function(code) {
-	return OPTIMIZE_RX.test(code);
+	return getOptimizeRx().test(code);
 };
 
 /*
@@ -81,7 +102,9 @@ exports.parse = function(code, filename) {
 
 /*
  * @method stripSourceMapComment
- * Removes a trailing //# sourceMappingURL= comment, as @babel/core did.
+ * Removes trailing sourceMappingURL comments, line or block form, as
+ * @babel/core did. The file is reprinted, so a map it points to would no
+ * longer match.
  */
 exports.stripSourceMapComment = function(code) {
 	return code.replace(SOURCE_MAP_COMMENT, '');

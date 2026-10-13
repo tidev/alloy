@@ -130,8 +130,61 @@ describe('optimizer.js', function() {
 							expect(code).not.toBe(expected);
 						}
 					});
+					it(prefix + 'pre-scan flags code the visitors change', function() {
+						var unchanged = transform.run(babylon.parse(testContent), null, {}, sourceMapper.OPTIONS_OUTPUT).replace(/\s*$/,'');
+						if (code !== unchanged) {
+							expect(transform.needsOptimize(testContent)).toBe(true);
+						}
+					});
 				});
 			});
+		});
+	});
+});
+
+describe('transform.needsOptimize', function() {
+	_.each([
+		'var a = Ti.Platform.name;',
+		'var a = Titanium.Platform.osname;',
+		'var a = Ti.Platform[\'osname\'];',
+		'var a = Titanium.Platform["name"];',
+		'var a = Ti\n\t.Platform\n\t.osname;',
+		'var a = Ti[\'Platform\'].name;',
+		'if (OS_IOS) {}',
+		'if (ENV_PROD) {}'
+	], function(src) {
+		it('flags ' + JSON.stringify(src), function() {
+			expect(transform.needsOptimize(src)).toBe(true);
+		});
+	});
+
+	_.each([
+		'var a = Ti.UI.createView();',
+		'var TiPlatform = 1;',
+		'var a = foo.OS_IOSX;'
+	], function(src) {
+		it('skips ' + JSON.stringify(src), function() {
+			expect(transform.needsOptimize(src)).toBe(false);
+		});
+	});
+});
+
+describe('transform.stripSourceMapComment', function() {
+	_.each([
+		['var a = 1;\n//# sourceMappingURL=a.js.map', 'var a = 1;\n'],
+		['var a = 1;\n//# sourceMappingURL=a.js.map\n', 'var a = 1;\n'],
+		['var a = 1;\r\n//# sourceMappingURL=a.js.map\r\n\r\n', 'var a = 1;\r\n'],
+		['var a = 1;\n//@ sourceMappingURL=a.js.map\n', 'var a = 1;\n'],
+		['var a = 1;\n/*# sourceMappingURL=a.js.map */\n', 'var a = 1;\n'],
+		['var a = 1;\n//# sourceMappingURL=data:application/json;base64,eyJ9\n', 'var a = 1;\n'],
+		['var a = 1;\n//# sourceMappingURL=a.js.map\n/*# sourceMappingURL=b.js.map */\n', 'var a = 1;\n'],
+		['var a = 1;\n', 'var a = 1;\n'],
+		['//# sourceMappingURL=a.js.map\nvar a = 1;\n', '//# sourceMappingURL=a.js.map\nvar a = 1;\n'],
+		['var a = `\n//# sourceMappingURL=a.js.map`;\n', 'var a = `\n//# sourceMappingURL=a.js.map`;\n'],
+		['var a = "//# sourceMappingURL=a.js.map"', 'var a = "//# sourceMappingURL=a.js.map"']
+	], function(test) {
+		it('handles ' + JSON.stringify(test[0]), function() {
+			expect(transform.stripSourceMapComment(test[0])).toBe(test[1]);
 		});
 	});
 });
