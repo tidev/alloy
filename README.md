@@ -70,11 +70,15 @@ jake app:run dir=basics/simple
     * If you decide to ignore my advice and run the tests anyway on Windows, make sure that if you imported the Harness into TiStudio that you _don't_ have TiStudio running. Windows creates locks on key files in that project that are necessary for the testing process. It will make tests fail erroneously.
     * If you're still that stubborn, are running the test suite on Windows, and you're getting those intermittent, erroneous errors, try running them one spec at a time. Instead of doing `jake test:all`, do `jake test:spec[SPEC_NAME]`, where `SPEC_NAME` is JS file in the [test specs folder](https://github.com/tidev/alloy/tree/master/test/specs).
 
-## Update moment.js/Backbone/Underscore
+## Update moment.js/Day.js/Backbone/Underscore
 
 ### moment.js
 
 Download the latest ZIP from https://github.com/moment/moment and then copy /moment.js (not dist/moment.js!) into `Alloy/builtins` and the locale/* files (not dist/locale/* !) to `Alloy/builtins/moment/lang`. After that do a search & replace and replace all `require('../moment')` with `require('/alloy/moment')`.
+
+### Day.js
+
+Download the latest package from npm (`npm pack dayjs`) and then copy `dayjs.min.js` into `Alloy/builtins` as `dayjs.js` (keep the version banner comment at the top up to date), the `plugin/*.js` files to `Alloy/builtins/dayjs/plugin` and the `locale/*.js` files to `Alloy/builtins/dayjs/locale`. After that do a search & replace in the locale files and replace all `require("dayjs")` with `require("/alloy/dayjs")`. The plugin files are self-contained and need no changes.
 
 ### Backbone
 
