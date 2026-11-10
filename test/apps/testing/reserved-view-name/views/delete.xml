@@ -1,0 +1,4 @@
+<Alloy>
+	<!-- a view named after a reserved word, whose root has no id and is a <Require> -->
+	<Require src="row" title="Delete" />
+</Alloy>
