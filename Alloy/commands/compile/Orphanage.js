@@ -89,6 +89,25 @@ Orphanage.prototype.removeAdapters = function(opts) {
 		path.join(titaniumFolder, 'alloy', 'sync')
 	];
 
+	// Custom adapters come from app/lib/alloy/sync (or a widget's lib folder)
+	// and are copied over on every compile anyway. Deleting them here just
+	// to recreate them a moment later makes them a moving target on Windows,
+	// so they are only removed once their source file is gone. Built-in
+	// adapters are removed when they are disabled in config.json.
+	var sourceDirs = [];
+	_.each([dirs.app].concat(_.values(widgetsInUse)), function(base) {
+		sourceDirs.push(
+			path.join(base, CONST.DIR.LIB, 'alloy', 'sync'),
+			path.join(base, CONST.DIR.LIB, titaniumFolder, 'alloy', 'sync'),
+			path.join(base, CONST.DIR.LIB, platform, 'alloy', 'sync')
+		);
+	});
+	function hasSource(adapterFile) {
+		return _.some(sourceDirs, function(dir) {
+			return fs.existsSync(path.join(dir, adapterFile));
+		});
+	}
+
 	_.each(paths, function(p) {
 		var adapterDir = path.join(dirs.resources, p);
 		if (!fs.existsSync(adapterDir)) {
@@ -98,7 +117,14 @@ Orphanage.prototype.removeAdapters = function(opts) {
 		_.each(fs.readdirSync(adapterDir), function(adapterFile) {
 			var fullpath = path.join(adapterDir, adapterFile);
 			var adapterName = adapterFile.replace(/\.js$/, '');
-			if (!_.includes(adapters, adapterName) && fs.statSync(fullpath).isFile()) {
+			if (!fs.statSync(fullpath).isFile()) {
+				return;
+			}
+
+			var orphaned = _.includes(CONST.ADAPTERS, adapterName) ?
+				!_.includes(adapters, adapterName) :
+				!hasSource(adapterFile);
+			if (orphaned) {
 				logger.trace('* ' + path.join(p, adapterFile));
 				fs.unlinkSync(fullpath);
 			}
