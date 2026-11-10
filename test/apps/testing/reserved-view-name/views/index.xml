@@ -1,0 +1,6 @@
+<Alloy>
+	<Window layout="vertical">
+		<Require src="delete" />
+		<Require src="new" />
+	</Window>
+</Alloy>
