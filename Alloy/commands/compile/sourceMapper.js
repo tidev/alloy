@@ -7,22 +7,17 @@ var SM = require('source-map'),
 	path = require('path'),
 	U = require('../../utils'),
 	CONST = require('../../common/constants'),
-	babylon = require('@babel/parser'),
-	babel = require('@babel/core'),
+	transform = require('./ast/transform'),
 	logger = require('../../logger'),
 	_ = require('lodash');
 
 var lineSplitter = /(?:\r\n|\r|\n)/;
 
-// Try to match this in our babel.transformFromAst calls?
 exports.OPTIONS_OUTPUT = {
-	ast: false,
 	// do NOT minify Alloy code because Titanium will do it!
 	minified: false,
 	compact: false,
 	comments: true,
-	babelrc: false,
-	passPerPreset: false,
 	retainLines: true
 };
 
@@ -114,11 +109,7 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	// parse composite code into an AST
 	var ast;
 	try {
-		ast = babylon.parse(genMap.code, {
-			sourceFilename: outfile,
-			sourceType: 'unambiguous',
-			allowReturnOutsideFunction: true
-		});
+		ast = transform.parse(genMap.code, outfile);
 	} catch (e) {
 		let filename;
 		if (data.__MAPMARKER_CONTROLLER_CODE__) {
@@ -131,30 +122,25 @@ exports.generateCodeAndSourceMap = function(generator, compileConfig) {
 	}
 
 	// create source map and generated code
-	var options = _.extend(_.clone(exports.OPTIONS_OUTPUT), {
-		plugins: [
-			[require('./ast/builtins-plugin'), compileConfig],
-			[require('./ast/optimizer-plugin'), compileConfig.alloyConfig]
-		],
-		filename
-	});
+	var options = _.clone(exports.OPTIONS_OUTPUT);
 	if (compileConfig.sourcemap) {
-		// Tell babel to retain the lines so they stay correct (columns go wacky, but OH WELL)
+		// Retain the lines so they stay correct (columns go wacky, but OH WELL)
 		// we produce our own source maps and we want the lines to stay as we mapped them
 		options.retainLines = true;
 	}
-	var outputResult = babel.transformFromAstSync(ast, genMap.code, options);
+	var visitor = transform.createVisitor(compileConfig, compileConfig.alloyConfig);
+	var outputCode = transform.run(ast, genMap.code, visitor, options);
 
 	// produce the source map and embed the original source (so the template source can be passed along)
 	const sourceMap = mapper.toJSON();
 	sourceMap.sourcesContent = [ target.templateContent, data[markers[0]].fileContent ];
 
 	// append pointer to the source map to the generated code
-	outputResult.code += `\n//# sourceMappingURL=file://${compileConfig.dir.project}/${CONST.DIR.MAP}/${relativeOutfile}.${CONST.FILE_EXT.MAP}`;
+	outputCode += `\n//# sourceMappingURL=file://${compileConfig.dir.project}/${CONST.DIR.MAP}/${relativeOutfile}.${CONST.FILE_EXT.MAP}`;
 
 	// write the generated controller code
 	fs.mkdirpSync(path.dirname(outfile));
-	fs.writeFileSync(outfile, outputResult.code.toString());
+	fs.writeFileSync(outfile, outputCode);
 	logger.info('  created:    "' + relativeOutfile + '"');
 
 	// write source map for the generated file
