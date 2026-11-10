@@ -88,9 +88,11 @@ function parse(node, state, args) {
 		args.symbol = CU.generateUniqueId();
 	}
 
-	// process the children, if any
+	// process the children, if any. Each child is pushed onto a local array by
+	// code generated inside that child's own condition (if, platform, formFactor),
+	// so a child that is not created at runtime is not referenced either.
 	var children = U.XML.getElementsFromNodes(node.childNodes),
-		xChildren = [];
+		childrenVar;
 	_.each(children, function(child) {
 		if (!CU.isNodeForCurrentPlatform(child)) { return; }
 		var childArgs = CU.getParserArgs(child);
@@ -98,16 +100,20 @@ function parse(node, state, args) {
 			parent: {},
 			post: function(node, state, args) {
 				if (state.parent.symbol) {
-					xChildren.push(state.parent.symbol);
+					childrenVar = childrenVar || CU.generateUniqueId();
+					return childrenVar + '.push(' + state.parent.symbol + ');\n';
 				}
 			}
 		});
 	});
+	if (childrenVar) {
+		code = 'var ' + childrenVar + ' = [];\n' + code;
+	}
 
 	// add extra createArgs if present
 	var xArgs = {};
 
-	if (xChildren.length) { xArgs.children = '__ALLOY_EXPR__--[' + xChildren.join(',') + ']'; }
+	if (childrenVar) { xArgs.children = '__ALLOY_EXPR__--' + childrenVar; }
 	if (state.model) { xArgs[CONST.BIND_MODEL_VAR] = '__ALLOY_EXPR__--' + state.model; }
 	if (state.parent && state.parent.symbol) {
 		xArgs[CONST.PARENT_SYMBOL_VAR] = '__ALLOY_EXPR__--' + state.parent.symbol;
