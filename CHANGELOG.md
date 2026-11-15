@@ -1,3 +1,9 @@
+## Unreleased
+
+### Deprecated
+
+* Deprecate the `alloy purgetss` shortcut. Use the standalone `purgetss` CLI instead.
+
 # [2.1.0](https://github.com/tidev/alloy/compare/2.0.2...2.1.0) (2024-01-09)
 
 
