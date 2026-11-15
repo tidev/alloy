@@ -1,0 +1,17 @@
+<Alloy>
+	<Window>
+		<!-- the condition is false: neither child is created, and neither may be referenced -->
+		<Require id="cardWithoutChildren" src="card">
+			<Require src="badge" if="Alloy.CFG.showBadge" />
+			<Label if="Alloy.CFG.showBadge" text="label" />
+		</Require>
+		<!-- the condition is true: the child is created and passed in $.args.children -->
+		<Require id="cardWithChild" src="card">
+			<Require src="badge" if="!Alloy.CFG.showBadge" />
+		</Require>
+		<!-- an unconditional child -->
+		<Require id="cardWithLabel" src="card">
+			<Label text="label" />
+		</Require>
+	</Window>
+</Alloy>
