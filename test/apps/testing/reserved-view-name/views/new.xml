@@ -1,0 +1,4 @@
+<Alloy>
+	<!-- a view named after a reserved word, whose root has no id -->
+	<Label text="New" />
+</Alloy>

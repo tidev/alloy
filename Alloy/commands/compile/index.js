@@ -898,8 +898,10 @@ function parseAlloyComponent(view, dir, manifest, noView, fileRestriction) {
 
 		// process the UI nodes
 		_.each(rootChildren, function(node, i) {
-			// should we use the default id?
-			var defaultId = CU.isNodeForCurrentPlatform(node) ? viewName : undefined;
+			// should we use the default id? Not when the view's name is a reserved word (such
+			// as delete.xml): that is not a valid id, so the element gets a generated one.
+			var defaultId = CU.isNodeForCurrentPlatform(node) && !_.includes(CONST.JS_RESERVED_ALL, viewName) ?
+				viewName : undefined;
 
 			// generate the code for this node
 			var fullname = CU.getNodeFullname(node);
