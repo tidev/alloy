@@ -30,7 +30,7 @@ function loadBuiltin(source, name, dest) {
 	loaded = _.union(loaded, [name]);
 }
 
-function loadMomentLanguages(config) {
+function loadLocaleFiles(config, moduleName, localeDir) {
 	// retrieve the languages of the project
 	var i18nPath = path.join(config.dir.project, 'i18n');
 	if (fs.existsSync(i18nPath)) {
@@ -38,16 +38,16 @@ function loadMomentLanguages(config) {
 			return fs.statSync(path.join(i18nPath, file)).isDirectory();
 		});
 
-		// filter the momentjs translation files that match one of these languages
-		var availableI18nPath = path.join(BUILTINS_PATH, 'moment', 'lang');
+		// filter the translation files that match one of these languages
+		var availableI18nPath = path.join(BUILTINS_PATH, moduleName, localeDir);
 		var fileNames = _.filter(fs.readdirSync(availableI18nPath), function(file) {
 			return _.indexOf(languages, file.substr(0, 2)) !== -1;
 		});
 
 		// import these files
 		_.each(fileNames, function(file) {
-			var source = path.join(BUILTINS_PATH, 'moment', 'lang', file);
-			var dest = path.join(config.dir.resources, 'alloy', 'moment', 'lang', file);
+			var source = path.join(BUILTINS_PATH, moduleName, localeDir, file);
+			var dest = path.join(config.dir.resources, 'alloy', moduleName, localeDir, file);
 			loadBuiltin(source, file, dest);
 		});
 	}
@@ -82,7 +82,10 @@ module.exports = function (_ref) {
 					if ('moment.js' === name) {
 						// if momentjs is required in the project, also load the
 						// localizations which may be used
-						loadMomentLanguages(this.opts);
+						loadLocaleFiles(this.opts, 'moment', 'lang');
+					} else if ('dayjs.js' === name) {
+						// same for dayjs, whose locales live in "locale"
+						loadLocaleFiles(this.opts, 'dayjs', 'locale');
 					}
 				}
 			}
