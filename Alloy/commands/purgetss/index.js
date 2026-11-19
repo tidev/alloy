@@ -1,7 +1,12 @@
 const { exec } = require('child_process');
 const U = require('../../utils');
+const logger = require('../../logger');
 
 module.exports = async function(args, program) {
+	logger.warn([
+		'`alloy purgetss` is deprecated. Run `purgetss` directly instead.',
+		'Use `purgetss --help` for the current commands and options.'
+	]);
 	let options = '';
 	try {
 		if (args.length === 0) {

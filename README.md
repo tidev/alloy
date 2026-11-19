@@ -23,6 +23,10 @@ Alloy is an MVC application framework by [TiDev](https://tidev.io) for the [Tita
 [sudo] npm install -g git://github.com/tidev/alloy.git
 ```
 
+## PurgeTSS
+
+The `alloy purgetss` shortcut is deprecated and remains available for compatibility. Install the standalone CLI with `npm install -g purgetss`, then run `purgetss` directly from your Alloy project directory. Use `purgetss --help` for the current commands and options.
+
 ## Running Sample Test Apps
 
 Alloy includes many sample and test apps in the **sample/apps** folder (see above). For example, [basics/simple](https://github.com/tidev/alloy/tree/master/samples/apps/basics/simple). You can run these in a few different ways:
